@@ -1,5 +1,7 @@
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../ui/onboarding/get_started_onboarding.dart';
+import '../../../ui/onboarding/role_onboarding.dart';
 import '../../api_folder/auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
@@ -10,6 +12,8 @@ import '../network/network_service.dart';
 @StackedApp(
   routes: [
     // MaterialRoute(page: Dashboard, initial: true),
+    MaterialRoute(page: RoleOnboarding),
+    MaterialRoute(page: GetStartedOnboarding),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

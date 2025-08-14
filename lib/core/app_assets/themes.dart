@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:medicate_app/core/config/colors.dart';
 
-import 'colors.dart';
-import 'dimens.dart';
+import '../config/dimens.dart';
 
 ThemeData buildThemeData() {
   return ThemeData(
@@ -31,20 +31,4 @@ ThemeData buildThemeData() {
       constraints: const BoxConstraints(minHeight: 50),
     ),
   );
-}
-
-class AppTextStyle {
-  static TextStyle style({
-    Color? color,
-    double? size,
-    String? family,
-    FontWeight? fontWeight,
-  }) {
-    return TextStyle(
-      color: color,
-      fontSize: size,
-      fontFamily: family,
-      fontWeight: fontWeight,
-    );
-  }
 }
