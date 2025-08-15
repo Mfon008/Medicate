@@ -397,7 +397,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
+                        recognizer: TapGestureRecognizer()..onTap = () =>navigate.navigateTo(Routes.loginScreen),
                       ),
                     ],
                   ),
@@ -532,8 +532,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(
-                          vertical: 14.w,
-                          horizontal: 14.w,
+                          vertical: 16.w,
+                          horizontal: 16.w,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.r),
@@ -566,8 +566,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Container(
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(
-                          vertical: 14.w,
-                          horizontal: 14.w,
+                          vertical: 16.w,
+                          horizontal: 16.w,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.r),
@@ -606,7 +606,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         color: AppColors.white,
                         buttonBorderColor: AppColors.transparent,
                         onPressed: () {
-                          if (formKeyValidate.currentState!.validate()) {}
+                          if (formKeyValidate.currentState!.validate()) {
+                            navigate.navigateTo(Routes.setupPinScreen);
+                          }
                         },
                       ),
                       SizedBox(height: 20.h),

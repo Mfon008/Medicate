@@ -1,7 +1,13 @@
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../../../ui/authentication/user/change_phone_number.dart';
+import '../../../ui/authentication/user/forgot_pin_screen.dart';
+import '../../../ui/authentication/user/login_screen.dart';
+import '../../../ui/authentication/user/reset_pin_screen.dart';
+import '../../../ui/authentication/user/setup_pin_screen.dart';
 import '../../../ui/authentication/user/sign_up_screen.dart';
+import '../../../ui/authentication/user/success_screen.dart';
+import '../../../ui/authentication/user/welcome_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../api_folder/auth_api.dart';
@@ -18,6 +24,12 @@ import '../network/network_service.dart';
     MaterialRoute(page: GetStartedOnboarding),
     MaterialRoute(page: SignUpScreen),
     MaterialRoute(page: ChangePhoneNumber),
+    MaterialRoute(page: SetupPinScreen),
+    MaterialRoute(page: LoginScreen),
+    MaterialRoute(page: WelcomeScreen),
+    MaterialRoute(page: ForgotPinScreen),
+    MaterialRoute(page: ResetPinScreen),
+    MaterialRoute(page: SuccessScreen),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

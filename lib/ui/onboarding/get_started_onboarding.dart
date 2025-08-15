@@ -86,6 +86,7 @@ class GetStartedOnboarding extends StatelessWidget {
                     buttonText: 'Sign In',
                     color: AppColors.black,
                     buttonBorderColor: AppColors.transparent,
+                    onPressed: () => navigate.navigateTo(Routes.loginScreen),
                   ),
                   SizedBox(height: 16.20.h),
                   TextView(

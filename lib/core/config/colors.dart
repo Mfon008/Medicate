@@ -8,6 +8,7 @@ class AppColors {
   static const inactive = Color(0xFFB9DCEA);
   static const skyBlue = Color(0xFFF5F9FF);
   static const greygrey = Color(0xFF7D7F81);
+  static const greygrey1 = Color(0xFF75808A);
 
   static const buttonGrey1 = Color(0xFFCCCCCC);
   static const infoGrey = Color(0xFFA9A9A9);

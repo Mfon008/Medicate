@@ -1,51 +1,39 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
-import 'package:medicate_app/ui/widget/button.dart';
-import 'package:medicate_app/ui/widget/text.dart';
-import 'package:medicate_app/ui/widget/text_form_widget.dart';
-import 'package:pinput/pinput.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../widget/button.dart';
+import '../../widget/text.dart';
+import '../../widget/text_form_widget.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPinScreen extends StatefulWidget {
+  const ForgotPinScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPinScreen> createState() => _ForgotPinScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPinScreenState extends State<ForgotPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
 
   bool isPhone = false;
+
   bool isPhoneValid = false;
 
-  final defaultPinTheme = PinTheme(
-    width: 50.w,
-    height: 50.h,
-    margin: EdgeInsets.only(right: 10.w),
-    textStyle: const TextStyle(
-      fontSize: 20,
-      color: Colors.black,
-      fontWeight: FontWeight.w500,
-    ),
-    decoration: BoxDecoration(
-      color: AppColors.grey, // light background
-      border: Border.all(color: AppColors.transparent),
-      borderRadius: BorderRadius.circular(10),
-    ),
-  );
-
-  String? pinInput;
+  bool isPassed({required bool isPhone}) {
+    if (isPhone == true) {
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 26.0.h),
               TextView(
-                text: 'Welcome to Medicate',
+                text: 'Forgot PIN?',
                 textStyle: TextStyle(
                   // fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
@@ -83,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 10.h),
               TextView(
                 text:
-                    'Your journey to better health starts here. Enter your phone number and name to get started',
+                    'Enter the phone number associated with your account to get a PIN reset OTP.',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 15.2.sp,
@@ -203,104 +191,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h),
 
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  children: [
-                    const TextSpan(text: "Don’t have a Medicate account? "),
-                    TextSpan(
-                      text: "Sign Up",
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 150.h),
+              SizedBox(height: 350.h),
               ButtonWidget(
                 border: 100.r,
                 buttonColor: !isPassed(isPhone: isPhone)
                     ? AppColors.buttonGrey1
                     : AppColors.primary,
-                buttonText: 'Log In',
+                buttonText: 'Continue',
                 color: AppColors.white,
                 buttonBorderColor: AppColors.transparent,
                 onPressed: !isPassed(isPhone: isPhone)
                     ? () {}
                     : () {
                         if (formKey.currentState!.validate()) {
-                          navigate.navigateTo(Routes.forgotPinScreen);
+                          navigate.navigateTo(Routes.resetPinScreen);
                         }
                       },
               ),
               SizedBox(height: 30.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: Divider(color: AppColors.buttonGrey1, thickness: 1),
-                  ),
-                  SizedBox(width: 20.w),
-                  TextView(
-                    text: 'Or continue with',
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 14.2.sp,
-                      color: AppColors.fineGrey,
-                    ),
-                  ),
-                  SizedBox(width: 20.w),
-                  Expanded(
-                    child: Divider(color: AppColors.buttonGrey1, thickness: 1),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16.30.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      padding: EdgeInsets.symmetric(vertical: 15.0.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.r),
-                        border: Border.all(color: AppColors.buttonGrey1),
-                      ),
-                      child: SvgPicture.asset(
-                        AppImage.google,
-                        width: 22.w,
-                        height: 22.h,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20.w),
-                  Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 2,
-                      padding: EdgeInsets.symmetric(vertical: 15.0.w),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32.r),
-                        border: Border.all(color: AppColors.buttonGrey1),
-                      ),
-                      child: SvgPicture.asset(
-                        AppImage.facebook,
-                        width: 22.w,
-                        height: 22.h,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 17.30.h),
               Center(
                 child: RichText(
                   text: TextSpan(
@@ -329,12 +238,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  bool isPassed({required bool isPhone}) {
-    if (isPhone == true) {
-      return true;
-    }
-    return false;
   }
 }

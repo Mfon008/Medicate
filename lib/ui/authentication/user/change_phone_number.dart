@@ -70,7 +70,6 @@ class _ChangePhoneNumberState extends State<ChangePhoneNumber> {
                 ),
               ),
               SizedBox(height: 24.0.h),
-
               Stack(
                 clipBehavior: Clip.none,
                 children: [
