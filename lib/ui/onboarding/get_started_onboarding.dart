@@ -53,7 +53,7 @@ class GetStartedOnboarding extends StatelessWidget {
                   TextView(
                     text: '👋 Hi there, Welcome to Medicate!',
                     textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
+                      // fontFamily: 'GoogleSans',
                       letterSpacing: 0,
                       fontWeight: FontWeight.w700,
                       fontSize: 17.0.sp,
@@ -82,7 +82,7 @@ class GetStartedOnboarding extends StatelessWidget {
                   SizedBox(height: 12.20.h),
                   ButtonWidget(
                     border: 100.r,
-                    buttonColor: AppColors.buttonGrey,
+                    buttonColor: AppColors.grey,
                     buttonText: 'Sign In',
                     color: AppColors.black,
                     buttonBorderColor: AppColors.transparent,

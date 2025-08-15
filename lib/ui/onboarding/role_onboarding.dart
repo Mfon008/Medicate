@@ -13,7 +13,7 @@ import '../widget/medicate_enum.dart';
 import '../widget/text.dart';
 
 class RoleOnboarding extends StatefulWidget {
-  RoleOnboarding({super.key});
+  const RoleOnboarding({super.key});
 
   @override
   State<RoleOnboarding> createState() => _RoleOnboardingState();
@@ -48,7 +48,7 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
                   TextView(
                     text: 'Choose Your Role to Get Started!',
                     textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
+                      // fontFamily: 'GoogleSans',
                       fontWeight: FontWeight.w700,
                       fontSize: 16.20.sp,
                     ),
@@ -96,7 +96,7 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
                     buttonText: 'Continue',
                     color: AppColors.white,
                     buttonBorderColor: AppColors.transparent,
-                    onPressed: () => navigate.navigateTo(Routes.signUpScreen),
+                    onPressed: () => navigationFlow(),
                   ),
                   SizedBox(height: 20.h),
                   TextView(
@@ -118,9 +118,18 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
     );
   }
 
-  // navigationFlow(){
-  //   if(selectedUserType==UserType.everydayUser){
-  //     navigate.s
-  //   }
-  // }
+  void navigationFlow() {
+    switch (selectedUserType) {
+      case UserType.everydayUser:
+        navigate.navigateTo(Routes.signUpScreen);
+        break;
+
+      case UserType.pharmacist:
+      case UserType.healthCare:
+        break;
+
+      case null:
+        throw UnimplementedError();
+    }
+  }
 }

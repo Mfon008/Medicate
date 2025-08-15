@@ -71,8 +71,8 @@ class EverydayUserCard extends StatelessWidget {
                       textStyle: TextStyle(
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0,
-                        fontFamily: 'GoogleSans',
-                        fontSize: 14.sp,
+                        // fontFamily: 'GoogleSans',
+                        fontSize: 16.sp,
                       ),
                     ),
                     SizedBox(height: 4),

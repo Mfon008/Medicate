@@ -1,5 +1,5 @@
 enum UserType {
-  none,
+  // none,
   everydayUser,
   pharmacist,
   healthCare,

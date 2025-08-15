@@ -106,7 +106,7 @@ class AppValidator {
       if (!regex.hasMatch(value)) {
         return error ?? 'Invalid character';
       }
-      if (value.length < 3) {
+      if (value.length < 4) {
         return error ?? 'Enter a valid complete OTP';
       }
       return null;

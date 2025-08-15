@@ -74,7 +74,7 @@ class TextFormWidget extends StatelessWidget {
     this.onEditCompleted,
     this.keyboardType,
     this.suffixIconColor,
-    this.fillColor = AppColors.textFieldFill,
+    this.fillColor = AppColors.grey,
     this.prefixIconColor,
     this.onChange,
     this.formKey,
