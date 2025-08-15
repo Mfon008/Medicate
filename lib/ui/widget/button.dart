@@ -3,6 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 
+import '../../core/config/colors.dart';
+import '../../main.dart';
+
 class ButtonWidget extends StatelessWidget {
   const ButtonWidget({
     super.key,
@@ -53,12 +56,35 @@ class ButtonWidget extends StatelessWidget {
                 text: buttonText!,
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
-                  fontWeight: FontWeight.w400,
-                  fontSize: 15.80.sp,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.80.sp,
                   color: color,
                 ),
               )
             : SpinKitThreeBounce(color: color, size: 24),
+      ),
+    );
+  }
+}
+
+class GlobalNavigator extends StatelessWidget {
+  const GlobalNavigator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => navigate.back(),
+      child: Container(
+        padding: EdgeInsets.all(4.10.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.10.r),
+          border: Border.all(color: AppColors.black),
+        ),
+        child: Icon(
+          Icons.arrow_back_ios_new,
+          size: 14.sp,
+          color: AppColors.black,
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../ui/authentication/sign_up_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../api_folder/auth_api.dart';
@@ -14,6 +15,7 @@ import '../network/network_service.dart';
     // MaterialRoute(page: Dashboard, initial: true),
     MaterialRoute(page: RoleOnboarding),
     MaterialRoute(page: GetStartedOnboarding),
+    MaterialRoute(page: SignUpScreen),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),

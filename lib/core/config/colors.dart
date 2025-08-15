@@ -9,6 +9,7 @@ class AppColors {
   static const greygrey = Color(0xFF7D7F81);
 
   static const buttonGrey = Color(0xFFF5F6F8);
+  static const buttonGrey1 = Color(0xFFCCCCCC);
   static const infoGrey = Color(0xFFA9A9A9);
   //
   static const secondaryTextColor = Color(0xFF475467);
@@ -19,7 +20,9 @@ class AppColors {
   static const searchInputFillColor = Color(0x1E767680);
   static const greyee = Color(0xFF7D7F81);
   static const grey = Color(0xFFF5F6F8);
+  static const fieldGrey = Color(0xFFF5F6F8);
   static const green = Color(0xFF039754);
+  static const textFieldFill = Color(0xFFF5F6F8);
   static const black = Colors.black;
   static const white = Colors.white;
 

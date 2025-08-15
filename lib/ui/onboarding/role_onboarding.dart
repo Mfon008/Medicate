@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/every_day_card_widget.dart';
 import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
@@ -94,7 +96,7 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
                     buttonText: 'Continue',
                     color: AppColors.white,
                     buttonBorderColor: AppColors.transparent,
-                    onPressed: () => print(selectedUserType),
+                    onPressed: () => navigate.navigateTo(Routes.signUpScreen),
                   ),
                   SizedBox(height: 20.h),
                   TextView(
@@ -115,4 +117,10 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
       ),
     );
   }
+
+  // navigationFlow(){
+  //   if(selectedUserType==UserType.everydayUser){
+  //     navigate.s
+  //   }
+  // }
 }

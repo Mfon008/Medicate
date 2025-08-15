@@ -43,7 +43,10 @@ class TextFormWidget extends StatelessWidget {
   final double? size;
   final int? maxline;
   final int? minline;
-  final double? border;
+  final double? borderTopRight;
+  final double? borderTopLeft;
+  final double? borderBottomRight;
+  final double? borderBottomLeft;
 
   TextFormWidget({
     Key? key,
@@ -71,7 +74,7 @@ class TextFormWidget extends StatelessWidget {
     this.onEditCompleted,
     this.keyboardType,
     this.suffixIconColor,
-    this.fillColor=AppColors.grey,
+    this.fillColor = AppColors.textFieldFill,
     this.prefixIconColor,
     this.onChange,
     this.formKey,
@@ -80,7 +83,10 @@ class TextFormWidget extends StatelessWidget {
     this.borderColor = AppColors.transparent,
     this.labelColor = AppColors.black,
     this.maxline = 1,
-    this.border = 4,
+    this.borderBottomLeft,
+    this.borderBottomRight,
+    this.borderTopLeft,
+    this.borderTopRight,
     this.minline,
     this.focusNode,
     this.hintColor = AppColors.black,
@@ -93,17 +99,35 @@ class TextFormWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         hint != null
-            ? TextView(
-                text: hint ?? '',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w500,
-                  color: hintColor,
-                ),
+            ? Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  TextView(
+                    text: hint ?? '',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w500,
+                      color: hintColor,
+                    ),
+                  ),
+
+                  Positioned(
+                    right: -12.10,
+                    child: TextView(
+                      text: '*',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.red,
+                      ),
+                    ),
+                  ),
+                ],
               )
             : const SizedBox.shrink(),
-        SizedBox(height: 12.2.h),
+        SizedBox(height: hint != null ? 12.2.h : 0.h),
         TextFormField(
           textCapitalization: TextCapitalization.words,
           keyboardType: keyboardType,
@@ -120,7 +144,12 @@ class TextFormWidget extends StatelessWidget {
               borderSide: BorderSide(width: 1.w, color: AppColors.transparent),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(border!.r)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(borderTopLeft!.r),
+                topRight: Radius.circular(borderTopRight!.r),
+                bottomLeft: Radius.circular(borderBottomLeft!.r),
+                bottomRight: Radius.circular(borderBottomRight!.r),
+              ),
               borderSide: BorderSide(width: 2.w, color: borderColor!),
             ),
             disabledBorder: OutlineInputBorder(
@@ -128,7 +157,13 @@ class TextFormWidget extends StatelessWidget {
               borderSide: BorderSide(width: 1.w, color: Colors.grey),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(border!.r)),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(borderTopLeft!.r),
+                topRight: Radius.circular(borderTopRight!.r),
+                bottomLeft: Radius.circular(borderBottomLeft!.r),
+                bottomRight: Radius.circular(borderBottomRight!.r),
+              ),
+
               borderSide: BorderSide(width: 1.w, color: borderColor!),
             ),
             errorBorder: OutlineInputBorder(
