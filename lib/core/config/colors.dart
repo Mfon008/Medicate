@@ -24,6 +24,7 @@ class AppColors {
   static const grey = Color(0xFFF5F6F8);
   static const dashboard = Color(0xFFF5F6F8);
   static const fineGrey = Color(0xFFA9A9A9);
+  static const lightBlue = Color(0xFF29A9FF);
   static const green = Color(0xFF039754);
   static const black = Colors.black;
   static const white = Colors.white;

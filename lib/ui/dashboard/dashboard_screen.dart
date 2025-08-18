@@ -150,13 +150,20 @@ class _DashboardState extends State<Dashboard> {
                   label: 'Pharmacy',
                 ),
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    AppImage.dash_logo,
-                    color: _currentIndex == 3
-                        ? AppColors.primary
-                        : AppColors.fineGrey,
-                    height: 24.0.h,
-                    width: 24.0.w,
+                  icon: Container(
+                    padding: EdgeInsets.all(4.2.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.inactive.withOpacity(.1),
+                    ),
+                    child: SvgPicture.asset(
+                      AppImage.big_logo,
+                      // color: _currentIndex == 3
+                      // ? AppColors.transparent
+                      // : AppColors.fineGrey,
+                      height: 24.0.h,
+                      width: 16.20.w,
+                    ),
                   ),
                   label: 'AskMed',
                 ),
