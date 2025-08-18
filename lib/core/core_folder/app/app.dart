@@ -8,6 +8,7 @@ import '../../../ui/authentication/user/setup_pin_screen.dart';
 import '../../../ui/authentication/user/sign_up_screen.dart';
 import '../../../ui/authentication/user/success_screen.dart';
 import '../../../ui/authentication/user/welcome_screen.dart';
+import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../api_folder/auth_api.dart';
@@ -19,7 +20,7 @@ import '../network/network_service.dart';
 
 @StackedApp(
   routes: [
-    // MaterialRoute(page: Dashboard, initial: true),
+    MaterialRoute(page: Dashboard, initial: true),
     MaterialRoute(page: RoleOnboarding),
     MaterialRoute(page: GetStartedOnboarding),
     MaterialRoute(page: SignUpScreen),

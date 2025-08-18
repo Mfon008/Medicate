@@ -6,6 +6,8 @@ import 'package:pinput/pinput.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
@@ -110,7 +112,7 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
                   },
                 ),
               ),
-              
+
               SizedBox(height: 370.h),
               ButtonWidget(
                 border: 100.r,
@@ -120,12 +122,12 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
                 buttonBorderColor: AppColors.transparent,
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    // _modalBottomSheetMenu(phoneNo: phoneController.text);
+                    navigate.navigateTo(Routes.dashboard);
                   }
                 },
               ),
               SizedBox(height: 20.30.h),
-             ],
+            ],
           ),
         ),
       ),
