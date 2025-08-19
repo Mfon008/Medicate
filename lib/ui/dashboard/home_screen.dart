@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/config/colors.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/ai_text_form_widget.dart';
 import '../widget/text.dart';
 
@@ -18,42 +20,41 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         leading: Container(
-          margin: EdgeInsets.only(left: 10.w),
+          margin: EdgeInsets.only(left: 4.w),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.inactive.withOpacity(.1),
             border: Border.all(color: AppColors.primaryLight),
           ),
           child: IconButton(
-            icon: SvgPicture.asset(
-              AppImage.burger,
-              width: 28.w, // balanced size inside circle
-              height: 28.h,
-              color: AppColors.primary,
-            ),
-            onPressed: () {},
-            splashRadius: 28, // makes ripple effect round
+            icon: SvgPicture.asset(AppImage.burger, color: AppColors.primary),
+            onPressed: () => navigate.navigateTo(
+              Routes.moreScreen,
+            ), // makes ripple effect round
           ),
         ),
         title: SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),
         centerTitle: true,
         actions: [
-          Container(
-            margin: EdgeInsets.only(right: 10.w),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.inactive.withOpacity(.1),
-              border: Border.all(color: AppColors.primaryLight),
-            ),
-            child: IconButton(
-              icon: SvgPicture.asset(
-                AppImage.bell,
-                width: 26,
-                height: 26,
-                color: AppColors.primary,
+          Padding(
+            padding: EdgeInsets.all(2.w),
+            child: Container(
+              margin: EdgeInsets.only(right: 4.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.inactive.withOpacity(.1),
+                border: Border.all(color: AppColors.primaryLight),
               ),
-              onPressed: () {},
-              splashRadius: 28,
+              child: IconButton(
+                icon: SvgPicture.asset(
+                  AppImage.bell,
+                  width: 26,
+                  height: 26,
+                  color: AppColors.primary,
+                ),
+                onPressed: () {},
+                splashRadius: 28,
+              ),
             ),
           ),
         ],
@@ -371,7 +372,7 @@ class HomeScreen extends StatelessWidget {
     ),
     child: Row(
       children: [
-        SvgPicture.asset(icon, width: 16.w, height: 16.h),
+        SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
         SizedBox(width: 6.10.w),
         Flexible(
           child: TextView(

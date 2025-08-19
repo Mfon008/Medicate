@@ -3,6 +3,9 @@
 class AppImage {
   static const String applogo = 'assets/images/logo.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
+  static const String cancel = 'assets/svgs/cancel.svg';
+  static const String calendar = 'assets/svgs/calendar.svg';
+  static const String arrow_down = 'assets/svgs/arrow_down.svg';
   static const String x = 'assets/svgs/x.svg';
   static const String facebook = 'assets/svgs/facebook.svg';
   static const String google = 'assets/svgs/google.svg';
@@ -21,7 +24,18 @@ class AppImage {
   static const String appointment = 'assets/svgs/appointment.svg';
   static const String tips = 'assets/svgs/tips.svg';
   static const String audio = 'assets/svgs/audio.svg';
+  static const String profile = 'assets/svgs/profile.svg';
+  static const String timer = 'assets/svgs/timer.svg';
+  static const String filter = 'assets/svgs/filter.svg';
+  static const String key = 'assets/svgs/key.svg';
+  static const String faq = 'assets/svgs/faq.svg';
+  static const String policy = 'assets/svgs/policy.svg';
+  static const String terms = 'assets/svgs/terms.svg';
+  static const String wallet = 'assets/svgs/wallet.svg';
+  static const String chat_support = 'assets/svgs/chat_support.svg';
+  static const String profile_image = 'assets/svgs/profile_image.svg';
   static const String clipper = 'assets/svgs/clipper.svg';
+  static const String logout = 'assets/svgs/logout.svg';
   static const String arrow_up = 'assets/svgs/arrow_up.svg';
   static const String dash_logo = 'assets/svgs/dash_logo.svg';
   static const String arrow_forward = 'assets/svgs/arrow_forward.svg';

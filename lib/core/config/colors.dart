@@ -10,6 +10,7 @@ class AppColors {
   static const greygrey = Color(0xFF7D7F81);
   static const greygrey1 = Color(0xFF75808A);
   static const yellow = Color(0xFFF5B546);
+  static const f1 = Color(0xFFF1F1F1);
 
   static const buttonGrey1 = Color(0xFFCCCCCC);
   static const infoGrey = Color(0xFFA9A9A9);
@@ -26,6 +27,7 @@ class AppColors {
   static const fineGrey = Color(0xFFA9A9A9);
   static const lightBlue = Color(0xFF29A9FF);
   static const green = Color(0xFF039754);
+  static const appWhite = Color(0xFFFFFFFF);
   static const black = Colors.black;
   static const white = Colors.white;
 

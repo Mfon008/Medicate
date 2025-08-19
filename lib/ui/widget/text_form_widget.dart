@@ -44,6 +44,7 @@ class TextFormWidget extends StatelessWidget {
   final int? maxline;
   final int? minline;
   final double? borderTopRight;
+  double? hintSize;
   final double? borderTopLeft;
   final double? borderBottomRight;
   final double? borderBottomLeft;
@@ -80,6 +81,7 @@ class TextFormWidget extends StatelessWidget {
     this.formKey,
     this.size,
     this.text,
+    this.hintSize = 18,
     this.borderColor = AppColors.transparent,
     this.labelColor = AppColors.black,
     this.maxline = 1,
@@ -106,7 +108,7 @@ class TextFormWidget extends StatelessWidget {
                     text: hint ?? '',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
-                      fontSize: 18.sp,
+                      fontSize: hintSize!.sp,
                       fontWeight: FontWeight.w500,
                       color: hintColor,
                     ),
