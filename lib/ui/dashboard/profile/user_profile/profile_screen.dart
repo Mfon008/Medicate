@@ -122,6 +122,7 @@ class ProfileScreen extends StatelessWidget {
                 text: 'Contact Support',
                 topLeft: 12,
                 topRight: 12,
+                onTap: () => navigate.navigateTo(Routes.supportScreen),
               ),
               SizedBox(height: 1.0.h),
               profileContainer(icon: AppImage.faq, text: 'FAQ'),

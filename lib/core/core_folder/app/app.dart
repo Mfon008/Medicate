@@ -13,6 +13,7 @@ import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_screen.dart';
+import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../api_folder/auth_api.dart';
@@ -37,6 +38,7 @@ import '../network/network_service.dart';
     MaterialRoute(page: SuccessScreen),
     MaterialRoute(page: ProfileScreen),
     MaterialRoute(page: ProfileInfoScreen),
+    MaterialRoute(page: SupportScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

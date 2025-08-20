@@ -8,6 +8,7 @@ import 'package:medicate_app/ui/dashboard/home_screen.dart';
 import '../../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
 import '../widget/text.dart';
+import 'reminder/reminder_screen.dart';
 
 // ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
@@ -22,7 +23,7 @@ class _DashboardState extends State<Dashboard> {
 
   final List<Widget> _body = [
     HomeScreen(),
-    Container(),
+    ReminderScreen(),
     Container(),
     Container(),
   ];
@@ -158,9 +159,6 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     child: SvgPicture.asset(
                       AppImage.big_logo,
-                      // color: _currentIndex == 3
-                      // ? AppColors.transparent
-                      // : AppColors.fineGrey,
                       height: 24.0.h,
                       width: 16.20.w,
                     ),

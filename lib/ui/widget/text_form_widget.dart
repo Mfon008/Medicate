@@ -30,6 +30,7 @@ class TextFormWidget extends StatelessWidget {
   final bool? isGender;
   final bool? isFeedback;
   final bool? isFilled;
+  final bool? alignLabelWithHint;
   final Function()? onTapped;
   TextStyle? labelStyle;
   final TextInputType? keyboardType;
@@ -56,6 +57,7 @@ class TextFormWidget extends StatelessWidget {
     this.floatingLabel,
     this.hint,
     this.isFilled = false,
+    this.alignLabelWithHint = false,
     this.prefixIcon,
     this.suffixIcon,
     this.suffixWidget,
@@ -140,6 +142,7 @@ class TextFormWidget extends StatelessWidget {
             filled: isFilled,
             fillColor: fillColor,
             focusColor: AppColors.black,
+            alignLabelWithHint: alignLabelWithHint,
             contentPadding: EdgeInsets.fromLTRB(20.w, 10.w, 20.w, 10.w),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.r),

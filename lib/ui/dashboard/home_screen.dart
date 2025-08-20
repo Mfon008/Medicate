@@ -20,11 +20,11 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         leading: Container(
-          margin: EdgeInsets.only(left: 4.w),
+          margin: EdgeInsets.only(left: 7.8.w),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.inactive.withOpacity(.1),
-            border: Border.all(color: AppColors.primaryLight),
+            border: Border.all(color: AppColors.inactive),
           ),
           child: IconButton(
             icon: SvgPicture.asset(AppImage.burger, color: AppColors.primary),
@@ -37,13 +37,13 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.all(2.w),
+            padding: EdgeInsets.all(4.4.w),
             child: Container(
               margin: EdgeInsets.only(right: 4.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.inactive.withOpacity(.1),
-                border: Border.all(color: AppColors.primaryLight),
+                border: Border.all(color: AppColors.inactive),
               ),
               child: IconButton(
                 icon: SvgPicture.asset(

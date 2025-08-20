@@ -16,6 +16,12 @@ class AppImage {
   static const String success = 'assets/svgs/success.svg';
   static const String home = 'assets/svgs/home.svg';
   static const String pills = 'assets/svgs/pills.svg';
+  static const String reminder = 'assets/svgs/reminder_pic.svg';
+  static const String person_plus = 'assets/svgs/person_plus.svg';
+  static const String ai_star = 'assets/svgs/ai_star.svg';
+  static const String message = 'assets/svgs/message.svg';
+  static const String phone = 'assets/svgs/phone.svg';
+  static const String whatsapp = 'assets/svgs/whatsapp.svg';
   static const String big_logo = 'assets/svgs/big_logo.svg';
   static const String cart = 'assets/svgs/cart.svg';
   static const String today_pills = 'assets/svgs/today_pills.svg';
