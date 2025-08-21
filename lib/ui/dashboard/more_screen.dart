@@ -114,7 +114,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 color: AppColors.infoGrey,
               ),
             ),
-            SizedBox(height: 12.20.h),
+            SizedBox(height: 2.20.h),
             ...textHistoryList.map(
               (e) => GestureDetector(
                 onTap: () {
@@ -123,6 +123,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 },
                 child: Container(
                   width: double.infinity,
+                  margin: EdgeInsets.only(top: 6.10.w),
                   padding: EdgeInsets.symmetric(
                     vertical: 10.w,
                     horizontal: 12.w,

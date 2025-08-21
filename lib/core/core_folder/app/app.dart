@@ -9,6 +9,7 @@ import '../../../ui/authentication/user/setup_pin_screen.dart';
 import '../../../ui/authentication/user/sign_up_screen.dart';
 import '../../../ui/authentication/user/success_screen.dart';
 import '../../../ui/authentication/user/welcome_screen.dart';
+import '../../../ui/dashboard/ask_me_screen.dart';
 import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
@@ -39,6 +40,7 @@ import '../network/network_service.dart';
     MaterialRoute(page: ProfileScreen),
     MaterialRoute(page: ProfileInfoScreen),
     MaterialRoute(page: SupportScreen),
+    MaterialRoute(page: AskMeScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

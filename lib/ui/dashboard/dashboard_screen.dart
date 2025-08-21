@@ -8,11 +8,13 @@ import 'package:medicate_app/ui/dashboard/home_screen.dart';
 import '../../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
 import '../widget/text.dart';
+import 'ask_me_screen.dart';
 import 'reminder/reminder_screen.dart';
 
 // ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+   Dashboard({super.key,this.index});
+  int? index;
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -25,7 +27,7 @@ class _DashboardState extends State<Dashboard> {
     HomeScreen(),
     ReminderScreen(),
     Container(),
-    Container(),
+    AskMeScreen(),
   ];
 
   Future<bool> willPopControl() async {
