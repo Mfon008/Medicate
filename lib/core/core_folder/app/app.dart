@@ -17,6 +17,7 @@ import '../../../ui/dashboard/profile/user_profile/profile_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
+import '../../../ui/onboarding/splash_screen.dart';
 import '../../api_folder/auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
@@ -41,6 +42,7 @@ import '../network/network_service.dart';
     MaterialRoute(page: ProfileInfoScreen),
     MaterialRoute(page: SupportScreen),
     MaterialRoute(page: AskMeScreen),
+    MaterialRoute(page: SplashScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

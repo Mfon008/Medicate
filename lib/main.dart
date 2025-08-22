@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         ),
-        initialRoute: Routes.getStartedOnboarding,
+        initialRoute: Routes.splashScreen,
         navigatorKey: StackedService.navigatorKey,
         onGenerateRoute: StackedRouter().onGenerateRoute,
         debugShowCheckedModeBanner: false,

@@ -132,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(14.6.w),
+                    padding: EdgeInsets.all(13.8.w),
                     decoration: BoxDecoration(
                       color: AppColors.grey,
                       borderRadius: BorderRadius.only(

@@ -119,7 +119,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        padding: EdgeInsets.all(12.w),
+                        padding: EdgeInsets.all(13.8.w),
                         decoration: BoxDecoration(
                           color: AppColors.grey,
                           borderRadius: BorderRadius.only(
@@ -221,11 +221,6 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     controller: nameController,
                     validator: AppValidator.validateString(),
                     onChange: (p0) {
-                      // if (p0.isEmpty) {
-                      //   isName = false;
-                      // } else {
-                      //   isName = true;
-                      // }
                       setState(() {});
                     },
                   ),

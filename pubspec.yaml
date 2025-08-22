@@ -44,7 +44,6 @@ dependencies:
   json_annotation: ^4.9.0
   page_transition: ^2.2.1
   stacked_hooks: ^0.2.4
-  flutter_native_splash: ^2.4.6
   google_fonts: ^6.3.0
   flutter_svg: ^2.2.0
   flutter_spinkit: ^5.2.2
@@ -105,22 +104,6 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
 
-flutter_native_splash:
-  color: "#FFFFFF"
-  #background_image: "assets/background.png"
-  image: assets/images/logo.png
-  color_dark: "#051C25"
-  image_dark: assets/images/logo.png
 
-  android_12:
-    image: assets/images/logo.png
-    color: "#FFFFFF"
-    image_dark: assets/images/logo.png
-    color_dark: "#051C25"
 
-  android: true
-  ios: true
-  web: false
 
-  android_gravity: center
-  ios_content_mode: center
