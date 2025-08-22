@@ -20,6 +20,12 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
 
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
 
   bool isPhone = false;
   bool isPhoneValid = false;
@@ -243,7 +249,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     ),
                     fillColor: AppColors.grey,
                     isFilled: true,
-                    controller: nameController,
+                    controller: dobController,
                     validator: AppValidator.validateString(),
                     suffixWidget: Padding(
                       padding: EdgeInsets.all(14.10.w),
@@ -269,7 +275,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     ),
                     fillColor: AppColors.grey,
                     isFilled: true,
-                    controller: nameController,
+                    controller: ageController,
                     validator: AppValidator.validateString(),
                   ),
                   SizedBox(height: 20.h),
@@ -291,7 +297,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     ),
                     fillColor: AppColors.grey,
                     isFilled: true,
-                    controller: nameController,
+                    controller: genderController,
                     validator: AppValidator.validateString(),
                     suffixWidget: Padding(
                       padding: EdgeInsets.all(14.20.w),
@@ -317,7 +323,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     ),
                     fillColor: AppColors.grey,
                     isFilled: true,
-                    controller: nameController,
+                    controller: countryController,
                     validator: AppValidator.validateString(),
                     suffixWidget: Padding(
                       padding: EdgeInsets.all(14.20.w),
@@ -355,7 +361,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     ),
                     fillColor: AppColors.grey,
                     isFilled: true,
-                    controller: nameController,
+                    controller: heightController,
                     validator: AppValidator.validateString(),
                     suffixWidget: Padding(
                       padding: EdgeInsets.all(14.20.w),
@@ -381,7 +387,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     ),
                     fillColor: AppColors.grey,
                     isFilled: true,
-                    controller: nameController,
+                    controller: weightController,
                     validator: AppValidator.validateString(),
                     suffixWidget: Padding(
                       padding: EdgeInsets.all(14.20.w),
