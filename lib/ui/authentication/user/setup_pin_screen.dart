@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../core/app_assets/app_validation.dart';
@@ -133,7 +135,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                 buttonBorderColor: AppColors.transparent,
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    // _modalBottomSheetMenu(phoneNo: phoneController.text);
+                    navigate.navigateTo(Routes.welcomeScreen);
                   }
                 },
               ),
@@ -146,7 +148,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                 buttonBorderColor: AppColors.primary,
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    // _modalBottomSheetMenu(phoneNo: phoneController.text);
+                    navigate.navigateTo(Routes.welcomeScreen);
                   }
                 },
               ),

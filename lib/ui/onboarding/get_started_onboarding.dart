@@ -1,4 +1,6 @@
+import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
@@ -10,6 +12,17 @@ import '../widget/text.dart';
 
 class GetStartedOnboarding extends StatelessWidget {
   const GetStartedOnboarding({super.key});
+
+  Future<Uint8List> loadImageWithoutExif(String assetPath) async {
+    final data = await rootBundle.load(assetPath);
+    final bytes = data.buffer.asUint8List();
+    final image = img.decodeImage(bytes)!;
+
+    // Bake orientation into pixel data
+    final baked = img.bakeOrientation(image);
+
+    return Uint8List.fromList(img.encodePng(baked));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +46,32 @@ class GetStartedOnboarding extends StatelessWidget {
                     width: 116.w,
                     height: 28.h,
                   ),
-                  SizedBox(height: 34.h),
-                  ClipOval(
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                        const Color.fromARGB(255, 84, 113, 151),
-                        BlendMode.color, // Stronger monochrome blue
-                      ), // Sky blue overlay
-                      // Blends the color with the image
-                      child: Image.asset(
-                        AppImage.mc,
-                        fit: BoxFit.fill,
-                        width: 260.w,
-                        height: 280.h,
-                      ),
-                    ),
+                  SizedBox(height: 54.h),
+                  FutureBuilder<Uint8List>(
+                    future: loadImageWithoutExif(AppImage.mc),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData) {
+                        return ClipOval(
+                          child: ShaderMask(
+                            shaderCallback: (bounds) => const LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 110, 120, 133),
+                                Color.fromARGB(255, 110, 120, 133),
+                              ],
+                            ).createShader(bounds),
+                            blendMode: BlendMode.color,
+                            child: Image.asset(
+                              AppImage.mc,
+                              fit: BoxFit.cover,
+                              width: 260.w,
+                              height: 280.h,
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox();
+                    },
                   ),
                   SizedBox(height: 30.h),
                   TextView(

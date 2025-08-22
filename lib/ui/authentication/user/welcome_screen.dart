@@ -4,12 +4,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
+import '../bio_authentication.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -112,21 +115,40 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                 ),
               ),
-              TextView(
-                text: 'Forgot PIN',
-                decoration: TextDecoration.underline,
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.primary,
+
+              SizedBox(height: 20.0.h),
+              GestureDetector(
+                onTap: () => navigate.navigateTo(Routes.forgotPinScreen),
+                child: TextView(
+                  text: 'Forgot PIN',
+                  decoration: TextDecoration.underline,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.primary,
+                  ),
                 ),
               ),
               SizedBox(height: 20.0.h),
-              Container(
-                padding: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(color: AppColors.inactive),
-                child: SvgPicture.asset(AppImage.bio),
+              GestureDetector(
+                onTap: () async {
+                  bool auth = await Authentication.authentication();
+                  if (auth) {
+                    navigate.navigateTo(
+                      Routes.dashboard,
+                      arguments: DashboardArguments(index: 0),
+                    );
+                  }
+                },
+                child: Container(
+                  padding: EdgeInsets.all(14.8.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.inactive.withOpacity(.22),
+                    shape: BoxShape.circle,
+                  ),
+                  child: SvgPicture.asset(AppImage.bio),
+                ),
               ),
               SizedBox(height: 16.0.h),
               TextView(
@@ -139,7 +161,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   color: AppColors.greygrey1,
                 ),
               ),
-              SizedBox(height: 370.h),
+              SizedBox(height: 260.h),
               ButtonWidget(
                 border: 100.r,
                 buttonColor: AppColors.primary,
@@ -148,7 +170,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 buttonBorderColor: AppColors.transparent,
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    // _modalBottomSheetMenu(phoneNo: phoneController.text);
+                    navigate.navigateTo(
+                      Routes.dashboard,
+                    );
                   }
                 },
               ),
@@ -164,12 +188,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     children: [
                       const TextSpan(text: "Don’t have an account? "),
                       TextSpan(
-                        text: " Sign in",
+                        text: " Sign up",
                         style: TextStyle(
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
+                        recognizer: TapGestureRecognizer()..onTap = () => navigate.navigateTo(Routes.signUpScreen),
                       ),
                     ],
                   ),

@@ -132,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(12.w),
+                    padding: EdgeInsets.all(14.6.w),
                     decoration: BoxDecoration(
                       color: AppColors.grey,
                       borderRadius: BorderRadius.only(
@@ -397,7 +397,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () =>navigate.navigateTo(Routes.loginScreen),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () =>
+                              navigate.navigateTo(Routes.loginScreen),
                       ),
                     ],
                   ),
@@ -425,10 +427,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void _modalBottomSheetMenu({String? phoneNo}) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (builder) {
-        return Container(
-          color: Colors.transparent, //could change this to Color(0xFF737373),
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(
+              context,
+            ).viewInsets.bottom, // 👈 pushes content above keyboard
+          ), //could change this to Color(0xFF737373),
           //so you don't have to change MaterialApp canvasColor
           child: Container(
             width: double.infinity,
@@ -439,7 +446,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 topRight: const Radius.circular(20.0),
               ),
             ),
-            child: Center(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
+                ),
+              ),
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(vertical: 40.w, horizontal: 20.w),
                 child: Form(

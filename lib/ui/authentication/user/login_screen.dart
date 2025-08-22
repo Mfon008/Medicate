@@ -220,7 +220,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: AppColors.primary,
                         decoration: TextDecoration.underline,
                       ),
-                      recognizer: TapGestureRecognizer()..onTap = () {},
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () =>
+                            navigate.navigateTo(Routes.signUpScreen),
                     ),
                   ],
                 ),
@@ -238,7 +240,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? () {}
                     : () {
                         if (formKey.currentState!.validate()) {
-                          navigate.navigateTo(Routes.forgotPinScreen);
+                          navigate.navigateTo(Routes.dashboard);
                         }
                       },
               ),
@@ -312,12 +314,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const TextSpan(text: "Don’t have an account? "),
                       TextSpan(
-                        text: " Sign in",
+                        text: " Sign up",
                         style: TextStyle(
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () {},
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () =>
+                              navigate.navigateTo(Routes.signUpScreen),
                       ),
                     ],
                   ),

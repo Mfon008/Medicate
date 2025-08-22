@@ -102,7 +102,7 @@ class _ChangePhoneNumberState extends State<ChangePhoneNumber> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(12.w),
+                    padding: EdgeInsets.all(14.6.w),
                     decoration: BoxDecoration(
                       color: AppColors.grey,
                       borderRadius: BorderRadius.only(

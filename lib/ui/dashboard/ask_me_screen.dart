@@ -19,6 +19,7 @@ class AskMeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.dashboard,
+      resizeToAvoidBottomInset: true, // 👈 ensures keyboard pushes content
       appBar: AppBar(
         backgroundColor: AppColors.white,
         leading: Container(
@@ -30,9 +31,7 @@ class AskMeScreen extends StatelessWidget {
           ),
           child: IconButton(
             icon: SvgPicture.asset(AppImage.burger, color: AppColors.primary),
-            onPressed: () => navigate.navigateTo(
-              Routes.moreScreen,
-            ), // makes ripple effect round
+            onPressed: () => navigate.navigateTo(Routes.moreScreen),
           ),
         ),
         title: SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),
@@ -61,14 +60,16 @@ class AskMeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 15.22.w, vertical: 22.w),
+      body: SafeArea(
         child: Column(
           children: [
-            SizedBox(
-              height: 380.h,
+            // 👇 scrollable messages
+            Expanded(
               child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15.22.w,
+                  vertical: 22.w,
+                ),
                 child: Column(
                   children: [
                     Align(
@@ -106,7 +107,6 @@ class AskMeScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Container(
                             padding: EdgeInsets.all(14.w),
@@ -141,62 +141,62 @@ class AskMeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 30.h),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                width: double.infinity.w,
-                padding: EdgeInsets.all(18.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22.r),
-                  color: AppColors.white,
-                ),
-                child: Column(
-                  children: [
-                    AiTextFormWidget(
-                      label: 'Chat with Medicate AI....',
-                      labelStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 15.2.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.infoGrey,
+
+            // 👇 fixed input at bottom
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(18.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22.r),
+                color: AppColors.white,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AiTextFormWidget(
+                    label: 'Chat with Medicate AI....',
+                    labelStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 18.20.h),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppImage.audio,
+                        width: 22.w,
+                        height: 22.h,
                       ),
-                    ),
-                    SizedBox(height: 18.20.h),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          AppImage.audio,
-                          width: 22.w,
-                          height: 22.h,
+                      Spacer(),
+                      SvgPicture.asset(
+                        AppImage.clipper,
+                        color: AppColors.black,
+                        width: 22.w,
+                        height: 22.h,
+                      ),
+                      SizedBox(width: 20.w),
+                      Container(
+                        padding: EdgeInsets.all(14.w),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.primary,
                         ),
-                        Spacer(),
-                        SvgPicture.asset(
-                          AppImage.clipper,
-                          color: AppColors.black,
-                          width: 22.w,
-                          height: 22.h,
+                        child: SvgPicture.asset(
+                          AppImage.arrow_up,
+                          width: 20.w,
+                          height: 17.20.h,
+                          color: AppColors.white,
                         ),
-                        SizedBox(width: 20.w),
-                        Container(
-                          padding: EdgeInsets.all(14.w),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.primary,
-                          ),
-                          child: SvgPicture.asset(
-                            AppImage.arrow_up,
-                            width: 20.w,
-                            height: 17.20.h,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
+            SizedBox(height: 25.20.h),
           ],
         ),
       ),
