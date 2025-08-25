@@ -13,7 +13,7 @@ import 'reminder/reminder_screen.dart';
 
 // ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
-   Dashboard({super.key,this.index});
+  Dashboard({super.key, this.index});
   int? index;
 
   @override

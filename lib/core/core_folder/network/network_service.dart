@@ -115,6 +115,14 @@ class NetworkService {
             options: options ?? await _getOption(),
           );
           break;
+        case RequestMethod.patch:
+          response = await dio!.patch(
+            path,
+            queryParameters: params,
+            data: data,
+            options: options ?? await _getOption(),
+          );
+          break;
         case RequestMethod.upload:
           response = await dio!.post(
             path,
@@ -159,4 +167,4 @@ class NetworkService {
   }
 }
 
-enum RequestMethod { post, get, put, delete, upload, getParams }
+enum RequestMethod { post, get, put, delete, upload, getParams, patch }

@@ -1,29 +1,206 @@
-// import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-// import '../connect_end/model/sign_in_entity_model.dart';
-// import '../core_folder/app/app.locator.dart';
+import 'package:medicate_app/core/connect_end/model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/change_pin_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/change_pin_response_model/change_pin_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/reset_password_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/set_pin_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_pin_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
+import '../connect_end/model/resend_otp_entity_model.dart';
+import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
+import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
+import '../connect_end/model/verify_phone_entity_model.dart';
+import '../core_folder/app/app.locator.dart';
+import '../connect_end/model/login_response_model/login_response_model.dart';
 import '../core_folder/app/app.logger.dart';
-// import '../core_folder/network/network_service.dart';
-// import '../core_folder/network/url_path.dart';
+import '../core_folder/network/network_service.dart';
+import '../core_folder/network/url_path.dart';
 
 @lazySingleton
 class AuthApi {
-  // final _service = locator<NetworkService>();
+  final _service = locator<NetworkService>();
   final logger = getLogger('AuthViewModel');
 
-  // Future<SignInResponseModel> signIn(SignInEntityModel signInEntity) async {
-  //   try {
-  //     final response = await _service.call(
-  //       UrlConfig.sign_in,
-  //       RequestMethod.post,
-  //       data: signInEntity.toJson(),
-  //     );
-  //     logger.d(response.data);
-  //     return SignInResponseModel.fromJson(response.data);
-  //   } catch (e) {
-  //     logger.d("response:$e");
-  //     rethrow;
-  //   }
-  // }
+  Future<LoginResponseModel> signIn(LoginEntityModel signInEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.sign_in,
+        RequestMethod.post,
+        data: signInEntity.toJson(),
+      );
+      logger.d(response.data);
+      return LoginResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
 
- }
+  Future<SignUpResponseModel> signUp(SignUpEntityModel signUpEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.sign_up,
+        RequestMethod.post,
+        data: signUpEntity.toJson(),
+      );
+      logger.d(response.data);
+      return SignUpResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> resendOtp(ResendOtpEntityModel resendOtpEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.resend_otp,
+        RequestMethod.post,
+        data: resendOtpEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<VerifyPassOtpRespnseModel> verifyPhoneOtp(
+    VerifyPhoneEntityModel verifyPhoneOtp,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.verify_otp,
+        RequestMethod.post,
+        data: verifyPhoneOtp.toJson(),
+      );
+      logger.d(response.data);
+      return VerifyPassOtpRespnseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<ForgotPasswordResponseModel> forgotPasword(ResendOtpEntityModel forgotPassword) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.forgot_password,
+        RequestMethod.post,
+        data: forgotPassword.toJson(),
+      );
+      logger.d(response.data);
+      return ForgotPasswordResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<VerifyPassOtpRespnseModel> verifyForgotPassword(VerifyPhoneEntityModel verifyPhoneEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.sign_up,
+        RequestMethod.post,
+        data: verifyPhoneEntity.toJson(),
+      );
+      logger.d(response.data);
+      return VerifyPassOtpRespnseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> resetPin(ResetPasswordEntityModel resetPasswordEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reset_password,
+        RequestMethod.post,
+        data: resetPasswordEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<ChangePhoneNoResponseModel> changePhoneNo(ResendOtpEntityModel changePhoneNo) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.change_number,
+        RequestMethod.patch,
+        data: changePhoneNo.toJson(),
+      );
+      logger.d(response.data);
+      return ChangePhoneNoResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<ChangePinResponseModel> changePin(ChangePinEntityModel changePin) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.change_pin,
+        RequestMethod.post,
+        data: changePin.toJson(),
+      );
+      logger.d(response.data);
+      return ChangePinResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<dynamic> refreshToken() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.refresh_token,
+        RequestMethod.post,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.user_detail}/$phoneNo',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetUserDetailsResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.set_pin,
+        RequestMethod.post,
+        data: setPinEntity.toJson(),
+      );
+      logger.d(response.data);
+      return SetPinResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+}

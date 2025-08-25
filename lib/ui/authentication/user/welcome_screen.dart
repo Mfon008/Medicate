@@ -170,9 +170,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 buttonBorderColor: AppColors.transparent,
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    navigate.navigateTo(
-                      Routes.dashboard,
-                    );
+                    navigate.navigateTo(Routes.dashboard);
                   }
                 },
               ),
@@ -193,7 +191,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer()..onTap = () => navigate.navigateTo(Routes.signUpScreen),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () =>
+                              navigate.navigateTo(Routes.signUpScreen),
                       ),
                     ],
                   ),

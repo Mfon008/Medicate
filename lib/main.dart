@@ -6,7 +6,6 @@ import 'package:stacked_services/stacked_services.dart';
 import 'core/core_folder/app/app.locator.dart';
 import 'core/core_folder/app/app.router.dart';
 
-
 final navigate = locator<NavigationService>();
 
 Future<void> main() async {

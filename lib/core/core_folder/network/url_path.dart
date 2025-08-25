@@ -1,13 +1,17 @@
 // ignore_for_file: constant_identifier_names
 
 class UrlConfig {
-  static const String check_mail = 'v1/auth/check-email';
-  static const String verify_mail = 'v1/auth/verify-email';
-  static const String sign_in = 'v1/auth/sign-in';
-  static const String sign_up = 'v1/auth/sign-up';
-  static const String user_detail = 'v1/user';
-  static const String reset_password = 'v1/auth/reset-password';
-  static const String reset_password_verify = 'v1/auth/reset-password-verify';
-  static const String google_auth = 'v1/auth/google-auth-mobile';
-  static const String delete_account = 'v1/user/test/';
+  static const String refresh_token = 'auth/refresh-token';
+  static const String set_pin = 'auth/set-pin';
+  static const String sign_in = 'auth/login';
+  static const String sign_up = 'auth/individual-user/signup';
+  static const String user_detail = 'auth/getUserDetails/';
+  static const String resend_otp = 'auth/resend-otp';
+  static const String reset_password = 'auth/reset-pin';
+  static const String verify_otp = 'auth/verify-phone-otp';
+  static const String forgot_password = 'auth/forgot-password';
+  static const String verify_forget_password_otp =
+      'auth/verify-forgot-password-otp';
+  static const String change_number = 'auth/change-phonenumber/';
+  static const String change_pin = 'auth/change-pin';
 }
