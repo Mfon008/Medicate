@@ -24,14 +24,16 @@ class _ReminderScreenState extends State<ReminderScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         leading: Container(
-          margin: EdgeInsets.only(left: 7.8.w),
+          margin: EdgeInsets.only(left: 10.4.w),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.inactive.withOpacity(.1),
             border: Border.all(color: AppColors.inactive),
           ),
           child: IconButton(
-            icon: SvgPicture.asset(AppImage.burger, color: AppColors.primary),
+            icon: SvgPicture.asset(AppImage.burger, color: AppColors.primary,
+                    height: 12.h,
+                    width: 12.w,),
             onPressed: () => navigate.navigateTo(Routes.moreScreen),
           ),
         ),
@@ -46,7 +48,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.all(4.4.w),
+            padding: EdgeInsets.all(4.8.w),
             child: Container(
               margin: EdgeInsets.only(right: 4.w),
               decoration: BoxDecoration(
@@ -57,8 +59,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
               child: IconButton(
                 icon: SvgPicture.asset(
                   AppImage.bell,
-                  width: 26,
-                  height: 26,
+                  width: 22.h,
+                  height: 22.h,
                   color: AppColors.primary,
                 ),
                 onPressed: () {},

@@ -71,11 +71,11 @@ class EverydayUserCard extends StatelessWidget {
                       textStyle: TextStyle(
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0,
-                        // fontFamily: 'GoogleSans',
+                        fontFamily: 'GoogleSans',
                         fontSize: 16.sp,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    SizedBox(height: 6),
                     TextView(
                       text: text2 ?? '',
                       textStyle: TextStyle(

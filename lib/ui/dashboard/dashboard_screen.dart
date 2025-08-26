@@ -107,63 +107,86 @@ class _DashboardState extends State<Dashboard> {
               selectedFontSize: 14.8.sp,
               unselectedFontSize: 14.6.sp,
               selectedLabelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 0,
                 fontFamily: 'Arial',
-                fontSize: 14.sp,
+                fontSize: 14.4.sp,
               ),
               unselectedLabelStyle: TextStyle(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 0,
                 fontFamily: 'Arial',
-                fontSize: 14.sp,
+                fontSize: 14.4.sp,
               ),
               items: [
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    AppImage.home,
-                    color: _currentIndex == 0
-                        ? AppColors.primary
-                        : AppColors.fineGrey,
-                    height: 26.0.h,
-                    width: 26.0.w,
+                  icon: Column(
+                    children: [
+                      SvgPicture.asset(
+                        AppImage.home,
+                        color: _currentIndex == 0
+                            ? AppColors.primary
+                            : AppColors.fineGrey,
+                        height: 26.0.h,
+                        width: 26.0.w,
+                      ),
+
+                      SizedBox(height: 6.0.w),
+                    ],
                   ),
                   label: 'Home',
                 ),
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    AppImage.pills,
-                    color: _currentIndex == 1
-                        ? AppColors.primary
-                        : AppColors.fineGrey,
-                    height: 28.0.h,
-                    width: 28.0.w,
+                  icon: Column(
+                    children: [
+                      SvgPicture.asset(
+                        AppImage.pills,
+                        color: _currentIndex == 1
+                            ? AppColors.primary
+                            : AppColors.fineGrey,
+                        height: 28.0.h,
+                        width: 28.0.w,
+                      ),
+                      SizedBox(height: 6.0.w),
+                    ],
                   ),
                   label: 'Reminder',
                 ),
                 BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    AppImage.cart,
-                    color: _currentIndex == 2
-                        ? AppColors.primary
-                        : AppColors.fineGrey,
-                    height: 28.0.h,
-                    width: 28.0.w,
+                  icon: Column(
+                    children: [
+                      SvgPicture.asset(
+                        AppImage.cart,
+                        color: _currentIndex == 2
+                            ? AppColors.primary
+                            : AppColors.fineGrey,
+                        height: 28.0.h,
+                        width: 28.0.w,
+                      ),
+
+                      SizedBox(height: 6.0.w),
+                    ],
                   ),
                   label: 'Pharmacy',
                 ),
                 BottomNavigationBarItem(
-                  icon: Container(
-                    padding: EdgeInsets.all(4.2.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.r),
-                      color: AppColors.inactive.withOpacity(.1),
-                    ),
-                    child: SvgPicture.asset(
-                      AppImage.big_logo,
-                      height: 24.0.h,
-                      width: 16.20.w,
-                    ),
+                  icon: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(4.4.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: AppColors.inactive.withOpacity(.1),
+                        ),
+                        child: SvgPicture.asset(
+                          AppImage.big_logo,
+                          height: 24.0.h,
+                          width: 16.20.w,
+                        ),
+                      ),
+
+                      SizedBox(height: 3.90.w),
+                    ],
                   ),
                   label: 'AskMed',
                 ),

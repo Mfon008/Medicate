@@ -48,9 +48,9 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
                   TextView(
                     text: 'Choose Your Role to Get Started!',
                     textStyle: TextStyle(
-                      // fontFamily: 'GoogleSans',
+                      fontFamily: 'GoogleSans',
                       fontWeight: FontWeight.w700,
-                      fontSize: 16.20.sp,
+                      fontSize: 18.50.sp,
                     ),
                   ),
                   SizedBox(height: 20.0.h),
@@ -87,7 +87,7 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
                     },
                     text: 'Healthcare Provider',
                     text2:
-                        'Manage patient medication adherence and appointments, set medication reminders.',
+                        'Manage patient medication adherence and appointments, set\nmedication reminders.',
                   ),
                   SizedBox(height: 70.h),
                   ButtonWidget(

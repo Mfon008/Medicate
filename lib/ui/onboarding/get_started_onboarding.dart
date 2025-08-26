@@ -64,7 +64,7 @@ class GetStartedOnboarding extends StatelessWidget {
                             child: Image.asset(
                               AppImage.mc,
                               fit: BoxFit.cover,
-                              width: 260.w,
+                              width: 280.w,
                               height: 280.h,
                             ),
                           ),
@@ -77,7 +77,7 @@ class GetStartedOnboarding extends StatelessWidget {
                   TextView(
                     text: '👋 Hi there, Welcome to Medicate!',
                     textStyle: TextStyle(
-                      // fontFamily: 'GoogleSans',
+                      fontFamily: 'GoogleSans',
                       letterSpacing: 0,
                       fontWeight: FontWeight.w700,
                       fontSize: 17.0.sp,

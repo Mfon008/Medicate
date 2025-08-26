@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
             appBar: AppBar(
               backgroundColor: AppColors.white,
               leading: Container(
-                margin: EdgeInsets.only(left: 7.8.w),
+                margin: EdgeInsets.only(left: 10.4.w),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppColors.inactive.withOpacity(.1),
@@ -44,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: SvgPicture.asset(
                     AppImage.burger,
                     color: AppColors.primary,
+                    height: 12.h,
+                    width: 12.w,
                   ),
                   onPressed: () => navigate.navigateTo(
                     Routes.moreScreen,
@@ -58,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
               centerTitle: true,
               actions: [
                 Padding(
-                  padding: EdgeInsets.all(4.4.w),
+                  padding: EdgeInsets.all(4.8.w),
                   child: Container(
                     margin: EdgeInsets.only(right: 4.w),
                     decoration: BoxDecoration(
@@ -69,8 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: IconButton(
                       icon: SvgPicture.asset(
                         AppImage.bell,
-                        width: 26,
-                        height: 26,
+                        height: 22.h,
+                        width: 22.w,
                         color: AppColors.primary,
                       ),
                       onPressed: () {},
@@ -90,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 15.8.w,
+                        horizontal: 12.8.w,
                         vertical: 22.w,
                       ),
                       child: Column(
@@ -463,6 +465,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
+          // SvgPicture.asset(
+          //   AppImage.curved_arrow,
+          //   width: 10.20.w,
+          //   height: 10.20.h,
+          // ),
           SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
           SizedBox(width: 6.10.w),
           Flexible(

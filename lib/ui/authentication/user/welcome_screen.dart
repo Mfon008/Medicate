@@ -77,7 +77,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   color: AppColors.black,
                 ),
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 3.70.h),
               TextView(
                 text: 'Enter your 4 digit pin to continue',
                 textStyle: TextStyle(

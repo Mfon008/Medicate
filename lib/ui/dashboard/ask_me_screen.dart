@@ -23,22 +23,29 @@ class AskMeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         leading: Container(
-          margin: EdgeInsets.only(left: 7.8.w),
+          margin: EdgeInsets.only(left: 10.4.w),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.inactive.withOpacity(.1),
             border: Border.all(color: AppColors.inactive),
           ),
           child: IconButton(
-            icon: SvgPicture.asset(AppImage.burger, color: AppColors.primary),
-            onPressed: () => navigate.navigateTo(Routes.moreScreen),
+            icon: SvgPicture.asset(
+              AppImage.burger,
+              color: AppColors.primary,
+              height: 12.h,
+              width: 12.w,
+            ),
+            onPressed: () => navigate.navigateTo(
+              Routes.moreScreen,
+            ), // makes ripple effect round
           ),
         ),
         title: SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.all(4.4.w),
+            padding: EdgeInsets.all(4.8.w),
             child: Container(
               margin: EdgeInsets.only(right: 4.w),
               decoration: BoxDecoration(
@@ -49,8 +56,8 @@ class AskMeScreen extends StatelessWidget {
               child: IconButton(
                 icon: SvgPicture.asset(
                   AppImage.bell,
-                  width: 26,
-                  height: 26,
+                  height: 22.h,
+                  width: 22.w,
                   color: AppColors.primary,
                 ),
                 onPressed: () {},
@@ -60,6 +67,7 @@ class AskMeScreen extends StatelessWidget {
           ),
         ],
       ),
+
       body: SafeArea(
         child: Column(
           children: [
@@ -83,9 +91,9 @@ class AskMeScreen extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(12.r),
-                            topRight: Radius.circular(12.r),
-                            bottomLeft: Radius.circular(12.r),
+                            topLeft: Radius.circular(24.r),
+                            topRight: Radius.circular(24.r),
+                            bottomLeft: Radius.circular(24.r),
                           ),
                           color: AppColors.skyBlue,
                           border: Border.all(
@@ -107,6 +115,7 @@ class AskMeScreen extends StatelessWidget {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                             padding: EdgeInsets.all(14.w),
@@ -146,6 +155,7 @@ class AskMeScreen extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(18.w),
+              margin: EdgeInsets.symmetric(horizontal: 16.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22.r),
                 color: AppColors.white,

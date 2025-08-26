@@ -40,7 +40,7 @@ class AuthViewModel extends BaseViewModel {
       );
       _isLoading = false;
       if(_loginResponseModel?.statusCode==201){
-         await AppUtils.snackbar(context, message: 'Your login is successful.!');
+         await AppUtils.snackbar(context, message: 'Your login is successful..!');
       }
      
       // navigate.navigateTo(Routes.dashboard);

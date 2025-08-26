@@ -77,7 +77,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 30.h, width: 30.w),
                 ],
               ),
-              SizedBox(height: 26.0.h),
+              SizedBox(height: 28.0.h),
               TextView(
                 text: 'Welcome to Medicate',
                 textStyle: TextStyle(
@@ -87,7 +87,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   color: AppColors.black,
                 ),
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 4.10.h),
               TextView(
                 text:
                     'Your journey to better health starts here. Enter your phone number and name to get started',
@@ -241,56 +241,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               SizedBox(height: 16.h),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Transform.scale(
-                      alignment: Alignment.centerRight,
-                      scale: isTablet(context) ? 1.5 : 1.1,
-                      child: Checkbox(
-                        value: isChecked,
-                        onChanged: (value) {
-                          setState(() {
-                            isChecked = value ?? false;
-                          });
-                        },
-                        activeColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            4,
-                          ), // Matches your screenshot style
-                        ),
+                  Transform.scale(
+                    scale: isTablet(context) ? 1.5 : 1.1,
+                    child: Checkbox(
+                      value: isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          isChecked = value ?? false;
+                        });
+                      },
+                      activeColor: AppColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
                       ),
+                      visualDensity:
+                          VisualDensity.compact, // 👈 reduces internal padding
                     ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w400,
+                  ), // 👈 small spacing you control
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        children: [
+                          const TextSpan(text: "I agree to the "),
+                          TextSpan(
+                            text: "Terms of Use",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()..onTap = () {},
+                          ),
+                          const TextSpan(text: " and "),
+                          TextSpan(
+                            text: "Privacy Policy",
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()..onTap = () {},
+                          ),
+                        ],
                       ),
-                      children: [
-                        const TextSpan(text: "I agree to the "),
-                        TextSpan(
-                          text: "Terms of Use",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            decoration: TextDecoration.underline,
-                          ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
-                        ),
-                        const TextSpan(text: " and "),
-                        TextSpan(
-                          text: "Privacy Policy",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            decoration: TextDecoration.underline,
-                          ),
-                          recognizer: TapGestureRecognizer()..onTap = () {},
-                        ),
-                      ],
                     ),
                   ),
                 ],

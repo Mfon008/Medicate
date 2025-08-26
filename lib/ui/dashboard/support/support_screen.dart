@@ -63,7 +63,7 @@ class SupportScreen extends StatelessWidget {
                         'Click the link “Join Chat” above to join the Whatsapp group for more Information.',
                   ),
                   conContainer(
-                    icon: AppImage.phone,
+                    icon: AppImage.message,
                     text1: 'Product@medicate.com',
                     text2:
                         'Email us directly if you need any help. Our Agents will help you.',
@@ -164,7 +164,7 @@ class SupportScreen extends StatelessWidget {
   }
 
   conContainer({String? icon, String? text1, String? text2}) => Container(
-    margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.w),
+    margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.12.w),
     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.w),
     decoration: BoxDecoration(
       color: AppColors.primary.withOpacity(.03),
@@ -194,14 +194,39 @@ class SupportScreen extends StatelessWidget {
             SizedBox(height: 5.10.h),
             SizedBox(
               width: 200.w,
-              child: TextView(
-                text: text2 ?? '',
-                textStyle: TextStyle(
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.black,
-                ),
-              ),
+              child: text1 == 'Join Chat'
+                  ? RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: 13.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                        children: [
+                          const TextSpan(text: 'Click the link “'),
+                          TextSpan(
+                            text: 'Join Chat',
+                            style: TextStyle(
+                              decoration: TextDecoration
+                                  .underline, // 👈 underline only this
+                              color: AppColors.black,
+                            ),
+                          ),
+                          const TextSpan(
+                            text:
+                                '” above to join the Whatsapp group for more Information.',
+                          ),
+                        ],
+                      ),
+                    )
+                  : TextView(
+                      text: text2 ?? '',
+                      textStyle: TextStyle(
+                        fontSize: 13.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
             ),
           ],
         ),
