@@ -43,9 +43,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-
         dobController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
-        print(dobController.text);
       });
     }
   }
