@@ -68,7 +68,7 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
               TextView(
                 text: 'Reset PIN',
                 textStyle: TextStyle(
-                  // fontFamily: 'GoogleSans',
+                  fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,

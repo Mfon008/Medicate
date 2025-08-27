@@ -143,7 +143,7 @@ class TextFormWidget extends StatelessWidget {
             fillColor: fillColor,
             focusColor: AppColors.black,
             alignLabelWithHint: alignLabelWithHint,
-            contentPadding: EdgeInsets.fromLTRB(20.w, 10.w, 20.w, 10.w),
+            contentPadding: EdgeInsets.fromLTRB(20.w, 12.60.w, 20.w, 12.60.w),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.r),
               borderSide: BorderSide(width: 1.w, color: AppColors.transparent),

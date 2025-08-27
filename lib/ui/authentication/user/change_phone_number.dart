@@ -52,7 +52,7 @@ class _ChangePhoneNumberState extends State<ChangePhoneNumber> {
               TextView(
                 text: 'Change Phone Number',
                 textStyle: TextStyle(
-                  // fontFamily: 'GoogleSans',
+                  fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,

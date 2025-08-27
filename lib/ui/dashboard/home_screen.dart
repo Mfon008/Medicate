@@ -97,55 +97,60 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: Column(
                         children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 4.0.w),
-                            padding: EdgeInsets.symmetric(
-                              vertical: 12.w,
-                              horizontal: 14.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: AppColors.yellow),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  color: AppColors.yellow,
-                                  size: 20.sp,
-                                ),
-                                SizedBox(width: 12.w),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextView(
-                                      text: 'Complete Registration',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
+                          GestureDetector(
+                            onTap: () =>
+                                navigate.navigateTo(Routes.profileScreen),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 4.0.w),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 12.w,
+                                horizontal: 14.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(12.r),
+                                border: Border.all(color: AppColors.yellow),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.info_outline,
+                                    color: AppColors.yellow,
+                                    size: 20.sp,
+                                  ),
+                                  SizedBox(width: 12.w),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextView(
+                                        text: 'Complete Registration',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 15.2.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.black,
+                                        ),
                                       ),
-                                    ),
-                                    TextView(
-                                      text: 'Please enter your new PIN.',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.infoGrey,
+                                      TextView(
+                                        text: 'Please enter your new PIN.',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 13.2.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.infoGrey,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                SvgPicture.asset(
-                                  AppImage.arrow_forward,
-                                  width: 14.20.w,
-                                  height: 14.20.w,
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  Spacer(),
+                                  SvgPicture.asset(
+                                    AppImage.arrow_forward,
+                                    width: 14.20.w,
+                                    height: 14.20.w,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           SizedBox(height: 24.h),
@@ -340,109 +345,186 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
+                          SizedBox(height: 30.h),
+                          Container(
+                            width: double.infinity.w,
+                            padding: EdgeInsets.all(18.w),
+                            // margin: EdgeInsets.symmetric(
+                            //   horizontal: 15.8.w,
+                            //   vertical: 22.w,
+                            // ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(22.r),
+                              color: AppColors.white,
+                            ),
+                            child: Form(
+                              key: formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AiTextFormWidget(
+                                    label: 'Chat with Medicate AI....',
+                                    validator: AppValidator.validateString(),
+                                    onChange: (p0) {
+                                      setState(() {
+                                        chatText = p0;
+                                      });
+                                    },
+                                    labelStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  SizedBox(height: 26.h),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppImage.audio,
+                                        width: 22.w,
+                                        height: 22.h,
+                                      ),
+                                      Spacer(),
+                                      SvgPicture.asset(
+                                        AppImage.clipper,
+                                        color: AppColors.black,
+                                        width: 22.w,
+                                        height: 22.h,
+                                      ),
+                                      SizedBox(width: 20.w),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            isTappToChat = !isTappToChat;
+                                            chatText = chatText;
+                                            setState(() {});
+                                          }
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(14.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.primary,
+                                          ),
+                                          child: SvgPicture.asset(
+                                            AppImage.arrow_up,
+                                            width: 20.w,
+                                            height: 17.20.h,
+                                            color: AppColors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           SizedBox(height: 100.h),
                         ],
                       ),
                     ),
                   ),
-                  isTapOnScreenOrChatButt
-                      ? Container(
-                          width: double.infinity.w,
-                          padding: EdgeInsets.all(18.w),
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 15.8.w,
-                            vertical: 22.w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(22.r),
-                            color: AppColors.white,
-                          ),
-                          child: Form(
-                            key: formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AiTextFormWidget(
-                                  label: 'Chat with Medicate AI....',
-                                  validator: AppValidator.validateString(),
-                                  onChange: (p0) {
-                                    setState(() {
-                                      chatText = p0;
-                                    });
-                                  },
-                                  labelStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 15.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                ),
-                                SizedBox(height: 26.h),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      AppImage.audio,
-                                      width: 22.w,
-                                      height: 22.h,
-                                    ),
-                                    Spacer(),
-                                    SvgPicture.asset(
-                                      AppImage.clipper,
-                                      color: AppColors.black,
-                                      width: 22.w,
-                                      height: 22.h,
-                                    ),
-                                    SizedBox(width: 20.w),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (formKey.currentState!.validate()) {
-                                          isTappToChat = !isTappToChat;
-                                          chatText = chatText;
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(14.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.primary,
-                                        ),
-                                        child: SvgPicture.asset(
-                                          AppImage.arrow_up,
-                                          width: 20.w,
-                                          height: 17.20.h,
-                                          color: AppColors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Align(
-                          alignment: Alignment.bottomRight,
-                          child: GestureDetector(
-                            onTap: () => setState(() {
-                              isTapOnScreenOrChatButt = true;
-                            }),
-                            child: Container(
-                              padding: EdgeInsets.all(14.w),
-                              margin: EdgeInsets.only(right: 22.w),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.primary,
-                              ),
-                              child: SvgPicture.asset(
-                                AppImage.chat_support,
-                                width: 24.w,
-                                height: 22.0.h,
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                  // isTapOnScreenOrChatButt
+                  //     ? Container(
+                  //         width: double.infinity.w,
+                  //         padding: EdgeInsets.all(18.w),
+                  //         margin: EdgeInsets.symmetric(
+                  //           horizontal: 15.8.w,
+                  //           vertical: 22.w,
+                  //         ),
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(22.r),
+                  //           color: AppColors.white,
+                  //         ),
+                  //         child: Form(
+                  //           key: formKey,
+                  //           child: Column(
+                  //             mainAxisSize: MainAxisSize.min,
+                  //             children: [
+                  //               AiTextFormWidget(
+                  //                 label: 'Chat with Medicate AI....',
+                  //                 validator: AppValidator.validateString(),
+                  //                 onChange: (p0) {
+                  //                   setState(() {
+                  //                     chatText = p0;
+                  //                   });
+                  //                 },
+                  //                 labelStyle: TextStyle(
+                  //                   fontFamily: 'Arial',
+                  //                   fontSize: 15.2.sp,
+                  //                   fontWeight: FontWeight.w400,
+                  //                   color: AppColors.infoGrey,
+                  //                 ),
+                  //               ),
+                  //               SizedBox(height: 26.h),
+                  //               Row(
+                  //                 children: [
+                  //                   SvgPicture.asset(
+                  //                     AppImage.audio,
+                  //                     width: 22.w,
+                  //                     height: 22.h,
+                  //                   ),
+                  //                   Spacer(),
+                  //                   SvgPicture.asset(
+                  //                     AppImage.clipper,
+                  //                     color: AppColors.black,
+                  //                     width: 22.w,
+                  //                     height: 22.h,
+                  //                   ),
+                  //                   SizedBox(width: 20.w),
+                  //                   GestureDetector(
+                  //                     onTap: () {
+                  //                       if (formKey.currentState!.validate()) {
+                  //                         isTappToChat = !isTappToChat;
+                  //                         chatText = chatText;
+                  //                         setState(() {});
+                  //                       }
+                  //                     },
+                  //                     child: Container(
+                  //                       padding: EdgeInsets.all(14.w),
+                  //                       decoration: BoxDecoration(
+                  //                         shape: BoxShape.circle,
+                  //                         color: AppColors.primary,
+                  //                       ),
+                  //                       child: SvgPicture.asset(
+                  //                         AppImage.arrow_up,
+                  //                         width: 20.w,
+                  //                         height: 17.20.h,
+                  //                         color: AppColors.white,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       )
+                  //     : Align(
+                  //         alignment: Alignment.bottomRight,
+                  //         child: GestureDetector(
+                  //           onTap: () => setState(() {
+                  //             isTapOnScreenOrChatButt = true;
+                  //           }),
+                  //           child: Container(
+                  //             padding: EdgeInsets.all(14.w),
+                  //             margin: EdgeInsets.only(right: 22.w),
+                  //             decoration: BoxDecoration(
+                  //               shape: BoxShape.circle,
+                  //               color: AppColors.primary,
+                  //             ),
+                  //             child: SvgPicture.asset(
+                  //               AppImage.chat_support,
+                  //               width: 24.w,
+                  //               height: 22.0.h,
+                  //               color: AppColors.white,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
                   SizedBox(height: 22.20.h),
                 ],
               ),
@@ -465,11 +547,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Row(
         children: [
-          // SvgPicture.asset(
-          //   AppImage.curved_arrow,
-          //   width: 10.20.w,
-          //   height: 10.20.h,
-          // ),
+          SvgPicture.asset(
+            AppImage.curved_arrow,
+            width: 10.20.w,
+            height: 10.20.h,
+          ),
+          SizedBox(width: 6.10.w),
           SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
           SizedBox(width: 6.10.w),
           Flexible(

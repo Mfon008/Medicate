@@ -71,7 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               TextView(
                 text: 'Welcome back, Ben',
                 textStyle: TextStyle(
-                  // fontFamily: 'GoogleSans',
+                  fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,

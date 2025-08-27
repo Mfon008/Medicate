@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
@@ -29,6 +30,25 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
 
   bool isPhone = false;
   bool isPhoneValid = false;
+  DateTime?
+  _selectedDate; // Use nullable DateTime to handle no selection initially
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(), // Initial date shown
+      firstDate: DateTime(1900), // Earliest selectable date
+      lastDate: DateTime(2100), // Latest selectable date
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+
+        dobController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+        print(dobController.text);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +128,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                       ),
 
                       TextView(
-                        text: 'Change Photo',
+                        text: 'Change',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14.2.sp,
@@ -240,7 +260,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'YYYY/MM/DD',
-
+                    readOnly: true,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -253,7 +273,10 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                     validator: AppValidator.validateString(),
                     suffixWidget: Padding(
                       padding: EdgeInsets.all(14.10.w),
-                      child: SvgPicture.asset(AppImage.calendar),
+                      child: GestureDetector(
+                        onTap: () => _selectDate(context),
+                        child: SvgPicture.asset(AppImage.calendar),
+                      ),
                     ),
                   ),
                   SizedBox(height: 20.h),

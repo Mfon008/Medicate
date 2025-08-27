@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextView(
                 text: 'Welcome to Medicate',
                 textStyle: TextStyle(
-                  // fontFamily: 'GoogleSans',
+                  fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,

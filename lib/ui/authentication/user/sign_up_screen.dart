@@ -81,7 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               TextView(
                 text: 'Welcome to Medicate',
                 textStyle: TextStyle(
-                  // fontFamily: 'GoogleSans',
+                  fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,
@@ -465,7 +465,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           TextView(
                             text: 'Verify Phone Number',
                             textStyle: TextStyle(
-                              // fontFamily: 'GoogleSans',
+                              fontFamily: 'GoogleSans',
                               fontSize: 16.20.sp,
                               fontWeight: FontWeight.w700,
                               color: AppColors.black,

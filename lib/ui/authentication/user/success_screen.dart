@@ -26,7 +26,7 @@ class SuccessScreen extends StatelessWidget {
             TextView(
               text: 'PIN Reset Successful!',
               textStyle: TextStyle(
-                // fontFamily: 'GoogleSans',
+                fontFamily: 'GoogleSans',
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
                 color: AppColors.black,

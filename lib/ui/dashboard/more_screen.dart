@@ -8,10 +8,13 @@ import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 
+import '../../core/app_assets/app_validation.dart';
+import '../widget/button.dart';
 import '../widget/text.dart';
+import '../widget/text_form_widget.dart';
 
 class MoreScreen extends StatefulWidget {
-  MoreScreen({super.key});
+  const MoreScreen({super.key});
 
   @override
   State<MoreScreen> createState() => _MoreScreenState();
@@ -24,6 +27,11 @@ class _MoreScreenState extends State<MoreScreen> {
   ];
 
   String selectHistory = '';
+
+  GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
+
+  TextEditingController monthController = TextEditingController();
+  TextEditingController yearController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +105,13 @@ class _MoreScreenState extends State<MoreScreen> {
                     color: AppColors.black,
                   ),
                 ),
-                SvgPicture.asset(
-                  AppImage.filter,
-                  height: 16.20.h,
-                  width: 12.22.w,
+                GestureDetector(
+                  onTap: () => _modalBottomSheetMenu(),
+                  child: SvgPicture.asset(
+                    AppImage.filter,
+                    height: 16.20.h,
+                    width: 12.22.w,
+                  ),
                 ),
               ],
             ),
@@ -203,4 +214,179 @@ class _MoreScreenState extends State<MoreScreen> {
           ),
         ),
       );
+
+  void _modalBottomSheetMenu() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: AppColors.white,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false, // 👈 allows proper layout
+          builder: (context, scrollController) {
+            return SafeArea(
+              child: SingleChildScrollView(
+                controller: scrollController, // 👈 critical
+                padding: EdgeInsets.symmetric(
+                  vertical: 13.20.w,
+                  horizontal: 20.w,
+                ),
+                child: Form(
+                  key: formKeyValidate,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // --- your content ---
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(width: 50.w),
+                          TextView(
+                            text: 'Filter Search',
+                            textStyle: TextStyle(
+                              fontSize: 16.2.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.black,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => navigate.back(),
+                            icon: SvgPicture.asset(AppImage.cancel),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30.h),
+
+                      // --- Month & Year inputs ---
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            // 👈 use Flexible instead of Expanded
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Month',
+                                  textStyle: TextStyle(
+                                    fontSize: 16.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                TextFormWidget(
+                                  label: 'Month',
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  fillColor: AppColors.dashboard,
+                                  isFilled: true,
+                                  controller: monthController,
+                                  validator: AppValidator.validateString(),
+                                  suffixWidget: Padding(
+                                    padding: EdgeInsets.all(14.20.w),
+                                    child: SvgPicture.asset(
+                                      AppImage.arrow_down,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 20.w),
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Year',
+                                  textStyle: TextStyle(
+                                    fontSize: 16.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                TextFormWidget(
+                                  label: 'Year',
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  fillColor: AppColors.dashboard,
+                                  isFilled: true,
+                                  controller: yearController,
+                                  validator: AppValidator.validateString(),
+                                  suffixWidget: Padding(
+                                    padding: EdgeInsets.all(14.20.w),
+                                    child: SvgPicture.asset(
+                                      AppImage.arrow_down,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20.h),
+
+                      // --- Reset link ---
+                      TextView(
+                        text: 'Reset filter',
+                        textStyle: TextStyle(
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(height: 50.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.dashboard,
+                              buttonText: 'Cancel',
+                              color: AppColors.black,
+                              buttonBorderColor: AppColors.transparent,
+                              onPressed: () => navigate.back(),
+                            ),
+                          ),
+                          SizedBox(width: 20.w),
+                          Flexible(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.primary,
+                              buttonText: 'Apply',
+                              color: AppColors.white,
+                              buttonBorderColor: AppColors.transparent,
+                              onPressed: () {
+                                // if (formKeyValidate.currentState!.validate()) {
+                                //   navigate.navigateTo(Routes.setupPinScreen);
+                                // }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 }

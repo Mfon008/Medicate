@@ -62,7 +62,7 @@ class _ForgotPinScreenState extends State<ForgotPinScreen> {
               TextView(
                 text: 'Forgot PIN?',
                 textStyle: TextStyle(
-                  // fontFamily: 'GoogleSans',
+                  fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,

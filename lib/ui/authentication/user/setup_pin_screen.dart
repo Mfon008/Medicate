@@ -70,7 +70,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
               TextView(
                 text: 'Set up your pin',
                 textStyle: TextStyle(
-                  // fontFamily: 'GoogleSans',
+                  fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,
