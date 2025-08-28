@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medicate_app/core/config/colors.dart';
+import 'package:medicate_app/core/route_class.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'core/core_folder/app/app.locator.dart';
 import 'core/core_folder/app/app.router.dart';
@@ -32,7 +33,9 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         ),
-        initialRoute: Routes.splashScreen,
+        initialRoute: AppRoutes().returnAppRoutes(
+              SharedPreferencesService.instance,
+            ),
         navigatorKey: StackedService.navigatorKey,
         onGenerateRoute: StackedRouter().onGenerateRoute,
         debugShowCheckedModeBanner: false,

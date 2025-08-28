@@ -23,23 +23,14 @@ class SharedPreferencesService {
 
   static const String keyAuthToken = 'auth_token';
   static const String keyAuthRefreshToken = 'auth_refresh_token';
-  static const String logginKey = 'loggin';
   static const String verified = 'verify';
   static const String kycVerified = 'kyc_verify';
   static const String is_login = 'is_login';
   static const String is_sign_up = 'is_sign_up';
-  static const String notifiedKey = 'notify';
   static const String userData = 'user';
-  static const String chatData = 'chat';
-  static const String processData = 'process';
-  static const String cancelData = 'cancel';
-  static const String completeData = 'complete';
 
   String get authToken => sharedPreferences?.getString(keyAuthToken) ?? '';
   String get authRefreshoken => sharedPreferences?.getString(keyAuthRefreshToken) ?? '';
-
-  bool get isNotified => sharedPreferences?.getBool(notifiedKey) ?? false;
-  bool get isLoggedIn => sharedPreferences?.getBool(logginKey) ?? false;
   bool get isLogin => sharedPreferences?.getBool(is_login) ?? false;
   bool get isSignUp => sharedPreferences?.getBool(is_sign_up) ?? false;
   bool get isVerified => sharedPreferences?.getBool(verified) ?? false;
@@ -52,8 +43,6 @@ class SharedPreferencesService {
     return {};
   }
 
-  set isLoggedIn(bool logging) =>
-      sharedPreferences?.setBool(logginKey, logging);
   set isLogin(bool isLogin) =>
       sharedPreferences?.setBool(is_login, isLogin);
   set isSignUp(bool isSignUp) =>
@@ -61,8 +50,6 @@ class SharedPreferencesService {
   set isVerified(bool verify) => sharedPreferences?.setBool(verified, verify);
   set isKycVerified(bool verifyKyc) =>
       sharedPreferences?.setBool(kycVerified, verifyKyc);
-  set isNotified(bool notify) =>
-      sharedPreferences?.setBool(notifiedKey, notify);
   set authToken(String authToken) =>
       sharedPreferences?.setString(keyAuthToken, authToken);
   set authRefreshToken(String authRefreshToken) =>
@@ -70,9 +57,6 @@ class SharedPreferencesService {
 
   set usersData(Map<String, dynamic>? map) =>
       sharedPreferences?.setString(userData, json.encode(map));
-
-  set chatsData(Map<String, dynamic>? map) =>
-      sharedPreferences?.setString(chatData, json.encode(map));
 
   Future<bool> logOut(role) async {
     try {

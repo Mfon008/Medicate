@@ -181,7 +181,8 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const WelcomeScreenArguments(),
       );
       return _i19.MaterialPageRoute<dynamic>(
-        builder: (context) => _i9.WelcomeScreen(key: args.key),
+        builder: (context) =>
+            _i9.WelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
       );
     },
@@ -437,24 +438,26 @@ class LoginScreenArguments {
 }
 
 class WelcomeScreenArguments {
-  const WelcomeScreenArguments({this.key});
+  const WelcomeScreenArguments({this.key, this.phone});
 
   final _i19.Key? key;
 
+  final String? phone;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "phone": "$phone"}';
   }
 
   @override
   bool operator ==(covariant WelcomeScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.phone == phone;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ phone.hashCode;
   }
 }
 
@@ -788,6 +791,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
 
   Future<dynamic> navigateToWelcomeScreen({
     _i19.Key? key,
+    String? phone,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -796,7 +800,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.welcomeScreen,
-      arguments: WelcomeScreenArguments(key: key),
+      arguments: WelcomeScreenArguments(key: key, phone: phone),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -1096,6 +1100,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
 
   Future<dynamic> replaceWithWelcomeScreen({
     _i19.Key? key,
+    String? phone,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1104,7 +1109,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.welcomeScreen,
-      arguments: WelcomeScreenArguments(key: key),
+      arguments: WelcomeScreenArguments(key: key, phone: phone),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

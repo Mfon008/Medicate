@@ -28,7 +28,7 @@ class AuthRepoImpl {
   Future<LoginResponseModel> signIn(LoginEntityModel signInEntity) async {
     final response = await _contract.login(signInEntity);
     _chache(response);
-    _session.isLoggedIn = true;
+    _session.isLogin = true;
     return response;
   }
 
@@ -97,16 +97,16 @@ class AuthRepoImpl {
   Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async {
     final response = await _contract.setPin(setPinEntity);
     _chache(response);
-    _session.isLoggedIn = true;
+    _session.isLogin = true;
     return response;
   }
 
   void _chache(data) {
     if (data != null) {
-      print('datatata printing::: ${data.data.toJson()}');
+    
       _session.authToken = data.data.tokens.accessToken;
       _session.authRefreshToken = data.data.tokens.refreshToken;
-      // _session.usersData = data.toJson();
+      _session.usersData = data.data.toJson();
     }
   }
 }

@@ -86,11 +86,10 @@ class AuthViewModel extends BaseViewModel {
       if (_loginResponseModel?.statusCode == 201) {
         await AppUtils.snackbar(
           context,
-          message: 'Your login is successful..!',
+          message: _loginResponseModel?.message ?? '',
         );
+        navigate.navigateTo(Routes.dashboard);
       }
-
-      // navigate.navigateTo(Routes.dashboard);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
