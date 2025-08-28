@@ -1,6 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
@@ -33,6 +34,7 @@ class AuthRepoImpl {
 
   Future<SignUpResponseModel> signUp(SignUpEntityModel signUpEntity) async {
     final response = await _contract.signUp(signUpEntity);
+    _session.isSignUp = true;
     return response;
   }
 
@@ -41,10 +43,11 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<VerifyPassOtpRespnseModel> verifyPhoneOtp(
+  Future<VerifyOtpResponseModel> verifyPhoneOtp(
     VerifyPhoneEntityModel verifyPhoneOtp,
   ) async {
     final response = await _contract.verifyPhoneOtp(verifyPhoneOtp);
+    _chache(response);
     return response;
   }
 
@@ -55,7 +58,9 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<VerifyPassOtpRespnseModel> verifyForgotPassword(VerifyPhoneEntityModel verifyPhoneEntity) async {
+  Future<VerifyPassOtpRespnseModel> verifyForgotPassword(
+    VerifyPhoneEntityModel verifyPhoneEntity,
+  ) async {
     final response = await _contract.verifyForgotPassword(verifyPhoneEntity);
     return response;
   }
@@ -65,17 +70,21 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<ChangePhoneNoResponseModel> changePhoneNo(ResendOtpEntityModel changePhoneNo) async {
+  Future<ChangePhoneNoResponseModel> changePhoneNo(
+    ResendOtpEntityModel changePhoneNo,
+  ) async {
     final response = await _contract.changePhoneNo(changePhoneNo);
     return response;
   }
 
-  Future<ChangePinResponseModel> changePin(ChangePinEntityModel changePin) async {
+  Future<ChangePinResponseModel> changePin(
+    ChangePinEntityModel changePin,
+  ) async {
     final response = await _contract.changePin(changePin);
     return response;
   }
 
-  Future<dynamic> refreshToken() async{
+  Future<dynamic> refreshToken() async {
     final response = await _contract.refreshToken();
     return response;
   }
@@ -85,7 +94,7 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async{
+  Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async {
     final response = await _contract.setPin(setPinEntity);
     _chache(response);
     _session.isLoggedIn = true;
@@ -94,8 +103,9 @@ class AuthRepoImpl {
 
   void _chache(data) {
     if (data != null) {
-      print('datatata printing::: $data');
-      _session.authToken = data.jwt;
+      print('datatata printing::: ${data.data.toJson()}');
+      _session.authToken = data.data.tokens.accessToken;
+      _session.authRefreshToken = data.data.tokens.refreshToken;
       // _session.usersData = data.toJson();
     }
   }

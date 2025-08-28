@@ -11,6 +11,7 @@ import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_p
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
+import '../connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
 import '../core_folder/app/app.locator.dart';
@@ -69,7 +70,7 @@ class AuthApi {
     }
   }
 
-  Future<VerifyPassOtpRespnseModel> verifyPhoneOtp(
+  Future<VerifyOtpResponseModel> verifyPhoneOtp(
     VerifyPhoneEntityModel verifyPhoneOtp,
   ) async {
     try {
@@ -79,7 +80,7 @@ class AuthApi {
         data: verifyPhoneOtp.toJson(),
       );
       logger.d(response.data);
-      return VerifyPassOtpRespnseModel.fromJson(response.data);
+      return VerifyOtpResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

@@ -5,6 +5,7 @@ import 'package:medicate_app/core/config/colors.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'core/core_folder/app/app.locator.dart';
 import 'core/core_folder/app/app.router.dart';
+import 'core/core_folder/manager/shared_preference.dart';
 
 final navigate = locator<NavigationService>();
 
@@ -16,6 +17,7 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
   setupLocator();
+  await locator<SharedPreferencesService>().initilize();
   runApp(const MyApp());
 }
 

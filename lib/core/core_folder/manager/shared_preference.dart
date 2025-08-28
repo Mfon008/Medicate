@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,11 +22,12 @@ class SharedPreferencesService {
   }
 
   static const String keyAuthToken = 'auth_token';
+  static const String keyAuthRefreshToken = 'auth_refresh_token';
   static const String logginKey = 'loggin';
   static const String verified = 'verify';
   static const String kycVerified = 'kyc_verify';
-  // ignore: constant_identifier_names
-  static const String is_first_login = 'is_first_login';
+  static const String is_login = 'is_login';
+  static const String is_sign_up = 'is_sign_up';
   static const String notifiedKey = 'notify';
   static const String userData = 'user';
   static const String chatData = 'chat';
@@ -33,10 +36,12 @@ class SharedPreferencesService {
   static const String completeData = 'complete';
 
   String get authToken => sharedPreferences?.getString(keyAuthToken) ?? '';
+  String get authRefreshoken => sharedPreferences?.getString(keyAuthRefreshToken) ?? '';
 
   bool get isNotified => sharedPreferences?.getBool(notifiedKey) ?? false;
   bool get isLoggedIn => sharedPreferences?.getBool(logginKey) ?? false;
-  bool get isFirstLogin => sharedPreferences?.getBool(is_first_login) ?? false;
+  bool get isLogin => sharedPreferences?.getBool(is_login) ?? false;
+  bool get isSignUp => sharedPreferences?.getBool(is_sign_up) ?? false;
   bool get isVerified => sharedPreferences?.getBool(verified) ?? false;
   bool get isKycVerified => sharedPreferences?.getBool(kycVerified) ?? false;
   Map<String, dynamic> get usersData {
@@ -49,8 +54,10 @@ class SharedPreferencesService {
 
   set isLoggedIn(bool logging) =>
       sharedPreferences?.setBool(logginKey, logging);
-  set isFirstLogin(bool isLog) =>
-      sharedPreferences?.setBool(is_first_login, isLog);
+  set isLogin(bool isLogin) =>
+      sharedPreferences?.setBool(is_login, isLogin);
+  set isSignUp(bool isSignUp) =>
+      sharedPreferences?.setBool(is_sign_up, isSignUp);
   set isVerified(bool verify) => sharedPreferences?.setBool(verified, verify);
   set isKycVerified(bool verifyKyc) =>
       sharedPreferences?.setBool(kycVerified, verifyKyc);
@@ -58,6 +65,8 @@ class SharedPreferencesService {
       sharedPreferences?.setBool(notifiedKey, notify);
   set authToken(String authToken) =>
       sharedPreferences?.setString(keyAuthToken, authToken);
+  set authRefreshToken(String authRefreshToken) =>
+      sharedPreferences?.setString(keyAuthRefreshToken, authRefreshToken);
 
   set usersData(Map<String, dynamic>? map) =>
       sharedPreferences?.setString(userData, json.encode(map));

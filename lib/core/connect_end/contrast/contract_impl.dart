@@ -14,6 +14,7 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart' show SignUpResponseModel;
+import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
 
@@ -27,7 +28,7 @@ class AuthContractsImpl {
       await _api.signUp(signUpEntity);
   Future<dynamic> resendOtp(ResendOtpEntityModel resendOtpEntity) async =>
       await _api.resendOtp(resendOtpEntity);
-  Future<VerifyPassOtpRespnseModel> verifyPhoneOtp(
+  Future<VerifyOtpResponseModel> verifyPhoneOtp(
     VerifyPhoneEntityModel verifyPhoneOtp,
   ) async =>
       await _api.verifyPhoneOtp(verifyPhoneOtp);
