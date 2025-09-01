@@ -126,7 +126,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                       validator: AppValidator.validateOTP(),
                       onCompleted: (pin) {
-                        print('Entered PIN: $pin');
                         pinInput = pin;
                         setState(() {});
                       },

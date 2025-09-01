@@ -10,6 +10,7 @@ import 'package:medicate_app/core/connect_end/model/set_pin_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_pin_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
+import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
 import '../connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -55,7 +56,7 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> resendOtp(ResendOtpEntityModel resendOtpEntity) async {
+  Future<ResendOtpResponseModel> resendOtp(ResendOtpEntityModel resendOtpEntity) async {
     try {
       final response = await _service.call(
         UrlConfig.resend_otp,
@@ -63,7 +64,7 @@ class AuthApi {
         data: resendOtpEntity.toJson(),
       );
       logger.d(response.data);
-      return response.data;
+      return ResendOtpResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -87,7 +88,9 @@ class AuthApi {
     }
   }
 
-  Future<ForgotPasswordResponseModel> forgotPasword(ResendOtpEntityModel forgotPassword) async {
+  Future<ForgotPasswordResponseModel> forgotPasword(
+    ResendOtpEntityModel forgotPassword,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.forgot_password,
@@ -102,7 +105,9 @@ class AuthApi {
     }
   }
 
-  Future<VerifyPassOtpRespnseModel> verifyForgotPassword(VerifyPhoneEntityModel verifyPhoneEntity) async {
+  Future<VerifyPassOtpRespnseModel> verifyForgotPassword(
+    VerifyPhoneEntityModel verifyPhoneEntity,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.sign_up,
@@ -132,12 +137,14 @@ class AuthApi {
     }
   }
 
-  Future<ChangePhoneNoResponseModel> changePhoneNo(ResendOtpEntityModel changePhoneNo) async {
+  Future<ChangePhoneNoResponseModel> changePhoneNo(
+   { ResendOtpEntityModel? changePhoneNo, String? id}
+  ) async {
     try {
       final response = await _service.call(
-        UrlConfig.change_number,
+        '${UrlConfig.change_number}/$id',
         RequestMethod.patch,
-        data: changePhoneNo.toJson(),
+        data: changePhoneNo?.toJson(),
       );
       logger.d(response.data);
       return ChangePhoneNoResponseModel.fromJson(response.data);
@@ -146,8 +153,10 @@ class AuthApi {
       rethrow;
     }
   }
-  
-  Future<ChangePinResponseModel> changePin(ChangePinEntityModel changePin) async {
+
+  Future<ChangePinResponseModel> changePin(
+    ChangePinEntityModel changePin,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.change_pin,
@@ -161,7 +170,7 @@ class AuthApi {
       rethrow;
     }
   }
-  
+
   Future<dynamic> refreshToken() async {
     try {
       final response = await _service.call(
@@ -175,7 +184,7 @@ class AuthApi {
       rethrow;
     }
   }
-  
+
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
     try {
       final response = await _service.call(
@@ -189,7 +198,7 @@ class AuthApi {
       rethrow;
     }
   }
-  
+
   Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async {
     try {
       final response = await _service.call(

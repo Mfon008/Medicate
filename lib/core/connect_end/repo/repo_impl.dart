@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
-
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/contract_impl.dart';
@@ -12,6 +11,7 @@ import '../model/change_pin_response_model/change_pin_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
+import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
@@ -38,7 +38,7 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<dynamic> resendOtp(ResendOtpEntityModel resendOtpEntity) async {
+  Future<ResendOtpResponseModel> resendOtp(ResendOtpEntityModel resendOtpEntity) async {
     final response = await _contract.resendOtp(resendOtpEntity);
     return response;
   }
@@ -71,9 +71,9 @@ class AuthRepoImpl {
   }
 
   Future<ChangePhoneNoResponseModel> changePhoneNo(
-    ResendOtpEntityModel changePhoneNo,
+    {ResendOtpEntityModel? changePhoneNo,String? id}
   ) async {
-    final response = await _contract.changePhoneNo(changePhoneNo);
+    final response = await _contract.changePhoneNo(changePhoneNo:changePhoneNo,id:id);
     return response;
   }
 
@@ -103,7 +103,6 @@ class AuthRepoImpl {
 
   void _chache(data) {
     if (data != null) {
-    
       _session.authToken = data.data.tokens.accessToken;
       _session.authRefreshToken = data.data.tokens.refreshToken;
       _session.usersData = data.data.toJson();

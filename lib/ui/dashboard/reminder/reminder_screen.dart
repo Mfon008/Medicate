@@ -31,9 +31,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
             border: Border.all(color: AppColors.inactive),
           ),
           child: IconButton(
-            icon: SvgPicture.asset(AppImage.burger, color: AppColors.primary,
-                    height: 12.h,
-                    width: 12.w,),
+            icon: SvgPicture.asset(
+              AppImage.burger,
+              color: AppColors.primary,
+              height: 12.h,
+              width: 12.w,
+            ),
             onPressed: () => navigate.navigateTo(Routes.moreScreen),
           ),
         ),

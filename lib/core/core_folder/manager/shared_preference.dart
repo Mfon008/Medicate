@@ -30,7 +30,8 @@ class SharedPreferencesService {
   static const String userData = 'user';
 
   String get authToken => sharedPreferences?.getString(keyAuthToken) ?? '';
-  String get authRefreshoken => sharedPreferences?.getString(keyAuthRefreshToken) ?? '';
+  String get authRefreshoken =>
+      sharedPreferences?.getString(keyAuthRefreshToken) ?? '';
   bool get isLogin => sharedPreferences?.getBool(is_login) ?? false;
   bool get isSignUp => sharedPreferences?.getBool(is_sign_up) ?? false;
   bool get isVerified => sharedPreferences?.getBool(verified) ?? false;
@@ -43,8 +44,7 @@ class SharedPreferencesService {
     return {};
   }
 
-  set isLogin(bool isLogin) =>
-      sharedPreferences?.setBool(is_login, isLogin);
+  set isLogin(bool isLogin) => sharedPreferences?.setBool(is_login, isLogin);
   set isSignUp(bool isSignUp) =>
       sharedPreferences?.setBool(is_sign_up, isSignUp);
   set isVerified(bool verify) => sharedPreferences?.setBool(verified, verify);

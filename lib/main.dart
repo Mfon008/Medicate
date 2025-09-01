@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         ),
         initialRoute: AppRoutes().returnAppRoutes(
-              SharedPreferencesService.instance,
-            ),
+          SharedPreferencesService.instance,
+        ),
         navigatorKey: StackedService.navigatorKey,
         onGenerateRoute: StackedRouter().onGenerateRoute,
         debugShowCheckedModeBanner: false,

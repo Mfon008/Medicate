@@ -150,11 +150,9 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i6.ChangePhoneNumber: (data) {
-      final args = data.getArgs<ChangePhoneNumberArguments>(
-        orElse: () => const ChangePhoneNumberArguments(),
-      );
+      final args = data.getArgs<ChangePhoneNumberArguments>(nullOk: false);
       return _i19.MaterialPageRoute<dynamic>(
-        builder: (context) => _i6.ChangePhoneNumber(key: args.key),
+        builder: (context) => _i6.ChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
       );
     },
@@ -372,24 +370,26 @@ class SignUpScreenArguments {
 }
 
 class ChangePhoneNumberArguments {
-  const ChangePhoneNumberArguments({this.key});
+  const ChangePhoneNumberArguments({this.key, required this.id});
 
   final _i19.Key? key;
 
+  final String? id;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "id": "$id"}';
   }
 
   @override
   bool operator ==(covariant ChangePhoneNumberArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.id == id;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ id.hashCode;
   }
 }
 
@@ -737,6 +737,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
 
   Future<dynamic> navigateToChangePhoneNumber({
     _i19.Key? key,
+    required String? id,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -745,7 +746,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.changePhoneNumber,
-      arguments: ChangePhoneNumberArguments(key: key),
+      arguments: ChangePhoneNumberArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -1046,6 +1047,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
 
   Future<dynamic> replaceWithChangePhoneNumber({
     _i19.Key? key,
+    required String? id,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1054,7 +1056,7 @@ extension NavigatorStateExtension on _i20.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.changePhoneNumber,
-      arguments: ChangePhoneNumberArguments(key: key),
+      arguments: ChangePhoneNumberArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
