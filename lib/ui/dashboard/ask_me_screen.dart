@@ -152,59 +152,95 @@ class AskMeScreen extends StatelessWidget {
             ),
 
             // 👇 fixed input at bottom
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(18.w),
-              margin: EdgeInsets.symmetric(horizontal: 16.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22.r),
-                color: AppColors.white,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  AiTextFormWidget(
-                    label: 'Chat with Medicate AI....',
-                    labelStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 15.2.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.infoGrey,
-                    ),
+            Column(
+              children: [
+                SizedBox(height: 10.h),
+                Container(
+                  width: 130.w,
+                  padding: EdgeInsets.symmetric(vertical: 4.10.w),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.primary),
+                    borderRadius: BorderRadius.circular(22.r),
                   ),
-                  SizedBox(height: 18.20.h),
-                  Row(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(
-                        AppImage.audio,
-                        width: 22.w,
-                        height: 22.h,
-                      ),
-                      Spacer(),
-                      SvgPicture.asset(
-                        AppImage.clipper,
-                        color: AppColors.black,
-                        width: 22.w,
-                        height: 22.h,
-                      ),
-                      SizedBox(width: 20.w),
-                      Container(
-                        padding: EdgeInsets.all(14.w),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                      Icon(Icons.add, color: AppColors.primary, size: 26.sp),
+                      SizedBox(width: 6.10.w),
+                      TextView(
+                        text: 'New Chat',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w400,
                           color: AppColors.primary,
-                        ),
-                        child: SvgPicture.asset(
-                          AppImage.arrow_up,
-                          width: 20.w,
-                          height: 17.20.h,
-                          color: AppColors.white,
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+
+                SizedBox(height: 12.20.h),
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(
+                    top: 2.4.w,
+                    bottom: 8.w,
+                    left: 10.w,
+                    right: 10.w,
+                  ),
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.22.r),
+                    color: AppColors.white,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AiTextFormWidget(
+                        label: 'Chat with Medicate AI....',
+
+                        labelStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            AppImage.audio,
+                            width: 22.w,
+                            height: 22.h,
+                          ),
+                          Spacer(),
+                          SvgPicture.asset(
+                            AppImage.clipper,
+                            color: AppColors.black,
+                            width: 22.w,
+                            height: 22.h,
+                          ),
+                          SizedBox(width: 20.w),
+                          Container(
+                            padding: EdgeInsets.all(14.w),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.primary,
+                            ),
+                            child: SvgPicture.asset(
+                              AppImage.arrow_up,
+                              width: 20.w,
+                              height: 17.20.h,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 25.20.h),
           ],

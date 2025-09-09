@@ -1,4 +1,6 @@
-// ignore_for_file: unnecessary_null_comparison, deprecated_member_use, strict_top_level_inference
+// ignore_for_file: unnecessary_null_comparison, deprecated_member_use, strict_top_level_inference, unused_field
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -76,6 +78,21 @@ class AuthViewModel extends BaseViewModel {
       _verifyPassOtpRespnseModel;
 
   AuthViewModel({this.context});
+
+  Timer? _timer;
+  int _start = 60;
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (Timer timer) {
+      if (_start == 0) {
+        timer.cancel();
+      } else {
+        _start--;
+      }
+      notifyListeners();
+    });
+  }
 
   final defaultPinTheme = PinTheme(
     width: 50.w,
@@ -162,12 +179,15 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      if (_changePhoneNoResponseModel?.statusCode == 201) {
+      if (_changePhoneNoResponseModel?.statusCode == 200) {
         await AppUtils.snackbar(
           context,
           message: _changePhoneNoResponseModel?.message,
         );
-        navigate.navigateTo(Routes.setupPinScreen);
+        navigate.navigateTo(
+          Routes.resetPinScreen,
+          arguments: ResetPinScreenArguments(phone: resendOtpEntityModel.phone),
+        );
       }
     } catch (e) {
       _isLoading = false;
@@ -227,6 +247,7 @@ class AuthViewModel extends BaseViewModel {
   void resendOtp(context, {ResendOtpEntityModel? resendotp}) async {
     try {
       _isLoading = true;
+      startTimer();
       _resendOtpResponseModel = await runBusyFuture(
         repositoryImply.resendOtp(resendotp!),
         throwException: true,
@@ -248,20 +269,18 @@ class AuthViewModel extends BaseViewModel {
 
   void resetPin(
     context, {
-    ResetPasswordEntityModel? pesetPasswordEntityModel,
+    ResetPasswordEntityModel? resetPasswordEntityModel,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.resetPin(pesetPasswordEntityModel!),
+        repositoryImply.resetPin(resetPasswordEntityModel!),
         throwException: true,
       );
       _isLoading = false;
       // if (_resendOtpResponseModel?.statusCode == 201) {
-      //   await AppUtils.snackbar(
-      //     context,
-      //     message: _resendOtpResponseModel?.message,
-      //   );
+      await AppUtils.snackbar(context, message: v);
+      navigate.navigateTo(Routes.successScreen);
       // }
     } catch (e) {
       _isLoading = false;
@@ -287,6 +306,9 @@ class AuthViewModel extends BaseViewModel {
         modalBottomSheetMenuForgotPassword(
           context: context,
           phoneNo: forgotPassword.phone,
+          id:
+              SharedPreferencesService.instance.usersData['_id'] ??
+              SharedPreferencesService.instance.usersData['id'],
         );
       }
     } catch (e) {
@@ -301,6 +323,7 @@ class AuthViewModel extends BaseViewModel {
     context, {
     VerifyPhoneEntityModel? verifyPhoneEntity,
   }) async {
+    print('meee');
     try {
       _isLoading = true;
       _verifyPassOtpRespnseModel = await runBusyFuture(
@@ -308,13 +331,16 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      if (_resendOtpResponseModel?.statusCode == 201) {
+      if (_verifyPassOtpRespnseModel?.statusCode == 201) {
         await AppUtils.snackbar(
           context,
-          message: _resendOtpResponseModel?.message,
+          message: _verifyPassOtpRespnseModel?.message,
         );
 
-        navigate.navigateTo(Routes.resetPinScreen);
+        navigate.navigateTo(
+          Routes.resetPinScreen,
+          arguments: ResetPinScreenArguments(phone: verifyPhoneEntity.phone),
+        );
       }
     } catch (e) {
       _isLoading = false;
@@ -754,7 +780,9 @@ class AuthViewModel extends BaseViewModel {
                                     text: "Didn’t receive a code? ",
                                   ),
                                   TextSpan(
-                                    text: "Resend",
+                                    text: _start == 60 || _start == 0
+                                        ? "Resend"
+                                        : "$_start seconds",
                                     style: TextStyle(
                                       color: AppColors.primary,
                                       decoration: TextDecoration.underline,

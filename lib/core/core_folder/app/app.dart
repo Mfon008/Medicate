@@ -12,6 +12,9 @@ import '../../../ui/authentication/user/welcome_screen.dart';
 import '../../../ui/dashboard/ask_me_screen.dart';
 import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
+import '../../../ui/dashboard/notification/empty_notification.dart';
+import '../../../ui/dashboard/profile/faq_screen.dart';
+import '../../../ui/dashboard/profile/reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
@@ -41,7 +44,10 @@ import '../network/network_service.dart';
     MaterialRoute(page: ProfileScreen),
     MaterialRoute(page: ProfileInfoScreen),
     MaterialRoute(page: SupportScreen),
+    MaterialRoute(page: ResetPinPadScreen),
     MaterialRoute(page: AskMeScreen),
+    MaterialRoute(page: EmptyNotification),
+    MaterialRoute(page: FaqScreen),
     MaterialRoute(page: SplashScreen),
     CustomRoute(
       page: MoreScreen,

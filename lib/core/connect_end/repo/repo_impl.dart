@@ -6,8 +6,6 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/contract_impl.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
-import '../model/change_pin_entity_model.dart';
-import '../model/change_pin_response_model/change_pin_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -74,13 +72,6 @@ class AuthRepoImpl {
     {ResendOtpEntityModel? changePhoneNo,String? id}
   ) async {
     final response = await _contract.changePhoneNo(changePhoneNo:changePhoneNo,id:id);
-    return response;
-  }
-
-  Future<ChangePinResponseModel> changePin(
-    ChangePinEntityModel changePin,
-  ) async {
-    final response = await _contract.changePin(changePin);
     return response;
   }
 

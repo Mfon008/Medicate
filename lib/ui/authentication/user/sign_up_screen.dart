@@ -98,7 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         text: 'Phone Number',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
-                          fontSize: 18.sp,
+                          fontSize: 16.60.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.black,
                         ),
@@ -110,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           text: '*',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 18.sp,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w500,
                             color: AppColors.red,
                           ),
@@ -212,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'What should we call you?',
-
+                    hintSize: 16.60.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',

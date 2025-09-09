@@ -1,7 +1,10 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
@@ -72,7 +75,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GlobalNavigator(),
+                      GestureDetector(
+                        onTap: () {
+                          if (Platform.isAndroid) {
+                            SystemNavigator.pop();
+                          } else if (Platform.isIOS) {
+                            exit(0);
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(4.10.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.10.r),
+                            border: Border.all(color: AppColors.black),
+                          ),
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 14.sp,
+                            color: AppColors.black,
+                          ),
+                        ),
+                      ),
                       SvgPicture.asset(
                         AppImage.applogoSvg,
                         width: 116.w,
@@ -83,7 +106,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   SizedBox(height: 26.0.h),
                   TextView(
-                    text: 'Welcome back, Ben',
+                    text:
+                        'Welcome back, ${SharedPreferencesService.instance.usersData['displayName']}',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 20.sp,
@@ -106,6 +130,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Center(
                     child: Pinput(
                       length: 4,
+                      obscureText: true,
                       defaultPinTheme: defaultPinTheme,
                       focusedPinTheme: defaultPinTheme.copyWith(
                         decoration: BoxDecoration(

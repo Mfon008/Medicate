@@ -75,7 +75,7 @@ class EverydayUserCard extends StatelessWidget {
                         fontSize: 16.sp,
                       ),
                     ),
-                    SizedBox(height: 6),
+                    SizedBox(height: 3.4),
                     TextView(
                       text: text2 ?? '',
                       textStyle: TextStyle(

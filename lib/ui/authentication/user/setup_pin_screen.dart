@@ -88,7 +88,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                       color: AppColors.black,
                     ),
                   ),
-                  SizedBox(height: 10.h),
+                  SizedBox(height: 5.0.h),
                   TextView(
                     text:
                         'This pin will give you access to the app anytime you log in.',

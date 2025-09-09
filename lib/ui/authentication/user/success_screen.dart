@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
@@ -52,7 +54,7 @@ class SuccessScreen extends StatelessWidget {
               color: AppColors.white,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                // _modalBottomSheetMenu(phoneNo: phoneController.text);
+                navigate.navigateTo(Routes.loginScreen);
               },
             ),
             SizedBox(height: 20.30.h),

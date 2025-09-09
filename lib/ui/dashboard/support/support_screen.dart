@@ -28,6 +28,7 @@ class SupportScreen extends StatelessWidget {
         title: TextView(
           text: 'Support',
           textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
             fontSize: 17.2.sp,
             fontWeight: FontWeight.w700,
             color: AppColors.black,
@@ -191,7 +192,7 @@ class SupportScreen extends StatelessWidget {
                 color: AppColors.black,
               ),
             ),
-            SizedBox(height: 5.10.h),
+            SizedBox(height: 2.10.h),
             SizedBox(
               width: 200.w,
               child: text1 == 'Join Chat'

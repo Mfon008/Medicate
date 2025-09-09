@@ -8,6 +8,7 @@ import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/button.dart';
 import '../../../../core/config/colors.dart';
+import '../../../../core/core_folder/manager/shared_preference.dart';
 import '../../../widget/text.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -28,6 +29,7 @@ class ProfileScreen extends StatelessWidget {
         title: TextView(
           text: 'Profile',
           textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
             fontSize: 17.2.sp,
             fontWeight: FontWeight.w700,
             color: AppColors.black,
@@ -58,7 +60,8 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 6.h),
               Center(
                 child: TextView(
-                  text: 'John Doe',
+                  text:
+                      '${SharedPreferencesService.instance.usersData['displayName'] ?? ''}',
                   textStyle: TextStyle(
                     fontSize: 18.2.sp,
                     fontWeight: FontWeight.w500,
@@ -69,7 +72,8 @@ class ProfileScreen extends StatelessWidget {
               SizedBox(height: 2.10.h),
               Center(
                 child: TextView(
-                  text: 'jondoe@gmail.com',
+                  text:
+                      '${SharedPreferencesService.instance.usersData['email'] ?? ''}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14.2.sp,
@@ -88,7 +92,11 @@ class ProfileScreen extends StatelessWidget {
                 onTap: () => navigate.navigateTo(Routes.profileInfoScreen),
               ),
               SizedBox(height: 1.0.h),
-              profileContainer(icon: AppImage.key, text: 'Login & Security'),
+              profileContainer(
+                icon: AppImage.key,
+                text: 'Login & Security',
+                onTap: () => navigate.navigateTo(Routes.resetPinPadScreen),
+              ),
               SizedBox(height: 30.h),
               TextView(
                 text: 'WALLET & PAYMENT',
@@ -125,7 +133,11 @@ class ProfileScreen extends StatelessWidget {
                 onTap: () => navigate.navigateTo(Routes.supportScreen),
               ),
               SizedBox(height: 1.0.h),
-              profileContainer(icon: AppImage.faq, text: 'FAQ'),
+              profileContainer(
+                icon: AppImage.faq,
+                text: 'FAQ',
+                onTap: () => navigate.navigateTo(Routes.faqScreen),
+              ),
               SizedBox(height: 1.0.h),
               profileContainer(
                 icon: AppImage.terms,

@@ -204,6 +204,7 @@ class _ChangePhoneNumberState extends State<ChangePhoneNumber> {
                     buttonText: 'Continue',
                     color: AppColors.white,
                     buttonBorderColor: AppColors.transparent,
+                    isLoading: model.isLoading,
                     onPressed: !isPassed(isPhone: isPhone)
                         ? () {}
                         : () {
@@ -211,7 +212,7 @@ class _ChangePhoneNumberState extends State<ChangePhoneNumber> {
                               model.changeNumber(
                                 context,
                                 resendOtpEntityModel: ResendOtpEntityModel(
-                                  phone: phoneController.text.trim(),
+                                  phone: '+234${phoneController.text.trim()}',
                                 ),
                                 id: widget.id,
                               );

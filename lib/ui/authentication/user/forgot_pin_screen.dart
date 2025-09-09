@@ -126,7 +126,7 @@ class _ForgotPinScreenState extends State<ForgotPinScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        padding: EdgeInsets.all(12.w),
+                        padding: EdgeInsets.all(13.8.w),
                         decoration: BoxDecoration(
                           color: AppColors.grey,
                           borderRadius: BorderRadius.only(
@@ -214,6 +214,7 @@ class _ForgotPinScreenState extends State<ForgotPinScreen> {
                         : AppColors.primary,
                     buttonText: 'Continue',
                     color: AppColors.white,
+                    isLoading: model.isLoading,
                     buttonBorderColor: AppColors.transparent,
                     onPressed: !isPassed(isPhone: isPhone)
                         ? () {}
@@ -222,7 +223,7 @@ class _ForgotPinScreenState extends State<ForgotPinScreen> {
                               model.forgotPassword(
                                 context,
                                 forgotPassword: ResendOtpEntityModel(
-                                  phone: phoneController.text.trim(),
+                                  phone: '+234${phoneController.text}',
                                 ),
                               );
                             }
@@ -245,7 +246,9 @@ class _ForgotPinScreenState extends State<ForgotPinScreen> {
                               color: AppColors.primary,
                               decoration: TextDecoration.underline,
                             ),
-                            recognizer: TapGestureRecognizer()..onTap = () => navigate.navigateTo(Routes.signUpScreen),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () =>
+                                  navigate.navigateTo(Routes.signUpScreen),
                           ),
                         ],
                       ),

@@ -4,8 +4,6 @@ import 'package:medicate_app/core/connect_end/model/login_response_model/login_r
 import '../../api_folder/auth_api.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
-import '../model/change_pin_entity_model.dart';
-import '../model/change_pin_response_model/change_pin_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -45,9 +43,6 @@ class AuthContractsImpl {
   Future<ChangePhoneNoResponseModel> changePhoneNo(
    { ResendOtpEntityModel? changePhoneNo,String? id}
   ) async => await _api.changePhoneNo(changePhoneNo:changePhoneNo,id: id);
-  Future<ChangePinResponseModel> changePin(
-    ChangePinEntityModel changePin,
-  ) async => await _api.changePin(changePin);
   Future<dynamic> refreshToken() async => await _api.refreshToken();
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async =>
       await _api.getUserDetails(phoneNo);

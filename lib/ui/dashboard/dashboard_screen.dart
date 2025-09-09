@@ -140,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
                   icon: Column(
                     children: [
                       SvgPicture.asset(
-                        AppImage.pills,
+                        AppImage.pills_filled,
                         color: _currentIndex == 1
                             ? AppColors.primary
                             : AppColors.fineGrey,

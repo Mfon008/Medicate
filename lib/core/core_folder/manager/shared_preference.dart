@@ -30,7 +30,7 @@ class SharedPreferencesService {
   static const String userData = 'user';
 
   String get authToken => sharedPreferences?.getString(keyAuthToken) ?? '';
-  String get authRefreshoken =>
+  String get authRefreshToken =>
       sharedPreferences?.getString(keyAuthRefreshToken) ?? '';
   bool get isLogin => sharedPreferences?.getBool(is_login) ?? false;
   bool get isSignUp => sharedPreferences?.getBool(is_sign_up) ?? false;

@@ -1,7 +1,5 @@
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/change_phone_no_response_model/change_phone_no_response_model.dart';
-import 'package:medicate_app/core/connect_end/model/change_pin_entity_model.dart';
-import 'package:medicate_app/core/connect_end/model/change_pin_response_model/change_pin_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
@@ -56,7 +54,9 @@ class AuthApi {
     }
   }
 
-  Future<ResendOtpResponseModel> resendOtp(ResendOtpEntityModel resendOtpEntity) async {
+  Future<ResendOtpResponseModel> resendOtp(
+    ResendOtpEntityModel resendOtpEntity,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.resend_otp,
@@ -110,7 +110,7 @@ class AuthApi {
   ) async {
     try {
       final response = await _service.call(
-        UrlConfig.sign_up,
+        UrlConfig.verify_forget_password_otp,
         RequestMethod.post,
         data: verifyPhoneEntity.toJson(),
       );
@@ -128,6 +128,7 @@ class AuthApi {
         UrlConfig.reset_password,
         RequestMethod.post,
         data: resetPasswordEntity.toJson(),
+        
       );
       logger.d(response.data);
       return response.data;
@@ -137,9 +138,10 @@ class AuthApi {
     }
   }
 
-  Future<ChangePhoneNoResponseModel> changePhoneNo(
-   { ResendOtpEntityModel? changePhoneNo, String? id}
-  ) async {
+  Future<ChangePhoneNoResponseModel> changePhoneNo({
+    ResendOtpEntityModel? changePhoneNo,
+    String? id,
+  }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.change_number}/$id',
@@ -148,23 +150,6 @@ class AuthApi {
       );
       logger.d(response.data);
       return ChangePhoneNoResponseModel.fromJson(response.data);
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
-
-  Future<ChangePinResponseModel> changePin(
-    ChangePinEntityModel changePin,
-  ) async {
-    try {
-      final response = await _service.call(
-        UrlConfig.change_pin,
-        RequestMethod.post,
-        data: changePin.toJson(),
-      );
-      logger.d(response.data);
-      return ChangePinResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

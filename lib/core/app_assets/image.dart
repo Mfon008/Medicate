@@ -3,6 +3,8 @@
 class AppImage {
   static const String applogo = 'assets/images/logo.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
+  static const String not_sym = 'assets/svgs/not_symbol.svg';
+  static const String padlock = 'assets/svgs/padlock.svg';
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String calendar = 'assets/svgs/calendar.svg';
   static const String arrow_down = 'assets/svgs/arrow_down.svg';
@@ -16,6 +18,7 @@ class AppImage {
   static const String success = 'assets/svgs/success.svg';
   static const String home = 'assets/svgs/home.svg';
   static const String pills = 'assets/svgs/pills.svg';
+  static const String pills_filled = 'assets/svgs/pills_fiil.svg';
   static const String reminder = 'assets/svgs/reminder_pic.svg';
   static const String person_plus = 'assets/svgs/person_plus.svg';
   static const String ai_star = 'assets/svgs/ai_star.svg';

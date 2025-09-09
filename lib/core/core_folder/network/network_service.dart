@@ -83,6 +83,14 @@ class NetworkService {
             options: options ?? await _getOption(),
           );
           break;
+        case RequestMethod.postRefresh:
+          response = await dio!.post(
+            path,
+            queryParameters: params,
+            data: data,
+            options: options ?? await _getRefreshOption(),
+          );
+          break;
         case RequestMethod.get:
           response = await dio!.get(
             path,
@@ -165,6 +173,15 @@ class NetworkService {
       },
     );
   }
+
+  Future<Options> _getRefreshOption() async {
+    return Options(
+      headers: {
+        "Authorization": "Bearer ${session.authRefreshToken}",
+        'Accept': 'application/json',
+      },
+    );
+  }
 }
 
-enum RequestMethod { post, get, put, delete, upload, getParams, patch }
+enum RequestMethod { post,postRefresh, get, put, delete, upload, getParams, patch }
