@@ -23,7 +23,7 @@ void printDioLogs(Object object) {
 }
 
 // @lazySingleton
-class NetworkService {
+class SupportNetworkService {
   static const int connectTimeout = 30000;
   static const int receiveTimeout = 30000;
   Dio? dio;
@@ -31,7 +31,7 @@ class NetworkService {
 
   final session = locator<SharedPreferencesService>();
 
-  NetworkService({String? baseUrl, String? authToken}) {
+  SupportNetworkService({String? baseUrl, String? authToken}) {
     // ignore: prefer_initializing_formals
     this.baseUrl = baseUrl;
     // ignore: prefer_initializing_formals
@@ -45,7 +45,7 @@ class NetworkService {
       BaseOptions(
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
-        baseUrl: baseUrl ?? AppConfig.apiUrl,
+        baseUrl: baseUrl ?? AppConfig.supportApiUrl,
       ),
     );
     // authToken ??= session.authToken;
@@ -55,7 +55,7 @@ class NetworkService {
   }
 
   /// Factory constructor used mainly for injecting an instance of [Dio] mock
-  NetworkService.test(this.dio);
+  SupportNetworkService.test(this.dio);
 
   Future<Response> call(
     String path,
@@ -81,14 +81,6 @@ class NetworkService {
             queryParameters: params,
             data: data,
             options: options ?? await _getOption(),
-          );
-          break;
-        case RequestMethod.postRefresh:
-          response = await dio!.post(
-            path,
-            queryParameters: params,
-            data: data,
-            options: options ?? await _getRefreshOption(),
           );
           break;
         case RequestMethod.get:
@@ -173,24 +165,6 @@ class NetworkService {
       },
     );
   }
-
-  Future<Options> _getRefreshOption() async {
-    return Options(
-      headers: {
-        "Authorization": "Bearer ${session.authRefreshToken}",
-        'Accept': 'application/json',
-      },
-    );
-  }
 }
 
-enum RequestMethod {
-  post,
-  postRefresh,
-  get,
-  put,
-  delete,
-  upload,
-  getParams,
-  patch,
-}
+enum RequestMethod { post, get, put, delete, upload, getParams, patch }

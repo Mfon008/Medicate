@@ -27,414 +27,406 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return isTappToChat
-        ? AskMeScreen(inText: chatText)
-        : Scaffold(
-            backgroundColor: AppColors.dashboard,
-            appBar: AppBar(
-              backgroundColor: AppColors.white,
-              leading: Container(
-                margin: EdgeInsets.only(left: 12.4.w),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.inactive.withOpacity(.1),
-                  border: Border.all(color: AppColors.inactive.withOpacity(.4)),
-                ),
-                child: IconButton(
-                  icon: SvgPicture.asset(
-                    AppImage.burger,
-                    color: AppColors.primary,
-                    height: 12.h,
-                    width: 12.w,
-                  ),
-                  onPressed: () => navigate.navigateTo(
-                    Routes.moreScreen,
-                  ), // makes ripple effect round
-                ),
-              ),
-              title: SvgPicture.asset(
-                AppImage.applogoSvg,
-                height: 28.h,
-                width: 28.w,
-              ),
-              centerTitle: true,
-              actions: [
-                Padding(
-                  padding: EdgeInsets.all(6.8.w),
-                  child: Container(
-                    margin: EdgeInsets.only(right: 4.w),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.inactive.withOpacity(.1),
-                      border: Border.all(
-                        color: AppColors.inactive.withOpacity(.4),
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        AppImage.bell,
-                        height: 20.h,
-                        width: 20.w,
-                        color: AppColors.primary,
-                      ),
-                      onPressed: () =>
-                          navigate.navigateTo(Routes.emptyNotification),
-                      splashRadius: 28,
-                    ),
-                  ),
-                ),
-              ],
+    return Scaffold(
+      backgroundColor: AppColors.dashboard,
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        leading: Container(
+          margin: EdgeInsets.only(left: 12.4.w),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.inactive.withOpacity(.1),
+            border: Border.all(color: AppColors.inactive.withOpacity(.4)),
+          ),
+          child: IconButton(
+            icon: SvgPicture.asset(
+              AppImage.burger,
+              color: AppColors.primary,
+              height: 12.h,
+              width: 12.w,
             ),
-            body: GestureDetector(
-              onTap: () {
-                isTapOnScreenOrChatButt = false;
-                setState(() {});
-              },
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12.8.w,
-                        vertical: 22.w,
-                      ),
-                      child: Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () =>
-                                navigate.navigateTo(Routes.profileScreen),
-                            child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 4.0.w),
-                              padding: EdgeInsets.symmetric(
-                                vertical: 12.w,
-                                horizontal: 14.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.white,
-                                borderRadius: BorderRadius.circular(12.r),
-                                border: Border.all(color: AppColors.yellow),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.info_outline,
-                                    color: AppColors.yellow,
-                                    size: 20.sp,
-                                  ),
-                                  SizedBox(width: 12.w),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Complete Registration',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 15.2.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: 'Please enter your new PIN.',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 13.2.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  SvgPicture.asset(
-                                    AppImage.arrow_forward,
-                                    width: 14.20.w,
-                                    height: 14.20.w,
-                                  ),
-                                ],
-                              ),
+            onPressed: () => navigate.navigateTo(
+              Routes.moreScreen,
+            ), // makes ripple effect round
+          ),
+        ),
+        title: GestureDetector(
+          onTap: () => setState(() => isTappToChat = false),
+          child: SvgPicture.asset(
+            AppImage.applogoSvg,
+            height: 28.h,
+            width: 28.w,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: EdgeInsets.all(6.8.w),
+            child: Container(
+              margin: EdgeInsets.only(right: 4.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.inactive.withOpacity(.1),
+                border: Border.all(color: AppColors.inactive.withOpacity(.4)),
+              ),
+              child: IconButton(
+                icon: SvgPicture.asset(
+                  AppImage.bell,
+                  height: 20.h,
+                  width: 20.w,
+                  color: AppColors.primary,
+                ),
+                onPressed: () => navigate.navigateTo(Routes.emptyNotification),
+                splashRadius: 28,
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: isTappToChat
+          ? AskMeScreen(inText: chatText)
+          : Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.8.w,
+                      vertical: 22.w,
+                    ),
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () =>
+                              navigate.navigateTo(Routes.profileScreen),
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 4.0.w),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 12.w,
+                              horizontal: 14.w,
                             ),
-                          ),
-                          SizedBox(height: 24.h),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(width: 4.0.w),
-                              Container(
-                                padding: EdgeInsets.all(16.w),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.white,
-                                ),
-                                child: SvgPicture.asset(
-                                  AppImage.big_logo,
-                                  width: 20.w,
-                                  height: 20.w,
-                                ),
-                              ),
-                              SizedBox(width: 22.w),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TextView(
-                                    text: 'Good Morning, Ben!',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.infoGrey,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: 'How can i help you?',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 18.2.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5.10.h),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 36.10.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: conContainer(
-                                  icon: AppImage.today_pills,
-                                  text: 'Today’s Med',
-                                ),
-                              ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: conContainer(
-                                  icon: AppImage.today_pills,
-                                  text: 'Tomorrow’s Med',
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 22.10.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: conContainer(
-                                  icon: AppImage.appointment,
-                                  text: 'Appointment',
-                                ),
-                              ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: conContainer(
-                                  icon: AppImage.bell_small,
-                                  text: 'Create Reminder',
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 30.10.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text: 'Health Tips',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.black,
-                                ),
-                              ),
-                              TextView(
-                                text: 'View more',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 13.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.primary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: AppColors.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 12.10.h),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: Border.all(color: AppColors.yellow),
+                            ),
                             child: Row(
                               children: [
-                                ...[1, 2, 3].map(
-                                  (o) => Container(
-                                    width: 298.w,
-                                    margin: EdgeInsets.only(right: 20.w),
-                                    padding: EdgeInsets.all(24.w),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(22.r),
-                                      color: AppColors.white,
+                                Icon(
+                                  Icons.info_outline,
+                                  color: AppColors.yellow,
+                                  size: 20.sp,
+                                ),
+                                SizedBox(width: 12.w),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextView(
+                                      text: 'Complete Registration',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.black,
+                                      ),
                                     ),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              AppImage.tips,
-                                              color: AppColors.fineGrey,
-                                              height: 25.30.h,
-                                              width: 25.30.w,
-                                            ),
-                                            SizedBox(width: 12.2.w),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                TextView(
-                                                  text: o == 1
-                                                      ? 'Today’s Health Tip'
-                                                      : o == 2
-                                                      ? 'Tomorrow’s Health Tip'
-                                                      : 'Next Tomorrow’s Health Tip',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 14.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.infoGrey,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 8.10.h),
-                                                TextView(
-                                                  text: 'Don’t Skip Breakfast',
-                                                  textStyle: TextStyle(
-                                                    fontSize: 19.2.sp,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: AppColors.primary,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-
-                                        SizedBox(height: 140.h),
-                                        Row(
-                                          children: [
-                                            TextView(
-                                              text: 'Read more',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.2.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.lightBlue,
-                                              ),
-                                            ),
-                                            SizedBox(width: 10.w),
-                                            SvgPicture.asset(
-                                              AppImage.arrow_forward,
-                                              color: AppColors.lightBlue,
-                                              height: 16.20.h,
-                                              width: 15.20.w,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                    TextView(
+                                      text: 'Please enter your new PIN.',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.infoGrey,
+                                      ),
                                     ),
-                                  ),
+                                  ],
+                                ),
+                                Spacer(),
+                                SvgPicture.asset(
+                                  AppImage.arrow_forward,
+                                  width: 14.20.w,
+                                  height: 14.20.w,
                                 ),
                               ],
                             ),
                           ),
-                          SizedBox(height: 30.h),
-                          Container(
-                            width: double.infinity.w,
-                            padding: EdgeInsets.only(
-                              top: 2.4.w,
-                              bottom: 8.w,
-                              left: 10.w,
-                              right: 10.w,
+                        ),
+                        SizedBox(height: 24.h),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(width: 4.0.w),
+                            Container(
+                              padding: EdgeInsets.all(16.w),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.white,
+                              ),
+                              child: SvgPicture.asset(
+                                AppImage.big_logo,
+                                width: 20.w,
+                                height: 20.w,
+                              ),
                             ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18.22.r),
-                              color: AppColors.white,
-                            ),
-                            child: Form(
-                              key: formKey,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AiTextFormWidget(
-                                    label: 'Chat with Medicate AI....',
-                                    validator: AppValidator.validateString(),
-                                    onChange: (p0) {
-                                      setState(() {
-                                        chatText = p0;
-                                      });
-                                    },
-                                    labelStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.infoGrey,
-                                    ),
+                            SizedBox(width: 22.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Good Morning, Ben!',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 15.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.infoGrey,
                                   ),
-                                  Row(
+                                ),
+                                TextView(
+                                  text: 'How can i help you?',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 18.2.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 5.10.h),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 36.10.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: conContainer(
+                                icon: AppImage.today_pills,
+                                text: 'Today’s Med',
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: conContainer(
+                                icon: AppImage.today_pills,
+                                text: 'Tomorrow’s Med',
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 22.10.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: conContainer(
+                                icon: AppImage.appointment,
+                                text: 'Appointment',
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: conContainer(
+                                icon: AppImage.bell_small,
+                                text: 'Create Reminder',
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 30.10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextView(
+                              text: 'Health Tips',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            TextView(
+                              text: 'View more',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.2.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: AppColors.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.10.h),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              ...[1, 2, 3].map(
+                                (o) => Container(
+                                  width: 298.w,
+                                  margin: EdgeInsets.only(right: 20.w),
+                                  padding: EdgeInsets.all(24.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(22.r),
+                                    color: AppColors.white,
+                                  ),
+                                  child: Column(
                                     children: [
-                                      SvgPicture.asset(
-                                        AppImage.audio,
-                                        width: 22.w,
-                                        height: 22.h,
-                                      ),
-                                      Spacer(),
-                                      SvgPicture.asset(
-                                        AppImage.clipper,
-                                        color: AppColors.black,
-                                        width: 22.w,
-                                        height: 22.h,
-                                      ),
-                                      SizedBox(width: 20.w),
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (formKey.currentState!
-                                              .validate()) {
-                                            isTappToChat = !isTappToChat;
-                                            chatText = chatText;
-                                            setState(() {});
-                                          }
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(14.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppColors.primary,
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            AppImage.tips,
+                                            color: AppColors.fineGrey,
+                                            height: 25.30.h,
+                                            width: 25.30.w,
                                           ),
-                                          child: SvgPicture.asset(
-                                            AppImage.arrow_up,
-                                            width: 20.w,
-                                            height: 17.20.h,
-                                            color: AppColors.white,
+                                          SizedBox(width: 12.2.w),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: o == 1
+                                                    ? 'Today’s Health Tip'
+                                                    : o == 2
+                                                    ? 'Tomorrow’s Health Tip'
+                                                    : 'Next Tomorrow’s Health Tip',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 14.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              SizedBox(height: 8.10.h),
+                                              TextView(
+                                                text: 'Don’t Skip Breakfast',
+                                                textStyle: TextStyle(
+                                                  fontSize: 19.2.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
+                                        ],
+                                      ),
+
+                                      SizedBox(height: 140.h),
+                                      Row(
+                                        children: [
+                                          TextView(
+                                            text: 'Read more',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.lightBlue,
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          SvgPicture.asset(
+                                            AppImage.arrow_forward,
+                                            color: AppColors.lightBlue,
+                                            height: 16.20.h,
+                                            width: 15.20.w,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 30.h),
+                        Container(
+                          width: double.infinity.w,
+                          padding: EdgeInsets.only(
+                            top: 2.4.w,
+                            bottom: 8.w,
+                            left: 10.w,
+                            right: 10.w,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18.22.r),
+                            color: AppColors.white,
+                          ),
+                          child: Form(
+                            key: formKey,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                AiTextFormWidget(
+                                  label: 'Chat with Medicate AI....',
+                                  validator: AppValidator.validateString(),
+                                  onChange: (p0) {
+                                    setState(() {
+                                      chatText = p0;
+                                    });
+                                  },
+                                  labelStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 15.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppImage.audio,
+                                      width: 22.w,
+                                      height: 22.h,
+                                    ),
+                                    Spacer(),
+                                    SvgPicture.asset(
+                                      AppImage.clipper,
+                                      color: AppColors.black,
+                                      width: 22.w,
+                                      height: 22.h,
+                                    ),
+                                    SizedBox(width: 20.w),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (formKey.currentState!.validate()) {
+                                          isTappToChat = !isTappToChat;
+                                          chatText = chatText;
+                                          setState(() {});
+                                        }
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.all(14.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.primary,
+                                        ),
+                                        child: SvgPicture.asset(
+                                          AppImage.arrow_up,
+                                          width: 20.w,
+                                          height: 17.20.h,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 100.h),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 100.h),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 22.20.h),
-                ],
-              ),
+                ),
+                SizedBox(height: 22.20.h),
+              ],
             ),
-          );
+    );
   }
 
   conContainer({required String icon, required String text}) => GestureDetector(

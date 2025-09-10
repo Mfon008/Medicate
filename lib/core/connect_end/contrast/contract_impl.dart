@@ -14,6 +14,7 @@ import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart'
     show SignUpResponseModel;
+import '../model/support_entity_model.dart';
 import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -26,8 +27,9 @@ class AuthContractsImpl {
       await _api.signIn(loginEntity);
   Future<SignUpResponseModel> signUp(SignUpEntityModel signUpEntity) async =>
       await _api.signUp(signUpEntity);
-  Future<ResendOtpResponseModel> resendOtp(ResendOtpEntityModel resendOtpEntity) async =>
-      await _api.resendOtp(resendOtpEntity);
+  Future<ResendOtpResponseModel> resendOtp(
+    ResendOtpEntityModel resendOtpEntity,
+  ) async => await _api.resendOtp(resendOtpEntity);
   Future<VerifyOtpResponseModel> verifyPhoneOtp(
     VerifyPhoneEntityModel verifyPhoneOtp,
   ) async => await _api.verifyPhoneOtp(verifyPhoneOtp);
@@ -40,12 +42,15 @@ class AuthContractsImpl {
   Future<dynamic> resetPin(
     ResetPasswordEntityModel resetPasswordEntity,
   ) async => await _api.resetPin(resetPasswordEntity);
-  Future<ChangePhoneNoResponseModel> changePhoneNo(
-   { ResendOtpEntityModel? changePhoneNo,String? id}
-  ) async => await _api.changePhoneNo(changePhoneNo:changePhoneNo,id: id);
+  Future<ChangePhoneNoResponseModel> changePhoneNo({
+    ResendOtpEntityModel? changePhoneNo,
+    String? id,
+  }) async => await _api.changePhoneNo(changePhoneNo: changePhoneNo, id: id);
   Future<dynamic> refreshToken() async => await _api.refreshToken();
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async =>
       await _api.getUserDetails(phoneNo);
   Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async =>
       await _api.setPin(setPinEntity);
+  Future<dynamic> support(SupportEntityModel supportEntity) async =>
+      await _api.support(supportEntity);
 }

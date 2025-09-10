@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
@@ -358,12 +359,28 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      // if (_getUserDetailsResponseModel?.statusCode == 201) {
-      //   await AppUtils.snackbar(
-      //     context,
-      //     message: _getUserDetailsResponseModel?.message,
-      //   );
-      // }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void support({context, SupportEntityModel? supportEntity}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.support(supportEntity!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['message'] != null) {
+        await AppUtils.snackbar(
+          context,
+          message: 'Request has been sent successfully..!',
+        );
+      }
     } catch (e) {
       _isLoading = false;
       logger.d(e);

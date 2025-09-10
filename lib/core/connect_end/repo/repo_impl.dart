@@ -15,6 +15,7 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
+import '../model/support_entity_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
 
@@ -36,7 +37,9 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<ResendOtpResponseModel> resendOtp(ResendOtpEntityModel resendOtpEntity) async {
+  Future<ResendOtpResponseModel> resendOtp(
+    ResendOtpEntityModel resendOtpEntity,
+  ) async {
     final response = await _contract.resendOtp(resendOtpEntity);
     return response;
   }
@@ -68,10 +71,14 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<ChangePhoneNoResponseModel> changePhoneNo(
-    {ResendOtpEntityModel? changePhoneNo,String? id}
-  ) async {
-    final response = await _contract.changePhoneNo(changePhoneNo:changePhoneNo,id:id);
+  Future<ChangePhoneNoResponseModel> changePhoneNo({
+    ResendOtpEntityModel? changePhoneNo,
+    String? id,
+  }) async {
+    final response = await _contract.changePhoneNo(
+      changePhoneNo: changePhoneNo,
+      id: id,
+    );
     return response;
   }
 
@@ -89,6 +96,11 @@ class AuthRepoImpl {
     final response = await _contract.setPin(setPinEntity);
     _chache(response);
     _session.isLogin = true;
+    return response;
+  }
+
+  Future<dynamic> support(SupportEntityModel supportEntity) async {
+    final response = await _contract.support(supportEntity);
     return response;
   }
 

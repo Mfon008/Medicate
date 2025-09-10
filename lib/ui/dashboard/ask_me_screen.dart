@@ -5,8 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/core_folder/brief.dart';
 import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
-import '../../core/core_folder/app/app.router.dart';
-import '../../main.dart';
 import '../widget/ai_text_form_widget.dart';
 import '../widget/text.dart';
 
@@ -17,61 +15,9 @@ class AskMeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.dashboard,
-      resizeToAvoidBottomInset: true, // 👈 ensures keyboard pushes content
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        leading: Container(
-          margin: EdgeInsets.only(left: 10.4.w),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.inactive.withOpacity(.1),
-            border: Border.all(color: AppColors.inactive),
-          ),
-          child: IconButton(
-            icon: SvgPicture.asset(
-              AppImage.burger,
-              color: AppColors.primary,
-              height: 12.h,
-              width: 12.w,
-            ),
-            onPressed: () => navigate.navigateTo(
-              Routes.moreScreen,
-            ), // makes ripple effect round
-          ),
-        ),
-        title: SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.all(4.8.w),
-            child: Container(
-              margin: EdgeInsets.only(right: 4.w),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.inactive.withOpacity(.1),
-                border: Border.all(color: AppColors.inactive),
-              ),
-              child: IconButton(
-                icon: SvgPicture.asset(
-                  AppImage.bell,
-                  height: 22.h,
-                  width: 22.w,
-                  color: AppColors.primary,
-                ),
-                onPressed: () {},
-                splashRadius: 28,
-              ),
-            ),
-          ),
-        ],
-      ),
-
-      body: SafeArea(
+    return  SafeArea(
         child: Column(
           children: [
-            // 👇 scrollable messages
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
@@ -245,7 +191,6 @@ class AskMeScreen extends StatelessWidget {
             SizedBox(height: 25.20.h),
           ],
         ),
-      ),
     );
   }
 
@@ -258,6 +203,9 @@ class AskMeScreen extends StatelessWidget {
     }
     if (text == 'Appointment') {
       return 'Do I have any appointments today?';
+    }
+    if (text == 'Create Reminder') {
+      return 'Hey medicate, create a medication reminder for me.';
     }
     if (text != null || text != '' || text.isNotEmpty) {
       return text ?? 'Hey medicate, create a medication reminder for me.';

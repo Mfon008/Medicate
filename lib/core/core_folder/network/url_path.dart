@@ -14,4 +14,5 @@ class UrlConfig {
       'auth/verify-forgot-password-otp';
   static const String change_number = 'auth/change-phonenumber/';
   static const String change_pin = 'auth/change-pin';
+  static const String support = 'v1/api/support';
 }
