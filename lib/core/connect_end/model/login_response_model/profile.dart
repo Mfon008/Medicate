@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'profile_picture.dart';
+
 part 'profile.g.dart';
 
 @JsonSerializable()
@@ -14,7 +16,7 @@ class Profile {
   dynamic country;
   dynamic height;
   dynamic weight;
-  dynamic profilePicture;
+  ProfilePicture? profilePicture;
   int? profileCompletion;
   DateTime? createdAt;
   DateTime? updatedAt;

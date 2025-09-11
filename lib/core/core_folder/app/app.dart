@@ -17,6 +17,8 @@ import '../../../ui/dashboard/profile/faq_screen.dart';
 import '../../../ui/dashboard/profile/reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_screen.dart';
+import '../../../ui/dashboard/profile/wallet/transaction_screen.dart';
+import '../../../ui/dashboard/profile/wallet/wallet_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
@@ -28,6 +30,7 @@ import '../../connect_end/view_model/auth_view_model.dart';
 import '../manager/shared_preference.dart';
 import '../network/network_service.dart';
 import '../network/support_network_service.dart';
+
 
 @StackedApp(
   routes: [
@@ -50,6 +53,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: EmptyNotification),
     MaterialRoute(page: FaqScreen),
     MaterialRoute(page: SplashScreen),
+    MaterialRoute(page: WalletScreen),
+    MaterialRoute(page: TransactionScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

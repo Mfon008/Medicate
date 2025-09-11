@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
@@ -101,6 +102,11 @@ class AuthRepoImpl {
 
   Future<dynamic> support(SupportEntityModel supportEntity) async {
     final response = await _contract.support(supportEntity);
+    return response;
+  }
+
+   Future<dynamic> uploadProPicture(MultipartFile file) async {
+    final response = await _contract.uploadProPicture(file);
     return response;
   }
 

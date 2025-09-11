@@ -16,7 +16,9 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
   country: json['country'],
   height: json['height'],
   weight: json['weight'],
-  profilePicture: json['profilePicture'],
+  profilePicture: json['profilePicture'] == null
+      ? null
+      : ProfilePicture.fromJson(json['profilePicture'] as Map<String, dynamic>),
   profileCompletion: (json['profileCompletion'] as num?)?.toInt(),
   createdAt: json['createdAt'] == null
       ? null

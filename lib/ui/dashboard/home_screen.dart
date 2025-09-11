@@ -418,12 +418,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 100.h),
+
+                        SizedBox(height: 10.h),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 22.20.h),
+                SizedBox(height: 20.h),
               ],
             ),
     );

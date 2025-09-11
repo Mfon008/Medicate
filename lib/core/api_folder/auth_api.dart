@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
@@ -208,6 +209,21 @@ class AuthApi {
         UrlConfig.support,
         sup.RequestMethod.post,
         data: supportEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> uploadProPicture(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.upload_pro_picture,
+        RequestMethod.patch,
+        data: FormData.fromMap({'file':file}),
       );
       logger.d(response.data);
       return response.data;

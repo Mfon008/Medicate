@@ -20,8 +20,11 @@ class AppImage {
   static const String pills = 'assets/svgs/pills.svg';
   static const String pills_filled = 'assets/svgs/pills_fiil.svg';
   static const String reminder = 'assets/svgs/reminder_pic.svg';
+  static const String closed_eye = 'assets/svgs/closed_eye.svg';
   static const String person_plus = 'assets/svgs/person_plus.svg';
   static const String ai_star = 'assets/svgs/ai_star.svg';
+  static const String up_stroke = 'assets/svgs/upstroke.svg';
+  static const String down_stroke = 'assets/svgs/downstroke.svg';
   static const String message = 'assets/svgs/message.svg';
   static const String phone = 'assets/svgs/phone.svg';
   static const String whatsapp = 'assets/svgs/whatsapp.svg';

@@ -7,11 +7,11 @@ part 'login_response_model.g.dart';
 @JsonSerializable()
 class LoginResponseModel {
   bool? success;
-  String? message;
   int? statusCode;
+  String? message;
   Data? data;
 
-  LoginResponseModel({this.success, this.message, this.statusCode, this.data});
+  LoginResponseModel({this.success, this.statusCode, this.message, this.data});
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
     return _$LoginResponseModelFromJson(json);

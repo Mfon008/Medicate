@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
@@ -53,4 +54,6 @@ class AuthContractsImpl {
       await _api.setPin(setPinEntity);
   Future<dynamic> support(SupportEntityModel supportEntity) async =>
       await _api.support(supportEntity);
+   Future<dynamic> uploadProPicture(MultipartFile file)async =>
+      await _api.uploadProPicture(file);
 }

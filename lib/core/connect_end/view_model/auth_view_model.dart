@@ -1,6 +1,8 @@
 // ignore_for_file: unnecessary_null_comparison, deprecated_member_use, strict_top_level_inference, unused_field
 import 'dart:async';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +19,7 @@ import '../../../ui/widget/text.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
 import '../../app_assets/image.dart';
+import '../../app_assets/image_picker.dart';
 import '../../config/colors.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
@@ -82,6 +85,9 @@ class AuthViewModel extends BaseViewModel {
 
   Timer? _timer;
   int _start = 60;
+  final _pickImage = ImagePickerHandler();
+  File? image;
+  String? filename;
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -380,6 +386,7 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: 'Request has been sent successfully..!',
         );
+        navigate.back();
       }
     } catch (e) {
       _isLoading = false;
@@ -387,6 +394,50 @@ class AuthViewModel extends BaseViewModel {
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  void uploadProfilePicture({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      await runBusyFuture(
+        repositoryImply.uploadProPicture(file!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  formartFileImage(File? imageFile) {
+    if (imageFile == null) return;
+    return File(imageFile.path.replaceAll('\'', '').replaceAll('File: ', ''));
+  }
+
+  void pickImage(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) {
+          image = file;
+          filename = image!.path.split("/").last;
+          uploadProfilePicture(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(image).readAsBytesSync(),
+              filename: image!.path.split("/").last,
+            ),
+          );
+          
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
   }
 
   void modalBottomSheetMenu({context, String? phoneNo, String? id}) {
