@@ -35,6 +35,11 @@ class AppImage {
   static const String bell_small = 'assets/svgs/bell_small.svg';
   static const String appointment = 'assets/svgs/appointment.svg';
   static const String tips = 'assets/svgs/tips.svg';
+  static const String copy = 'assets/svgs/copy.svg';
+  static const String mobile_money = 'assets/svgs/mobile_money.svg';
+  static const String fund_card = 'assets/svgs/fund_card.svg';
+  static const String bank = 'assets/svgs/bank.svg';
+  static const String ussd = 'assets/svgs/ussd.svg';
   static const String audio = 'assets/svgs/audio.svg';
   static const String profile = 'assets/svgs/profile.svg';
   static const String timer = 'assets/svgs/timer.svg';

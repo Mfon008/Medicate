@@ -1,5 +1,4 @@
 // ignore_for_file: must_be_immutable, deprecated_member_use
-
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +40,7 @@ class WalletScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.h),
+        padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.w),
         child: Column(
           children: [
             WalletCard(),
@@ -138,7 +137,7 @@ class WalletScreen extends StatelessWidget {
                                 TextView(
                                   text: '₦5,000',
                                   textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
+                                    // fontFamily: 'GoogleSans',
                                     fontSize: 13.5.sp,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.reminder,

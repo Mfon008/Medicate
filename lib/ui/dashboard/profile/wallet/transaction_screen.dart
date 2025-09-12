@@ -1,5 +1,4 @@
-// ignore_for_file: must_be_immutable
-
+// ignore_for_file: must_be_immutable, deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,10 +53,8 @@ class TransactionScreen extends StatelessWidget {
             ...transLength.asMap().entries.map((entry) {
               final index = entry.key;
               // final e = entry.value;
-
               final isFirst = index == 0;
               final isLast = index == transLength.length - 1;
-
               return profileContainer(
                 topLeft: isFirst ? 12 : 0,
                 topRight: isFirst ? 12 : 0,
@@ -108,7 +105,7 @@ class TransactionScreen extends StatelessWidget {
                         TextView(
                           text: '₦5,000',
                           textStyle: TextStyle(
-                            fontFamily: 'GoogleSans',
+                            // fontFamily: 'GoogleSans',
                             fontSize: 13.5.sp,
                             fontWeight: FontWeight.w500,
                             color: AppColors.reminder,

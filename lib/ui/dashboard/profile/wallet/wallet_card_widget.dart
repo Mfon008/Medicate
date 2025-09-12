@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 
 import '../../../../core/config/colors.dart';
 
@@ -56,7 +58,7 @@ class WalletCard extends StatelessWidget {
                 const Text(
                   "₦150,000.00",
                   style: TextStyle(
-                    fontFamily: 'GoogleSans',
+                    // fontFamily: 'GoogleSans',
                     color: Colors.white,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -81,32 +83,35 @@ class WalletCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 20.h),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(left: 15.20.w, right: 15.20.w),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 24,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white38, width: 1),
-                    color: Colors.white.withOpacity(0.1),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.add_circle_outline_outlined,
-                        color: Colors.white,
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        "Fund Wallet",
-                        style: TextStyle(color: Colors.white, fontSize: 16),
-                      ),
-                    ],
+                GestureDetector(
+                  onTap: () => navigate.navigateTo(Routes.fundScreen),
+                  child: Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(left: 15.20.w, right: 15.20.w),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 24,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.white38, width: 1),
+                      color: Colors.white.withOpacity(0.1),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.add_circle_outline_outlined,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          "Fund Wallet",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 20.h),
