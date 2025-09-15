@@ -60,4 +60,8 @@ class AppImage {
   static const String health_pro = 'assets/images/health_pro.png';
   static const String mc = 'assets/images/m&c.png';
   static const String pharmacist = 'assets/images/pharmacist.png';
+  static const String smart_cash = 'assets/images/smart_cash.png';
+  static const String momo = 'assets/images/mom.png';
+  static const String paga = 'assets/images/paga.png';
+  static const String glo = 'assets/images/glo.png';
 }

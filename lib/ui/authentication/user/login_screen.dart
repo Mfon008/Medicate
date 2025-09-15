@@ -72,22 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 26.0.h),
               TextView(
-                text: 'Welcome to Medicate',
+                text: 'Login',
                 textStyle: TextStyle(
                   fontFamily: 'GoogleSans',
                   fontSize: 20.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.black,
-                ),
-              ),
-              SizedBox(height: 10.h),
-              TextView(
-                text:
-                    'Your journey to better health starts here. Enter your phone number and name to get started',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
                   color: AppColors.black,
                 ),
               ),

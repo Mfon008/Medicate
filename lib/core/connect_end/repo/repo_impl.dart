@@ -67,8 +67,8 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<dynamic> resetPin(ResetPasswordEntityModel resetPasswordEntity) async {
-    final response = await _contract.resetPin(resetPasswordEntity);
+  Future<dynamic> resetPin({ResetPasswordEntityModel? resetPasswordEntity,String? resetToken}) async {
+    final response = await _contract.resetPin(resetPasswordEntity:resetPasswordEntity, resetToken: resetToken);
     return response;
   }
 

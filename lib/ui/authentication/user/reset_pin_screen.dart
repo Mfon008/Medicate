@@ -18,6 +18,7 @@ import '../../widget/text.dart';
 class ResetPinScreen extends StatefulWidget {
   ResetPinScreen({super.key, this.phone});
   String? phone;
+  String? resetToken;
 
   @override
   State<ResetPinScreen> createState() => _ResetPinScreenState();
@@ -147,6 +148,7 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
                             newPin: pinInput,
                             userIntent: 'reset-pin',
                           ),
+                          resetToken: model.verifyPassOtpRespnseModel?.data?.resetToken
                         );
                       }
                     },

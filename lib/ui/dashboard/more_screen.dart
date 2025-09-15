@@ -5,10 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/config/colors.dart';
+import 'package:medicate_app/core/core_folder/app/app.locator.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
+import 'package:stacked/stacked.dart';
 
 import '../../core/app_assets/app_validation.dart';
+import '../../core/connect_end/view_model/auth_view_model.dart';
 import '../widget/button.dart';
 import '../widget/text.dart';
 import '../widget/text_form_widget.dart';
@@ -37,145 +40,154 @@ class _MoreScreenState extends State<MoreScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 16.20.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: ViewModelBuilder<AuthViewModel>.reactive(
+      viewModelBuilder: () => locator<AuthViewModel>(),
+      onViewModelReady: (model) {
+        // model.getUserDetails(context: context, phoneNo: widget.phoneNumber);
+      },
+      disposeViewModel: false,
+      builder: (_, AuthViewModel model, __) {
+        return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 16.20.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextView(
+                      text: 'More',
+                      textStyle: TextStyle(
+                        fontSize: 16.2.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => navigate.back(),
+                      icon: SvgPicture.asset(AppImage.cancel),
+                    ),
+                  ],
+                ),
+                Divider(color: AppColors.f1),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    moreContainer(
+                      context,
+                      icon: AppImage.appointment,
+                      text: 'Appointment',
+                    ),
+                    SizedBox(width: 14.w),
+                    moreContainer(
+                      context,
+                      icon: AppImage.profile,
+                      text: 'Profile',
+                      onTap: () => navigate.navigateTo(Routes.profileScreen),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Row(
+                  children: [
+                    moreContainer(
+                      context,
+                      icon: AppImage.timer,
+                      text: 'Track Reminder',
+                    ),
+                    SizedBox(width: 14.w),
+                    moreContainer(
+                      context,
+                      icon: AppImage.timer,
+                      text: 'Reminder History',
+                    ),
+                  ],
+                ),
+                SizedBox(height: 200.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextView(
+                      text: 'History',
+                      textStyle: TextStyle(
+                        fontSize: 16.2.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => _modalBottomSheetMenu(),
+                      child: SvgPicture.asset(
+                        AppImage.filter,
+                        height: 16.20.h,
+                        width: 12.22.w,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
                 TextView(
-                  text: 'More',
+                  text: 'Today',
                   textStyle: TextStyle(
-                    fontSize: 16.2.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.black,
+                    fontFamily: 'Arial',
+                    fontSize: 14.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
                   ),
                 ),
-                IconButton(
-                  onPressed: () => navigate.back(),
-                  icon: SvgPicture.asset(AppImage.cancel),
-                ),
-              ],
-            ),
-            Divider(color: AppColors.f1),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
-                moreContainer(
-                  context,
-                  icon: AppImage.appointment,
-                  text: 'Appointment',
-                ),
-                SizedBox(width: 14.w),
-                moreContainer(
-                  context,
-                  icon: AppImage.profile,
-                  text: 'Profile',
-                  onTap: () => navigate.navigateTo(Routes.profileScreen),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.h),
-            Row(
-              children: [
-                moreContainer(
-                  context,
-                  icon: AppImage.timer,
-                  text: 'Track Reminder',
-                ),
-                SizedBox(width: 14.w),
-                moreContainer(
-                  context,
-                  icon: AppImage.timer,
-                  text: 'Reminder History',
-                ),
-              ],
-            ),
-            SizedBox(height: 200.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextView(
-                  text: 'History',
-                  textStyle: TextStyle(
-                    fontSize: 16.2.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.black,
+                SizedBox(height: 2.20.h),
+                ...textHistoryList.map(
+                  (e) => GestureDetector(
+                    onTap: () {
+                      selectHistory = e;
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.only(top: 6.10.w),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.w,
+                        horizontal: 12.w,
+                      ),
+          
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.r),
+                        color: selectHistory == e
+                            ? AppColors.inactive.withOpacity(.3)
+                            : AppColors.transparent,
+                      ),
+                      child: TextView(
+                        text: e,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () => _modalBottomSheetMenu(),
-                  child: SvgPicture.asset(
-                    AppImage.filter,
-                    height: 16.20.h,
-                    width: 12.22.w,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20.h),
-            TextView(
-              text: 'Today',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14.2.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.infoGrey,
-              ),
-            ),
-            SizedBox(height: 2.20.h),
-            ...textHistoryList.map(
-              (e) => GestureDetector(
-                onTap: () {
-                  selectHistory = e;
-                  setState(() {});
-                },
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(top: 6.10.w),
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.w,
-                    horizontal: 12.w,
-                  ),
-
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.r),
-                    color: selectHistory == e
-                        ? AppColors.inactive.withOpacity(.3)
-                        : AppColors.transparent,
-                  ),
+                SizedBox(height: 20.h),
+                Center(
                   child: TextView(
-                    text: e,
-                    maxLines: 1,
-                    textOverflow: TextOverflow.ellipsis,
+                    text: 'Show all',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 14.2.sp,
                       fontWeight: FontWeight.w400,
-                      color: AppColors.black,
+                      color: AppColors.primary,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppColors.primary,
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-            SizedBox(height: 20.h),
-            Center(
-              child: TextView(
-                text: 'Show all',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.primary,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.primary,
-                ),
-              ),
-            ),
-          ],
-        ),
+          );
+        }
       ),
     );
   }

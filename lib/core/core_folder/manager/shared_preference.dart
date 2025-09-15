@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../main.dart';
+import '../app/app.router.dart';
+
 @lazySingleton
 class SharedPreferencesService {
   SharedPreferencesService._internal();
@@ -28,8 +31,10 @@ class SharedPreferencesService {
   static const String is_login = 'is_login';
   static const String is_sign_up = 'is_sign_up';
   static const String userData = 'user';
+  static const String pin_set = 'pin';
 
   String get authToken => sharedPreferences?.getString(keyAuthToken) ?? '';
+  String get pinSet => sharedPreferences?.getString(pin_set) ?? '';
   String get authRefreshToken =>
       sharedPreferences?.getString(keyAuthRefreshToken) ?? '';
   bool get isLogin => sharedPreferences?.getBool(is_login) ?? false;
@@ -52,19 +57,17 @@ class SharedPreferencesService {
       sharedPreferences?.setBool(kycVerified, verifyKyc);
   set authToken(String authToken) =>
       sharedPreferences?.setString(keyAuthToken, authToken);
+  set pinSet(String pin) => sharedPreferences?.setString(pin_set, pin);
   set authRefreshToken(String authRefreshToken) =>
       sharedPreferences?.setString(keyAuthRefreshToken, authRefreshToken);
 
   set usersData(Map<String, dynamic>? map) =>
       sharedPreferences?.setString(userData, json.encode(map));
 
-  Future<bool> logOut(role) async {
+  Future<bool> logOut() async {
     try {
       await sharedPreferences!.clear();
-      // navigate.clearStackAndShow(
-      //   Routes.loginScreen,
-      //   arguments: LoginScreenArguments(userType: role),
-      // );
+      navigate.clearStackAndShow(Routes.loginScreen);
       // await box.clear();
 
       // getLogger('logout').d(sharedPreferences.toString());

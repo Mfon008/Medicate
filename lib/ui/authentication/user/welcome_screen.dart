@@ -55,11 +55,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(SharedPreferencesService.instance.usersData);
     return Scaffold(
       backgroundColor: AppColors.white,
       body: ViewModelBuilder<AuthViewModel>.reactive(
         viewModelBuilder: () => locator<AuthViewModel>(),
-        onViewModelReady: (model) {},
+        onViewModelReady: (model) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            model.getUserDetails(context: context, phoneNo: widget.phone);
+          });
+        },
         disposeViewModel: false,
         builder: (_, AuthViewModel model, __) {
           return SingleChildScrollView(
@@ -107,7 +112,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   SizedBox(height: 26.0.h),
                   TextView(
                     text:
-                        'Welcome back, ${SharedPreferencesService.instance.usersData['displayName']}',
+                        'Welcome back, ${SharedPreferencesService.instance.usersData['displayName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 20.sp,
@@ -172,36 +177,55 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                   ),
                   SizedBox(height: 20.0.h),
-                  GestureDetector(
-                    onTap: () async {
-                      bool auth = await Authentication.authentication();
-                      if (auth) {
-                        navigate.navigateTo(
-                          Routes.dashboard,
-                          arguments: DashboardArguments(index: 0),
-                        );
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(14.8.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.inactive.withOpacity(.22),
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(AppImage.bio),
-                    ),
-                  ),
-                  SizedBox(height: 16.0.h),
-                  TextView(
-                    text: 'Login with biometric',
-                    decoration: TextDecoration.underline,
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 12.6.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.greygrey1,
-                    ),
-                  ),
+                  model.getUserDetailsResponseModel != null &&
+                          model.getUserDetailsResponseModel?.data?.pinSet ==
+                              true
+                      ? Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                bool auth =
+                                    await Authentication.authentication();
+                                if (auth) {
+                                  model.signIn(
+                                    context,
+                                    signInEntity: LoginEntityModel(
+                                      phone:
+                                          widget.phone ??
+                                          SharedPreferencesService
+                                              .instance
+                                              .usersData['phone']['phoneNumber'],
+                                      pin: SharedPreferencesService
+                                          .instance
+                                          .pinSet,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(14.8.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.inactive.withOpacity(.22),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset(AppImage.bio),
+                              ),
+                            ),
+                            SizedBox(height: 16.0.h),
+                            TextView(
+                              text: 'Login with biometric',
+                              decoration: TextDecoration.underline,
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 12.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.greygrey1,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SizedBox.shrink(),
+
                   SizedBox(height: 260.h),
                   ButtonWidget(
                     border: 100.r,

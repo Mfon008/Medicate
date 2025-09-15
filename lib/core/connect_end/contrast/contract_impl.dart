@@ -41,8 +41,8 @@ class AuthContractsImpl {
     VerifyPhoneEntityModel verifyPhoneEntity,
   ) async => await _api.verifyForgotPassword(verifyPhoneEntity);
   Future<dynamic> resetPin(
-    ResetPasswordEntityModel resetPasswordEntity,
-  ) async => await _api.resetPin(resetPasswordEntity);
+    {ResetPasswordEntityModel? resetPasswordEntity,String? resetToken}
+  ) async => await _api.resetPin(resetPasswordEntity:resetPasswordEntity,resetToken: resetToken);
   Future<ChangePhoneNoResponseModel> changePhoneNo({
     ResendOtpEntityModel? changePhoneNo,
     String? id,

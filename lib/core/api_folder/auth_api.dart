@@ -127,12 +127,16 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> resetPin(ResetPasswordEntityModel resetPasswordEntity) async {
+  Future<dynamic> resetPin({
+    ResetPasswordEntityModel? resetPasswordEntity,
+    String? resetToken,
+  }) async {
     try {
       final response = await _service.call(
         UrlConfig.reset_password,
         RequestMethod.post,
-        data: resetPasswordEntity.toJson(),
+        data: resetPasswordEntity?.toJson(),
+        options: Options(headers: {"x-token": "Bearer $resetToken"}),
       );
       logger.d(response.data);
       return response.data;
@@ -223,7 +227,7 @@ class AuthApi {
       final response = await _service.call(
         UrlConfig.upload_pro_picture,
         RequestMethod.patch,
-        data: FormData.fromMap({'file':file}),
+        data: FormData.fromMap({'file': file}),
       );
       logger.d(response.data);
       return response.data;

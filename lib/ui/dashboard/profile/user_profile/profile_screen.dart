@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,11 +53,16 @@ class ProfileScreen extends StatelessWidget {
                 children: [
                   Center(
                     child:
-                        SharedPreferencesService
-                                .instance
-                                .usersData['profile']['profilePicture'] !=
-                            null
-                        ? CircleAvatar(
+                        SharedPreferencesService.instance.usersData == null ||
+                            SharedPreferencesService
+                                    .instance
+                                    .usersData['profile'] ==
+                                null ||
+                            SharedPreferencesService
+                                    .instance
+                                    .usersData['profile']['profilePicture'] ==
+                                null
+                        ? SvgPicture.asset(AppImage.profile_image) :CircleAvatar(
                             radius: 60.0, // Adjust the size as needed
                             backgroundImage: NetworkImage(
                               SharedPreferencesService
@@ -65,7 +70,7 @@ class ProfileScreen extends StatelessWidget {
                                   .usersData['profile']['profilePicture']['url'],
                             ),
                           )
-                        : SvgPicture.asset(AppImage.profile_image),
+                        
                   ),
                   Center(
                     child: GestureDetector(
@@ -87,7 +92,7 @@ class ProfileScreen extends StatelessWidget {
                   Center(
                     child: TextView(
                       text:
-                          '${SharedPreferencesService.instance.usersData['displayName'] ?? ''}',
+                          '${SharedPreferencesService.instance.usersData['displayName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
                       textStyle: TextStyle(
                         fontSize: 18.2.sp,
                         fontWeight: FontWeight.w500,
@@ -178,37 +183,40 @@ class ProfileScreen extends StatelessWidget {
                     bottomRight: 12,
                   ),
                   SizedBox(height: 30.h),
-                  Container(
-                    padding: EdgeInsets.all(16.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8.0.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.red.withOpacity(.1),
-                            shape: BoxShape.circle,
+                  GestureDetector(
+                    onTap: () => SharedPreferencesService.instance.logOut(),
+                    child: Container(
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8.0.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.red.withOpacity(.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: SvgPicture.asset(
+                              AppImage.logout,
+                              height: 20.2.h,
+                              width: 20.2.w,
+                            ),
                           ),
-                          child: SvgPicture.asset(
-                            AppImage.logout,
-                            height: 20.2.h,
-                            width: 20.2.w,
+                          SizedBox(width: 20.w),
+                          TextView(
+                            text: 'Log Out',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 16.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.red,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: 20.w),
-                        TextView(
-                          text: 'Log Out',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.red,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 30.h),

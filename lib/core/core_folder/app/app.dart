@@ -18,6 +18,7 @@ import '../../../ui/dashboard/profile/reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_screen.dart';
 import '../../../ui/dashboard/profile/wallet/fund_screen.dart';
+import '../../../ui/dashboard/profile/wallet/fund_wallet_pay_screen.dart';
 import '../../../ui/dashboard/profile/wallet/transaction_screen.dart';
 import '../../../ui/dashboard/profile/wallet/wallet_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
@@ -56,6 +57,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: WalletScreen),
     MaterialRoute(page: TransactionScreen),
     MaterialRoute(page: FundScreen),
+    MaterialRoute(page: FundWalletPayScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

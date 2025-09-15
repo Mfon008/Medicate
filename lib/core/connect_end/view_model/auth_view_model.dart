@@ -80,6 +80,10 @@ class AuthViewModel extends BaseViewModel {
   VerifyPassOtpRespnseModel? _verifyPassOtpRespnseModel;
   VerifyPassOtpRespnseModel? get verifyPassOtpRespnseModel =>
       _verifyPassOtpRespnseModel;
+  String? pinInput;
+
+  GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
 
   AuthViewModel({this.context});
 
@@ -117,9 +121,6 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
-  String? pinInput;
-
-  GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
 
   void signIn(context, {LoginEntityModel? signInEntity}) async {
     try {
@@ -242,6 +243,9 @@ class AuthViewModel extends BaseViewModel {
           message: _setPinResponseModel?.message,
         );
         navigate.navigateTo(Routes.dashboard);
+
+        SharedPreferencesService.instance.pinSet =
+            setPinEntityModel.pin!;
       }
     } catch (e) {
       _isLoading = false;
@@ -277,18 +281,24 @@ class AuthViewModel extends BaseViewModel {
   void resetPin(
     context, {
     ResetPasswordEntityModel? resetPasswordEntityModel,
+    String? resetToken,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.resetPin(resetPasswordEntityModel!),
+        repositoryImply.resetPin(
+          resetPasswordEntity: resetPasswordEntityModel!,
+          resetToken: resetToken,
+        ),
         throwException: true,
       );
       _isLoading = false;
-      // if (_resendOtpResponseModel?.statusCode == 201) {
-      await AppUtils.snackbar(context, message: v);
-      navigate.navigateTo(Routes.successScreen);
-      // }
+      if (v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['data']['message']);
+        navigate.navigateTo(Routes.successScreen);
+        SharedPreferencesService.instance.pinSet =
+            resetPasswordEntityModel.newPin!;
+      }
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -343,7 +353,6 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _verifyPassOtpRespnseModel?.message,
         );
-
         navigate.navigateTo(
           Routes.resetPinScreen,
           arguments: ResetPinScreenArguments(phone: verifyPhoneEntity.phone),
@@ -368,7 +377,7 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      // AppUtils.snackbar(context, message: e.toString(), error: true9090887781);
     }
     notifyListeners();
   }
@@ -431,7 +440,7 @@ class AuthViewModel extends BaseViewModel {
               filename: image!.path.split("/").last,
             ),
           );
-          
+
           notifyListeners();
         },
       );
@@ -737,7 +746,7 @@ class AuthViewModel extends BaseViewModel {
                       horizontal: 20.w,
                     ),
                     child: Form(
-                      key: formKeyValidate,
+                      key: formKeyValidate2,
                       child: Column(
                         children: [
                           Row(
@@ -924,7 +933,7 @@ class AuthViewModel extends BaseViewModel {
                             isLoading: model.isLoading,
                             buttonBorderColor: AppColors.transparent,
                             onPressed: () {
-                              if (formKeyValidate.currentState!.validate()) {
+                              if (formKeyValidate2.currentState!.validate()) {
                                 verifyForgotPassword(
                                   context,
                                   verifyPhoneEntity: VerifyPhoneEntityModel(

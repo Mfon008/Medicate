@@ -136,6 +136,7 @@ class TextFormWidget extends StatelessWidget {
           textCapitalization: TextCapitalization.words,
           keyboardType: keyboardType,
           focusNode: focusNode,
+          inputFormatters: inputFormatters,
           decoration: InputDecoration(
             labelText: label ?? '',
             labelStyle: labelStyle,

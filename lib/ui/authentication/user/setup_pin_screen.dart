@@ -167,9 +167,8 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                     color: AppColors.primary,
                     buttonBorderColor: AppColors.primary,
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        navigate.navigateTo(Routes.welcomeScreen);
-                      }
+                        navigate.navigateTo(Routes.dashboard);
+                      
                     },
                   ),
                   SizedBox(height: 16.30.h),

@@ -10,6 +10,7 @@ class AppColors {
   static const greygrey = Color(0xFF7D7F81);
   static const greygrey1 = Color(0xFF75808A);
   static const yellow = Color(0xFFF5B546);
+  static const fadedyellow = Color(0xFFFEF6E7);
   static const f1 = Color(0xFFF1F1F1);
   static const reminder = Color(0xFF3E3E3E);
   static const dottedGrey = Color(0xFFEAECF0);
@@ -30,6 +31,7 @@ class AppColors {
   static const lightBlue = Color(0xFF29A9FF);
   static const green = Color(0xFF039754);
   static const appWhite = Color(0xFFFFFFFF);
+  static const deep = Color(0xFF06173A);
   static const black = Colors.black;
   static const white = Colors.white;
 
