@@ -62,7 +62,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         viewModelBuilder: () => locator<AuthViewModel>(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            model.getUserDetails(context: context, phoneNo: widget.phone);
+            model.getUserDetails(context: context, phoneNo: widget.phone??SharedPreferencesService.instance.usersData['phone']['phoneNumber']);
           });
         },
         disposeViewModel: false,

@@ -49,6 +49,7 @@ class AppImage {
   static const String policy = 'assets/svgs/policy.svg';
   static const String terms = 'assets/svgs/terms.svg';
   static const String wallet = 'assets/svgs/wallet.svg';
+  static const String image_icon = 'assets/svgs/image_icon.svg';
   static const String chat_support = 'assets/svgs/chat_support.svg';
   static const String profile_image = 'assets/svgs/profile_image.svg';
   static const String clipper = 'assets/svgs/clipper.svg';

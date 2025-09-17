@@ -11,7 +11,7 @@ import 'core/core_folder/manager/shared_preference.dart';
 final navigate = locator<NavigationService>();
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+   WidgetsFlutterBinding.ensureInitialized();
   // Lock orientation early
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

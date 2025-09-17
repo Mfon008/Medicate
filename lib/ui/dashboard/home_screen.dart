@@ -304,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               TextView(
                                                 text: 'Don’t Skip Breakfast',
                                                 textStyle: TextStyle(
-                                                  fontSize: 19.2.sp,
+                                                  fontSize: 17.2.sp,
                                                   fontWeight: FontWeight.w700,
                                                   color: AppColors.primary,
                                                 ),
@@ -314,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ],
                                       ),
 
-                                      SizedBox(height: 140.h),
+                                      SizedBox(height: 100.h),
                                       Row(
                                         children: [
                                           TextView(
@@ -424,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
+                // SizedBox(height: 20.h),
               ],
             ),
     );

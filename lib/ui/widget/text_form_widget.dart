@@ -131,7 +131,7 @@ class TextFormWidget extends StatelessWidget {
                 ],
               )
             : const SizedBox.shrink(),
-        SizedBox(height: hint != null ? 12.2.h : 0.h),
+        SizedBox(height: hint != null ? 10.2.h : 0.h),
         TextFormField(
           textCapitalization: TextCapitalization.words,
           keyboardType: keyboardType,
