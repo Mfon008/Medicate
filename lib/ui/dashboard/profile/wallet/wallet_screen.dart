@@ -18,6 +18,7 @@ class WalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: AppColors.dashboard,
       appBar: AppBar(
@@ -40,11 +41,11 @@ class WalletScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.w),
+        padding: EdgeInsets.symmetric(vertical: 32.0.w, horizontal: 20.w),
         child: Column(
           children: [
             WalletCard(),
-            SizedBox(height: 20),
+            SizedBox(height: 10.20.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

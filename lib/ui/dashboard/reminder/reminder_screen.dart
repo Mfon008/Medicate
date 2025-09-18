@@ -27,23 +27,26 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTablet(BuildContext context) =>
+        MediaQuery.of(context).size.shortestSide >= 600;
+
     return Scaffold(
       backgroundColor: AppColors.dashboard,
       appBar: AppBar(
         backgroundColor: AppColors.white,
         leading: Container(
-          margin: EdgeInsets.only(left: 10.4.w),
+          margin: EdgeInsets.only(left: isTablet(context) ? 5.2.w : 12.4.w),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.inactive.withOpacity(.1),
-            border: Border.all(color: AppColors.inactive),
+            border: Border.all(color: AppColors.inactive.withOpacity(.4)),
           ),
           child: IconButton(
             icon: SvgPicture.asset(
               AppImage.burger,
               color: AppColors.primary,
-              height: 12.h,
-              width: 12.w,
+              height: isTablet(context) ? 32.h : 12.h,
+              width: isTablet(context) ? 32.w : 12.w,
             ),
             onPressed: () => navigate.navigateTo(Routes.moreScreen),
           ),
@@ -59,19 +62,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.all(4.8.w),
+            padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
             child: Container(
               margin: EdgeInsets.only(right: 4.w),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.inactive.withOpacity(.1),
-                border: Border.all(color: AppColors.inactive),
+                border: Border.all(color: AppColors.inactive..withOpacity(.4)),
               ),
               child: IconButton(
                 icon: SvgPicture.asset(
                   AppImage.bell,
-                  width: 22.h,
-                  height: 22.h,
+                  height: isTablet(context) ? 40.h : 20.h,
+                  width: isTablet(context) ? 40.w : 20.w,
                   color: AppColors.primary,
                 ),
                 onPressed: () {},

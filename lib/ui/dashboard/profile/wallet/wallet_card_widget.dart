@@ -6,144 +6,115 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
+import 'package:medicate_app/ui/widget/text.dart';
 
-import '../../../../core/config/colors.dart';
-
-class WalletCard extends StatelessWidget {
+class WalletCard extends StatefulWidget {
   const WalletCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomRight,
-          colors: [
-            // lighter blue
-            AppColors.primary.withOpacity(.94), // lighter blue
-            AppColors.primary.withOpacity(.94), // lighter blue
-            AppColors.primary.withOpacity(.92), // lighter blue
-            AppColors.primary.withOpacity(.92), // lighter blue
-            AppColors.primary.withOpacity(.92), // lighter blue
-            AppColors.primary.withOpacity(.94), // lighter blue
-            AppColors.primary.withOpacity(.94), // lighter blue
-            AppColors.primary, // lighter blue
-          ],
-        ),
-      ),
-      child: Stack(
-        children: [
-          // Vertical gradient lines overlay
-          Positioned.fill(child: CustomPaint(painter: _VerticalLinesPainter())),
+  State<WalletCard> createState() => _WalletCardState();
+}
 
-          // Content
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+class _WalletCardState extends State<WalletCard> {
+  bool onTap = false;
+  @override
+  Widget build(BuildContext context) {
+    bool isTablet(BuildContext context) =>
+        MediaQuery.of(context).size.shortestSide >= 600;
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(22),
+          child: SizedBox(
+            width: double.infinity,
+            child: SvgPicture.asset(
+              AppImage.wallet_card,
+              width: double.infinity,
+              height: isTablet(context) ? 290.h : 198.0.h,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Column(
+          children: [
+            SizedBox(height: 20.h),
+            TextView(
+              text: "Wallet Balance",
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Arial',
+                fontSize: 14.8.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            SizedBox(height: 8.0.h),
+            TextView(
+              text: !onTap ? "₦*.**" : "₦150,000.00",
+              textStyle: TextStyle(
+                // fontFamily: 'GoogleSans',
+                color: Colors.white,
+                fontSize: 32.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 5.10.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Wallet Balance",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Arial',
-                    fontSize: 14.8,
-                    fontWeight: FontWeight.w500,
+                TextView(
+                  text: !onTap ? "View Balance" : "Hide balance",
+                  textStyle: TextStyle(color: Colors.white70, fontSize: 14.sp),
+                ),
+                SizedBox(width: 5),
+
+                GestureDetector(
+                  onTap: () => setState(() => onTap = !onTap),
+                  child: SvgPicture.asset(
+                    onTap ? AppImage.opened_eye : AppImage.closed_eye,
+                    color: Colors.white70,
+                    height: 11.90.h,
+                    width: 12.h,
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  "₦150,000.00",
-                  style: TextStyle(
-                    // fontFamily: 'GoogleSans',
-                    color: Colors.white,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ],
+            ),
+            SizedBox(height: 14.h),
+            GestureDetector(
+              onTap: () => navigate.navigateTo(Routes.fundScreen),
+              child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(left: 23.0.w, right: 23.0.w),
+                padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 24.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white38, width: 1),
+                  color: Colors.white.withOpacity(0.1),
                 ),
-                SizedBox(height: 10.h),
-                Row(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Hide balance",
-                      style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+                    Icon(
+                      Icons.add_circle_outline_outlined,
+                      color: Colors.white,
+                      size: 16.sp,
                     ),
-                    SizedBox(width: 5),
-
-                    SvgPicture.asset(
-                      AppImage.closed_eye,
-                      color: Colors.white70,
-                      height: 11.90.h,
-                      width: 12.h,
+                    SizedBox(width: 8),
+                    TextView(
+                      text: "Fund Wallet",
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.sp,
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
-                GestureDetector(
-                  onTap: () => navigate.navigateTo(Routes.fundScreen),
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(left: 15.20.w, right: 15.20.w),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 24,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white38, width: 1),
-                      color: Colors.white.withOpacity(0.1),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(
-                          Icons.add_circle_outline_outlined,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Fund Wallet",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.h),
-              ],
+              ),
             ),
-          ),
-        ],
-      ),
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ],
     );
   }
-}
-
-class _VerticalLinesPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          const Color.fromARGB(255, 25, 103, 205),
-          const Color.fromARGB(255, 25, 103, 205),
-        ],
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-
-    double spacing = size.width / 8; // 6 faint vertical lines
-
-    for (double x = spacing; x < size.width - spacing / 2; x += spacing) {
-      canvas.drawRect(Rect.fromLTWH(x, 0, 1.5, size.height), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

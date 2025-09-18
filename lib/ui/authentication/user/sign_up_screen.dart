@@ -212,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'What should we call you?',
-                    hintSize: 16.60.sp,
+                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',

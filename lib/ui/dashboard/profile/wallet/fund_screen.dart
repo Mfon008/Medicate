@@ -35,6 +35,8 @@ class _FundScreenState extends State<FundScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTablet(BuildContext context) =>
+        MediaQuery.of(context).size.shortestSide >= 600;
     return Scaffold(
       backgroundColor: AppColors.grey,
       appBar: AppBar(
@@ -204,6 +206,7 @@ class _FundScreenState extends State<FundScreen> {
                                   width: 20.w,
                                 ),
                               ),
+
                               SizedBox(width: 10.w),
                               TextView(
                                 text: 'Fund with Card',
@@ -216,7 +219,7 @@ class _FundScreenState extends State<FundScreen> {
                               ),
                               Spacer(),
                               SizedBox(
-                                width: 20.w,
+                                width: isTablet(context) ? 14.0.w : 20.w,
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     radioTheme: RadioThemeData(
@@ -302,7 +305,7 @@ class _FundScreenState extends State<FundScreen> {
                               ),
                               Spacer(),
                               SizedBox(
-                                width: 20.w,
+                                width: isTablet(context) ? 14.0.w : 20.w,
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     radioTheme: RadioThemeData(
@@ -388,7 +391,7 @@ class _FundScreenState extends State<FundScreen> {
                               ),
                               Spacer(),
                               SizedBox(
-                                width: 20.w,
+                                width: isTablet(context) ? 14.0.w : 20.w,
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     radioTheme: RadioThemeData(
@@ -473,7 +476,7 @@ class _FundScreenState extends State<FundScreen> {
                               ),
                               Spacer(),
                               SizedBox(
-                                width: 20.w,
+                                width: isTablet(context) ? 14.0.w : 20.w,
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
                                     radioTheme: RadioThemeData(

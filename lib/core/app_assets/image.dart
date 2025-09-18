@@ -21,6 +21,7 @@ class AppImage {
   static const String pills_filled = 'assets/svgs/pills_fiil.svg';
   static const String reminder = 'assets/svgs/reminder_pic.svg';
   static const String closed_eye = 'assets/svgs/closed_eye.svg';
+  static const String opened_eye = 'assets/svgs/opened_eye.svg';
   static const String person_plus = 'assets/svgs/person_plus.svg';
   static const String ai_star = 'assets/svgs/ai_star.svg';
   static const String up_stroke = 'assets/svgs/upstroke.svg';
@@ -50,6 +51,7 @@ class AppImage {
   static const String terms = 'assets/svgs/terms.svg';
   static const String wallet = 'assets/svgs/wallet.svg';
   static const String image_icon = 'assets/svgs/image_icon.svg';
+  static const String wallet_card = 'assets/svgs/wallet_card.svg';
   static const String chat_support = 'assets/svgs/chat_support.svg';
   static const String profile_image = 'assets/svgs/profile_image.svg';
   static const String clipper = 'assets/svgs/clipper.svg';
