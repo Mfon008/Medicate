@@ -45,7 +45,7 @@ class WalletScreen extends StatelessWidget {
         child: Column(
           children: [
             WalletCard(),
-            SizedBox(height: 10.20.h),
+            SizedBox(height: 20.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

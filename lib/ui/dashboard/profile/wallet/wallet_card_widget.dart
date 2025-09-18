@@ -30,7 +30,7 @@ class _WalletCardState extends State<WalletCard> {
             child: SvgPicture.asset(
               AppImage.wallet_card,
               width: double.infinity,
-              height: isTablet(context) ? 290.h : 198.0.h,
+              height: isTablet(context) ? 290.h : 205.0.h,
               fit: BoxFit.cover,
             ),
           ),
@@ -72,8 +72,8 @@ class _WalletCardState extends State<WalletCard> {
                   child: SvgPicture.asset(
                     onTap ? AppImage.opened_eye : AppImage.closed_eye,
                     color: Colors.white70,
-                    height: 11.90.h,
-                    width: 12.h,
+                    height: onTap ? 20.h : 11.90.h,
+                    width: onTap ? 19.20 : 12.h,
                   ),
                 ),
               ],
