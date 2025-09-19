@@ -714,7 +714,6 @@ class AuthViewModel extends BaseViewModel {
     context,
     String? phoneNo,
     String? id,
-    // String? name,
   }) {
     showModalBottomSheet(
       context: context,
