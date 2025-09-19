@@ -24,7 +24,7 @@ class _WalletCardState extends State<WalletCard> {
     return Stack(
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(16.r),
           child: SizedBox(
             width: double.infinity,
             child: SvgPicture.asset(
@@ -58,25 +58,28 @@ class _WalletCardState extends State<WalletCard> {
               ),
             ),
             SizedBox(height: 5.10.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextView(
-                  text: !onTap ? "View Balance" : "Hide balance",
-                  textStyle: TextStyle(color: Colors.white70, fontSize: 14.sp),
-                ),
-                SizedBox(width: 5),
+            GestureDetector(
+              onTap: () => setState(() => onTap = !onTap),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextView(
+                    text: !onTap ? "View Balance" : "Hide balance",
+                    textStyle: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  SizedBox(width: 5),
 
-                GestureDetector(
-                  onTap: () => setState(() => onTap = !onTap),
-                  child: SvgPicture.asset(
+                  SvgPicture.asset(
                     onTap ? AppImage.opened_eye : AppImage.closed_eye,
                     color: Colors.white70,
                     height: onTap ? 20.h : 11.90.h,
                     width: onTap ? 19.20 : 12.h,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(height: 14.h),
             GestureDetector(
