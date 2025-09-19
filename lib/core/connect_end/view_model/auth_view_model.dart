@@ -121,7 +121,6 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
-
   void signIn(context, {LoginEntityModel? signInEntity}) async {
     try {
       _isLoading = true;
@@ -162,6 +161,7 @@ class AuthViewModel extends BaseViewModel {
           context: context,
           phoneNo: signUpEntity.phone,
           id: _signUpResponseModel?.data?.id,
+          name: signUpEntity.fullName,
         );
       }
     } catch (e) {
@@ -176,6 +176,7 @@ class AuthViewModel extends BaseViewModel {
     context, {
     ResendOtpEntityModel? resendOtpEntityModel,
     String? id,
+    String? name,
   }) async {
     try {
       _isLoading = true;
@@ -192,9 +193,11 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _changePhoneNoResponseModel?.message,
         );
-        navigate.navigateTo(
-          Routes.resetPinScreen,
-          arguments: ResetPinScreenArguments(phone: resendOtpEntityModel.phone),
+        modalBottomSheetMenu(
+          context: context,
+          phoneNo: resendOtpEntityModel.phone,
+          id: _signUpResponseModel?.data?.id,
+          name: name,
         );
       }
     } catch (e) {
@@ -244,8 +247,7 @@ class AuthViewModel extends BaseViewModel {
         );
         navigate.navigateTo(Routes.dashboard);
 
-        SharedPreferencesService.instance.pinSet =
-            setPinEntityModel.pin!;
+        SharedPreferencesService.instance.pinSet = setPinEntityModel.pin!;
       }
     } catch (e) {
       _isLoading = false;
@@ -449,15 +451,22 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
-  void modalBottomSheetMenu({context, String? phoneNo, String? id}) {
+  void modalBottomSheetMenu({
+    context,
+    String? phoneNo,
+    String? id,
+    String? name,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (builder) {
         return ViewModelBuilder<AuthViewModel>.reactive(
-          viewModelBuilder: () => locator<AuthViewModel>(),
-          onViewModelReady: (model) {},
+          viewModelBuilder: () => AuthViewModel(),
+          onViewModelReady: (model) {
+
+          },
           disposeViewModel: false,
           builder: (_, AuthViewModel model, __) {
             return Padding(
@@ -684,7 +693,7 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                 );
                               }
-                              model.notifyListeners();
+                              notifyListeners();
                             },
                           ),
                           SizedBox(height: 20.h),
@@ -705,6 +714,7 @@ class AuthViewModel extends BaseViewModel {
     context,
     String? phoneNo,
     String? id,
+    // String? name,
   }) {
     showModalBottomSheet(
       context: context,

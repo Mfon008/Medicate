@@ -16,6 +16,7 @@ import '../../../core/core_folder/app/app.locator.dart';
 class ChangePhoneNumber extends StatefulWidget {
   ChangePhoneNumber({super.key, required this.id});
   String? id;
+  String? name;
 
   @override
   State<ChangePhoneNumber> createState() => _ChangePhoneNumberState();
