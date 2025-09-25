@@ -150,6 +150,15 @@ class AuthViewModel extends BaseViewModel {
     }
     return '$i tablet';
   }
+  String getStringFrDuration(String i) {
+    if (i == '') {
+      return '';
+    }
+    if (int.parse(i) > 1) {
+      return '$i days';
+    }
+    return '$i day';
+  }
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);

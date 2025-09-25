@@ -956,7 +956,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 );
                                 if (result != null) {
                                   setModalState(() {
-                                    medDurationController.text = result;
+                                    medDurationController.text = model.getStringFrDuration(result);
                                   });
                                 }
                               },
