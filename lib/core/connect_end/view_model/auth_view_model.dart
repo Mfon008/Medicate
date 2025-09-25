@@ -8,14 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/app_assets/country_code_format.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
+import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
 import '../../app_assets/image.dart';
@@ -35,6 +38,7 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
+import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -62,6 +66,8 @@ class AuthViewModel extends BaseViewModel {
 
   SignUpResponseModel? _signUpResponseModel;
   SignUpResponseModel? get signUpResponseModel => _signUpResponseModel;
+  UpdateUserProfileResponseModel? _updateUserProfileResponseModel;
+  UpdateUserProfileResponseModel? get updateUserProfileResponseModel => _updateUserProfileResponseModel;
   VerifyOtpResponseModel? _verifyOtpRespnseModel;
   VerifyOtpResponseModel? get verifyOtpRespnseModel => _verifyOtpRespnseModel;
   SetPinResponseModel? _setPinResponseModel;
@@ -84,6 +90,8 @@ class AuthViewModel extends BaseViewModel {
 
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
+  TextEditingController countryController = TextEditingController();
+  String querySignUpCountry = '';
 
   AuthViewModel({this.context});
 
@@ -423,6 +431,23 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void uploadUserProfile({context, UpdateUserProfileEntity? userEntity}) async {
+    try {
+      _isLoading = true;
+      _updateUserProfileResponseModel = await runBusyFuture(
+        repositoryImply.uploadUserProfile(userEntity),
+        throwException: true,
+      );
+      AppUtils.snackbar(context, message: _updateUserProfileResponseModel?.message??'');
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   formartFileImage(File? imageFile) {
     if (imageFile == null) return;
     return File(imageFile.path.replaceAll('\'', '').replaceAll('File: ', ''));
@@ -464,9 +489,7 @@ class AuthViewModel extends BaseViewModel {
       builder: (builder) {
         return ViewModelBuilder<AuthViewModel>.reactive(
           viewModelBuilder: () => AuthViewModel(),
-          onViewModelReady: (model) {
-
-          },
+          onViewModelReady: (model) {},
           disposeViewModel: false,
           builder: (_, AuthViewModel model, __) {
             return Padding(
@@ -693,7 +716,7 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                 );
                               }
-                              notifyListeners();
+                              model.notifyListeners();
                             },
                           ),
                           SizedBox(height: 20.h),
@@ -965,6 +988,217 @@ class AuthViewModel extends BaseViewModel {
           },
         );
       },
+    );
+  }
+
+  void modalBottomSheetMenuCountry(context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Enables full-screen dragging
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (builder) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.5, // 50% of screen height
+            minChildSize: 0.3, // Can be dragged to 30% of screen height
+            maxChildSize: 0.9, // Can be dragged to 90% of screen height
+            builder: (context, scrollController) {
+              return ViewModelBuilder<AuthViewModel>.reactive(
+                viewModelBuilder: () => AuthViewModel(),
+                onViewModelReady: (model) {},
+                disposeViewModel: false,
+                builder: (_, AuthViewModel model, __) {
+                  return SingleChildScrollView(
+                    controller: scrollController,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 22.0.h),
+                        Padding(
+                          padding: EdgeInsets.all(12.w),
+                          child: TextFormWidget(
+                            label: 'Search country',
+                            isFilled: true,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            fillColor: AppColors.grey,
+                            onChange: (p0) {
+                              querySignUpCountry = p0;
+                              model.notifyListeners();
+                            },
+                            suffixIcon: Icons.search_sharp,
+                            controller: countryController,
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        querySignUpCountry == ''
+                            ? SizedBox(
+                                width: 400.w,
+                                child: Column(
+                                  children: [
+                                    ...countryCodeFormat.map(
+                                      (e) => GestureDetector(
+                                        onTap: () {
+                                          countryController.text = e['country'];
+                                          Navigator.pop(context);
+                                          model.notifyListeners();
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 4.6.w,
+                                            horizontal: 20.w,
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(6.w),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: AppColors.transparent,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                SizedBox(
+                                                  width: 160.w,
+                                                  child: TextView(
+                                                    text: '${e['country']}',
+                                                    textOverflow:
+                                                        TextOverflow.ellipsis,
+                                                    textStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 17.2.sp,
+
+                                                      color: AppColors.black,
+                                                    ),
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+
+                                                buildImage(e['Flag']),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Column(
+                                children: [
+                                  ...countryCodeFormat
+                                      .where(
+                                        (o) => o['country']!
+                                            .toLowerCase()
+                                            .contains(
+                                              querySignUpCountry.toLowerCase(),
+                                            ),
+                                      )
+                                      .map(
+                                        (e) => GestureDetector(
+                                          onTap: () {
+                                            countryController.text =
+                                                e['country']!;
+                                            Navigator.pop(context);
+                                            model.notifyListeners();
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.white,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 4.6.w,
+                                              horizontal: 20.w,
+                                            ),
+                                            child: Container(
+                                              padding: EdgeInsets.all(6.w),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: AppColors.transparent,
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 180.w,
+                                                    child: TextView(
+                                                      text: '${e['country']}',
+                                                      textOverflow:
+                                                          TextOverflow.ellipsis,
+                                                      textStyle: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 17.2.sp,
+
+                                                        color: AppColors.black,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  buildImage(e['Flag']),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                ],
+                              ),
+                        SizedBox(height: 14.0.h),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildImage(String path) {
+    if (path.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.network(
+        path,
+        height: 20.h,
+        width: 30.w,
+        fit: BoxFit.cover,
+        placeholderBuilder: (context) => Container(
+          height: 20.h,
+          width: 30.w,
+          decoration: BoxDecoration(color: AppColors.grey),
+        ),
+      );
+    }
+    return Image.network(
+      path,
+      height: 20.h,
+      width: 30.w,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => Container(
+        height: 20.h,
+        width: 30.w,
+        decoration: BoxDecoration(color: AppColors.grey),
+      ),
     );
   }
 }

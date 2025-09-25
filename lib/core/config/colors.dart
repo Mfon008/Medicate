@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const primary = Color(0xFF0955B7);
+  static const primary1 = Color(0xFF2563EB);
   static const primaryLight = Color.fromARGB(200, 72, 130, 206);
   static const transparent = Colors.transparent;
   static const red = Colors.red;
@@ -27,6 +28,7 @@ class AppColors {
   static const searchInputFillColor = Color(0x1E767680);
   static const greyee = Color(0xFF7D7F81);
   static const grey = Color(0xFFF5F6F8);
+  static const grey1 = Color(0xFF8F8F8F);
   static const dashboard = Color(0xFFF5F6F8);
   static const fineGrey = Color(0xFFA9A9A9);
   static const lightBlue = Color(0xFF29A9FF);

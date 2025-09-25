@@ -62,15 +62,15 @@ class ProfileScreen extends StatelessWidget {
                                     .instance
                                     .usersData['profile']['profilePicture'] ==
                                 null
-                        ? SvgPicture.asset(AppImage.profile_image) :CircleAvatar(
+                        ? SvgPicture.asset(AppImage.profile_image)
+                        : CircleAvatar(
                             radius: 60.0, // Adjust the size as needed
                             backgroundImage: NetworkImage(
                               SharedPreferencesService
                                   .instance
                                   .usersData['profile']['profilePicture']['url'],
                             ),
-                          )
-                        
+                          ),
                   ),
                   Center(
                     child: GestureDetector(

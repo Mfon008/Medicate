@@ -15,5 +15,7 @@ class UrlConfig {
   static const String change_number = 'auth/change-phonenumber/';
   static const String change_pin = 'auth/change-pin';
   static const String support = 'v1/api/support';
-  static const String upload_pro_picture = 'auth/individual-user/upload/profile-picture';
+  static const String upload_pro_picture =
+      'auth/individual-user/upload/profile-picture';
+  static const String update_user_profile = 'auth/individual-user/update';
 }

@@ -16,6 +16,8 @@ import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart'
     show SignUpResponseModel;
 import '../model/support_entity_model.dart';
+import '../model/update_user_profile_entity.dart';
+import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -40,9 +42,13 @@ class AuthContractsImpl {
   Future<VerifyPassOtpRespnseModel> verifyForgotPassword(
     VerifyPhoneEntityModel verifyPhoneEntity,
   ) async => await _api.verifyForgotPassword(verifyPhoneEntity);
-  Future<dynamic> resetPin(
-    {ResetPasswordEntityModel? resetPasswordEntity,String? resetToken}
-  ) async => await _api.resetPin(resetPasswordEntity:resetPasswordEntity,resetToken: resetToken);
+  Future<dynamic> resetPin({
+    ResetPasswordEntityModel? resetPasswordEntity,
+    String? resetToken,
+  }) async => await _api.resetPin(
+    resetPasswordEntity: resetPasswordEntity,
+    resetToken: resetToken,
+  );
   Future<ChangePhoneNoResponseModel> changePhoneNo({
     ResendOtpEntityModel? changePhoneNo,
     String? id,
@@ -54,6 +60,9 @@ class AuthContractsImpl {
       await _api.setPin(setPinEntity);
   Future<dynamic> support(SupportEntityModel supportEntity) async =>
       await _api.support(supportEntity);
-   Future<dynamic> uploadProPicture(MultipartFile file)async =>
+  Future<dynamic> uploadProPicture(MultipartFile file) async =>
       await _api.uploadProPicture(file);
+  Future<UpdateUserProfileResponseModel> uploadUserProfile(
+    UpdateUserProfileEntity? userProfile,
+  ) async => await _api.uploadUserProfile(userProfile!);
 }

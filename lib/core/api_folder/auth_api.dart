@@ -9,11 +9,13 @@ import 'package:medicate_app/core/connect_end/model/set_pin_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_pin_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
     as sup;
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
+import '../connect_end/model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
@@ -231,6 +233,21 @@ class AuthApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<UpdateUserProfileResponseModel> uploadUserProfile(UpdateUserProfileEntity userProfile) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_user_profile,
+        RequestMethod.patch,
+        data: userProfile.toJson(),
+      );
+      logger.d(response.data);
+      return UpdateUserProfileResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

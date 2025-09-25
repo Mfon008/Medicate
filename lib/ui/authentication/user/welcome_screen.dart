@@ -62,7 +62,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         viewModelBuilder: () => locator<AuthViewModel>(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            model.getUserDetails(context: context, phoneNo: widget.phone??SharedPreferencesService.instance.usersData['phone']['phoneNumber']);
+            model.getUserDetails(
+              context: context,
+              phoneNo:
+                  widget.phone ??
+                  SharedPreferencesService
+                      .instance
+                      .usersData['phone']['phoneNumber'],
+            );
           });
         },
         disposeViewModel: false,
@@ -178,7 +185,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   SizedBox(height: 20.0.h),
                   model.getUserDetailsResponseModel != null &&
-                          model.getUserDetailsResponseModel?.data?.pinSet ==
+                              model.getUserDetailsResponseModel?.data?.pinSet ==
+                                  true ||
+                          SharedPreferencesService
+                                  .instance
+                                  .usersData['pinSet'] ==
                               true
                       ? Column(
                           children: [

@@ -17,6 +17,8 @@ import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/support_entity_model.dart';
+import '../model/update_user_profile_entity.dart';
+import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
 
@@ -67,8 +69,14 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<dynamic> resetPin({ResetPasswordEntityModel? resetPasswordEntity,String? resetToken}) async {
-    final response = await _contract.resetPin(resetPasswordEntity:resetPasswordEntity, resetToken: resetToken);
+  Future<dynamic> resetPin({
+    ResetPasswordEntityModel? resetPasswordEntity,
+    String? resetToken,
+  }) async {
+    final response = await _contract.resetPin(
+      resetPasswordEntity: resetPasswordEntity,
+      resetToken: resetToken,
+    );
     return response;
   }
 
@@ -105,8 +113,15 @@ class AuthRepoImpl {
     return response;
   }
 
-   Future<dynamic> uploadProPicture(MultipartFile file) async {
+  Future<dynamic> uploadProPicture(MultipartFile file) async {
     final response = await _contract.uploadProPicture(file);
+    return response;
+  }
+
+  Future<UpdateUserProfileResponseModel> uploadUserProfile(
+    UpdateUserProfileEntity? userProfile,
+  ) async {
+    final response = await _contract.uploadUserProfile(userProfile);
     return response;
   }
 

@@ -25,65 +25,52 @@ class ImagePickerHandler {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
-      builder:
-          (context) => BottomSheet(
-            backgroundColor: AppColors.white,
-            onClosing: () {},
-            builder:
-                (context) => Wrap(
-                  children: <Widget>[
-                    ListTile(
-                      title: Center(
-                        child: TextView(
-                          text: 'Pick from library',
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      onTap:
-                          () => Navigator.pop(
-                            context,
-                            ProfileOptionAction.library,
-                          ),
-                    ),
-                    const Divider(),
-                    ListTile(
-                      title: Center(
-                        child: TextView(
-                          text: 'Take a photo',
-                          fontSize: 17.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      onTap:
-                          () => Navigator.pop(
-                            context,
-                            ProfileOptionAction.profileCamera,
-                          ),
-                    ),
-                    InkWell(
-                      onTap:
-                          () => Navigator.pop(
-                            context,
-                            ProfileOptionAction.remove,
-                          ),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.all(12.0),
-                        color: Colors.grey[200],
-                        child: Center(
-                          child: TextView(
-                            text: 'Cancel',
-                            fontSize: 17.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 40.h),
-                  ],
+      builder: (context) => BottomSheet(
+        backgroundColor: AppColors.white,
+        onClosing: () {},
+        builder: (context) => Wrap(
+          children: <Widget>[
+            ListTile(
+              title: Center(
+                child: TextView(
+                  text: 'Pick from library',
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
                 ),
-          ),
+              ),
+              onTap: () => Navigator.pop(context, ProfileOptionAction.library),
+            ),
+            const Divider(),
+            ListTile(
+              title: Center(
+                child: TextView(
+                  text: 'Take a photo',
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onTap: () =>
+                  Navigator.pop(context, ProfileOptionAction.profileCamera),
+            ),
+            InkWell(
+              onTap: () => Navigator.pop(context, ProfileOptionAction.remove),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.all(12.0),
+                color: Colors.grey[200],
+                child: Center(
+                  child: TextView(
+                    text: 'Cancel',
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 40.h),
+          ],
+        ),
+      ),
     );
     if (action == null) return;
     File? getFile = await handleProfileAction(context, action: action);
@@ -137,5 +124,4 @@ class ImagePickerHandler {
   }
 }
 
-class AppColor {
-}
+class AppColor {}

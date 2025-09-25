@@ -41,13 +41,13 @@ class _MoreScreenState extends State<MoreScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: ViewModelBuilder<AuthViewModel>.reactive(
-      viewModelBuilder: () => locator<AuthViewModel>(),
-      onViewModelReady: (model) {
-        // model.getUserDetails(context: context, phoneNo: widget.phoneNumber);
-      },
-      disposeViewModel: false,
-      builder: (_, AuthViewModel model, __) {
-        return SingleChildScrollView(
+        viewModelBuilder: () => locator<AuthViewModel>(),
+        onViewModelReady: (model) {
+          // model.getUserDetails(context: context, phoneNo: widget.phoneNumber);
+        },
+        disposeViewModel: false,
+        builder: (_, AuthViewModel model, __) {
+          return SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 16.20.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +149,7 @@ class _MoreScreenState extends State<MoreScreen> {
                         vertical: 10.w,
                         horizontal: 12.w,
                       ),
-          
+
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.r),
                         color: selectHistory == e
@@ -187,7 +187,7 @@ class _MoreScreenState extends State<MoreScreen> {
               ],
             ),
           );
-        }
+        },
       ),
     );
   }

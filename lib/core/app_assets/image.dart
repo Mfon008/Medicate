@@ -47,6 +47,13 @@ class AppImage {
   static const String filter = 'assets/svgs/filter.svg';
   static const String key = 'assets/svgs/key.svg';
   static const String faq = 'assets/svgs/faq.svg';
+  static const String drip = 'assets/svgs/drip.svg';
+  static const String inhaler = 'assets/svgs/inhaler.svg';
+  static const String ointment = 'assets/svgs/ointment.svg';
+  static const String pill = 'assets/svgs/pill.svg';
+  static const String syringe = 'assets/svgs/syringe.svg';
+  static const String syrup = 'assets/svgs/syrup.svg';
+  static const String other_meds = 'assets/svgs/others.svg';
   static const String policy = 'assets/svgs/policy.svg';
   static const String terms = 'assets/svgs/terms.svg';
   static const String wallet = 'assets/svgs/wallet.svg';

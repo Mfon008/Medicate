@@ -148,7 +148,8 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
                             newPin: pinInput,
                             userIntent: 'reset-pin',
                           ),
-                          resetToken: model.verifyPassOtpRespnseModel?.data?.resetToken
+                          resetToken:
+                              model.verifyPassOtpRespnseModel?.data?.resetToken,
                         );
                       }
                     },
