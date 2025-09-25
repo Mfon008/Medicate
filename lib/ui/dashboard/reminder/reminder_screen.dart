@@ -25,6 +25,7 @@ class ReminderScreen extends StatefulWidget {
 class _ReminderScreenState extends State<ReminderScreen> {
   TextEditingController medNameController = TextEditingController();
   TextEditingController medDosageController = TextEditingController();
+  TextEditingController medDurationController = TextEditingController();
   TextEditingController drugNameController = TextEditingController();
   TextEditingController medTypeController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -34,6 +35,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   String medTypeResult = '';
   String medTypeResultImage = '';
   int? index;
+  int? indexDuration;
 
   List<MedType> medTypeList = [
     MedType(medType: 'Pills', medTypeImage: AppImage.pill),
@@ -209,6 +211,98 @@ class _ReminderScreenState extends State<ReminderScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<String?> showMedDurationMenu(BuildContext context) async {
+    return await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setMenuState) {
+            return Container(
+              margin: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    TextView(
+                      text: 'Duration',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16.60.sp,
+                        color: AppColors.greyee,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 14.h),
+                    for (int i = 1; i < 15; i++)
+                      GestureDetector(
+                        onTap: () {
+                          setMenuState(() {
+                            indexDuration = i;
+                          });
+
+                          Future.delayed(Duration(milliseconds: 200), () {
+                            Navigator.pop(ctx, indexDuration.toString());
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 12.w),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.w,
+                            horizontal: 12.w,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: indexDuration == i
+                                ? AppColors.skyBlue
+                                : AppColors.white,
+                            border: Border.all(
+                              color: indexDuration == i
+                                  ? AppColors.primary1
+                                  : Colors.transparent,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              TextView(
+                                text: i > 1
+                                    ? '$i days'
+                                    : '$i day',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.60.sp,
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (indexDuration == i)
+                                Icon(
+                                  Icons.check,
+                                  color: AppColors.primary1,
+                                  size: 15.60.sp,
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -624,7 +718,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-
                             controller: descriptionController,
                             validator: AppValidator.validateString(),
                           ),
@@ -680,30 +773,56 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                               ),
                                       ),
                                     ),
-                                    GestureDetector(
-                                      onTap: () => model.pickDrugImage(context),
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 22.w,
-                                          vertical: 10.10.w,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            32,
+                                    model.imageDrug != null
+                                        ? Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  model.imageDrug = null;
+                                                  model.notifyListeners();
+                                                },
+                                                child: SvgPicture.asset(
+                                                  AppImage.delete,
+                                                  height: 16.68.h,
+                                                  width: 15.2.w,
+                                                ),
+                                              ),
+                                              SizedBox(width: 18.30.w),
+                                              GestureDetector(
+                                                onTap: () => model
+                                                    .pickDrugImage(context),
+                                                child: SvgPicture.asset(
+                                                  AppImage.upload,
+                                                  height: 17.0.h,
+                                                  width: 16.68.w,
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : GestureDetector(
+                                            onTap: () =>
+                                                model.pickDrugImage(context),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 22.w,
+                                                vertical: 10.10.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(32),
+                                                color: AppColors.grey,
+                                              ),
+                                              child: TextView(
+                                                text: 'Upload',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 14.40.sp,
+                                                  color: AppColors.deep,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          color: AppColors.grey,
-                                        ),
-                                        child: TextView(
-                                          text: 'Upload',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 14.40.sp,
-                                            color: AppColors.deep,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -828,9 +947,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-                            controller: medNameController,
+                            readOnly: true,
+                            controller: medDurationController,
                             suffixWidget: IconButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                final result = await showMedDurationMenu(
+                                  context,
+                                );
+                                if (result != null) {
+                                  setModalState(() {
+                                    medDurationController.text = result;
+                                  });
+                                }
+                              },
                               icon: Icon(
                                 Icons.keyboard_arrow_down,
                                 color: AppColors.grey1,

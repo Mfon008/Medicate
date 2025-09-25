@@ -7,6 +7,8 @@ class AppImage {
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String calendar = 'assets/svgs/calendar.svg';
+  static const String delete = 'assets/svgs/delete.svg';
+  static const String upload = 'assets/svgs/upload.svg';
   static const String arrow_down = 'assets/svgs/arrow_down.svg';
   static const String x = 'assets/svgs/x.svg';
   static const String facebook = 'assets/svgs/facebook.svg';
