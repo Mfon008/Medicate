@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/country_code_format.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
@@ -67,7 +68,8 @@ class AuthViewModel extends BaseViewModel {
   SignUpResponseModel? _signUpResponseModel;
   SignUpResponseModel? get signUpResponseModel => _signUpResponseModel;
   UpdateUserProfileResponseModel? _updateUserProfileResponseModel;
-  UpdateUserProfileResponseModel? get updateUserProfileResponseModel => _updateUserProfileResponseModel;
+  UpdateUserProfileResponseModel? get updateUserProfileResponseModel =>
+      _updateUserProfileResponseModel;
   VerifyOtpResponseModel? _verifyOtpRespnseModel;
   VerifyOtpResponseModel? get verifyOtpRespnseModel => _verifyOtpRespnseModel;
   SetPinResponseModel? _setPinResponseModel;
@@ -99,7 +101,55 @@ class AuthViewModel extends BaseViewModel {
   int _start = 60;
   final _pickImage = ImagePickerHandler();
   File? image;
+  File? imageDrug;
   String? filename;
+  String? drugFilename;
+
+  TextEditingController dateTimeController = TextEditingController();
+  String? _pickedDate;
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(), // The date initially displayed
+      firstDate: DateTime.now(), // The earliest selectable date
+      lastDate: DateTime(2101), // The latest selectable date
+    );
+
+    if (pickedDate != null) {
+      _pickedDate = DateFormat('dd MMM, yyyy').format(pickedDate);
+      selectTime(context);
+    }
+    notifyListeners();
+  }
+
+  Future<void> selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(), // The time initially displayed
+    );
+
+    if (pickedTime != null) {
+      dateTimeController.text =
+          '${_pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
+    }
+    notifyListeners();
+  }
+
+  String formatTime(String timeString) {
+    DateTime dateTime = DateFormat("HH:mm").parse(timeString);
+    return DateFormat("hh:mm a").format(dateTime);
+  }
+
+  String getStringFrLabel(String i) {
+    if (i == '') {
+      return '';
+    }
+    if (int.parse(i) > 1) {
+      return '$i tablets';
+    }
+    return '$i tablet';
+  }
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -438,7 +488,10 @@ class AuthViewModel extends BaseViewModel {
         repositoryImply.uploadUserProfile(userEntity),
         throwException: true,
       );
-      AppUtils.snackbar(context, message: _updateUserProfileResponseModel?.message??'');
+      AppUtils.snackbar(
+        context,
+        message: _updateUserProfileResponseModel?.message ?? '',
+      );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -468,6 +521,21 @@ class AuthViewModel extends BaseViewModel {
             ),
           );
 
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickDrugImage(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) {
+          imageDrug = file;
+          drugFilename = imageDrug!.path.split("/").last;
           notifyListeners();
         },
       );

@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/ui/dashboard/reminder/med_type.dart';
+import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/view_model/auth_view_model.dart';
+import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
 import '../../widget/text.dart';
@@ -21,6 +24,7 @@ class ReminderScreen extends StatefulWidget {
 
 class _ReminderScreenState extends State<ReminderScreen> {
   TextEditingController medNameController = TextEditingController();
+  TextEditingController medDosageController = TextEditingController();
   TextEditingController drugNameController = TextEditingController();
   TextEditingController medTypeController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -29,6 +33,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
   String medTypeResult = '';
   String medTypeResultImage = '';
+  int? index;
 
   List<MedType> medTypeList = [
     MedType(medType: 'Pills', medTypeImage: AppImage.pill),
@@ -207,6 +212,96 @@ class _ReminderScreenState extends State<ReminderScreen> {
     );
   }
 
+  Future<String?> showMedDosageMenu(BuildContext context) async {
+    return await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setMenuState) {
+            return Container(
+              margin: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    TextView(
+                      text: 'Dosage',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16.60.sp,
+                        color: AppColors.greyee,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 14.h),
+                    for (int i = 1; i < 11; i++)
+                      GestureDetector(
+                        onTap: () {
+                          setMenuState(() {
+                            index = i;
+                          });
+
+                          Future.delayed(Duration(milliseconds: 200), () {
+                            Navigator.pop(ctx, index.toString());
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 12.w),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.w,
+                            horizontal: 12.w,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: index == i
+                                ? AppColors.skyBlue
+                                : AppColors.white,
+                            border: Border.all(
+                              color: index == i
+                                  ? AppColors.primary1
+                                  : Colors.transparent,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              TextView(
+                                text: i > 1 ? '$i tablets' : '$i tablet',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.60.sp,
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (index == i)
+                                Icon(
+                                  Icons.check,
+                                  color: AppColors.primary1,
+                                  size: 15.60.sp,
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Future<Map<String, String>?> showMedTypeMenu(BuildContext context) async {
     return await showModalBottomSheet<Map<String, String>>(
       context: context,
@@ -217,8 +312,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
         return StatefulBuilder(
           builder: (ctx, setMenuState) {
             return Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(16),
+              margin: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -327,574 +422,615 @@ class _ReminderScreenState extends State<ReminderScreen> {
             maxChildSize: 0.88, // Maximum height
             expand: true, // Set to true for full height initially
             builder: (BuildContext context, ScrollController scrollController) {
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(22.r),
-                  color: AppColors.white,
-                ),
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 22.w,
-                    vertical: 20.w,
-                  ),
-                  controller: scrollController,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+              return ViewModelBuilder<AuthViewModel>.reactive(
+                viewModelBuilder: () => locator<AuthViewModel>(),
+                onViewModelReady: (model) {},
+                disposeViewModel: false,
+                builder: (_, AuthViewModel model, _) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22.r),
+                      color: AppColors.white,
+                    ),
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 22.w,
+                        vertical: 20.w,
+                      ),
+                      controller: scrollController,
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(height: 20, width: 20),
-                          TextView(
-                            text: 'Add Medication',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              fontSize: 15.2.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.deep,
-                            ),
-                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(height: 20, width: 20),
+                              TextView(
+                                text: 'Add Medication',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 15.2.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.deep,
+                                ),
+                              ),
 
-                          Padding(
-                            padding: EdgeInsets.only(top: 4.w),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: SvgPicture.asset(
-                                AppImage.cancel,
-                                height: 14.20,
-                                width: 14.20,
-                                color: AppColors.black,
+                              Padding(
+                                padding: EdgeInsets.only(top: 4.w),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: SvgPicture.asset(
+                                    AppImage.cancel,
+                                    height: 14.20,
+                                    width: 14.20,
+                                    color: AppColors.black,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 13.60.h),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 300.w,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5.0),
-                              ), // Adjust radius as needed
-                              child: LinearProgressIndicator(
-                                minHeight: 4.0, // Adjust height as needed
-                                value: 0.59,
-                                color: AppColors.primary, // Progress bar color
-                                backgroundColor:
-                                    Colors.grey[300], // Background track color
+                          SizedBox(height: 13.60.h),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 300.w,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(5.0),
+                                  ), // Adjust radius as needed
+                                  child: LinearProgressIndicator(
+                                    minHeight: 4.0, // Adjust height as needed
+                                    value: 0.59,
+                                    color:
+                                        AppColors.primary, // Progress bar color
+                                    backgroundColor: Colors
+                                        .grey[300], // Background track color
+                                  ),
+                                ),
                               ),
-                            ),
+                              SizedBox(width: 8.2.h),
+                              TextView(
+                                text: '1/4',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 13.2.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(width: 8.2.h),
-                          TextView(
-                            text: '1/4',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 13.2.sp,
+                          SizedBox(height: 20.h),
+                          TextFormWidget(
+                            hint: 'Medication Name',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            hintSize: 14.60.sp,
+                            labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
-                              color: AppColors.reminder,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
                             ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: medNameController,
+                            validator: AppValidator.validateString(),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20.h),
-                      TextFormWidget(
-                        hint: 'Medication Name',
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        hintSize: 14.60.sp,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: medNameController,
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 16.h),
-                      TextFormWidget(
-                        hint: 'Drug Name',
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        hintSize: 14.60.sp,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: drugNameController,
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 16.h),
-                      TextView(
-                        text: 'Medication Type',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.60.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      TextFormWidget(
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        hintSize: 16.60.sp,
-                        readOnly: true,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        prefixWidget: medTypeResultImage.isNotEmpty
-                            ? Padding(
-                                padding: EdgeInsets.all(10.w),
-                                child: SvgPicture.asset(medTypeResultImage),
-                              )
-                            : SizedBox.shrink(),
-                        suffixWidget: IconButton(
-                          icon: Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                            color: AppColors.greyee,
-                          ),
-                          onPressed: () async {
-                            final result = await showMedTypeMenu(context);
-
-                            if (result != null) {
-                              setModalState(() {
-                                medTypeResultImage = result["icon"] ?? '';
-                                medTypeController.text = result["type"] ?? '';
-                              });
-                            }
-                          },
-                        ),
-                        controller: medTypeController,
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 16.h),
-                      TextView(
-                        text: 'Description',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.60.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      TextFormWidget(
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        hintSize: 16.60.sp,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-
-                        controller: descriptionController,
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 16.h),
-                      TextView(
-                        text: 'Medication picture upload',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.60.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 10.h),
-                      SizedBox(
-                        width: double.infinity,
-                        child: DottedBorder(
-                          options: RoundedRectDottedBorderOptions(
-                            dashPattern: [3, 3],
-                            strokeWidth: .94,
-                            radius: Radius.circular(10),
-                            color: AppColors.infoGrey1,
-                          ),
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              vertical: 16.20.w,
-                              horizontal: 16.0.w,
+                          SizedBox(height: 16.h),
+                          TextFormWidget(
+                            hint: 'Drug Name',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            hintSize: 14.60.sp,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
                             ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.r),
-                              color: AppColors.white,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: 140.w,
-                                  height: 84.h,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.grey,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      AppImage.image_icon,
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 36.w,
-                                    vertical: 13.80.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(32),
-                                    color: AppColors.grey,
-                                  ),
-                                  child: TextView(
-                                    text: 'Upload',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.60.sp,
-                                      color: AppColors.deep,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: drugNameController,
+                            validator: AppValidator.validateString(),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 24.0.h),
-                      TextView(
-                        text: 'SET SCHEDULE AND DOSAGE',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.80.sp,
-                          color: AppColors.grey1,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      Divider(color: AppColors.grey),
-                      SizedBox(height: 12.h),
-                      Row(
-                        children: [
+                          SizedBox(height: 16.h),
                           TextView(
-                            text: 'Dosage ',
+                            text: 'Medication Type',
                             textStyle: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 16.60.sp,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          SizedBox(height: 12.h),
+                          TextFormWidget(
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            hintSize: 16.60.sp,
+                            readOnly: true,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            prefixWidget: medTypeResultImage.isNotEmpty
+                                ? Padding(
+                                    padding: EdgeInsets.all(10.w),
+                                    child: SvgPicture.asset(medTypeResultImage),
+                                  )
+                                : SizedBox.shrink(),
+                            suffixWidget: IconButton(
+                              icon: Icon(
+                                Icons.keyboard_arrow_down_outlined,
+                                color: AppColors.greyee,
+                              ),
+                              onPressed: () async {
+                                final result = await showMedTypeMenu(context);
+
+                                if (result != null) {
+                                  setModalState(() {
+                                    medTypeResultImage = result["icon"] ?? '';
+                                    medTypeController.text =
+                                        result["type"] ?? '';
+                                  });
+                                }
+                              },
+                            ),
+                            controller: medTypeController,
+                            validator: AppValidator.validateString(),
+                          ),
+                          SizedBox(height: 16.h),
                           TextView(
-                            text: '(mg)',
+                            text: 'Description',
                             textStyle: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 16.60.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          TextFormWidget(
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            hintSize: 16.60.sp,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+
+                            controller: descriptionController,
+                            validator: AppValidator.validateString(),
+                          ),
+                          SizedBox(height: 16.h),
+                          TextView(
+                            text: 'Medication picture upload',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 16.60.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: DottedBorder(
+                              options: RoundedRectDottedBorderOptions(
+                                dashPattern: [3, 3],
+                                strokeWidth: .94,
+                                radius: Radius.circular(10),
+                                color: AppColors.infoGrey1,
+                              ),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 16.20.w,
+                                  horizontal: 16.0.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.r),
+                                  color: AppColors.white,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      width: 140.w,
+                                      height: 84.h,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.grey,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Center(
+                                        child: model.imageDrug != null
+                                            ? Image.file(
+                                                model.imageDrug!,
+                                                height: 75.80.h,
+                                                width: 70.80.w,
+                                              )
+                                            : SvgPicture.asset(
+                                                AppImage.image_icon,
+                                              ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => model.pickDrugImage(context),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 22.w,
+                                          vertical: 10.10.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            32,
+                                          ),
+                                          color: AppColors.grey,
+                                        ),
+                                        child: TextView(
+                                          text: 'Upload',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.40.sp,
+                                            color: AppColors.deep,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 24.0.h),
+                          TextView(
+                            text: 'SET SCHEDULE AND DOSAGE',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 14.80.sp,
                               color: AppColors.grey1,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 14.0.h),
-                      TextFormWidget(
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: medNameController,
-                        suffixWidget: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColors.grey1,
-                            size: 20.sp,
+                          SizedBox(height: 12.h),
+                          Divider(color: AppColors.grey),
+                          SizedBox(height: 12.h),
+                          Row(
+                            children: [
+                              TextView(
+                                text: 'Dosage ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.60.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextView(
+                                text: '(mg)',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.60.sp,
+                                  color: AppColors.grey1,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 24.0.h),
-                      TextFormWidget(
-                        hint: 'Start Date & Time',
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        hintSize: 14.60.sp,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: medNameController,
-                        suffixWidget: Padding(
-                          padding: EdgeInsets.all(8.w),
-                          child: SvgPicture.asset(
-                            AppImage.calendar,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 24.0.h),
-                      TextFormWidget(
-                        hint: 'Duration',
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: medNameController,
-                        suffixWidget: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColors.grey1,
-                            size: 20.sp,
-                          ),
-                        ),
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 24.0.h),
-                      Row(
-                        children: [
-                          TextView(
-                            text: 'End Date ',
-                            textStyle: TextStyle(
+                          SizedBox(height: 14.0.h),
+                          TextFormWidget(
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: model.getStringFrLabel(
+                              medDosageController.text,
+                            ),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
-                              fontSize: 16.60.sp,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 16.80.sp,
+                              color: AppColors.infoGrey,
                             ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            readOnly: true,
+                            suffixWidget: IconButton(
+                              onPressed: () async {
+                                final result = await showMedDosageMenu(context);
+                                if (result != null) {
+                                  setModalState(() {
+                                    medDosageController.text = result;
+                                  });
+                                }
+                              },
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.grey1,
+                                size: 20.sp,
+                              ),
+                            ),
+                            validator: AppValidator.validateString(),
                           ),
-                          Icon(
-                            Icons.info_outline,
-                            color: AppColors.yellow,
-                            size: 20.sp,
+                          SizedBox(height: 24.0.h),
+                          TextFormWidget(
+                            hint: 'Start Date & Time',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            readOnly: true,
+                            hintSize: 14.60.sp,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: model.dateTimeController,
+                            suffixWidget: Padding(
+                              padding: EdgeInsets.all(8.w),
+                              child: GestureDetector(
+                                onTap: () => model.selectDate(context),
+                                child: SvgPicture.asset(
+                                  AppImage.calendar,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            validator: AppValidator.validateString(),
+                          ),
+                          SizedBox(height: 24.0.h),
+                          TextFormWidget(
+                            hint: 'Duration',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: medNameController,
+                            suffixWidget: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.grey1,
+                                size: 20.sp,
+                              ),
+                            ),
+                            validator: AppValidator.validateString(),
+                          ),
+                          SizedBox(height: 24.0.h),
+                          Row(
+                            children: [
+                              TextView(
+                                text: 'End Date ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.60.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Icon(
+                                Icons.info_outline,
+                                color: AppColors.yellow,
+                                size: 20.sp,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 14.0.h),
+                          TextFormWidget(
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: medNameController,
+                            suffixWidget: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.grey1,
+                                size: 20.sp,
+                              ),
+                            ),
+                            validator: AppValidator.validateString(),
+                          ),
+                          SizedBox(height: 24.0.h),
+                          TextFormWidget(
+                            hint: 'No of Times to be taken daily',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            label: '',
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: medNameController,
+                            suffixWidget: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.grey1,
+                                size: 20.sp,
+                              ),
+                            ),
+                            validator: AppValidator.validateString(),
+                          ),
+                          SizedBox(height: 24.0.h),
+                          Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 12.w,
+                              horizontal: 12.w,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: AppColors.grey,
+                                width: 2,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Day 1',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 15.20.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.keyboard_arrow_up,
+                                        color: AppColors.grey1,
+                                        size: 24.sp,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 4.h),
+                                TextFormWidget(
+                                  hint: 'Dose 1',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  label: 'Morning',
+                                  hintSize: 14.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  controller: medNameController,
+                                  suffixWidget: Padding(
+                                    padding: EdgeInsets.all(8.w),
+                                    child: TextView(
+                                      text: 'Edit',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 13.60.sp,
+                                        color: AppColors.fineGrey,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppColors.fineGrey,
+                                      ),
+                                    ),
+                                  ),
+                                  validator: AppValidator.validateString(),
+                                ),
+                                SizedBox(height: 12.0.h),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Apply to all days',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    Transform.scale(
+                                      scale: isTablet(context) ? 1.5 : 1.1,
+                                      child: Checkbox(
+                                        value: true,
+                                        onChanged: (value) {
+                                          // setState(() {
+                                          //   isChecked = value ?? false;
+                                          // });
+                                        },
+                                        activeColor: AppColors.primary,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        visualDensity: VisualDensity
+                                            .compact, // 👈 reduces internal padding
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 12.0.h),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 14.0.h),
-                      TextFormWidget(
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: medNameController,
-                        suffixWidget: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColors.grey1,
-                            size: 20.sp,
-                          ),
-                        ),
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 24.0.h),
-                      TextFormWidget(
-                        hint: 'No of Times to be taken daily',
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: '',
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: medNameController,
-                        suffixWidget: IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: AppColors.grey1,
-                            size: 20.sp,
-                          ),
-                        ),
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 24.0.h),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 12.w,
-                          horizontal: 12.w,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.grey, width: 2),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextView(
-                                  text: 'Day 1',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 15.20.sp,
-                                    color: AppColors.black,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.keyboard_arrow_up,
-                                    color: AppColors.grey1,
-                                    size: 24.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4.h),
-                            TextFormWidget(
-                              hint: 'Dose 1',
-                              borderColor: AppColors.transparent,
-                              borderTopLeft: 10.r,
-                              borderTopRight: 10.r,
-                              borderBottomLeft: 10.r,
-                              borderBottomRight: 10.r,
-                              label: 'Morning',
-                              hintSize: 14.60.sp,
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                color: AppColors.infoGrey,
-                              ),
-                              fillColor: AppColors.grey,
-                              isFilled: true,
-                              controller: medNameController,
-                              suffixWidget: Padding(
-                                padding: EdgeInsets.all(8.w),
-                                child: TextView(
-                                  text: 'Edit',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 13.60.sp,
-                                    color: AppColors.fineGrey,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor: AppColors.fineGrey,
-                                  ),
-                                ),
-                              ),
-                              validator: AppValidator.validateString(),
-                            ),
-                            SizedBox(height: 12.0.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextView(
-                                  text: 'Apply to all days',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16.sp,
-                                    color: AppColors.black,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                                Transform.scale(
-                                  scale: isTablet(context) ? 1.5 : 1.1,
-                                  child: Checkbox(
-                                    value: true,
-                                    onChanged: (value) {
-                                      // setState(() {
-                                      //   isChecked = value ?? false;
-                                      // });
-                                    },
-                                    activeColor: AppColors.primary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    visualDensity: VisualDensity
-                                        .compact, // 👈 reduces internal padding
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12.0.h),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
           );
