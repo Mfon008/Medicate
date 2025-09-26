@@ -1168,6 +1168,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                           if (intList.isNotEmpty &&
                               medDailyInTakenController.text.isNotEmpty)
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ...intList.map(
                                   (e) => model.dosageWidgetContainer(
@@ -1179,6 +1180,57 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                     ),
                                   ),
                                 ),
+                                SizedBox(height: 14.0.h),
+                                TextView(
+                                  text: 'Add Note',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.60.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                TextFormWidget(
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.80.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled:
+                                      true, // Minimum number of lines visible
+                                  maxline:
+                                      3, // Maximum number of lines visible before scrolling
+                                  keyboardType: TextInputType.multiline,
+                                  validator: AppValidator.validateString(),
+                                ),
+
+                                SizedBox(height: 20.h),
+                                Center(
+                    child: GestureDetector(
+                      onTap: (){},
+                      child: TextView(
+                        text: 'Add Another Medication',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 17.2.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primary,
+                          decorationStyle: TextDecorationStyle.solid,
+                          decorationThickness: 2,
+                          
+                        ),
+                      ),
+                    ),
+                  ),
                                 SizedBox(height: 30.h),
                                 ButtonWidget(
                                   border: 100.r,
@@ -1187,11 +1239,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   color: AppColors.white,
                                   buttonBorderColor: AppColors.transparent,
                                   onPressed: () {
-                                    // print(
-                                    //   model.doseControllers
-                                    //       .map((c) => c.text)
-                                    //       .toList(),
-                                    // );
                                     for (
                                       var day = 0;
                                       day < model.doseControllers.length;

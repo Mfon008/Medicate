@@ -146,7 +146,7 @@ class AuthViewModel extends BaseViewModel {
       margin: EdgeInsets.only(bottom: 10.w),
       padding: EdgeInsets.symmetric(
         vertical: dosageValue == callback ? 12.w : 8.w,
-        horizontal: 12.w,
+        horizontal: 14.w,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
@@ -224,7 +224,7 @@ class AuthViewModel extends BaseViewModel {
                   );
                 }),
 
-                SizedBox(height: 12.0.h),
+                SizedBox(height: callback == 0 ? 12.0.h : 0.h),
                 if (callback == 0)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
