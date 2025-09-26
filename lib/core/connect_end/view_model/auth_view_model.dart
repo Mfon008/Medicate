@@ -109,10 +109,38 @@ class AuthViewModel extends BaseViewModel {
   String? pickedDate;
 
   int? dosageValue;
+  List<List<TextEditingController>> doseControllers = [];
 
-  dosageWidgetContainer({context, callback, listOfTimes}) {
+  void initDayDoseControllers({required int dayIndex, required int count}) {
+    // Ensure outer list has enough days
+    while (doseControllers.length <= dayIndex) {
+      doseControllers.add([]);
+    }
+
+    // Dispose old ones for that day
+    for (var c in doseControllers[dayIndex]) {
+      c.dispose();
+    }
+
+    // Assign new ones
+    doseControllers[dayIndex] = List.generate(
+      count,
+      (_) => TextEditingController(),
+    );
+  }
+
+  dosageWidgetContainer({
+    required BuildContext context,
+    required int callback,
+    required List<int> listOfTimes,
+  }) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
+    // ✅ Only initialize once
+    if (doseControllers.length <= callback ||
+        doseControllers[callback].isEmpty) {
+      initDayDoseControllers(dayIndex: callback, count: listOfTimes.length);
+    }
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(bottom: 10.w),
@@ -154,11 +182,13 @@ class AuthViewModel extends BaseViewModel {
                   ],
                 ),
                 SizedBox(height: 10.h),
-                ...listOfTimes.map(
-                  (e) => Padding(
+                ...listOfTimes.asMap().entries.map((entry) {
+                  final i = entry.key; // index
+                  final e = entry.value;
+                  return Padding(
                     padding: EdgeInsets.only(bottom: 10.w),
                     child: TextFormWidget(
-                      hint: 'Dose ${e+1}',
+                      hint: 'Dose ${e + 1}',
                       borderColor: AppColors.transparent,
                       borderTopLeft: 10.r,
                       borderTopRight: 10.r,
@@ -174,7 +204,7 @@ class AuthViewModel extends BaseViewModel {
                       ),
                       fillColor: AppColors.grey,
                       isFilled: true,
-                      // controller: medNameController,
+                      controller: doseControllers[callback][i],
                       suffixWidget: Padding(
                         padding: EdgeInsets.all(8.w),
                         child: TextView(
@@ -191,8 +221,8 @@ class AuthViewModel extends BaseViewModel {
                       ),
                       validator: AppValidator.validateString(),
                     ),
-                  ),
-                ),
+                  );
+                }),
 
                 SizedBox(height: 12.0.h),
                 if (callback == 0)

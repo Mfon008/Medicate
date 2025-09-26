@@ -13,6 +13,7 @@ import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
+import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
@@ -616,6 +617,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
                 viewModelBuilder: () => locator<AuthViewModel>(),
                 onViewModelReady: (model) {},
                 disposeViewModel: false,
+                onDispose: (viewModel) {
+                  // for (final c in viewModel.doseControllers) {
+                  //   c.clear();
+                  // }
+                },
                 builder: (_, AuthViewModel model, _) {
                   return Container(
                     decoration: BoxDecoration(
@@ -1161,15 +1167,46 @@ class _ReminderScreenState extends State<ReminderScreen> {
                           SizedBox(height: 24.0.h),
                           if (intList.isNotEmpty &&
                               medDailyInTakenController.text.isNotEmpty)
-                            ...intList.map(
-                              (e) => model.dosageWidgetContainer(
-                                context: context,
-                                callback: e,
-                                listOfTimes: List.generate(
-                                  int.parse(medDailyInTakenController.text),
-                                  (index) => index,
+                            Column(
+                              children: [
+                                ...intList.map(
+                                  (e) => model.dosageWidgetContainer(
+                                    context: context,
+                                    callback: e,
+                                    listOfTimes: List.generate(
+                                      int.parse(medDailyInTakenController.text),
+                                      (index) => index,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                SizedBox(height: 30.h),
+                                ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.primary,
+                                  buttonText: 'Preview',
+                                  color: AppColors.white,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () {
+                                    // print(
+                                    //   model.doseControllers
+                                    //       .map((c) => c.text)
+                                    //       .toList(),
+                                    // );
+                                    for (
+                                      var day = 0;
+                                      day < model.doseControllers.length;
+                                      day++
+                                    ) {
+                                      print("Day ${day + 1}:");
+                                      for (var dose
+                                          in model.doseControllers[day]) {
+                                        print("  ${dose.text}");
+                                      }
+                                    }
+                                  },
+                                ),
+                                SizedBox(height: 30.h),
+                              ],
                             ),
                         ],
                       ),
