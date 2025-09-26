@@ -106,18 +106,168 @@ class AuthViewModel extends BaseViewModel {
   String? drugFilename;
 
   TextEditingController dateTimeController = TextEditingController();
-  String? _pickedDate;
+  String? pickedDate;
+
+  int? dosageValue;
+
+  dosageWidgetContainer({context, callback, listOfTimes}) {
+    bool isTablet(BuildContext context) =>
+        MediaQuery.of(context).size.shortestSide >= 600;
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 10.w),
+      padding: EdgeInsets.symmetric(
+        vertical: dosageValue == callback ? 12.w : 8.w,
+        horizontal: 12.w,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.grey, width: 2),
+      ),
+      child: dosageValue == callback
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextView(
+                      text: 'Day ${callback + 1}',
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 15.20.sp,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        dosageValue = null;
+                        notifyListeners();
+                      },
+                      icon: Icon(
+                        Icons.keyboard_arrow_up,
+                        color: AppColors.grey1,
+                        size: 24.sp,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                ...listOfTimes.map(
+                  (e) => Padding(
+                    padding: EdgeInsets.only(bottom: 10.w),
+                    child: TextFormWidget(
+                      hint: 'Dose ${e+1}',
+                      borderColor: AppColors.transparent,
+                      borderTopLeft: 10.r,
+                      borderTopRight: 10.r,
+                      borderBottomLeft: 10.r,
+                      borderBottomRight: 10.r,
+                      label: 'Morning',
+                      hintSize: 14.60.sp,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 14.2.sp,
+                        color: AppColors.infoGrey,
+                      ),
+                      fillColor: AppColors.grey,
+                      isFilled: true,
+                      // controller: medNameController,
+                      suffixWidget: Padding(
+                        padding: EdgeInsets.all(8.w),
+                        child: TextView(
+                          text: 'Edit',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 13.60.sp,
+                            color: AppColors.fineGrey,
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.fineGrey,
+                          ),
+                        ),
+                      ),
+                      validator: AppValidator.validateString(),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 12.0.h),
+                if (callback == 0)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextView(
+                        text: 'Apply to all days',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.sp,
+                          color: AppColors.black,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Transform.scale(
+                        scale: isTablet(context) ? 1.5 : 1.1,
+                        child: Checkbox(
+                          value: true,
+                          onChanged: (value) {
+                            // setState(() {
+                            //   isChecked = value ?? false;
+                            // });
+                          },
+                          activeColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          visualDensity: VisualDensity
+                              .compact, // 👈 reduces internal padding
+                        ),
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 12.0.h),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Day ${callback + 1}',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.20.sp,
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    dosageValue = callback;
+                    notifyListeners();
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: AppColors.grey1,
+                    size: 24.sp,
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
 
   Future<void> selectDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
+    final DateTime? pickedDated = await showDatePicker(
       context: context,
       initialDate: DateTime.now(), // The date initially displayed
       firstDate: DateTime.now(), // The earliest selectable date
       lastDate: DateTime(2101), // The latest selectable date
     );
 
-    if (pickedDate != null) {
-      _pickedDate = DateFormat('dd MMM, yyyy').format(pickedDate);
+    if (pickedDated != null) {
+      pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
       selectTime(context);
     }
     notifyListeners();
@@ -131,7 +281,7 @@ class AuthViewModel extends BaseViewModel {
 
     if (pickedTime != null) {
       dateTimeController.text =
-          '${_pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
+          '${pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
     }
     notifyListeners();
   }
@@ -150,6 +300,7 @@ class AuthViewModel extends BaseViewModel {
     }
     return '$i tablet';
   }
+
   String getStringFrDuration(String i) {
     if (i == '') {
       return '';

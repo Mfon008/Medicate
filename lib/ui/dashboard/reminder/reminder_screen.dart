@@ -3,6 +3,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:medicate_app/ui/dashboard/reminder/med_type.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
@@ -26,9 +27,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
   TextEditingController medNameController = TextEditingController();
   TextEditingController medDosageController = TextEditingController();
   TextEditingController medDurationController = TextEditingController();
+  TextEditingController medDailyInTakenController = TextEditingController();
   TextEditingController drugNameController = TextEditingController();
   TextEditingController medTypeController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController endDateController = TextEditingController(text: '');
   bool isTapped = false;
   bool isTappedCon = false;
 
@@ -36,6 +39,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
   String medTypeResultImage = '';
   int? index;
   int? indexDuration;
+  int? indexDaily;
+
+  DateFormat inputFormat = DateFormat("dd MMM, yyyy");
+  DateTime? dateTimeObject;
 
   List<MedType> medTypeList = [
     MedType(medType: 'Pills', medTypeImage: AppImage.pill),
@@ -46,6 +53,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
     MedType(medType: 'Inhalers', medTypeImage: AppImage.inhaler),
     MedType(medType: 'Others', medTypeImage: AppImage.other_meds),
   ];
+
+  int? _duration;
+  List<int> intList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -214,6 +224,96 @@ class _ReminderScreenState extends State<ReminderScreen> {
     );
   }
 
+  Future<String?> showDailyInTakeMenu(BuildContext context) async {
+    return await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setMenuState) {
+            return Container(
+              margin: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+                    TextView(
+                      text: 'No of Times to be taken daily',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16.60.sp,
+                        color: AppColors.greyee,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    SizedBox(height: 14.h),
+                    for (int i = 1; i < 6; i++)
+                      GestureDetector(
+                        onTap: () {
+                          setMenuState(() {
+                            indexDaily = i;
+                          });
+
+                          Future.delayed(Duration(milliseconds: 200), () {
+                            Navigator.pop(ctx, indexDaily.toString());
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 12.w),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.w,
+                            horizontal: 12.w,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: indexDaily == i
+                                ? AppColors.skyBlue
+                                : AppColors.white,
+                            border: Border.all(
+                              color: indexDaily == i
+                                  ? AppColors.primary1
+                                  : Colors.transparent,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              TextView(
+                                text: i.toString(),
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.60.sp,
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (indexDaily == i)
+                                Icon(
+                                  Icons.check,
+                                  color: AppColors.primary1,
+                                  size: 15.60.sp,
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Future<String?> showMedDurationMenu(BuildContext context) async {
     return await showModalBottomSheet<String>(
       context: context,
@@ -275,9 +375,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                           child: Row(
                             children: [
                               TextView(
-                                text: i > 1
-                                    ? '$i days'
-                                    : '$i day',
+                                text: i > 1 ? '$i days' : '$i day',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 16.60.sp,
@@ -506,8 +604,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
     backgroundColor: AppColors.transparent,
     constraints: BoxConstraints(maxWidth: double.infinity),
     builder: (BuildContext context) {
-      bool isTablet(BuildContext context) =>
-          MediaQuery.of(context).size.shortestSide >= 600;
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setModalState) {
           return DraggableScrollableSheet(
@@ -544,7 +640,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 text: 'Add Medication',
                                 textStyle: TextStyle(
                                   fontFamily: 'GoogleSans',
-                                  fontSize: 15.2.sp,
+                                  fontSize: 16.70.sp,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.deep,
                                 ),
@@ -956,7 +1052,21 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 );
                                 if (result != null) {
                                   setModalState(() {
-                                    medDurationController.text = model.getStringFrDuration(result);
+                                    medDurationController.text = model
+                                        .getStringFrDuration(result);
+                                    _duration = int.parse(result);
+                                    intList = List.generate(
+                                      _duration!,
+                                      (index) => index,
+                                    );
+                                  });
+                                  setState(() {
+                                    dateTimeObject = inputFormat.parse(
+                                      model.pickedDate!,
+                                    );
+                                    endDateController.text = dateTimeObject!
+                                        .add(Duration(days: int.parse(result)))
+                                        .toString();
                                   });
                                 }
                               },
@@ -993,24 +1103,21 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             borderTopRight: 10.r,
                             borderBottomLeft: 10.r,
                             borderBottomRight: 10.r,
-                            label: '',
+                            label: endDateController.text.isNotEmpty
+                                ? DateFormat('dd MMM yyyy').format(
+                                    DateTime.parse(endDateController.text),
+                                  )
+                                : '',
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
-                              fontSize: 14.2.sp,
+                              fontSize: 16.2.sp,
                               color: AppColors.infoGrey,
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-                            controller: medNameController,
-                            suffixWidget: IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: AppColors.grey1,
-                                size: 20.sp,
-                              ),
-                            ),
+                            readOnly: true,
+
                             validator: AppValidator.validateString(),
                           ),
                           SizedBox(height: 24.0.h),
@@ -1030,9 +1137,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-                            controller: medNameController,
+                            readOnly: true,
+                            controller: medDailyInTakenController,
                             suffixWidget: IconButton(
-                              onPressed: () {},
+                              onPressed: () async {
+                                final result = await showDailyInTakeMenu(
+                                  context,
+                                );
+                                if (result != null) {
+                                  setModalState(() {
+                                    medDailyInTakenController.text = result;
+                                  });
+                                }
+                              },
                               icon: Icon(
                                 Icons.keyboard_arrow_down,
                                 color: AppColors.grey1,
@@ -1042,119 +1159,18 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             validator: AppValidator.validateString(),
                           ),
                           SizedBox(height: 24.0.h),
-                          Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              vertical: 12.w,
-                              horizontal: 12.w,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: AppColors.grey,
-                                width: 2,
+                          if (intList.isNotEmpty &&
+                              medDailyInTakenController.text.isNotEmpty)
+                            ...intList.map(
+                              (e) => model.dosageWidgetContainer(
+                                context: context,
+                                callback: e,
+                                listOfTimes: List.generate(
+                                  int.parse(medDailyInTakenController.text),
+                                  (index) => index,
+                                ),
                               ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextView(
-                                      text: 'Day 1',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 15.20.sp,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_up,
-                                        color: AppColors.grey1,
-                                        size: 24.sp,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 4.h),
-                                TextFormWidget(
-                                  hint: 'Dose 1',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  label: 'Morning',
-                                  hintSize: 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.2.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: medNameController,
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(8.w),
-                                    child: TextView(
-                                      text: 'Edit',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 13.60.sp,
-                                        color: AppColors.fineGrey,
-                                        fontWeight: FontWeight.w500,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: AppColors.fineGrey,
-                                      ),
-                                    ),
-                                  ),
-                                  validator: AppValidator.validateString(),
-                                ),
-                                SizedBox(height: 12.0.h),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextView(
-                                      text: 'Apply to all days',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 16.sp,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    Transform.scale(
-                                      scale: isTablet(context) ? 1.5 : 1.1,
-                                      child: Checkbox(
-                                        value: true,
-                                        onChanged: (value) {
-                                          // setState(() {
-                                          //   isChecked = value ?? false;
-                                          // });
-                                        },
-                                        activeColor: AppColors.primary,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            4,
-                                          ),
-                                        ),
-                                        visualDensity: VisualDensity
-                                            .compact, // 👈 reduces internal padding
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 12.0.h),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
