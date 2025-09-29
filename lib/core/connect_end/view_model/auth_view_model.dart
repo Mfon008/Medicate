@@ -107,6 +107,7 @@ class AuthViewModel extends BaseViewModel {
 
   TextEditingController dateTimeController = TextEditingController();
   String? pickedDate;
+  List<List<String>> periodLabels = [];
 
   int? dosageValue;
   List<List<TextEditingController>> doseControllers = [];
@@ -115,6 +116,7 @@ class AuthViewModel extends BaseViewModel {
     // Ensure outer list has enough days
     while (doseControllers.length <= dayIndex) {
       doseControllers.add([]);
+      periodLabels.add([]);
     }
 
     // Dispose old ones for that day
@@ -127,6 +129,8 @@ class AuthViewModel extends BaseViewModel {
       count,
       (_) => TextEditingController(),
     );
+
+    periodLabels[dayIndex] = List.generate(count, (_) => "Select Time");
   }
 
   dosageWidgetContainer({
@@ -194,7 +198,9 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: 'Morning',
+                      label: periodLabels.isEmpty
+                          ? ''
+                          : periodLabels[callback][i],
                       hintSize: 14.60.sp,
                       labelStyle: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -207,15 +213,33 @@ class AuthViewModel extends BaseViewModel {
                       controller: doseControllers[callback][i],
                       suffixWidget: Padding(
                         padding: EdgeInsets.all(8.w),
-                        child: TextView(
-                          text: 'Edit',
-                          textStyle: TextStyle(
-                            fontFamily: 'GoogleSans',
-                            fontSize: 13.60.sp,
-                            color: AppColors.fineGrey,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.fineGrey,
+                        child: GestureDetector(
+                          onTap: () async {
+                            final result = await selectDosageTime(
+                              context: context,
+                            );
+
+                            if (result != null) {
+                              // 👉 Update the controller for this dose
+                              doseControllers[callback][i].text =
+                                  result["time"]!;
+
+                              // 👉 Update period label for this dose
+
+                              periodLabels[callback][i] = result["period"]!;
+                              notifyListeners();
+                            }
+                          },
+                          child: TextView(
+                            text: 'Edit',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 13.60.sp,
+                              color: AppColors.fineGrey,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.fineGrey,
+                            ),
                           ),
                         ),
                       ),
@@ -314,6 +338,46 @@ class AuthViewModel extends BaseViewModel {
           '${pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
     }
     notifyListeners();
+  }
+
+  String getPeriodLabel(TimeOfDay time) {
+    if (time.hour >= 5 && time.hour < 12) {
+      return "Morning";
+    } else if (time.hour >= 12 && time.hour < 17) {
+      return "Afternoon";
+    } else if (time.hour >= 17 && time.hour < 21) {
+      return "Evening";
+    } else {
+      return "Night";
+    }
+  }
+
+  Future<Map<String, String>?> selectDosageTime({
+    required BuildContext context,
+  }) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      final now = DateTime.now();
+      final dateTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        pickedTime.hour,
+        pickedTime.minute,
+      );
+
+      final formattedTime = DateFormat(
+        "h:mm a",
+      ).format(dateTime); // 👉 12-hour with AM/PM
+      final period = getPeriodLabel(pickedTime);
+
+      return {"time": formattedTime, "period": period};
+    }
+    return null;
   }
 
   String formatTime(String timeString) {

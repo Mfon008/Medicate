@@ -1213,24 +1213,24 @@ class _ReminderScreenState extends State<ReminderScreen> {
 
                                 SizedBox(height: 20.h),
                                 Center(
-                    child: GestureDetector(
-                      onTap: (){},
-                      child: TextView(
-                        text: 'Add Another Medication',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 17.2.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
-                          decoration: TextDecoration.underline,
-                          decorationColor: AppColors.primary,
-                          decorationStyle: TextDecorationStyle.solid,
-                          decorationThickness: 2,
-                          
-                        ),
-                      ),
-                    ),
-                  ),
+                                  child: GestureDetector(
+                                    onTap: () {},
+                                    child: TextView(
+                                      text: 'Add Another Medication',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 17.2.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.primary,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppColors.primary,
+                                        decorationStyle:
+                                            TextDecorationStyle.solid,
+                                        decorationThickness: 2,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 SizedBox(height: 30.h),
                                 ButtonWidget(
                                   border: 100.r,
