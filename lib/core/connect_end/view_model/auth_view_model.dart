@@ -14,6 +14,7 @@ import 'package:medicate_app/core/connect_end/model/login_response_model/login_r
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
+import 'package:medicate_app/ui/dashboard/reminder/medication_class.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
@@ -94,6 +95,7 @@ class AuthViewModel extends BaseViewModel {
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   TextEditingController countryController = TextEditingController();
   String querySignUpCountry = '';
+  List<MedicationClass> medicationClassList = [];
 
   AuthViewModel({this.context});
 
