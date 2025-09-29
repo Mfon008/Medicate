@@ -133,6 +133,8 @@ class AuthViewModel extends BaseViewModel {
     periodLabels[dayIndex] = List.generate(count, (_) => "Select Time");
   }
 
+  bool isChecked = false;
+
   dosageWidgetContainer({
     required BuildContext context,
     required int callback,
@@ -265,11 +267,46 @@ class AuthViewModel extends BaseViewModel {
                       Transform.scale(
                         scale: isTablet(context) ? 1.5 : 1.1,
                         child: Checkbox(
-                          value: true,
+                          value: isChecked,
                           onChanged: (value) {
-                            // setState(() {
-                            //   isChecked = value ?? false;
-                            // });
+                            if (value != null && value) {
+                              // ✅ Copy Day 1 (callback = 0) values to all other days
+                              for (
+                                int day = 1;
+                                day < doseControllers.length;
+                                day++
+                              ) {
+                                for (
+                                  int i = 0;
+                                  i < doseControllers[0].length;
+                                  i++
+                                ) {
+                                  // Copy text
+                                  doseControllers[day][i].text =
+                                      doseControllers[0][i].text;
+                                  // Copy period
+                                  periodLabels[day][i] = periodLabels[0][i];
+                                }
+                              }
+                            } else {
+                              for (
+                                int day = 1;
+                                day < doseControllers.length;
+                                day++
+                              ) {
+                                for (
+                                  int i = 0;
+                                  i < doseControllers[day].length;
+                                  i++
+                                ) {
+                                  doseControllers[day][i]
+                                      .clear(); // clear controller text
+                                  periodLabels[day][i] = ''; // reset label
+                                }
+                              }
+                            }
+                            isChecked = value ?? false;
+                            notifyListeners();
                           },
                           activeColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
