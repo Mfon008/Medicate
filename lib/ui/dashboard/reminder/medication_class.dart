@@ -14,7 +14,7 @@ class MedicationClass {
   String? timesToTake;
   String? note;
   List<int>? listOfTimes;
-  List<List<dynamic>>? dosageMap;
+  dynamic dosageMap;
 
   MedicationClass({
     this.medicationName,
