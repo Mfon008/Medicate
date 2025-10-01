@@ -57,7 +57,7 @@ class ButtonWidget extends StatelessWidget {
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontWeight: FontWeight.w500,
-                  fontSize: 16.80.sp,
+                  fontSize: 18.0.sp,
                   color: color,
                 ),
               )
