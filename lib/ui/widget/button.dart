@@ -20,9 +20,11 @@ class ButtonWidget extends StatelessWidget {
     this.onPressed,
     this.textStyle,
     this.isLoading = false,
+    this.fontSize= 18.0,
   });
   final String? buttonText;
   final double? border;
+  final double? fontSize;
   final double? buttonWidth;
   final double? buttonHeight;
   final Color? color;
@@ -57,7 +59,7 @@ class ButtonWidget extends StatelessWidget {
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontWeight: FontWeight.w500,
-                  fontSize: 18.0.sp,
+                  fontSize: fontSize!.sp,
                   color: color,
                 ),
               )

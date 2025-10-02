@@ -60,7 +60,7 @@ class AuthViewModel extends BaseViewModel {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool get isTogglePassword => _isTogglePassword;
   bool _isTogglePassword = false;
-
+  bool isShowMoreSecondModalFlow = false;
   bool get isTogglePasswordConfirm => _isTogglePasswordConfirm;
   bool _isTogglePasswordConfirm = false;
   bool onToggleMic = false;
@@ -98,6 +98,7 @@ class AuthViewModel extends BaseViewModel {
   TextEditingController countryController = TextEditingController();
   String querySignUpCountry = '';
   List<MedicationClass> medicationClassList = [];
+  int indexOfMedicationClassList = 0;
 
   AuthViewModel({this.context});
 
@@ -536,7 +537,7 @@ class AuthViewModel extends BaseViewModel {
       return 'Preview Medication';
     } else if (linIndex == 3) {
       return 'Choose Notification Channel';
-    } else if (linIndex == 3) {
+    } else if (linIndex == 4) {
       return 'Make Payment';
     }
     return 'Add Medication';
@@ -1136,6 +1137,7 @@ class AuthViewModel extends BaseViewModel {
   dosageAfterWidgetContainer({
     required BuildContext context,
     required int callback,
+    required Color color,
     required List<int> listOfTimes,
     required List<Map<String, dynamic>> dosageMap,
   }) {
@@ -1173,7 +1175,7 @@ class AuthViewModel extends BaseViewModel {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.grey, width: 2),
+        border: Border.all(color: color, width: 2),
       ),
       child: dosageAfterValue == callback
           ? Column(
@@ -1330,6 +1332,136 @@ class AuthViewModel extends BaseViewModel {
                     ],
                   ),
                 SizedBox(height: 12.0.h),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Day ${callback + 1}',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.20.sp,
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    dosageAfterValue = callback;
+                    notifyListeners();
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: AppColors.grey1,
+                    size: 24.sp,
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  dosagePreviewWidgetContainer({
+    required BuildContext context,
+    required int callback,
+    required Color color,
+    required List<int> listOfTimes,
+    required List<Map<String, dynamic>> dosageMap,
+  }) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 10.w),
+      padding: EdgeInsets.symmetric(
+        vertical: dosageAfterValue == callback ? 12.w : 8.w,
+        horizontal: 14.w,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color, width: 2),
+        color: AppColors.white,
+      ),
+      child: dosageAfterValue == callback
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 🔹 Render each day
+                ...dosageMap.asMap().entries.map((entry) {
+                  final v = entry.value; // {day: 1, doses: [...]}
+
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 14.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 🔹 Day header
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextView(
+                              text: "Day ${v['day']}",
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 15.20.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                dosageAfterValue = null;
+                                notifyListeners();
+                              },
+                              icon: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: AppColors.grey1,
+                                size: 24.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8.h),
+
+                        // 🔹 Loop through doses of this day
+                        ...List.generate((v['doses'] as List).length, (j) {
+                          final dose = v['doses'][j];
+                          final isLast = j == (v['doses'] as List).length - 1;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 4.h),
+                              TextView(
+                                text: "Dose ${j + 1}",
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              TextView(
+                                text: "${dose['time']}",
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(height: 6.10.h),
+                              if (!isLast)
+                                Divider(
+                                  color: AppColors.fineGrey,
+                                  thickness: .4,
+                                ),
+                              if (!isLast) SizedBox(height: 6.10.h),
+                            ],
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                }),
               ],
             )
           : Row(
@@ -2585,6 +2717,13 @@ class AuthViewModel extends BaseViewModel {
         setModalState: setModalState,
         scrollController: scrollController,
       );
+    } else if (linIndex == 3) {
+      return thirdModalFlow(
+        model: model,
+        context: context,
+        setModalState: setModalState,
+        scrollController: scrollController,
+      );
     }
     return firstModalFLow(
       model: model,
@@ -2623,7 +2762,6 @@ class AuthViewModel extends BaseViewModel {
                   color: AppColors.deep,
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.only(top: 4.w),
                 child: GestureDetector(
@@ -2755,7 +2893,7 @@ class AuthViewModel extends BaseViewModel {
                           color: AppColors.greyee,
                         ),
                         onPressed: () async {
-                          final result = await showMedTypeMenu(context!);
+                          final result = await showMedTypeMenu(context);
 
                           if (result != null) {
                             setModalState!(() {
@@ -2863,7 +3001,7 @@ class AuthViewModel extends BaseViewModel {
                                         SizedBox(width: 18.30.w),
                                         GestureDetector(
                                           onTap: () =>
-                                              model.pickDrugImage(context!),
+                                              model.pickDrugImage(context),
                                           child: SvgPicture.asset(
                                             AppImage.upload,
                                             height: 17.0.h,
@@ -2873,8 +3011,7 @@ class AuthViewModel extends BaseViewModel {
                                       ],
                                     )
                                   : GestureDetector(
-                                      onTap: () =>
-                                          model.pickDrugImage(context!),
+                                      onTap: () => model.pickDrugImage(context),
                                       child: Container(
                                         padding: EdgeInsets.symmetric(
                                           horizontal: 22.w,
@@ -2955,7 +3092,7 @@ class AuthViewModel extends BaseViewModel {
                       readOnly: true,
                       suffixWidget: IconButton(
                         onPressed: () async {
-                          final result = await showMedDosageMenu(context!);
+                          final result = await showMedDosageMenu(context);
                           if (result != null) {
                             setModalState!(() {
                               medDosageController.text = result;
@@ -2993,7 +3130,7 @@ class AuthViewModel extends BaseViewModel {
                       suffixWidget: Padding(
                         padding: EdgeInsets.all(8.w),
                         child: GestureDetector(
-                          onTap: () => model.selectDate(context!),
+                          onTap: () => model.selectDate(context),
                           child: SvgPicture.asset(
                             AppImage.calendar,
                             fit: BoxFit.cover,
@@ -3023,7 +3160,7 @@ class AuthViewModel extends BaseViewModel {
                       controller: medDurationController,
                       suffixWidget: IconButton(
                         onPressed: () async {
-                          final result = await showMedDurationMenu(context!);
+                          final result = await showMedDurationMenu(context);
                           if (result != null) {
                             setModalState!(() {
                               medDurationController.text = model
@@ -3114,7 +3251,7 @@ class AuthViewModel extends BaseViewModel {
                       controller: medDailyInTakenController,
                       suffixWidget: IconButton(
                         onPressed: () async {
-                          final result = await showDailyInTakeMenu(context!);
+                          final result = await showDailyInTakeMenu(context);
                           if (result != null) {
                             setModalState!(() {
                               medDailyInTakenController.text = result;
@@ -3137,7 +3274,7 @@ class AuthViewModel extends BaseViewModel {
                         children: [
                           ...intList.map(
                             (e) => model.dosageWidgetContainer(
-                              context: context!,
+                              context: context,
                               callback: e,
                               listOfTimes: List.generate(
                                 int.parse(medDailyInTakenController.text),
@@ -3950,8 +4087,10 @@ class AuthViewModel extends BaseViewModel {
                                                     ...e.listOfTimes!.map(
                                                       (list) => model
                                                           .dosageAfterWidgetContainer(
-                                                            context: context!,
+                                                            context: context,
                                                             callback: list,
+                                                            color:
+                                                                AppColors.grey,
                                                             dosageMap:
                                                                 e.dosageMap,
                                                             listOfTimes:
@@ -4119,7 +4258,7 @@ class AuthViewModel extends BaseViewModel {
                               color: AppColors.greyee,
                             ),
                             onPressed: () async {
-                              final result = await showMedTypeMenu(context!);
+                              final result = await showMedTypeMenu(context);
 
                               if (result != null) {
                                 setModalState!(() {
@@ -4230,7 +4369,7 @@ class AuthViewModel extends BaseViewModel {
                                             SizedBox(width: 18.30.w),
                                             GestureDetector(
                                               onTap: () =>
-                                                  model.pickDrugImage(context!),
+                                                  model.pickDrugImage(context),
                                               child: SvgPicture.asset(
                                                 AppImage.upload,
                                                 height: 17.0.h,
@@ -4241,7 +4380,7 @@ class AuthViewModel extends BaseViewModel {
                                         )
                                       : GestureDetector(
                                           onTap: () =>
-                                              model.pickDrugImage(context!),
+                                              model.pickDrugImage(context),
                                           child: Container(
                                             padding: EdgeInsets.symmetric(
                                               horizontal: 22.w,
@@ -4323,7 +4462,7 @@ class AuthViewModel extends BaseViewModel {
                           readOnly: true,
                           suffixWidget: IconButton(
                             onPressed: () async {
-                              final result = await showMedDosageMenu(context!);
+                              final result = await showMedDosageMenu(context);
                               if (result != null) {
                                 setModalState!(() {
                                   medDosageController.text = result;
@@ -4361,7 +4500,7 @@ class AuthViewModel extends BaseViewModel {
                           suffixWidget: Padding(
                             padding: EdgeInsets.all(8.w),
                             child: GestureDetector(
-                              onTap: () => model.selectDate(context!),
+                              onTap: () => model.selectDate(context),
                               child: SvgPicture.asset(
                                 AppImage.calendar,
                                 fit: BoxFit.cover,
@@ -4391,9 +4530,7 @@ class AuthViewModel extends BaseViewModel {
                           controller: medDurationController,
                           suffixWidget: IconButton(
                             onPressed: () async {
-                              final result = await showMedDurationMenu(
-                                context!,
-                              );
+                              final result = await showMedDurationMenu(context);
                               if (result != null) {
                                 setModalState!(() {
                                   medDurationController.text = model
@@ -4485,9 +4622,7 @@ class AuthViewModel extends BaseViewModel {
                           controller: medDailyInTakenController,
                           suffixWidget: IconButton(
                             onPressed: () async {
-                              final result = await showDailyInTakeMenu(
-                                context!,
-                              );
+                              final result = await showDailyInTakeMenu(context);
                               if (result != null) {
                                 setModalState!(() {
                                   medDailyInTakenController.text = result;
@@ -4510,7 +4645,7 @@ class AuthViewModel extends BaseViewModel {
                             children: [
                               ...intList.map(
                                 (e) => model.dosageWidgetContainer(
-                                  context: context!,
+                                  context: context,
                                   callback: e,
                                   listOfTimes: List.generate(
                                     int.parse(medDailyInTakenController.text),
@@ -4579,8 +4714,8 @@ class AuthViewModel extends BaseViewModel {
 
                                 color: AppColors.white,
                                 buttonBorderColor: AppColors.transparent,
-                                onPressed: () {
-                                  // addReminderToList(model);
+                                onPressed: () async {
+                                  await addReminderToList(model);
                                   linIndex++;
                                   model.notifyListeners();
                                 },
@@ -4611,6 +4746,7 @@ class AuthViewModel extends BaseViewModel {
       padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
       controller: scrollController,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -4674,8 +4810,711 @@ class AuthViewModel extends BaseViewModel {
             ],
           ),
           SizedBox(height: 20.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed:
+                    medicationClassList[indexOfMedicationClassList] ==
+                        medicationClassList.first
+                    ? () {}
+                    : () {
+                        indexOfMedicationClassList -= 1;
+                        notifyListeners();
+
+                        print(indexOfMedicationClassList);
+                      },
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 22.sp,
+                  color:
+                      medicationClassList[indexOfMedicationClassList] ==
+                          medicationClassList.first
+                      ? AppColors.primaryLight.withOpacity(.7)
+                      : AppColors.primary,
+                ),
+              ),
+              TextView(
+                text:
+                    '${indexOfMedicationClassList + 1}/${medicationClassList.length}',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              IconButton(
+                onPressed:
+                    medicationClassList[indexOfMedicationClassList] ==
+                        medicationClassList.last
+                    ? () {}
+                    : () {
+                        indexOfMedicationClassList += 1;
+                        notifyListeners();
+                        print(indexOfMedicationClassList);
+                      },
+                icon: Icon(
+                  Icons.arrow_forward,
+                  size: 22.sp,
+                  color:
+                      medicationClassList[indexOfMedicationClassList] ==
+                          medicationClassList.last
+                      ? AppColors.primaryLight.withOpacity(.7)
+                      : AppColors.primary1,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.20.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+            decoration: BoxDecoration(
+              color: AppColors.grey,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'Medication Name',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text:
+                      '${medicationClassList[indexOfMedicationClassList].medicationName}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'Drug Name',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text:
+                      '${medicationClassList[indexOfMedicationClassList].drugName}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 24.w,
+                    horizontal: 108.0.w,
+                  ),
+                  width: double.infinity,
+                  height: 140.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Image.file(
+                    medicationClassList[indexOfMedicationClassList]
+                        .medicationFile!,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'Medication Type',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      medicationClassList[indexOfMedicationClassList]
+                          .medicationTypeIcon!,
+                    ),
+                    SizedBox(width: 6.0.w),
+                    TextView(
+                      text:
+                          '${medicationClassList[indexOfMedicationClassList].medicationType}',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16.0.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'Description',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text:
+                      '${medicationClassList[indexOfMedicationClassList].description}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+            ),
+          ),
+          SizedBox(height: 24.h),
+          TextView(
+            text: 'SET SCHEDULE AND DOSAGE',
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 14.80.sp,
+              color: AppColors.grey1,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Divider(color: AppColors.grey),
+          SizedBox(height: 12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+            decoration: BoxDecoration(
+              color: AppColors.grey,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'Dosage',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text:
+                      '${medicationClassList[indexOfMedicationClassList].dosage}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'Start Date & Time',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text:
+                      '${medicationClassList[indexOfMedicationClassList].dateAndTime}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'Duration',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    TextView(
+                      text:
+                          '${medicationClassList[indexOfMedicationClassList].duration}',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16.0.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    SizedBox(width: 6.0.w),
+                    GestureDetector(
+                      onTap: () {
+                        isShowMoreSecondModalFlow = !isShowMoreSecondModalFlow;
+                        model!.notifyListeners();
+                      },
+                      child: TextView(
+                        text: isShowMoreSecondModalFlow
+                            ? 'Hide details'
+                            : 'Show more',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
+                SizedBox(height: isShowMoreSecondModalFlow ? 10.w : 0.h),
+
+                isShowMoreSecondModalFlow
+                    ? Column(
+                        children: [
+                          ...medicationClassList[indexOfMedicationClassList]
+                              .dosageMap!
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                                final i = entry.key; // 0, 1, 2
+                                final v = entry.value; // {day: x, doses: [...]}
+
+                                return dosagePreviewWidgetContainer(
+                                  context: context,
+                                  callback: i, // ✅ now an index (int)
+                                  color: AppColors.grey,
+                                  listOfTimes: List.generate(
+                                    int.parse(
+                                      medicationClassList[indexOfMedicationClassList]
+                                          .timesToTake!,
+                                    ),
+                                    (index) => index,
+                                  ),
+                                  dosageMap: [
+                                    v,
+                                  ], // ✅ wrap v in a list so widget only sees one day
+                                );
+                              }),
+                        ],
+                      )
+                    : SizedBox.shrink(),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'End Date',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text: DateFormat("dd MMM, y").format(
+                    DateTime.parse(
+                      '${medicationClassList[indexOfMedicationClassList].endDate}',
+                    ),
+                  ),
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'No of Times to be taken',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text: showNoTimes(
+                    int.parse(
+                      medicationClassList[indexOfMedicationClassList]
+                          .timesToTake!,
+                    ),
+                  ),
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                Divider(
+                  color: AppColors.infoGrey.withOpacity(.2),
+                  thickness: .7,
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: 'Note',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text: medicationClassList[indexOfMedicationClassList].note!,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.20.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed:
+                    medicationClassList[indexOfMedicationClassList] ==
+                        medicationClassList.first
+                    ? () {}
+                    : () {
+                        indexOfMedicationClassList -= 1;
+                        notifyListeners();
+
+                        print(indexOfMedicationClassList);
+                      },
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 22.sp,
+                  color:
+                      medicationClassList[indexOfMedicationClassList] ==
+                          medicationClassList.first
+                      ? AppColors.primaryLight.withOpacity(.7)
+                      : AppColors.primary,
+                ),
+              ),
+              TextView(
+                text:
+                    '${indexOfMedicationClassList + 1}/${medicationClassList.length}',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              IconButton(
+                onPressed:
+                    medicationClassList[indexOfMedicationClassList] ==
+                        medicationClassList.last
+                    ? () {}
+                    : () {
+                        indexOfMedicationClassList += 1;
+                        notifyListeners();
+                        print(indexOfMedicationClassList);
+                      },
+                icon: Icon(
+                  Icons.arrow_forward,
+                  size: 22.sp,
+                  color:
+                      medicationClassList[indexOfMedicationClassList] ==
+                          medicationClassList.last
+                      ? AppColors.primaryLight.withOpacity(.7)
+                      : AppColors.primary1,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  buttonColor: AppColors.dashboard,
+                  buttonText: 'Make Updates',
+                  color: AppColors.black,
+                  fontSize: 14.sp,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndex--;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  fontSize: 14.sp,
+                  buttonColor: AppColors.primary,
+                  buttonText: 'Continue',
+                  color: AppColors.white,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndex++;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
         ],
       ),
+    ),
+  );
+
+  thirdModalFlow({
+    AuthViewModel? model,
+    StateSetter? setModalState,
+    ScrollController? scrollController,
+    BuildContext? context,
+  }) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22.r),
+      color: AppColors.white,
+    ),
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20, width: 20),
+              TextView(
+                text: modalName(),
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.70.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 4.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context!);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.cancel,
+                    height: 14.20,
+                    width: 14.20,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 13.60.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context!).size.width * .82,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: linIndex / 4,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              TextView(
+                text: '$linIndex/4',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          chooseNotChannelWidget(context, text: 'Email (Free)'),
+          chooseNotChannelWidget(context, text: 'Push (Free)'),
+          chooseNotChannelWidget(context, text: 'SMS (NGN10.00)'),
+          chooseNotChannelWidget(context, text: 'Whatsapp (NGN20.00)'),
+          chooseNotChannelWidget(context, text: 'Phone Call (NGN50.00)'),
+          SizedBox(height: 206.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  buttonColor: AppColors.dashboard,
+                  buttonText: 'Previous',
+                  color: AppColors.black,
+                  fontSize: 14.sp,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndex--;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  fontSize: 14.sp,
+                  buttonColor: AppColors.primary,
+                  buttonText: 'Make Payment',
+                  color: AppColors.white,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    // if (formKeyValidate.currentState!.validate()) {
+                    //   navigate.navigateTo(Routes.setupPinScreen);
+                    // }
+                  },
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
+        ],
+      ),
+    ),
+  );
+
+  String showNoTimes(number) {
+    if (number == 1) {
+      return 'Once Daily';
+    } else if (number == 2) {
+      return 'Twice Daily';
+    } else if (number == 3) {
+      return 'Thrice Daily';
+    } else if (number == 4) {
+      return 'Four Daily';
+    }
+    return 'Five Daily';
+  }
+
+  chooseNotChannelWidget(context, {required String text}) => Container(
+    padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 10.w),
+    margin: EdgeInsets.only(bottom: 10.w),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10.r),
+      border: Border.all(color: AppColors.infoGrey1.withOpacity(.9)),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Transform.scale(
+          scale: MediaQuery.of(context).size.shortestSide >= 600 ? 1.5 : 1.1,
+          child: Checkbox(
+            value: isChecked,
+            onChanged: (value) {},
+            activeColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+            visualDensity: VisualDensity.compact, // 👈 reduces internal padding
+          ),
+        ),
+        SizedBox(width: 10.w),
+        TextView(
+          text: text,
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 15.2.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.reminder,
+          ),
+        ),
+      ],
     ),
   );
 }

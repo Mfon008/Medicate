@@ -10,6 +10,7 @@ class AppColors {
   static const skyBlue = Color(0xFFF5F9FF);
   static const greygrey = Color(0xFF7D7F81);
   static const greygrey1 = Color(0xFF75808A);
+  static const greygreyer = Color(0xFFE9E9E9);
   static const yellow = Color(0xFFF5B546);
   static const fadedyellow = Color(0xFFFEF6E7);
   static const f1 = Color(0xFFF1F1F1);
