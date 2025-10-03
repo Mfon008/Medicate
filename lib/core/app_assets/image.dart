@@ -33,6 +33,8 @@ class AppImage {
   static const String whatsapp = 'assets/svgs/whatsapp.svg';
   static const String big_logo = 'assets/svgs/big_logo.svg';
   static const String cart = 'assets/svgs/cart.svg';
+  static const String drop_up = 'assets/svgs/drop_up.svg';
+  static const String edit_pen = 'assets/svgs/edit_pen.svg';
   static const String today_pills = 'assets/svgs/today_pills.svg';
   static const String curved_arrow = 'assets/svgs/curved_arrow.svg';
   static const String bell_small = 'assets/svgs/bell_small.svg';
