@@ -114,6 +114,7 @@ class AuthViewModel extends BaseViewModel {
   File? imageDrug;
   String? filename;
   String? drugFilename;
+  int costTotal = 0;
 
   TextEditingController dateTimeController = TextEditingController();
   String? pickedDate;
@@ -149,6 +150,7 @@ class AuthViewModel extends BaseViewModel {
   int? indexDuration;
   int? indexDaily;
   int linIndex = 1;
+  String onTapPaymentMeth = '';
 
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
   DateTime? dateTimeObject;
@@ -2744,6 +2746,13 @@ class AuthViewModel extends BaseViewModel {
         setModalState: setModalState,
         scrollController: scrollController,
       );
+    } else if (linIndex == 4) {
+      return fourthModalFlow(
+        model: model,
+        context: context,
+        setModalState: setModalState,
+        scrollController: scrollController,
+      );
     }
     return firstModalFLow(
       model: model,
@@ -5334,7 +5343,7 @@ class AuthViewModel extends BaseViewModel {
                   border: 100.r,
                   buttonColor: AppColors.dashboard,
                   buttonText: 'Make Updates',
-                  color: AppColors.black,
+                  color: AppColors.deep,
                   fontSize: 14.sp,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
@@ -5462,9 +5471,11 @@ class AuthViewModel extends BaseViewModel {
                     showEmailDialog(context);
                   } else if ([2, 3, 4].contains(index)) {
                     // Phone-related channels
+
                     showPhoneDialog(context);
                   }
                 } // ✅ update selection
+                addCostTotal();
                 notifyListeners();
               },
             );
@@ -6223,87 +6234,123 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'WhatsApp  (x5 msgs)',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: 'NGN25',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: selectedIndexes.contains(3)
+                                    ? 6.10.h
+                                    : 0.h,
                               ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'SMS  (x5 msgs)',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: 'NGN50',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
+                              selectedIndexes.contains(3)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(3)
+                                    ? 6.10.h
+                                    : 0.h,
                               ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Phone Calls  (x5 calls)',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: 'NGN100',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
+                              selectedIndexes.contains(3)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text: 'WhatsApp  (x5 msgs)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: 'NGN25',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(2)
+                                    ? 6.10.h
+                                    : 0.h,
                               ),
+                              selectedIndexes.contains(2)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(2)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                              selectedIndexes.contains(2)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text: 'SMS  (x5 msgs)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: 'NGN50',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(4)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                              selectedIndexes.contains(4)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(4)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                              selectedIndexes.contains(4)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text: 'Phone Calls  (x5 calls)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: 'NGN100',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
                               SizedBox(height: 6.10.h),
                               Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
@@ -6321,7 +6368,7 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text: 'NGN175.00',
+                                    text: 'NGN$costTotal.00',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -6348,7 +6395,7 @@ class AuthViewModel extends BaseViewModel {
                   border: 100.r,
                   buttonColor: AppColors.dashboard,
                   buttonText: 'Previous',
-                  color: AppColors.black,
+                  color: AppColors.deep,
                   fontSize: 14.sp,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
@@ -6367,10 +6414,212 @@ class AuthViewModel extends BaseViewModel {
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
-                    // if (formKeyValidate.currentState!.validate()) {
-                    //   navigate.navigateTo(Routes.setupPinScreen);
-                    // }
+                    linIndex++;
+                    model!.notifyListeners();
                   },
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
+        ],
+      ),
+    ),
+  );
+
+  fourthModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    StateSetter? setModalState,
+    ScrollController? scrollController,
+  }) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22.r),
+      color: AppColors.white,
+    ),
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20, width: 20),
+              TextView(
+                text: modalName(),
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.70.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 4.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context!);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.cancel,
+                    height: 14.20,
+                    width: 14.20,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 13.60.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context!).size.width * .82,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: linIndex / 4,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              TextView(
+                text: '$linIndex/4',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          TextView(
+            text: 'Amount',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.90.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 14.2.h),
+          Container(
+            height: 70.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.skyBlue,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Center(
+              child: TextView(
+                text: 'NGN$costTotal.00',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 20.90.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 22.h),
+          TextView(
+            text: 'Select Payment Method',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.90.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.deep,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          paymentWidget(
+            isWallet: true,
+            text: 'Pay with Wallet',
+            icon: AppImage.wallet_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Wallet';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Card',
+            icon: AppImage.card_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Card';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Bank Transfer',
+            icon: AppImage.bank_transfer,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Bank Transfer';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Mobile Money',
+            icon: AppImage.online_mobile,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Mobile Money';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with USSD',
+            icon: AppImage.ussd_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with USSD';
+              model!.notifyListeners();
+            },
+          ),
+          SizedBox(height: 120.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  buttonColor: AppColors.dashboard,
+                  buttonText: 'Previous',
+                  color: AppColors.deep,
+                  fontSize: 14.sp,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndex--;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  fontSize: 14.sp,
+                  buttonColor: onTapPaymentMeth != ''
+                      ? AppColors.primary
+                      : AppColors.infoGrey,
+                  buttonText: 'Continue',
+                  color: AppColors.white,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: onTapPaymentMeth != '' ? () {} : () {},
                 ),
               ),
             ],
@@ -6784,4 +7033,82 @@ class AuthViewModel extends BaseViewModel {
     );
     return totalDuration;
   }
+
+  void addCostTotal() {
+    costTotal = 0;
+    if (selectedIndexes.contains(2)) {
+      costTotal += 50;
+    }
+    if (selectedIndexes.contains(3)) {
+      costTotal += 25;
+    }
+    if (selectedIndexes.contains(4)) {
+      costTotal += 100;
+    }
+    notifyListeners();
+  }
+
+  paymentWidget({
+    bool isWallet = false,
+    String? text,
+    String? icon,
+    Function()? onTap,
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      margin: EdgeInsets.only(bottom: 12.w),
+      padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 12.w),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: onTapPaymentMeth == text ? AppColors.primary : AppColors.f1,
+          width: onTapPaymentMeth == text?2:1
+        ),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SvgPicture.asset(icon!),
+          SizedBox(width: 12.w),
+          TextView(
+            text: text ?? '',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+          Spacer(),
+          !isWallet
+              ? SizedBox.shrink()
+              : Row(
+                  children: [
+                    TextView(
+                      text: 'NGN0.00',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14.0.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.infoGrey,
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    TextView(
+                      text: 'Fund',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14.0.sp,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+        ],
+      ),
+    ),
+  );
 }

@@ -9,6 +9,11 @@ class AppImage {
   static const String calendar = 'assets/svgs/calendar.svg';
   static const String delete = 'assets/svgs/delete.svg';
   static const String upload = 'assets/svgs/upload.svg';
+  static const String bank_transfer = 'assets/svgs/bank_transfer.svg';
+  static const String card_pay = 'assets/svgs/card_pay.svg';
+  static const String online_mobile = 'assets/svgs/online_mobile.svg';
+  static const String ussd_pay = 'assets/svgs/ussd_pay.svg';
+  static const String wallet_pay = 'assets/svgs/wallet_pay.svg';
   static const String arrow_down = 'assets/svgs/arrow_down.svg';
   static const String x = 'assets/svgs/x.svg';
   static const String facebook = 'assets/svgs/facebook.svg';
