@@ -6619,7 +6619,11 @@ class AuthViewModel extends BaseViewModel {
                   buttonText: 'Continue',
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
-                  onPressed: onTapPaymentMeth != '' ? () {} : () {},
+                  onPressed: onTapPaymentMeth != ''
+                      ? () {
+                          navigate.navigateTo(Routes.paymentStatusScreen,arguments: PaymentStatusScreenArguments(isSuccessful: false));
+                        }
+                      : () {},
                 ),
               ),
             ],
@@ -7061,7 +7065,7 @@ class AuthViewModel extends BaseViewModel {
       decoration: BoxDecoration(
         border: Border.all(
           color: onTapPaymentMeth == text ? AppColors.primary : AppColors.f1,
-          width: onTapPaymentMeth == text?2:1
+          width: onTapPaymentMeth == text ? 2 : 1,
         ),
         borderRadius: BorderRadius.circular(12.r),
       ),
