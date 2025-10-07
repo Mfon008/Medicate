@@ -1,16 +1,24 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'user.dart';
-
 part 'data.g.dart';
 
 @JsonSerializable()
 class Data {
-  String? accessToken;
-  String? refreshToken;
-  User? user;
+  String? url;
+  String? mimeType;
+  int? width;
+  int? height;
+  int? size;
+  String? format;
 
-  Data({this.accessToken, this.refreshToken, this.user});
+  Data({
+    this.url,
+    this.mimeType,
+    this.width,
+    this.height,
+    this.size,
+    this.format,
+  });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

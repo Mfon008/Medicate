@@ -638,6 +638,7 @@ class AuthViewModel extends BaseViewModel {
         dosageMap: addTimePeriod,
       ),
     );
+    print('print::${medicationClassList[0].dosageMap}');
     await Future.delayed(Duration(seconds: 1), () {});
     clearReminderMedsVaraibles();
     model.notifyListeners();
@@ -3369,8 +3370,8 @@ class AuthViewModel extends BaseViewModel {
                             buttonText: 'Preview',
                             color: AppColors.white,
                             buttonBorderColor: AppColors.transparent,
-                            onPressed: () {
-                              addReminderToList(model);
+                            onPressed: () async {
+                              await addReminderToList(model);
                               linIndex++;
                               model.notifyListeners();
                               for (
@@ -3385,7 +3386,7 @@ class AuthViewModel extends BaseViewModel {
                               }
                             },
                           ),
-                          SizedBox(height: 30.h),
+                          SizedBox(height: 130.h),
                         ],
                       ),
                   ],
@@ -6621,7 +6622,12 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth != ''
                       ? () {
-                          navigate.navigateTo(Routes.paymentStatusScreen,arguments: PaymentStatusScreenArguments(isSuccessful: false));
+                          navigate.navigateTo(
+                            Routes.paymentStatusScreen,
+                            arguments: PaymentStatusScreenArguments(
+                              isSuccessful: false,
+                            ),
+                          );
                         }
                       : () {},
                 ),

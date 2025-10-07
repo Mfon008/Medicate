@@ -1,18 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'phone.dart';
-import 'tokens.dart';
+import 'user.dart';
 
 part 'data.g.dart';
 
 @JsonSerializable()
 class Data {
-  String? id;
-  String? displayName;
-  Phone? phone;
-  Tokens? tokens;
+  String? accessToken;
+  String? refreshToken;
+  User? user;
 
-  Data({this.id, this.displayName, this.phone, this.tokens});
+  Data({this.accessToken, this.refreshToken, this.user});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

@@ -7,19 +7,15 @@ part of 'data.dart';
 // **************************************************************************
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-  id: json['id'] as String?,
-  displayName: json['displayName'] as String?,
-  phone: json['phone'] == null
+  accessToken: json['accessToken'] as String?,
+  refreshToken: json['refreshToken'] as String?,
+  user: json['user'] == null
       ? null
-      : Phone.fromJson(json['phone'] as Map<String, dynamic>),
-  tokens: json['tokens'] == null
-      ? null
-      : Tokens.fromJson(json['tokens'] as Map<String, dynamic>),
+      : User.fromJson(json['user'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-  'id': instance.id,
-  'displayName': instance.displayName,
-  'phone': instance.phone,
-  'tokens': instance.tokens,
+  'accessToken': instance.accessToken,
+  'refreshToken': instance.refreshToken,
+  'user': instance.user,
 };

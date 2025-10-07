@@ -95,64 +95,53 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         child: ViewModelBuilder<AuthViewModel>.reactive(
           viewModelBuilder: () => locator<AuthViewModel>(),
           onViewModelReady: (model) {
+            print(SharedPreferencesService.instance.usersData);
             nameController.text =
-                SharedPreferencesService.instance.usersData['displayName'];
+                SharedPreferencesService.instance.usersData['user']['fullName'];
             phoneController.text = SharedPreferencesService
                 .instance
-                .usersData['phone']['phoneNumber']
+                .usersData['user']['phone']
                 .toString()
                 .substring(4);
             emailController.text =
-                SharedPreferencesService
-                    .instance
-                    .usersData['profile']['email'] ??
+                SharedPreferencesService.instance.usersData['user']['email'] ??
                 '';
             dobController.text =
                 SharedPreferencesService
                         .instance
-                        .usersData['profile']['dateOfBirth'] ==
+                        .usersData['user']['dateOfBirth'] ==
                     null
                 ? ''
                 : SharedPreferencesService
                       .instance
-                      .usersData['profile']['dateOfBirth']
+                      .usersData['user']['dateOfBirth']
                       .toString()
                       .substring(0, 10);
             genderController.text =
-                SharedPreferencesService
-                    .instance
-                    .usersData['profile']['gender'] ??
+                SharedPreferencesService.instance.usersData['user']['gender'] ??
                 '';
             ageController.text =
-                SharedPreferencesService.instance.usersData['profile']['age'] ==
+                SharedPreferencesService.instance.usersData['user']['age'] ==
                     null
                 ? ''
-                : SharedPreferencesService.instance.usersData['profile']['age']
+                : SharedPreferencesService.instance.usersData['user']['age']
                       .toString();
             model.countryController.text =
                 SharedPreferencesService
                     .instance
-                    .usersData['profile']['country'] ??
+                    .usersData['user']['country'] ??
                 '';
             heightController.text =
-                SharedPreferencesService
-                        .instance
-                        .usersData['profile']['height'] ==
+                SharedPreferencesService.instance.usersData['user']['height'] ==
                     null
                 ? ''
-                : SharedPreferencesService
-                      .instance
-                      .usersData['profile']['height']
+                : SharedPreferencesService.instance.usersData['user']['height']
                       .toString();
             weightController.text =
-                SharedPreferencesService
-                        .instance
-                        .usersData['profile']['weight'] ==
+                SharedPreferencesService.instance.usersData['user']['weight'] ==
                     null
                 ? ''
-                : SharedPreferencesService
-                      .instance
-                      .usersData['profile']['weight']
+                : SharedPreferencesService.instance.usersData['user']['weight']
                       .toString();
           },
           disposeViewModel: false,

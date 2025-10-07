@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         ),
-        // initialRoute: AppRoutes().returnAppRoutes(
-        //   SharedPreferencesService.instance,
-        // ),
-        initialRoute: Routes.dashboard,
+        initialRoute: AppRoutes().returnAppRoutes(
+          SharedPreferencesService.instance,
+        ),
+        // initialRoute: Routes.dashboard,
         navigatorKey: StackedService.navigatorKey,
         onGenerateRoute: StackedRouter().onGenerateRoute,
         debugShowCheckedModeBanner: false,

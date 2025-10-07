@@ -40,11 +40,16 @@ class PaymentStatusScreen extends StatelessWidget {
                     color: !isSuccessful ? AppColors.red : AppColors.app_green,
                   ),
                   child: Center(
-                    child:!isSuccessful? SvgPicture.asset(AppImage.cancel,color: AppColors.white,): Icon(
-                      Icons.check,
-                      size: 30.30.sp,
-                      color: AppColors.white,
-                    ),
+                    child: !isSuccessful
+                        ? SvgPicture.asset(
+                            AppImage.cancel,
+                            color: AppColors.white,
+                          )
+                        : Icon(
+                            Icons.check,
+                            size: 30.30.sp,
+                            color: AppColors.white,
+                          ),
                   ),
                 ),
               ),

@@ -20,7 +20,7 @@ class ButtonWidget extends StatelessWidget {
     this.onPressed,
     this.textStyle,
     this.isLoading = false,
-    this.fontSize= 18.0,
+    this.fontSize = 18.0,
   });
   final String? buttonText;
   final double? border;

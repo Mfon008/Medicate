@@ -7,11 +7,11 @@ part 'set_pin_response_model.g.dart';
 @JsonSerializable()
 class SetPinResponseModel {
   bool? success;
-  String? message;
   int? statusCode;
+  String? message;
   Data? data;
 
-  SetPinResponseModel({this.success, this.message, this.statusCode, this.data});
+  SetPinResponseModel({this.success, this.statusCode, this.message, this.data});
 
   factory SetPinResponseModel.fromJson(Map<String, dynamic> json) {
     return _$SetPinResponseModelFromJson(json);

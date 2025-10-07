@@ -127,8 +127,8 @@ class AuthRepoImpl {
 
   void _chache(data) {
     if (data != null) {
-      _session.authToken = data.data.tokens.accessToken;
-      _session.authRefreshToken = data.data.tokens.refreshToken;
+      _session.authToken = data.data.accessToken;
+      _session.authRefreshToken = data.data.refreshToken;
       _session.usersData = data.data.toJson();
     }
   }

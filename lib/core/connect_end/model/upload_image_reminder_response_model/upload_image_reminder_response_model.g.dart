@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'verify_otp_response_model.dart';
+part of 'upload_image_reminder_response_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-VerifyOtpResponseModel _$VerifyOtpResponseModelFromJson(
+UploadImageReminderResponseModel _$UploadImageReminderResponseModelFromJson(
   Map<String, dynamic> json,
-) => VerifyOtpResponseModel(
+) => UploadImageReminderResponseModel(
   success: json['success'] as bool?,
   statusCode: (json['statusCode'] as num?)?.toInt(),
   message: json['message'] as String?,
@@ -17,8 +17,8 @@ VerifyOtpResponseModel _$VerifyOtpResponseModelFromJson(
       : Data.fromJson(json['data'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$VerifyOtpResponseModelToJson(
-  VerifyOtpResponseModel instance,
+Map<String, dynamic> _$UploadImageReminderResponseModelToJson(
+  UploadImageReminderResponseModel instance,
 ) => <String, dynamic>{
   'success': instance.success,
   'statusCode': instance.statusCode,

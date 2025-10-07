@@ -30,6 +30,6 @@ class MedicationClass {
     this.timesToTake,
     this.note,
     this.listOfTimes,
-    this.dosageMap
+    this.dosageMap,
   });
 }

@@ -117,7 +117,7 @@ class AuthApi {
   ) async {
     try {
       final response = await _service.call(
-        UrlConfig.verify_forget_password_otp,
+        UrlConfig.verify_forget_pin_otp,
         RequestMethod.post,
         data: verifyPhoneEntity.toJson(),
       );
@@ -239,7 +239,9 @@ class AuthApi {
     }
   }
 
-  Future<UpdateUserProfileResponseModel> uploadUserProfile(UpdateUserProfileEntity userProfile) async {
+  Future<UpdateUserProfileResponseModel> uploadUserProfile(
+    UpdateUserProfileEntity userProfile,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.update_user_profile,

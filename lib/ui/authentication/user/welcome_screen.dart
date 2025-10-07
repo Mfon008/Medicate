@@ -66,9 +66,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               context: context,
               phoneNo:
                   widget.phone ??
-                  SharedPreferencesService
-                      .instance
-                      .usersData['phone']['phoneNumber'],
+                  SharedPreferencesService.instance.usersData['user']['phone'],
             );
           });
         },
@@ -254,7 +252,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 widget.phone ??
                                 SharedPreferencesService
                                     .instance
-                                    .usersData['phone']['phoneNumber'],
+                                    .usersData['user']['phone'],
                             pin: pinInput,
                           ),
                         );

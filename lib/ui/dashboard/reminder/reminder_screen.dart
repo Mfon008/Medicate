@@ -19,8 +19,6 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
- 
-
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -82,12 +80,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 22.w),
         child: ViewModelBuilder<AuthViewModel>.reactive(
-                viewModelBuilder: () => locator<AuthViewModel>(),
-                onViewModelReady: (model) {},
-                disposeViewModel: false,
-                onDispose: (viewModel) {},
-                builder: (_, AuthViewModel model, _) {
-                  return Center(
+          viewModelBuilder: () => locator<AuthViewModel>(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, AuthViewModel model, _) {
+            return Center(
               child: Column(
                 children: [
                   SizedBox(height: 130.h),
@@ -190,7 +188,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                 ],
               ),
             );
-          }
+          },
         ),
       ),
     );
