@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/config/colors.dart';
+import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/dashboard/reminder/payment_status_string.dart';
 
 import '../../widget/button.dart';
@@ -84,10 +85,10 @@ class PaymentStatusScreen extends StatelessWidget {
                           border: 100.r,
                           fontSize: 14.sp,
                           buttonColor: AppColors.primary,
-                          buttonText: 'Continue',
+                          buttonText: 'Fund Wallet',
                           color: AppColors.white,
                           buttonBorderColor: AppColors.transparent,
-                          onPressed: () {},
+                          // onPressed: () =>navigate.back(),
                         ),
                         SizedBox(height: 20.h),
                         ButtonWidget(
@@ -97,7 +98,7 @@ class PaymentStatusScreen extends StatelessWidget {
                           buttonText: 'Go Back',
                           color: AppColors.primary,
                           buttonBorderColor: AppColors.primary,
-                          onPressed: () {},
+                          onPressed: () => navigate.back(),
                         ),
                       ],
                     )

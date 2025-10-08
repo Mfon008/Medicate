@@ -10,8 +10,7 @@ class UrlConfig {
   static const String reset_password = 'auth/reset-pin';
   static const String verify_otp = 'auth/verify-otp';
   static const String forgot_password = 'auth/forgot-password';
-  static const String verify_forget_pin_otp =
-      'auth/verify-forgot-pin-otp';
+  static const String verify_forget_pin_otp = 'auth/verify-forgot-pin-otp';
   static const String change_number = 'auth/change-phonenumber/';
   static const String change_pin = 'auth/change-pin';
   static const String support = 'v1/api/support';

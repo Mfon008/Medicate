@@ -23,6 +23,7 @@ import '../../../main.dart';
 import '../../../ui/dashboard/reminder/med_type.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
+import '../../../ui/widget/text_form_dose_widget.dart';
 import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
@@ -175,9 +176,9 @@ class AuthViewModel extends BaseViewModel {
   final List<String> channels = [
     'Email (Free)',
     'Push (Free)',
-    'SMS (NGN10.00)',
-    'Whatsapp (NGN20.00)',
-    'Phone Call (NGN50.00)',
+    'SMS (₦10.00)',
+    'Whatsapp (₦20.00)',
+    'Phone Call (₦50.00)',
   ];
 
   Future<String?> showDailyInTakeMenu(BuildContext context) async {
@@ -473,7 +474,7 @@ class AuthViewModel extends BaseViewModel {
                   children: [
                     SizedBox(height: 10.h),
                     TextView(
-                      text: 'Medication Type',
+                      text: 'Medication Types',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16.60.sp,
@@ -574,9 +575,9 @@ class AuthViewModel extends BaseViewModel {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setModalState) {
           return DraggableScrollableSheet(
-            initialChildSize: 0.7, // Initial height as percentage of screen
-            minChildSize: 0.5, // Minimum height
-            maxChildSize: 0.88, // Maximum height
+            initialChildSize: 0.9, // Initial height as percentage of screen
+            minChildSize: 0.7, // Minimum height
+            maxChildSize: 0.99, // Maximum height
             expand: true, // Set to true for full height initially
             builder: (BuildContext context, ScrollController scrollController) {
               return ViewModelBuilder<AuthViewModel>.reactive(
@@ -786,17 +787,13 @@ class AuthViewModel extends BaseViewModel {
                   final e = entry.value;
                   return Padding(
                     padding: EdgeInsets.only(bottom: 10.w),
-                    child: TextFormWidget(
+                    child: TextFormDoseWidget(
                       hint: 'Dose ${e + 1}',
                       borderColor: AppColors.transparent,
-                      borderTopLeft: 10.r,
-                      borderTopRight: 10.r,
-                      borderBottomLeft: 10.r,
-                      borderBottomRight: 10.r,
                       label: periodLabels.isEmpty
                           ? ''
                           : periodLabels[callback][i],
-                      hintSize: 14.60.sp,
+                      hintSize: 13.40.sp,
                       labelStyle: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Arial',
@@ -1635,6 +1632,8 @@ class AuthViewModel extends BaseViewModel {
       borderRadius: BorderRadius.circular(10),
     ),
   );
+
+  bool isAddMeds = false;
 
   void signIn(context, {LoginEntityModel? signInEntity}) async {
     try {
@@ -2820,7 +2819,7 @@ class AuthViewModel extends BaseViewModel {
                   ), // Adjust radius as needed
                   child: LinearProgressIndicator(
                     minHeight: 4.0, // Adjust height as needed
-                    value: linIndex / 4,
+                    value: linIndex / 3,
                     color: AppColors.primary, // Progress bar color
                     backgroundColor: Colors.grey[300], // Background track color
                   ),
@@ -2828,7 +2827,7 @@ class AuthViewModel extends BaseViewModel {
               ),
               SizedBox(width: 10.w),
               TextView(
-                text: '$linIndex/4',
+                text: '$linIndex/3',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -2850,18 +2849,16 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: '',
-                      hintSize: 14.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
+                      hintSize: 14.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: medNameController,
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 16.h),
                     TextFormWidget(
@@ -2871,25 +2868,23 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: '',
-                      hintSize: 14.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
+                      hintSize: 14.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: drugNameController,
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 16.h),
                     TextView(
                       text: 'Medication Type',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 16.60.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -2900,15 +2895,9 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: '',
-                      hintSize: 16.60.sp,
+
                       readOnly: true,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
+
                       fillColor: AppColors.grey,
                       isFilled: true,
                       prefixWidget: medTypeResultImage.isNotEmpty
@@ -2935,13 +2924,18 @@ class AuthViewModel extends BaseViewModel {
                       ),
                       controller: medTypeController,
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 16.h),
                     TextView(
                       text: 'Description',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 16.60.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -2952,25 +2946,22 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: '',
-                      hintSize: 16.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: descriptionController,
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 16.h),
                     TextView(
                       text: 'Medication picture upload',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 16.60.sp,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -3088,7 +3079,7 @@ class AuthViewModel extends BaseViewModel {
                           text: 'Dosage ',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 16.60.sp,
+                            fontSize: 14.6.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -3096,7 +3087,7 @@ class AuthViewModel extends BaseViewModel {
                           text: '(mg)',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 16.60.sp,
+                            fontSize: 14.60.sp,
                             color: AppColors.grey1,
                             fontWeight: FontWeight.w500,
                           ),
@@ -3114,7 +3105,7 @@ class AuthViewModel extends BaseViewModel {
                       labelStyle: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Arial',
-                        fontSize: 16.80.sp,
+                        fontSize: 14.80.sp,
                         color: AppColors.infoGrey,
                       ),
                       fillColor: AppColors.grey,
@@ -3136,6 +3127,11 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       ),
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 24.0.h),
                     TextFormWidget(
@@ -3145,15 +3141,8 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: '',
                       readOnly: true,
-                      hintSize: 14.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
+                      hintSize: 14.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: model.dateTimeController,
@@ -3168,55 +3157,90 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       ),
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 24.0.h),
                     TextFormWidget(
                       hint: 'Duration',
                       borderColor: AppColors.transparent,
+                      keyboardType: TextInputType.number,
                       borderTopLeft: 10.r,
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: '',
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
+                      hintSize: 14.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
-                      readOnly: true,
                       controller: medDurationController,
-                      suffixWidget: IconButton(
-                        onPressed: () async {
-                          final result = await showMedDurationMenu(context);
-                          if (result != null) {
-                            setModalState!(() {
-                              medDurationController.text = model
-                                  .getStringFrDuration(result);
-                              _duration = int.parse(result);
-                              intList = List.generate(
-                                _duration!,
-                                (index) => index,
-                              );
-                            });
+                      onChange: (p0) {
+                        if (p0 != null && p0.trim().isNotEmpty) {
+                          final parsed = int.tryParse(p0.trim());
+
+                          if (parsed != null) {
+                            _duration = parsed;
+
+                            intList = List.generate(
+                              _duration!,
+                              (index) => index,
+                            );
+
                             dateTimeObject = inputFormat.parse(
                               model.pickedDate!,
                             );
+
                             endDateController.text = dateTimeObject!
-                                .add(Duration(days: int.parse(result)))
+                                .add(Duration(days: _duration!))
                                 .toString();
-                            model.notifyListeners();
+                          } else {
+                            // Optional: handle invalid input (e.g., show error or clear output)
+                            print('⚠️ Invalid number input: $p0');
                           }
-                        },
-                        icon: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.grey1,
-                          size: 20.sp,
-                        ),
-                      ),
+                        } else {
+                          // Optional: clear output when input is empty
+                          endDateController.clear();
+                        }
+
+                        model.notifyListeners();
+                      },
+
+                      // suffixWidget: IconButton(
+                      //   onPressed: () async {
+                      //     final result = await showMedDurationMenu(context);
+                      //     if (result != null) {
+                      //       setModalState!(() {
+                      //         medDurationController.text = model
+                      //             .getStringFrDuration(result);
+                      //         _duration = int.parse(result);
+                      //         intList = List.generate(
+                      //           _duration!,
+                      //           (index) => index,
+                      //         );
+                      //       });
+                      //       dateTimeObject = inputFormat.parse(
+                      //         model.pickedDate!,
+                      //       );
+                      //       endDateController.text = dateTimeObject!
+                      //           .add(Duration(days: int.parse(result)))
+                      //           .toString();
+                      //       model.notifyListeners();
+                      //     }
+                      //   },
+                      //   icon: Icon(
+                      //     Icons.keyboard_arrow_down,
+                      //     color: AppColors.grey1,
+                      //     size: 20.sp,
+                      //   ),
+                      // ),
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 24.0.h),
                     Row(
@@ -3225,7 +3249,7 @@ class AuthViewModel extends BaseViewModel {
                           text: 'End Date ',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 16.60.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -3257,8 +3281,13 @@ class AuthViewModel extends BaseViewModel {
                       fillColor: AppColors.grey,
                       isFilled: true,
                       readOnly: true,
-
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
+                      hintSize: 14.sp,
                     ),
                     SizedBox(height: 24.0.h),
                     TextFormWidget(
@@ -3268,13 +3297,7 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      label: '',
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
+                      hintSize: 14.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       readOnly: true,
@@ -3295,6 +3318,11 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       ),
                       validator: AppValidator.validateString(),
+                      style: TextStyle(
+                        fontSize: 16.20.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                      ),
                     ),
                     SizedBox(height: 24.0.h),
                     if (intList.isNotEmpty &&
@@ -3317,7 +3345,7 @@ class AuthViewModel extends BaseViewModel {
                             text: 'Add Note',
                             textStyle: TextStyle(
                               fontFamily: 'Arial',
-                              fontSize: 16.60.sp,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -3329,18 +3357,17 @@ class AuthViewModel extends BaseViewModel {
                             borderBottomLeft: 10.r,
                             borderBottomRight: 10.r,
                             controller: noteController,
-                            labelStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Arial',
-                              fontSize: 16.80.sp,
-                              color: AppColors.infoGrey,
-                            ),
                             fillColor: AppColors.grey,
                             isFilled: true, // Minimum number of lines visible
                             maxline:
                                 3, // Maximum number of lines visible before scrolling
                             keyboardType: TextInputType.multiline,
                             validator: AppValidator.validateString(),
+                            style: TextStyle(
+                              fontSize: 16.20.sp,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'GoogleSans',
+                            ),
                           ),
                           SizedBox(height: 20.h),
                           Center(
@@ -3445,7 +3472,7 @@ class AuthViewModel extends BaseViewModel {
                                                   : 'Medication Name',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
-                                                fontSize: 16.sp,
+                                                fontSize: 14.sp,
                                                 fontWeight: FontWeight.w500,
                                                 color: AppColors.black,
                                               ),
@@ -3510,24 +3537,6 @@ class AuthViewModel extends BaseViewModel {
                                                 ),
                                               ),
                                             ),
-                                            // SizedBox(
-                                            //   width:
-                                            //       medCard == e
-                                            //       ? 6.w
-                                            //       : 0.w,
-                                            // ),
-                                            // medCard == e
-                                            //     ? IconButton(
-                                            //         onPressed:
-                                            //             () {},
-                                            //         icon: Icon(
-                                            //           Icons
-                                            //               .system_update_outlined,
-                                            //           size: 18.20
-                                            //               .sp,
-                                            //         ),
-                                            //       )
-                                            //     : SizedBox.shrink(),
                                           ],
                                         ),
                                       ],
@@ -3559,14 +3568,8 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                label: '',
-                                                hintSize: 14.60.sp,
-                                                labelStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  color: AppColors.infoGrey,
-                                                ),
+                                                hintSize: 14.sp,
+
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
@@ -3576,6 +3579,11 @@ class AuthViewModel extends BaseViewModel {
                                                     ),
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 16.h),
                                               TextFormWidget(
@@ -3586,14 +3594,8 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                label: '',
-                                                hintSize: 14.60.sp,
-                                                labelStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  color: AppColors.infoGrey,
-                                                ),
+                                                hintSize: 14.sp,
+
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
@@ -3603,13 +3605,18 @@ class AuthViewModel extends BaseViewModel {
                                                     ),
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 16.h),
                                               TextView(
                                                 text: 'Medication Type',
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
-                                                  fontSize: 16.60.sp,
+                                                  fontSize: 14.sp,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -3621,15 +3628,8 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                label: '',
-                                                hintSize: 16.60.sp,
                                                 readOnly: true,
-                                                labelStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  color: AppColors.infoGrey,
-                                                ),
+
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 prefixWidget:
@@ -3674,13 +3674,18 @@ class AuthViewModel extends BaseViewModel {
                                                     ),
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 16.h),
                                               TextView(
                                                 text: 'Description',
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
-                                                  fontSize: 16.60.sp,
+                                                  fontSize: 14.0.sp,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -3692,15 +3697,9 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                label: '',
-                                                hintSize: 16.60.sp,
+
                                                 readOnly: true,
-                                                labelStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  color: AppColors.infoGrey,
-                                                ),
+
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 controller:
@@ -3709,6 +3708,11 @@ class AuthViewModel extends BaseViewModel {
                                                     ),
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 16.h),
                                               TextView(
@@ -3716,7 +3720,7 @@ class AuthViewModel extends BaseViewModel {
                                                     'Medication picture upload',
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
-                                                  fontSize: 16.60.sp,
+                                                  fontSize: 14.sp,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -3841,7 +3845,7 @@ class AuthViewModel extends BaseViewModel {
                                                     text: 'Dosage ',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
-                                                      fontSize: 16.60.sp,
+                                                      fontSize: 14.sp,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     ),
@@ -3850,7 +3854,7 @@ class AuthViewModel extends BaseViewModel {
                                                     text: '(mg)',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
-                                                      fontSize: 16.60.sp,
+                                                      fontSize: 15.60.sp,
                                                       color: AppColors.grey1,
                                                       fontWeight:
                                                           FontWeight.w500,
@@ -3870,7 +3874,7 @@ class AuthViewModel extends BaseViewModel {
                                                 labelStyle: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'Arial',
-                                                  fontSize: 16.80.sp,
+                                                  fontSize: 16.20.sp,
                                                   color: AppColors.infoGrey,
                                                 ),
                                                 fillColor: AppColors.grey,
@@ -3898,6 +3902,11 @@ class AuthViewModel extends BaseViewModel {
                                                 ),
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 24.0.h),
                                               TextFormWidget(
@@ -3908,15 +3917,9 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                label: '',
                                                 readOnly: true,
-                                                hintSize: 14.60.sp,
-                                                labelStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  color: AppColors.infoGrey,
-                                                ),
+                                                hintSize: 14.sp,
+
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
 
@@ -3939,82 +3942,130 @@ class AuthViewModel extends BaseViewModel {
                                                 ),
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 24.0.h),
                                               TextFormWidget(
                                                 hint: 'Duration',
+                                                hintSize: 14.sp,
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 borderColor:
                                                     AppColors.transparent,
                                                 borderTopLeft: 10.r,
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                label: '',
-                                                labelStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  color: AppColors.infoGrey,
-                                                ),
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
+                                                onChange: (p0) {
+                                                  if (p0 != null &&
+                                                      p0.trim().isNotEmpty) {
+                                                    final parsed = int.tryParse(
+                                                      p0.trim(),
+                                                    );
+
+                                                    if (parsed != null) {
+                                                      _duration = parsed;
+
+                                                      intList = List.generate(
+                                                        _duration!,
+                                                        (index) => index,
+                                                      );
+
+                                                      dateTimeObject =
+                                                          inputFormat.parse(
+                                                            model.pickedDate!,
+                                                          );
+
+                                                      endDateController
+                                                          .text = dateTimeObject!
+                                                          .add(
+                                                            Duration(
+                                                              days: _duration!,
+                                                            ),
+                                                          )
+                                                          .toString();
+                                                    } else {
+                                                      // Optional: handle invalid input (e.g., show error or clear output)
+                                                      print(
+                                                        '⚠️ Invalid number input: $p0',
+                                                      );
+                                                    }
+                                                  } else {
+                                                    // Optional: clear output when input is empty
+                                                    endDateController.clear();
+                                                  }
+
+                                                  model.notifyListeners();
+                                                },
+
                                                 controller:
                                                     TextEditingController(
                                                       text: e.duration,
                                                     ),
-                                                suffixWidget: IconButton(
-                                                  onPressed: () async {
-                                                    // final result =
-                                                    //     await showMedDurationMenu(
-                                                    //       context,
-                                                    //     );
-                                                    // if (result !=
-                                                    //     null) {
-                                                    //   setModalState(() {
-                                                    //     medDurationController
-                                                    //         .text = model.getStringFrDuration(
-                                                    //       result,
-                                                    //     );
-                                                    //     _duration =
-                                                    //         int.parse(
-                                                    //           result,
-                                                    //         );
-                                                    //     intList = List.generate(
-                                                    //       _duration!,
-                                                    //       (
-                                                    //         index,
-                                                    //       ) =>
-                                                    //           index,
-                                                    //     );
-                                                    //   });
+                                                // suffixWidget: IconButton(
+                                                //   onPressed: () async {
+                                                //     // final result =
+                                                //     //     await showMedDurationMenu(
+                                                //     //       context,
+                                                //     //     );
+                                                //     // if (result !=
+                                                //     //     null) {
+                                                //     //   setModalState(() {
+                                                //     //     medDurationController
+                                                //     //         .text = model.getStringFrDuration(
+                                                //     //       result,
+                                                //     //     );
+                                                //     //     _duration =
+                                                //     //         int.parse(
+                                                //     //           result,
+                                                //     //         );
+                                                //     //     intList = List.generate(
+                                                //     //       _duration!,
+                                                //     //       (
+                                                //     //         index,
+                                                //     //       ) =>
+                                                //     //           index,
+                                                //     //     );
+                                                //     //   });
 
-                                                    //   dateTimeObject =
-                                                    //       inputFormat.parse(
-                                                    //         model.pickedDate!,
-                                                    //       );
-                                                    //   endDateController
-                                                    //       .text = dateTimeObject!
-                                                    //       .add(
-                                                    //         Duration(
-                                                    //           days: int.parse(
-                                                    //             result,
-                                                    //           ),
-                                                    //         ),
-                                                    //       )
-                                                    //       .toString();
-                                                    //   model
-                                                    //       .notifyListeners();
-                                                    // }
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.keyboard_arrow_down,
-                                                    color: AppColors.grey1,
-                                                    size: 20.sp,
-                                                  ),
-                                                ),
+                                                //     //   dateTimeObject =
+                                                //     //       inputFormat.parse(
+                                                //     //         model.pickedDate!,
+                                                //     //       );
+                                                //     //   endDateController
+                                                //     //       .text = dateTimeObject!
+                                                //     //       .add(
+                                                //     //         Duration(
+                                                //     //           days: int.parse(
+                                                //     //             result,
+                                                //     //           ),
+                                                //     //         ),
+                                                //     //       )
+                                                //     //       .toString();
+                                                //     //   model
+                                                //     //       .notifyListeners();
+                                                //     // }
+                                                //   },
+                                                //   icon: Icon(
+                                                //     Icons.keyboard_arrow_down,
+                                                //     color: AppColors.grey1,
+                                                //     size: 20.sp,
+                                                //   ),
+                                                // ),
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 24.0.h),
                                               Row(
@@ -4023,7 +4074,7 @@ class AuthViewModel extends BaseViewModel {
                                                     text: 'End Date ',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
-                                                      fontSize: 16.60.sp,
+                                                      fontSize: 14.sp,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     ),
@@ -4058,9 +4109,13 @@ class AuthViewModel extends BaseViewModel {
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
-
                                                 validator:
                                                     AppValidator.validateString(),
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
                                               ),
                                               SizedBox(height: 24.0.h),
                                               TextFormWidget(
@@ -4072,13 +4127,7 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                label: '',
-                                                labelStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  color: AppColors.infoGrey,
-                                                ),
+                                                hintSize: 14.sp,
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
@@ -4108,77 +4157,12 @@ class AuthViewModel extends BaseViewModel {
                                                 ),
                                                 validator:
                                                     AppValidator.validateString(),
-                                              ),
-                                              SizedBox(height: 24.0.h),
-                                              if (e.listOfTimes!.isNotEmpty &&
-                                                  e.timesToTake!.isNotEmpty)
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    ...e.listOfTimes!.map(
-                                                      (list) => model
-                                                          .dosageAfterWidgetContainer(
-                                                            context: context,
-                                                            callback: list,
-                                                            color:
-                                                                AppColors.grey,
-                                                            dosageMap:
-                                                                e.dosageMap,
-                                                            listOfTimes:
-                                                                List.generate(
-                                                                  int.parse(
-                                                                    e.timesToTake!,
-                                                                  ),
-                                                                  (index) =>
-                                                                      index,
-                                                                ),
-                                                          ),
-                                                    ),
-                                                    SizedBox(height: 14.0.h),
-                                                    TextView(
-                                                      text: 'Add Note',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16.60.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 10.h),
-                                                    TextFormWidget(
-                                                      borderColor:
-                                                          AppColors.transparent,
-                                                      borderTopLeft: 10.r,
-                                                      borderTopRight: 10.r,
-                                                      borderBottomLeft: 10.r,
-                                                      borderBottomRight: 10.r,
-                                                      labelStyle: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16.80.sp,
-                                                        color:
-                                                            AppColors.infoGrey,
-                                                      ),
-                                                      fillColor: AppColors.grey,
-                                                      isFilled:
-                                                          true, // Minimum number of lines visible
-                                                      readOnly: true,
-                                                      maxline:
-                                                          3, // Maximum number of lines visible before scrolling
-                                                      keyboardType:
-                                                          TextInputType
-                                                              .multiline,
-                                                      validator:
-                                                          AppValidator.validateString(),
-                                                      controller:
-                                                          TextEditingController(
-                                                            text: e.note,
-                                                          ),
-                                                    ),
-                                                  ],
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
                                                 ),
+                                              ),
                                             ],
                                           ),
                                         )
@@ -4199,7 +4183,7 @@ class AuthViewModel extends BaseViewModel {
                                             textStyle: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Arial',
-                                              fontSize: 17.2.sp,
+                                              fontSize: 15.60.sp,
                                               color: AppColors.black,
                                             ),
                                           ),
@@ -4209,6 +4193,10 @@ class AuthViewModel extends BaseViewModel {
                             ),
                           );
                         }),
+                        // isAddMeds
+                        //     ? Column(
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
                         SizedBox(height: 20.h),
                         TextFormWidget(
                           hint: 'Medication Name',
@@ -4217,18 +4205,16 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '',
-                          hintSize: 14.60.sp,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: medNameController,
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 16.h),
                         TextFormWidget(
@@ -4238,25 +4224,23 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '',
-                          hintSize: 14.60.sp,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: drugNameController,
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 16.h),
                         TextView(
                           text: 'Medication Type',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 16.60.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -4267,15 +4251,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '',
-                          hintSize: 16.60.sp,
                           readOnly: true,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
                           fillColor: AppColors.grey,
                           isFilled: true,
                           prefixWidget: medTypeResultImage.isNotEmpty
@@ -4302,13 +4278,18 @@ class AuthViewModel extends BaseViewModel {
                           ),
                           controller: medTypeController,
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 16.h),
                         TextView(
                           text: 'Description',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 16.60.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -4319,25 +4300,22 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '',
-                          hintSize: 16.60.sp,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: descriptionController,
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 16.h),
                         TextView(
                           text: 'Medication picture upload',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
-                            fontSize: 16.60.sp,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -4458,7 +4436,7 @@ class AuthViewModel extends BaseViewModel {
                               text: 'Dosage ',
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
-                                fontSize: 16.60.sp,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -4466,7 +4444,7 @@ class AuthViewModel extends BaseViewModel {
                               text: '(mg)',
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
-                                fontSize: 16.60.sp,
+                                fontSize: 14.6.sp,
                                 color: AppColors.grey1,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -4483,12 +4461,7 @@ class AuthViewModel extends BaseViewModel {
                           label: model.getStringFrLabel(
                             medDosageController.text,
                           ),
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 16.80.sp,
-                            color: AppColors.infoGrey,
-                          ),
+
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
@@ -4508,6 +4481,11 @@ class AuthViewModel extends BaseViewModel {
                             ),
                           ),
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
@@ -4517,15 +4495,8 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '',
                           readOnly: true,
-                          hintSize: 14.60.sp,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: model.dateTimeController,
@@ -4540,56 +4511,91 @@ class AuthViewModel extends BaseViewModel {
                             ),
                           ),
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
                           hint: 'Duration',
+                          keyboardType: TextInputType.number,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '',
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          readOnly: true,
+                          hintSize: 14.sp,
                           controller: medDurationController,
-                          suffixWidget: IconButton(
-                            onPressed: () async {
-                              final result = await showMedDurationMenu(context);
-                              if (result != null) {
-                                setModalState!(() {
-                                  medDurationController.text = model
-                                      .getStringFrDuration(result);
-                                  _duration = int.parse(result);
-                                  intList = List.generate(
-                                    _duration!,
-                                    (index) => index,
-                                  );
-                                });
+                          // suffixWidget: IconButton(
+                          //   onPressed: () async {
+                          //     final result = await showMedDurationMenu(context);
+                          //     if (result != null) {
+                          //       setModalState!(() {
+                          //         medDurationController.text = model
+                          //             .getStringFrDuration(result);
+                          //         _duration = int.parse(result);
+                          //         intList = List.generate(
+                          //           _duration!,
+                          //           (index) => index,
+                          //         );
+                          //       });
+
+                          //       dateTimeObject = inputFormat.parse(
+                          //         model.pickedDate!,
+                          //       );
+                          //       endDateController.text = dateTimeObject!
+                          //           .add(Duration(days: int.parse(result)))
+                          //           .toString();
+                          //       model.notifyListeners();
+                          //     }
+                          //   },
+                          //   icon: Icon(
+                          //     Icons.keyboard_arrow_down,
+                          //     color: AppColors.grey1,
+                          //     size: 20.sp,
+                          //   ),
+                          // ),
+                          onChange: (p0) {
+                            if (p0 != null && p0.trim().isNotEmpty) {
+                              final parsed = int.tryParse(p0.trim());
+
+                              if (parsed != null) {
+                                _duration = parsed;
+
+                                intList = List.generate(
+                                  _duration!,
+                                  (index) => index,
+                                );
 
                                 dateTimeObject = inputFormat.parse(
                                   model.pickedDate!,
                                 );
+
                                 endDateController.text = dateTimeObject!
-                                    .add(Duration(days: int.parse(result)))
+                                    .add(Duration(days: _duration!))
                                     .toString();
-                                model.notifyListeners();
+                              } else {
+                                // Optional: handle invalid input (e.g., show error or clear output)
+                                print('⚠️ Invalid number input: $p0');
                               }
-                            },
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.grey1,
-                              size: 20.sp,
-                            ),
-                          ),
+                            } else {
+                              // Optional: clear output when input is empty
+                              endDateController.clear();
+                            }
+
+                            model.notifyListeners();
+                          },
+
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 24.0.h),
                         Row(
@@ -4598,7 +4604,7 @@ class AuthViewModel extends BaseViewModel {
                               text: 'End Date ',
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
-                                fontSize: 16.60.sp,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -4624,7 +4630,7 @@ class AuthViewModel extends BaseViewModel {
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
-                            fontSize: 16.2.sp,
+                            fontSize: 14.2.sp,
                             color: AppColors.infoGrey,
                           ),
                           fillColor: AppColors.grey,
@@ -4632,6 +4638,11 @@ class AuthViewModel extends BaseViewModel {
                           readOnly: true,
 
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
@@ -4641,13 +4652,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '',
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
@@ -4668,6 +4673,11 @@ class AuthViewModel extends BaseViewModel {
                             ),
                           ),
                           validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
                         ),
                         SizedBox(height: 24.0.h),
                         if (intList.isNotEmpty &&
@@ -4690,7 +4700,7 @@ class AuthViewModel extends BaseViewModel {
                                 text: 'Add Note',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
-                                  fontSize: 16.60.sp,
+                                  fontSize: 14.6.sp,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -4701,12 +4711,7 @@ class AuthViewModel extends BaseViewModel {
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.infoGrey,
-                                ),
+                                hintSize: 12.8.sp,
                                 fillColor: AppColors.grey,
                                 isFilled:
                                     true, // Minimum number of lines visible
@@ -4715,6 +4720,11 @@ class AuthViewModel extends BaseViewModel {
                                 keyboardType: TextInputType.multiline,
                                 validator: AppValidator.validateString(),
                                 controller: noteController,
+                                style: TextStyle(
+                                  fontSize: 16.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  fontFamily: 'GoogleSans',
+                                ),
                               ),
                               SizedBox(height: 20.h),
                               Center(
@@ -4726,7 +4736,7 @@ class AuthViewModel extends BaseViewModel {
                                     text: 'Add Another Medication',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
-                                      fontSize: 17.2.sp,
+                                      fontSize: 16.2.sp,
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.primary,
                                       decoration: TextDecoration.underline,
@@ -4754,7 +4764,73 @@ class AuthViewModel extends BaseViewModel {
                               ),
                               SizedBox(height: 30.h),
                             ],
+                          )
+                        else
+                          Column(
+                            children: [
+                              SizedBox(height: 30.h),
+                              ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary,
+                                buttonText: 'Preview',
+
+                                color: AppColors.white,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: () async {
+                                  // await addReminderToList(model);
+                                  linIndex++;
+                                  model.notifyListeners();
+                                },
+                              ),
+                              SizedBox(height: 30.h),
+                            ],
                           ),
+
+                        //   ],
+                        // )
+                        // : Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     children: [
+                        //       SizedBox(height: 20.h),
+                        //       Center(
+                        //         child: GestureDetector(
+                        //           onTap: () async {
+                        //             isAddMeds = true;
+                        //             model.notifyListeners();
+                        //           },
+                        //           child: TextView(
+                        //             text: 'Add Another Medication',
+                        //             textStyle: TextStyle(
+                        //               fontFamily: 'Arial',
+                        //               fontSize: 16.2.sp,
+                        //               fontWeight: FontWeight.w600,
+                        //               color: AppColors.primary,
+                        //               decoration: TextDecoration.underline,
+                        //               decorationColor: AppColors.primary,
+                        //               decorationStyle:
+                        //                   TextDecorationStyle.solid,
+                        //               decorationThickness: 1.4,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       SizedBox(height: 30.h),
+                        //       ButtonWidget(
+                        //         border: 100.r,
+                        //         buttonColor: AppColors.primary,
+                        //         buttonText: 'Preview',
+
+                        //         color: AppColors.white,
+                        //         buttonBorderColor: AppColors.transparent,
+                        //         onPressed: () async {
+                        //           // await addReminderToList(model);
+                        //           linIndex++;
+                        //           model.notifyListeners();
+                        //         },
+                        //       ),
+                        //       SizedBox(height: 30.h),
+                        //     ],
+                        //   ),
                       ],
                     ),
                   ),
@@ -4823,7 +4899,7 @@ class AuthViewModel extends BaseViewModel {
                   ), // Adjust radius as needed
                   child: LinearProgressIndicator(
                     minHeight: 4.0, // Adjust height as needed
-                    value: linIndex / 4,
+                    value: linIndex / 3,
                     color: AppColors.primary, // Progress bar color
                     backgroundColor: Colors.grey[300], // Background track color
                   ),
@@ -4831,7 +4907,7 @@ class AuthViewModel extends BaseViewModel {
               ),
               SizedBox(width: 10.w),
               TextView(
-                text: '$linIndex/4',
+                text: '$linIndex/3',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -4873,7 +4949,7 @@ class AuthViewModel extends BaseViewModel {
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
+                  color: AppColors.infoGrey,
                 ),
               ),
               IconButton(
@@ -4913,7 +4989,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Medication Name',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -4939,7 +5015,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Drug Name',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -4982,7 +5058,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Medication Type',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5018,7 +5094,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Description',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5065,7 +5141,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Dosage',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5091,7 +5167,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Start Date & Time',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5117,7 +5193,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Duration',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5200,7 +5276,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'End Date',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5229,7 +5305,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'No of Times to be taken',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5259,7 +5335,7 @@ class AuthViewModel extends BaseViewModel {
                   text: 'Note',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 13.8.sp,
+                    fontSize: 12.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
@@ -5310,7 +5386,7 @@ class AuthViewModel extends BaseViewModel {
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
+                  color: AppColors.infoGrey,
                 ),
               ),
               IconButton(
@@ -5435,7 +5511,7 @@ class AuthViewModel extends BaseViewModel {
                   ), // Adjust radius as needed
                   child: LinearProgressIndicator(
                     minHeight: 4.0, // Adjust height as needed
-                    value: linIndex / 4,
+                    value: linIndex / 3,
                     color: AppColors.primary, // Progress bar color
                     backgroundColor: Colors.grey[300], // Background track color
                   ),
@@ -5443,7 +5519,7 @@ class AuthViewModel extends BaseViewModel {
               ),
               SizedBox(width: 10.w),
               TextView(
-                text: '$linIndex/4',
+                text: '$linIndex/3',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -5502,7 +5578,7 @@ class AuthViewModel extends BaseViewModel {
                                   text: 'Add Email Address',
                                   textStyle: TextStyle(
                                     fontFamily: 'Arial',
-                                    fontSize: 15.8.sp,
+                                    fontSize: 16.2.sp,
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.deep,
                                   ),
@@ -5513,7 +5589,7 @@ class AuthViewModel extends BaseViewModel {
                                       text: 'Emails available',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
-                                        fontSize: 15.8.sp,
+                                        fontSize: 14.8.sp,
                                         fontWeight: FontWeight.w400,
                                         color: AppColors.fineGrey,
                                       ),
@@ -5610,7 +5686,7 @@ class AuthViewModel extends BaseViewModel {
                                         text: 'Add Email Address',
                                         textStyle: TextStyle(
                                           fontFamily: 'Arial',
-                                          fontSize: 15.8.sp,
+                                          fontSize: 16.2.sp,
                                           fontWeight: FontWeight.w400,
                                           color: AppColors.deep,
                                         ),
@@ -5621,7 +5697,7 @@ class AuthViewModel extends BaseViewModel {
                                             text: 'Emails available',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
-                                              fontSize: 15.8.sp,
+                                              fontSize: 14.8.sp,
                                               fontWeight: FontWeight.w400,
                                               color: AppColors.fineGrey,
                                             ),
@@ -5700,43 +5776,91 @@ class AuthViewModel extends BaseViewModel {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                      left: 6.10.w,
-                                      right: 12.20.w,
+                                      left: 12.20.w,
+                                      right: 20.w,
+                                      bottom: 12.w,
                                     ),
                                     child: Row(
                                       children: [
-                                        Transform.scale(
-                                          scale:
-                                              MediaQuery.of(
-                                                    context,
-                                                  ).size.shortestSide >=
-                                                  600
-                                              ? 1.5
-                                              : 1.1,
-                                          child: Checkbox(
-                                            value: addedEmailReminderList
-                                                .contains(o),
-                                            onChanged: (_) {
-                                              if (addedEmailReminderList
-                                                  .contains(o)) {
-                                                addedEmailReminderList.remove(
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (addedEmailReminderList.contains(
+                                              o,
+                                            )) {
+                                              addedEmailReminderList.remove(o);
+                                            } else {
+                                              addedEmailReminderList.add(o);
+                                            }
+                                            model!.notifyListeners();
+                                          },
+                                          child: Container(
+                                            padding:
+                                                addedEmailReminderList.contains(
                                                   o,
-                                                );
-                                              } else {
-                                                addedEmailReminderList.add(o);
-                                              }
-                                              model!.notifyListeners();
-                                            },
-                                            activeColor: AppColors.primary,
-                                            shape: RoundedRectangleBorder(
+                                                )
+                                                ? EdgeInsets.all(4.0.w)
+                                                : EdgeInsets.all(10.w),
+                                            decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(4),
+                                                  BorderRadius.circular(6.r),
+                                              color:
+                                                  addedEmailReminderList
+                                                      .contains(o)
+                                                  ? AppColors.primary
+                                                  : AppColors.transparent,
+                                              border: Border.all(
+                                                color:
+                                                    addedEmailReminderList
+                                                        .contains(o)
+                                                    ? AppColors.transparent
+                                                    : AppColors.infoGrey,
+                                                width: .78,
+                                              ),
                                             ),
-                                            visualDensity: VisualDensity
-                                                .compact, // 👈 reduces internal padding
+                                            child:
+                                                addedEmailReminderList.contains(
+                                                  o,
+                                                )
+                                                ? Icon(
+                                                    Icons.check,
+                                                    size: 12.sp,
+                                                    color: AppColors.white,
+                                                  )
+                                                : SizedBox.shrink(),
                                           ),
                                         ),
-                                        SizedBox(width: 5.10.w),
+                                        // Transform.scale(
+                                        //   scale:
+                                        //       MediaQuery.of(
+                                        //             context,
+                                        //           ).size.shortestSide >=
+                                        //           600
+                                        //       ? 1.5
+                                        //       : 1.1,
+                                        //   child: Checkbox(
+                                        //     value: addedEmailReminderList
+                                        //         .contains(o),
+                                        //     onChanged: (_) {
+                                        //       if (addedEmailReminderList
+                                        //           .contains(o)) {
+                                        //         addedEmailReminderList.remove(
+                                        //           o,
+                                        //         );
+                                        //       } else {
+                                        //         addedEmailReminderList.add(o);
+                                        //       }
+                                        //       model!.notifyListeners();
+                                        //     },
+                                        //     activeColor: AppColors.primary,
+                                        //     shape: RoundedRectangleBorder(
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(4),
+                                        //     ),
+                                        //     visualDensity: VisualDensity
+                                        //         .compact, // 👈 reduces internal padding
+                                        //   ),
+                                        // ),
+                                        SizedBox(width: 9.10.w),
                                         SizedBox(
                                           width: 220.w,
                                           child: TextView(
@@ -5822,7 +5946,7 @@ class AuthViewModel extends BaseViewModel {
                                   text: 'Add Phone Number',
                                   textStyle: TextStyle(
                                     fontFamily: 'Arial',
-                                    fontSize: 15.8.sp,
+                                    fontSize: 16.2.sp,
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.deep,
                                   ),
@@ -5833,7 +5957,7 @@ class AuthViewModel extends BaseViewModel {
                                       text: 'Numbers available',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
-                                        fontSize: 15.8.sp,
+                                        fontSize: 14.8.sp,
                                         fontWeight: FontWeight.w400,
                                         color: AppColors.fineGrey,
                                       ),
@@ -6024,43 +6148,91 @@ class AuthViewModel extends BaseViewModel {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(
-                                      left: 10.w,
+                                      left: 12.w,
                                       right: 20.w,
+                                      bottom: 12.w,
                                     ),
                                     child: Row(
                                       children: [
-                                        Transform.scale(
-                                          scale:
-                                              MediaQuery.of(
-                                                    context,
-                                                  ).size.shortestSide >=
-                                                  600
-                                              ? 1.5
-                                              : 1.1,
-                                          child: Checkbox(
-                                            value: addedPhoneReminderList
-                                                .contains(o),
-                                            onChanged: (_) {
-                                              if (addedPhoneReminderList
-                                                  .contains(o)) {
-                                                addedPhoneReminderList.remove(
+                                        // Transform.scale(
+                                        //   scale:
+                                        //       MediaQuery.of(
+                                        //             context,
+                                        //           ).size.shortestSide >=
+                                        //           600
+                                        //       ? 1.5
+                                        //       : 1.1,
+                                        //   child: Checkbox(
+                                        //     value: addedPhoneReminderList
+                                        //         .contains(o),
+                                        //     onChanged: (_) {
+                                        //       if (addedPhoneReminderList
+                                        //           .contains(o)) {
+                                        //         addedPhoneReminderList.remove(
+                                        //           o,
+                                        //         );
+                                        //       } else {
+                                        //         addedPhoneReminderList.add(o);
+                                        //       }
+                                        //       model!.notifyListeners();
+                                        //     },
+                                        //     activeColor: AppColors.primary,
+                                        //     shape: RoundedRectangleBorder(
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(4),
+                                        //     ),
+                                        //     visualDensity: VisualDensity
+                                        //         .compact, // 👈 reduces internal padding
+                                        //   ),
+                                        // ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (addedPhoneReminderList.contains(
+                                              o,
+                                            )) {
+                                              addedPhoneReminderList.remove(o);
+                                            } else {
+                                              addedPhoneReminderList.add(o);
+                                            }
+                                            model!.notifyListeners();
+                                          },
+                                          child: Container(
+                                            padding:
+                                                addedPhoneReminderList.contains(
                                                   o,
-                                                );
-                                              } else {
-                                                addedPhoneReminderList.add(o);
-                                              }
-                                              model!.notifyListeners();
-                                            },
-                                            activeColor: AppColors.primary,
-                                            shape: RoundedRectangleBorder(
+                                                )
+                                                ? EdgeInsets.all(4.0.w)
+                                                : EdgeInsets.all(10.w),
+                                            decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(4),
+                                                  BorderRadius.circular(6.r),
+                                              color:
+                                                  addedPhoneReminderList
+                                                      .contains(o)
+                                                  ? AppColors.primary
+                                                  : AppColors.transparent,
+                                              border: Border.all(
+                                                color:
+                                                    addedPhoneReminderList
+                                                        .contains(o)
+                                                    ? AppColors.transparent
+                                                    : AppColors.infoGrey,
+                                                width: .78,
+                                              ),
                                             ),
-                                            visualDensity: VisualDensity
-                                                .compact, // 👈 reduces internal padding
+                                            child:
+                                                addedPhoneReminderList.contains(
+                                                  o,
+                                                )
+                                                ? Icon(
+                                                    Icons.check,
+                                                    size: 12.sp,
+                                                    color: AppColors.white,
+                                                  )
+                                                : SizedBox.shrink(),
                                           ),
                                         ),
-                                        SizedBox(width: 10.w),
+                                        SizedBox(width: 9.10.w),
                                         TextView(
                                           text: o,
                                           textStyle: TextStyle(
@@ -6263,9 +6435,9 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: 'NGN25',
+                                          text: '₦25',
                                           textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
+                                            // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
                                             color: AppColors.black,
                                             fontWeight: FontWeight.w500,
@@ -6302,9 +6474,9 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: 'NGN50',
+                                          text: '₦50',
                                           textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
+                                            // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
                                             color: AppColors.black,
                                             fontWeight: FontWeight.w500,
@@ -6341,9 +6513,9 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: 'NGN100',
+                                          text: '₦100',
                                           textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
+                                            // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
                                             color: AppColors.black,
                                             fontWeight: FontWeight.w500,
@@ -6362,16 +6534,16 @@ class AuthViewModel extends BaseViewModel {
                                   TextView(
                                     text: 'Total',
                                     textStyle: TextStyle(
-                                      fontFamily: 'ArGoogleSansial',
+                                      fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
                                       color: AppColors.black,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                   TextView(
-                                    text: 'NGN$costTotal.00',
+                                    text: '₦$costTotal.00',
                                     textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
+                                      fontFamily: 'Arial',
                                       fontSize: 16.80.sp,
                                       color: AppColors.black,
                                       fontWeight: FontWeight.w700,
@@ -6415,7 +6587,16 @@ class AuthViewModel extends BaseViewModel {
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
-                    linIndex++;
+                    if (phoneReminderList.isNotEmpty) {
+                      linIndex++;
+                    } else {
+                      navigate.navigateTo(
+                        Routes.paymentStatusScreen,
+                        arguments: PaymentStatusScreenArguments(
+                          isSuccessful: true,
+                        ),
+                      );
+                    }
                     model!.notifyListeners();
                   },
                 ),
@@ -6525,9 +6706,9 @@ class AuthViewModel extends BaseViewModel {
             ),
             child: Center(
               child: TextView(
-                text: 'NGN$costTotal.00',
+                text: '₦$costTotal.00',
                 textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
+                  fontFamily: 'Arial',
                   fontSize: 20.90.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.reminder,
@@ -6541,7 +6722,7 @@ class AuthViewModel extends BaseViewModel {
             textStyle: TextStyle(
               fontFamily: 'Arial',
               fontSize: 16.90.sp,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               color: AppColors.deep,
             ),
           ),
@@ -6658,39 +6839,44 @@ class AuthViewModel extends BaseViewModel {
     required String text,
     required bool isTapped,
     required VoidCallback onTap,
-  }) => Container(
-    padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 10.w),
-    margin: EdgeInsets.only(bottom: 10.w),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10.r),
-      border: Border.all(color: AppColors.infoGrey1.withOpacity(.9)),
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Transform.scale(
-          scale: MediaQuery.of(context).size.shortestSide >= 600 ? 1.5 : 1.1,
-          child: Checkbox(
-            value: isTapped,
-            onChanged: (_) => onTap(),
-            activeColor: AppColors.primary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 16.w),
+      margin: EdgeInsets.only(bottom: 10.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: AppColors.infoGrey1.withOpacity(.9)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: isTapped ? EdgeInsets.all(4.0.w) : EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6.r),
+              color: isTapped ? AppColors.primary : AppColors.transparent,
+              border: Border.all(
+                color: isTapped ? AppColors.transparent : AppColors.infoGrey,
+                width: .78,
+              ),
             ),
-            visualDensity: VisualDensity.compact, // 👈 reduces internal padding
+            child: isTapped
+                ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+                : SizedBox.shrink(),
           ),
-        ),
-        SizedBox(width: 10.w),
-        TextView(
-          text: text,
-          textStyle: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 15.2.sp,
-            fontWeight: FontWeight.w400,
-            color: AppColors.reminder,
+          SizedBox(width: 10.w),
+          TextView(
+            text: text,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 
@@ -7078,8 +7264,8 @@ class AuthViewModel extends BaseViewModel {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SvgPicture.asset(icon!),
-          SizedBox(width: 12.w),
+          SvgPicture.asset(icon!, width: 18.125.w, height: 18.h),
+          SizedBox(width: 10.w),
           TextView(
             text: text ?? '',
             textStyle: TextStyle(
@@ -7095,7 +7281,7 @@ class AuthViewModel extends BaseViewModel {
               : Row(
                   children: [
                     TextView(
-                      text: 'NGN0.00',
+                      text: '₦0.00',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14.0.sp,

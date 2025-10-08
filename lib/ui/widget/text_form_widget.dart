@@ -33,6 +33,7 @@ class TextFormWidget extends StatelessWidget {
   final bool? alignLabelWithHint;
   final Function()? onTapped;
   TextStyle? labelStyle;
+  TextStyle? style;
   final TextInputType? keyboardType;
   final Color? suffixIconColor;
   final Color? borderColor;
@@ -74,6 +75,7 @@ class TextFormWidget extends StatelessWidget {
     this.isFeedback = false,
     this.onTapped,
     this.labelStyle,
+    this.style,
     this.onEditCompleted,
     this.keyboardType,
     this.suffixIconColor,
@@ -140,6 +142,7 @@ class TextFormWidget extends StatelessWidget {
           decoration: InputDecoration(
             labelText: label ?? '',
             labelStyle: labelStyle,
+            
             filled: isFilled,
             fillColor: fillColor,
             focusColor: AppColors.black,
@@ -212,7 +215,9 @@ class TextFormWidget extends StatelessWidget {
           onChanged: onChange,
           onFieldSubmitted: onEditCompleted,
           validator: validator,
-          style: TextStyle(fontSize: 16.20.sp, fontWeight: FontWeight.w500),
+          style:
+              style ??
+              TextStyle(fontSize: 16.20.sp, fontWeight: FontWeight.w500),
         ),
       ],
     );

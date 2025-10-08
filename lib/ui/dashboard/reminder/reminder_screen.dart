@@ -26,56 +26,61 @@ class _ReminderScreenState extends State<ReminderScreen> {
     return Scaffold(
       backgroundColor: AppColors.dashboard,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.white,
-        leading: Container(
-          margin: EdgeInsets.only(left: isTablet(context) ? 5.2.w : 12.4.w),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.inactive.withOpacity(.1),
-            border: Border.all(color: AppColors.inactive.withOpacity(.4)),
-          ),
-          child: IconButton(
-            icon: SvgPicture.asset(
-              AppImage.burger,
-              color: AppColors.primary,
-              height: isTablet(context) ? 32.h : 12.h,
-              width: isTablet(context) ? 32.w : 12.w,
-            ),
-            onPressed: () => navigate.navigateTo(Routes.moreScreen),
-          ),
-        ),
-        title: TextView(
-          text: 'Reminder',
-          textStyle: TextStyle(
-            fontSize: 17.2.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.black,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
-            child: Container(
-              margin: EdgeInsets.only(right: 4.w),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.inactive.withOpacity(.1),
-                border: Border.all(color: AppColors.inactive..withOpacity(.4)),
-              ),
-              child: IconButton(
-                icon: SvgPicture.asset(
-                  AppImage.bell,
-                  height: isTablet(context) ? 40.h : 20.h,
-                  width: isTablet(context) ? 40.w : 20.w,
-                  color: AppColors.primary,
+        toolbarHeight: 80.0,
+        title: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.inactive.withOpacity(.1),
+                  border: Border.all(color: AppColors.inactive.withOpacity(.4)),
                 ),
-                onPressed: () {},
-                splashRadius: 28,
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    AppImage.burger,
+                    color: AppColors.primary,
+                    height: isTablet(context) ? 34.h : 14.h,
+                    width: isTablet(context) ? 34.w : 14.w,
+                  ),
+                  onPressed: () => navigate.navigateTo(Routes.moreScreen),
+                ),
               ),
-            ),
+              TextView(
+                text: 'Reminder',
+                textStyle: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.black,
+                ),
+              ),
+
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.inactive.withOpacity(.1),
+                  border: Border.all(
+                    color: AppColors.inactive..withOpacity(.4),
+                  ),
+                ),
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    AppImage.bell,
+                    height: isTablet(context) ? 40.h : 20.h,
+                    width: isTablet(context) ? 40.w : 20.w,
+                    color: AppColors.primary,
+                  ),
+                  onPressed: () {},
+                  splashRadius: 28,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 22.w),
