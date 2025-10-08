@@ -92,7 +92,7 @@ class ProfileScreen extends StatelessWidget {
                   Center(
                     child: TextView(
                       text:
-                          '${SharedPreferencesService.instance.usersData['displayName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
+                          '${SharedPreferencesService.instance.usersData['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
                       textStyle: TextStyle(
                         fontSize: 18.2.sp,
                         fontWeight: FontWeight.w500,

@@ -117,7 +117,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   SizedBox(height: 26.0.h),
                   TextView(
                     text:
-                        'Welcome back, ${SharedPreferencesService.instance.usersData['displayName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
+                        'Welcome back, ${SharedPreferencesService.instance.usersData['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 20.sp,

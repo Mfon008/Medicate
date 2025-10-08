@@ -575,9 +575,9 @@ class AuthViewModel extends BaseViewModel {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setModalState) {
           return DraggableScrollableSheet(
-            initialChildSize: 0.9, // Initial height as percentage of screen
+            initialChildSize: 0.88, // Initial height as percentage of screen
             minChildSize: 0.7, // Minimum height
-            maxChildSize: 0.99, // Maximum height
+            maxChildSize: 0.89, // Maximum height
             expand: true, // Set to true for full height initially
             builder: (BuildContext context, ScrollController scrollController) {
               return ViewModelBuilder<AuthViewModel>.reactive(
@@ -2849,7 +2849,7 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      hintSize: 14.sp,
+                      hintSize: 12.2.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: medNameController,
@@ -2868,7 +2868,7 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      hintSize: 14.sp,
+                      hintSize: 12.2.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: drugNameController,
@@ -3142,7 +3142,7 @@ class AuthViewModel extends BaseViewModel {
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
                       readOnly: true,
-                      hintSize: 14.sp,
+                      hintSize: 12.2.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: model.dateTimeController,
@@ -3172,7 +3172,7 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      hintSize: 14.sp,
+                      hintSize: 12.2.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: medDurationController,
@@ -3297,7 +3297,7 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      hintSize: 14.sp,
+                      hintSize: 12.2.sp,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       readOnly: true,
@@ -3568,8 +3568,7 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                hintSize: 14.sp,
-
+                                                hintSize: 12.2.sp,
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
@@ -3594,8 +3593,7 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                hintSize: 14.sp,
-
+                                                hintSize: 12.2.sp,
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
@@ -3918,7 +3916,7 @@ class AuthViewModel extends BaseViewModel {
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
                                                 readOnly: true,
-                                                hintSize: 14.sp,
+                                                hintSize: 12.2.sp,
 
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
@@ -3951,7 +3949,7 @@ class AuthViewModel extends BaseViewModel {
                                               SizedBox(height: 24.0.h),
                                               TextFormWidget(
                                                 hint: 'Duration',
-                                                hintSize: 14.sp,
+                                                hintSize: 12.2.sp,
                                                 keyboardType:
                                                     TextInputType.number,
                                                 borderColor:
@@ -4127,7 +4125,7 @@ class AuthViewModel extends BaseViewModel {
                                                 borderTopRight: 10.r,
                                                 borderBottomLeft: 10.r,
                                                 borderBottomRight: 10.r,
-                                                hintSize: 14.sp,
+                                                hintSize: 12.2.sp,
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
@@ -4163,6 +4161,76 @@ class AuthViewModel extends BaseViewModel {
                                                   fontFamily: 'GoogleSans',
                                                 ),
                                               ),
+                                              SizedBox(height: 24.0.h),
+                                              if (e.listOfTimes!.isNotEmpty &&
+                                                  e.timesToTake!.isNotEmpty)
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    ...e.listOfTimes!.map(
+                                                      (list) => model
+                                                          .dosageAfterWidgetContainer(
+                                                            context: context,
+                                                            callback: list,
+                                                            color:
+                                                                AppColors.grey,
+                                                            dosageMap:
+                                                                e.dosageMap,
+                                                            listOfTimes:
+                                                                List.generate(
+                                                                  int.parse(
+                                                                    e.timesToTake!,
+                                                                  ),
+                                                                  (index) =>
+                                                                      index,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                    SizedBox(height: 14.0.h),
+                                                    TextView(
+                                                      text: 'Add Note',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 16.60.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 10.h),
+                                                    TextFormWidget(
+                                                      borderColor:
+                                                          AppColors.transparent,
+                                                      borderTopLeft: 10.r,
+                                                      borderTopRight: 10.r,
+                                                      borderBottomLeft: 10.r,
+                                                      borderBottomRight: 10.r,
+                                                      labelStyle: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 16.80.sp,
+                                                        color:
+                                                            AppColors.infoGrey,
+                                                      ),
+                                                      fillColor: AppColors.grey,
+                                                      isFilled:
+                                                          true, // Minimum number of lines visible
+                                                      readOnly: true,
+                                                      maxline:
+                                                          3, // Maximum number of lines visible before scrolling
+                                                      keyboardType:
+                                                          TextInputType
+                                                              .multiline,
+                                                      validator:
+                                                          AppValidator.validateString(),
+                                                      controller:
+                                                          TextEditingController(
+                                                            text: e.note,
+                                                          ),
+                                                    ),
+                                                  ],
+                                                ),
                                             ],
                                           ),
                                         )
@@ -4205,7 +4273,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 14.sp,
+                          hintSize: 12.2.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: medNameController,
@@ -4224,7 +4292,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 14.sp,
+                          hintSize: 12.2.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: drugNameController,
@@ -4496,7 +4564,7 @@ class AuthViewModel extends BaseViewModel {
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
                           readOnly: true,
-                          hintSize: 14.sp,
+                          hintSize: 12.2.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: model.dateTimeController,
@@ -4528,7 +4596,7 @@ class AuthViewModel extends BaseViewModel {
                           borderBottomRight: 10.r,
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          hintSize: 14.sp,
+                          hintSize: 12.2.sp,
                           controller: medDurationController,
                           // suffixWidget: IconButton(
                           //   onPressed: () async {
@@ -4652,7 +4720,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 14.sp,
+                          hintSize: 12.2.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
