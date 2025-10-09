@@ -45,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
     ),
   );
 
-  String? pinInput;
 
   @override
   Widget build(BuildContext context) {

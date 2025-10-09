@@ -5,6 +5,8 @@ import 'package:medicate_app/core/connect_end/model/login_response_model/login_r
 import '../../api_folder/auth_api.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
+import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -18,6 +20,7 @@ import '../model/sign_up_response_model/sign_up_response_model.dart'
 import '../model/support_entity_model.dart';
 import '../model/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
+import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -65,4 +68,10 @@ class AuthContractsImpl {
   Future<UpdateUserProfileResponseModel> uploadUserProfile(
     UpdateUserProfileEntity? userProfile,
   ) async => await _api.uploadUserProfile(userProfile!);
+  Future<CreateReminderResponseModel> createReminder(
+    CreateReminderEntityModel createReminderEntityModel,
+  ) async => await _api.createReminder(createReminderEntityModel);
+  Future<UploadImageReminderResponseModel> uploadImageReminder(
+    MultipartFile file,
+  ) async => await _api.uploadImageReminder(file);
 }

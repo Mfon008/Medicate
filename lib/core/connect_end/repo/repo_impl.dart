@@ -7,6 +7,8 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/contract_impl.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
+import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -19,6 +21,7 @@ import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/support_entity_model.dart';
 import '../model/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
+import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
 
@@ -122,6 +125,18 @@ class AuthRepoImpl {
     UpdateUserProfileEntity? userProfile,
   ) async {
     final response = await _contract.uploadUserProfile(userProfile);
+    return response;
+  }
+  
+  Future<CreateReminderResponseModel> createReminder(
+    CreateReminderEntityModel createReminderEntityModel,
+  ) async {
+    final response = await _contract.createReminder(createReminderEntityModel);
+    return response;
+  }
+  
+   Future<UploadImageReminderResponseModel> uploadImageReminder(MultipartFile file) async {
+    final response = await _contract.uploadImageReminder(file);
     return response;
   }
 

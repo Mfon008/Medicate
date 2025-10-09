@@ -17,4 +17,6 @@ class UrlConfig {
   static const String upload_pro_picture =
       'auth/individual-user/upload/profile-picture';
   static const String update_user_profile = 'auth/individual-user/update';
+  static const String reminder = 'reminders';
+  static const String upload_image_reminder = 'reminders/image';
 }

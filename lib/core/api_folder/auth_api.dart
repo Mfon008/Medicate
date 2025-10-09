@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
@@ -10,6 +12,7 @@ import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_p
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
+import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
     as sup;
 import '../connect_end/model/resend_otp_entity_model.dart';
@@ -239,6 +242,21 @@ class AuthApi {
     }
   }
 
+  Future<UploadImageReminderResponseModel> uploadImageReminder(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.upload_image_reminder,
+        RequestMethod.upload,
+        formData: FormData.fromMap({'image': file}),
+      );
+      logger.d(response.data);
+      return UploadImageReminderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<UpdateUserProfileResponseModel> uploadUserProfile(
     UpdateUserProfileEntity userProfile,
   ) async {
@@ -250,6 +268,23 @@ class AuthApi {
       );
       logger.d(response.data);
       return UpdateUserProfileResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<CreateReminderResponseModel> createReminder(
+    CreateReminderEntityModel createReminderEntityModel,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminder,
+        RequestMethod.post,
+        data: createReminderEntityModel.toJson(),
+      );
+      logger.d(response.data);
+      return CreateReminderResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

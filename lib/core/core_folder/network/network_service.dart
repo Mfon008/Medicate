@@ -134,7 +134,7 @@ class NetworkService {
         case RequestMethod.upload:
           response = await dio!.post(
             path,
-            data: data,
+            data: formData,
             queryParameters: params,
             options:
                 options ??

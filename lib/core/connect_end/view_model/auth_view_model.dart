@@ -12,10 +12,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/country_code_format.dart';
+import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/medication_image.dart';
+import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/payment.dart';
+import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
+import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/ui/dashboard/reminder/medication_class.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
@@ -35,6 +40,8 @@ import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/create_reminder_entity_model/daily_dose_time.dart';
+import '../model/create_reminder_entity_model/medication.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -94,6 +101,12 @@ class AuthViewModel extends BaseViewModel {
   VerifyPassOtpRespnseModel? get verifyPassOtpRespnseModel =>
       _verifyPassOtpRespnseModel;
   String? pinInput;
+  CreateReminderResponseModel? _createReminderResponseModel;
+  CreateReminderResponseModel? get createReminderResponseModel =>
+      _createReminderResponseModel;
+  UploadImageReminderResponseModel? _uploadImageReminderResponseModel;
+  UploadImageReminderResponseModel? get uploadImageReminderResponseModel =>
+      _uploadImageReminderResponseModel;
 
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
@@ -119,6 +132,8 @@ class AuthViewModel extends BaseViewModel {
 
   TextEditingController dateTimeController = TextEditingController();
   String? pickedDate;
+  String endDateIso = '';
+  String startDateIso = '';
   List<List<String>> periodLabels = [];
   List<List<String>> periodAfterLabels = [];
 
@@ -129,6 +144,7 @@ class AuthViewModel extends BaseViewModel {
   List<List<TextEditingController>> doseAfterControllers = [];
   bool isChecked = false;
   int? totalDuration;
+  bool isPhoneValid = false;
 
   TextEditingController medNameController = TextEditingController();
   TextEditingController medDosageController = TextEditingController();
@@ -171,8 +187,10 @@ class AuthViewModel extends BaseViewModel {
   List<String> addedEmailReminderList = [];
   List<String> phoneReminderList = [];
   List<String> addedPhoneReminderList = [];
+  List<String> notificationChannel = [];
   List<int> intList = [];
   final List<int> selectedIndexes = [];
+
   final List<String> channels = [
     'Email (Free)',
     'Push (Free)',
@@ -180,6 +198,26 @@ class AuthViewModel extends BaseViewModel {
     'Whatsapp (₦20.00)',
     'Phone Call (₦50.00)',
   ];
+
+  buildChannelList(selectedIndexes) {
+    notificationChannel.clear();
+    if (selectedIndexes.contains(0)) {
+      notificationChannel.add('EMAIL');
+    }
+    if (selectedIndexes.contains(1)) {
+      notificationChannel.add('PUSH NOTIFICATION');
+    }
+    if (selectedIndexes.contains(2)) {
+      notificationChannel.add('SMS');
+    }
+    if (selectedIndexes.contains(3)) {
+      notificationChannel.add('WHATSAPP');
+    }
+    if (selectedIndexes.contains(4)) {
+      notificationChannel.add('PHONE CALL');
+    }
+    notifyListeners();
+  }
 
   Future<String?> showDailyInTakeMenu(BuildContext context) async {
     return await showModalBottomSheet<String>(
@@ -611,6 +649,8 @@ class AuthViewModel extends BaseViewModel {
         dayDoses.add({
           'time': doseControllers[day][i].text,
           'period': periodLabels[day][i],
+          'date': startDateIso.substring(0, 10),
+          'isoDate': startDateIso,
         });
       }
 
@@ -630,16 +670,18 @@ class AuthViewModel extends BaseViewModel {
         description: descriptionController.text,
         medicationFile: model.imageDrug,
         dosage: model.getStringFrLabel(medDosageController.text),
+        imageData: model.uploadImageReminderResponseModel!.data,
         dateAndTime: model.dateTimeController.text,
         duration: medDurationController.text,
         endDate: endDateController.text,
+        startDateIso: DateTime.parse(startDateIso),
+        endDateIso: DateTime.parse(endDateIso),
         timesToTake: medDailyInTakenController.text,
         note: noteController.text,
         listOfTimes: intList,
         dosageMap: addTimePeriod,
       ),
     );
-    print('print::${medicationClassList[0].dosageMap}');
     await Future.delayed(Duration(seconds: 1), () {});
     clearReminderMedsVaraibles();
     model.notifyListeners();
@@ -1522,6 +1564,7 @@ class AuthViewModel extends BaseViewModel {
 
     if (pickedDated != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
+      startDateIso = pickedDated.toUtc().toIso8601String();
       selectTime(context);
     }
     notifyListeners();
@@ -1632,8 +1675,6 @@ class AuthViewModel extends BaseViewModel {
       borderRadius: BorderRadius.circular(10),
     ),
   );
-
-  bool isAddMeds = false;
 
   void signIn(context, {LoginEntityModel? signInEntity}) async {
     try {
@@ -1992,6 +2033,13 @@ class AuthViewModel extends BaseViewModel {
         file: (file) {
           imageDrug = file;
           drugFilename = imageDrug!.path.split("/").last;
+          uploadImageReminder(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageDrug).readAsBytesSync(),
+              filename: imageDrug!.path.split("/").last,
+            ),
+          );
           notifyListeners();
         },
       );
@@ -3195,6 +3243,9 @@ class AuthViewModel extends BaseViewModel {
                             endDateController.text = dateTimeObject!
                                 .add(Duration(days: _duration!))
                                 .toString();
+                            endDateIso = dateTimeObject!
+                                .toUtc()
+                                .toIso8601String();
                           } else {
                             // Optional: handle invalid input (e.g., show error or clear output)
                             print('⚠️ Invalid number input: $p0');
@@ -4844,8 +4895,7 @@ class AuthViewModel extends BaseViewModel {
 
                                 color: AppColors.white,
                                 buttonBorderColor: AppColors.transparent,
-                                onPressed: () async {
-                                  // await addReminderToList(model);
+                                onPressed: () {
                                   linIndex++;
                                   model.notifyListeners();
                                 },
@@ -5434,8 +5484,6 @@ class AuthViewModel extends BaseViewModel {
                     : () {
                         indexOfMedicationClassList -= 1;
                         notifyListeners();
-
-                        print(indexOfMedicationClassList);
                       },
                 icon: Icon(
                   Icons.arrow_back,
@@ -5493,6 +5541,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     linIndex--;
+                    indexOfMedicationClassList = 0;
                     model!.notifyListeners();
                   },
                 ),
@@ -5618,8 +5667,11 @@ class AuthViewModel extends BaseViewModel {
                     // Phone-related channels
 
                     showPhoneDialog(context);
+                    isPhoneValid = false;
+                    model!.notifyListeners();
                   }
                 } // ✅ update selection
+                buildChannelList(selectedIndexes);
                 addCostTotal();
                 notifyListeners();
               },
@@ -6081,7 +6133,11 @@ class AuthViewModel extends BaseViewModel {
                                 ),
                                 SizedBox(width: 2.w),
                                 IconButton(
-                                  onPressed: () => showPhoneDialog(context),
+                                  onPressed: () {
+                                    showPhoneDialog(context);
+                                    isPhoneValid = false;
+                                    model!.notifyListeners();
+                                  },
                                   icon: Icon(
                                     Icons.add_circle,
                                     color: AppColors.primary1,
@@ -6191,8 +6247,12 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                       SizedBox(width: 2.w),
                                       IconButton(
-                                        onPressed: () =>
-                                            showPhoneDialog(context),
+                                        onPressed: () {
+                                          showPhoneDialog(context);
+
+                                          isPhoneValid = false;
+                                          model!.notifyListeners();
+                                        },
                                         icon: Icon(
                                           Icons.add_circle,
                                           color: AppColors.primary1,
@@ -6222,37 +6282,6 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                     child: Row(
                                       children: [
-                                        // Transform.scale(
-                                        //   scale:
-                                        //       MediaQuery.of(
-                                        //             context,
-                                        //           ).size.shortestSide >=
-                                        //           600
-                                        //       ? 1.5
-                                        //       : 1.1,
-                                        //   child: Checkbox(
-                                        //     value: addedPhoneReminderList
-                                        //         .contains(o),
-                                        //     onChanged: (_) {
-                                        //       if (addedPhoneReminderList
-                                        //           .contains(o)) {
-                                        //         addedPhoneReminderList.remove(
-                                        //           o,
-                                        //         );
-                                        //       } else {
-                                        //         addedPhoneReminderList.add(o);
-                                        //       }
-                                        //       model!.notifyListeners();
-                                        //     },
-                                        //     activeColor: AppColors.primary,
-                                        //     shape: RoundedRectangleBorder(
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(4),
-                                        //     ),
-                                        //     visualDensity: VisualDensity
-                                        //         .compact, // 👈 reduces internal padding
-                                        //   ),
-                                        // ),
                                         GestureDetector(
                                           onTap: () {
                                             if (addedPhoneReminderList.contains(
@@ -6322,6 +6351,7 @@ class AuthViewModel extends BaseViewModel {
                                                   phoneNumber:
                                                       phoneReminderList[index],
                                                 );
+                                                isPhoneValid = false;
                                                 model!.notifyListeners();
                                               },
                                               child: SvgPicture.asset(
@@ -6627,7 +6657,11 @@ class AuthViewModel extends BaseViewModel {
                   ],
                 )
               : SizedBox.shrink(),
+          model!.isLoading
+              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+              : SizedBox.shrink(),
           SizedBox(height: phoneReminderList.isNotEmpty ? 40.h : 206.h),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -6641,7 +6675,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     linIndex--;
-                    model!.notifyListeners();
+                    model.notifyListeners();
                   },
                 ),
               ),
@@ -6658,14 +6692,45 @@ class AuthViewModel extends BaseViewModel {
                     if (phoneReminderList.isNotEmpty) {
                       linIndex++;
                     } else {
-                      navigate.navigateTo(
-                        Routes.paymentStatusScreen,
-                        arguments: PaymentStatusScreenArguments(
-                          isSuccessful: true,
+                      createReminder(
+                        context,
+                        createReminderEntityModel: CreateReminderEntityModel(
+                          medications: medicationClassList.map((m) {
+                            return Medication(
+                              medicationName: m.medicationName,
+                              drugName: m.drugName,
+                              dosage: m.dosage,
+                              medicationType: m.medicationType,
+                              startDateTime: m.startDateIso,
+                              endDateTime: m.endDateIso,
+                              durationInDays: int.parse(m.duration!),
+                              timesPerDay: int.parse(m.timesToTake!),
+                              dailyDoseTimes: (m.dosageMap as List)
+                                  .map(
+                                    (dayData) => (dayData['doses'] as List)
+                                        .map(
+                                          (dose) => DailyDoseTime.fromJson(
+                                            dose as Map<String, dynamic>,
+                                          ),
+                                        )
+                                        .toList(),
+                                  )
+                                  .toList(),
+                              note: m.note,
+                              medicationImage: MedicationImage.fromJson(
+                                m.imageData!.toJson(),
+                              ),
+                            );
+                          }).toList(),
+                          timeZone: "Africa/Lagos",
+                          notificationChannels: notificationChannel,
+                          emails: emailReminderList,
+                          phoneNumbers: phoneReminderList,
+                          payment: Payment(amount: costTotal, currency: "NGN"),
                         ),
                       );
                     }
-                    model!.notifyListeners();
+                    model.notifyListeners();
                   },
                 ),
               ),
@@ -6840,6 +6905,10 @@ class AuthViewModel extends BaseViewModel {
               model!.notifyListeners();
             },
           ),
+          SizedBox(height: model!.isLoading ? 20.h : 0.h),
+          model.isLoading
+              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+              : SizedBox.shrink(),
           SizedBox(height: 120.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -6854,7 +6923,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     linIndex--;
-                    model!.notifyListeners();
+                    model.notifyListeners();
                   },
                 ),
               ),
@@ -6871,11 +6940,51 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth != ''
                       ? () {
-                          navigate.navigateTo(
-                            Routes.paymentStatusScreen,
-                            arguments: PaymentStatusScreenArguments(
-                              isSuccessful: false,
-                            ),
+                          createReminder(
+                            context,
+                            createReminderEntityModel:
+                                CreateReminderEntityModel(
+                                  medications: medicationClassList.map((m) {
+                                    return Medication(
+                                      medicationName: m.medicationName,
+                                      drugName: m.drugName,
+                                      dosage: m.dosage,
+                                      medicationType: m.medicationType,
+                                      startDateTime: m.startDateIso,
+                                      endDateTime: m.endDateIso,
+                                      durationInDays: int.parse(m.duration!),
+                                      timesPerDay: int.parse(m.timesToTake!),
+                                      dailyDoseTimes: (m.dosageMap as List)
+                                          .map(
+                                            (
+                                              dayData,
+                                            ) => (dayData['doses'] as List)
+                                                .map(
+                                                  (
+                                                    dose,
+                                                  ) => DailyDoseTime.fromJson(
+                                                    dose
+                                                        as Map<String, dynamic>,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          )
+                                          .toList(),
+                                      note: m.note,
+                                      medicationImage: MedicationImage.fromJson(
+                                        m.imageData!.toJson(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  timeZone: "Africa/Lagos",
+                                  notificationChannels: notificationChannel,
+                                  emails: emailReminderList,
+                                  phoneNumbers: phoneReminderList,
+                                  payment: Payment(
+                                    amount: costTotal,
+                                    currency: "NGN",
+                                  ),
+                                ),
                           );
                         }
                       : () {},
@@ -7112,13 +7221,14 @@ class AuthViewModel extends BaseViewModel {
   }) {
     TextEditingController phoneController = TextEditingController();
     if (isEdit) {
-      phoneController.text = phoneNumber!;
+      phoneController.text = phoneNumber!.substring(4);
     }
 
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
+        print("isPhoneValid$isPhoneValid");
         return Container(
           color: AppColors.transparent,
           child: Column(
@@ -7152,134 +7262,152 @@ class AuthViewModel extends BaseViewModel {
                 backgroundColor: AppColors.white,
                 child: Padding(
                   padding: EdgeInsets.all(34.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextView(
-                        text: !isEdit
-                            ? 'Add Phone Number'
-                            : 'Edit Phone Number',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          color: AppColors.black,
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w700,
+                  child: Form(
+                    key: formKeyPhoneReminder,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextView(
+                          text: !isEdit
+                              ? 'Add Phone Number'
+                              : 'Edit Phone Number',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            color: AppColors.black,
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 12.h),
-                      TextView(
-                        text: 'Phone Number',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          color: AppColors.black,
-                          fontSize: 12.20.sp,
-                          fontWeight: FontWeight.w400,
+                        SizedBox(height: 12.h),
+                        TextView(
+                          text: 'Phone Number',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            color: AppColors.black,
+                            fontSize: 12.20.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(13.8.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.grey,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10.r),
-                                topRight: Radius.circular(0.r),
-                                bottomLeft: Radius.circular(10.r),
-                                bottomRight: Radius.circular(0.r),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(13.8.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.grey,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10.r),
+                                  topRight: Radius.circular(0.r),
+                                  bottomLeft: Radius.circular(10.r),
+                                  bottomRight: Radius.circular(0.r),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    AppImage.nigeria,
+                                    width: 22.w,
+                                    height: 22.h,
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  TextView(
+                                    text: '+234',
+                                    textStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.2.sp,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  AppImage.nigeria,
-                                  width: 22.w,
-                                  height: 22.h,
-                                ),
-                                SizedBox(width: 4.w),
-                                TextView(
-                                  text: '+234',
-                                  textStyle: TextStyle(
+                            SizedBox(width: 2.w),
+                            Expanded(
+                              child: Container(
+                                margin: isPhoneValid
+                                    ? EdgeInsets.only(top: 20.w)
+                                    : EdgeInsets.zero,
+                                child: TextFormWidget(
+                                  hint: null,
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 0,
+                                  borderTopRight: 10,
+                                  borderBottomLeft: 0,
+                                  borderBottomRight: 10,
+                                  label: '',
+
+                                  labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
                                     fontSize: 14.2.sp,
-                                    color: AppColors.black,
+                                    color: AppColors.infoGrey,
                                   ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  controller: phoneController,
+                                  onChange: (p0) {},
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    final result = AppValidator.validatePhone()(
+                                      value,
+                                    );
+                                    if (result != null) {
+                                      isPhoneValid = true;
+                                    } else {
+                                      isPhoneValid = false;
+                                    }
+                                    print(isPhoneValid);
+                                    notifyListeners();
+                                    return result;
+                                  },
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 2.w),
-                          Expanded(
-                            child: Form(
-                              key: formKeyPhoneReminder,
-                              child: TextFormWidget(
-                                hint: null,
-                                borderColor: AppColors.transparent,
-                                borderTopLeft: 0,
-                                borderTopRight: 10,
-                                borderBottomLeft: 0,
-                                borderBottomRight: 10,
-                                label: '',
-
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  color: AppColors.infoGrey,
-                                ),
-                                fillColor: AppColors.grey,
-                                isFilled: true,
-                                controller: phoneController,
-                                onChange: (p0) {},
-                                keyboardType: TextInputType.number,
+                          ],
+                        ),
+                        SizedBox(height: 35.h),
+                        // 🔹 Save button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (formKeyPhoneReminder.currentState!
+                                  .validate()) {
+                                if (!isEdit) {
+                                  phoneReminderList.add(
+                                    '+234${phoneController.text.trim()}',
+                                  );
+                                } else {
+                                  phoneReminderList[index!] =
+                                      '+234${phoneController.text.trim()}';
+                                }
+                                Navigator.pop(context);
+                                phoneController.clear();
+                              }
+                              notifyListeners();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: Text(
+                              "Save",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 35.h),
-
-                      // 🔹 Save button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (formKeyPhoneReminder.currentState!.validate()) {
-                              if (!isEdit) {
-                                phoneReminderList.add(
-                                  phoneController.text.trim(),
-                                );
-                              } else {
-                                phoneReminderList[index!] =
-                                    phoneController.text;
-                              }
-                              Navigator.pop(context);
-                              phoneController.clear();
-                            }
-                            notifyListeners();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          child: Text(
-                            "Save",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -7375,4 +7503,61 @@ class AuthViewModel extends BaseViewModel {
       ),
     ),
   );
+
+  void createReminder(
+    context, {
+    CreateReminderEntityModel? createReminderEntityModel,
+  }) async {
+    try {
+      _isLoading = true;
+      _createReminderResponseModel = await runBusyFuture(
+        repositoryImply.createReminder(createReminderEntityModel!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createReminderResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createReminderResponseModel?.message ?? '',
+        );
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(isSuccessful: true),
+        );
+      } else {
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void uploadImageReminder({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      _uploadImageReminderResponseModel = await runBusyFuture(
+        repositoryImply.uploadImageReminder(file!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_uploadImageReminderResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: 'Image uploaded successfully..!',
+        );
+      }
+      logger.d(_uploadImageReminderResponseModel?.toJson());
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 }
