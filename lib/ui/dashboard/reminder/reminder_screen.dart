@@ -8,7 +8,6 @@ import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/get_reminder_response_model/reminder.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
-import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
 import '../../widget/text.dart';
@@ -85,7 +84,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
         ),
       ),
       body: ViewModelBuilder<AuthViewModel>.reactive(
-        viewModelBuilder: () => locator<AuthViewModel>(),
+        viewModelBuilder: () => AuthViewModel(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             model.getReminder(
@@ -101,12 +100,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
         builder: (_, AuthViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(
-              vertical: model.checkRemiderEmpty() ? 20.w : 50.w,
+              vertical: model.checkReminderEmpty() ? 20.w : 50.w,
               horizontal: 16.w,
             ),
             child: Column(
               children: [
-                model.checkRemiderEmpty()
+                model.checkReminderEmpty()
                     ? Container(
                         width: double.infinity,
                         padding: EdgeInsets.all(10.w),

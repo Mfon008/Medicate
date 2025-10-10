@@ -238,18 +238,18 @@ class AuthViewModel extends BaseViewModel {
     if (medType == 'OTHERS') {
       return AppImage.other_meds;
     }
-      return AppImage.pill;
+    return AppImage.pill;
   }
 
-  checkRemiderEmpty() {
-    if (isReminderStatus == 'ongoing' && getReminderResponseModel != null &&
-        getReminderResponseModel!.data!.reminders!.isNotEmpty ||
-        isReminderStatus == 'completed' && getReminderResponseModel != null &&
-        getReminderResponseModel!.data!.reminders!.isNotEmpty ||
-        isReminderStatus == 'today' && getReminderResponseModel != null &&
-        getReminderResponseModel!.data!.reminders!.isNotEmpty) {
-      return true;
-    }
+  bool checkReminderEmpty() {
+    final reminders = getReminderResponseModel?.data?.reminders;
+
+    if (reminders == null || reminders.isEmpty) return true;
+
+    if (isReminderStatus == 'ongoing' && reminders.isNotEmpty) return true;
+    if (isReminderStatus == 'completed' && reminders.isNotEmpty) return true;
+    if (isReminderStatus == 'today' && reminders.isNotEmpty) return true;
+
     return false;
   }
 
