@@ -10,6 +10,7 @@ import '../model/change_phone_no_response_model/change_phone_no_response_model.d
 import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -139,6 +140,15 @@ class AuthRepoImpl {
     MultipartFile file,
   ) async {
     final response = await _contract.uploadImageReminder(file);
+    return response;
+  }
+
+ Future<GetReminderResponseModel> getReminder({
+    String? status,
+    String? page,
+    String? limit,
+  }) async {
+    final response = await _contract.getReminder(status: status,page: page,limit: limit);
     return response;
   }
 

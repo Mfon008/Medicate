@@ -84,6 +84,12 @@ class _DashboardState extends State<Dashboard> {
   }
 
   @override
+  void initState() {
+    _currentIndex = widget.index??0;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: willPopControl,

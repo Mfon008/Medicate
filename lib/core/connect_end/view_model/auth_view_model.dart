@@ -43,6 +43,7 @@ import '../model/change_phone_no_response_model/change_phone_no_response_model.d
 import '../model/create_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_reminder_entity_model/medication.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -107,7 +108,9 @@ class AuthViewModel extends BaseViewModel {
   UploadImageReminderResponseModel? _uploadImageReminderResponseModel;
   UploadImageReminderResponseModel? get uploadImageReminderResponseModel =>
       _uploadImageReminderResponseModel;
-
+  GetReminderResponseModel? _getReminderResponseModel;
+  GetReminderResponseModel? get getReminderResponseModel =>
+      _getReminderResponseModel;
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   TextEditingController countryController = TextEditingController();
@@ -167,6 +170,7 @@ class AuthViewModel extends BaseViewModel {
   int? indexDuration;
   int? indexDaily;
   int linIndex = 1;
+  int? page = 1;
   String onTapPaymentMeth = '';
 
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
@@ -210,6 +214,44 @@ class AuthViewModel extends BaseViewModel {
   List<TextEditingController> noteUpdateController = [];
   List<File> medicationUpdateFile = [];
   List<String> meyTypeUpdateIcon = [];
+  String isReminderStatus = 'ongoing';
+
+  errorRemidnderImage(medType) {
+    if (medType == 'PILL') {
+      return AppImage.pills;
+    }
+    if (medType == 'SYRUP') {
+      return AppImage.syrup;
+    }
+    if (medType == 'INJECTION') {
+      return AppImage.syringe;
+    }
+    if (medType == 'DRIP') {
+      return AppImage.drip;
+    }
+    if (medType == 'OINTMENT') {
+      return AppImage.ointment;
+    }
+    if (medType == 'INHALER') {
+      return AppImage.inhaler;
+    }
+    if (medType == 'OTHERS') {
+      return AppImage.other_meds;
+    }
+      return AppImage.pill;
+  }
+
+  checkRemiderEmpty() {
+    if (isReminderStatus == 'ongoing' && getReminderResponseModel != null &&
+        getReminderResponseModel!.data!.reminders!.isNotEmpty ||
+        isReminderStatus == 'completed' && getReminderResponseModel != null &&
+        getReminderResponseModel!.data!.reminders!.isNotEmpty ||
+        isReminderStatus == 'today' && getReminderResponseModel != null &&
+        getReminderResponseModel!.data!.reminders!.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
 
   void initUpdateControllers() {
     medicationNameUpdateControllers = medicationClassList
@@ -7477,6 +7519,27 @@ class AuthViewModel extends BaseViewModel {
           arguments: PaymentStatusScreenArguments(isSuccessful: false),
         );
       }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void getReminder(
+    context, {
+    String? status,
+    String? page,
+    String? limit,
+  }) async {
+    try {
+      _isLoading = true;
+      _getReminderResponseModel = await runBusyFuture(
+        repositoryImply.getReminder(status: status, page: page, limit: limit),
+        throwException: true,
+      );
+      _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);

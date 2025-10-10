@@ -4,6 +4,7 @@ import 'package:medicate_app/core/connect_end/model/change_phone_no_response_mod
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/get_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/reset_password_entity_model.dart';
@@ -336,7 +337,7 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> getReminder({
+  Future<GetReminderResponseModel> getReminder({
     String? status,
     String? page,
     String? limit,
@@ -348,7 +349,7 @@ class AuthApi {
         data: {'status': status, 'page': page, 'limit': limit},
       );
       logger.d(response.data);
-      return response.data;
+      return GetReminderResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
