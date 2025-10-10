@@ -127,15 +127,17 @@ class AuthRepoImpl {
     final response = await _contract.uploadUserProfile(userProfile);
     return response;
   }
-  
+
   Future<CreateReminderResponseModel> createReminder(
     CreateReminderEntityModel createReminderEntityModel,
   ) async {
     final response = await _contract.createReminder(createReminderEntityModel);
     return response;
   }
-  
-   Future<UploadImageReminderResponseModel> uploadImageReminder(MultipartFile file) async {
+
+  Future<UploadImageReminderResponseModel> uploadImageReminder(
+    MultipartFile file,
+  ) async {
     final response = await _contract.uploadImageReminder(file);
     return response;
   }

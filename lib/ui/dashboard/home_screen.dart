@@ -29,62 +29,71 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
-
     return Scaffold(
       backgroundColor: AppColors.dashboard,
       appBar: AppBar(
         backgroundColor: AppColors.white,
-        leading: Container(
-          margin: EdgeInsets.only(left: isTablet(context) ? 5.2.w : 12.4.w),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.inactive.withOpacity(.1),
-            border: Border.all(color: AppColors.inactive.withOpacity(.4)),
-          ),
-          child: IconButton(
-            icon: SvgPicture.asset(
-              AppImage.burger,
-              color: AppColors.primary,
-              height: isTablet(context) ? 32.h : 12.h,
-              width: isTablet(context) ? 32.w : 12.w,
-            ),
-            onPressed: () => navigate.navigateTo(
-              Routes.moreScreen,
-            ), // makes ripple effect round
-          ),
-        ),
-        title: GestureDetector(
-          onTap: () => setState(() => isTappToChat = false),
-          child: SvgPicture.asset(
-            AppImage.applogoSvg,
-            height: 28.h,
-            width: 28.w,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
-            child: Container(
-              margin: EdgeInsets.only(right: 4.w),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.inactive.withOpacity(.1),
-                border: Border.all(color: AppColors.inactive.withOpacity(.4)),
-              ),
-              child: IconButton(
-                icon: SvgPicture.asset(
-                  AppImage.bell,
-                  height: isTablet(context) ? 40.h : 20.h,
-                  width: isTablet(context) ? 40.w : 20.w,
-                  color: AppColors.primary,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 80.0,
+        title: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 1.0.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.inactive.withOpacity(.1),
+                  border: Border.all(color: AppColors.inactive.withOpacity(.4)),
                 ),
-                onPressed: () => navigate.navigateTo(Routes.emptyNotification),
-                splashRadius: 28,
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    AppImage.burger,
+                    color: AppColors.primary,
+                    height: isTablet(context) ? 32.h : 12.h,
+                    width: isTablet(context) ? 32.w : 12.w,
+                  ),
+                  onPressed: () => navigate.navigateTo(
+                    Routes.moreScreen,
+                  ), // makes ripple effect round
+                ),
               ),
-            ),
+              GestureDetector(
+                onTap: () => setState(() => isTappToChat = false),
+                child: SvgPicture.asset(
+                  AppImage.applogoSvg,
+                  height: 28.h,
+                  width: 28.w,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 2.4.w),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.inactive.withOpacity(.1),
+                  border: Border.all(color: AppColors.inactive.withOpacity(.4)),
+                ),
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    AppImage.bell,
+                    height: isTablet(context) ? 40.h : 20.h,
+                    width: isTablet(context) ? 40.w : 20.w,
+                    color: AppColors.primary,
+                  ),
+                  onPressed: () =>
+                      navigate.navigateTo(Routes.emptyNotification),
+                  splashRadius: 28,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+        // centerTitle: true,
+        // actions: [
+        //   // Padding(
+        //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
+        //   //   child: ),
+        // ],
       ),
       body: isTappToChat
           ? AskMeScreen(inText: chatText)
@@ -433,44 +442,45 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  conContainer({required String icon, required String text}) => GestureDetector(
-    onTap: () {
-      isTappToChat = !isTappToChat;
-      chatText = text;
-      setState(() {});
-    },
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: AppColors.inactive),
-        borderRadius: BorderRadius.circular(22.r),
-      ),
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            AppImage.curved_arrow,
-            width: 10.20.w,
-            height: 10.20.h,
+  Widget conContainer({required String icon, required String text}) =>
+      GestureDetector(
+        onTap: () {
+          isTappToChat = !isTappToChat;
+          chatText = text;
+          setState(() {});
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(color: AppColors.inactive),
+            borderRadius: BorderRadius.circular(22.r),
           ),
-          SizedBox(width: 6.10.w),
-          SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
-          SizedBox(width: 6.10.w),
-          Flexible(
-            child: TextView(
-              text: text,
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14.2.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black,
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                AppImage.curved_arrow,
+                width: 10.20.w,
+                height: 10.20.h,
               ),
-              maxLines: 1,
-              textOverflow: TextOverflow.ellipsis,
-            ),
+              SizedBox(width: 6.10.w),
+              SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
+              SizedBox(width: 6.10.w),
+              Flexible(
+                child: TextView(
+                  text: text,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

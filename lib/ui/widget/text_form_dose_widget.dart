@@ -170,7 +170,7 @@ class TextFormDoseWidget extends StatelessWidget {
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        contentPadding: EdgeInsets.only(top:2.w)
+                        contentPadding: EdgeInsets.only(top: 2.w),
                         // prefixIcon:
                         //     prefixWidget ??
                         //     (prefixIcon != null

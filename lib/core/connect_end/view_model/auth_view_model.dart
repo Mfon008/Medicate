@@ -173,12 +173,12 @@ class AuthViewModel extends BaseViewModel {
   DateTime? dateTimeObject;
 
   List<MedType> medTypeList = [
-    MedType(medType: 'Pills', medTypeImage: AppImage.pill),
-    MedType(medType: 'Syrups', medTypeImage: AppImage.syrup),
+    MedType(medType: 'Pill', medTypeImage: AppImage.pill),
+    MedType(medType: 'Syrup', medTypeImage: AppImage.syrup),
     MedType(medType: 'Injection', medTypeImage: AppImage.syringe),
-    MedType(medType: 'Drips', medTypeImage: AppImage.drip),
-    MedType(medType: 'Ointments', medTypeImage: AppImage.ointment),
-    MedType(medType: 'Inhalers', medTypeImage: AppImage.inhaler),
+    MedType(medType: 'Drip', medTypeImage: AppImage.drip),
+    MedType(medType: 'Ointment', medTypeImage: AppImage.ointment),
+    MedType(medType: 'Inhaler', medTypeImage: AppImage.inhaler),
     MedType(medType: 'Others', medTypeImage: AppImage.other_meds),
   ];
 
@@ -190,7 +190,6 @@ class AuthViewModel extends BaseViewModel {
   List<String> notificationChannel = [];
   List<int> intList = [];
   final List<int> selectedIndexes = [];
-
   final List<String> channels = [
     'Email (Free)',
     'Push (Free)',
@@ -199,13 +198,62 @@ class AuthViewModel extends BaseViewModel {
     'Phone Call (₦50.00)',
   ];
 
+  List<TextEditingController> medicationNameUpdateControllers = [];
+  List<TextEditingController> drugNameUpdateControllers = [];
+  List<TextEditingController> medTypeUpdateControllers = [];
+  List<TextEditingController> descriptionUpdateControllers = [];
+  List<TextEditingController> dosageUpdateControllers = [];
+  List<TextEditingController> startDateUpdateControllers = [];
+  List<TextEditingController> durationUpdateControllers = [];
+  List<TextEditingController> endDateUpdateController = [];
+  List<TextEditingController> timesToTakeUpdateController = [];
+  List<TextEditingController> noteUpdateController = [];
+  List<File> medicationUpdateFile = [];
+  List<String> meyTypeUpdateIcon = [];
+
+  void initUpdateControllers() {
+    medicationNameUpdateControllers = medicationClassList
+        .map((e) => TextEditingController(text: e.medicationName))
+        .toList();
+    drugNameUpdateControllers = medicationClassList
+        .map((e) => TextEditingController(text: e.drugName))
+        .toList();
+    medTypeUpdateControllers = medicationClassList
+        .map((e) => TextEditingController(text: e.medicationType))
+        .toList();
+    meyTypeUpdateIcon = medicationClassList
+        .map((e) => e.medicationTypeIcon!)
+        .toList();
+    dosageUpdateControllers = medicationClassList
+        .map((e) => TextEditingController(text: e.dosage))
+        .toList();
+    startDateUpdateControllers = medicationClassList
+        .map((e) => TextEditingController(text: e.dateAndTime))
+        .toList();
+    // update the start date iso as well when selecting date
+    // update the end date iso as well when selecting date
+    durationUpdateControllers = medicationClassList
+        .map((e) => TextEditingController(text: e.duration))
+        .toList();
+    endDateUpdateController = medicationClassList
+        .map((e) => TextEditingController(text: e.endDate))
+        .toList();
+    timesToTakeUpdateController = medicationClassList
+        .map((e) => TextEditingController(text: e.timesToTake))
+        .toList();
+    noteUpdateController = medicationClassList
+        .map((e) => TextEditingController(text: e.note))
+        .toList();
+    notifyListeners();
+  }
+
   buildChannelList(selectedIndexes) {
     notificationChannel.clear();
     if (selectedIndexes.contains(0)) {
       notificationChannel.add('EMAIL');
     }
     if (selectedIndexes.contains(1)) {
-      notificationChannel.add('PUSH NOTIFICATION');
+      notificationChannel.add('PUSH');
     }
     if (selectedIndexes.contains(2)) {
       notificationChannel.add('SMS');
@@ -214,7 +262,7 @@ class AuthViewModel extends BaseViewModel {
       notificationChannel.add('WHATSAPP');
     }
     if (selectedIndexes.contains(4)) {
-      notificationChannel.add('PHONE CALL');
+      notificationChannel.add('PHONE_CALL');
     }
     notifyListeners();
   }
@@ -1564,7 +1612,12 @@ class AuthViewModel extends BaseViewModel {
 
     if (pickedDated != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
-      startDateIso = pickedDated.toUtc().toIso8601String();
+      startDateIso = DateTime.utc(
+        pickedDated.year,
+        pickedDated.month,
+        pickedDated.day,
+      ).toIso8601String();
+      print('iso$startDateIso');
       selectTime(context);
     }
     notifyListeners();
@@ -3240,12 +3293,25 @@ class AuthViewModel extends BaseViewModel {
                               model.pickedDate!,
                             );
 
-                            endDateController.text = dateTimeObject!
-                                .add(Duration(days: _duration!))
-                                .toString();
-                            endDateIso = dateTimeObject!
-                                .toUtc()
+                            final localDate = dateTimeObject!;
+
+                            // Convert the picked date to UTC *without shifting the day*
+                            final utcStartDate = DateTime.utc(
+                              localDate.year,
+                              localDate.month,
+                              localDate.day,
+                            );
+
+                            // Now safely add your duration
+                            final utcEndDate = utcStartDate.add(
+                              Duration(days: _duration!),
+                            );
+
+                            // Display or store
+                            endDateController.text = utcEndDate
                                 .toIso8601String();
+                            endDateIso = utcEndDate.toIso8601String();
+                            print('endDateIso$endDateIso');
                           } else {
                             // Optional: handle invalid input (e.g., show error or clear output)
                             print('⚠️ Invalid number input: $p0');
@@ -3486,7 +3552,11 @@ class AuthViewModel extends BaseViewModel {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 20.h),
-                        ...model.medicationClassList.map((e) {
+                        ...model.medicationClassList.asMap().entries.map((
+                          entry,
+                        ) {
+                          final index = entry.key;
+                          final e = entry.value;
                           return Card(
                             color: AppColors.white,
                             elevation: .78,
@@ -3622,7 +3692,7 @@ class AuthViewModel extends BaseViewModel {
                                                 hintSize: 12.2.sp,
                                                 fillColor: AppColors.grey,
                                                 isFilled: true,
-                                                readOnly: true,
+                                                // readOnly: true,
                                                 controller:
                                                     TextEditingController(
                                                       text: e.medicationName,
@@ -3634,6 +3704,13 @@ class AuthViewModel extends BaseViewModel {
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'GoogleSans',
                                                 ),
+                                                onChange: (val) {
+                                                  model
+                                                          .medicationClassList[index]
+                                                          .medicationName =
+                                                      val;
+                                                  model.notifyListeners();
+                                                },
                                               ),
                                               SizedBox(height: 16.h),
                                               TextFormWidget(
@@ -4058,56 +4135,6 @@ class AuthViewModel extends BaseViewModel {
                                                     TextEditingController(
                                                       text: e.duration,
                                                     ),
-                                                // suffixWidget: IconButton(
-                                                //   onPressed: () async {
-                                                //     // final result =
-                                                //     //     await showMedDurationMenu(
-                                                //     //       context,
-                                                //     //     );
-                                                //     // if (result !=
-                                                //     //     null) {
-                                                //     //   setModalState(() {
-                                                //     //     medDurationController
-                                                //     //         .text = model.getStringFrDuration(
-                                                //     //       result,
-                                                //     //     );
-                                                //     //     _duration =
-                                                //     //         int.parse(
-                                                //     //           result,
-                                                //     //         );
-                                                //     //     intList = List.generate(
-                                                //     //       _duration!,
-                                                //     //       (
-                                                //     //         index,
-                                                //     //       ) =>
-                                                //     //           index,
-                                                //     //     );
-                                                //     //   });
-
-                                                //     //   dateTimeObject =
-                                                //     //       inputFormat.parse(
-                                                //     //         model.pickedDate!,
-                                                //     //       );
-                                                //     //   endDateController
-                                                //     //       .text = dateTimeObject!
-                                                //     //       .add(
-                                                //     //         Duration(
-                                                //     //           days: int.parse(
-                                                //     //             result,
-                                                //     //           ),
-                                                //     //         ),
-                                                //     //       )
-                                                //     //       .toString();
-                                                //     //   model
-                                                //     //       .notifyListeners();
-                                                //     // }
-                                                //   },
-                                                //   icon: Icon(
-                                                //     Icons.keyboard_arrow_down,
-                                                //     color: AppColors.grey1,
-                                                //     size: 20.sp,
-                                                //   ),
-                                                // ),
                                                 validator:
                                                     AppValidator.validateString(),
                                                 style: TextStyle(
@@ -4312,10 +4339,6 @@ class AuthViewModel extends BaseViewModel {
                             ),
                           );
                         }),
-                        // isAddMeds
-                        //     ? Column(
-                        //         crossAxisAlignment: CrossAxisAlignment.start,
-                        //         children: [
                         SizedBox(height: 20.h),
                         TextFormWidget(
                           hint: 'Medication Name',
@@ -4580,7 +4603,6 @@ class AuthViewModel extends BaseViewModel {
                           label: model.getStringFrLabel(
                             medDosageController.text,
                           ),
-
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
@@ -4649,35 +4671,6 @@ class AuthViewModel extends BaseViewModel {
                           isFilled: true,
                           hintSize: 12.2.sp,
                           controller: medDurationController,
-                          // suffixWidget: IconButton(
-                          //   onPressed: () async {
-                          //     final result = await showMedDurationMenu(context);
-                          //     if (result != null) {
-                          //       setModalState!(() {
-                          //         medDurationController.text = model
-                          //             .getStringFrDuration(result);
-                          //         _duration = int.parse(result);
-                          //         intList = List.generate(
-                          //           _duration!,
-                          //           (index) => index,
-                          //         );
-                          //       });
-
-                          //       dateTimeObject = inputFormat.parse(
-                          //         model.pickedDate!,
-                          //       );
-                          //       endDateController.text = dateTimeObject!
-                          //           .add(Duration(days: int.parse(result)))
-                          //           .toString();
-                          //       model.notifyListeners();
-                          //     }
-                          //   },
-                          //   icon: Icon(
-                          //     Icons.keyboard_arrow_down,
-                          //     color: AppColors.grey1,
-                          //     size: 20.sp,
-                          //   ),
-                          // ),
                           onChange: (p0) {
                             if (p0 != null && p0.trim().isNotEmpty) {
                               final parsed = int.tryParse(p0.trim());
@@ -4755,7 +4748,6 @@ class AuthViewModel extends BaseViewModel {
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
-
                           validator: AppValidator.validateString(),
                           style: TextStyle(
                             fontSize: 16.20.sp,
@@ -4903,52 +4895,6 @@ class AuthViewModel extends BaseViewModel {
                               SizedBox(height: 30.h),
                             ],
                           ),
-
-                        //   ],
-                        // )
-                        // : Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       SizedBox(height: 20.h),
-                        //       Center(
-                        //         child: GestureDetector(
-                        //           onTap: () async {
-                        //             isAddMeds = true;
-                        //             model.notifyListeners();
-                        //           },
-                        //           child: TextView(
-                        //             text: 'Add Another Medication',
-                        //             textStyle: TextStyle(
-                        //               fontFamily: 'Arial',
-                        //               fontSize: 16.2.sp,
-                        //               fontWeight: FontWeight.w600,
-                        //               color: AppColors.primary,
-                        //               decoration: TextDecoration.underline,
-                        //               decorationColor: AppColors.primary,
-                        //               decorationStyle:
-                        //                   TextDecorationStyle.solid,
-                        //               decorationThickness: 1.4,
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       SizedBox(height: 30.h),
-                        //       ButtonWidget(
-                        //         border: 100.r,
-                        //         buttonColor: AppColors.primary,
-                        //         buttonText: 'Preview',
-
-                        //         color: AppColors.white,
-                        //         buttonBorderColor: AppColors.transparent,
-                        //         onPressed: () async {
-                        //           // await addReminderToList(model);
-                        //           linIndex++;
-                        //           model.notifyListeners();
-                        //         },
-                        //       ),
-                        //       SizedBox(height: 30.h),
-                        //     ],
-                        //   ),
                       ],
                     ),
                   ),
@@ -6700,7 +6646,7 @@ class AuthViewModel extends BaseViewModel {
                               medicationName: m.medicationName,
                               drugName: m.drugName,
                               dosage: m.dosage,
-                              medicationType: m.medicationType,
+                              medicationType: m.medicationType!.toUpperCase(),
                               startDateTime: m.startDateIso,
                               endDateTime: m.endDateIso,
                               durationInDays: int.parse(m.duration!),
@@ -6949,7 +6895,8 @@ class AuthViewModel extends BaseViewModel {
                                       medicationName: m.medicationName,
                                       drugName: m.drugName,
                                       dosage: m.dosage,
-                                      medicationType: m.medicationType,
+                                      medicationType: m.medicationType!
+                                          .toUpperCase(),
                                       startDateTime: m.startDateIso,
                                       endDateTime: m.endDateIso,
                                       durationInDays: int.parse(m.duration!),

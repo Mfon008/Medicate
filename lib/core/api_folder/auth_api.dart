@@ -242,7 +242,9 @@ class AuthApi {
     }
   }
 
-  Future<UploadImageReminderResponseModel> uploadImageReminder(MultipartFile file) async {
+  Future<UploadImageReminderResponseModel> uploadImageReminder(
+    MultipartFile file,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.upload_image_reminder,
@@ -285,6 +287,68 @@ class AuthApi {
       );
       logger.d(response.data);
       return CreateReminderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateReminder({String? id}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminder}/$id',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> getReminderById({String? id}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminder}/$id',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> getTodaysReminder({String? period, String? date}) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminder,
+        RequestMethod.get,
+        data: {'period': period, 'date': date},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> getReminder({
+    String? status,
+    String? page,
+    String? limit,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminder,
+        RequestMethod.get,
+        data: {'status': status, 'page': page, 'limit': limit},
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

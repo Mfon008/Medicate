@@ -142,7 +142,7 @@ class TextFormWidget extends StatelessWidget {
           decoration: InputDecoration(
             labelText: label ?? '',
             labelStyle: labelStyle,
-            
+
             filled: isFilled,
             fillColor: fillColor,
             focusColor: AppColors.black,
