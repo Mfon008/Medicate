@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison, deprecated_member_use, strict_top_level_inference, unused_field
 import 'dart:async';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/gestures.dart';
@@ -57,6 +56,10 @@ import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/repo_impl.dart';
+
+String startDateIso = '';
+
+List<MedicationClass> medicationClassList = [];
 
 class AuthViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -115,7 +118,6 @@ class AuthViewModel extends BaseViewModel {
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   TextEditingController countryController = TextEditingController();
   String querySignUpCountry = '';
-  List<MedicationClass> medicationClassList = [];
   int indexOfMedicationClassList = 0;
   bool isNotTapped = false;
 
@@ -128,6 +130,7 @@ class AuthViewModel extends BaseViewModel {
   int _start = 60;
   final _pickImage = ImagePickerHandler();
   File? image;
+  // File? get imageDrug => _imageDrug;
   File? imageDrug;
   String? filename;
   String? drugFilename;
@@ -136,7 +139,7 @@ class AuthViewModel extends BaseViewModel {
   TextEditingController dateTimeController = TextEditingController();
   String? pickedDate;
   String endDateIso = '';
-  String startDateIso = '';
+
   List<List<String>> periodLabels = [];
   List<List<String>> periodAfterLabels = [];
 
@@ -731,14 +734,16 @@ class AuthViewModel extends BaseViewModel {
 
   addReminderToList(AuthViewModel model) async {
     List<Map<String, dynamic>> addTimePeriod = [];
+    print('startDateIsostartDateIsostartDateIsostartDateIso$startDateIso');
+    print('doseControllers.length${model.doseControllers.length}');
 
-    for (int day = 0; day < doseControllers.length; day++) {
+    for (int day = 0; day < model.doseControllers.length; day++) {
       List<Map<String, String>> dayDoses = [];
 
-      for (int i = 0; i < doseControllers[day].length; i++) {
+      for (int i = 0; i < model.doseControllers[day].length; i++) {
         dayDoses.add({
-          'time': doseControllers[day][i].text,
-          'period': periodLabels[day][i],
+          'time': model.doseControllers[day][i].text,
+          'period': model.periodLabels[day][i],
           'date': startDateIso.substring(0, 10),
           'isoDate': startDateIso,
         });
@@ -751,7 +756,7 @@ class AuthViewModel extends BaseViewModel {
     }
 
     await Future.delayed(Duration(seconds: 1), () {});
-    model.medicationClassList.add(
+    medicationClassList.add(
       MedicationClass(
         medicationName: medNameController.text,
         drugName: drugNameController.text,
@@ -773,19 +778,20 @@ class AuthViewModel extends BaseViewModel {
       ),
     );
     await Future.delayed(Duration(seconds: 1), () {});
-    clearReminderMedsVaraibles();
+    clearReminderMedsVaraibles(model);
     model.notifyListeners();
+    print('again$medicationClassList');
   }
 
-  clearReminderMedsVaraibles() {
+  clearReminderMedsVaraibles(model) {
     medTypeResultImage = '';
-    imageDrug = null;
+    model.imageDrug = null;
     medNameController.clear();
     drugNameController.clear();
     medTypeController.clear();
     descriptionController.clear();
     medDosageController.clear();
-    dateTimeController.clear();
+    model.dateTimeController.clear();
     medDurationController.clear();
     endDateController.clear();
     medDailyInTakenController.clear();
@@ -1562,7 +1568,7 @@ class AuthViewModel extends BaseViewModel {
                             IconButton(
                               onPressed: () {
                                 dosageAfterValue = null;
-                                notifyListeners();
+                                locator<AuthViewModel>().notifyListeners();
                               },
                               icon: Icon(
                                 Icons.keyboard_arrow_down,
@@ -1631,7 +1637,7 @@ class AuthViewModel extends BaseViewModel {
                 IconButton(
                   onPressed: () {
                     dosageAfterValue = callback;
-                    notifyListeners();
+                    locator<AuthViewModel>().notifyListeners();
                   },
                   icon: Icon(
                     Icons.keyboard_arrow_down,
@@ -1654,13 +1660,15 @@ class AuthViewModel extends BaseViewModel {
 
     if (pickedDated != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
+
+      await selectTime(context);
       startDateIso = DateTime.utc(
         pickedDated.year,
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
+      print('After time select → startDateIso: $startDateIso');
       print('iso$startDateIso');
-      selectTime(context);
     }
     notifyListeners();
   }
@@ -1675,6 +1683,7 @@ class AuthViewModel extends BaseViewModel {
       dateTimeController.text =
           '${pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
     }
+    print('is999999999o$startDateIso');
     notifyListeners();
   }
 
@@ -2981,7 +2990,7 @@ class AuthViewModel extends BaseViewModel {
             ],
           ),
           SizedBox(height: 20.h),
-          model!.medicationClassList.isEmpty
+          medicationClassList.isEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -3038,9 +3047,7 @@ class AuthViewModel extends BaseViewModel {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-
                       readOnly: true,
-
                       fillColor: AppColors.grey,
                       isFilled: true,
                       prefixWidget: medTypeResultImage.isNotEmpty
@@ -3139,7 +3146,7 @@ class AuthViewModel extends BaseViewModel {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Center(
-                                  child: model.imageDrug != null
+                                  child: model!.imageDrug != null
                                       ? Image.file(
                                           model.imageDrug!,
                                           height: 75.80.h,
@@ -3154,6 +3161,9 @@ class AuthViewModel extends BaseViewModel {
                                         GestureDetector(
                                           onTap: () {
                                             model.imageDrug = null;
+                                            print(
+                                              'null delete${model.imageDrug}',
+                                            );
                                             model.notifyListeners();
                                           },
                                           child: SvgPicture.asset(
@@ -3362,38 +3372,9 @@ class AuthViewModel extends BaseViewModel {
                           // Optional: clear output when input is empty
                           endDateController.clear();
                         }
-
+                        print('is00000000o$startDateIso');
                         model.notifyListeners();
                       },
-
-                      // suffixWidget: IconButton(
-                      //   onPressed: () async {
-                      //     final result = await showMedDurationMenu(context);
-                      //     if (result != null) {
-                      //       setModalState!(() {
-                      //         medDurationController.text = model
-                      //             .getStringFrDuration(result);
-                      //         _duration = int.parse(result);
-                      //         intList = List.generate(
-                      //           _duration!,
-                      //           (index) => index,
-                      //         );
-                      //       });
-                      //       dateTimeObject = inputFormat.parse(
-                      //         model.pickedDate!,
-                      //       );
-                      //       endDateController.text = dateTimeObject!
-                      //           .add(Duration(days: int.parse(result)))
-                      //           .toString();
-                      //       model.notifyListeners();
-                      //     }
-                      //   },
-                      //   icon: Icon(
-                      //     Icons.keyboard_arrow_down,
-                      //     color: AppColors.grey1,
-                      //     size: 20.sp,
-                      //   ),
-                      // ),
                       validator: AppValidator.validateString(),
                       style: TextStyle(
                         fontSize: 16.20.sp,
@@ -3594,9 +3575,7 @@ class AuthViewModel extends BaseViewModel {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 20.h),
-                        ...model.medicationClassList.asMap().entries.map((
-                          entry,
-                        ) {
+                        ...medicationClassList.asMap().entries.map((entry) {
                           final index = entry.key;
                           final e = entry.value;
                           return Card(
@@ -3661,9 +3640,8 @@ class AuthViewModel extends BaseViewModel {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                model.medicationClassList
-                                                    .remove(e);
-                                                model.notifyListeners();
+                                                medicationClassList.remove(e);
+                                                model!.notifyListeners();
                                               },
                                               child: SvgPicture.asset(
                                                 AppImage.delete,
@@ -3679,7 +3657,7 @@ class AuthViewModel extends BaseViewModel {
                                                 } else {
                                                   medCard = e;
                                                 }
-                                                model.notifyListeners();
+                                                model!.notifyListeners();
                                               },
                                               child: TextView(
                                                 text: medCard == e
@@ -3747,11 +3725,10 @@ class AuthViewModel extends BaseViewModel {
                                                   fontFamily: 'GoogleSans',
                                                 ),
                                                 onChange: (val) {
-                                                  model
-                                                          .medicationClassList[index]
+                                                  medicationClassList[index]
                                                           .medicationName =
                                                       val;
-                                                  model.notifyListeners();
+                                                  model!.notifyListeners();
                                                 },
                                               ),
                                               SizedBox(height: 16.h),
@@ -4148,7 +4125,7 @@ class AuthViewModel extends BaseViewModel {
 
                                                       dateTimeObject =
                                                           inputFormat.parse(
-                                                            model.pickedDate!,
+                                                            model!.pickedDate!,
                                                           );
 
                                                       endDateController
@@ -4170,7 +4147,7 @@ class AuthViewModel extends BaseViewModel {
                                                     endDateController.clear();
                                                   }
 
-                                                  model.notifyListeners();
+                                                  model!.notifyListeners();
                                                 },
 
                                                 controller:
@@ -4289,7 +4266,7 @@ class AuthViewModel extends BaseViewModel {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     ...e.listOfTimes!.map(
-                                                      (list) => model
+                                                      (list) => model!
                                                           .dosageAfterWidgetContainer(
                                                             context: context,
                                                             callback: list,
@@ -4535,7 +4512,7 @@ class AuthViewModel extends BaseViewModel {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Center(
-                                      child: model.imageDrug != null
+                                      child: model!.imageDrug != null
                                           ? Image.file(
                                               model.imageDrug!,
                                               height: 75.80.h,
@@ -4552,7 +4529,7 @@ class AuthViewModel extends BaseViewModel {
                                             GestureDetector(
                                               onTap: () {
                                                 model.imageDrug = null;
-                                                model.notifyListeners();
+                                                notifyListeners();
                                               },
                                               child: SvgPicture.asset(
                                                 AppImage.delete,
@@ -4926,7 +4903,6 @@ class AuthViewModel extends BaseViewModel {
                                 border: 100.r,
                                 buttonColor: AppColors.primary,
                                 buttonText: 'Preview',
-
                                 color: AppColors.white,
                                 buttonBorderColor: AppColors.transparent,
                                 onPressed: () {
@@ -5034,7 +5010,7 @@ class AuthViewModel extends BaseViewModel {
                     ? () {}
                     : () {
                         indexOfMedicationClassList -= 1;
-                        notifyListeners();
+                        model!.notifyListeners();
 
                         print(indexOfMedicationClassList);
                       },
@@ -5065,7 +5041,7 @@ class AuthViewModel extends BaseViewModel {
                     ? () {}
                     : () {
                         indexOfMedicationClassList += 1;
-                        notifyListeners();
+                        model!.notifyListeners();
                         print(indexOfMedicationClassList);
                       },
                 icon: Icon(
@@ -5500,7 +5476,7 @@ class AuthViewModel extends BaseViewModel {
                     ? () {}
                     : () {
                         indexOfMedicationClassList += 1;
-                        notifyListeners();
+                        model!.notifyListeners();
                         print(indexOfMedicationClassList);
                       },
                 icon: Icon(
@@ -5546,6 +5522,7 @@ class AuthViewModel extends BaseViewModel {
                   onPressed: () {
                     linIndex++;
                     model!.notifyListeners();
+                    print('medicationClassList$medicationClassList');
                   },
                 ),
               ),
@@ -5661,7 +5638,7 @@ class AuthViewModel extends BaseViewModel {
                 } // ✅ update selection
                 buildChannelList(selectedIndexes);
                 addCostTotal();
-                notifyListeners();
+                model!.notifyListeners();
               },
             );
           }),
@@ -6645,10 +6622,12 @@ class AuthViewModel extends BaseViewModel {
                   ],
                 )
               : SizedBox.shrink(),
-          model!.isLoading
+          SizedBox(height: _isLoading ? 20.h : 0.h),
+
+          _isLoading
               ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
               : SizedBox.shrink(),
-          SizedBox(height: phoneReminderList.isNotEmpty ? 40.h : 206.h),
+          SizedBox(height: phoneReminderList.isNotEmpty ? 40.h : _isLoading?106.h: 206.h),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -6663,7 +6642,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     linIndex--;
-                    model.notifyListeners();
+                    model!.notifyListeners();
                   },
                 ),
               ),
@@ -6718,7 +6697,8 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       );
                     }
-                    model.notifyListeners();
+                    model!.notifyListeners();
+                    print('medicationClassList$medicationClassList');
                   },
                 ),
               ),
@@ -6893,8 +6873,8 @@ class AuthViewModel extends BaseViewModel {
               model!.notifyListeners();
             },
           ),
-          SizedBox(height: model!.isLoading ? 20.h : 0.h),
-          model.isLoading
+          SizedBox(height: _isLoading ? 20.h : 0.h),
+          _isLoading
               ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
               : SizedBox.shrink(),
           SizedBox(height: 120.h),
@@ -6911,7 +6891,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     linIndex--;
-                    model.notifyListeners();
+                    model!.notifyListeners();
                   },
                 ),
               ),
@@ -6975,6 +6955,8 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                 ),
                           );
+                          model!.notifyListeners();
+                          print('medicationClassList$medicationClassList');
                         }
                       : () {},
                 ),
@@ -7172,7 +7154,7 @@ class AuthViewModel extends BaseViewModel {
                               Navigator.pop(context);
                               emailController.clear();
                             }
-                            notifyListeners();
+                            locator<AuthViewModel>().notifyListeners();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
@@ -7376,7 +7358,7 @@ class AuthViewModel extends BaseViewModel {
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }
-                              notifyListeners();
+                              locator<AuthViewModel>().notifyListeners();
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
@@ -7524,7 +7506,7 @@ class AuthViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
-    notifyListeners();
+    locator<AuthViewModel>().notifyListeners();
   }
 
   void getReminder(

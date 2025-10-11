@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/core/config/colors.dart';
+import 'package:medicate_app/core/connect_end/view_model/auth_view_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/dashboard/reminder/payment_status_string.dart';
@@ -110,10 +111,14 @@ class PaymentStatusScreen extends StatelessWidget {
                       buttonText: 'Continue',
                       color: AppColors.white,
                       buttonBorderColor: AppColors.transparent,
-                      onPressed: () => navigate.clearStackAndShow(
-                        Routes.dashboard,
-                        arguments: DashboardArguments(index: 1),
-                      ),
+                      onPressed: ()  {
+                        medicationClassList.clear();
+                         navigate.clearStackAndShow(
+                          Routes.dashboard,
+                          arguments: DashboardArguments(index: 1),
+                        );
+                        
+                      },
                     ),
               SizedBox(height: 30.h),
             ],

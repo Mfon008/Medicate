@@ -54,36 +54,30 @@ class ApiError {
               dioError.response?.statusCode == 409) {
             apiErrorModel = ApiErrorModel.fromJson(dioError.response?.data);
             print('..u... ${apiErrorModel?.msg}');
-            if (apiErrorModel?.msg != null) {
+
+            if (apiErrorModel?.msg != null && apiErrorModel?.msg.isNotEmpty) {
+              print('LENGTH ${apiErrorModel?.msg}');
+              errorDescription = apiErrorModel?.msg[0];
+            } else if (apiErrorModel?.msg != null) {
               errorDescription = apiErrorModel?.msg;
             }
-            if (apiErrorModel?.error != null) {
-              if (apiErrorModel?.error['code'] != null) {
-                errorDescription = apiErrorModel?.error['code'][0];
-              } else if (apiErrorModel?.error['email'] != null) {
-                errorDescription = apiErrorModel?.error['email'][0];
-              } else if (apiErrorModel?.error['username'] != null) {
-                errorDescription = apiErrorModel?.error['username'][0];
-              } else if (apiErrorModel?.error['business_logo'] != null) {
-                errorDescription = apiErrorModel?.error['business_logo'][0];
-              } else if (apiErrorModel?.error['description'] != null) {
-                errorDescription = apiErrorModel?.error['description'][0];
-              } else if (apiErrorModel?.error['referral_code'] != null) {
-                errorDescription = apiErrorModel?.error['referral_code'][0];
-              } else if (apiErrorModel?.error['discount'] != null) {
-                errorDescription = apiErrorModel?.error['discount'][0];
-              } else if (apiErrorModel?.error['checked_in'] != null) {
-                errorDescription = apiErrorModel?.error['checked_in'][0];
-              } else if (apiErrorModel?.error['data'] != null) {
-                errorDescription = apiErrorModel?.error['data'];
-              } else if (apiErrorModel?.error['slot'] != null) {
-                errorDescription = apiErrorModel?.error['slot'][0];
+            if (apiErrorModel?.msg == null) {
+              if (apiErrorModel?.error != null) {
+                if (apiErrorModel?.error['code'] != null) {
+                  errorDescription = apiErrorModel?.error['code'][0];
+                } else if (apiErrorModel?.error['email'] != null) {
+                  errorDescription = apiErrorModel?.error['email'][0];
+                } else if (apiErrorModel?.error['description'] != null) {
+                  errorDescription = apiErrorModel?.error['description'][0];
+                } else if (apiErrorModel?.error['data'] != null) {
+                  errorDescription = apiErrorModel?.error['data'];
+                }
+              } else {
+                errorDescription =
+                    apiErrorModel?.msg ??
+                    apiErrorModel?.data ??
+                    extractDescriptionFromResponse(error.response);
               }
-            } else {
-              errorDescription =
-                  apiErrorModel?.msg ??
-                  apiErrorModel?.data ??
-                  extractDescriptionFromResponse(error.response);
             }
           } else if (dioError.response?.statusCode == 500) {
             apiErrorModel = ApiErrorModel.fromJson(dioError.response?.data);
@@ -132,7 +126,7 @@ class ApiError {
 
 class ApiErrorModel {
   String? code;
-  String? msg;
+  dynamic msg;
   String? data;
   bool? success;
   String? details;

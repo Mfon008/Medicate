@@ -91,7 +91,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
               context,
               status: model.isReminderStatus,
               page: model.page.toString(),
-              limit: 10.toString(),
+              limit: 20.toString(),
             );
           });
         },
@@ -124,7 +124,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                     context,
                                     status: model.isReminderStatus,
                                     page: model.page.toString(),
-                                    limit: 10.toString(),
+                                    limit: 20.toString(),
                                   );
                                   setState(() {});
                                 },
@@ -255,7 +255,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               ...model
                                   .getReminderResponseModel!
                                   .data!
-                                  .reminders!
+                                  .reminders!.reversed
                                   .map(
                                     (e) => reminderWidget(
                                       context: context,
@@ -268,7 +268,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               ...model
                                   .getReminderResponseModel!
                                   .data!
-                                  .reminders!
+                                  .reminders!.reversed
                                   .map(
                                     (e) => reminderWidget(
                                       context: context,
@@ -441,13 +441,18 @@ class _ReminderScreenState extends State<ReminderScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextView(
-              text: reminder?.medication?.medicationName ?? '',
-              textStyle: TextStyle(
-                fontFamily: 'GoogleSans',
-                fontSize: 16.2.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.reminder,
+            SizedBox(
+              width: 140.w,
+              child: TextView(
+                text: reminder?.medication?.medicationName ?? '',
+                maxLines: 1,
+                textOverflow: TextOverflow.ellipsis,
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.2.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
               ),
             ),
             SizedBox(height: 4.h),
