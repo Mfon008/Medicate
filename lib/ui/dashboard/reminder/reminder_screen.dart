@@ -413,7 +413,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 30.h),
+                                SizedBox(height: 10.h),
                                 !model.isTapped
                                     ? SizedBox.shrink()
                                     : Container(
@@ -478,7 +478,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                         ),
                                       ),
 
-                                SizedBox(height: 30.h),
+                                SizedBox(height: !model.isTapped?60.h:30.h),
                               ],
                             ),
                           ),

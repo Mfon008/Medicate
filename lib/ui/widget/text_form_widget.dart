@@ -50,6 +50,7 @@ class TextFormWidget extends StatelessWidget {
   final double? borderTopLeft;
   final double? borderBottomRight;
   final double? borderBottomLeft;
+  final FloatingLabelBehavior? floatingLabelBehavior;
 
   TextFormWidget({
     Key? key,
@@ -92,6 +93,7 @@ class TextFormWidget extends StatelessWidget {
     this.borderBottomLeft,
     this.borderBottomRight,
     this.borderTopLeft,
+    this.floatingLabelBehavior = FloatingLabelBehavior.auto,
     this.borderTopRight,
     this.minline,
     this.focusNode,
@@ -140,9 +142,16 @@ class TextFormWidget extends StatelessWidget {
           focusNode: focusNode,
           inputFormatters: inputFormatters,
           decoration: InputDecoration(
-            labelText: label ?? '',
             labelStyle: labelStyle,
-
+            labelText: readOnly! ? null : label ?? '',
+            hintText: readOnly! ? label ?? '' : null,
+            hintStyle: TextStyle(
+              fontSize: 15.20.sp,
+              fontWeight: FontWeight.w400,
+              fontFamily: 'Arial',
+              color: AppColors.infoGrey,
+            ),
+            floatingLabelBehavior: floatingLabelBehavior,
             filled: isFilled,
             fillColor: fillColor,
             focusColor: AppColors.black,
