@@ -55,7 +55,7 @@ class ApiError {
             apiErrorModel = ApiErrorModel.fromJson(dioError.response?.data);
             print('..u... ${apiErrorModel?.msg}');
 
-            if (apiErrorModel?.msg != null && apiErrorModel?.msg.isNotEmpty) {
+            if (apiErrorModel?.msg != null && apiErrorModel?.msg is List) {
               print('LENGTH ${apiErrorModel?.msg}');
               errorDescription = apiErrorModel?.msg[0];
             } else if (apiErrorModel?.msg != null) {

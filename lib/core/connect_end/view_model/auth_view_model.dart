@@ -173,8 +173,11 @@ class AuthViewModel extends BaseViewModel {
   int? indexDuration;
   int? indexDaily;
   int linIndex = 1;
-  int? page = 1;
+  int pageOngoing = 1;
+  int pageCompleted = 1;
+  int pageToday = 1;
   String onTapPaymentMeth = '';
+  bool isLoadNoMore = false;
 
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
   DateTime? dateTimeObject;
@@ -6627,7 +6630,13 @@ class AuthViewModel extends BaseViewModel {
           _isLoading
               ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
               : SizedBox.shrink(),
-          SizedBox(height: phoneReminderList.isNotEmpty ? 40.h : _isLoading?106.h: 206.h),
+          SizedBox(
+            height: phoneReminderList.isNotEmpty
+                ? 40.h
+                : _isLoading
+                ? 106.h
+                : 206.h,
+          ),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -7509,16 +7518,15 @@ class AuthViewModel extends BaseViewModel {
     locator<AuthViewModel>().notifyListeners();
   }
 
-  void getReminder(
-    context, {
-    String? status,
-    String? page,
-    String? limit,
-  }) async {
+  void getReminder(context, {String? status, String? page}) async {
     try {
       _isLoading = true;
       _getReminderResponseModel = await runBusyFuture(
-        repositoryImply.getReminder(status: status, page: page, limit: limit),
+        repositoryImply.getReminder(
+          status: status,
+          page: page,
+          limit: 3.toString(),
+        ),
         throwException: true,
       );
       _isLoading = false;
@@ -7527,6 +7535,73 @@ class AuthViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
+    notifyListeners();
+  }
+
+  Future<void> onRefresh() async {
+    await Future.delayed(const Duration(milliseconds: 1000));
+    notifyListeners();
+  }
+
+  onAddGoingLoading() async {
+    pageOngoing++;
+    onLoading(pageOngoing);
+    notifyListeners();
+  }
+
+  onAddCompletedLoading() async {
+    pageCompleted++;
+    onLoading(pageCompleted);
+    notifyListeners();
+  }
+
+  onAddTodayLoading() async {
+    pageToday++;
+    onLoading(pageToday);
+    notifyListeners();
+  }
+
+  onSubGoingLoading() async {
+    pageOngoing--;
+    onLoading(pageOngoing);
+    notifyListeners();
+  }
+
+  onSubCompletedLoading() async {
+    pageCompleted--;
+    onLoading(pageCompleted);
+    notifyListeners();
+  }
+
+  onSubTodayLoading() async {
+    pageToday--;
+    onLoading(pageToday);
+    notifyListeners();
+  }
+
+  Future<void> onLoading(page) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    if (_getReminderResponseModel!.data!.reminders!.isNotEmpty) {
+      try {
+        _isLoading = true;
+        _getReminderResponseModel = await runBusyFuture(
+          repositoryImply.getReminder(
+            status: isReminderStatus,
+            page: page.toString(),
+            limit: 3.toString(),
+          ),
+        );
+        _isLoading = false;
+      } catch (e) {
+         _isLoading = false;
+        rethrow;
+      }
+    } else {
+      isLoadNoMore = true;
+      null;
+    }
+     _isLoading = false;
     notifyListeners();
   }
 
