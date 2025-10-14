@@ -225,6 +225,13 @@ class AuthViewModel extends BaseViewModel {
   List<String> meyTypeUpdateIcon = [];
   String isReminderStatus = 'ongoing';
 
+  String formatPhoneNumber(String phoneNumber) {
+    if (phoneNumber.startsWith('+234')) {
+      return phoneNumber.replaceFirst('+234', '0');
+    }
+    return phoneNumber; // return unchanged if it doesn't start with +234
+  }
+
   errorRemidnderImage(medType) {
     if (medType == 'PILL') {
       return AppImage.pills;
@@ -740,8 +747,6 @@ class AuthViewModel extends BaseViewModel {
 
   addReminderToList(AuthViewModel model) async {
     List<Map<String, dynamic>> addTimePeriod = [];
-    print('startDateIsostartDateIsostartDateIsostartDateIso$startDateIso');
-    print('doseControllers.length${model.doseControllers.length}');
 
     for (int day = 0; day < model.doseControllers.length; day++) {
       List<Map<String, String>> dayDoses = [];
@@ -786,7 +791,6 @@ class AuthViewModel extends BaseViewModel {
     await Future.delayed(Duration(seconds: 1), () {});
     clearReminderMedsVaraibles(model);
     model.notifyListeners();
-    print('again$medicationClassList');
   }
 
   clearReminderMedsVaraibles(model) {
@@ -2007,7 +2011,6 @@ class AuthViewModel extends BaseViewModel {
     context, {
     VerifyPhoneEntityModel? verifyPhoneEntity,
   }) async {
-    print('meee');
     try {
       _isLoading = true;
       _verifyPassOtpRespnseModel = await runBusyFuture(
@@ -3289,7 +3292,7 @@ class AuthViewModel extends BaseViewModel {
                             size: 20.sp,
                           ),
                         ),
-                        validator: AppValidator.validateString(),
+                        // validator: AppValidator.validateString(),
                         style: TextStyle(
                           fontSize: 15.0.sp,
                           fontWeight: FontWeight.w400,
@@ -3380,7 +3383,7 @@ class AuthViewModel extends BaseViewModel {
                           }
                           model.notifyListeners();
                         },
-                        validator: AppValidator.validateString(),
+                        // validator: AppValidator.validateString(),
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
@@ -3432,7 +3435,7 @@ class AuthViewModel extends BaseViewModel {
                         fillColor: AppColors.grey,
                         isFilled: true,
                         readOnly: true,
-                        validator: AppValidator.validateString(),
+                        // validator: AppValidator.validateString(),
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
@@ -3527,6 +3530,13 @@ class AuthViewModel extends BaseViewModel {
                                   if (firstFormReminderKey.currentState!
                                       .validate()) {
                                     addReminderToList(model);
+                                  } else {
+                                    AppUtils.snackbar(
+                                      context,
+                                      message:
+                                          'Kindly input all required fields.',
+                                      error: true,
+                                    );
                                   }
                                 },
                                 child: TextView(
@@ -4315,13 +4325,14 @@ class AuthViewModel extends BaseViewModel {
                     }),
                     SizedBox(height: 30.h),
 
-                    onTapToAddAnotherReminder
+                    !onTapToAddAnotherReminder
                         ? Column(
                             children: [
                               Center(
                                 child: GestureDetector(
                                   onTap: () {
                                     onTapToAddAnotherReminder = true;
+                                    model!.notifyListeners();
                                   },
                                   child: TextView(
                                     text: 'Add Another Medication',
@@ -4373,7 +4384,23 @@ class AuthViewModel extends BaseViewModel {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(height: 20.h),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10.w),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            onTapToAddAnotherReminder = false;
+                                            print(onTapToAddAnotherReminder);
+                                            model!.notifyListeners();
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppImage.cancel,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
                                     TextFormWidget(
                                       hint: 'Medication Name',
                                       borderColor: AppColors.transparent,
@@ -4681,7 +4708,7 @@ class AuthViewModel extends BaseViewModel {
                                           size: 20.sp,
                                         ),
                                       ),
-                                      validator: AppValidator.validateString(),
+                                      // validator: AppValidator.validateString(),
                                       style: TextStyle(
                                         fontSize: 16.20.sp,
                                         fontWeight: FontWeight.w400,
@@ -4755,12 +4782,13 @@ class AuthViewModel extends BaseViewModel {
                                                 .text = dateTimeObject!
                                                 .add(Duration(days: _duration!))
                                                 .toString();
-                                          } else {
-                                            // Optional: handle invalid input (e.g., show error or clear output)
-                                            print(
-                                              '⚠️ Invalid number input: $p0',
-                                            );
                                           }
+                                          // else {
+                                          //   // Optional: handle invalid input (e.g., show error or clear output)
+                                          //   print(
+                                          //     '⚠️ Invalid number input: $p0',
+                                          //   );
+                                          // }
                                         } else {
                                           // Optional: clear output when input is empty
                                           endDateController.clear();
@@ -4817,7 +4845,6 @@ class AuthViewModel extends BaseViewModel {
                                       fillColor: AppColors.grey,
                                       isFilled: true,
                                       readOnly: true,
-                                      validator: AppValidator.validateString(),
                                       style: TextStyle(
                                         fontSize: 16.20.sp,
                                         fontWeight: FontWeight.w400,
@@ -4926,6 +4953,13 @@ class AuthViewModel extends BaseViewModel {
                                                     .currentState!
                                                     .validate()) {
                                                   addReminderToList(model);
+                                                } else {
+                                                  AppUtils.snackbar(
+                                                    context,
+                                                    message:
+                                                        'Kindly input all required fields.',
+                                                    error: true,
+                                                  );
                                                 }
                                               },
                                               child: TextView(
@@ -4961,6 +4995,13 @@ class AuthViewModel extends BaseViewModel {
                                                 await addReminderToList(model);
                                                 linIndex++;
                                                 model.notifyListeners();
+                                              } else {
+                                                AppUtils.snackbar(
+                                                  context,
+                                                  message:
+                                                      'Kindly input all required fields.',
+                                                  error: true,
+                                                );
                                               }
                                             },
                                           ),
@@ -6337,11 +6378,11 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                   SizedBox(width: 9.10.w),
                                   TextView(
-                                    text:
-                                        getUserDetailsResponseModel
-                                            ?.data
-                                            ?.phone ??
-                                        '',
+                                    text: formatPhoneNumber(
+                                      SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['phone'],
+                                    ),
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 16.2.sp,
@@ -6353,22 +6394,23 @@ class AuthViewModel extends BaseViewModel {
                                   Row(
                                     children: [
                                       Container(
+                                        padding: EdgeInsets.all(1.2.w),
                                         decoration: BoxDecoration(
                                           color: AppColors.app_green,
                                           shape: BoxShape.circle,
                                         ),
                                         child: Icon(
                                           Icons.check,
-                                          size: 12.sp,
+                                          size: 13.4.sp,
                                           color: AppColors.white,
                                         ),
                                       ),
-                                      SizedBox(width: 16.10.w),
+                                      SizedBox(width: 10.w),
                                       TextView(
                                         text: 'Primary',
                                         textStyle: TextStyle(
                                           fontFamily: 'Arial',
-                                          fontSize: 13.2.sp,
+                                          fontSize: 13.72.sp,
                                           fontWeight: FontWeight.w400,
                                           color: AppColors.reminder,
                                         ),
@@ -6447,7 +6489,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         SizedBox(width: 9.10.w),
                                         TextView(
-                                          text: o,
+                                          text: formatPhoneNumber(o),
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.2.sp,
@@ -6813,6 +6855,18 @@ class AuthViewModel extends BaseViewModel {
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
+                    if (phoneReminderList.contains(
+                      SharedPreferencesService
+                          .instance
+                          .usersData['user']['phone'],
+                    )) {
+                    } else {
+                      phoneReminderList.add(
+                        SharedPreferencesService
+                            .instance
+                            .usersData['user']['phone'],
+                      );
+                    }
                     if (phoneReminderList.isNotEmpty) {
                       linIndex++;
                     } else {

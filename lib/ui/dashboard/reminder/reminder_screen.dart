@@ -277,7 +277,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                       .getReminderResponseModel!
                                       .data!
                                       .reminders!
-                                      .reversed
                                       .map(
                                         (e) => reminderWidget(
                                           context: context,
@@ -291,7 +290,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                       .getReminderResponseModel!
                                       .data!
                                       .reminders!
-                                      .reversed
                                       .map(
                                         (e) => reminderWidget(
                                           context: context,
