@@ -3292,7 +3292,7 @@ class AuthViewModel extends BaseViewModel {
                             size: 20.sp,
                           ),
                         ),
-                        // validator: AppValidator.validateString(),
+
                         style: TextStyle(
                           fontSize: 15.0.sp,
                           fontWeight: FontWeight.w400,
@@ -3383,7 +3383,6 @@ class AuthViewModel extends BaseViewModel {
                           }
                           model.notifyListeners();
                         },
-                        // validator: AppValidator.validateString(),
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
@@ -4391,7 +4390,6 @@ class AuthViewModel extends BaseViewModel {
                                         child: GestureDetector(
                                           onTap: () {
                                             onTapToAddAnotherReminder = false;
-                                            print(onTapToAddAnotherReminder);
                                             model!.notifyListeners();
                                           },
                                           child: SvgPicture.asset(
@@ -4401,6 +4399,7 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                     ),
                                     SizedBox(height: 10.h),
+
                                     TextFormWidget(
                                       hint: 'Medication Name',
                                       borderColor: AppColors.transparent,
@@ -4749,6 +4748,7 @@ class AuthViewModel extends BaseViewModel {
                                     SizedBox(height: 24.0.h),
                                     TextFormWidget(
                                       hint: 'Duration',
+                                      label: 'E.g 15',
                                       keyboardType: TextInputType.number,
                                       borderColor: AppColors.transparent,
                                       borderTopLeft: 10.r,
@@ -4756,6 +4756,8 @@ class AuthViewModel extends BaseViewModel {
                                       borderBottomLeft: 10.r,
                                       borderBottomRight: 10.r,
                                       fillColor: AppColors.grey,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.never,
                                       isFilled: true,
                                       hintSize: 12.52.sp,
                                       controller: medDurationController,
@@ -4783,17 +4785,9 @@ class AuthViewModel extends BaseViewModel {
                                                 .add(Duration(days: _duration!))
                                                 .toString();
                                           }
-                                          // else {
-                                          //   // Optional: handle invalid input (e.g., show error or clear output)
-                                          //   print(
-                                          //     '⚠️ Invalid number input: $p0',
-                                          //   );
-                                          // }
                                         } else {
-                                          // Optional: clear output when input is empty
                                           endDateController.clear();
                                         }
-
                                         model.notifyListeners();
                                       },
 
@@ -4830,7 +4824,7 @@ class AuthViewModel extends BaseViewModel {
                                       borderBottomLeft: 10.r,
                                       borderBottomRight: 10.r,
                                       label: endDateController.text.isNotEmpty
-                                          ? DateFormat('dd MMM yyyy').format(
+                                          ? DateFormat('dd MMM, yyyy').format(
                                               DateTime.parse(
                                                 endDateController.text,
                                               ),
@@ -5132,8 +5126,6 @@ class AuthViewModel extends BaseViewModel {
                     : () {
                         indexOfMedicationClassList -= 1;
                         model!.notifyListeners();
-
-                        print(indexOfMedicationClassList);
                       },
                 icon: Icon(
                   Icons.arrow_back,

@@ -22,6 +22,7 @@ import '../../../ui/dashboard/profile/wallet/fund_wallet_pay_screen.dart';
 import '../../../ui/dashboard/profile/wallet/transaction_screen.dart';
 import '../../../ui/dashboard/profile/wallet/wallet_screen.dart';
 import '../../../ui/dashboard/reminder/payment_status_screen.dart';
+import '../../../ui/dashboard/reminder/view_medication_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
@@ -60,6 +61,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: FundScreen),
     MaterialRoute(page: FundWalletPayScreen),
     MaterialRoute(page: PaymentStatusScreen),
+    MaterialRoute(page: ViewMedicationScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

@@ -50,6 +50,9 @@ class AppImage {
   static const String mobile_money = 'assets/svgs/mobile_money.svg';
   static const String fund_card = 'assets/svgs/fund_card.svg';
   static const String bank = 'assets/svgs/bank.svg';
+  static const String set = 'assets/svgs/set.svg';
+  static const String noon = 'assets/svgs/noon.svg';
+  static const String dawn = 'assets/svgs/dawn.svg';
   static const String ussd = 'assets/svgs/ussd.svg';
   static const String audio = 'assets/svgs/audio.svg';
   static const String profile = 'assets/svgs/profile.svg';
