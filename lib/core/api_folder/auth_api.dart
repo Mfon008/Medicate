@@ -4,6 +4,7 @@ import 'package:medicate_app/core/connect_end/model/change_phone_no_response_mod
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/get_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
@@ -16,6 +17,7 @@ import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.d
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
     as sup;
+import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
@@ -308,29 +310,29 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> getReminderById({String? id}) async {
+  Future<GetReminderById> getReminderById(String? id) async {
     try {
       final response = await _service.call(
         '${UrlConfig.reminder}/$id',
         RequestMethod.get,
       );
       logger.d(response.data);
-      return response.data;
+      return GetReminderById.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<dynamic> getTodaysReminder({String? period, String? date}) async {
+  Future<GetTodayReminderModel> getTodaysReminder({String? period, String? date}) async {
     try {
       final response = await _service.call(
-        UrlConfig.reminder,
+        UrlConfig.today_reminder,
         RequestMethod.get,
         data: {'period': period, 'date': date},
       );
       logger.d(response.data);
-      return response.data;
+      return GetTodayReminderModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

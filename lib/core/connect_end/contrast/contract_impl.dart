@@ -8,7 +8,9 @@ import '../model/change_phone_no_response_model/change_phone_no_response_model.d
 import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
+import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -79,5 +81,10 @@ class AuthContractsImpl {
     String? status,
     String? page,
     String? limit,
-  }) async => await _api.getReminder(status: status,page: page,limit: limit);
+  }) async => await _api.getReminder(status: status, page: page, limit: limit);
+
+  Future<GetReminderById> getReminderById(String? id) async =>
+      await _api.getReminderById(id!);
+  Future<GetTodayReminderModel> getTodaysReminder({String? period, String? date}) async  =>
+      await _api.getTodaysReminder(period: period,date: date);
 }

@@ -4,6 +4,7 @@ class AppImage {
   static const String applogo = 'assets/images/logo.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
+  static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';

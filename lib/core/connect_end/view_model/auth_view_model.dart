@@ -15,6 +15,7 @@ import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/medication_image.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/payment.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
@@ -42,6 +43,7 @@ import '../model/change_phone_no_response_model/change_phone_no_response_model.d
 import '../model/create_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_reminder_entity_model/medication.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -80,6 +82,10 @@ class AuthViewModel extends BaseViewModel {
 
   LoginResponseModel? _loginResponseModel;
   LoginResponseModel? get loginResponseModel => _loginResponseModel;
+  GetReminderById? _getReminderByIdModel;
+  GetReminderById? get getReminderByIdModel => _getReminderByIdModel;
+  GetTodayReminderModel? _getTodaysReminderModel;
+  GetTodayReminderModel? get getTodaysReminderModel => _getTodaysReminderModel;
 
   SignUpResponseModel? _signUpResponseModel;
   SignUpResponseModel? get signUpResponseModel => _signUpResponseModel;
@@ -224,6 +230,7 @@ class AuthViewModel extends BaseViewModel {
   List<File> medicationUpdateFile = [];
   List<String> meyTypeUpdateIcon = [];
   String isReminderStatus = 'ongoing';
+  String timePeriod = 'morning';
 
   String formatPhoneNumber(String phoneNumber) {
     if (phoneNumber.startsWith('+234')) {
@@ -1728,7 +1735,7 @@ class AuthViewModel extends BaseViewModel {
       );
 
       final formattedTime = DateFormat(
-        "h:mm a",
+        "HH:mm a",
       ).format(dateTime); // 👉 12-hour with AM/PM
       final period = getPeriodLabel(pickedTime);
 
@@ -7732,6 +7739,38 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void getReminderById(context, String? id) async {
+    try {
+      _isLoading = true;
+      _getReminderByIdModel = await runBusyFuture(
+        repositoryImply.getReminderById(id),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void getTodaysReminder(context, {String? period, String? date}) async {
+    try {
+      _isLoading = true;
+      _getTodaysReminderModel = await runBusyFuture(
+        repositoryImply.getTodaysReminder(period: period, date: date),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
     notifyListeners();
@@ -7820,5 +7859,64 @@ class AuthViewModel extends BaseViewModel {
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  String isMedTypeView(medType) {
+    if (medType == 'PILL') {
+      return AppImage.pills;
+    }
+    if (medType == 'SYRUP') {
+      return AppImage.syrup;
+    }
+    if (medType == 'INJECTION') {
+      return AppImage.syringe;
+    }
+    if (medType == 'DRIP') {
+      return AppImage.drip;
+    }
+    if (medType == 'OINTMENT') {
+      return AppImage.ointment;
+    }
+    if (medType == 'INHALER') {
+      return AppImage.inhaler;
+    }
+    return AppImage.other_meds;
+  }
+
+  checkTimePeriod(time) {
+    int hour = int.parse(time.split(":")[0]);
+    if (hour < 12) {
+      return "AM";
+    } else {
+      return "PM";
+    }
+  }
+
+  Color checkMedsStatusColor(meds) {
+    if (meds == 'PENDING') {
+      return AppColors.transparent;
+    }
+    if (meds == 'MISSED') {
+      return AppColors.red;
+    }
+    return AppColors.green;
+  }
+
+  Widget checkMedsStatusWidget(meds) {
+    if (meds == 'PENDING') {
+      return SvgPicture.asset(AppImage.pending_meds);
+    }
+    if (meds == 'MISSED') {
+      return Padding(
+        padding: EdgeInsets.all(2.w),
+        child: SvgPicture.asset(
+          AppImage.cancel,
+          color: AppColors.white,
+          height: 5.6.h,
+          width: 5.6.w,
+        ),
+      );
+    }
+    return Icon(Icons.check, size: 10.4.sp, color: AppColors.white);
   }
 }

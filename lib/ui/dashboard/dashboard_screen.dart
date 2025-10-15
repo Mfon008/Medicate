@@ -85,7 +85,7 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
-    _currentIndex = widget.index??0;
+    _currentIndex = widget.index ?? 0;
     super.initState();
   }
 

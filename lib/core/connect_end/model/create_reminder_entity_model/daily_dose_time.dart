@@ -44,8 +44,8 @@ class DailyDoseTime {
   }
 
   Map<String, dynamic> toJson() => {
-        'time': _normalizeTo24Hour(time),
-        'date': date,
-        'isoDate': isoDate?.toIso8601String(),
-      };
+    'time': _normalizeTo24Hour(time),
+    'date': date,
+    'isoDate': isoDate?.toIso8601String(),
+  };
 }

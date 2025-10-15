@@ -389,11 +389,10 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i26.ViewMedicationScreen: (data) {
-      final args = data.getArgs<ViewMedicationScreenArguments>(
-        orElse: () => const ViewMedicationScreenArguments(),
-      );
+      final args = data.getArgs<ViewMedicationScreenArguments>(nullOk: false);
       return _i28.MaterialPageRoute<dynamic>(
-        builder: (context) => _i26.ViewMedicationScreen(key: args.key),
+        builder: (context) =>
+            _i26.ViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
       );
     },
@@ -966,24 +965,26 @@ class PaymentStatusScreenArguments {
 }
 
 class ViewMedicationScreenArguments {
-  const ViewMedicationScreenArguments({this.key});
+  const ViewMedicationScreenArguments({this.key, required this.id});
 
   final _i28.Key? key;
 
+  final String? id;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "id": "$id"}';
   }
 
   @override
   bool operator ==(covariant ViewMedicationScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.id == id;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ id.hashCode;
   }
 }
 
@@ -1459,6 +1460,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
 
   Future<dynamic> navigateToViewMedicationScreen({
     _i28.Key? key,
+    required String? id,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1467,7 +1469,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(key: key),
+      arguments: ViewMedicationScreenArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -1942,6 +1944,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
 
   Future<dynamic> replaceWithViewMedicationScreen({
     _i28.Key? key,
+    required String? id,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1950,7 +1953,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(key: key),
+      arguments: ViewMedicationScreenArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
