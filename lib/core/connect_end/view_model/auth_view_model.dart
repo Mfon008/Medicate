@@ -8179,4 +8179,21 @@ class AuthViewModel extends BaseViewModel {
     }
     return Icon(Icons.check, size: 10.4.sp, color: AppColors.white);
   }
+
+  String getNumberOfTimes(int times) {
+  switch (times) {
+    case 1:
+      return 'Once daily';
+    case 2:
+      return 'Twice daily';
+    case 3:
+      return 'Thrice daily';
+    default:
+      if (times > 2 && times <= 12) {
+        return '$times times daily';
+      } else {
+        return 'Invalid number of times';
+      }
+  }
+}
 }

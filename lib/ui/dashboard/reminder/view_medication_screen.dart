@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:medicate_app/core/app_assets/image.dart';
+import 'package:intl/intl.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
@@ -85,7 +86,8 @@ class ViewMedicationScreen extends StatelessWidget {
                                           .getReminderByIdModel
                                           ?.data
                                           ?.medication
-                                          ?.medicationStatus ??
+                                          ?.medicationStatus
+                                          ?.capitalize() ??
                                       '',
                                   textStyle: TextStyle(
                                     fontFamily: 'Arial',
@@ -98,7 +100,8 @@ class ViewMedicationScreen extends StatelessWidget {
                             ),
                             SizedBox(width: 56.w),
                             TextView(
-                              text: '1/5 days left',
+                              text:
+                                  '${model.getReminderByIdModel!.data!.medication!.endDateTime!.difference(DateTime.now()).inDays + 1}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days left',
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 14.sp,
@@ -134,7 +137,8 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: 'Medication for Headache',
+                                text:
+                                    '${model.getReminderByIdModel!.data!.medication!.medicationName}',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -159,7 +163,8 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: 'Panadol',
+                                text:
+                                    '${model.getReminderByIdModel!.data!.medication!.drugName}',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -169,6 +174,7 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 10.h),
                               Container(
+                                width: double.infinity,
                                 padding: EdgeInsets.symmetric(
                                   vertical: 30.w,
                                   horizontal: 20..w,
@@ -176,6 +182,16 @@ class ViewMedicationScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: AppColors.white,
                                   borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Image.network(
+                                  model
+                                      .getReminderByIdModel!
+                                      .data!
+                                      .medication!
+                                      .medicationImage!
+                                      .url!,
+                                  height:70.h,
+                                  width:70.w,
                                 ),
                               ),
                               SizedBox(height: 5.10.h),
@@ -197,12 +213,23 @@ class ViewMedicationScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   SvgPicture.asset(
-                                    AppImage.pills,
+                                    model.isMedTypeView(
+                                      model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .medication!
+                                          .medicationType,
+                                    ),
                                     color: AppColors.primary,
                                   ),
                                   SizedBox(width: 6.10.h),
                                   TextView(
-                                    text: 'Pills',
+                                    text: model
+                                        .getReminderByIdModel!
+                                        .data!
+                                        .medication!
+                                        .medicationType!
+                                        .capitalize(),
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14.8.sp,
@@ -212,31 +239,31 @@ class ViewMedicationScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 5.10.h),
-                              Divider(
-                                color: AppColors.infoGrey,
-                                thickness: .14,
-                              ),
-                              SizedBox(height: 5.10.h),
-                              TextView(
-                                text: 'Description',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12.8.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.infoGrey,
-                                ),
-                              ),
-                              SizedBox(height: 4.10.h),
-                              TextView(
-                                text: 'Pain Relief',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.8.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
+                              // SizedBox(height: 5.10.h),
+                              // Divider(
+                              //   color: AppColors.infoGrey,
+                              //   thickness: .14,
+                              // ),
+                              // SizedBox(height: 5.10.h),
+                              // TextView(
+                              //   text: 'Description',
+                              //   textStyle: TextStyle(
+                              //     fontFamily: 'Arial',
+                              //     fontSize: 12.8.sp,
+                              //     fontWeight: FontWeight.w400,
+                              //     color: AppColors.infoGrey,
+                              //   ),
+                              // ),
+                              // SizedBox(height: 4.10.h),
+                              // TextView(
+                              //   text: 'Pain Relief',
+                              //   textStyle: TextStyle(
+                              //     fontFamily: 'Arial',
+                              //     fontSize: 14.8.sp,
+                              //     fontWeight: FontWeight.w400,
+                              //     color: AppColors.reminder,
+                              //   ),
+                              // ),
                               SizedBox(height: 10.h),
                             ],
                           ),
@@ -278,7 +305,8 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: '2 tablets',
+                                text:
+                                    '${model.getReminderByIdModel!.data!.medication!.dosage}',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -303,7 +331,13 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: '13 Feb, 2025 10:30 AM',
+                                text: DateFormat('d MMM, yyyy').format(
+                                  model
+                                      .getReminderByIdModel!
+                                      .data!
+                                      .medication!
+                                      .startDateTime!,
+                                ),
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -330,7 +364,8 @@ class ViewMedicationScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   TextView(
-                                    text: '1/5 days',
+                                    text:
+                                        '${model.getReminderByIdModel!.data!.medication!.endDateTime!.difference(DateTime.now()).inDays + 1}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days',
                                     letterSpacing: 1,
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
@@ -369,7 +404,13 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: '18 Feb, 2025',
+                                text: DateFormat('d MMM, yyyy').format(
+                                  model
+                                      .getReminderByIdModel!
+                                      .data!
+                                      .medication!
+                                      .endDateTime!,
+                                ),
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -394,7 +435,13 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: 'Thrice Daily',
+                                text: model.getNumberOfTimes(
+                                  model
+                                      .getReminderByIdModel!
+                                      .data!
+                                      .medication!
+                                      .timesPerDay!,
+                                ),
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -419,7 +466,8 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: 'Always eat before you take the drugs.',
+                                text:
+                                    '${model.getReminderByIdModel!.data!.medication!.note}',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -457,38 +505,36 @@ class ViewMedicationScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(height: 10.h),
-                              ...[
-                                'EMAIL',
-                                'SMS',
-                                'Push',
-                                'Whatsapp',
-                                'Phone Call',
-                              ].map(
-                                (e) => Padding(
-                                  padding: EdgeInsets.only(bottom: 20.w),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(2.w),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.black,
-                                          shape: BoxShape.circle,
-                                        ),
+                              ...model
+                                  .getReminderByIdModel!
+                                  .data!
+                                  .notificationChannels!
+                                  .map(
+                                    (e) => Padding(
+                                      padding: EdgeInsets.only(bottom: 20.w),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(2.w),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.black,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          SizedBox(width: 12.w),
+                                          TextView(
+                                            text: e,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      SizedBox(width: 12.w),
-                                      TextView(
-                                        text: e,
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 16.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
                             ],
                           ),
                         ),
