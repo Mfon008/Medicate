@@ -19,6 +19,7 @@ import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/get
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_doses_status_model/update_doses_status_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/ui/dashboard/reminder/medication_class.dart';
@@ -45,6 +46,7 @@ import '../model/create_reminder_entity_model/medication.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
+import '../model/get_today_reminder_model/datum.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -86,6 +88,8 @@ class AuthViewModel extends BaseViewModel {
   GetReminderById? get getReminderByIdModel => _getReminderByIdModel;
   GetTodayReminderModel? _getTodaysReminderModel;
   GetTodayReminderModel? get getTodaysReminderModel => _getTodaysReminderModel;
+  UpdateDosesStatusModel? _updateDosesStatusModel;
+  UpdateDosesStatusModel? get updateDosesStatusModel => _updateDosesStatusModel;
 
   SignUpResponseModel? _signUpResponseModel;
   SignUpResponseModel? get signUpResponseModel => _signUpResponseModel;
@@ -7238,6 +7242,236 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
+  void showUpdateDoseDialog(BuildContext context, {Datum? o}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<AuthViewModel>.reactive(
+          viewModelBuilder: () => AuthViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, AuthViewModel model, _) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(21.4.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.skyBlue,
+                              shape: BoxShape.circle,
+                            ),
+                            child: SvgPicture.asset(
+                              isMedTypeView(o!.medicationType),
+                              color: AppColors.primary,
+                              height: 20.h,
+                              width: 20.w,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          TextView(
+                            text: o.drugName ?? '',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextView(
+                                text: 'Note: ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 14.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              TextView(
+                                text: '${o.note}',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 13.2.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20.h),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.w,
+                              horizontal: 20.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.skyBlue,
+                              border: Border.all(
+                                color: AppColors.buttonGrey1,
+                                width: 1,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  children: [
+                                    TextView(
+                                      text: '2 Tablets',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.10.h),
+                                    TextView(
+                                      text: 'Dosage to be taken',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.8.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.infoGrey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 5.10.h),
+                                Column(
+                                  children: [
+                                    TextView(
+                                      text:
+                                          '${o.time} ${checkTimePeriod(o.time)}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.10.h),
+                                    TextView(
+                                      text: 'Scheduled Time',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.8.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.infoGrey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: model.isLoading ? 20.h : 0.h),
+                          model.isLoading
+                              ? SpinKitWaveSpinner(
+                                  color: AppColors.primary,
+                                  size: 32.0.sp,
+                                )
+                              : SizedBox.shrink(),
+                          SizedBox(height: 30.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.white,
+                                  buttonText: 'Missed',
+                                  color: AppColors.red,
+                                  buttonBorderColor: AppColors.red,
+                                  onPressed: () {
+                                    model.updateDosesStatus(
+                                      context,
+                                      reminder: o.reminderId,
+                                      dose: o.doseId,
+                                      status: 'MISSED',
+                                    );
+                                    model.notifyListeners();
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 30.w),
+
+                              Expanded(
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.app_green,
+                                  buttonText: 'Taken',
+                                  color: AppColors.white,
+                                  buttonBorderColor: AppColors.app_green,
+                                  onPressed: () {
+                                    model.updateDosesStatus(
+                                      context,
+                                      reminder: o.reminderId,
+                                      dose: o.doseId,
+                                      status: 'TAKEN',
+                                    );
+                                    model.notifyListeners();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   void showEmailDialog(
     BuildContext context, {
     bool isEdit = false,
@@ -7762,6 +7996,32 @@ class AuthViewModel extends BaseViewModel {
         repositoryImply.getTodaysReminder(period: period, date: date),
         throwException: true,
       );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateDosesStatus(
+    context, {
+    String? reminder,
+    String? dose,
+    String? status,
+  }) async {
+    try {
+      _isLoading = true;
+      _updateDosesStatusModel = await runBusyFuture(
+        repositoryImply.updateDosesStatusModel(
+          status: status,
+          doseId: dose,
+          reminderId: reminder,
+        ),
+        throwException: true,
+      );
+      AppUtils.snackbar(context, message: _updateDosesStatusModel?.message);
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

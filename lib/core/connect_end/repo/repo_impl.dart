@@ -22,6 +22,7 @@ import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/support_entity_model.dart';
+import '../model/update_doses_status_model/update_doses_status_model.dart';
 import '../model/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
@@ -163,8 +164,27 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<GetTodayReminderModel> getTodaysReminder({String? period, String? date}) async  {
-    final response = await _contract.getTodaysReminder(period: period,date: date);
+  Future<GetTodayReminderModel> getTodaysReminder({
+    String? period,
+    String? date,
+  }) async {
+    final response = await _contract.getTodaysReminder(
+      period: period,
+      date: date,
+    );
+    return response;
+  }
+
+  Future<UpdateDosesStatusModel> updateDosesStatusModel({
+    String? reminderId,
+    String? doseId,
+    String? status,
+  }) async {
+    final response = await _contract.updateDosesStatusModel(
+      status: status,
+      reminderId: reminderId,
+      doseId: doseId,
+    );
     return response;
   }
 

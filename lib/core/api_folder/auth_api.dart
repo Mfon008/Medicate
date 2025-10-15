@@ -21,6 +21,7 @@ import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.d
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
+import '../connect_end/model/update_doses_status_model/update_doses_status_model.dart';
 import '../connect_end/model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -324,7 +325,10 @@ class AuthApi {
     }
   }
 
-  Future<GetTodayReminderModel> getTodaysReminder({String? period, String? date}) async {
+  Future<GetTodayReminderModel> getTodaysReminder({
+    String? period,
+    String? date,
+  }) async {
     try {
       final response = await _service.call(
         UrlConfig.today_reminder,
@@ -352,6 +356,26 @@ class AuthApi {
       );
       logger.d(response.data);
       return GetReminderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<UpdateDosesStatusModel> updateDoseStatus({
+    String? reminerId,
+    String? doseId,
+    String? status,
+
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminder}/$reminerId/doses/$doseId/status',
+        RequestMethod.patch,
+        data: {'status': status,},
+      );
+      logger.d(response.data);
+      return UpdateDosesStatusModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

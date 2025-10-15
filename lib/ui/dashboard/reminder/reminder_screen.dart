@@ -30,19 +30,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          // if (model.isReminderStatus == 'today') {
-          // model.getTodaysReminder(
-          //   context,
-          //   period: model.timePeriod,
-          //   date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-          // );
-          // } else {
           model.getReminder(
             context,
             status: model.isReminderStatus,
             page: model.pageOngoing.toString(),
           );
-          // }
         });
       },
       disposeViewModel: false,
@@ -300,353 +292,399 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     ? Center(
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height * .62,
-                          child: SingleChildScrollView(
-                            physics: AlwaysScrollableScrollPhysics(),
-                            child: Column(
-                              children: [
-                                SizedBox(height: 30.h),
-                                if (model.isReminderStatus == 'today' &&
-                                    model.getTodaysReminderModel != null)
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.w,
-                                      horizontal: 20.w,
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 16.w),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextView(
-                                          text: 'Today’s Medications',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 13.2.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.infoGrey,
-                                          ),
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                               model.getTodaysReminder(
+                                context,
+                                period: model.timePeriod,
+                                date: DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(DateTime.now()),
+                              );
+                            },
+                            child: SingleChildScrollView(
+                              physics: AlwaysScrollableScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 30.h),
+                                  if (model.isReminderStatus == 'today' &&
+                                      model.getTodaysReminderModel != null)
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 14.w,
+                                        horizontal: 20.w,
+                                      ),
+                                      margin: EdgeInsets.only(bottom: 16.w),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.white,
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
                                         ),
-                                        SizedBox(height: 4.h),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            SvgPicture.asset(
-                                              AppImage.calendar,
-                                              height: 18.h,
-                                              width: 18.w,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'Today’s Medications',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 13.2.sp,
+                                              fontWeight: FontWeight.w400,
                                               color: AppColors.infoGrey,
                                             ),
-                                            SizedBox(width: 10.h),
-                                            TextView(
-                                              text: DateFormat(
-                                                'EEEE, MMMM dd',
-                                              ).format(DateTime.now()),
-                                              textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 15.2.sp,
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 10.h),
-                                        Divider(
-                                          thickness: .14,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                        SizedBox(height: 14.h),
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () async {
-                                                model.timePeriod = 'morning';
-                                                await Future.delayed(
-                                                  Duration(milliseconds: 100),
-                                                );
-                                                model.getTodaysReminder(
-                                                  context,
-                                                  period: model.timePeriod,
-                                                  date: DateFormat(
-                                                    'yyyy-MM-dd',
-                                                  ).format(DateTime.now()),
-                                                );
-                                                model.notifyListeners();
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 8.w,
-                                                  horizontal: 24.0.w,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color:
-                                                        model.timePeriod ==
-                                                            'morning'
-                                                        ? AppColors.primary
-                                                        : AppColors.f1,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        22.0,
-                                                      ),
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppImage.set,
-                                                    ),
-                                                    SizedBox(width: 6.w),
-                                                    TextView(
-                                                      text: 'Morning',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 13.2.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.infoGrey,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10.4.h),
-                                            GestureDetector(
-                                              onTap: () async {
-                                                model.timePeriod = 'afternoon';
-
-                                                await Future.delayed(
-                                                  Duration(milliseconds: 100),
-                                                );
-                                                model.getTodaysReminder(
-                                                  context,
-                                                  period: model.timePeriod,
-                                                  date: DateFormat(
-                                                    'yyyy-MM-dd',
-                                                  ).format(DateTime.now()),
-                                                );
-                                                model.notifyListeners();
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 8.w,
-                                                  horizontal: 24.0.w,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color:
-                                                        model.timePeriod ==
-                                                            'afternoon'
-                                                        ? AppColors.primary
-                                                        : AppColors.f1,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        22.0,
-                                                      ),
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppImage.noon,
-                                                    ),
-                                                    SizedBox(width: 6.w),
-                                                    TextView(
-                                                      text: 'Afternoon',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 13.2.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.infoGrey,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 10.h),
-
-                                        GestureDetector(
-                                          onTap: () async {
-                                            model.timePeriod = 'evening';
-                                            await Future.delayed(
-                                              Duration(milliseconds: 100),
-                                            );
-                                            model.getTodaysReminder(
-                                              context,
-                                              period: model.timePeriod,
-                                              date: DateFormat(
-                                                'yyyy-MM-dd',
-                                              ).format(DateTime.now()),
-                                            );
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            width: 130.0.w,
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 8.w,
-                                              horizontal: 24.0.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color:
-                                                    model.timePeriod ==
-                                                        'evening'
-                                                    ? AppColors.primary
-                                                    : AppColors.f1,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(22.0),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                SvgPicture.asset(AppImage.dawn),
-                                                SizedBox(width: 6.w),
-                                                TextView(
-                                                  text: 'Evening',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 13.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.infoGrey,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
                                           ),
-                                        ),
-                                        SizedBox(height: 30.h),
-                                        ...model.getTodaysReminderModel!.data!.asMap().entries.map((
-                                          entry,
-                                        ) {
-                                          final index = entry.key;
-                                          final o = entry.value;
-                                          final isLast =
-                                              index ==
-                                              model
-                                                      .getTodaysReminderModel!
-                                                      .data!
-                                                      .length -
-                                                  1;
-                                          return Column(
+                                          SizedBox(height: 4.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    padding: EdgeInsets.all(
-                                                      14.w,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.skyBlue,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: SvgPicture.asset(
-                                                      model.isMedTypeView(
-                                                        o.medicationType,
-                                                      ),
-                                                      color: AppColors.primary,
-                                                      height: 18.h,
-                                                      width: 18.w,
-                                                    ),
+                                              SvgPicture.asset(
+                                                AppImage.calendar,
+                                                height: 18.h,
+                                                width: 18.w,
+                                                color: AppColors.infoGrey,
+                                              ),
+                                              SizedBox(width: 10.h),
+                                              TextView(
+                                                text: DateFormat(
+                                                  'EEEE, MMMM dd',
+                                                ).format(DateTime.now()),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Divider(
+                                            thickness: .14,
+                                            color: AppColors.infoGrey,
+                                          ),
+                                          SizedBox(height: 14.h),
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  model.timePeriod = 'morning';
+                                                  await Future.delayed(
+                                                    Duration(milliseconds: 100),
+                                                  );
+                                                  model.getTodaysReminder(
+                                                    context,
+                                                    period: model.timePeriod,
+                                                    date: DateFormat(
+                                                      'yyyy-MM-dd',
+                                                    ).format(DateTime.now()),
+                                                  );
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 8.w,
+                                                    horizontal: 24.0.w,
                                                   ),
-                                                  SizedBox(width: 20.w),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color:
+                                                          model.timePeriod ==
+                                                              'morning'
+                                                          ? AppColors.primary
+                                                          : AppColors.f1,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          22.0,
+                                                        ),
+                                                  ),
+                                                  child: Row(
                                                     children: [
+                                                      SvgPicture.asset(
+                                                        AppImage.set,
+                                                      ),
+                                                      SizedBox(width: 6.w),
                                                       TextView(
-                                                        text:
-                                                            o.medicationType
-                                                                ?.capitalize() ??
-                                                            '',
+                                                        text: 'Morning',
                                                         textStyle: TextStyle(
                                                           fontFamily: 'Arial',
                                                           fontSize: 13.2.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
-                                                          color:
-                                                              AppColors.grey1,
-                                                        ),
-                                                      ),
-                                                      TextView(
-                                                        text: o.drugName ?? '',
-                                                        textStyle: TextStyle(
-                                                          fontFamily:
-                                                              'GoogleSans',
-                                                          fontSize: 15.2.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: AppColors.deep,
+                                                          color: AppColors
+                                                              .infoGrey,
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                  Spacer(),
-                                                  Row(
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.4.h),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  model.timePeriod =
+                                                      'afternoon';
+
+                                                  await Future.delayed(
+                                                    Duration(milliseconds: 100),
+                                                  );
+                                                  model.getTodaysReminder(
+                                                    context,
+                                                    period: model.timePeriod,
+                                                    date: DateFormat(
+                                                      'yyyy-MM-dd',
+                                                    ).format(DateTime.now()),
+                                                  );
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 8.w,
+                                                    horizontal: 24.0.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color:
+                                                          model.timePeriod ==
+                                                              'afternoon'
+                                                          ? AppColors.primary
+                                                          : AppColors.f1,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          22.0,
+                                                        ),
+                                                  ),
+                                                  child: Row(
                                                     children: [
+                                                      SvgPicture.asset(
+                                                        AppImage.noon,
+                                                      ),
+                                                      SizedBox(width: 6.w),
                                                       TextView(
-                                                        text:
-                                                            '${o.time} ${model.checkTimePeriod(o.time)}',
+                                                        text: 'Afternoon',
                                                         textStyle: TextStyle(
-                                                          fontFamily:
-                                                              'GoogleSans',
-                                                          fontSize: 18.2.sp,
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 13.2.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: AppColors
-                                                              .reminder,
+                                                              .infoGrey,
                                                         ),
-                                                      ),
-                                                      SizedBox(width: 10.w),
-                                                      Container(
-                                                        padding: EdgeInsets.all(
-                                                          1.2.w,
-                                                        ),
-                                                        decoration: BoxDecoration(
-                                                          color: model
-                                                              .checkMedsStatusColor(
-                                                                o.status,
-                                                              ),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: model
-                                                            .checkMedsStatusWidget(
-                                                              o.status,
-                                                            ),
                                                       ),
                                                     ],
                                                   ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10.h),
+
+                                          GestureDetector(
+                                            onTap: () async {
+                                              model.timePeriod = 'evening';
+                                              await Future.delayed(
+                                                Duration(milliseconds: 100),
+                                              );
+                                              model.getTodaysReminder(
+                                                context,
+                                                period: model.timePeriod,
+                                                date: DateFormat(
+                                                  'yyyy-MM-dd',
+                                                ).format(DateTime.now()),
+                                              );
+                                              model.notifyListeners();
+                                            },
+                                            child: Container(
+                                              width: 130.0.w,
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 8.w,
+                                                horizontal: 24.0.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color:
+                                                      model.timePeriod ==
+                                                          'evening'
+                                                      ? AppColors.primary
+                                                      : AppColors.f1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(22.0),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    AppImage.dawn,
+                                                  ),
+                                                  SizedBox(width: 6.w),
+                                                  TextView(
+                                                    text: 'Evening',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 13.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                  ),
                                                 ],
                                               ),
-                                              SizedBox(height: 10.30.h),
-                                              if (!isLast)
-                                                Divider(
-                                                  color: AppColors.infoGrey,
-                                                  thickness: .14,
+                                            ),
+                                          ),
+                                          SizedBox(height: 30.h),
+                                          ...model.getTodaysReminderModel!.data!.asMap().entries.map((
+                                            entry,
+                                          ) {
+                                            final index = entry.key;
+                                            final o = entry.value;
+                                            final isLast =
+                                                index ==
+                                                model
+                                                        .getTodaysReminderModel!
+                                                        .data!
+                                                        .length -
+                                                    1;
+                                            return Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () => model
+                                                      .showUpdateDoseDialog(
+                                                        context,
+                                                        o: o,
+                                                      ),
+                                                  child: Container(
+                                                    color:
+                                                        AppColors.transparent,
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                14.w,
+                                                              ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                color: AppColors
+                                                                    .skyBlue,
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                          child: SvgPicture.asset(
+                                                            model.isMedTypeView(
+                                                              o.medicationType,
+                                                            ),
+                                                            color: AppColors
+                                                                .primary,
+                                                            height: 18.h,
+                                                            width: 18.w,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 20.w),
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            TextView(
+                                                              text:
+                                                                  o.medicationType
+                                                                      ?.capitalize() ??
+                                                                  '',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'Arial',
+                                                                fontSize:
+                                                                    13.2.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .grey1,
+                                                              ),
+                                                            ),
+                                                            TextView(
+                                                              text:
+                                                                  o.drugName ??
+                                                                  '',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'GoogleSans',
+                                                                fontSize:
+                                                                    15.2.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .deep,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Spacer(),
+                                                        Row(
+                                                          children: [
+                                                            TextView(
+                                                              text:
+                                                                  '${o.time} ${model.checkTimePeriod(o.time)}',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'GoogleSans',
+                                                                fontSize:
+                                                                    18.2.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10.w,
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets.all(
+                                                                    1.2.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                color: model
+                                                                    .checkMedsStatusColor(
+                                                                      o.status,
+                                                                    ),
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                              child: model
+                                                                  .checkMedsStatusWidget(
+                                                                    o.status,
+                                                                  ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
                                                 ),
-                                            ],
-                                          );
-                                        }),
-                                      ],
+                                                SizedBox(height: 10.30.h),
+                                                if (!isLast)
+                                                  Divider(
+                                                    color: AppColors.infoGrey,
+                                                    thickness: .14,
+                                                  ),
+                                              ],
+                                            );
+                                          }),
+                                        ],
+                                      ),
                                     ),
-                                  ),
 
-                                SizedBox(height: 30.h),
-                              ],
+                                  SizedBox(height: 30.h),
+                                ],
+                              ),
                             ),
                           ),
                         ),
