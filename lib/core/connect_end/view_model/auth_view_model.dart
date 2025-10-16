@@ -15,6 +15,8 @@ import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/medication_image.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/payment.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/daily_dose_time.dart'
+    as getId;
 import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
@@ -191,6 +193,7 @@ class AuthViewModel extends BaseViewModel {
   String onTapPaymentMeth = '';
   bool isLoadNoMore = false;
   bool onTapToAddAnotherReminder = false;
+  bool onTapViewSingleReminder = false;
 
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
   DateTime? dateTimeObject;
@@ -1659,6 +1662,127 @@ class AuthViewModel extends BaseViewModel {
                   onPressed: () {
                     dosageAfterValue = callback;
                     locator<AuthViewModel>().notifyListeners();
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: AppColors.grey1,
+                    size: 24.sp,
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  viewPreviewWidgetContainer({
+    required BuildContext context,
+    required int callback,
+    required Color color,
+    required List<int> listOfTimes,
+    required List<getId.DailyDoseTime> dosageMap,
+  }) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 10.w),
+      padding: EdgeInsets.symmetric(
+        vertical: dosageAfterValue == callback ? 10.w : 6.w,
+        horizontal: 10.w,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color, width: 2),
+        color: AppColors.white,
+      ),
+      child: dosageAfterValue == callback
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 🔹 Day header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextView(
+                      text: "Day ${callback + 1}",
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 15.20.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.black,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        dosageAfterValue = null;
+                        notifyListeners();
+                      },
+                      icon: Icon(
+                        Icons.keyboard_arrow_up,
+                        color: AppColors.grey1,
+                        size: 24.sp,
+                      ),
+                    ),
+                  ],
+                ),
+                // 🔹 Render each day
+                ...dosageMap.asMap().entries.map((entry) {
+                  final i = entry.key;
+                  final v = entry.value;
+                  final isLast =  i==(dosageMap as List).length - 1;
+
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 14.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: 4.h),
+                            TextView(
+                              text: "Dose ${i + 1}",
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.20.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.infoGrey,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            TextView(
+                              text: "${v.time} ${checkTimePeriod(v.time)}",
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16.20.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(height: 6.10.h),
+                            if(!isLast)
+                            Divider(color: AppColors.fineGrey, thickness: .4),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Day ${callback + 1}',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.20.sp,
+                    color: AppColors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    dosageAfterValue = callback;
+                    notifyListeners();
                   },
                   icon: Icon(
                     Icons.keyboard_arrow_down,
@@ -5166,7 +5290,6 @@ class AuthViewModel extends BaseViewModel {
                     : () {
                         indexOfMedicationClassList += 1;
                         model!.notifyListeners();
-                        print(indexOfMedicationClassList);
                       },
                 icon: Icon(
                   Icons.arrow_forward,
@@ -5442,7 +5565,6 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 10.h),
                 SizedBox(height: isShowMoreSecondModalFlow ? 10.w : 0.h),
-
                 isShowMoreSecondModalFlow
                     ? Column(
                         children: [
@@ -8181,19 +8303,19 @@ class AuthViewModel extends BaseViewModel {
   }
 
   String getNumberOfTimes(int times) {
-  switch (times) {
-    case 1:
-      return 'Once daily';
-    case 2:
-      return 'Twice daily';
-    case 3:
-      return 'Thrice daily';
-    default:
-      if (times > 2 && times <= 12) {
-        return '$times times daily';
-      } else {
-        return 'Invalid number of times';
-      }
+    switch (times) {
+      case 1:
+        return 'Once daily';
+      case 2:
+        return 'Twice daily';
+      case 3:
+        return 'Thrice daily';
+      default:
+        if (times > 3 && times <= 12) {
+          return '$times times daily';
+        } else {
+          return 'Invalid number of times';
+        }
+    }
   }
-}
 }
