@@ -294,7 +294,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                           height: MediaQuery.of(context).size.height * .62,
                           child: RefreshIndicator(
                             onRefresh: () async {
-                               model.getTodaysReminder(
+                              model.getTodaysReminder(
                                 context,
                                 period: model.timePeriod,
                                 date: DateFormat(

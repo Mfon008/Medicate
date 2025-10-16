@@ -91,8 +91,12 @@ class AuthContractsImpl {
     String? date,
   }) async => await _api.getTodaysReminder(period: period, date: date);
   Future<UpdateDosesStatusModel> updateDosesStatusModel({
-     String? reminderId,
+    String? reminderId,
     String? doseId,
     String? status,
-  }) async => await _api.updateDoseStatus(reminerId: reminderId,doseId: doseId,status:status);
+  }) async => await _api.updateDoseStatus(
+    reminerId: reminderId,
+    doseId: doseId,
+    status: status,
+  );
 }

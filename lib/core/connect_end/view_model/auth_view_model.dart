@@ -1727,7 +1727,7 @@ class AuthViewModel extends BaseViewModel {
                 ...dosageMap.asMap().entries.map((entry) {
                   final i = entry.key;
                   final v = entry.value;
-                  final isLast =  i==(dosageMap as List).length - 1;
+                  final isLast = i == (dosageMap as List).length - 1;
 
                   return Padding(
                     padding: EdgeInsets.only(bottom: 14.h),
@@ -1757,8 +1757,8 @@ class AuthViewModel extends BaseViewModel {
                               ),
                             ),
                             SizedBox(height: 6.10.h),
-                            if(!isLast)
-                            Divider(color: AppColors.fineGrey, thickness: .4),
+                            if (!isLast)
+                              Divider(color: AppColors.fineGrey, thickness: .4),
                           ],
                         ),
                       ],

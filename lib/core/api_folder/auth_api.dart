@@ -366,13 +366,12 @@ class AuthApi {
     String? reminerId,
     String? doseId,
     String? status,
-
   }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.reminder}/$reminerId/doses/$doseId/status',
         RequestMethod.patch,
-        data: {'status': status,},
+        data: {'status': status},
       );
       logger.d(response.data);
       return UpdateDosesStatusModel.fromJson(response.data);
