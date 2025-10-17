@@ -23,6 +23,7 @@ import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/support_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
+import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
@@ -184,6 +185,17 @@ class AuthRepoImpl {
       status: status,
       reminderId: reminderId,
       doseId: doseId,
+    );
+    return response;
+  }
+
+  Future<dynamic> updateReminder({
+    String? reminderId,
+    UpdateReminderEntityModel? updateReminder,
+  }) async {
+    final response = await _contract.updateReminder(
+      reminderId: reminderId,
+      updateReminder: updateReminder,
     );
     return response;
   }

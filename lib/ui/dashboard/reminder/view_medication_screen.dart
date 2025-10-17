@@ -634,7 +634,8 @@ class ViewMedicationScreen extends StatelessWidget {
                           buttonText: 'Edit Medication',
                           color: AppColors.white,
                           buttonBorderColor: AppColors.transparent,
-                          onPressed: () {},
+                          onPressed: () =>
+                              model.showUpdateMedicationDialog(context:context,data: model.getReminderByIdModel!.data),
                           fontSize: 14.sp,
                         ),
                       ],

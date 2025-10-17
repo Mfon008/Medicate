@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const primary = Color(0xFF0955B7);
+  static const bblack = Color(0xFF1F1F1F);
   static const primary1 = Color(0xFF2563EB);
   static const primaryLight = Color.fromARGB(200, 72, 130, 206);
   static const transparent = Colors.transparent;

@@ -13,6 +13,7 @@ import 'package:medicate_app/core/connect_end/model/set_pin_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_pin_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
@@ -297,20 +298,6 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> updateReminder({String? id}) async {
-    try {
-      final response = await _service.call(
-        '${UrlConfig.reminder}/$id',
-        RequestMethod.patch,
-      );
-      logger.d(response.data);
-      return response.data;
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
-
   Future<GetReminderById> getReminderById(String? id) async {
     try {
       final response = await _service.call(
@@ -375,6 +362,24 @@ class AuthApi {
       );
       logger.d(response.data);
       return UpdateDosesStatusModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateReminder({
+    String? reminderId,
+    UpdateReminderEntityModel? updateReminder,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminder}/$reminderId',
+        RequestMethod.patch,
+        data: updateReminder?.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

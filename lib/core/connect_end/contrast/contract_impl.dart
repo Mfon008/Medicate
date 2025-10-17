@@ -22,6 +22,7 @@ import '../model/sign_up_response_model/sign_up_response_model.dart'
     show SignUpResponseModel;
 import '../model/support_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
+import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
@@ -90,6 +91,7 @@ class AuthContractsImpl {
     String? period,
     String? date,
   }) async => await _api.getTodaysReminder(period: period, date: date);
+
   Future<UpdateDosesStatusModel> updateDosesStatusModel({
     String? reminderId,
     String? doseId,
@@ -99,4 +101,9 @@ class AuthContractsImpl {
     doseId: doseId,
     status: status,
   );
+  
+  Future<dynamic> updateReminder({
+    String? reminderId,
+    UpdateReminderEntityModel? updateReminder,
+  }) async => await _api.updateReminder(reminderId: reminderId,updateReminder: updateReminder);
 }
