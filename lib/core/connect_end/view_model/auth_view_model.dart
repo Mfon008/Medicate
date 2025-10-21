@@ -910,13 +910,10 @@ class AuthViewModel extends BaseViewModel {
           'date': startDateIsoWithin.substring(0, 10),
           'isoDate': startDateIsoWithin,
         });
-        if (day == i) {
-        } else {
-          startDateIsoWithin = DateTime.parse(
-            startDateIsoWithin,
-          ).add(Duration(days: i + 1)).toString();
-        }
       }
+      startDateIsoWithin = DateTime.parse(
+            startDateIsoWithin,
+          ).add(Duration(days:0 + 1)).toString();
 
       addTimePeriod.add({
         'day': day + 1, // so Day 1, Day 2, etc.
@@ -947,14 +944,6 @@ class AuthViewModel extends BaseViewModel {
       ),
     );
     await Future.delayed(Duration(seconds: 1), () {});
-    print(
-      'check list:::${
-        MedicationClass(
-          medicationName: medNameController.text,
-          drugName: drugNameController.text,
-          medicationType: medTypeController.text, 
-          medicationTypeIcon: medTypeResultImage, description: descriptionController.text, medicationFile: model.imageDrug, dosage: model.getStringFrLabel(medDosageController.text), imageData: model.uploadImageReminderResponseModel!.data, dateAndTime: model.dateTimeController.text, duration: medDurationController.text, endDate: endDateController.text, startDateIso: DateTime.parse(startDateIso), endDateIso: DateTime.parse(endDateIso), timesToTake: medDailyInTakenController.text, note: noteController.text, listOfTimes: intList, dosageMap: addTimePeriod).toJson()}',
-    );
 
     clearReminderMedsVaraibles(model);
     model.notifyListeners();
@@ -8473,8 +8462,8 @@ class AuthViewModel extends BaseViewModel {
     startDateIso = data.medication!.startDateTime.toString();
     notificationChannel.addAll(data.notificationChannels);
     getListOfNotificationChannel(data);
-    phoneReminderList.addAll(data.phoneNumbers);
-    emailReminderList.addAll(data.emails);
+    phoneReminderList.addAll(data.phoneNumbers??[]);
+    emailReminderList.addAll(data.emails??[]);
     dateTimeControllerUpdate.text = DateFormat(
       'dd MMM, yyyy',
     ).format(data.medication!.startDateTime!);
