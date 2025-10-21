@@ -20,4 +20,5 @@ class UrlConfig {
   static const String reminder = 'reminders';
   static const String today_reminder = 'reminders/daily';
   static const String upload_image_reminder = 'reminders/image';
+  static const String upload_image_reminder_update = 'reminders/medication-image';
 }

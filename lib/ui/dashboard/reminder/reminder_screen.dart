@@ -1549,7 +1549,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       ), // Adjust radius as needed
                       child: LinearProgressIndicator(
                         minHeight: 4.0, // Adjust height as needed
-                        value: 0 / 4,
+                        value: model!.getReminderStatusValue(reminder.medication!.dailyDoseTimes!),
                         color: AppColors.lightBlue, // Progress bar color
                         backgroundColor:
                             Colors.grey[300], // Background track color
@@ -1558,7 +1558,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   ),
                   SizedBox(width: 7.10.w),
                   TextView(
-                    text: '0/4',
+                    text: '${model.takenCount}/${model.totalCount}',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 12.sp,

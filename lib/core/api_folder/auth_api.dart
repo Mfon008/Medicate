@@ -264,6 +264,23 @@ class AuthApi {
     }
   }
 
+  Future<dynamic> uploadImageReminderUpdate({
+    MultipartFile? file,String? id
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.upload_image_reminder}/$id/update',
+        RequestMethod.upload,
+        formData: FormData.fromMap({'image': file}),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<UpdateUserProfileResponseModel> uploadUserProfile(
     UpdateUserProfileEntity userProfile,
   ) async {

@@ -203,7 +203,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           widget.phone ??
                                           SharedPreferencesService
                                               .instance
-                                              .usersData['phone']['phoneNumber'],
+                                              .usersData['user']['phone'],
                                       pin: SharedPreferencesService
                                           .instance
                                           .pinSet,
