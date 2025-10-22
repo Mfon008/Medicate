@@ -104,7 +104,7 @@ class ViewMedicationScreen extends StatelessWidget {
                             SizedBox(width: 56.w),
                             TextView(
                               text:
-                                  '${model.getReminderByIdModel!.data!.medication!.endDateTime!.difference(DateTime.now()).inDays + 1}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days left',
+                                  '${model.calculateDaysLeft()}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days left',
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 14.sp,
@@ -186,17 +186,15 @@ class ViewMedicationScreen extends StatelessWidget {
                                   color: AppColors.white,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Image.network(
-                                  model
-                                      .getReminderByIdModel!
-                                      .data!
-                                      .medication!
-                                      .medicationImage!
-                                      .url!,
-                                  height: 70.h,
-                                  width: 70.w,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Padding(
+                                child:
+                                    model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .medication!
+                                            .medicationImage
+                                            ==
+                                        null
+                                    ? Padding(
                                         padding: EdgeInsets.all(8.w),
                                         child: SvgPicture.asset(
                                           color: AppColors.primary,
@@ -210,8 +208,34 @@ class ViewMedicationScreen extends StatelessWidget {
                                           height: 70.h,
                                           width: 70.w,
                                         ),
+                                      )
+                                    : Image.network(
+                                        model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .medication!
+                                            .medicationImage!
+                                            .url!,
+                                        height: 70.h,
+                                        width: 70.w,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Padding(
+                                                  padding: EdgeInsets.all(8.w),
+                                                  child: SvgPicture.asset(
+                                                    color: AppColors.primary,
+                                                    model.errorRemidnderImage(
+                                                      model
+                                                          .getReminderByIdModel!
+                                                          .data!
+                                                          .medication!
+                                                          .medicationType,
+                                                    ),
+                                                    height: 70.h,
+                                                    width: 70.w,
+                                                  ),
+                                                ),
                                       ),
-                                ),
                               ),
                               SizedBox(height: 5.10.h),
                               Divider(
@@ -634,8 +658,10 @@ class ViewMedicationScreen extends StatelessWidget {
                           buttonText: 'Edit Medication',
                           color: AppColors.white,
                           buttonBorderColor: AppColors.transparent,
-                          onPressed: () =>
-                              model.showUpdateMedicationDialog(context:context,data: model.getReminderByIdModel!.data),
+                          onPressed: () => model.showUpdateMedicationDialog(
+                            context: context,
+                            data: model.getReminderByIdModel!.data,
+                          ),
                           fontSize: 14.sp,
                         ),
                       ],

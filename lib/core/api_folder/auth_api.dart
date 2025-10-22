@@ -269,8 +269,8 @@ class AuthApi {
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.upload_image_reminder}/$id/update',
-        RequestMethod.upload,
+        '${UrlConfig.upload_image_reminder_update}/$id/update',
+        RequestMethod.patchUpdate,
         formData: FormData.fromMap({'image': file}),
       );
       logger.d(response.data);

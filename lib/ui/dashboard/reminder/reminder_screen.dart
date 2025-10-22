@@ -482,7 +482,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                             ],
                                           ),
                                           SizedBox(height: 10.h),
-
                                           GestureDetector(
                                             onTap: () async {
                                               model.timePeriod = 'evening';
@@ -606,20 +605,28 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                                     .grey1,
                                                               ),
                                                             ),
-                                                            TextView(
-                                                              text:
-                                                                  o.drugName ??
-                                                                  '',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'GoogleSans',
-                                                                fontSize:
-                                                                    15.2.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: AppColors
-                                                                    .deep,
+                                                            SizedBox(
+                                                              width: 120.w,
+                                                              child: TextView(
+                                                                text:
+                                                                    o.drugName ??
+                                                                    '',
+                                                                textOverflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'GoogleSans',
+                                                                  fontSize:
+                                                                      15.2.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color:
+                                                                      AppColors
+                                                                          .deep,
+                                                                ),
                                                               ),
                                                             ),
                                                           ],
@@ -931,7 +938,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                 ],
                                               ),
                                               SizedBox(height: 10.h),
-
                                               GestureDetector(
                                                 onTap: () async {
                                                   model.timePeriod = 'evening';
@@ -1049,20 +1055,28 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                                     .grey1,
                                                               ),
                                                             ),
-                                                            TextView(
-                                                              text:
-                                                                  o.drugName ??
-                                                                  '',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'GoogleSans',
-                                                                fontSize:
-                                                                    15.2.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: AppColors
-                                                                    .deep,
+                                                            SizedBox(
+                                                              width: 120.w,
+                                                              child: TextView(
+                                                                text:
+                                                                    o.drugName ??
+                                                                    '',
+                                                                textOverflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                maxLines: 1,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'GoogleSans',
+                                                                  fontSize:
+                                                                      15.2.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color:
+                                                                      AppColors
+                                                                          .deep,
+                                                                ),
                                                               ),
                                                             ),
                                                           ],
@@ -1485,24 +1499,27 @@ class _ReminderScreenState extends State<ReminderScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 40.w),
-            width: MediaQuery.of(context).size.width / 2.5,
-            height: 150.h,
-            decoration: BoxDecoration(
-              color: AppColors.dashboard,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Image.network(
-              reminder?.medication?.medicationImage?.url ?? '',
-              height: 76.h,
-              width: 76.w,
-              errorBuilder: (context, error, stackTrace) => Padding(
-                padding: EdgeInsets.all(18.w),
-                child: SvgPicture.asset(
-                  color: AppColors.primary,
-                  model!.errorRemidnderImage(
-                    reminder!.medication!.medicationType,
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 36.0.w, horizontal: 36.40.w),
+              width: MediaQuery.of(context).size.width / 2.5,
+              height: 150.h,
+              decoration: BoxDecoration(
+                color: AppColors.dashboard,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Image.network(
+                reminder?.medication?.medicationImage?.url ?? '',
+                height: 76.h,
+                width: 76.w,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Padding(
+                  padding: EdgeInsets.all(18.w),
+                  child: SvgPicture.asset(
+                    color: AppColors.primary,
+                    model!.errorRemidnderImage(
+                      reminder!.medication!.medicationType,
+                    ),
                   ),
                 ),
               ),
@@ -1549,7 +1566,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       ), // Adjust radius as needed
                       child: LinearProgressIndicator(
                         minHeight: 4.0, // Adjust height as needed
-                        value: model!.getReminderStatusValue(reminder.medication!.dailyDoseTimes!),
+                        value: model!.getReminderStatusValue(
+                          reminder.medication!.dailyDoseTimes!,
+                        ),
                         color: AppColors.lightBlue, // Progress bar color
                         backgroundColor:
                             Colors.grey[300], // Background track color

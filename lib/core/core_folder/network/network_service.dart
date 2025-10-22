@@ -153,6 +153,28 @@ class NetworkService {
             },
           );
           break;
+        case RequestMethod.patchUpdate:
+          response = await dio!.patch(
+            path,
+            data: formData,
+            queryParameters: params,
+            options:
+                options ??
+                Options(
+                  headers: {
+                    "Authorization": "Bearer ${session.authToken}",
+                    "Content-Disposition": "form-data",
+                    "Content-Type": "multipart/form-data",
+                    'Accept': 'application/json',
+                  },
+                ),
+            onSendProgress: (sent, total) {
+              // eventBus
+              //     .fire(
+              //     FileUploadProgressEvent(FileUploadProgress(sent, total, tag: classTag)));
+            },
+          );
+          break;
       }
       return response;
     } catch (error, stackTrace) {
@@ -193,4 +215,5 @@ enum RequestMethod {
   upload,
   getParams,
   patch,
+  patchUpdate,
 }

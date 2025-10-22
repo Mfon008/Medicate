@@ -69,6 +69,8 @@ import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/repo_impl.dart';
+import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart';
+import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/payment.dart'as update;
 
 String startDateIso = '';
 
@@ -176,6 +178,7 @@ class AuthViewModel extends BaseViewModel {
   List<List<TextEditingController>> doseControllersUpdate = [];
   List<List<TextEditingController>> doseAfterControllers = [];
   bool isChecked = false;
+  bool isCheckedUp = false;
   int? totalDuration;
   bool isPhoneValid = false;
   bool _initializedUpdate = false;
@@ -223,6 +226,7 @@ class AuthViewModel extends BaseViewModel {
   bool isLoadNoMore = false;
   bool onTapToAddAnotherReminder = false;
   bool onTapViewSingleReminder = false;
+  int v = 1;
 
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
   DateTime? dateTimeObject;
@@ -285,6 +289,21 @@ class AuthViewModel extends BaseViewModel {
   var totalCount;
   var takenCount;
 
+  calculateDaysLeft() {
+    if (getReminderByIdModel!.data!.medication!.endDateTime!
+                .difference(DateTime.now())
+                .inDays +
+            1 <
+        1) {
+      return 0;
+    } else {
+      return getReminderByIdModel!.data!.medication!.endDateTime!
+              .difference(DateTime.now())
+              .inDays +
+          1;
+    }
+  }
+
   String formatPhoneNumber(String phoneNumber) {
     if (phoneNumber.startsWith('+234')) {
       return phoneNumber.replaceFirst('+234', '0');
@@ -330,7 +349,6 @@ class AuthViewModel extends BaseViewModel {
   }
 
   void initUpdateControllers() async {
-    print('oga');
     medicationNameUpdateControllers = medicationClassList
         .map((e) => TextEditingController(text: e.medicationName))
         .toList();
@@ -377,7 +395,7 @@ class AuthViewModel extends BaseViewModel {
         .map((e) => TextEditingController(text: e.description))
         .toList();
     medicationFileUpdate = medicationClassList
-        .map((e) => e.medicationFile!)
+        .map((e) => e.medicationFile ?? File(''))
         .toList();
     for (var med in medicationClassList) {
       final dosageMap = med.dosageMap ?? [];
@@ -912,8 +930,8 @@ class AuthViewModel extends BaseViewModel {
         });
       }
       startDateIsoWithin = DateTime.parse(
-            startDateIsoWithin,
-          ).add(Duration(days:0 + 1)).toString();
+        startDateIsoWithin,
+      ).add(Duration(days: 0 + 1)).toString();
 
       addTimePeriod.add({
         'day': day + 1, // so Day 1, Day 2, etc.
@@ -931,7 +949,7 @@ class AuthViewModel extends BaseViewModel {
         description: descriptionController.text,
         medicationFile: model.imageDrug,
         dosage: model.getStringFrLabel(medDosageController.text),
-        imageData: model.uploadImageReminderResponseModel!.data,
+        imageData: model.uploadImageReminderResponseModel?.data ?? Data(),
         dateAndTime: model.dateTimeController.text,
         duration: medDurationController.text,
         endDate: endDateController.text,
@@ -1431,7 +1449,7 @@ class AuthViewModel extends BaseViewModel {
                               }
                             }
                             isChecked = value ?? false;
-                            notifyListeners();
+                            locator<AuthViewModel>().notifyListeners();
                           },
                           activeColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
@@ -1474,218 +1492,14 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
-  dosageAddedWidgetContainer({
-    required BuildContext context,
-    required int callback,
-    required List<int> listOfTimes,
-  }) {
-    bool isTablet(BuildContext context) =>
-        MediaQuery.of(context).size.shortestSide >= 600;
-    // ✅ Only initialize once
-    if (doseControllers.length <= callback ||
-        doseControllers[callback].isEmpty) {
-      initDayDoseControllers(dayIndex: callback, count: listOfTimes.length);
-    }
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(bottom: 10.w),
-      padding: EdgeInsets.symmetric(
-        vertical: dosageValue == callback ? 12.w : 8.w,
-        horizontal: 14.w,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.grey, width: 2),
-      ),
-      child: dosageValue == callback
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextView(
-                      text: 'Day ${callback + 1}',
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 15.20.sp,
-                        color: AppColors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        dosageValue = null;
-                        notifyListeners();
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_up,
-                        color: AppColors.grey1,
-                        size: 24.sp,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                ...listOfTimes.asMap().entries.map((entry) {
-                  final i = entry.key; // index
-                  final e = entry.value;
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 10.w),
-                    child: TextFormWidget(
-                      hint: 'Dose ${e + 1}',
-                      borderColor: AppColors.transparent,
-                      borderTopLeft: 10.r,
-                      borderTopRight: 10.r,
-                      borderBottomLeft: 10.r,
-                      borderBottomRight: 10.r,
-                      label: periodLabels.isEmpty
-                          ? ''
-                          : periodLabels[callback][i],
-                      hintSize: 14.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
-                      fillColor: AppColors.grey,
-                      isFilled: true,
-                      controller: doseControllers[callback][i],
-                      suffixWidget: Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: GestureDetector(
-                          onTap: () async {
-                            // final result = await selectDosageTime(
-                            //   context: context,
-                            // );
-
-                            // if (result != null) {
-                            //   // 👉 Update the controller for this dose
-                            //   doseControllers[callback][i].text =
-                            //       result["time"]!;
-
-                            //   // 👉 Update period label for this dose
-
-                            //   periodLabels[callback][i] = result["period"]!;
-                            //   notifyListeners();
-                            // }
-                          },
-                          child: TextView(
-                            text: 'Edit',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              fontSize: 13.60.sp,
-                              color: AppColors.fineGrey,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                              decorationColor: AppColors.fineGrey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      validator: AppValidator.validateString(),
-                    ),
-                  );
-                }),
-
-                SizedBox(height: callback == 0 ? 12.0.h : 0.h),
-                if (callback == 0)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextView(
-                        text: 'Apply to all days',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.sp,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Transform.scale(
-                        scale: isTablet(context) ? 1.5 : 1.1,
-                        child: Checkbox(
-                          value: isChecked,
-                          onChanged: (value) {
-                            // if (value != null && value) {
-                            //   // ✅ Copy Day 1 (callback = 0) values to all other days
-                            //   for (
-                            //     int day = 1;
-                            //     day < doseControllers.length;
-                            //     day++
-                            //   ) {
-                            //     for (
-                            //       int i = 0;
-                            //       i < doseControllers[0].length;
-                            //       i++
-                            //     ) {
-                            //       // Copy text
-                            //       doseControllers[day][i].text =
-                            //           doseControllers[0][i].text;
-                            //       // Copy period
-                            //       periodLabels[day][i] = periodLabels[0][i];
-                            //     }
-                            //   }
-                            // } else {
-                            //   for (
-                            //     int day = 1;
-                            //     day < doseControllers.length;
-                            //     day++
-                            //   ) {
-                            //     for (
-                            //       int i = 0;
-                            //       i < doseControllers[day].length;
-                            //       i++
-                            //     ) {
-                            //       doseControllers[day][i]
-                            //           .clear(); // clear controller text
-                            //       periodLabels[day][i] = ''; // reset label
-                            //     }
-                            //   }
-                            // }
-                            // isChecked = value ?? false;
-                            notifyListeners();
-                          },
-                          activeColor: AppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          visualDensity: VisualDensity
-                              .compact, // 👈 reduces internal padding
-                        ),
-                      ),
-                    ],
-                  ),
-                SizedBox(height: 12.0.h),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextView(
-                  text: 'Day ${callback + 1}',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 15.20.sp,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    dosageValue = callback;
-                    notifyListeners();
-                  },
-                  icon: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.grey1,
-                    size: 24.sp,
-                  ),
-                ),
-              ],
-            ),
-    );
+  String implementTimeDurationWithDate({date, int? callbackIndex}) {
+    String? returnDate;
+    final format = DateFormat("d MMM, yyyy hh:mm a");
+    final dateTime = format.parse(date);
+    returnDate = DateTime.parse(
+      dateTime.toString(),
+    ).add(Duration(days: 0 + callbackIndex!)).toString();
+    return returnDate;
   }
 
   dosageAfterWidgetContainer({
@@ -1694,6 +1508,7 @@ class AuthViewModel extends BaseViewModel {
     required Color color,
     required List<int> listOfTimes,
     required List<Map<String, dynamic>> dosageMap,
+    required String date,
   }) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
@@ -1706,9 +1521,20 @@ class AuthViewModel extends BaseViewModel {
       }
     }
 
-    final doses = List<Map<String, dynamic>>.from(
-      dosageMap[callback]['doses'] ?? [],
-    );
+    // final doses = List<Map<String, dynamic>>.from(
+    //   dosageMap[callback]['doses'] ?? [],
+    // );
+
+    List<Map<String, dynamic>> doses = [];
+
+    if (callback >= 0 && callback < dosageMap.length) {
+      final item = dosageMap[callback];
+      doses = List<Map<String, dynamic>>.from(item['doses'] ?? []);
+    } else {
+      logger.e(
+        '⚠️ Invalid callback index: $callback for dosageMap length: ${dosageMap.length}',
+      );
+    }
 
     // Ensure enough controllers exist
     if (doseAfterControllers[callback].length < doses.length) {
@@ -1848,6 +1674,16 @@ class AuthViewModel extends BaseViewModel {
                                     result["time"]!;
                                 dosageMap[callback]['doses'][i]['period'] =
                                     result["period"]!; // optional
+                                dosageMap[callback]['doses'][i]['date'] =
+                                    implementTimeDurationWithDate(
+                                      date: date,
+                                      callbackIndex: callback,
+                                    ).substring(0, 10); // optional
+                                dosageMap[callback]['doses'][i]['isoDate'] =
+                                    implementTimeDurationWithDate(
+                                      date: date,
+                                      callbackIndex: callback,
+                                    ); // optional
                               }
                               notifyListeners();
                             }
@@ -1889,7 +1725,7 @@ class AuthViewModel extends BaseViewModel {
                       Transform.scale(
                         scale: isTablet(context) ? 1.5 : 1.1,
                         child: Checkbox(
-                          value: isChecked,
+                          value: isCheckedUp,
                           onChanged: (value) {
                             if (value != null && value) {
                               for (
@@ -1906,6 +1742,27 @@ class AuthViewModel extends BaseViewModel {
                                       doseAfterControllers[0][i].text;
                                   periodAfterLabels[day][i] =
                                       periodAfterLabels[0][i];
+
+                                  // ✅ Also update dosageMap (important for data persistence)
+                                  if (day < dosageMap.length &&
+                                      i <
+                                          (dosageMap[day]['doses']?.length ??
+                                              0)) {
+                                    dosageMap[day]['doses'][i]['time'] =
+                                        doseAfterControllers[0][i].text;
+                                    dosageMap[day]['doses'][i]['period'] =
+                                        periodAfterLabels[0][i];
+                                    dosageMap[day]['doses'][i]['date'] =
+                                        implementTimeDurationWithDate(
+                                          date: date,
+                                          callbackIndex: day,
+                                        ).substring(0, 10);
+                                    dosageMap[day]['doses'][i]['isoDate'] =
+                                        implementTimeDurationWithDate(
+                                          date: date,
+                                          callbackIndex: day,
+                                        );
+                                  }
                                 }
                               }
                             } else {
@@ -1921,10 +1778,19 @@ class AuthViewModel extends BaseViewModel {
                                 ) {
                                   doseAfterControllers[day][i].clear();
                                   periodAfterLabels[day][i] = '';
+                                  if (day < dosageMap.length &&
+                                      i <
+                                          (dosageMap[day]['doses']?.length ??
+                                              0)) {
+                                    dosageMap[day]['doses'][i]['time'] = '';
+                                    dosageMap[day]['doses'][i]['period'] = '';
+                                    dosageMap[day]['doses'][i]['date'] = '';
+                                    dosageMap[day]['doses'][i]['isoDate'] = '';
+                                  }
                                 }
                               }
                             }
-                            isChecked = value ?? false;
+                            isCheckedUp = value ?? false;
                             notifyListeners();
                           },
                           activeColor: AppColors.primary,
@@ -2945,7 +2811,7 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
-  void pickDrugImageUpdate(BuildContext context) {
+  void pickDrugImageUpdate({BuildContext? context, String? id}) {
     try {
       _pickImage.pickImage(
         context: context,
@@ -2954,6 +2820,7 @@ class AuthViewModel extends BaseViewModel {
           drugFilename = imageDrug!.path.split("/").last;
           uploadImageReminderUpdate(
             context: context,
+            id: id,
             file: MultipartFile.fromBytes(
               formartFileImage(imageDrug).readAsBytesSync(),
               filename: imageDrug!.path.split("/").last,
@@ -4826,6 +4693,15 @@ class AuthViewModel extends BaseViewModel {
                                                                       75.80.h,
                                                                   width:
                                                                       70.80.w,
+                                                                  errorBuilder:
+                                                                      (
+                                                                        context,
+                                                                        error,
+                                                                        stackTrace,
+                                                                      ) => SvgPicture.asset(
+                                                                        AppImage
+                                                                            .image_icon,
+                                                                      ),
                                                                 )
                                                               : SvgPicture.asset(
                                                                   AppImage
@@ -5093,9 +4969,6 @@ class AuthViewModel extends BaseViewModel {
                                                           .endDate =
                                                       '';
                                                 }
-                                                print(
-                                                  'print duration:::$listOfTimesUpdate',
-                                                );
 
                                                 // --- Maintain cursor position and focus after rebuild ---
                                                 WidgetsBinding.instance
@@ -5387,7 +5260,7 @@ class AuthViewModel extends BaseViewModel {
                                                       .asMap()
                                                       .entries
                                                       .map((list) {
-                                                        int v = list.key;
+                                                        v = list.key;
                                                         return model!.dosageAfterWidgetContainer(
                                                           context: context,
                                                           callback: v,
@@ -5398,6 +5271,9 @@ class AuthViewModel extends BaseViewModel {
                                                           listOfTimes:
                                                               medicationClassList[index]
                                                                   .listOfTimes!,
+                                                          date:
+                                                              startDateUpdateControllers[index]
+                                                                  .text,
                                                         );
                                                       }),
                                                   SizedBox(height: 14.0.h),
@@ -5428,7 +5304,6 @@ class AuthViewModel extends BaseViewModel {
                                                     fillColor: AppColors.grey,
                                                     isFilled:
                                                         true, // Minimum number of lines visible
-                                                    readOnly: true,
                                                     maxline:
                                                         3, // Maximum number of lines visible before scrolling
                                                     keyboardType:
@@ -5436,9 +5311,39 @@ class AuthViewModel extends BaseViewModel {
                                                     validator:
                                                         AppValidator.validateString(),
                                                     controller:
-                                                        TextEditingController(
-                                                          text: e.note,
-                                                        ),
+                                                        noteUpdateController[index],
+                                                    focusNode:
+                                                        noteUpdateFocusNodes[index],
+                                                    onChange: (val) {
+                                                      medicationClassList[index]
+                                                              .note =
+                                                          val;
+                                                      WidgetsBinding.instance.addPostFrameCallback((
+                                                        _,
+                                                      ) {
+                                                        final controller =
+                                                            noteUpdateController[index];
+                                                        final focusNode =
+                                                            noteUpdateFocusNodes[index];
+                                                        // Keep cursor at end
+                                                        controller.selection =
+                                                            TextSelection.fromPosition(
+                                                              TextPosition(
+                                                                offset:
+                                                                    controller
+                                                                        .text
+                                                                        .length,
+                                                              ),
+                                                            );
+
+                                                        // Re-request focus
+                                                        focusNode
+                                                            .requestFocus();
+
+                                                        // ;
+                                                      });
+                                                      model!.notifyListeners();
+                                                    },
                                                   ),
                                                 ],
                                               ),
@@ -5725,6 +5630,15 @@ class AuthViewModel extends BaseViewModel {
                                                             model.imageDrug!,
                                                             height: 75.80.h,
                                                             width: 70.80.w,
+                                                            errorBuilder:
+                                                                (
+                                                                  context,
+                                                                  error,
+                                                                  stackTrace,
+                                                                ) => SvgPicture.asset(
+                                                                  AppImage
+                                                                      .image_icon,
+                                                                ),
                                                           )
                                                         : SvgPicture.asset(
                                                             AppImage.image_icon,
@@ -5738,7 +5652,8 @@ class AuthViewModel extends BaseViewModel {
                                                             onTap: () {
                                                               model.imageDrug =
                                                                   null;
-                                                              notifyListeners();
+                                                              model
+                                                                  .notifyListeners();
                                                             },
                                                             child:
                                                                 SvgPicture.asset(
@@ -5952,12 +5867,14 @@ class AuthViewModel extends BaseViewModel {
                                               dateTimeObject = inputFormat
                                                   .parse(model.pickedDate!);
 
-                                              endDateController
-                                                  .text = dateTimeObject!
-                                                  .add(
-                                                    Duration(days: _duration!),
-                                                  )
-                                                  .toString();
+                                              endDateController.text =
+                                                  dateTimeObject!
+                                                      .add(
+                                                        Duration(
+                                                          days: _duration! - 1,
+                                                        ),
+                                                      )
+                                                      .toString();
                                             }
                                           } else {
                                             endDateController.clear();
@@ -6749,7 +6666,7 @@ class AuthViewModel extends BaseViewModel {
                     ? () {}
                     : () {
                         indexOfMedicationClassList -= 1;
-                        notifyListeners();
+                        model!.notifyListeners();
                       },
                 icon: Icon(
                   Icons.arrow_back,
@@ -6808,7 +6725,7 @@ class AuthViewModel extends BaseViewModel {
                   onPressed: () {
                     linIndex--;
                     indexOfMedicationClassList = 0;
-                    model!.notifyListeners();
+                    locator<AuthViewModel>().notifyListeners();
                   },
                 ),
               ),
@@ -8076,9 +7993,11 @@ class AuthViewModel extends BaseViewModel {
                                   )
                                   .toList(),
                               note: m.note,
-                              medicationImage: MedicationImage.fromJson(
-                                m.imageData!.toJson(),
-                              ),
+                              medicationImage: m.imageData != null
+                                  ? null
+                                  : MedicationImage.fromJson(
+                                      m.imageData!.toJson(),
+                                    ),
                             );
                           }).toList(),
                           timeZone: "Africa/Lagos",
@@ -8088,7 +8007,6 @@ class AuthViewModel extends BaseViewModel {
                       );
                     }
                     model!.notifyListeners();
-                    print('medicationClassList$medicationClassList');
                   },
                 ),
               ),
@@ -8330,9 +8248,11 @@ class AuthViewModel extends BaseViewModel {
                                           )
                                           .toList(),
                                       note: m.note,
-                                      medicationImage: MedicationImage.fromJson(
-                                        m.imageData!.toJson(),
-                                      ),
+                                      medicationImage: m.imageData != null
+                                          ? null
+                                          : MedicationImage.fromJson(
+                                              m.imageData!.toJson(),
+                                            ),
                                     );
                                   }).toList(),
                                   timeZone: "Africa/Lagos",
@@ -8379,12 +8299,18 @@ class AuthViewModel extends BaseViewModel {
           durationInDays: int.parse(medDurationControllerUpdate.text),
           timesPerDay: int.parse(medDailyInTakenControllerUpdate.text),
           dailyDoseTimes: dailyDose,
+          dosage: _dosageLabel,
+          medicationImage: null,
+          emails: emailReminderList,
+          phoneNumbers: phoneReminderList,
+          notificationChannels: notificationChannel,
         ),
       );
     } else if (linIndexUpdate == 3) {
       return thirdModalFlowUpdate(
         model: model,
         context: context,
+        data:data,
         setModalState: setModalState,
         scrollController: scrollController,
       );
@@ -8458,12 +8384,12 @@ class AuthViewModel extends BaseViewModel {
     medTypeResultImageUpdate = data.medication!.medicationType!;
     noteControllerUpdate.text = data.medication!.note!;
     endDateControllerUpdate.text = data.medication!.endDateTime.toString();
-    imageReminderUpdate = data.medication!.medicationImage!.url;
+    imageReminderUpdate = data.medication!.medicationImage?.url ?? "";
     startDateIso = data.medication!.startDateTime.toString();
     notificationChannel.addAll(data.notificationChannels);
     getListOfNotificationChannel(data);
-    phoneReminderList.addAll(data.phoneNumbers??[]);
-    emailReminderList.addAll(data.emails??[]);
+    phoneReminderList.addAll(data.phoneNumbers ?? []);
+    emailReminderList.addAll(data.emails ?? []);
     dateTimeControllerUpdate.text = DateFormat(
       'dd MMM, yyyy',
     ).format(data.medication!.startDateTime!);
@@ -8765,8 +8691,10 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                       SizedBox(width: 18.30.w),
                                       GestureDetector(
-                                        onTap: () =>
-                                            model.pickDrugImageUpdate(context),
+                                        onTap: () => model.pickDrugImageUpdate(
+                                          context: context,
+                                          id: data!.medication!.id,
+                                        ),
                                         child: SvgPicture.asset(
                                           AppImage.upload,
                                           height: 17.0.h,
@@ -8776,8 +8704,10 @@ class AuthViewModel extends BaseViewModel {
                                     ],
                                   )
                                 : GestureDetector(
-                                    onTap: () =>
-                                        model.pickDrugImageUpdate(context),
+                                    onTap: () => model.pickDrugImageUpdate(
+                                      context: context,
+                                      id: data!.medication!.id,
+                                    ),
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: 22.w,
@@ -9278,20 +9208,32 @@ class AuthViewModel extends BaseViewModel {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: Image.network(
-                    imageReminderUpdate!,
-                    errorBuilder: (context, error, stackTrace) => Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: SvgPicture.asset(
-                        color: AppColors.primary,
-                        model!.errorRemidnderImage(
-                          medTypeControllerUpdate.text,
+                  child: imageReminderUpdate == ''
+                      ? Padding(
+                          padding: EdgeInsets.all(8.w),
+                          child: SvgPicture.asset(
+                            color: AppColors.primary,
+                            model!.errorRemidnderImage(
+                              medTypeControllerUpdate.text,
+                            ),
+                            height: 70.h,
+                            width: 70.w,
+                          ),
+                        )
+                      : Image.network(
+                          imageReminderUpdate!,
+                          errorBuilder: (context, error, stackTrace) => Padding(
+                            padding: EdgeInsets.all(8.w),
+                            child: SvgPicture.asset(
+                              color: AppColors.primary,
+                              model!.errorRemidnderImage(
+                                medTypeControllerUpdate.text,
+                              ),
+                              height: 70.h,
+                              width: 70.w,
+                            ),
+                          ),
                         ),
-                        height: 70.h,
-                        width: 70.w,
-                      ),
-                    ),
-                  ),
                 ),
                 SizedBox(height: 10.h),
                 Divider(
@@ -9612,8 +9554,7 @@ class AuthViewModel extends BaseViewModel {
     AuthViewModel? model,
     StateSetter? setModalState,
     ScrollController? scrollController,
-    BuildContext? context,
-    UpdateReminderEntityModel? updateReminderEntityModel,
+    BuildContext? context, getReminderId.Data? data,
   }) => Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(22.r),
@@ -10823,41 +10764,28 @@ class AuthViewModel extends BaseViewModel {
                     if (phoneReminderList.isNotEmpty) {
                       linIndexUpdate++;
                     } else {
-                      createReminder(
+                      updateReminder(
                         context,
-                        createReminderEntityModel: CreateReminderEntityModel(
-                          medications: medicationClassList.map((m) {
-                            return Medication(
-                              medicationName: m.medicationName,
-                              drugName: m.drugName,
-                              dosage: m.dosage,
-                              medicationType: m.medicationType!.toUpperCase(),
-                              startDateTime: m.startDateIso,
-                              endDateTime: m.endDateIso,
-                              durationInDays: int.parse(m.duration!),
-                              timesPerDay: int.parse(m.timesToTake!),
-                              dailyDoseTimes: (m.dosageMap as List)
-                                  .map(
-                                    (dayData) => (dayData['doses'] as List)
-                                        .map(
-                                          (dose) => DailyDoseTime.fromJson(
-                                            dose as Map<String, dynamic>,
-                                          ),
-                                        )
-                                        .toList(),
-                                  )
-                                  .toList(),
-                              note: m.note,
-                              medicationImage: MedicationImage.fromJson(
-                                m.imageData!.toJson(),
-                              ),
-                            );
-                          }).toList(),
-                          timeZone: "Africa/Lagos",
-                          notificationChannels: notificationChannel,
+                        reminderId: data!.id!,
+                        updateReminder: UpdateReminderEntityModel(
+                          startDateTime: DateFormat(
+                            'dd MMM, yyyy',
+                          ).parse(dateTimeControllerUpdate.text),
+                          endDateTime: DateTime.parse(
+                            endDateControllerUpdate.text,
+                          ),
+                          durationInDays: int.parse(
+                            medDurationControllerUpdate.text,
+                          ),
+                          timesPerDay: int.parse(
+                            medDailyInTakenControllerUpdate.text,
+                          ),
+                          dailyDoseTimes: dailyDose,
+                          dosage: _dosageLabel,
+                          medicationImage: null,
                           emails: emailReminderList,
                           phoneNumbers: phoneReminderList,
-                          payment: Payment(amount: costTotal, currency: "NGN"),
+                          notificationChannels: notificationChannel,
                         ),
                       );
                     }
@@ -10877,6 +10805,7 @@ class AuthViewModel extends BaseViewModel {
     AuthViewModel? model,
     BuildContext? context,
     StateSetter? setModalState,
+    getReminderId.Data? data,
     ScrollController? scrollController,
   }) => Container(
     decoration: BoxDecoration(
@@ -11071,55 +11000,32 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth != ''
                       ? () {
-                          createReminder(
-                            context,
-                            createReminderEntityModel:
-                                CreateReminderEntityModel(
-                                  medications: medicationClassList.map((m) {
-                                    return Medication(
-                                      medicationName: m.medicationName,
-                                      drugName: m.drugName,
-                                      dosage: m.dosage,
-                                      medicationType: m.medicationType!
-                                          .toUpperCase(),
-                                      startDateTime: m.startDateIso,
-                                      endDateTime: m.endDateIso,
-                                      durationInDays: int.parse(m.duration!),
-                                      timesPerDay: int.parse(m.timesToTake!),
-                                      dailyDoseTimes: (m.dosageMap as List)
-                                          .map(
-                                            (
-                                              dayData,
-                                            ) => (dayData['doses'] as List)
-                                                .map(
-                                                  (
-                                                    dose,
-                                                  ) => DailyDoseTime.fromJson(
-                                                    dose
-                                                        as Map<String, dynamic>,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          )
-                                          .toList(),
-                                      note: m.note,
-                                      medicationImage: MedicationImage.fromJson(
-                                        m.imageData!.toJson(),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  timeZone: "Africa/Lagos",
-                                  notificationChannels: notificationChannel,
-                                  emails: emailReminderList,
-                                  phoneNumbers: phoneReminderList,
-                                  payment: Payment(
-                                    amount: costTotal,
-                                    currency: "NGN",
-                                  ),
-                                ),
-                          );
+                        updateReminder(
+                        context,
+                        reminderId: data!.id!,
+                        updateReminder: UpdateReminderEntityModel(
+                          startDateTime: DateFormat(
+                            'dd MMM, yyyy',
+                          ).parse(dateTimeControllerUpdate.text),
+                          endDateTime: DateTime.parse(
+                            endDateControllerUpdate.text,
+                          ),
+                          durationInDays: int.parse(
+                            medDurationControllerUpdate.text,
+                          ),
+                          timesPerDay: int.parse(
+                            medDailyInTakenControllerUpdate.text,
+                          ),
+                          dailyDoseTimes: dailyDose,
+                          dosage: _dosageLabel,
+                          medicationImage: null,
+                          emails: emailReminderList,
+                          phoneNumbers: phoneReminderList,
+                          notificationChannels: notificationChannel,
+                          payment:update.Payment(amount:costTotal,currency: 'NGN'),
+                        ),
+                      );
                           model!.notifyListeners();
-                          print('medicationClassList$medicationClassList');
                         }
                       : () {},
                 ),
