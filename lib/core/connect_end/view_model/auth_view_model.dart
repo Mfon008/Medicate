@@ -70,7 +70,8 @@ import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dar
 import '../model/verify_phone_entity_model.dart';
 import '../repo/repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart';
-import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/payment.dart'as update;
+import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/payment.dart'
+    as update;
 
 String startDateIso = '';
 
@@ -8310,7 +8311,7 @@ class AuthViewModel extends BaseViewModel {
       return thirdModalFlowUpdate(
         model: model,
         context: context,
-        data:data,
+        data: data,
         setModalState: setModalState,
         scrollController: scrollController,
       );
@@ -8318,6 +8319,7 @@ class AuthViewModel extends BaseViewModel {
       return fourthModalFlowUpdate(
         model: model,
         context: context,
+        data: data,
         setModalState: setModalState,
         scrollController: scrollController,
       );
@@ -8373,6 +8375,7 @@ class AuthViewModel extends BaseViewModel {
   }
 
   getReminderUpdate(data) {
+    logger.d(data.toJson());
     medNameControllerUpdate.text = data!.medication!.medicationName!;
     medDosageControllerUpdate.text = data.medication!.dosage!;
     medDurationControllerUpdate.text = data.medication!.durationInDays!
@@ -8398,7 +8401,6 @@ class AuthViewModel extends BaseViewModel {
       int.parse(medDurationControllerUpdate.text),
       (index) => index,
     );
-
     listOfDosage.clear();
     doseControllersUpdate.clear();
     periodLabelsUpdate.clear();
@@ -9554,7 +9556,8 @@ class AuthViewModel extends BaseViewModel {
     AuthViewModel? model,
     StateSetter? setModalState,
     ScrollController? scrollController,
-    BuildContext? context, getReminderId.Data? data,
+    BuildContext? context,
+    getReminderId.Data? data,
   }) => Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(22.r),
@@ -9636,7 +9639,7 @@ class AuthViewModel extends BaseViewModel {
               onTap: () {
                 if (selectedIndexes.contains(index)) {
                   // unselect
-                  selectedIndexes.remove(index);
+                  // selectedIndexes.remove(index);
                 } else {
                   // select
                   selectedIndexes.add(index);
@@ -10749,19 +10752,21 @@ class AuthViewModel extends BaseViewModel {
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
-                    if (phoneReminderList.contains(
-                      SharedPreferencesService
-                          .instance
-                          .usersData['user']['phone'],
-                    )) {
-                    } else {
-                      phoneReminderList.add(
-                        SharedPreferencesService
-                            .instance
-                            .usersData['user']['phone'],
-                      );
-                    }
-                    if (phoneReminderList.isNotEmpty) {
+                    // if (phoneReminderList.contains(
+                    //   SharedPreferencesService
+                    //       .instance
+                    //       .usersData['user']['phone'],
+                    // )) {
+                    // } else {
+                    //   phoneReminderList.add(
+                    //     SharedPreferencesService
+                    //         .instance
+                    //         .usersData['user']['phone'],
+                    //   );
+                    // }
+                    if (notificationChannel.contains('SMS') ||
+                        notificationChannel.contains('PHONE_CALL') ||
+                        notificationChannel.contains('WHATSAPP')) {
                       linIndexUpdate++;
                     } else {
                       updateReminder(
@@ -10784,7 +10789,6 @@ class AuthViewModel extends BaseViewModel {
                           dosage: _dosageLabel,
                           medicationImage: null,
                           emails: emailReminderList,
-                          phoneNumbers: phoneReminderList,
                           notificationChannels: notificationChannel,
                         ),
                       );
@@ -10861,7 +10865,7 @@ class AuthViewModel extends BaseViewModel {
                   ), // Adjust radius as needed
                   child: LinearProgressIndicator(
                     minHeight: 4.0, // Adjust height as needed
-                    value: linIndex / 4,
+                    value: linIndexUpdate / 4,
                     color: AppColors.primary, // Progress bar color
                     backgroundColor: Colors.grey[300], // Background track color
                   ),
@@ -10869,7 +10873,7 @@ class AuthViewModel extends BaseViewModel {
               ),
               SizedBox(width: 10.w),
               TextView(
-                text: '$linIndex/4',
+                text: '$linIndexUpdate/4',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -10982,7 +10986,7 @@ class AuthViewModel extends BaseViewModel {
                   fontSize: 14.sp,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
-                    linIndex--;
+                    linIndexUpdate--;
                     model!.notifyListeners();
                   },
                 ),
@@ -11000,31 +11004,34 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth != ''
                       ? () {
-                        updateReminder(
-                        context,
-                        reminderId: data!.id!,
-                        updateReminder: UpdateReminderEntityModel(
-                          startDateTime: DateFormat(
-                            'dd MMM, yyyy',
-                          ).parse(dateTimeControllerUpdate.text),
-                          endDateTime: DateTime.parse(
-                            endDateControllerUpdate.text,
-                          ),
-                          durationInDays: int.parse(
-                            medDurationControllerUpdate.text,
-                          ),
-                          timesPerDay: int.parse(
-                            medDailyInTakenControllerUpdate.text,
-                          ),
-                          dailyDoseTimes: dailyDose,
-                          dosage: _dosageLabel,
-                          medicationImage: null,
-                          emails: emailReminderList,
-                          phoneNumbers: phoneReminderList,
-                          notificationChannels: notificationChannel,
-                          payment:update.Payment(amount:costTotal,currency: 'NGN'),
-                        ),
-                      );
+                          updateReminder(
+                            context,
+                            reminderId: data!.id!,
+                            updateReminder: UpdateReminderEntityModel(
+                              startDateTime: DateFormat(
+                                'dd MMM, yyyy',
+                              ).parse(dateTimeControllerUpdate.text),
+                              endDateTime: DateTime.parse(
+                                endDateControllerUpdate.text,
+                              ),
+                              durationInDays: int.parse(
+                                medDurationControllerUpdate.text,
+                              ),
+                              timesPerDay: int.parse(
+                                medDailyInTakenControllerUpdate.text,
+                              ),
+                              dailyDoseTimes: dailyDose,
+                              dosage: _dosageLabel,
+                              medicationImage: null,
+                              emails: emailReminderList,
+                              phoneNumbers: phoneReminderList,
+                              notificationChannels: notificationChannel,
+                              payment: update.Payment(
+                                amount: costTotal,
+                                currency: 'NGN',
+                              ),
+                            ),
+                          );
                           model!.notifyListeners();
                         }
                       : () {},
@@ -11953,6 +11960,7 @@ class AuthViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
+    _isLoading = false;
     notifyListeners();
   }
 
