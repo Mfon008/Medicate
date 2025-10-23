@@ -45,7 +45,6 @@ class _AcceleratePaymentViewState extends State<AcceleratePaymentView> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +58,7 @@ class _AcceleratePaymentViewState extends State<AcceleratePaymentView> {
               arguments: DashboardArguments(index: 1),
             ),
             child: Padding(
-              padding: EdgeInsets.only(right:10.0.w),
+              padding: EdgeInsets.only(right: 10.0.w),
               child: TextView(
                 text: 'DASHBOARD',
                 textStyle: TextStyle(
