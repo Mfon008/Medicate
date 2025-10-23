@@ -191,8 +191,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                             .getReminderByIdModel!
                                             .data!
                                             .medication!
-                                            .medicationImage
-                                            ==
+                                            .medicationImage ==
                                         null
                                     ? Padding(
                                         padding: EdgeInsets.all(8.w),
@@ -408,7 +407,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                 children: [
                                   TextView(
                                     text:
-                                        '${model.getReminderByIdModel!.data!.medication!.endDateTime!.difference(DateTime.now()).inDays + 1}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days',
+                                        '${model.calculateDaysLeft()}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days',
                                     letterSpacing: 1,
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',

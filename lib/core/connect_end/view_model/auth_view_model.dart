@@ -292,16 +292,15 @@ class AuthViewModel extends BaseViewModel {
 
   calculateDaysLeft() {
     if (getReminderByIdModel!.data!.medication!.endDateTime!
-                .difference(DateTime.now())
+                .difference(getReminderByIdModel!.data!.medication!.startDateTime!)
                 .inDays +
             1 <
         1) {
       return 0;
     } else {
       return getReminderByIdModel!.data!.medication!.endDateTime!
-              .difference(DateTime.now())
-              .inDays +
-          1;
+              .difference(getReminderByIdModel!.data!.medication!.startDateTime!)
+              .inDays+1;
     }
   }
 
@@ -1363,14 +1362,9 @@ class AuthViewModel extends BaseViewModel {
                               // 👉 Update the controller for this dose
                               doseControllersUpdate[callback][i].text =
                                   result["time"]!;
-
                               // 👉 Update period label for this dose
-
                               periodLabelsUpdate[callback][i] =
                                   result["period"]!;
-                              print(
-                                'time:${doseControllersUpdate[callback][i].text} and Period: ${periodLabelsUpdate[callback][i]}',
-                              );
                               locator<AuthViewModel>().notifyListeners();
                             }
                           },
@@ -4130,7 +4124,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 13.62.sp,
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
@@ -4403,7 +4397,7 @@ class AuthViewModel extends BaseViewModel {
                                               borderTopRight: 10.r,
                                               borderBottomLeft: 10.r,
                                               borderBottomRight: 10.r,
-                                              hintSize: 13.62.sp,
+                                              hintSize: 14.sp,
                                               fillColor: AppColors.grey,
                                               isFilled: true,
                                               focusNode:
@@ -4454,7 +4448,7 @@ class AuthViewModel extends BaseViewModel {
                                               borderTopRight: 10.r,
                                               borderBottomLeft: 10.r,
                                               borderBottomRight: 10.r,
-                                              hintSize: 13.62.sp,
+                                              hintSize: 14.sp,
                                               fillColor: AppColors.grey,
                                               isFilled: true,
                                               focusNode:
@@ -4849,7 +4843,7 @@ class AuthViewModel extends BaseViewModel {
                                               borderBottomLeft: 10.r,
                                               borderBottomRight: 10.r,
                                               readOnly: true,
-                                              hintSize: 13.62.sp,
+                                              hintSize: 14.sp,
                                               fillColor: AppColors.grey,
                                               isFilled: true,
                                               controller:
@@ -4879,7 +4873,7 @@ class AuthViewModel extends BaseViewModel {
                                             SizedBox(height: 24.0.h),
                                             TextFormWidget(
                                               hint: 'Duration',
-                                              hintSize: 13.62.sp,
+                                              hintSize: 14.sp,
                                               keyboardType:
                                                   TextInputType.number,
                                               borderColor:
@@ -4918,17 +4912,31 @@ class AuthViewModel extends BaseViewModel {
                                                         .parse(
                                                           model!.pickedDate!,
                                                         );
+
+
+                                                    final localDate =
+                                                        dateTimeObject!;
+                                                    final utcStartDate =
+                                                        DateTime.utc(
+                                                          localDate.year,
+                                                          localDate.month,
+                                                          localDate.day,
+                                                        );
+
+                                                    // Now safely add your duration
+                                                    final utcEndDate =
+                                                        utcStartDate.add(
+                                                          Duration(
+                                                            days:
+                                                                _duration! - 1,
+                                                          ),
+                                                        );
                                                     medicationClassList[index]
-                                                            .endDate =
-                                                        dateTimeObject!
-                                                            .add(
-                                                              Duration(
-                                                                days:
-                                                                    _duration! -
-                                                                    1,
-                                                              ),
-                                                            )
-                                                            .toString();
+                                                        .endDate = utcEndDate
+                                                        .toIso8601String();
+                                                    medicationClassList[index]
+                                                        .endDateIso = DateTime.parse(utcEndDate.toIso8601String());
+
                                                     // ✅ Ensure controller lists match new duration
                                                     while (doseAfterControllers
                                                             .length <
@@ -5065,7 +5073,7 @@ class AuthViewModel extends BaseViewModel {
                                               borderTopRight: 10.r,
                                               borderBottomLeft: 10.r,
                                               borderBottomRight: 10.r,
-                                              hintSize: 13.62.sp,
+                                              hintSize: 14.sp,
                                               fillColor: AppColors.grey,
                                               isFilled: true,
                                               readOnly: true,
@@ -6131,6 +6139,7 @@ class AuthViewModel extends BaseViewModel {
                                 ),
                               ),
                             ),
+                      SizedBox(height: 160.h),
                     ],
                   ),
           ],
