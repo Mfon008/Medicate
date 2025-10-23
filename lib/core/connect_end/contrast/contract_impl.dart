@@ -12,6 +12,7 @@ import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -79,9 +80,10 @@ class AuthContractsImpl {
   Future<UploadImageReminderResponseModel> uploadImageReminder(
     MultipartFile file,
   ) async => await _api.uploadImageReminder(file);
-   Future<dynamic> uploadImageReminderUpdate({
-    MultipartFile? file,String? id
-  }) async => await _api.uploadImageReminderUpdate(file:file,id:id);
+  Future<dynamic> uploadImageReminderUpdate({
+    MultipartFile? file,
+    String? id,
+  }) async => await _api.uploadImageReminderUpdate(file: file, id: id);
   Future<GetReminderResponseModel> getReminder({
     String? status,
     String? page,
@@ -104,9 +106,16 @@ class AuthContractsImpl {
     doseId: doseId,
     status: status,
   );
-  
+
   Future<dynamic> updateReminder({
     String? reminderId,
     UpdateReminderEntityModel? updateReminder,
-  }) async => await _api.updateReminder(reminderId: reminderId,updateReminder: updateReminder);
+  }) async => await _api.updateReminder(
+    reminderId: reminderId,
+    updateReminder: updateReminder,
+  );
+
+  Future<InitiatePaymentResponseModel> initiatePayment({
+    String? reference,
+  }) async => await _api.initiatePayment(reference: reference);
 }

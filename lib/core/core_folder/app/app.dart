@@ -27,6 +27,7 @@ import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
+import '../../../ui/widget/accelerate_payment_view.dart';
 import '../../api_folder/auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
@@ -62,6 +63,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: FundWalletPayScreen),
     MaterialRoute(page: PaymentStatusScreen),
     MaterialRoute(page: ViewMedicationScreen),
+    MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

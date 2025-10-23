@@ -14,6 +14,7 @@ import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -147,10 +148,14 @@ class AuthRepoImpl {
     return response;
   }
 
-   Future<dynamic> uploadImageReminderUpdate({
-    MultipartFile? file,String? id
+  Future<dynamic> uploadImageReminderUpdate({
+    MultipartFile? file,
+    String? id,
   }) async {
-    final response = await _contract.uploadImageReminderUpdate(file:file,id:id);
+    final response = await _contract.uploadImageReminderUpdate(
+      file: file,
+      id: id,
+    );
     return response;
   }
 
@@ -204,6 +209,13 @@ class AuthRepoImpl {
       reminderId: reminderId,
       updateReminder: updateReminder,
     );
+    return response;
+  }
+
+ Future<InitiatePaymentResponseModel> initiatePayment({
+    String? reference,
+  }) async  {
+    final response = await _contract.initiatePayment(reference: reference);
     return response;
   }
 

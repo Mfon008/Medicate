@@ -6,7 +6,7 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i28;
+import 'package:flutter/material.dart' as _i29;
 import 'package:flutter/material.dart';
 import 'package:medicate_app/ui/authentication/user/change_phone_number.dart'
     as _i6;
@@ -23,7 +23,7 @@ import 'package:medicate_app/ui/authentication/user/success_screen.dart'
 import 'package:medicate_app/ui/authentication/user/welcome_screen.dart' as _i9;
 import 'package:medicate_app/ui/dashboard/ask_me_screen.dart' as _i17;
 import 'package:medicate_app/ui/dashboard/dashboard_screen.dart' as _i2;
-import 'package:medicate_app/ui/dashboard/more_screen.dart' as _i27;
+import 'package:medicate_app/ui/dashboard/more_screen.dart' as _i28;
 import 'package:medicate_app/ui/dashboard/notification/empty_notification.dart'
     as _i18;
 import 'package:medicate_app/ui/dashboard/profile/faq_screen.dart' as _i19;
@@ -49,8 +49,9 @@ import 'package:medicate_app/ui/dashboard/support/support_screen.dart' as _i15;
 import 'package:medicate_app/ui/onboarding/get_started_onboarding.dart' as _i4;
 import 'package:medicate_app/ui/onboarding/role_onboarding.dart' as _i3;
 import 'package:medicate_app/ui/onboarding/splash_screen.dart' as _i20;
+import 'package:medicate_app/ui/widget/accelerate_payment_view.dart' as _i27;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i29;
+import 'package:stacked_services/stacked_services.dart' as _i30;
 
 class Routes {
   static const dashboard = '/';
@@ -103,6 +104,8 @@ class Routes {
 
   static const viewMedicationScreen = '/view-medication-screen';
 
+  static const acceleratePaymentView = '/accelerate-payment-view';
+
   static const moreScreen = '/more-screen';
 
   static const all = <String>{
@@ -131,6 +134,7 @@ class Routes {
     fundWalletPayScreen,
     paymentStatusScreen,
     viewMedicationScreen,
+    acceleratePaymentView,
     moreScreen,
   };
 }
@@ -162,7 +166,11 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(Routes.fundWalletPayScreen, page: _i24.FundWalletPayScreen),
     _i1.RouteDef(Routes.paymentStatusScreen, page: _i25.PaymentStatusScreen),
     _i1.RouteDef(Routes.viewMedicationScreen, page: _i26.ViewMedicationScreen),
-    _i1.RouteDef(Routes.moreScreen, page: _i27.MoreScreen),
+    _i1.RouteDef(
+      Routes.acceleratePaymentView,
+      page: _i27.AcceleratePaymentView,
+    ),
+    _i1.RouteDef(Routes.moreScreen, page: _i28.MoreScreen),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
@@ -170,7 +178,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<DashboardArguments>(
         orElse: () => const DashboardArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i2.Dashboard(key: args.key, index: args.index),
         settings: data,
       );
@@ -179,7 +187,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<RoleOnboardingArguments>(
         orElse: () => const RoleOnboardingArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i3.RoleOnboarding(key: args.key),
         settings: data,
       );
@@ -188,7 +196,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<GetStartedOnboardingArguments>(
         orElse: () => const GetStartedOnboardingArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.GetStartedOnboarding(key: args.key),
         settings: data,
       );
@@ -197,14 +205,14 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SignUpScreenArguments>(
         orElse: () => const SignUpScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.SignUpScreen(key: args.key),
         settings: data,
       );
     },
     _i6.ChangePhoneNumber: (data) {
       final args = data.getArgs<ChangePhoneNumberArguments>(nullOk: false);
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i6.ChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
       );
@@ -213,7 +221,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SetupPinScreenArguments>(
         orElse: () => const SetupPinScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i7.SetupPinScreen(key: args.key),
         settings: data,
       );
@@ -222,7 +230,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<LoginScreenArguments>(
         orElse: () => const LoginScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i8.LoginScreen(key: args.key),
         settings: data,
       );
@@ -231,7 +239,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<WelcomeScreenArguments>(
         orElse: () => const WelcomeScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i9.WelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
@@ -241,7 +249,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ForgotPinScreenArguments>(
         orElse: () => const ForgotPinScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i10.ForgotPinScreen(key: args.key),
         settings: data,
       );
@@ -250,7 +258,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ResetPinScreenArguments>(
         orElse: () => const ResetPinScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i11.ResetPinScreen(key: args.key, phone: args.phone),
         settings: data,
@@ -260,7 +268,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SuccessScreenArguments>(
         orElse: () => const SuccessScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i12.SuccessScreen(key: args.key),
         settings: data,
       );
@@ -269,7 +277,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ProfileScreenArguments>(
         orElse: () => const ProfileScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i13.ProfileScreen(key: args.key),
         settings: data,
       );
@@ -278,7 +286,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ProfileInfoScreenArguments>(
         orElse: () => const ProfileInfoScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i14.ProfileInfoScreen(key: args.key),
         settings: data,
       );
@@ -287,7 +295,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SupportScreenArguments>(
         orElse: () => const SupportScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i15.SupportScreen(key: args.key),
         settings: data,
       );
@@ -296,7 +304,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ResetPinPadScreenArguments>(
         orElse: () => const ResetPinPadScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i16.ResetPinPadScreen(key: args.key),
         settings: data,
       );
@@ -305,7 +313,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<AskMeScreenArguments>(
         orElse: () => const AskMeScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i17.AskMeScreen(key: args.key, inText: args.inText),
         settings: data,
@@ -315,7 +323,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<EmptyNotificationArguments>(
         orElse: () => const EmptyNotificationArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i18.EmptyNotification(key: args.key),
         settings: data,
       );
@@ -324,7 +332,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<FaqScreenArguments>(
         orElse: () => const FaqScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i19.FaqScreen(key: args.key),
         settings: data,
       );
@@ -333,7 +341,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SplashScreenArguments>(
         orElse: () => const SplashScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i20.SplashScreen(key: args.key),
         settings: data,
       );
@@ -342,7 +350,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<WalletScreenArguments>(
         orElse: () => const WalletScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i21.WalletScreen(key: args.key),
         settings: data,
       );
@@ -351,7 +359,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<TransactionScreenArguments>(
         orElse: () => const TransactionScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i22.TransactionScreen(key: args.key),
         settings: data,
       );
@@ -360,7 +368,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<FundScreenArguments>(
         orElse: () => const FundScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i23.FundScreen(key: args.key),
         settings: data,
       );
@@ -369,7 +377,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<FundWalletPayScreenArguments>(
         orElse: () => const FundWalletPayScreenArguments(),
       );
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i24.FundWalletPayScreen(
           key: args.key,
           screenName: args.screenName,
@@ -380,7 +388,7 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i25.PaymentStatusScreen: (data) {
       final args = data.getArgs<PaymentStatusScreenArguments>(nullOk: false);
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) => _i25.PaymentStatusScreen(
           key: args.key,
           isSuccessful: args.isSuccessful,
@@ -390,19 +398,27 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i26.ViewMedicationScreen: (data) {
       final args = data.getArgs<ViewMedicationScreenArguments>(nullOk: false);
-      return _i28.MaterialPageRoute<dynamic>(
+      return _i29.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i26.ViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
       );
     },
-    _i27.MoreScreen: (data) {
+    _i27.AcceleratePaymentView: (data) {
+      final args = data.getArgs<AcceleratePaymentViewArguments>(nullOk: false);
+      return _i29.MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            _i27.AcceleratePaymentView(key: args.key, url: args.url),
+        settings: data,
+      );
+    },
+    _i28.MoreScreen: (data) {
       final args = data.getArgs<MoreScreenArguments>(
         orElse: () => const MoreScreenArguments(),
       );
-      return _i28.PageRouteBuilder<dynamic>(
+      return _i29.PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            _i27.MoreScreen(key: args.key),
+            _i28.MoreScreen(key: args.key),
         settings: data,
         transitionsBuilder:
             data.transition ?? _i1.TransitionsBuilders.slideRight,
@@ -421,7 +437,7 @@ class StackedRouter extends _i1.RouterBase {
 class DashboardArguments {
   const DashboardArguments({this.key, this.index});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final int? index;
 
@@ -445,7 +461,7 @@ class DashboardArguments {
 class RoleOnboardingArguments {
   const RoleOnboardingArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -467,7 +483,7 @@ class RoleOnboardingArguments {
 class GetStartedOnboardingArguments {
   const GetStartedOnboardingArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -489,7 +505,7 @@ class GetStartedOnboardingArguments {
 class SignUpScreenArguments {
   const SignUpScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -511,7 +527,7 @@ class SignUpScreenArguments {
 class ChangePhoneNumberArguments {
   const ChangePhoneNumberArguments({this.key, required this.id});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final String? id;
 
@@ -535,7 +551,7 @@ class ChangePhoneNumberArguments {
 class SetupPinScreenArguments {
   const SetupPinScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -557,7 +573,7 @@ class SetupPinScreenArguments {
 class LoginScreenArguments {
   const LoginScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -579,7 +595,7 @@ class LoginScreenArguments {
 class WelcomeScreenArguments {
   const WelcomeScreenArguments({this.key, this.phone});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final String? phone;
 
@@ -603,7 +619,7 @@ class WelcomeScreenArguments {
 class ForgotPinScreenArguments {
   const ForgotPinScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -625,7 +641,7 @@ class ForgotPinScreenArguments {
 class ResetPinScreenArguments {
   const ResetPinScreenArguments({this.key, this.phone});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final String? phone;
 
@@ -649,7 +665,7 @@ class ResetPinScreenArguments {
 class SuccessScreenArguments {
   const SuccessScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -671,7 +687,7 @@ class SuccessScreenArguments {
 class ProfileScreenArguments {
   const ProfileScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -693,7 +709,7 @@ class ProfileScreenArguments {
 class ProfileInfoScreenArguments {
   const ProfileInfoScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -715,7 +731,7 @@ class ProfileInfoScreenArguments {
 class SupportScreenArguments {
   const SupportScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -737,7 +753,7 @@ class SupportScreenArguments {
 class ResetPinPadScreenArguments {
   const ResetPinPadScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -759,7 +775,7 @@ class ResetPinPadScreenArguments {
 class AskMeScreenArguments {
   const AskMeScreenArguments({this.key, this.inText});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final String? inText;
 
@@ -783,7 +799,7 @@ class AskMeScreenArguments {
 class EmptyNotificationArguments {
   const EmptyNotificationArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -805,7 +821,7 @@ class EmptyNotificationArguments {
 class FaqScreenArguments {
   const FaqScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -827,7 +843,7 @@ class FaqScreenArguments {
 class SplashScreenArguments {
   const SplashScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -849,7 +865,7 @@ class SplashScreenArguments {
 class WalletScreenArguments {
   const WalletScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -871,7 +887,7 @@ class WalletScreenArguments {
 class TransactionScreenArguments {
   const TransactionScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -893,7 +909,7 @@ class TransactionScreenArguments {
 class FundScreenArguments {
   const FundScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -915,7 +931,7 @@ class FundScreenArguments {
 class FundWalletPayScreenArguments {
   const FundWalletPayScreenArguments({this.key, this.screenName, this.amount});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final String? screenName;
 
@@ -943,7 +959,7 @@ class FundWalletPayScreenArguments {
 class PaymentStatusScreenArguments {
   const PaymentStatusScreenArguments({this.key, required this.isSuccessful});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final bool isSuccessful;
 
@@ -967,7 +983,7 @@ class PaymentStatusScreenArguments {
 class ViewMedicationScreenArguments {
   const ViewMedicationScreenArguments({this.key, required this.id});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   final String? id;
 
@@ -988,10 +1004,34 @@ class ViewMedicationScreenArguments {
   }
 }
 
+class AcceleratePaymentViewArguments {
+  const AcceleratePaymentViewArguments({this.key, required this.url});
+
+  final _i29.Key? key;
+
+  final String? url;
+
+  @override
+  String toString() {
+    return '{"key": "$key", "url": "$url"}';
+  }
+
+  @override
+  bool operator ==(covariant AcceleratePaymentViewArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key && other.url == url;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^ url.hashCode;
+  }
+}
+
 class MoreScreenArguments {
   const MoreScreenArguments({this.key});
 
-  final _i28.Key? key;
+  final _i29.Key? key;
 
   @override
   String toString() {
@@ -1010,9 +1050,9 @@ class MoreScreenArguments {
   }
 }
 
-extension NavigatorStateExtension on _i29.NavigationService {
+extension NavigatorStateExtension on _i30.NavigationService {
   Future<dynamic> navigateToDashboard({
-    _i28.Key? key,
+    _i29.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -1031,7 +1071,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToRoleOnboarding({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1049,7 +1089,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToGetStartedOnboarding({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1067,7 +1107,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToSignUpScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1085,7 +1125,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToChangePhoneNumber({
-    _i28.Key? key,
+    _i29.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -1104,7 +1144,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToSetupPinScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1122,7 +1162,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToLoginScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1140,7 +1180,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToWelcomeScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -1159,7 +1199,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToForgotPinScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1177,7 +1217,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToResetPinScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -1196,7 +1236,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToSuccessScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1214,7 +1254,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToProfileScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1232,7 +1272,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToProfileInfoScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1250,7 +1290,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToSupportScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1268,7 +1308,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToResetPinPadScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1286,7 +1326,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToAskMeScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? inText,
     int? routerId,
     bool preventDuplicates = true,
@@ -1305,7 +1345,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToEmptyNotification({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1323,7 +1363,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToFaqScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1341,7 +1381,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToSplashScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1359,7 +1399,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToWalletScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1377,7 +1417,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToTransactionScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1395,7 +1435,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToFundScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1413,7 +1453,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToFundWalletPayScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? screenName,
     String? amount,
     int? routerId,
@@ -1437,7 +1477,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToPaymentStatusScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     required bool isSuccessful,
     int? routerId,
     bool preventDuplicates = true,
@@ -1459,7 +1499,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> navigateToViewMedicationScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -1477,8 +1517,27 @@ extension NavigatorStateExtension on _i29.NavigationService {
     );
   }
 
+  Future<dynamic> navigateToAcceleratePaymentView({
+    _i29.Key? key,
+    required String? url,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return navigateTo<dynamic>(
+      Routes.acceleratePaymentView,
+      arguments: AcceleratePaymentViewArguments(key: key, url: url),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
   Future<dynamic> navigateToMoreScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1496,7 +1555,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithDashboard({
-    _i28.Key? key,
+    _i29.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -1515,7 +1574,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithRoleOnboarding({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1533,7 +1592,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithGetStartedOnboarding({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1551,7 +1610,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithSignUpScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1569,7 +1628,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithChangePhoneNumber({
-    _i28.Key? key,
+    _i29.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -1588,7 +1647,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithSetupPinScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1606,7 +1665,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithLoginScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1624,7 +1683,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithWelcomeScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -1643,7 +1702,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithForgotPinScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1661,7 +1720,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithResetPinScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -1680,7 +1739,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithSuccessScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1698,7 +1757,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithProfileScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1716,7 +1775,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithProfileInfoScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1734,7 +1793,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithSupportScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1752,7 +1811,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithResetPinPadScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1770,7 +1829,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithAskMeScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? inText,
     int? routerId,
     bool preventDuplicates = true,
@@ -1789,7 +1848,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithEmptyNotification({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1807,7 +1866,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithFaqScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1825,7 +1884,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithSplashScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1843,7 +1902,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithWalletScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1861,7 +1920,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithTransactionScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1879,7 +1938,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithFundScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -1897,7 +1956,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithFundWalletPayScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     String? screenName,
     String? amount,
     int? routerId,
@@ -1921,7 +1980,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithPaymentStatusScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     required bool isSuccessful,
     int? routerId,
     bool preventDuplicates = true,
@@ -1943,7 +2002,7 @@ extension NavigatorStateExtension on _i29.NavigationService {
   }
 
   Future<dynamic> replaceWithViewMedicationScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -1961,8 +2020,27 @@ extension NavigatorStateExtension on _i29.NavigationService {
     );
   }
 
+  Future<dynamic> replaceWithAcceleratePaymentView({
+    _i29.Key? key,
+    required String? url,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return replaceWith<dynamic>(
+      Routes.acceleratePaymentView,
+      arguments: AcceleratePaymentViewArguments(key: key, url: url),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
   Future<dynamic> replaceWithMoreScreen({
-    _i28.Key? key,
+    _i29.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,

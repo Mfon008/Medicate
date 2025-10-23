@@ -56,6 +56,7 @@ import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/datum.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -102,6 +103,9 @@ class AuthViewModel extends BaseViewModel {
   GetTodayReminderModel? get getTodaysReminderModel => _getTodaysReminderModel;
   UpdateDosesStatusModel? _updateDosesStatusModel;
   UpdateDosesStatusModel? get updateDosesStatusModel => _updateDosesStatusModel;
+  InitiatePaymentResponseModel? _initiatePaymentResponseModel;
+  InitiatePaymentResponseModel? get initiatePaymentResponseModel =>
+      _initiatePaymentResponseModel;
 
   SignUpResponseModel? _signUpResponseModel;
   SignUpResponseModel? get signUpResponseModel => _signUpResponseModel;
@@ -292,15 +296,20 @@ class AuthViewModel extends BaseViewModel {
 
   calculateDaysLeft() {
     if (getReminderByIdModel!.data!.medication!.endDateTime!
-                .difference(getReminderByIdModel!.data!.medication!.startDateTime!)
+                .difference(
+                  getReminderByIdModel!.data!.medication!.startDateTime!,
+                )
                 .inDays +
             1 <
         1) {
       return 0;
     } else {
       return getReminderByIdModel!.data!.medication!.endDateTime!
-              .difference(getReminderByIdModel!.data!.medication!.startDateTime!)
-              .inDays+1;
+              .difference(
+                getReminderByIdModel!.data!.medication!.startDateTime!,
+              )
+              .inDays +
+          1;
     }
   }
 
@@ -4913,7 +4922,6 @@ class AuthViewModel extends BaseViewModel {
                                                           model!.pickedDate!,
                                                         );
 
-
                                                     final localDate =
                                                         dateTimeObject!;
                                                     final utcStartDate =
@@ -4935,7 +4943,11 @@ class AuthViewModel extends BaseViewModel {
                                                         .endDate = utcEndDate
                                                         .toIso8601String();
                                                     medicationClassList[index]
-                                                        .endDateIso = DateTime.parse(utcEndDate.toIso8601String());
+                                                            .endDateIso =
+                                                        DateTime.parse(
+                                                          utcEndDate
+                                                              .toIso8601String(),
+                                                        );
 
                                                     // ✅ Ensure controller lists match new duration
                                                     while (doseAfterControllers
@@ -6854,7 +6866,7 @@ class AuthViewModel extends BaseViewModel {
                   // select
                   selectedIndexes.add(index);
                   // ✅ Show specific dialogs
-                  if (index == 0) {
+                  if (index == 0 || index == 1) {
                     // Email
                     showEmailDialog(context);
                   } else if ([2, 3, 4].contains(index)) {
@@ -8226,7 +8238,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth != ''
                       ? () {
-                          createReminder(
+                          createReminderPaid(
                             context,
                             createReminderEntityModel:
                                 CreateReminderEntityModel(
@@ -11855,6 +11867,73 @@ class AuthViewModel extends BaseViewModel {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
           arguments: PaymentStatusScreenArguments(isSuccessful: true),
+        );
+      } else {
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    locator<AuthViewModel>().notifyListeners();
+  }
+
+  void initiatePayment(context, {String? reference}) async {
+    try {
+      _isLoading = true;
+      _initiatePaymentResponseModel = await runBusyFuture(
+        repositoryImply.initiatePayment(reference: reference),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_initiatePaymentResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _initiatePaymentResponseModel?.message ?? '',
+        );
+        navigate.navigateTo(
+          Routes.acceleratePaymentView,
+          arguments: AcceleratePaymentViewArguments(
+            url: _initiatePaymentResponseModel?.data?.redirectUrl,
+          ),
+        );
+      } else {
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    locator<AuthViewModel>().notifyListeners();
+  }
+
+  void createReminderPaid(
+    context, {
+    CreateReminderEntityModel? createReminderEntityModel,
+  }) async {
+    try {
+      _isLoading = true;
+      _createReminderResponseModel = await runBusyFuture(
+        repositoryImply.createReminder(createReminderEntityModel!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createReminderResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createReminderResponseModel?.message ?? '',
+        );
+        initiatePayment(
+          context,
+          reference: _createReminderResponseModel?.data?.transactionReference,
         );
       } else {
         navigate.navigateTo(

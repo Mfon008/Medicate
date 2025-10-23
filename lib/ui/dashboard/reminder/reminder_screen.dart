@@ -1501,7 +1501,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
         children: [
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 36.0.w, horizontal: 36.40.w),
+              padding: EdgeInsets.symmetric(
+                vertical: 36.0.w,
+                horizontal: 36.40.w,
+              ),
               width: MediaQuery.of(context).size.width / 2.5,
               height: 150.h,
               decoration: BoxDecoration(

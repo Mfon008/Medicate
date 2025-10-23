@@ -19,6 +19,7 @@ import 'package:medicate_app/core/connect_end/model/upload_image_reminder_respon
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
     as sup;
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
@@ -265,7 +266,8 @@ class AuthApi {
   }
 
   Future<dynamic> uploadImageReminderUpdate({
-    MultipartFile? file,String? id
+    MultipartFile? file,
+    String? id,
   }) async {
     try {
       final response = await _service.call(
@@ -397,6 +399,23 @@ class AuthApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<InitiatePaymentResponseModel> initiatePayment({
+    String? reference,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.initiate_payment,
+        RequestMethod.post,
+        data: {"reference": reference},
+      );
+      logger.d(response.data);
+      return InitiatePaymentResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
