@@ -1358,7 +1358,8 @@ class AuthViewModel extends BaseViewModel {
                       ),
                       fillColor: AppColors.grey,
                       isFilled: true,
-                      controller: doseControllersUpdate[callback][i],
+                      readOnly:true,
+                      controller: TextEditingController(text:'${doseControllersUpdate[callback][i].text} ${checkTimePeriod(doseControllersUpdate[callback][i].text)}'),
                       suffixWidget: Padding(
                         padding: EdgeInsets.all(8.w),
                         child: GestureDetector(
