@@ -2045,7 +2045,7 @@ class AuthViewModel extends BaseViewModel {
                             ),
                             SizedBox(height: 4.h),
                             TextView(
-                              text: "${v.time}",
+                              text: "${v.time} ${checkTimePeriod(v.time)}",
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16.20.sp,
@@ -2167,7 +2167,7 @@ class AuthViewModel extends BaseViewModel {
                             ),
                             SizedBox(height: 4.h),
                             TextView(
-                              text: "${v.time} ${checkTimePeriod(v.time)}",
+                              text: "${v.time}",
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
                                 fontSize: 16.20.sp,
@@ -8354,13 +8354,24 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
-  TimeOfDay getTimeOfDay(time) {
-    final parts = time.split(":");
-    final hour = int.parse(parts[0]);
-    final minute = int.parse(parts[1]);
+  TimeOfDay getTimeOfDay(String time) {
+    try {
+      // Handle AM/PM time format (e.g. "12:30 PM" or "00 AM")
+      if (time.contains('AM') || time.contains('PM')) {
+        final dateTime = DateFormat("hh:mm a").parse(time);
+        return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
+      }
 
-    final timeOfDay = TimeOfDay(hour: hour, minute: minute);
-    return timeOfDay;
+      // Handle 24-hour format (e.g. "13:45")
+      final parts = time.split(":");
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    } catch (e) {
+      debugPrint("Invalid time format: $time — $e");
+      // Fallback to midnight
+      return const TimeOfDay(hour: 0, minute: 0);
+    }
   }
 
   getListOfNotificationChannel(data) {
@@ -8442,9 +8453,7 @@ class AuthViewModel extends BaseViewModel {
         listOfDosage.add(dose);
 
         // Create controller for this dose
-        final controller = TextEditingController(
-          text: '${dose.time} ${checkTimePeriod(dose.time)}',
-        );
+        final controller = TextEditingController(text: '${dose.time}');
         controllersForThisDose.add(controller);
         labelsForDay.add(getPeriodLabel(getTimeOfDay(dose.time)));
       }
@@ -8995,6 +9004,7 @@ class AuthViewModel extends BaseViewModel {
                         if (result != null) {
                           setModalState!(() {
                             medDailyInTakenControllerUpdate.text = result;
+                            model.notifyListeners();
                           });
                         }
                       },
@@ -12390,7 +12400,7 @@ class AuthViewModel extends BaseViewModel {
     // Convert startDateIso (String) to DateTime once
     DateTime currentDate = DateTime.parse(startDateIso);
 
-    for (int day = 0; day < doseControllersUpdate.length; day++) {
+    for (int day = 0; day < intList.length; day++) {
       // Create a new sublist for each day
       List<upReminder.DailyDoseTime> dailyList = [];
 
@@ -12400,7 +12410,7 @@ class AuthViewModel extends BaseViewModel {
         // Add each time entry for this day
         dailyList.add(
           upReminder.DailyDoseTime(
-            time: controller.text,
+            time: controller.text.substring(0,5),
             date: DateFormat('yyyy-MM-dd').format(currentDate),
             isoDate: currentDate,
           ),
