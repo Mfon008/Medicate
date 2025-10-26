@@ -1631,14 +1631,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     padding: EdgeInsets.all(3.2.w),
                     decoration: BoxDecoration(
                       color: !isComplete
-                          ? AppColors.yellow
+                          ? payStatusColor(reminder.payments!.isNotEmpty)
                           : AppColors.app_green,
                       shape: BoxShape.circle,
                     ),
                   ),
                   SizedBox(width: 4.6.w),
                   TextView(
-                    text: !isComplete ? 'Pending' : 'Successful',
+                    text: !isComplete ? payStatus(reminder.payments!.isNotEmpty) : 'Successful',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 12.sp,
@@ -1654,4 +1654,17 @@ class _ReminderScreenState extends State<ReminderScreen> {
       ),
     ),
   );
+
+  payStatus(isPaid) {
+    if (isPaid == true) {
+      return 'Pending';
+    }
+    return 'Free';
+  }
+  payStatusColor(isPaid) {
+    if (isPaid == true) {
+      return AppColors.yellow;
+    }
+    return AppColors.greygrey;
+  }
 }

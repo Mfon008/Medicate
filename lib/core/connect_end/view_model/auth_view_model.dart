@@ -1358,8 +1358,11 @@ class AuthViewModel extends BaseViewModel {
                       ),
                       fillColor: AppColors.grey,
                       isFilled: true,
-                      readOnly:true,
-                      controller: TextEditingController(text:'${doseControllersUpdate[callback][i].text} ${checkTimePeriod(doseControllersUpdate[callback][i].text)}'),
+                      readOnly: true,
+                      controller: TextEditingController(
+                        text:
+                            '${doseControllersUpdate[callback][i].text} ${checkTimePeriod(doseControllersUpdate[callback][i].text)}',
+                      ),
                       suffixWidget: Padding(
                         padding: EdgeInsets.all(8.w),
                         child: GestureDetector(
@@ -10784,47 +10787,36 @@ class AuthViewModel extends BaseViewModel {
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
-                    // if (phoneReminderList.contains(
-                    //   SharedPreferencesService
-                    //       .instance
-                    //       .usersData['user']['phone'],
-                    // )) {
+                    // if (notificationChannel.contains('SMS') ||
+                    //     notificationChannel.contains('PHONE_CALL') ||
+                    //     notificationChannel.contains('WHATSAPP')) {
+                    //   linIndexUpdate++;
                     // } else {
-                    //   phoneReminderList.add(
-                    //     SharedPreferencesService
-                    //         .instance
-                    //         .usersData['user']['phone'],
-                    //   );
-                    // }
-                    if (notificationChannel.contains('SMS') ||
-                        notificationChannel.contains('PHONE_CALL') ||
-                        notificationChannel.contains('WHATSAPP')) {
-                      linIndexUpdate++;
-                    } else {
-                      updateReminder(
-                        context,
-                        reminderId: data!.id!,
-                        updateReminder: UpdateReminderEntityModel(
-                          startDateTime: DateFormat(
-                            'dd MMM, yyyy',
-                          ).parse(dateTimeControllerUpdate.text),
-                          endDateTime: DateTime.parse(
-                            endDateControllerUpdate.text,
-                          ),
-                          durationInDays: int.parse(
-                            medDurationControllerUpdate.text,
-                          ),
-                          timesPerDay: int.parse(
-                            medDailyInTakenControllerUpdate.text,
-                          ),
-                          dailyDoseTimes: dailyDose,
-                          dosage: _dosageLabel,
-                          medicationImage: null,
-                          emails: emailReminderList,
-                          notificationChannels: notificationChannel,
+                    updateReminder(
+                      context,
+                      reminderId: data!.id!,
+                      updateReminder: UpdateReminderEntityModel(
+                        startDateTime: DateFormat(
+                          'dd MMM, yyyy',
+                        ).parse(dateTimeControllerUpdate.text),
+                        endDateTime: DateTime.parse(
+                          endDateControllerUpdate.text,
                         ),
-                      );
-                    }
+                        durationInDays: int.parse(
+                          medDurationControllerUpdate.text,
+                        ),
+                        timesPerDay: int.parse(
+                          medDailyInTakenControllerUpdate.text,
+                        ),
+                        dailyDoseTimes: dailyDose,
+                        dosage: _dosageLabel,
+                        medicationImage: null,
+                        emails: emailReminderList,
+                        notificationChannels: notificationChannel,
+                        
+                      ),
+                    );
+                    // }
                     model!.notifyListeners();
                   },
                 ),
@@ -12411,7 +12403,7 @@ class AuthViewModel extends BaseViewModel {
         // Add each time entry for this day
         dailyList.add(
           upReminder.DailyDoseTime(
-            time: controller.text.substring(0,5),
+            time: controller.text.substring(0, 5),
             date: DateFormat('yyyy-MM-dd').format(currentDate),
             isoDate: currentDate,
           ),
