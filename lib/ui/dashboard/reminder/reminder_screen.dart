@@ -8,6 +8,7 @@ import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/get_reminder_response_model/payment.dart';
 import '../../../core/connect_end/model/get_reminder_response_model/reminder.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
@@ -1631,14 +1632,18 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     padding: EdgeInsets.all(3.2.w),
                     decoration: BoxDecoration(
                       color: !isComplete
-                          ? payStatusColor(reminder.payments!.isNotEmpty)
+                          ? payStatusColor(reminder.payments)
                           : AppColors.app_green,
                       shape: BoxShape.circle,
                     ),
                   ),
                   SizedBox(width: 4.6.w),
                   TextView(
-                    text: !isComplete ? payStatus(reminder.payments!.isNotEmpty) : 'Successful',
+                    text: !isComplete
+                        ? payStatus(
+                            reminder.payments,
+                          )
+                        : 'Completed',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 12.sp,
@@ -1655,14 +1660,21 @@ class _ReminderScreenState extends State<ReminderScreen> {
     ),
   );
 
-  payStatus(isPaid) {
-    if (isPaid == true) {
-      return 'Pending';
+  payStatus(List<Payment>? payments) {
+    if (payments!.isNotEmpty && payments[0].status=='SUCCESS') {
+      return 'Paid';
     }
+    if (payments.isNotEmpty && payments[0].status=='PENDING') {
+      return 'Pending';
+    }  
     return 'Free';
   }
-  payStatusColor(isPaid) {
-    if (isPaid == true) {
+
+  payStatusColor(List<Payment>? payments) {
+    if (payments!.isNotEmpty && payments[0].status=='SUCCESS') {
+      return AppColors.app_green;
+    }
+    if (payments.isNotEmpty && payments[0].status=='PENDING') {
       return AppColors.yellow;
     }
     return AppColors.greygrey;
