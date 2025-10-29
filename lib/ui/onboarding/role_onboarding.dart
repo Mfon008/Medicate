@@ -89,6 +89,18 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
                     text2:
                         'Manage patient medication adherence and appointments, set\nmedication reminders.',
                   ),
+                  SizedBox(height: 12.0.h),
+                  EverydayUserCard(
+                    imge: AppImage.hmo,
+                    userType: UserType.hmo,
+                    selectedUserType: selectedUserType,
+                    onTap: (type) {
+                      setState(() => selectedUserType = type);
+                    },
+                    text: 'HMO',
+                    text2:
+                        'Manage employee health plans, view usage reports, and ensure access to quality care.',
+                  ),
                   SizedBox(height: 70.h),
                   ButtonWidget(
                     border: 100.r,
@@ -125,7 +137,10 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
         break;
 
       case UserType.pharmacist:
+        navigate.navigateTo(Routes.pharmacySignUpScreen);
+        break;
       case UserType.healthCare:
+      case UserType.hmo:
         break;
 
       case null:

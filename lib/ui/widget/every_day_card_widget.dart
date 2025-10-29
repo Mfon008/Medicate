@@ -47,11 +47,13 @@ class EverydayUserCard extends StatelessWidget {
                   topLeft: Radius.circular(8.r),
                   bottomLeft: Radius.circular(8.r),
                 ),
-                child: Image.asset(
-                  imge ?? "", // Replace with your image path
-                  height: 140.h,
-                  fit: BoxFit.fitHeight,
-                  alignment: Alignment.topLeft,
+                child: Center(
+                  child: Image.asset(
+                    imge ?? "", // Replace with your image path
+                    height: 140.h,
+                    fit: BoxFit.fitHeight,
+                    alignment: Alignment.topLeft,
+                  ),
                 ),
               ),
             ),
@@ -59,7 +61,7 @@ class EverydayUserCard extends StatelessWidget {
             // Right text
             Expanded(
               child: Container(
-                margin: EdgeInsets.symmetric(vertical: 12.20.w),
+                margin: EdgeInsets.only(top: 2.20.w,bottom: 2.20.w,right: 10.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,7 @@
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../ui/authentication/pharmacy/pharm_sign_up_screen.dart';
 import '../../../ui/authentication/user/change_phone_number.dart';
 import '../../../ui/authentication/user/forgot_pin_screen.dart';
 import '../../../ui/authentication/user/login_screen.dart';
@@ -63,6 +64,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: FundWalletPayScreen),
     MaterialRoute(page: PaymentStatusScreen),
     MaterialRoute(page: ViewMedicationScreen),
+    MaterialRoute(page: PharmacySignUpScreen),
     // MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,
