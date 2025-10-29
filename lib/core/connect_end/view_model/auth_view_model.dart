@@ -2257,8 +2257,51 @@ class AuthViewModel extends BaseViewModel {
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
-      print('After time select → startDateIso: $startDateIso');
-      print('iso$startDateIso');
+
+      if (medicationClassList[index].duration!.isNotEmpty) {
+        final parsed = int.tryParse(medicationClassList[index].duration!);
+        if (parsed != null) {
+          _duration = parsed;
+          medicationClassList[index].listOfTimes = List.generate(
+            _duration!,
+            (i) => i,
+          );
+          dateTimeObject = inputFormat.parse(pickedDate!);
+
+          final localDate = dateTimeObject!;
+          final utcStartDate = DateTime.utc(
+            localDate.year,
+            localDate.month,
+            localDate.day,
+          );
+
+          // Now safely add your duration
+          final utcEndDate = utcStartDate.add(Duration(days: _duration! - 1));
+          medicationClassList[index].endDate = utcEndDate.toIso8601String();
+          medicationClassList[index].endDateIso = DateTime.parse(
+            utcEndDate.toIso8601String(),
+          );
+
+          // ✅ Ensure controller lists match new duration
+          while (doseAfterControllers.length < _duration!) {
+            doseAfterControllers.add([]);
+          }
+          while (periodAfterLabels.length < _duration!) {
+            periodAfterLabels.add([]);
+          }
+
+          // ✅ Trim extra ones if user reduces duration
+          if (doseAfterControllers.length > _duration!) {
+            doseAfterControllers.removeRange(
+              _duration!,
+              doseAfterControllers.length,
+            );
+          }
+          if (periodAfterLabels.length > _duration!) {
+            periodAfterLabels.removeRange(_duration!, periodAfterLabels.length);
+          }
+        }
+      }
     }
     notifyListeners();
   }
@@ -3696,7 +3739,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 13.62.sp,
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: medNameController,
@@ -3996,7 +4039,7 @@ class AuthViewModel extends BaseViewModel {
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
                           readOnly: true,
-                          hintSize: 13.62.sp,
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: model.dateTimeController,
@@ -4028,7 +4071,7 @@ class AuthViewModel extends BaseViewModel {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 13.62.sp,
+                          hintSize: 14.sp,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: medDurationController,
@@ -4907,6 +4950,9 @@ class AuthViewModel extends BaseViewModel {
                                                 medicationClassList[index]
                                                         .duration =
                                                     p0;
+                                                setNoOfTimesWithDurationUpdate(
+                                                  index,
+                                                );
 
                                                 // --- recalc logic ---
                                                 if (p0.trim().isNotEmpty) {
@@ -6162,6 +6208,82 @@ class AuthViewModel extends BaseViewModel {
         ),
       ),
     );
+  }
+
+  setNoOfTimesWithDurationUpdate(index) {
+    if (medicationClassList[index].timesToTake!.isNotEmpty) {
+      final timesCount =
+          int.tryParse(medicationClassList[index].timesToTake.toString()) ?? 0;
+      final durationCount =
+          int.tryParse(
+            medicationClassList[index].duration?.toString() ?? '0',
+          ) ??
+          0;
+      // 🔹 Get the old data before rebuilding
+      final oldControllers = List<List<TextEditingController>>.from(
+        doseAfterControllers,
+      );
+      final oldPeriods = List<List<String>>.from(periodAfterLabels);
+      // 🔹 Rebuild dosageMap safely (preserve where possible)
+      medicationClassList[index].dosageMap = List.generate(durationCount, (
+        day,
+      ) {
+        final oldDay = (day < medicationClassList[index].dosageMap.length)
+            ? medicationClassList[index].dosageMap[day]
+            : null;
+        final oldDoses = oldDay != null
+            ? List<Map<String, dynamic>>.from(oldDay['doses'])
+            : [];
+        return {
+          "day": day + 1,
+          "doses": List.generate(timesCount, (doseIndex) {
+            if (doseIndex < oldDoses.length) {
+              // preserve previous time + period if available
+              return {
+                "time": oldDoses[doseIndex]["time"] ?? "",
+                "period": oldDoses[doseIndex]["period"] ?? "",
+                "date": oldDoses[doseIndex]["date"] ?? "",
+                "isoDate": oldDoses[doseIndex]["isoDate"] ?? "",
+              };
+            }
+            // otherwise new empty slot
+            return {"time": "", "period": "", "date": "", "isoDate": ""};
+          }),
+        };
+      });
+
+      // 🔹 Rebuild controllers but preserve existing values
+      doseAfterControllers = List.generate(durationCount, (dayIndex) {
+        return List.generate(timesCount, (doseIndex) {
+          if (dayIndex < oldControllers.length &&
+              doseIndex < oldControllers[dayIndex].length) {
+            return oldControllers[dayIndex][doseIndex];
+          } else {
+            return TextEditingController(
+              text:
+                  medicationClassList[index]
+                      .dosageMap[dayIndex]["doses"][doseIndex]["time"] ??
+                  "",
+            );
+          }
+        });
+      });
+
+      // 🔹 Rebuild period labels safely
+      periodAfterLabels = List.generate(durationCount, (dayIndex) {
+        return List.generate(timesCount, (doseIndex) {
+          if (dayIndex < oldPeriods.length &&
+              doseIndex < oldPeriods[dayIndex].length) {
+            return oldPeriods[dayIndex][doseIndex];
+          } else {
+            return medicationClassList[index]
+                    .dosageMap[dayIndex]["doses"][doseIndex]["period"] ??
+                "";
+          }
+        });
+      });
+      notifyListeners();
+    }
   }
 
   secondModalFlow({
@@ -10813,7 +10935,6 @@ class AuthViewModel extends BaseViewModel {
                         medicationImage: null,
                         emails: emailReminderList,
                         notificationChannels: notificationChannel,
-                        
                       ),
                     );
                     // }
@@ -11520,9 +11641,14 @@ class AuthViewModel extends BaseViewModel {
                           onPressed: () {
                             if (formKeyEmailReminder.currentState!.validate()) {
                               if (!isEdit) {
-                                emailReminderList.add(
+                                if (emailReminderList.contains(
                                   emailController.text.trim(),
-                                );
+                                )) {
+                                } else {
+                                  emailReminderList.add(
+                                    emailController.text.trim(),
+                                  );
+                                }
                               } else {
                                 emailReminderList[index!] =
                                     emailController.text;
@@ -11575,7 +11701,6 @@ class AuthViewModel extends BaseViewModel {
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
-        print("isPhoneValid$isPhoneValid");
         return Container(
           color: AppColors.transparent,
           child: Column(
@@ -11724,9 +11849,14 @@ class AuthViewModel extends BaseViewModel {
                               if (formKeyPhoneReminder.currentState!
                                   .validate()) {
                                 if (!isEdit) {
-                                  phoneReminderList.add(
+                                  if (phoneReminderList.contains(
                                     '+234${phoneController.text.trim()}',
-                                  );
+                                  )) {
+                                  } else {
+                                    phoneReminderList.add(
+                                      '+234${phoneController.text.trim()}',
+                                    );
+                                  }
                                 } else {
                                   phoneReminderList[index!] =
                                       '+234${phoneController.text.trim()}';
@@ -11734,6 +11864,7 @@ class AuthViewModel extends BaseViewModel {
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }
+                              print('phoneReminderList:::$phoneReminderList');
                               locator<AuthViewModel>().notifyListeners();
                             },
                             style: ElevatedButton.styleFrom(
@@ -11898,12 +12029,12 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _initiatePaymentResponseModel?.message ?? '',
         );
-        navigate.navigateTo(
-          Routes.acceleratePaymentView,
-          arguments: AcceleratePaymentViewArguments(
-            url: _initiatePaymentResponseModel?.data?.redirectUrl,
-          ),
-        );
+        // navigate.navigateTo(
+        //   Routes.acceleratePaymentView,
+        //   arguments: AcceleratePaymentViewArguments(
+        //     url: _initiatePaymentResponseModel?.data?.redirectUrl,
+        //   ),
+        // );
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,

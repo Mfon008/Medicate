@@ -63,7 +63,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: FundWalletPayScreen),
     MaterialRoute(page: PaymentStatusScreen),
     MaterialRoute(page: ViewMedicationScreen),
-    MaterialRoute(page: AcceleratePaymentView),
+    // MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,
