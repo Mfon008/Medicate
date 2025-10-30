@@ -26,6 +26,7 @@ class TextFormWidget extends StatelessWidget {
   final TextEditingController? controller;
   final AutovalidateMode? autoValidateMode;
   final bool? obscureText;
+  final bool isShowHint;
   final bool? readOnly;
   final bool? isGender;
   final bool? isFeedback;
@@ -74,6 +75,7 @@ class TextFormWidget extends StatelessWidget {
     this.isGender = false,
     this.readOnly = false,
     this.isFeedback = false,
+    this.isShowHint = false,
     this.onTapped,
     this.labelStyle,
     this.style,
@@ -120,7 +122,7 @@ class TextFormWidget extends StatelessWidget {
                     ),
                   ),
 
-                  Positioned(
+                  !isShowHint? Positioned(
                     right: -12.10,
                     child: TextView(
                       text: '*',
@@ -131,7 +133,7 @@ class TextFormWidget extends StatelessWidget {
                         color: AppColors.red,
                       ),
                     ),
-                  ),
+                  ):SizedBox.shrink(),
                 ],
               )
             : const SizedBox.shrink(),
