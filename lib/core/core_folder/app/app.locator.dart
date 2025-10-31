@@ -16,6 +16,7 @@ import '../../api_folder/auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
 import '../../connect_end/view_model/auth_view_model.dart';
+import '../../connect_end/view_model/pharm_auth_view_model.dart';
 import '../manager/shared_preference.dart';
 import '../network/network_service.dart';
 import '../network/support_network_service.dart';
@@ -43,4 +44,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => AuthContractsImpl());
   locator.registerLazySingleton(() => AuthRepoImpl());
   locator.registerLazySingleton(() => AuthViewModel());
+  locator.registerLazySingleton(() => PharmAuthViewModel());
 }

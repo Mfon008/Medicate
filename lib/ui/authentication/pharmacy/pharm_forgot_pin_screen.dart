@@ -2,8 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicate_app/ui/widget/button.dart'
-    show GlobalNavigator, ButtonWidget;
+import 'package:medicate_app/ui/widget/button.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../core/app_assets/app_validation.dart';

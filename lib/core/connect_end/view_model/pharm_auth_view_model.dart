@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
 import '../../app_assets/app_validation.dart';
@@ -21,6 +22,7 @@ class PharmAuthViewModel extends BaseViewModel {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   String? pinInput;
+  GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
 
   PharmAuthViewModel({this.context});
 
@@ -39,7 +41,6 @@ class PharmAuthViewModel extends BaseViewModel {
       borderRadius: BorderRadius.circular(10),
     ),
   );
-
 
   void modalBottomSheetMenu({
     context,
@@ -87,7 +88,7 @@ class PharmAuthViewModel extends BaseViewModel {
                       horizontal: 20.w,
                     ),
                     child: Form(
-                      // key: formKeyValidate,
+                      key: formKeyValidate,
                       child: Column(
                         children: [
                           Row(
@@ -204,13 +205,13 @@ class PharmAuthViewModel extends BaseViewModel {
                                       decoration: TextDecoration.underline,
                                     ),
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () {}
-                                      // model.resendOtp(
-                                      //   context,
-                                      //   resendotp: ResendOtpEntityModel(
-                                      //     phone: phoneNo,
-                                      //   ),
-                                      // ),
+                                      ..onTap = () {},
+                                    // model.resendOtp(
+                                    //   context,
+                                    //   resendotp: ResendOtpEntityModel(
+                                    //     phone: phoneNo,
+                                    //   ),
+                                    // ),
                                   ),
                                 ],
                               ),
@@ -244,12 +245,12 @@ class PharmAuthViewModel extends BaseViewModel {
                                       decoration: TextDecoration.underline,
                                     ),
                                     recognizer: TapGestureRecognizer()
-                                      // ..onTap = () => navigate.navigateTo(
-                                      //   Routes.changePhoneNumber,
-                                      //   arguments: ChangePhoneNumberArguments(
-                                      //     id: id,
-                                      //   ),
-                                      // ),
+                                    ..onTap = () => navigate.navigateTo(
+                                      Routes.pharmacyChangePhoneNumber,
+                                      arguments: PharmacyChangePhoneNumberArguments(
+                                        id: id,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -273,15 +274,16 @@ class PharmAuthViewModel extends BaseViewModel {
                             isLoading: model.isLoading,
                             buttonBorderColor: AppColors.transparent,
                             onPressed: () {
-                              // if (formKeyValidate.currentState!.validate()) {
-                              //   verifyOtp(
-                              //     context,
-                              //     verifyEntity: VerifyPhoneEntityModel(
-                              //       phone: '$phoneNo',
-                              //       otp: pinInput,
-                              //     ),
-                              //   );
-                              // }
+                              if (formKeyValidate.currentState!.validate()) {
+                                navigate.navigateTo(Routes.pharmacySetupPinScreen);
+                                //   verifyOtp(
+                                //     context,
+                                //     verifyEntity: VerifyPhoneEntityModel(
+                                //       phone: '$phoneNo',
+                                //       otp: pinInput,
+                                //     ),
+                                //   );
+                              }
                               // model.notifyListeners();
                             },
                           ),

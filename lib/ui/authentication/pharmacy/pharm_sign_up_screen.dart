@@ -308,7 +308,7 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     fillColor: AppColors.grey,
                     isFilled: true,
                     controller: emailAddressController,
-                    validator: AppValidator.validateString(),
+                    validator: AppValidator.validateEmail(),
                     onChange: (p0) {
                       // if (p0.isEmpty) {
                       //   isName = false;

@@ -10,17 +10,19 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/core_folder/app/app.locator.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
-class SetupPinScreen extends StatefulWidget {
-  const SetupPinScreen({super.key});
+class PharmacySetupPinScreen extends StatefulWidget {
+  const PharmacySetupPinScreen({super.key});
 
   @override
-  State<SetupPinScreen> createState() => _SetupPinScreenState();
+  State<PharmacySetupPinScreen> createState() => _PharmacySetupPinScreenState();
 }
 
-class _SetupPinScreenState extends State<SetupPinScreen> {
+class _PharmacySetupPinScreenState extends State<PharmacySetupPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isPhoneValid = false;
@@ -148,6 +150,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
+                      navigate.navigateTo(Routes.pharmacyDashboard);
                         // model.setPin(
                         //   context,
                         //   setPinEntityModel: SetPinEntityModel(pin: pinInput),
@@ -163,7 +166,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
                     color: AppColors.primary,
                     buttonBorderColor: AppColors.primary,
                     onPressed: () {
-                      // navigate.navigateTo(Routes.dashboard);
+                      navigate.navigateTo(Routes.pharmacyDashboard);
                     },
                   ),
                   SizedBox(height: 16.30.h),

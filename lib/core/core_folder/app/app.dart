@@ -1,7 +1,13 @@
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../ui/authentication/pharmacy/pharm_change_no_screen.dart';
+import '../../../ui/authentication/pharmacy/pharm_forgot_pin_screen.dart';
+import '../../../ui/authentication/pharmacy/pharm_login_screen.dart';
+import '../../../ui/authentication/pharmacy/pharm_reset_pin_screen.dart';
+import '../../../ui/authentication/pharmacy/pharm_setup_pin_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_sign_up_screen.dart';
+import '../../../ui/authentication/pharmacy/welcome_screen.dart';
 import '../../../ui/authentication/user/change_phone_number.dart';
 import '../../../ui/authentication/user/forgot_pin_screen.dart';
 import '../../../ui/authentication/user/login_screen.dart';
@@ -14,6 +20,7 @@ import '../../../ui/dashboard/ask_me_screen.dart';
 import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/notification/empty_notification.dart';
+import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
 import '../../../ui/dashboard/profile/faq_screen.dart';
 import '../../../ui/dashboard/profile/reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
@@ -33,6 +40,7 @@ import '../../api_folder/auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
 import '../../connect_end/view_model/auth_view_model.dart';
+import '../../connect_end/view_model/pharm_auth_view_model.dart';
 import '../manager/shared_preference.dart';
 import '../network/network_service.dart';
 import '../network/support_network_service.dart';
@@ -40,6 +48,7 @@ import '../network/support_network_service.dart';
 @StackedApp(
   routes: [
     MaterialRoute(page: Dashboard, initial: true),
+    MaterialRoute(page: PharmacyDashboard),
     MaterialRoute(page: RoleOnboarding),
     MaterialRoute(page: GetStartedOnboarding),
     MaterialRoute(page: SignUpScreen),
@@ -65,6 +74,12 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PaymentStatusScreen),
     MaterialRoute(page: ViewMedicationScreen),
     MaterialRoute(page: PharmacySignUpScreen),
+    MaterialRoute(page: PharmacySetupPinScreen),
+    MaterialRoute(page: PharmacyLoginScreen),
+    MaterialRoute(page: PharmacyChangePhoneNumber),
+    MaterialRoute(page: PharmacyForgotPinScreen),
+    MaterialRoute(page: PharmacyResetPinScreen),
+    MaterialRoute(page: PharmacyWelcomeScreen),
     // MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,
@@ -83,6 +98,7 @@ import '../network/support_network_service.dart';
     LazySingleton(classType: AuthContractsImpl),
     LazySingleton(classType: AuthRepoImpl),
     LazySingleton(classType: AuthViewModel),
+    LazySingleton(classType: PharmAuthViewModel),
   ],
   logger: StackedLogger(),
 )
