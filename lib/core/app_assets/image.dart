@@ -77,6 +77,9 @@ class AppImage {
   static const String chat_support = 'assets/svgs/chat_support.svg';
   static const String profile_image = 'assets/svgs/profile_image.svg';
   static const String clipper = 'assets/svgs/clipper.svg';
+  static const String purchase = 'assets/svgs/purchase.svg';
+  static const String track_reminder = 'assets/svgs/track_reminder.svg';
+  static const String level = 'assets/svgs/level.svg';
   static const String logout = 'assets/svgs/logout.svg';
   static const String arrow_up = 'assets/svgs/arrow_up.svg';
   static const String dash_logo = 'assets/svgs/dash_logo.svg';

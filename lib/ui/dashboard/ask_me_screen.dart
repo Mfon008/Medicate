@@ -12,8 +12,9 @@ import '../widget/text.dart';
 
 // ignore: must_be_immutable
 class AskMeScreen extends StatefulWidget {
-  AskMeScreen({super.key, this.inText});
+  AskMeScreen({super.key, this.inText, this.isDashboard=false});
   String? inText;
+  bool? isDashboard;
 
   @override
   State<AskMeScreen> createState() => _AskMeScreenState();
@@ -27,7 +28,7 @@ class _AskMeScreenState extends State<AskMeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.dashboard,
-      appBar: AppBar(
+      appBar:!widget.isDashboard!? AppBar(
         backgroundColor: AppColors.white,
         automaticallyImplyLeading: false,
         toolbarHeight: 80.0,
@@ -83,7 +84,7 @@ class _AskMeScreenState extends State<AskMeScreen> {
         //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
         //   //   child: ),
         // ],
-      ),
+      ):null,
 
       body: SafeArea(
         child: Column(
