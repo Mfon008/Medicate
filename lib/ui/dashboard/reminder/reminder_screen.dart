@@ -1640,9 +1640,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   SizedBox(width: 4.6.w),
                   TextView(
                     text: !isComplete
-                        ? payStatus(
-                            reminder.payments,
-                          )
+                        ? payStatus(reminder.payments)
                         : 'Completed',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
@@ -1661,20 +1659,20 @@ class _ReminderScreenState extends State<ReminderScreen> {
   );
 
   payStatus(List<Payment>? payments) {
-    if (payments!.isNotEmpty && payments[0].status=='SUCCESS') {
+    if (payments!.isNotEmpty && payments[0].status == 'SUCCESS') {
       return 'Paid';
     }
-    if (payments.isNotEmpty && payments[0].status=='PENDING') {
+    if (payments.isNotEmpty && payments[0].status == 'PENDING') {
       return 'Pending';
-    }  
+    }
     return 'Free';
   }
 
   payStatusColor(List<Payment>? payments) {
-    if (payments!.isNotEmpty && payments[0].status=='SUCCESS') {
+    if (payments!.isNotEmpty && payments[0].status == 'SUCCESS') {
       return AppColors.app_green;
     }
-    if (payments.isNotEmpty && payments[0].status=='PENDING') {
+    if (payments.isNotEmpty && payments[0].status == 'PENDING') {
       return AppColors.yellow;
     }
     return AppColors.greygrey;

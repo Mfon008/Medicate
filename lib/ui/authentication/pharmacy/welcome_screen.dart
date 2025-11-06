@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:io';
 
@@ -16,6 +16,7 @@ import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/login_entity_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
@@ -54,15 +55,20 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(SharedPreferencesService.instance.usersData);
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<PharmAuthViewModel>.reactive(
-        viewModelBuilder: () => locator<PharmAuthViewModel>(),
+      body: ViewModelBuilder<PharmViewModel>.reactive(
+        viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {
-          },
+          model.getUserDetails(
+            context: context,
+            phoneNo:
+                widget.phone ??
+                SharedPreferencesService.instance.usersData['user']['phone'],
+          );
+        },
         disposeViewModel: false,
-        builder: (_, PharmAuthViewModel model, __) {
+        builder: (_, PharmViewModel model, __) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -106,14 +112,21 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
                     ],
                   ),
                   SizedBox(height: 26.0.h),
-                  TextView(
-                    text:
-                        'Welcome back, Ben',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.black,
+                  SizedBox(
+                    width: 350.w,
+                    child: Center(
+                      child: TextView(
+                        text:
+                            'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName']}',
+                        textOverflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.black,
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 3.70.h),
@@ -160,7 +173,7 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
 
                   SizedBox(height: 20.0.h),
                   GestureDetector(
-                    onTap: () => navigate.navigateTo(Routes.forgotPinScreen),
+                    onTap: () => navigate.navigateTo(Routes.pharmacyForgotPinScreen),
                     child: TextView(
                       text: 'Forgot PIN',
                       decoration: TextDecoration.underline,
@@ -173,34 +186,33 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
                     ),
                   ),
                   SizedBox(height: 20.0.h),
-                  // model.getUserDetailsResponseModel != null &&
-                  //             model.getUserDetailsResponseModel?.data?.pinSet ==
-                  //                 true ||
-                  //         SharedPreferencesService
-                  //                 .instance
-                  //                 .usersData['pinSet'] ==
-                  //             true
-                  //     ? 
-                      Column(
+                  model.getUserDetailsResponseModel != null &&
+                              model.getUserDetailsResponseModel?.data?.pinSet ==
+                                  true ||
+                          SharedPreferencesService
+                                  .instance
+                                  .usersData['pinSet'] ==
+                              true
+                      ? Column(
                           children: [
                             GestureDetector(
                               onTap: () async {
                                 bool auth =
                                     await Authentication.authentication();
                                 if (auth) {
-                                  // model.signIn(
-                                  //   context,
-                                  //   signInEntity: LoginEntityModel(
-                                  //     phone:
-                                  //         widget.phone ??
-                                  //         SharedPreferencesService
-                                  //             .instance
-                                  //             .usersData['user']['phone'],
-                                  //     pin: SharedPreferencesService
-                                  //         .instance
-                                  //         .pinSet,
-                                  //   ),
-                                  // );
+                                  model.signInPharmacy(
+                                    context,
+                                    signInEntity: LoginEntityModel(
+                                      phone:
+                                          widget.phone ??
+                                          SharedPreferencesService
+                                              .instance
+                                              .usersData['user']['phone'],
+                                      pin: SharedPreferencesService
+                                          .instance
+                                          .pinSet,
+                                    ),
+                                  );
                                 }
                               },
                               child: Container(
@@ -224,8 +236,8 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
                               ),
                             ),
                           ],
-                        ),
-                      // : SizedBox.shrink(),
+                        )
+                      : SizedBox.shrink(),
 
                   SizedBox(height: 260.h),
                   ButtonWidget(
@@ -237,17 +249,17 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        // model.signIn(
-                        //   context,
-                        //   signInEntity: LoginEntityModel(
-                        //     phone:
-                        //         widget.phone ??
-                        //         SharedPreferencesService
-                        //             .instance
-                        //             .usersData['user']['phone'],
-                        //     pin: pinInput,
-                        //   ),
-                        // );
+                        model.signInPharmacy(
+                          context,
+                          signInEntity: LoginEntityModel(
+                            phone:
+                                widget.phone ??
+                                SharedPreferencesService
+                                    .instance
+                                    .usersData['user']['phone'],
+                            pin: pinInput,
+                          ),
+                        );
                       }
                     },
                   ),

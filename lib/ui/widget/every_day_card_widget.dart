@@ -61,7 +61,11 @@ class EverydayUserCard extends StatelessWidget {
             // Right text
             Expanded(
               child: Container(
-                margin: EdgeInsets.only(top: 2.20.w,bottom: 2.20.w,right: 10.w),
+                margin: EdgeInsets.only(
+                  top: 2.20.w,
+                  bottom: 2.20.w,
+                  right: 10.w,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

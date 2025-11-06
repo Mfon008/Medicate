@@ -31,9 +31,11 @@ class SharedPreferencesService {
   static const String is_login = 'is_login';
   static const String is_sign_up = 'is_sign_up';
   static const String userData = 'user';
+  static const String userType = 'user_type';
   static const String pin_set = 'pin';
 
   String get authToken => sharedPreferences?.getString(keyAuthToken) ?? '';
+  String get authType => sharedPreferences?.getString(userType) ?? '';
   String get pinSet => sharedPreferences?.getString(pin_set) ?? '';
   String get authRefreshToken =>
       sharedPreferences?.getString(keyAuthRefreshToken) ?? '';
@@ -57,6 +59,8 @@ class SharedPreferencesService {
       sharedPreferences?.setBool(kycVerified, verifyKyc);
   set authToken(String authToken) =>
       sharedPreferences?.setString(keyAuthToken, authToken);
+  set authType(String authType) =>
+      sharedPreferences?.setString(userType, authType);
   set pinSet(String pin) => sharedPreferences?.setString(pin_set, pin);
   set authRefreshToken(String authRefreshToken) =>
       sharedPreferences?.setString(keyAuthRefreshToken, authRefreshToken);

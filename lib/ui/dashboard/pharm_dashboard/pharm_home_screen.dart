@@ -7,6 +7,8 @@ import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/ai_text_form_widget.dart';
 import '../../widget/text.dart';
 
@@ -51,10 +53,9 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                     height: isTablet(context) ? 32.h : 12.h,
                     width: isTablet(context) ? 32.w : 12.w,
                   ),
-                  onPressed: () {},
-                  //  navigate.navigateTo(
-                  //   Routes.moreScreen,
-                  // ), // makes ripple effect round
+                  onPressed: () => navigate.navigateTo(
+                    Routes.pharmMoreScreen,
+                  ), // makes ripple effect round
                 ),
               ),
               GestureDetector(
@@ -263,7 +264,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                           ],
                         ),
                         SizedBox(height: 60.10.h),
-                       
+
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
@@ -315,7 +316,8 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                                       SizedBox(width: 20.w),
                                       GestureDetector(
                                         onTap: () {
-                                          if (formKey.currentState!.validate()) {
+                                          if (formKey.currentState!
+                                              .validate()) {
                                             isTappToChat = !isTappToChat;
                                             chatText = chatText;
                                             setState(() {});
@@ -376,7 +378,12 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                 height: 10.20.h,
               ),
               SizedBox(width: 6.10.w),
-              SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h,color: AppColors.lightBlue,),
+              SvgPicture.asset(
+                icon,
+                width: 16.20.w,
+                height: 16.20.h,
+                color: AppColors.lightBlue,
+              ),
               SizedBox(width: 6.10.w),
               Flexible(
                 child: TextView(

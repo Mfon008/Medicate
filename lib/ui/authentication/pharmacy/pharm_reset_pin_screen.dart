@@ -1,10 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/connect_end/model/reset_password_entity_model.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
@@ -15,7 +14,7 @@ import '../../widget/text.dart';
 
 // ignore: must_be_immutable
 class PharmacyResetPinScreen extends StatefulWidget {
-  PharmacyResetPinScreen({super.key, this.phone});
+  PharmacyResetPinScreen({super.key, this.phone, this.resetToken});
   String? phone;
   String? resetToken;
 
@@ -50,11 +49,11 @@ class _PharmacyResetPinScreenState extends State<PharmacyResetPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<PharmAuthViewModel>.reactive(
-        viewModelBuilder: () => locator<PharmAuthViewModel>(),
+      body: ViewModelBuilder<PharmViewModel>.reactive(
+        viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, PharmAuthViewModel model, __) {
+        builder: (_, PharmViewModel model, __) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -140,7 +139,15 @@ class _PharmacyResetPinScreenState extends State<PharmacyResetPinScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                       
+                        model.resetPinPharmacy(
+                          context,
+                          resetToken: widget.resetToken,
+                          resetPasswordEntityModel: ResetPasswordEntityModel(
+                            phone: widget.phone,
+                            newPin: pinInput,
+                            userIntent: 'login',
+                          ),
+                        );
                       }
                     },
                   ),

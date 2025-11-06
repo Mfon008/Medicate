@@ -5,6 +5,7 @@ import '../../../ui/authentication/pharmacy/pharm_change_no_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_forgot_pin_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_login_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_reset_pin_screen.dart';
+import '../../../ui/authentication/pharmacy/pharm_reset_success_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_setup_pin_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_sign_up_screen.dart';
 import '../../../ui/authentication/pharmacy/welcome_screen.dart';
@@ -21,7 +22,12 @@ import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/notification/empty_notification.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
+import '../../../ui/dashboard/pharm_dashboard/pharm_more_screen.dart';
 import '../../../ui/dashboard/profile/faq_screen.dart';
+import '../../../ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart';
+import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart';
+import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_screen.dart';
+import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_setting_screen.dart';
 import '../../../ui/dashboard/profile/reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_screen.dart';
@@ -35,9 +41,11 @@ import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
-import '../../../ui/widget/accelerate_payment_view.dart';
 import '../../api_folder/auth_api.dart';
+import '../../api_folder/pharm_auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
+import '../../connect_end/contrast/pharm_contract_impl.dart';
+import '../../connect_end/repo/pharm_repo_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
 import '../../connect_end/view_model/auth_view_model.dart';
 import '../../connect_end/view_model/pharm_auth_view_model.dart';
@@ -60,7 +68,9 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: ResetPinScreen),
     MaterialRoute(page: SuccessScreen),
     MaterialRoute(page: ProfileScreen),
+    MaterialRoute(page: PharmacyProfileScreen),
     MaterialRoute(page: ProfileInfoScreen),
+    MaterialRoute(page: PharmacyProfileInfoScreen),
     MaterialRoute(page: SupportScreen),
     MaterialRoute(page: ResetPinPadScreen),
     MaterialRoute(page: AskMeScreen),
@@ -80,9 +90,17 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmacyForgotPinScreen),
     MaterialRoute(page: PharmacyResetPinScreen),
     MaterialRoute(page: PharmacyWelcomeScreen),
+    MaterialRoute(page: KycScreen),
+    MaterialRoute(page: PharmacySettingScreen),
+    MaterialRoute(page: PharmResetSuccessScreen),
     // MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,
+      transitionsBuilder: TransitionsBuilders.slideRight,
+      durationInMilliseconds: 300,
+    ),
+    CustomRoute(
+      page: PharmMoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,
       durationInMilliseconds: 300,
     ),
@@ -95,10 +113,13 @@ import '../network/support_network_service.dart';
     LazySingleton(classType: NetworkService),
     LazySingleton(classType: SupportNetworkService),
     LazySingleton(classType: AuthApi),
+    LazySingleton(classType: PharmApi),
     LazySingleton(classType: AuthContractsImpl),
+    LazySingleton(classType: PharmContractsImpl),
     LazySingleton(classType: AuthRepoImpl),
+    LazySingleton(classType: PharmRepoImpl),
     LazySingleton(classType: AuthViewModel),
-    LazySingleton(classType: PharmAuthViewModel),
+    LazySingleton(classType: PharmViewModel),
   ],
   logger: StackedLogger(),
 )

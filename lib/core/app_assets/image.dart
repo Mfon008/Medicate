@@ -3,9 +3,13 @@
 class AppImage {
   static const String applogo = 'assets/images/logo.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
+  static const String info = 'assets/svgs/info.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
+  static const String fa = 'assets/svgs/2fa.svg';
+  static const String users = 'assets/svgs/users.svg';
+  static const String role = 'assets/svgs/role.svg';
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String calendar = 'assets/svgs/calendar.svg';
@@ -58,6 +62,7 @@ class AppImage {
   static const String ussd = 'assets/svgs/ussd.svg';
   static const String audio = 'assets/svgs/audio.svg';
   static const String profile = 'assets/svgs/profile.svg';
+  static const String providers = 'assets/svgs/providers.svg';
   static const String timer = 'assets/svgs/timer.svg';
   static const String filter = 'assets/svgs/filter.svg';
   static const String key = 'assets/svgs/key.svg';
@@ -67,6 +72,7 @@ class AppImage {
   static const String ointment = 'assets/svgs/ointment.svg';
   static const String pill = 'assets/svgs/pill.svg';
   static const String syringe = 'assets/svgs/syringe.svg';
+  static const String settings = 'assets/svgs/settings.svg';
   static const String syrup = 'assets/svgs/syrup.svg';
   static const String other_meds = 'assets/svgs/others.svg';
   static const String policy = 'assets/svgs/policy.svg';
@@ -83,6 +89,8 @@ class AppImage {
   static const String logout = 'assets/svgs/logout.svg';
   static const String arrow_up = 'assets/svgs/arrow_up.svg';
   static const String dash_logo = 'assets/svgs/dash_logo.svg';
+  static const String upload_doc = 'assets/svgs/upload_doc.svg';
+  static const String info_circle = 'assets/svgs/info-circle.svg';
   static const String arrow_forward = 'assets/svgs/arrow_forward.svg';
   static const String everyDayUSer = 'assets/images/everyday_user.png';
   static const String health_pro = 'assets/images/health_pro.png';

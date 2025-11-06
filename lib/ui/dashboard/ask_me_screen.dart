@@ -12,7 +12,7 @@ import '../widget/text.dart';
 
 // ignore: must_be_immutable
 class AskMeScreen extends StatefulWidget {
-  AskMeScreen({super.key, this.inText, this.isDashboard=false});
+  AskMeScreen({super.key, this.inText, this.isDashboard = false});
   String? inText;
   bool? isDashboard;
 
@@ -28,63 +28,73 @@ class _AskMeScreenState extends State<AskMeScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.dashboard,
-      appBar:!widget.isDashboard!? AppBar(
-        backgroundColor: AppColors.white,
-        automaticallyImplyLeading: false,
-        toolbarHeight: 80.0,
-        title: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 1.w),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.inactive.withOpacity(.1),
-                  border: Border.all(color: AppColors.inactive.withOpacity(.4)),
-                ),
-                child: IconButton(
-                  icon: SvgPicture.asset(
-                    AppImage.burger,
-                    color: AppColors.primary,
-                    height: isTablet(context) ? 32.h : 12.h,
-                    width: isTablet(context) ? 32.w : 12.w,
-                  ),
-                  onPressed: () => navigate.navigateTo(
-                    Routes.moreScreen,
-                  ), // makes ripple effect round
+      appBar: !widget.isDashboard!
+          ? AppBar(
+              backgroundColor: AppColors.white,
+              automaticallyImplyLeading: false,
+              toolbarHeight: 80.0,
+              title: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 1.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.inactive.withOpacity(.1),
+                        border: Border.all(
+                          color: AppColors.inactive.withOpacity(.4),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          AppImage.burger,
+                          color: AppColors.primary,
+                          height: isTablet(context) ? 32.h : 12.h,
+                          width: isTablet(context) ? 32.w : 12.w,
+                        ),
+                        onPressed: () => navigate.navigateTo(
+                          Routes.moreScreen,
+                        ), // makes ripple effect round
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      AppImage.applogoSvg,
+                      height: 28.h,
+                      width: 28.w,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(right: 2.4.w),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.inactive.withOpacity(.1),
+                        border: Border.all(
+                          color: AppColors.inactive.withOpacity(.4),
+                        ),
+                      ),
+                      child: IconButton(
+                        icon: SvgPicture.asset(
+                          AppImage.bell,
+                          height: isTablet(context) ? 40.h : 20.h,
+                          width: isTablet(context) ? 40.w : 20.w,
+                          color: AppColors.primary,
+                        ),
+                        onPressed: () =>
+                            navigate.navigateTo(Routes.emptyNotification),
+                        splashRadius: 28,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),
-              Container(
-                margin: EdgeInsets.only(right: 2.4.w),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.inactive.withOpacity(.1),
-                  border: Border.all(color: AppColors.inactive.withOpacity(.4)),
-                ),
-                child: IconButton(
-                  icon: SvgPicture.asset(
-                    AppImage.bell,
-                    height: isTablet(context) ? 40.h : 20.h,
-                    width: isTablet(context) ? 40.w : 20.w,
-                    color: AppColors.primary,
-                  ),
-                  onPressed: () =>
-                      navigate.navigateTo(Routes.emptyNotification),
-                  splashRadius: 28,
-                ),
-              ),
-            ],
-          ),
-        ),
-        // centerTitle: true,
-        // actions: [
-        //   // Padding(
-        //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
-        //   //   child: ),
-        // ],
-      ):null,
+              // centerTitle: true,
+              // actions: [
+              //   // Padding(
+              //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
+              //   //   child: ),
+              // ],
+            )
+          : null,
 
       body: SafeArea(
         child: Column(

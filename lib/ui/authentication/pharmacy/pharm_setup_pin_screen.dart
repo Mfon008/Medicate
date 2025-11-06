@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +8,7 @@ import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/set_pin_entity_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
@@ -49,11 +49,11 @@ class _PharmacySetupPinScreenState extends State<PharmacySetupPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<PharmAuthViewModel>.reactive(
-        viewModelBuilder: () => locator<PharmAuthViewModel>(),
+      body: ViewModelBuilder<PharmViewModel>.reactive(
+        viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, PharmAuthViewModel model, __) {
+        builder: (_, PharmViewModel model, __) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -150,11 +150,10 @@ class _PharmacySetupPinScreenState extends State<PharmacySetupPinScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                      navigate.navigateTo(Routes.pharmacyDashboard);
-                        // model.setPin(
-                        //   context,
-                        //   setPinEntityModel: SetPinEntityModel(pin: pinInput),
-                        // );
+                        model.setPinPharmacy(
+                          context,
+                          setPinEntityModel: SetPinEntityModel(pin: pinInput),
+                        );
                       }
                     },
                   ),

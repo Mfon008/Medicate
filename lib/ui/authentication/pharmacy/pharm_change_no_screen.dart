@@ -37,11 +37,11 @@ class _PharmacyChangePhoneNumberState extends State<PharmacyChangePhoneNumber> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<PharmAuthViewModel>.reactive(
-        viewModelBuilder: () => locator<PharmAuthViewModel>(),
+      body: ViewModelBuilder<PharmViewModel>.reactive(
+        viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, PharmAuthViewModel model, __) {
+        builder: (_, PharmViewModel model, __) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -236,6 +236,5 @@ class _PharmacyChangePhoneNumberState extends State<PharmacyChangePhoneNumber> {
       return true;
     }
     return false;
-    
   }
 }

@@ -212,9 +212,9 @@ class AuthRepoImpl {
     return response;
   }
 
- Future<InitiatePaymentResponseModel> initiatePayment({
+  Future<InitiatePaymentResponseModel> initiatePayment({
     String? reference,
-  }) async  {
+  }) async {
     final response = await _contract.initiatePayment(reference: reference);
     return response;
   }
@@ -224,6 +224,7 @@ class AuthRepoImpl {
       _session.authToken = data.data.accessToken;
       _session.authRefreshToken = data.data.refreshToken;
       _session.usersData = data.data.toJson();
+      _session.authType = 'everyday_user';
     }
   }
 }

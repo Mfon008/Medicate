@@ -4,12 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/ui/widget/button.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/resend_otp_entity_model.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
@@ -41,11 +43,11 @@ class _PharmacyForgotPinScreenState extends State<PharmacyForgotPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<PharmAuthViewModel>.reactive(
-        viewModelBuilder: () => locator<PharmAuthViewModel>(),
+      body: ViewModelBuilder<PharmViewModel>.reactive(
+        viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, PharmAuthViewModel model, __) {
+        builder: (_, PharmViewModel model, __) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -198,12 +200,12 @@ class _PharmacyForgotPinScreenState extends State<PharmacyForgotPinScreen> {
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
-                              // model.forgotPassword(
-                              //   context,
-                              //   forgotPassword: ResendOtpEntityModel(
-                              //     phone: '+234${phoneController.text}',
-                              //   ),
-                              // );
+                              model.forgotPasswordPharmacy(
+                                context,
+                                forgotPassword: ResendOtpEntityModel(
+                                  phone: '+234${phoneController.text}',
+                                ),
+                              );
                             }
                           },
                   ),
@@ -224,9 +226,9 @@ class _PharmacyForgotPinScreenState extends State<PharmacyForgotPinScreen> {
                               color: AppColors.primary,
                               decoration: TextDecoration.underline,
                             ),
-                            recognizer: TapGestureRecognizer(),
-                            // ..onTap = () =>
-                            //     navigate.navigateTo(Routes.signUpScreen),
+                            recognizer: TapGestureRecognizer()
+                            ..onTap = () =>
+                                navigate.navigateTo(Routes.pharmacySignUpScreen),
                           ),
                         ],
                       ),

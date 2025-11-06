@@ -55,7 +55,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(SharedPreferencesService.instance.usersData);
     return Scaffold(
       backgroundColor: AppColors.white,
       body: ViewModelBuilder<AuthViewModel>.reactive(

@@ -12029,9 +12029,9 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _initiatePaymentResponseModel?.message ?? '',
         );
-          medicationClassList.clear();
-          doseControllers.clear();
-          periodLabels.clear();
+        medicationClassList.clear();
+        doseControllers.clear();
+        periodLabels.clear();
         // navigate.navigateTo(
         //   Routes.acceleratePaymentView,
         //   arguments: AcceleratePaymentViewArguments(

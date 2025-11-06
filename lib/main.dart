@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
         initialRoute: AppRoutes().returnAppRoutes(
           SharedPreferencesService.instance,
         ),
-        // initialRoute: Routes.dashboard,
         navigatorKey: StackedService.navigatorKey,
         onGenerateRoute: StackedRouter().onGenerateRoute,
         debugShowCheckedModeBanner: false,

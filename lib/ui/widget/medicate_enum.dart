@@ -1,1 +1,1 @@
-enum UserType { everydayUser, pharmacist, healthCare, hmo}
+enum UserType { everydayUser, pharmacist, healthCare, hmo }

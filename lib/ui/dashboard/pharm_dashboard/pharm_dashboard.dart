@@ -171,7 +171,7 @@ class _PharmacyDashboardState extends State<PharmacyDashboard> {
                       SizedBox(height: 6.0.w),
                     ],
                   ),
-                  label: 'Pharmacy',
+                  label: 'Wholesale Store',
                 ),
                 BottomNavigationBarItem(
                   icon: Column(

@@ -2,13 +2,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/connect_end/model/sign_up_pharmacy_entity_model.dart';
 import 'package:medicate_app/ui/widget/button.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
@@ -39,11 +41,11 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
         MediaQuery.of(context).size.shortestSide >= 600;
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<PharmAuthViewModel>.reactive(
-        viewModelBuilder: () => PharmAuthViewModel(),
+      body: ViewModelBuilder<PharmViewModel>.reactive(
+        viewModelBuilder: () => PharmViewModel(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, PharmAuthViewModel model, __) {
+        builder: (_, PharmViewModel model, __) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -221,14 +223,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: nameController,
                     validator: AppValidator.validateString(),
-                    onChange: (p0) {
-                      if (p0.isEmpty) {
-                        isName = false;
-                      } else {
-                        isName = true;
-                      }
-                      setState(() {});
-                    },
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -251,14 +245,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: licenseNoController,
                     validator: AppValidator.validateString(),
-                    onChange: (p0) {
-                      // if (p0.isEmpty) {
-                      //   isName = false;
-                      // } else {
-                      //   isName = true;
-                      // }
-                      // setState(() {});
-                    },
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -280,14 +266,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: businessAddressController,
                     validator: AppValidator.validateString(),
-                    onChange: (p0) {
-                      // if (p0.isEmpty) {
-                      //   isName = false;
-                      // } else {
-                      //   isName = true;
-                      // }
-                      // setState(() {});
-                    },
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -309,14 +287,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: emailAddressController,
                     validator: AppValidator.validateEmail(),
-                    onChange: (p0) {
-                      // if (p0.isEmpty) {
-                      //   isName = false;
-                      // } else {
-                      //   isName = true;
-                      // }
-                      // setState(() {});
-                    },
                   ),
                   SizedBox(height: 16.h),
                   Row(
@@ -387,7 +357,7 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                         : AppColors.primary,
                     buttonText: 'Sign Up',
                     color: AppColors.white,
-                    // isLoading: model.isLoading,
+                    isLoading: model.isLoading,
                     buttonBorderColor: AppColors.transparent,
                     onPressed:
                         !isPassed(
@@ -398,7 +368,19 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
-                              model.modalBottomSheetMenu(context: context,phoneNo: phoneController.text.trim());
+                              model.signUpPharmacy(
+                                context,
+                                signUpEntity: SignUpPharmacyEntityModel(
+                                  name: nameController.text.trim(),
+                                  phone: '+234${phoneController.text.trim()}',
+                                  licenseNumber: licenseNoController.text
+                                      .trim(),
+                                  businessAddress: businessAddressController
+                                      .text
+                                      .trim(),
+                                  email: emailAddressController.text.trim(),
+                                ),
+                              );
                             }
                           },
                   ),
@@ -483,8 +465,10 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                               color: AppColors.primary,
                               decoration: TextDecoration.underline,
                             ),
-                            recognizer: TapGestureRecognizer()..onTap = () {},
-                            // navigate.navigateTo(Routes.loginScreen),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => navigate.navigateTo(
+                                Routes.pharmacyLoginScreen,
+                              ),
                           ),
                         ],
                       ),
