@@ -159,7 +159,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                           margin: isPhoneValid
                               ? EdgeInsets.only(top: 20.w)
                               : EdgeInsets.zero, // Add margin if invalid
-
                           child: TextFormWidget(
                             hint: null,
                             borderColor: AppColors.transparent,
@@ -168,7 +167,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                             borderBottomLeft: 0,
                             borderBottomRight: 10,
                             label: 'Best number to reach you?',
-
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
@@ -211,7 +209,7 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     borderTopRight: 10.r,
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
-                    label: 'What should we call you?',
+                    label: 'Enter pharmacy name',
                     hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
@@ -223,6 +221,14 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: nameController,
                     validator: AppValidator.validateString(),
+                    onChange: (p0) {
+                      if (p0.isEmpty) {
+                        isName = false;
+                      } else {
+                        isName = true;
+                      }
+                      setState(() {});
+                    },
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -245,6 +251,7 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: licenseNoController,
                     validator: AppValidator.validateString(),
+                    
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -266,6 +273,7 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: businessAddressController,
                     validator: AppValidator.validateString(),
+                    
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -287,6 +295,7 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: emailAddressController,
                     validator: AppValidator.validateEmail(),
+
                   ),
                   SizedBox(height: 16.h),
                   Row(

@@ -2,7 +2,6 @@ import 'package:injectable/injectable.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
-import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -23,7 +22,9 @@ class PharmRepoImpl {
   final _session = locator<SharedPreferencesService>();
   final _contract = locator<PharmContractsImpl>();
 
-  Future<PharmacyLoginResponseModel> signIn(LoginEntityModel signInEntity) async {
+  Future<PharmacyLoginResponseModel> signIn(
+    LoginEntityModel signInEntity,
+  ) async {
     final response = await _contract.login(signInEntity);
     _chache(response);
     _session.isLogin = true;
@@ -78,8 +79,8 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<ChangePhoneNoResponseModel> changePhoneNo({
-    ResendOtpEntityModel? changePhoneNo,
+  Future<dynamic> changePhoneNo({
+    String? changePhoneNo,
     String? id,
   }) async {
     final response = await _contract.changePhoneNo(
@@ -91,6 +92,21 @@ class PharmRepoImpl {
 
   Future<dynamic> refreshToken() async {
     final response = await _contract.refreshToken();
+    return response;
+  }
+
+  Future<dynamic> sendOtp(String phone) async {
+    final response = await _contract.sendOtp(phone);
+    return response;
+  }
+
+  Future<dynamic> verifyChangePhoneOtp(VerifyPhoneEntityModel verifyPhoneEntity) async {
+    final response = await _contract.verifyChangePhoneOtp(verifyPhoneEntity);
+    return response;
+  }
+
+  Future<dynamic> verifyChangePhoneOtpChange(VerifyPhoneEntityModel verifyPhoneEntity) async {
+    final response = await _contract.verifyChangePhoneOtpChange(verifyPhoneEntity);
     return response;
   }
 

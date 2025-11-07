@@ -60,12 +60,14 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
       body: ViewModelBuilder<PharmViewModel>.reactive(
         viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {
-          model.getUserDetails(
-            context: context,
-            phoneNo:
-                widget.phone ??
-                SharedPreferencesService.instance.usersData['user']['phone'],
-          );
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            model.getUserDetails(
+              context: context,
+              phoneNo:
+                  widget.phone ??
+                  SharedPreferencesService.instance.usersData['user']['phone'],
+            );
+          });
         },
         disposeViewModel: false,
         builder: (_, PharmViewModel model, __) {
@@ -173,7 +175,8 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
 
                   SizedBox(height: 20.0.h),
                   GestureDetector(
-                    onTap: () => navigate.navigateTo(Routes.pharmacyForgotPinScreen),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.pharmacyForgotPinScreen),
                     child: TextView(
                       text: 'Forgot PIN',
                       decoration: TextDecoration.underline,
@@ -281,8 +284,9 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () =>
-                                  navigate.navigateTo(Routes.signUpScreen),
+                              ..onTap = () => navigate.navigateTo(
+                                Routes.pharmacySignUpScreen,
+                              ),
                           ),
                         ],
                       ),

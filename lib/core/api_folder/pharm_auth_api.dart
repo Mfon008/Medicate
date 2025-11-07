@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import '../connect_end/model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
@@ -17,6 +16,7 @@ import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model
 import '../connect_end/model/verify_phone_entity_model.dart';
 import '../core_folder/app/app.locator.dart';
 import '../core_folder/app/app.logger.dart';
+import '../core_folder/manager/shared_preference.dart';
 import '../core_folder/network/network_service.dart';
 import '../core_folder/network/url_path.dart';
 
@@ -25,8 +25,11 @@ class PharmApi {
   final _service = locator<NetworkService>();
   // final _serviceSupport = locator<sup.SupportNetworkService>();
   final logger = getLogger('PharmViewModel');
+  final session = locator<SharedPreferencesService>();
 
-  Future<PharmacyLoginResponseModel> signIn(LoginEntityModel signInEntity) async {
+  Future<PharmacyLoginResponseModel> signIn(
+    LoginEntityModel signInEntity,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.sign_in,
@@ -145,18 +148,18 @@ class PharmApi {
     }
   }
 
-  Future<ChangePhoneNoResponseModel> changePhoneNo({
-    ResendOtpEntityModel? changePhoneNo,
-    String? id,
-  }) async {
+  Future<dynamic> changePhoneNo({String? phone, String? id}) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.change_number}/$id',
+        UrlConfig.change_number_pharmacy,
         RequestMethod.patch,
-        data: changePhoneNo?.toJson(),
+        data: {"newPhoneNumber": phone},
+        options: Options(headers: {
+          "Authorization": "Bearer ${session.authToken}",
+          "x-reset-token": "$id"}),
       );
       logger.d(response.data);
-      return ChangePhoneNoResponseModel.fromJson(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -174,6 +177,55 @@ class PharmApi {
       );
       logger.d(response.data);
       return SetPinPharmResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> sendOtp(String phone) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.send_otp,
+        RequestMethod.post,
+        data: {'phone': phone},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> verifyChangePhoneOtp(
+    VerifyPhoneEntityModel verifyPhoneEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.verify_otp,
+        RequestMethod.post,
+        data: verifyPhoneEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> verifyChangePhoneOtpChange(
+    VerifyPhoneEntityModel verifyPhoneEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.verify_change_phone_otp,
+        RequestMethod.post,
+        data: verifyPhoneEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -207,5 +259,4 @@ class PharmApi {
       rethrow;
     }
   }
-  
 }

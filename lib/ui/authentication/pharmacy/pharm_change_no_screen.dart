@@ -211,13 +211,11 @@ class _PharmacyChangePhoneNumberState extends State<PharmacyChangePhoneNumber> {
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
-                              // model.changeNumber(
-                              //   context,
-                              //   resendOtpEntityModel: ResendOtpEntityModel(
-                              //     phone: '+234${phoneController.text.trim()}',
-                              //   ),
-                              //   id: widget.id,
-                              // );
+                              model.changeNumberPharmacy(
+                                context,
+                                phone: '+234${phoneController.text.trim()}',
+                                id: widget.id,
+                              );
                             }
                           },
                   ),

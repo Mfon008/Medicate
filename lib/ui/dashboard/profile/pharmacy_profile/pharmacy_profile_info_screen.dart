@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 // import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
@@ -221,21 +222,29 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                             ),
 
                             GestureDetector(
-                              onTap: () => model.modalBottomSheetMenu(
-                                context: context,
-                                phoneNo: '09000000000',
+                              onTap: () => model.sendOtpPharmacy(
+                                context,
+                                phone: SharedPreferencesService
+                                    .instance
+                                    .usersData['user']['phone'],
                               ),
-                              child: TextView(
-                                text: 'Change',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.primary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: AppColors.primary,
-                                ),
-                              ),
+
+                              child: model.isLoading
+                                  ? SpinKitCircle(
+                                      color: AppColors.primary,
+                                      size: 30.sp,
+                                    )
+                                  : TextView(
+                                      text: 'Change',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.primary,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppColors.primary,
+                                      ),
+                                    ),
                             ),
                           ],
                         ),

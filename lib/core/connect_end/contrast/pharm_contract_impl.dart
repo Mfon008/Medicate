@@ -1,7 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/pharm_auth_api.dart';
 import '../../core_folder/app/app.locator.dart';
-import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -21,8 +20,9 @@ import '../model/verify_phone_entity_model.dart';
 class PharmContractsImpl {
   final _api = locator<PharmApi>();
 
-  Future<PharmacyLoginResponseModel> login(LoginEntityModel loginEntity) async =>
-      await _api.signIn(loginEntity);
+  Future<PharmacyLoginResponseModel> login(
+    LoginEntityModel loginEntity,
+  ) async => await _api.signIn(loginEntity);
   Future<SignUpPhamaryResponseModel> signUp(
     SignUpPharmacyEntityModel signUpEntity,
   ) async => await _api.signUp(signUpEntity);
@@ -47,11 +47,14 @@ class PharmContractsImpl {
   );
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async =>
       await _api.getUserDetails(phoneNo);
-  Future<ChangePhoneNoResponseModel> changePhoneNo({
-    ResendOtpEntityModel? changePhoneNo,
+  Future<dynamic> changePhoneNo({
+    String? changePhoneNo,
     String? id,
-  }) async => await _api.changePhoneNo(changePhoneNo: changePhoneNo, id: id);
+  }) async => await _api.changePhoneNo(phone: changePhoneNo, id: id);
   Future<dynamic> refreshToken() async => await _api.refreshToken();
+  Future<dynamic> sendOtp(String phone) async => await _api.sendOtp(phone);
+  Future<dynamic> verifyChangePhoneOtp(VerifyPhoneEntityModel verifyPhoneEntity) async => await _api.verifyChangePhoneOtp(verifyPhoneEntity);
+  Future<dynamic> verifyChangePhoneOtpChange(VerifyPhoneEntityModel verifyPhoneEntity) async => await _api.verifyChangePhoneOtpChange(verifyPhoneEntity);
   Future<SetPinPharmResponseModel> setPin(
     SetPinEntityModel setPinEntity,
   ) async => await _api.setPin(setPinEntity);
