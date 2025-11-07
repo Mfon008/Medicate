@@ -19,6 +19,7 @@ class AppColors {
   static const f1 = Color(0xFFF1F1F1);
   static const reminder = Color(0xFF3E3E3E);
   static const success = Color(0xFF505050);
+  static const faintedGrey = Color(0xFFC5C5C5);
   static const dottedGrey = Color(0xFFEAECF0);
 
   static const buttonGrey1 = Color(0xFFCCCCCC);

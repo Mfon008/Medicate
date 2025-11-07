@@ -28,6 +28,7 @@ import '../../../ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_setting_screen.dart';
+import '../../../ui/dashboard/profile/pharmacy_profile/users_screen.dart';
 import '../../../ui/dashboard/profile/reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_info_screen.dart';
 import '../../../ui/dashboard/profile/user_profile/profile_screen.dart';
@@ -93,6 +94,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: KycScreen),
     MaterialRoute(page: PharmacySettingScreen),
     MaterialRoute(page: PharmResetSuccessScreen),
+    MaterialRoute(page: UsersScreen),
     // MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,

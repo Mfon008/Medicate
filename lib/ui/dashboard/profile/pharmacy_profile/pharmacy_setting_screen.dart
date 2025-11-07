@@ -7,6 +7,8 @@ import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../../core/core_folder/app/app.locator.dart';
+import '../../../../core/core_folder/app/app.router.dart';
+import '../../../../main.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 
@@ -90,7 +92,7 @@ class PharmacySettingScreen extends StatelessWidget {
                     text: 'Users',
                     topLeft: 12,
                     topRight: 12,
-                    // onTap: () => navigate.navigateTo(Routes.profileInfoScreen),
+                    onTap: () => navigate.navigateTo(Routes.usersScreen),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(

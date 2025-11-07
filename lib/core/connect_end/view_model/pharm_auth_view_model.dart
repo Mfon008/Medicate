@@ -50,6 +50,7 @@ class PharmViewModel extends BaseViewModel {
   bool get isLoading => _isLoading;
   String? pinInput;
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateAddUser = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerifyChange = GlobalKey<FormState>();
   SignUpPhamaryResponseModel? _signUpPhamaryResponseModel;
@@ -932,7 +933,8 @@ class PharmViewModel extends BaseViewModel {
                                   isLoading: _isLoading,
                                   buttonBorderColor: AppColors.transparent,
                                   onPressed: () {
-                                    if (formKeyValidateVerifyChange.currentState!
+                                    if (formKeyValidateVerifyChange
+                                        .currentState!
                                         .validate()) {
                                       verifyChangePhoneOtpChange(
                                         context: context,
@@ -1290,11 +1292,7 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void changeNumberPharmacy(
-    context, {
-    String? phone,
-    String? id,
-  }) async {
+  void changeNumberPharmacy(context, {String? phone, String? id}) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
@@ -1304,10 +1302,7 @@ class PharmViewModel extends BaseViewModel {
       _isLoading = false;
       if (v['statusCode'] == 200) {
         await AppUtils.snackbar(context, message: v['message']);
-        modalBottomSheetMenuChangeVerifyPhone(
-          context: context,
-          phoneNo: phone,
-        );
+        modalBottomSheetMenuChangeVerifyPhone(context: context, phoneNo: phone);
       }
     } catch (e) {
       _isLoading = false;
@@ -1827,5 +1822,331 @@ class PharmViewModel extends BaseViewModel {
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  void modalBottomSheetMenuAddUser({context}) {
+    bool isTablet(BuildContext context) =>
+        MediaQuery.of(context).size.shortestSide >= 600;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (builder) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.9, // 80% of screen height
+            minChildSize: 0.5, // Can be dragged to 30% of screen height
+            maxChildSize: 0.9,
+            builder: (context, scrollController) {
+              return ViewModelBuilder<PharmViewModel>.reactive(
+                viewModelBuilder: () => PharmViewModel(),
+                onViewModelReady: (model) {},
+                disposeViewModel: false,
+                builder: (_, PharmViewModel model, __) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(
+                        context,
+                      ).viewInsets.bottom, // 👈 pushes content above keyboard
+                    ), //could change this to Color(0xFF737373),
+                    //so you don't have to change MaterialApp canvasColor
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: const Radius.circular(20.0),
+                          topRight: const Radius.circular(20.0),
+                        ),
+                      ),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                        ),
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 20.w,
+                            horizontal: 20.w,
+                          ),
+                          child: Form(
+                            key: formKeyValidateAddUser,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(width: 30.w),
+                                    TextView(
+                                      text: 'Add User',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: SvgPicture.asset(
+                                        AppImage.x,
+                                        width: 24.w,
+                                        height: 24.h,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 32.h),
+                                TextFormWidget(
+                                  hint: 'First Name',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  onChange: (p0) {},
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Last Name',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  onChange: (p0) {},
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Phone Number',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateInt(),
+                                  onChange: (p0) {},
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Email Address',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateEmail(),
+                                  onChange: (p0) {},
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Address',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  onChange: (p0) {},
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Gender',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  label: '--Select--',
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  suffixWidget: Padding(
+                                    padding: EdgeInsets.all(14.20.w),
+                                    child: GestureDetector(
+                                      child: SvgPicture.asset(
+                                        AppImage.arrow_down,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Role',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  label: '--Select--',
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  suffixWidget: Padding(
+                                    padding: EdgeInsets.all(14.20.w),
+                                    child: GestureDetector(
+                                      child: SvgPicture.asset(
+                                        AppImage.arrow_down,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Temporary 4-digit PIN',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  obscureText: true,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 16.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  suffixWidget: Padding(
+                                    padding: EdgeInsets.all(14.20.w),
+                                    child: GestureDetector(
+                                      child: SvgPicture.asset(
+                                        AppImage .closed_eye_user,
+                                        // color: AppColors.app_green,
+                                        height: 20.h,
+                                        width: 20.w
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20.h),
+
+                                SizedBox(height: 50.h),
+                                ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.primary,
+                                  buttonText: 'Add',
+                                  fontSize: 16.sp,
+                                  color: AppColors.white,
+                                  isLoading: _isLoading,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () {
+                                    if (formKeyValidateAddUser.currentState!
+                                        .validate()) {}
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                SizedBox(height: 20.h),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

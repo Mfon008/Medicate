@@ -99,7 +99,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       color: AppColors.black,
                     ),
                   ),
-
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
