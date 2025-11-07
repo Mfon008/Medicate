@@ -135,6 +135,8 @@ class PharmacySettingScreen extends StatelessWidget {
       child: Row(
         children: [
           Container(
+            height: 42.0.h,
+            width: 42.0.w,
             padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
               color: AppColors.primaryLight.withOpacity(.1),
