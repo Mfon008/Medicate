@@ -17,6 +17,7 @@ class AppColors {
   static const yellow = Color(0xFFF5B546);
   static const fadedyellow = Color(0xFFFEF6E7);
   static const f1 = Color(0xFFF1F1F1);
+  static const f7 = Color(0xFFF7F7F7);
   static const reminder = Color(0xFF3E3E3E);
   static const success = Color(0xFF505050);
   static const faintedGrey = Color(0xFFC5C5C5);

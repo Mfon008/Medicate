@@ -82,6 +82,7 @@ class PharmViewModel extends BaseViewModel {
 
   TextEditingController countryController = TextEditingController();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
+  bool? onTapToAddUser = false;
 
   int _start = 60;
   // Timer? _timer;
@@ -1915,7 +1916,7 @@ class PharmViewModel extends BaseViewModel {
                                   borderBottomRight: 10.r,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -1938,7 +1939,7 @@ class PharmViewModel extends BaseViewModel {
                                   borderBottomRight: 10.r,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -1961,7 +1962,7 @@ class PharmViewModel extends BaseViewModel {
                                   borderBottomRight: 10.r,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -1984,7 +1985,7 @@ class PharmViewModel extends BaseViewModel {
                                   borderBottomRight: 10.r,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -2007,7 +2008,7 @@ class PharmViewModel extends BaseViewModel {
                                   borderBottomRight: 10.r,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -2030,7 +2031,7 @@ class PharmViewModel extends BaseViewModel {
                                   borderBottomRight: 10.r,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -2061,7 +2062,7 @@ class PharmViewModel extends BaseViewModel {
                                   borderBottomRight: 10.r,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -2093,7 +2094,7 @@ class PharmViewModel extends BaseViewModel {
                                   obscureText: true,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
-                                      : 16.60.sp,
+                                      : 14.60.sp,
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',
@@ -2108,17 +2109,15 @@ class PharmViewModel extends BaseViewModel {
                                     padding: EdgeInsets.all(14.20.w),
                                     child: GestureDetector(
                                       child: SvgPicture.asset(
-                                        AppImage .closed_eye_user,
+                                        AppImage.closed_eye_user,
                                         // color: AppColors.app_green,
                                         height: 20.h,
-                                        width: 20.w
+                                        width: 20.w,
                                       ),
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: 20.h),
-
-                                SizedBox(height: 50.h),
+                                SizedBox(height: 70.h),
                                 ButtonWidget(
                                   border: 100.r,
                                   buttonColor: AppColors.primary,

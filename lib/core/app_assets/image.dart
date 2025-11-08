@@ -4,6 +4,7 @@ class AppImage {
   static const String applogo = 'assets/images/logo.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
   static const String info = 'assets/svgs/info.svg';
+  static const String search = 'assets/svgs/search.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
@@ -84,6 +85,7 @@ class AppImage {
   static const String wallet_card = 'assets/svgs/wallet_card.svg';
   static const String chat_support = 'assets/svgs/chat_support.svg';
   static const String profile_image = 'assets/svgs/profile_image.svg';
+  static const String user_pro_pic = 'assets/svgs/user_pro_pic.svg';
   static const String clipper = 'assets/svgs/clipper.svg';
   static const String purchase = 'assets/svgs/purchase.svg';
   static const String track_reminder = 'assets/svgs/track_reminder.svg';
