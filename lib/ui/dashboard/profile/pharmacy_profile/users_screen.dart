@@ -205,9 +205,13 @@ class UsersScreen extends StatelessWidget {
                                           ],
                                         ),
                                         Spacer(),
-                                        SvgPicture.asset(
-                                          AppImage.delete,
-                                          color: AppColors.red,
+                                        GestureDetector(
+                                          onTap: () => model
+                                              .showRemoveUserDialog(context),
+                                          child: SvgPicture.asset(
+                                            AppImage.delete,
+                                            color: AppColors.red,
+                                          ),
                                         ),
                                         SizedBox(width: 14.80.w),
 

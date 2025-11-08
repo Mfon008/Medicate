@@ -83,6 +83,7 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController countryController = TextEditingController();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   bool? onTapToAddUser = false;
+  bool? onTapToAddRole = false;
 
   int _start = 60;
   // Timer? _timer;
@@ -1825,6 +1826,177 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void modalBottomSheetMenuAddRole({context}) {
+    bool isTablet(BuildContext context) =>
+        MediaQuery.of(context).size.shortestSide >= 600;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (builder) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.5, // 80% of screen height
+            minChildSize: 0.5, // Can be dragged to 30% of screen height
+            maxChildSize: 0.9,
+            builder: (context, scrollController) {
+              return ViewModelBuilder<PharmViewModel>.reactive(
+                viewModelBuilder: () => PharmViewModel(),
+                onViewModelReady: (model) {},
+                disposeViewModel: false,
+                builder: (_, PharmViewModel model, __) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(
+                        context,
+                      ).viewInsets.bottom, // 👈 pushes content above keyboard
+                    ), //could change this to Color(0xFF737373),
+                    //so you don't have to change MaterialApp canvasColor
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: const Radius.circular(20.0),
+                          topRight: const Radius.circular(20.0),
+                        ),
+                      ),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                        ),
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 20.w,
+                            horizontal: 20.w,
+                          ),
+                          child: Form(
+                            key: formKeyValidateAddUser,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(width: 30.w),
+                                    TextView(
+                                      text: 'Add Role',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: SvgPicture.asset(
+                                        AppImage.x,
+                                        width: 24.w,
+                                        height: 24.h,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 32.h),
+                                TextFormWidget(
+                                  hint: 'Role Name',
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 14.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  onChange: (p0) {},
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Description',
+                                  maxline: 4,
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  obscureText: true,
+                                  hintSize: isTablet(context)
+                                      ? 6.82.sp
+                                      : 14.60.sp,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  // controller: nameController,
+                                  validator: AppValidator.validateString(),
+                                  suffixWidget: Padding(
+                                    padding: EdgeInsets.all(14.20.w),
+                                    child: GestureDetector(
+                                      child: SvgPicture.asset(
+                                        AppImage.closed_eye_user,
+                                        // color: AppColors.app_green,
+                                        height: 20.h,
+                                        width: 20.w,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 70.h),
+                                ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.primary,
+                                  buttonText: 'Add',
+                                  fontSize: 16.sp,
+                                  color: AppColors.white,
+                                  isLoading: _isLoading,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () {
+                                    if (formKeyValidateAddUser.currentState!
+                                        .validate()) {}
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                SizedBox(height: 20.h),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void modalBottomSheetMenuAddUser({context}) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
@@ -2143,6 +2315,161 @@ class PharmViewModel extends BaseViewModel {
                 },
               );
             },
+          ),
+        );
+      },
+    );
+  }
+
+  void showRemoveUserDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return Container(
+          color: AppColors.transparent,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: TextButton.icon(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.close, color: Colors.white, size: 18),
+                  label: Text("Close", style: TextStyle(color: Colors.white)),
+                  style: TextButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.w,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 6.10.h),
+              Dialog(
+                insetPadding: EdgeInsets.all(16.20.w),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                backgroundColor: AppColors.white,
+                child: Padding(
+                  padding: EdgeInsets.all(16.4.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(18.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.yellow.withOpacity(.2),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(14.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.yellow,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12.h),
+                      TextView(
+                        text: 'Remove User',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          color: AppColors.black,
+                          fontSize: 18.20.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      TextView(
+                        text:
+                            'Are you sure you want to make remove this sub-user (James Smith)?',
+                        textAlign: TextAlign.center,
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          color: AppColors.success,
+                          fontSize: 14.20.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(height: 20.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: AppColors.primary),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 32.w,
+                                vertical: 12.w,
+                              ),
+                            ),
+                            child: TextView(
+                              text: "Cancel",
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 15.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16.w),
+
+                          // Continue Button
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                Navigator.pop(context);
+                                await Future.delayed(
+                                  Duration(milliseconds: 100),
+                                );
+                                // Add your update logic here
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                  vertical: 12.w,
+                                ),
+                                elevation: 0,
+                              ),
+                              child: TextView(
+                                text: "Yes, Continue",
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 15.6.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
