@@ -2360,25 +2360,26 @@ class PharmViewModel extends BaseViewModel {
                 child: Padding(
                   padding: EdgeInsets.all(16.4.w),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Stack(
+                        alignment: Alignment.center,
                         children: [
                           Container(
-                            padding: EdgeInsets.all(18.w),
+                            padding: EdgeInsets.all(34.w),
                             decoration: BoxDecoration(
                               color: AppColors.yellow.withOpacity(.2),
                               shape: BoxShape.circle,
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.all(14.w),
+                            padding: EdgeInsets.all(24.w),
                             decoration: BoxDecoration(
                               color: AppColors.yellow,
                               shape: BoxShape.circle,
                             ),
                           ),
+                          SvgPicture.asset(AppImage.exclam)
                         ],
                       ),
                       SizedBox(height: 12.h),
