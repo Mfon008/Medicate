@@ -1934,12 +1934,12 @@ class PharmViewModel extends BaseViewModel {
                                 TextFormWidget(
                                   hint: 'Description',
                                   maxline: 4,
+                                  alignLabelWithHint: true,
                                   borderColor: AppColors.transparent,
                                   borderTopLeft: 10.r,
                                   borderTopRight: 10.r,
                                   borderBottomLeft: 10.r,
                                   borderBottomRight: 10.r,
-                                  obscureText: true,
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
                                       : 14.60.sp,
@@ -1953,17 +1953,7 @@ class PharmViewModel extends BaseViewModel {
                                   isFilled: true,
                                   // controller: nameController,
                                   validator: AppValidator.validateString(),
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(14.20.w),
-                                    child: GestureDetector(
-                                      child: SvgPicture.asset(
-                                        AppImage.closed_eye_user,
-                                        // color: AppColors.app_green,
-                                        height: 20.h,
-                                        width: 20.w,
-                                      ),
-                                    ),
-                                  ),
+                                 
                                 ),
                                 SizedBox(height: 70.h),
                                 ButtonWidget(
@@ -2379,7 +2369,7 @@ class PharmViewModel extends BaseViewModel {
                               shape: BoxShape.circle,
                             ),
                           ),
-                          SvgPicture.asset(AppImage.exclam)
+                          SvgPicture.asset(AppImage.exclam),
                         ],
                       ),
                       SizedBox(height: 12.h),

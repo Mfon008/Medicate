@@ -100,7 +100,7 @@ class PharmacySettingScreen extends StatelessWidget {
                     bottomLeft: 12,
                     bottomRight: 12,
                     text: 'Roles and Permissions',
-                    onTap: () => navigate.navigateTo(Routes.resetPinPadScreen),
+                    onTap: () => navigate.navigateTo(Routes.rolesAndPermissionScreen),
                   ),
                   SizedBox(height: 30.h),
                   SizedBox(height: 30.h),

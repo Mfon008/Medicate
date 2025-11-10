@@ -55,9 +55,9 @@ class RolesAndPermissionScreen extends StatelessWidget {
                   ),
                   child: SingleChildScrollView(
                     padding: EdgeInsets.symmetric(
-                      vertical: !model.onTapToAddUser! ? 120.w : 20.w,
+                      vertical: !model.onTapToAddRole! ? 120.w : 20.w,
                     ),
-                    child: !model.onTapToAddUser!
+                    child: !model.onTapToAddRole!
                         ? Column(
                             children: [
                               SvgPicture.asset(AppImage.no_user_data),
