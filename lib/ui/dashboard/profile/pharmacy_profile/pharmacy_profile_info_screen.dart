@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/bank_detail.dart';
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 // import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'package:medicate_app/main.dart';
@@ -9,7 +12,6 @@ import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
-import '../../../../core/core_folder/app/app.locator.dart';
 import '../../../../core/core_folder/manager/shared_preference.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
@@ -28,13 +30,13 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
 
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
-  TextEditingController ageController = TextEditingController();
-  TextEditingController genderController = TextEditingController();
+  TextEditingController licenceNoController = TextEditingController();
+  TextEditingController businessAddController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController countryController = TextEditingController();
-  TextEditingController heightController = TextEditingController();
-  TextEditingController weightController = TextEditingController();
+  TextEditingController contactDetailsController = TextEditingController();
+  TextEditingController bankNameController = TextEditingController();
+  TextEditingController bankNoController = TextEditingController();
 
   bool isPhone = false;
   bool isPhoneValid = false;
@@ -94,56 +96,69 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.h),
         child: ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => locator<PharmViewModel>(),
-          onViewModelReady: (model) {
-            print(SharedPreferencesService.instance.usersData);
-            // nameController.text =
-            //     SharedPreferencesService.instance.usersData['user']['fullName'];
-            // phoneController.text = SharedPreferencesService
-            //     .instance
-            //     .usersData['user']['phone']
-            //     .toString()
-            //     .substring(4);
-            // emailController.text =
-            //     SharedPreferencesService.instance.usersData['user']['email'] ??
-            //     '';
-            // dobController.text =
-            //     SharedPreferencesService
-            //             .instance
-            //             .usersData['user']['dateOfBirth'] ==
-            //         null
-            //     ? ''
-            //     : SharedPreferencesService
-            //           .instance
-            //           .usersData['user']['dateOfBirth']
-            //           .toString()
-            //           .substring(0, 10);
-            // genderController.text =
-            //     SharedPreferencesService.instance.usersData['user']['gender'] ??
-            //     '';
-            // ageController.text =
-            //     SharedPreferencesService.instance.usersData['user']['age'] ==
-            //         null
-            //     ? ''
-            //     : SharedPreferencesService.instance.usersData['user']['age']
-            //           .toString();
-            // model.countryController.text =
-            //     SharedPreferencesService
-            //         .instance
-            //         .usersData['user']['country'] ??
-            //     '';
-            // heightController.text =
-            //     SharedPreferencesService.instance.usersData['user']['height'] ==
-            //         null
-            //     ? ''
-            //     : SharedPreferencesService.instance.usersData['user']['height']
-            //           .toString();
-            // weightController.text =
-            //     SharedPreferencesService.instance.usersData['user']['weight'] ==
-            //         null
-            //     ? ''
-            //     : SharedPreferencesService.instance.usersData['user']['weight']
-            //           .toString();
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) async {
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              await model.getTenant(context);
+              nameController.text =
+                  model.getTetantResponseModel?.data?.name ?? '';
+              phoneController.text = SharedPreferencesService
+                  .instance
+                  .usersData['user']['phone']
+                  .toString()
+                  .substring(4);
+
+              licenceNoController.text =
+                  model.getTetantResponseModel?.data?.licenseNumber ?? '';
+              businessAddController.text =
+                  model.getTetantResponseModel?.data?.businessAddress ?? '';
+              bankNameController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .bankName ??
+                  "";
+              bankNoController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .accountNumber ??
+                  '';
+              emailController.text =
+                  model.getTetantResponseModel?.data?.email ?? '';
+              model.countryController.text =
+                  model.getTetantResponseModel?.data?.country ?? '';
+              model.stateController.text =
+                  model.getTetantResponseModel?.data?.state ?? '';
+              model.lgaController.text =
+                  model.getTetantResponseModel?.data?.lga ?? '';
+              model.selectService =
+                  model.getTetantResponseModel?.data?.servicesOffered ?? [];
+              print('print services:::${model.selectService}');
+              contactDetailsController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .accountName ??
+                  '';
+              bankNameController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .bankName ??
+                  '';
+              bankNoController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .accountNumber ??
+                  '';
+            });
           },
           disposeViewModel: false,
           builder: (_, PharmViewModel model, __) {
@@ -304,9 +319,15 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                     fontSize: 14.2.sp,
                                     color: AppColors.infoGrey,
                                   ),
-                                  fillColor: AppColors.grey,
+                                  fillColor: const Color.fromRGBO(
+                                    245,
+                                    246,
+                                    248,
+                                    1,
+                                  ),
                                   isFilled: true,
-                                  controller: phoneController,
+                                  readOnly: true,
+                                  label: phoneController.text,
                                   onChange: (p0) {
                                     if (p0.isEmpty) {
                                       isPhone = false;
@@ -315,18 +336,18 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                     }
                                     setState(() {});
                                   },
-                                  validator: (value) {
-                                    final result = AppValidator.validatePhone()(
-                                      value,
-                                    );
-                                    if (result != null) {
-                                      isPhoneValid = true;
-                                    } else {
-                                      isPhoneValid = false;
-                                    }
-                                    setState(() {});
-                                    return result;
-                                  },
+                                  // validator: (value) {
+                                  //   final result = AppValidator.validatePhone()(
+                                  //     value,
+                                  //   );
+                                  //   if (result != null) {
+                                  //     isPhoneValid = true;
+                                  //   } else {
+                                  //     isPhoneValid = false;
+                                  //   }
+                                  //   setState(() {});
+                                  //   return result;
+                                  // },
                                 ),
                               ),
                             ),
@@ -349,8 +370,9 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: nameController,
-                          validator: AppValidator.validateString(),
+                          readOnly: true,
+                          label: nameController.text,
+                          // validator: AppValidator.validateString(),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -372,8 +394,9 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: nameController,
-                          validator: AppValidator.validateString(),
+                          readOnly: true,
+                          label: licenceNoController.text,
+                          // validator: AppValidator.validateString(),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -395,7 +418,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: nameController,
+                          controller: businessAddController,
                           validator: AppValidator.validateString(),
                           onChange: (p0) {
                             setState(() {});
@@ -420,7 +443,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          // controller: model.countryController,
+                          controller: model.countryController,
                           validator: AppValidator.validateString(),
                           suffixWidget: Padding(
                             padding: EdgeInsets.all(14.20.w),
@@ -433,7 +456,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Email',
+                          hint: 'Email Address',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -449,7 +472,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: emailController,
-                          validator: AppValidator.validateString(),
+                          validator: AppValidator.validateEmail(),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -477,13 +500,16 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 ),
                                 fillColor: AppColors.grey,
                                 isFilled: true,
-                                controller: emailController,
+                                controller: model.stateController,
                                 validator: AppValidator.validateString(),
                                 suffixWidget: Padding(
                                   padding: EdgeInsets.all(14.20.w),
                                   child: GestureDetector(
-                                    child: SvgPicture.asset(
-                                      AppImage.arrow_down,
+                                    onTap: () => model.modalBottomSheetMenuState(context),
+                                    child: GestureDetector(
+                                      child: SvgPicture.asset(
+                                        AppImage.arrow_down,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -512,7 +538,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 ),
                                 fillColor: AppColors.grey,
                                 isFilled: true,
-                                controller: emailController,
+                                controller: model.lgaController,
                                 validator: AppValidator.validateString(),
                                 suffixWidget: Padding(
                                   padding: EdgeInsets.all(14.20.w),
@@ -545,30 +571,25 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           return model.chooseNotChannelWidget(
                             context,
                             text: model.services[index],
-                            isTapped: model.selectedIndexes.contains(
-                              index,
+                            isTapped: model.selectService.contains(
+                              model.services[index],
                             ), // ✅ reflect state
                             onTap: () {
-                              if (model.selectedIndexes.contains(index)) {
+                              print('fealess:$index');
+                              if (model.selectService.contains(
+                                model.services[index],
+                              )) {
                                 // unselect
-                                model.selectedIndexes.remove(index);
+                                // model.selectedIndexes.remove(index);
+                                model.selectService.remove(
+                                  model.services[index],
+                                );
                               } else {
                                 // select
-                                model.selectedIndexes.add(index);
-                                // ✅ Show specific dialogs
-                                if (index == 0 || index == 1) {
-                                  // Email
-                                  // showEmailDialog(context);
-                                } else if ([2, 3, 4].contains(index)) {
-                                  // Phone-related channels
-
-                                  // showPhoneDialog(context);
-                                  // isPhoneValid = false;
-                                  // model!.notifyListeners();
-                                }
+                                // model.selectedIndexes.add(index);
+                                model.selectService.add(model.services[index]);
                               } // ✅ update selection
-                              // buildChannelList(selectedIndexes);
-                              // addCostTotal();
+
                               model.notifyListeners();
                             },
                           );
@@ -597,8 +618,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          // label: '--Select--',
-                          // readOnly: true,
                           keyboardType: TextInputType.number,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -608,12 +627,8 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: heightController,
+                          controller: contactDetailsController,
                           validator: AppValidator.validateString(),
-                          // suffixWidget: Padding(
-                          //   padding: EdgeInsets.all(14.20.w),
-                          //   child: SvgPicture.asset(AppImage.arrow_down),
-                          // ),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -624,8 +639,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          // label: '--Select--',
-                          // readOnly: true,
                           keyboardType: TextInputType.number,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -635,12 +648,11 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: weightController,
-                          validator: AppValidator.validateString(),
-                          // suffixWidget: Padding(
-                          //   padding: EdgeInsets.all(14.20.w),
-                          //   child: SvgPicture.asset(AppImage.arrow_down),
-                          // ),
+                          controller: emailController,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp("[a-z]")),
+                          ],
+                          // validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 30.h),
                         TextView(
@@ -666,7 +678,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
                           label: '--Select--',
-                          // readOnly: true,
                           keyboardType: TextInputType.number,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -676,12 +687,12 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: heightController,
+                          controller: bankNameController,
                           validator: AppValidator.validateString(),
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(14.20.w),
-                            child: SvgPicture.asset(AppImage.arrow_down),
-                          ),
+                          // suffixWidget: Padding(
+                          //   padding: EdgeInsets.all(14.20.w),
+                          //   child: SvgPicture.asset(AppImage.arrow_down),
+                          // ),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -692,8 +703,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '--Select--',
-                          // readOnly: true,
+                          label: 'Enter account number',
                           keyboardType: TextInputType.number,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -703,12 +713,12 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: weightController,
+                          controller: bankNoController,
                           validator: AppValidator.validateString(),
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(14.20.w),
-                            child: SvgPicture.asset(AppImage.arrow_down),
-                          ),
+                          // suffixWidget: Padding(
+                          //   padding: EdgeInsets.all(14.20.w),
+                          //   child: SvgPicture.asset(AppImage.arrow_down),
+                          // ),
                         ),
                       ],
                     ),
@@ -741,7 +751,50 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isLoading: model.isLoading,
                           buttonBorderColor: AppColors.transparent,
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {}
+                            if (formKey.currentState!.validate()) {
+                              print(
+                                UpdatePharmacyProfileEntityModel(
+                                  country: model.countryController.text,
+                                  state: model.stateController.text,
+                                  lga: model.lgaController.text,
+                                  businessAddress: businessAddController.text,
+                                  servicesOffered: model.selectService,
+                                  contactPersonName:
+                                      contactDetailsController.text,
+                                  contactEmail: emailController.text,
+                                  bankDetails: [
+                                    BankDetail(
+                                      bankName: bankNameController.text,
+                                      accountName:
+                                          contactDetailsController.text,
+                                      accountNumber: bankNoController.text,
+                                    ),
+                                  ],
+                                ).toJson(),
+                              );
+
+                              model.updatePharmacy(
+                                context,
+                                update: UpdatePharmacyProfileEntityModel(
+                                  country: model.countryController.text,
+                                  state: model.stateController.text,
+                                  lga: model.lgaController.text,
+                                  businessAddress: businessAddController.text,
+                                  servicesOffered: model.selectService,
+                                  contactPersonName:
+                                      contactDetailsController.text,
+                                  contactEmail: emailController.text,
+                                  bankDetails: [
+                                    BankDetail(
+                                      bankName: bankNameController.text,
+                                      accountName:
+                                          contactDetailsController.text,
+                                      accountNumber: bankNoController.text,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                           },
                         ),
                       ),

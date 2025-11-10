@@ -19,14 +19,19 @@ class UrlConfig {
   static const String change_number = 'auth/change-phonenumber/';
   static const String change_number_pharmacy = 'auth/change-phone';
   static const String change_pin = 'auth/change-pin';
+  static const String get_tenant = 'auth/get-tenant-profile';
   static const String support = 'v1/api/support';
+  static const String pharmacy = 'pharmacy';
   static const String upload_pro_picture =
       'auth/individual-user/upload/profile-picture';
   static const String update_user_profile = 'auth/individual-user/update';
+  static const String update_pharmacy_profile = 'auth/update-pharmacy-profile';
   static const String reminder = 'reminders';
   static const String today_reminder = 'reminders/daily';
   static const String upload_image_reminder = 'reminders/image';
   static const String upload_image_reminder_update =
       'reminders/medication-image';
   static const String initiate_payment = 'payment/initiate';
+  static const String state = 'countries/states/q';
+  // static const String city = 'api/v0.1/countries/state/cities';
 }

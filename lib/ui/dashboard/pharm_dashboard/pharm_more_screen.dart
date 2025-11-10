@@ -77,14 +77,16 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                       context,
                       icon: AppImage.settings,
                       text: 'Settings',
-                      onTap: () => navigate.navigateTo(Routes.pharmacySettingScreen),
+                      onTap: () =>
+                          navigate.navigateTo(Routes.pharmacySettingScreen),
                     ),
                     SizedBox(width: 14.w),
                     moreContainer(
                       context,
                       icon: AppImage.profile,
                       text: 'Profile',
-                      onTap: () => navigate.navigateTo(Routes.pharmacyProfileScreen),
+                      onTap: () =>
+                          navigate.navigateTo(Routes.pharmacyProfileScreen),
                     ),
                   ],
                 ),

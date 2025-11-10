@@ -251,7 +251,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: licenseNoController,
                     validator: AppValidator.validateString(),
-                    
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -273,7 +272,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: businessAddressController,
                     validator: AppValidator.validateString(),
-                    
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -295,7 +293,6 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                     isFilled: true,
                     controller: emailAddressController,
                     validator: AppValidator.validateEmail(),
-
                   ),
                   SizedBox(height: 16.h),
                   Row(

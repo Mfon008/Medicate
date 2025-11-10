@@ -227,8 +227,9 @@ class _PharmacyForgotPinScreenState extends State<PharmacyForgotPinScreen> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                            ..onTap = () =>
-                                navigate.navigateTo(Routes.pharmacySignUpScreen),
+                              ..onTap = () => navigate.navigateTo(
+                                Routes.pharmacySignUpScreen,
+                              ),
                           ),
                         ],
                       ),

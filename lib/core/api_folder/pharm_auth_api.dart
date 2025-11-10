@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
@@ -11,6 +12,7 @@ import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../connect_end/model/sign_up_pharmacy_entity_model.dart';
+import '../connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
@@ -23,8 +25,8 @@ import '../core_folder/network/url_path.dart';
 @lazySingleton
 class PharmApi {
   final _service = locator<NetworkService>();
-  // final _serviceSupport = locator<sup.SupportNetworkService>();
-  final logger = getLogger('PharmViewModel');
+  // final _servicesupport = locator<sup.SupportNetworkService>();
+  final logger = getLogger('Pharm Api');
   final session = locator<SharedPreferencesService>();
 
   Future<PharmacyLoginResponseModel> signIn(
@@ -154,9 +156,12 @@ class PharmApi {
         UrlConfig.change_number_pharmacy,
         RequestMethod.patch,
         data: {"newPhoneNumber": phone},
-        options: Options(headers: {
-          "Authorization": "Bearer ${session.authToken}",
-          "x-reset-token": "$id"}),
+        options: Options(
+          headers: {
+            "Authorization": "Bearer ${session.authToken}",
+            "x-reset-token": "$id",
+          },
+        ),
       );
       logger.d(response.data);
       return response.data;
@@ -259,4 +264,36 @@ class PharmApi {
       rethrow;
     }
   }
+
+  Future<GetTenantResponseModel> getTenant() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_tenant,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetTenantResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updatePharmacy(
+    UpdatePharmacyProfileEntityModel? updatePharmacy,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_pharmacy_profile,
+        RequestMethod.patch,
+        data: updatePharmacy!.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
 }

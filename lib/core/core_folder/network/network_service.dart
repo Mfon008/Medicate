@@ -105,7 +105,6 @@ class NetworkService {
             data: data,
             options: options ?? await _getOption(),
           );
-
           break;
         case RequestMethod.put:
           response = await dio!.put(
