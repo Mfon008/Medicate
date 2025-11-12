@@ -19,6 +19,7 @@ class UrlConfig {
   static const String change_number = 'auth/change-phonenumber/';
   static const String change_number_pharmacy = 'auth/change-phone';
   static const String change_pin = 'auth/change-pin';
+  static const String uplaod_image = 'auth/upload-file';
   static const String get_tenant = 'auth/get-tenant-profile';
   static const String support = 'v1/api/support';
   static const String pharmacy = 'pharmacy';
@@ -33,5 +34,5 @@ class UrlConfig {
       'reminders/medication-image';
   static const String initiate_payment = 'payment/initiate';
   static const String state = 'countries/states/q';
-  // static const String city = 'api/v0.1/countries/state/cities';
+  static const String get_kyc = 'auth/get-kyc';
 }

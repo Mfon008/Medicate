@@ -1,6 +1,8 @@
 // ignore_for_file: strict_top_level_inference
 
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 import 'dart:async';
@@ -9,10 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/connect_end/model/get_city_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_state_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
@@ -24,6 +29,7 @@ import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
 import '../../app_assets/country_code_format.dart';
 import '../../app_assets/image.dart';
+import '../../app_assets/image_picker.dart';
 import '../../config/colors.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
@@ -53,6 +59,14 @@ class PharmViewModel extends BaseViewModel {
   final session = locator<SharedPreferencesService>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _isLoadingMeansId = false;
+  bool get isLoadingMeansId => _isLoadingMeansId;
+  bool _isLoadingCAC = false;
+  bool get isLoadingCAC => _isLoadingCAC;
+  bool _isLoadingLicense = false;
+  bool get isLoadingLicense => _isLoadingLicense;
+  bool _isLoadingTIN = false;
+  bool get isLoadingV => _isLoadingTIN;
   String? pinInput;
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateAddUser = GlobalKey<FormState>();
@@ -90,13 +104,46 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController countryController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController lgaController = TextEditingController();
+  TextEditingController meansIdController = TextEditingController();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   bool? onTapToAddUser = false;
   bool? onTapToAddRole = false;
   List<String> selectService = [];
 
+  GetStateResponseModel? _getStateResponseModel;
+  GetStateResponseModel? get getStateResponseModel => _getStateResponseModel;
+  GetCityResponseModel? get getCityResponseModel => _getCityResponseModel;
+  GetCityResponseModel? _getCityResponseModel;
+  UploadImageResponseModel? _uploadImageResponseModel;
+  UploadImageResponseModel? get uploadImageResponseModel =>
+      _uploadImageResponseModel;
+  UploadImageResponseModel? _uploadImageResponseModelMeansID;
+  UploadImageResponseModel? get uploadImageResponseModelMeansID =>
+      _uploadImageResponseModelMeansID;
+  UploadImageResponseModel? _uploadImageResponseModelCAC;
+  UploadImageResponseModel? get uploadImageResponseModelCAC =>
+      _uploadImageResponseModelCAC;
+  UploadImageResponseModel? _uploadImageResponseModelPharmLicense;
+  UploadImageResponseModel? get uploadImageResponseModelPharmLicense =>
+      _uploadImageResponseModelPharmLicense;
+  UploadImageResponseModel? _uploadImageResponseModelTIN;
+  UploadImageResponseModel? get uploadImageResponseModelTIN =>
+      _uploadImageResponseModelTIN;
+  GetPharmacyKycResponseModel? get getPharmacyKycResponseModel =>
+      _getPharmacyKycResponseModel;
+  GetPharmacyKycResponseModel? _getPharmacyKycResponseModel;
+
+  final _pickImage = ImagePickerHandler();
+  File? imageMeansId;
+  String? filenameMeansId;
+  File? imageCAC;
+  String? filenameCAC;
+  File? imageTIN;
+  String? filenameTIN;
+  File? imagePharmLicense;
+  String? filenamePharmLicense;
+
   int _start = 60;
-  // Timer? _timer;
   String querySignUpCountry = '';
   String queryState = '';
   String queryLga = '';
@@ -106,6 +153,18 @@ class PharmViewModel extends BaseViewModel {
     'Order Fulfilment',
     'Appointment Scheduling',
     'Setup Reminders for Customers',
+  ];
+  List meansId = [
+    'Driver’s License',
+    'International Passport ',
+    'National ID',
+    'Citizenship Card',
+    'Biometric Residence Permit (BRP)',
+    'State ID Card ',
+    'Green Card/Resident Card',
+    'Voter ID Card',
+    'Asylum Seeker ID',
+    'Alien ID Card',
   ];
 
   final List<int> selectedIndexes = [];
@@ -1194,9 +1253,6 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  GetStateResponseModel? _getStateResponseModel;
-  GetStateResponseModel? get getStateResponseModel => _getStateResponseModel;
-
   Future<void> fetchStates(String country) async {
     final uri = Uri.parse(
       'https://countriesnow.space/api/v0.1/countries/states/q',
@@ -1215,6 +1271,33 @@ class PharmViewModel extends BaseViewModel {
         final jsonData = jsonDecode(response.body);
         _getStateResponseModel = GetStateResponseModel.fromJson(jsonData);
         print('✅ Success: ${_getStateResponseModel?.toJson()}');
+      } else {
+        print('❌ Error ${response.statusCode}: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('⚠️ Exception: $e');
+    }
+    notifyListeners();
+  }
+
+  Future<void> fetchLga({String? country, String? state}) async {
+    final uri = Uri.parse(
+      'https://countriesnow.space/api/v0.1/countries/state/cities/q',
+    ).replace(queryParameters: {'country': country, 'state': state});
+
+    try {
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        _getCityResponseModel = GetCityResponseModel.fromJson(jsonData);
+        print('✅ Success: ${_getCityResponseModel?.toJson()}');
       } else {
         print('❌ Error ${response.statusCode}: ${response.reasonPhrase}');
       }
@@ -1422,18 +1505,24 @@ class PharmViewModel extends BaseViewModel {
             builder: (context, scrollController) {
               return ViewModelBuilder<PharmViewModel>.reactive(
                 viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) {},
+                onViewModelReady: (model) {
+                  model.fetchLga(
+                    country: countryController.text,
+                    state: stateController.text,
+                  );
+                },
                 disposeViewModel: false,
                 builder: (_, PharmViewModel model, __) {
                   return SingleChildScrollView(
                     controller: scrollController,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 22.0.h),
                         Padding(
                           padding: EdgeInsets.all(12.w),
                           child: TextFormWidget(
-                            label: 'Search country',
+                            label: 'Search city',
                             isFilled: true,
                             borderTopLeft: 10.r,
                             borderTopRight: 10.r,
@@ -1441,23 +1530,27 @@ class PharmViewModel extends BaseViewModel {
                             borderBottomRight: 10.r,
                             fillColor: AppColors.grey,
                             onChange: (p0) {
-                              querySignUpCountry = p0;
+                              queryLga = p0;
                               model.notifyListeners();
                             },
                             suffixIcon: Icons.search_sharp,
-                            controller: countryController,
+                            controller: lgaController,
                           ),
                         ),
                         SizedBox(height: 16.h),
-                        querySignUpCountry == ''
-                            ? SizedBox(
-                                width: 400.w,
-                                child: Column(
-                                  children: [
-                                    ...countryCodeFormat.map(
+                        queryLga == ''
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (model.getCityResponseModel != null &&
+                                      model
+                                          .getCityResponseModel!
+                                          .data!
+                                          .isNotEmpty)
+                                    ...model.getCityResponseModel!.data!.map(
                                       (e) => GestureDetector(
                                         onTap: () {
-                                          countryController.text = e['country'];
+                                          lgaController.text = e;
                                           Navigator.pop(context);
                                           model.notifyListeners();
                                         },
@@ -1479,7 +1572,7 @@ class PharmViewModel extends BaseViewModel {
                                             child: SizedBox(
                                               width: 200.w,
                                               child: TextView(
-                                                text: '${e['country']}',
+                                                text: e,
                                                 textOverflow:
                                                     TextOverflow.ellipsis,
                                                 textStyle: TextStyle(
@@ -1496,24 +1589,21 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                ],
                               )
                             : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ...countryCodeFormat
+                                  ...model.getCityResponseModel!.data!
                                       .where(
-                                        (o) => o['country']!
-                                            .toLowerCase()
-                                            .contains(
-                                              querySignUpCountry.toLowerCase(),
-                                            ),
+                                        (o) => o.toLowerCase().contains(
+                                          queryLga.toLowerCase(),
+                                        ),
                                       )
                                       .map(
                                         (e) => GestureDetector(
                                           onTap: () {
-                                            countryController.text =
-                                                e['country']!;
+                                            lgaController.text = e;
                                             Navigator.pop(context);
                                             model.notifyListeners();
                                           },
@@ -1532,29 +1622,17 @@ class PharmViewModel extends BaseViewModel {
                                                     BorderRadius.circular(10),
                                                 color: AppColors.transparent,
                                               ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 180.w,
-                                                    child: TextView(
-                                                      text: '${e['country']}',
-                                                      textOverflow:
-                                                          TextOverflow.ellipsis,
-                                                      textStyle: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 17.2.sp,
+                                              child: TextView(
+                                                text: e,
+                                                textOverflow:
+                                                    TextOverflow.ellipsis,
+                                                textStyle: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 17.2.sp,
 
-                                                        color: AppColors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  buildImage(e['Flag']),
-                                                ],
+                                                  color: AppColors.black,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -1692,6 +1770,30 @@ class PharmViewModel extends BaseViewModel {
       _isLoading = true;
       _getTetantResponseModel = await runBusyFuture(
         repositoryImply.getTenant(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  bool returnBool() {
+    if (_getTetantResponseModel == null ||
+        _getTetantResponseModel!.data!.bankDetails == null) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> getPharmacyKyc(context) async {
+    try {
+      _isLoading = true;
+      _getPharmacyKycResponseModel = await runBusyFuture(
+        repositoryImply.getPharmacyKyc(),
         throwException: true,
       );
       _isLoading = false;
@@ -2893,5 +2995,211 @@ class PharmViewModel extends BaseViewModel {
         );
       },
     );
+  }
+
+  getPopUpMenuDialog(BuildContext context) => PopupMenuButton<String>(
+    onSelected: (String result) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Selected: $result')));
+    },
+    color: AppColors.white,
+    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+      ...meansId.map(
+        (o) => PopupMenuItem<String>(
+          value: o.toString().toLowerCase(),
+          child: TextView(
+            text: o,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.deep,
+            ),
+          ),
+          onTap: () {
+            meansIdController.text = o;
+            notifyListeners();
+          },
+        ),
+      ),
+    ],
+    child: Padding(
+      padding: EdgeInsets.all(14.20.w),
+      child: SvgPicture.asset(AppImage.arrow_down),
+    ),
+  );
+
+  formartFileImage(File? imageFile) {
+    if (imageFile == null) return;
+    return File(imageFile.path.replaceAll('\'', '').replaceAll('File: ', ''));
+  }
+
+  Future<void> uploadImage({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      _uploadImageResponseModel = await runBusyFuture(
+        repositoryImply.uploadImage(file!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void pickImageMeansId(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageMeansId = file;
+          filenameMeansId = imageMeansId!.path.split("/").last;
+          _isLoadingMeansId = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageMeansId).readAsBytesSync(),
+              filename: imageMeansId!.path.split("/").last,
+            ),
+          );
+          _isLoadingMeansId = _isLoading;
+          _uploadImageResponseModelMeansID = _uploadImageResponseModel;
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickImageCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelCAC = _uploadImageResponseModel;
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickImagePharmLicense(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imagePharmLicense = file;
+          filenamePharmLicense = imagePharmLicense!.path.split("/").last;
+          _isLoadingLicense = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imagePharmLicense).readAsBytesSync(),
+              filename: imagePharmLicense!.path.split("/").last,
+            ),
+          );
+          _isLoadingLicense = _isLoading;
+          _uploadImageResponseModelPharmLicense = _uploadImageResponseModel;
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickImageTIN(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageTIN = file;
+          filenameTIN = imageTIN!.path.split("/").last;
+          _isLoadingTIN = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageTIN).readAsBytesSync(),
+              filename: imageTIN!.path.split("/").last,
+            ),
+          );
+          _isLoadingTIN = _isLoading;
+          _uploadImageResponseModelTIN = _uploadImageResponseModel;
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  String getKycStatus({id, cac, license, tin}) {
+    if (id == 'PENDING' ||
+        cac == 'PENDING' ||
+        license == 'PENDING' ||
+        tin == 'PENDING') {
+      return 'Your KYC is submitted and under\nreview. We’ll notify you once it’s\nverified.';
+    }
+    if (id == 'APPROVED' &&
+        cac == 'APPROVED' &&
+        license == 'APPROVED' &&
+        tin == 'APPROVED') {
+      return 'Your KYC has been successfully\nverified. You can now access all\nservices.';
+    }
+    return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
+  }
+
+  Color getKycStatusColor({id, cac, license, tin}) {
+    if (id == 'PENDING' ||
+        cac == 'PENDING' ||
+        license == 'PENDING' ||
+        tin == 'PENDING') {
+      return AppColors.fadedyellow;
+    }
+    if (id == 'APPROVED' &&
+        cac == 'APPROVED' &&
+        license == 'APPROVED' &&
+        tin == 'APPROVED') {
+      return AppColors.app_green_light;
+    }
+    return AppColors.fadedyellow;
+  }
+
+  bool getKycStatusBool({id, cac, license, tin}) {
+    if (id == 'PENDING' ||
+        cac == 'PENDING' ||
+        license == 'PENDING' ||
+        tin == 'PENDING') {
+      return true;
+    }
+    if (id == 'APPROVED' &&
+        cac == 'APPROVED' &&
+        license == 'APPROVED' &&
+        tin == 'APPROVED') {
+      return true;
+    }
+    return false;
   }
 }

@@ -40,36 +40,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
 
   bool isPhone = false;
   bool isPhoneValid = false;
-  // DateTime?
-  // _selectedDate; // Use nullable DateTime to handle no selection initially
-
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: _selectedDate ?? DateTime.now(), // Initial date shown
-  //     firstDate: DateTime(1900), // Earliest selectable date
-  //     lastDate: DateTime(2100), // Latest selectable date
-  //   );
-  //   if (picked != null && picked != _selectedDate) {
-  //     setState(() {
-  //       _selectedDate = picked;
-  //       ageController.text = calculateAge(_selectedDate!).toString();
-  //       dobController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
-  //     });
-  //   }
-  // }
-
-  // int calculateAge(DateTime birthDate) {
-  //   DateTime today = DateTime.now();
-  //   int age = today.year - birthDate.year;
-
-  //   if (today.month < birthDate.month ||
-  //       (today.month == birthDate.month && today.day < birthDate.day)) {
-  //     age--;
-  //   }
-
-  //   return age;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +106,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                   model.getTetantResponseModel?.data?.lga ?? '';
               model.selectService =
                   model.getTetantResponseModel?.data?.servicesOffered ?? [];
-              print('print services:::${model.selectService}');
               contactDetailsController.text =
                   model
                       .getTetantResponseModel
@@ -178,33 +147,42 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 12.w,
-                            horizontal: 12.w,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.fadedyellow,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(AppImage.info),
-                              SizedBox(width: 10.w),
-                              TextView(
-                                text:
-                                    'Complete your profile by updating the\nremaining fields.',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.black,
+                        bankNameController.text.isEmpty ||
+                                bankNoController.text.isEmpty
+                            ? Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 12.w,
+                                  horizontal: 12.w,
                                 ),
-                              ),
-                            ],
-                          ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.fadedyellow,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(AppImage.info),
+                                    SizedBox(width: 10.w),
+                                    TextView(
+                                      text:
+                                          'Complete your profile by updating the\nremaining fields.',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                        SizedBox(
+                          height:
+                              bankNameController.text.isEmpty ||
+                                  bankNoController.text.isEmpty
+                              ? 0.h
+                              : 16.8.h,
                         ),
-                        SizedBox(height: 16.8.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -505,7 +483,8 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 suffixWidget: Padding(
                                   padding: EdgeInsets.all(14.20.w),
                                   child: GestureDetector(
-                                    onTap: () => model.modalBottomSheetMenuState(context),
+                                    onTap: () => model
+                                        .modalBottomSheetMenuState(context),
                                     child: GestureDetector(
                                       child: SvgPicture.asset(
                                         AppImage.arrow_down,
@@ -543,8 +522,12 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 suffixWidget: Padding(
                                   padding: EdgeInsets.all(14.20.w),
                                   child: GestureDetector(
-                                    child: SvgPicture.asset(
-                                      AppImage.arrow_down,
+                                    onTap: () =>
+                                        model.modalBottomSheetMenuLga(context),
+                                    child: GestureDetector(
+                                      child: SvgPicture.asset(
+                                        AppImage.arrow_down,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -575,18 +558,15 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                               model.services[index],
                             ), // ✅ reflect state
                             onTap: () {
-                              print('fealess:$index');
                               if (model.selectService.contains(
                                 model.services[index],
                               )) {
                                 // unselect
-                                // model.selectedIndexes.remove(index);
                                 model.selectService.remove(
                                   model.services[index],
                                 );
                               } else {
                                 // select
-                                // model.selectedIndexes.add(index);
                                 model.selectService.add(model.services[index]);
                               } // ✅ update selection
 
@@ -689,10 +669,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isFilled: true,
                           controller: bankNameController,
                           validator: AppValidator.validateString(),
-                          // suffixWidget: Padding(
-                          //   padding: EdgeInsets.all(14.20.w),
-                          //   child: SvgPicture.asset(AppImage.arrow_down),
-                          // ),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -715,9 +691,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isFilled: true,
                           controller: bankNoController,
                           validator: AppValidator.validateString(),
-                          // suffixWidget: Padding(
-                          //   padding: EdgeInsets.all(14.20.w),
-                          //   child: SvgPicture.asset(AppImage.arrow_down),
                           // ),
                         ),
                       ],
@@ -752,27 +725,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           buttonBorderColor: AppColors.transparent,
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              print(
-                                UpdatePharmacyProfileEntityModel(
-                                  country: model.countryController.text,
-                                  state: model.stateController.text,
-                                  lga: model.lgaController.text,
-                                  businessAddress: businessAddController.text,
-                                  servicesOffered: model.selectService,
-                                  contactPersonName:
-                                      contactDetailsController.text,
-                                  contactEmail: emailController.text,
-                                  bankDetails: [
-                                    BankDetail(
-                                      bankName: bankNameController.text,
-                                      accountName:
-                                          contactDetailsController.text,
-                                      accountNumber: bankNoController.text,
-                                    ),
-                                  ],
-                                ).toJson(),
-                              );
-
                               model.updatePharmacy(
                                 context,
                                 update: UpdatePharmacyProfileEntityModel(

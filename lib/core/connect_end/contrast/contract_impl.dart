@@ -19,8 +19,7 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_entity_model.dart';
-import '../model/sign_up_response_model/sign_up_response_model.dart'
-    show SignUpResponseModel;
+import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/support_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';

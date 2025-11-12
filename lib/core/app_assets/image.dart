@@ -11,6 +11,8 @@ class AppImage {
   static const String fa = 'assets/svgs/2fa.svg';
   static const String users = 'assets/svgs/users.svg';
   static const String role = 'assets/svgs/role.svg';
+  static const String kyc_file = 'assets/svgs/file_kyc.svg';
+  static const String kyc_eye = 'assets/svgs/kyc_eye.svg';
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String calendar = 'assets/svgs/calendar.svg';

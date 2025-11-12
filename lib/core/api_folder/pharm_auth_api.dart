@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:medicate_app/core/connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -279,6 +281,20 @@ class PharmApi {
     }
   }
 
+  Future<GetPharmacyKycResponseModel> getPharmacyKyc() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_kyc,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetPharmacyKycResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<dynamic> updatePharmacy(
     UpdatePharmacyProfileEntityModel? updatePharmacy,
   ) async {
@@ -296,4 +312,18 @@ class PharmApi {
     }
   }
 
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.uplaod_image,
+        RequestMethod.upload,
+        formData: FormData.fromMap({'file': file}),
+      );
+      logger.d(response.data);
+      return UploadImageResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
 }

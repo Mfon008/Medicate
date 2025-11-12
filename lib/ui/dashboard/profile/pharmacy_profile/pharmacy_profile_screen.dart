@@ -21,7 +21,16 @@ class PharmacyProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<PharmViewModel>.reactive(
       viewModelBuilder: () => locator<PharmViewModel>(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await model.getTenant(context);
+          model.getUserDetails(
+            context: context,
+            phoneNo:
+                SharedPreferencesService.instance.usersData['user']['phone'],
+          );
+        });
+      },
       disposeViewModel: false,
       builder: (_, PharmViewModel model, __) {
         return Scaffold(
@@ -91,8 +100,8 @@ class PharmacyProfileScreen extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Center(
                     child: TextView(
-                      text: 'Sunrise Pharmacy',
-                      // '${SharedPreferencesService.instance.usersData['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
+                      text:
+                          '${SharedPreferencesService.instance.usersData['user']['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
                       textStyle: TextStyle(
                         fontSize: 16.2.sp,
                         fontWeight: FontWeight.w500,
@@ -103,8 +112,8 @@ class PharmacyProfileScreen extends StatelessWidget {
                   SizedBox(height: 2.10.h),
                   Center(
                     child: TextView(
-                      text: 'Sunrisepharmacy@gmail.com',
-                      // '${SharedPreferencesService.instance.usersData['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
+                      text:
+                          '${SharedPreferencesService.instance.usersData['user']['email'] ?? ''}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14.2.sp,
@@ -113,25 +122,12 @@ class PharmacyProfileScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 2.10.h),
-                  Center(
-                    child: TextView(
-                      text:
-                          '${SharedPreferencesService.instance.usersData['email'] ?? ''}',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.infoGrey,
-                      ),
-                    ),
-                  ),
 
                   SizedBox(height: 20.h),
                   profileContainer(
                     icon: AppImage.profile,
                     text: 'Profile Information',
-                    isactive: true,
+                    isactive:model.returnBool(),
                     topLeft: 12,
                     topRight: 12,
                     onTap: () =>
