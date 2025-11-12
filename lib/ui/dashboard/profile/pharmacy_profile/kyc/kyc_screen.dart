@@ -489,10 +489,9 @@ class KycScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      model
-                                  .getPharmacyKycResponseModel
+                      model.getPharmacyKycResponseModel
                                   ?.data
-                                  ?.kycDocuments?[1]
+                                  ?.kycDocuments?[2]
                                   .file !=
                               null
                           ? Container(
@@ -525,7 +524,51 @@ class KycScreen extends StatelessWidget {
                                 ],
                               ),
                             )
-                          : SizedBox(
+                          : model.isLoadingLicense
+                          ? Center(
+                              child: SpinKitCircle(
+                                color: AppColors.infoGrey,
+                                size: 32.40.sp,
+                              ),
+                            )
+                          : model.filenamePharmLicense != null
+                          ? Container(
+                              padding: EdgeInsets.all(10.w),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.tintColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(AppImage.kyc_file),
+                                  SizedBox(width: 14.20.w),
+                                  SizedBox(
+                                    width: 200.w,
+                                    child: TextView(
+                                      text: model.filenamePharmLicense ?? "",
+                                      textOverflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.filenamePharmLicense = null;
+                                      model.imagePharmLicense = null;
+                                      model.notifyListeners();
+                                    },
+                                    child: SvgPicture.asset(AppImage.delete),
+                                  ),
+                                ],
+                              ),
+                            )
+                          :  SizedBox(
                               width: double.infinity,
                               child: DottedBorder(
                                 options: RoundedRectDottedBorderOptions(
@@ -534,48 +577,51 @@ class KycScreen extends StatelessWidget {
                                   radius: Radius.circular(10),
                                   color: AppColors.primary,
                                 ),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 16.20.w,
-                                    horizontal: 22.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(AppImage.upload_doc),
-                                      SizedBox(width: 10.w),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text: 'Upload Document',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.reminder,
+                                child: GestureDetector(
+                                  onTap: () => model.pickImagePharmLicense(context),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 16.20.w,
+                                      horizontal: 22.0.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: AppColors.white,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(AppImage.upload_doc),
+                                        SizedBox(width: 10.w),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextView(
+                                              text: 'Upload Document',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 14.2.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.reminder,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: 2.0.h),
-                                          TextView(
-                                            text:
-                                                'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 13.6.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
+                                            SizedBox(height: 2.0.h),
+                                            TextView(
+                                              text:
+                                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 13.6.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.fineGrey,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -608,10 +654,9 @@ class KycScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      model
-                                  .getPharmacyKycResponseModel
+                      model.getPharmacyKycResponseModel
                                   ?.data
-                                  ?.kycDocuments?[1]
+                                  ?.kycDocuments?[3]
                                   .file !=
                               null
                           ? Container(
@@ -644,6 +689,50 @@ class KycScreen extends StatelessWidget {
                                 ],
                               ),
                             )
+                          : model.isLoadingTIN
+                          ? Center(
+                              child: SpinKitCircle(
+                                color: AppColors.infoGrey,
+                                size: 32.40.sp,
+                              ),
+                            )
+                          : model.filenameTIN != null
+                          ? Container(
+                              padding: EdgeInsets.all(10.w),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.tintColor),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(AppImage.kyc_file),
+                                  SizedBox(width: 14.20.w),
+                                  SizedBox(
+                                    width: 200.w,
+                                    child: TextView(
+                                      text: model.filenameTIN ?? "",
+                                      textOverflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.filenameTIN = null;
+                                      model.imageTIN = null;
+                                      model.notifyListeners();
+                                    },
+                                    child: SvgPicture.asset(AppImage.delete),
+                                  ),
+                                ],
+                              ),
+                            )
                           : SizedBox(
                               width: double.infinity,
                               child: DottedBorder(
@@ -653,48 +742,51 @@ class KycScreen extends StatelessWidget {
                                   radius: Radius.circular(10),
                                   color: AppColors.primary,
                                 ),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 16.20.w,
-                                    horizontal: 22.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(AppImage.upload_doc),
-                                      SizedBox(width: 10.w),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextView(
-                                            text: 'Upload Document',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.reminder,
+                                child: GestureDetector(
+                                  onTap: () => model.pickImageTIN(context),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 16.20.w,
+                                      horizontal: 22.0.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      color: AppColors.white,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(AppImage.upload_doc),
+                                        SizedBox(width: 10.w),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextView(
+                                              text: 'Upload Document',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 14.2.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.reminder,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: 2.0.h),
-                                          TextView(
-                                            text:
-                                                'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 13.6.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
+                                            SizedBox(height: 2.0.h),
+                                            TextView(
+                                              text:
+                                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 13.6.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.fineGrey,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

@@ -66,7 +66,7 @@ class PharmViewModel extends BaseViewModel {
   bool _isLoadingLicense = false;
   bool get isLoadingLicense => _isLoadingLicense;
   bool _isLoadingTIN = false;
-  bool get isLoadingV => _isLoadingTIN;
+  bool get isLoadingTIN => _isLoadingTIN;
   String? pinInput;
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateAddUser = GlobalKey<FormState>();
