@@ -16,6 +16,7 @@ import 'package:medicate_app/core/connect_end/model/get_pharmacy_kyc_response_mo
 import 'package:medicate_app/core/connect_end/model/get_state_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
@@ -45,6 +46,7 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
+import '../model/update_pharmacy_kyc_entity_model/document.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -142,6 +144,7 @@ class PharmViewModel extends BaseViewModel {
   String? filenameTIN;
   File? imagePharmLicense;
   String? filenamePharmLicense;
+  List<Document> kycDocumentsList = [];
 
   int _start = 60;
   String querySignUpCountry = '';
@@ -1805,6 +1808,30 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void updatePharmacyKyc(
+    context, {
+    UpdatePharmacyKycEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updatePharmacyKyc(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200) {
+        AppUtils.snackbar(context, message: v['message']);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   void updatePharmacy(
     context, {
     UpdatePharmacyProfileEntityModel? update,
@@ -3068,6 +3095,12 @@ class PharmViewModel extends BaseViewModel {
           );
           _isLoadingMeansId = _isLoading;
           _uploadImageResponseModelMeansID = _uploadImageResponseModel;
+          kycDocumentsList.add(
+            Document(
+              documentType: 'MEANS_OF_IDENTIFICATION%${meansIdController.text}',
+              file: _uploadImageResponseModelMeansID?.data?.toJson(),
+            ),
+          );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3094,6 +3127,12 @@ class PharmViewModel extends BaseViewModel {
           );
           _isLoadingCAC = _isLoading;
           _uploadImageResponseModelCAC = _uploadImageResponseModel;
+          kycDocumentsList.add(
+            Document(
+              documentType: 'CAC_DOCUMENT',
+              file: _uploadImageResponseModelCAC?.data?.toJson(),
+            ),
+          );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3120,6 +3159,13 @@ class PharmViewModel extends BaseViewModel {
           );
           _isLoadingLicense = _isLoading;
           _uploadImageResponseModelPharmLicense = _uploadImageResponseModel;
+
+          kycDocumentsList.add(
+            Document(
+              documentType: 'PHARMACY_LICENSE',
+              file: _uploadImageResponseModelPharmLicense?.data?.toJson(),
+            ),
+          );
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -3147,6 +3193,12 @@ class PharmViewModel extends BaseViewModel {
           _isLoadingTIN = _isLoading;
           _uploadImageResponseModelTIN = _uploadImageResponseModel;
           _uploadImageResponseModel = null;
+           kycDocumentsList.add(
+            Document(
+              documentType: 'TAX_IDENTIFICATION_NUMBER',
+              file: _uploadImageResponseModelTIN?.data?.toJson(),
+            ),
+          );
           notifyListeners();
         },
       );

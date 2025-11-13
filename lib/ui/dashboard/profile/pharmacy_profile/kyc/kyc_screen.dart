@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/app_assets/app_utils.dart';
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../../core/app_assets/app_validation.dart';
 import '../../../../../core/app_assets/image.dart';
@@ -489,7 +491,8 @@ class KycScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      model.getPharmacyKycResponseModel
+                      model
+                                  .getPharmacyKycResponseModel
                                   ?.data
                                   ?.kycDocuments?[2]
                                   .file !=
@@ -568,7 +571,7 @@ class KycScreen extends StatelessWidget {
                                 ],
                               ),
                             )
-                          :  SizedBox(
+                          : SizedBox(
                               width: double.infinity,
                               child: DottedBorder(
                                 options: RoundedRectDottedBorderOptions(
@@ -578,7 +581,8 @@ class KycScreen extends StatelessWidget {
                                   color: AppColors.primary,
                                 ),
                                 child: GestureDetector(
-                                  onTap: () => model.pickImagePharmLicense(context),
+                                  onTap: () =>
+                                      model.pickImagePharmLicense(context),
                                   child: Container(
                                     width: double.infinity,
                                     padding: EdgeInsets.symmetric(
@@ -590,7 +594,8 @@ class KycScreen extends StatelessWidget {
                                       color: AppColors.white,
                                     ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         SvgPicture.asset(AppImage.upload_doc),
                                         SizedBox(width: 10.w),
@@ -654,7 +659,8 @@ class KycScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      model.getPharmacyKycResponseModel
+                      model
+                                  .getPharmacyKycResponseModel
                                   ?.data
                                   ?.kycDocuments?[3]
                                   .file !=
@@ -755,7 +761,8 @@ class KycScreen extends StatelessWidget {
                                       color: AppColors.white,
                                     ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
                                         SvgPicture.asset(AppImage.upload_doc),
                                         SizedBox(width: 10.w),
@@ -825,7 +832,51 @@ class KycScreen extends StatelessWidget {
                         color: AppColors.white,
                         isLoading: model.isLoading,
                         buttonBorderColor: AppColors.transparent,
-                        onPressed: () {},
+                        onPressed:
+                            model.getKycStatusBool(
+                                  id: model
+                                      .getPharmacyKycResponseModel
+                                      ?.data
+                                      ?.kycDocuments?[0]
+                                      .status,
+                                  cac: model
+                                      .getPharmacyKycResponseModel
+                                      ?.data
+                                      ?.kycDocuments?[1]
+                                      .status,
+                                  license: model
+                                      .getPharmacyKycResponseModel
+                                      ?.data
+                                      ?.kycDocuments?[2]
+                                      .status,
+                                  tin: model
+                                      .getPharmacyKycResponseModel
+                                      ?.data
+                                      ?.kycDocuments?[3]
+                                      .status,
+                                ) ==
+                                false
+                            ? () {
+                                if (model.imageMeansId != null &&
+                                    model.imageCAC != null &&
+                                    model.imagePharmLicense != null &&
+                                    model.imageTIN != null) {
+                                  model.updatePharmacyKyc(
+                                    context,
+                                    updateKyc: UpdatePharmacyKycEntityModel(
+                                      documents: model.kycDocumentsList,
+                                    ),
+                                  );
+                                } else {
+                                  AppUtils.snackbar(
+                                    context,
+                                    message:
+                                        'Kindly select and upload all documents. ',
+                                    error: true,
+                                  );
+                                }
+                              }
+                            : () {},
                       ),
                       SizedBox(height: 20.h),
                     ],

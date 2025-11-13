@@ -35,4 +35,5 @@ class UrlConfig {
   static const String initiate_payment = 'payment/initiate';
   static const String state = 'countries/states/q';
   static const String get_kyc = 'auth/get-kyc';
+  static const String update_pharm_kyc = 'auth/upload-kyc';
 }

@@ -16,6 +16,7 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
+import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -133,6 +134,11 @@ class PharmRepoImpl {
     return response;
   }
 
+  Future<dynamic> updatePharmacyKyc(UpdatePharmacyKycEntityModel updateKyc) async {
+    final response = await _contract.updatePharmacyKyc(updateKyc);
+    return response;
+  }
+
   Future<dynamic> updatePharmacy(
     UpdatePharmacyProfileEntityModel? updatePharmacy,
   ) async {
@@ -140,7 +146,7 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async  {
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
     final response = await _contract.uploadImage(file);
     return response;
   }

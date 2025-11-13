@@ -15,6 +15,7 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
+import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -66,9 +67,13 @@ class PharmContractsImpl {
     SetPinEntityModel setPinEntity,
   ) async => await _api.setPin(setPinEntity);
   Future<GetTenantResponseModel> getTenant() async => await _api.getTenant();
-  Future<GetPharmacyKycResponseModel> getPharmacyKyc() async => await _api.getPharmacyKyc();
+  Future<GetPharmacyKycResponseModel> getPharmacyKyc() async =>
+      await _api.getPharmacyKyc();
+  Future<dynamic> updatePharmacyKyc(UpdatePharmacyKycEntityModel updateKyc) async =>
+      await _api.updatePharmacyKyc(updateKyc);
   Future<dynamic> updatePharmacy(
     UpdatePharmacyProfileEntityModel? updatePharmacy,
   ) async => await _api.updatePharmacy(updatePharmacy);
-  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async  => await _api.uploadImage(file);
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>
+      await _api.uploadImage(file);
 }

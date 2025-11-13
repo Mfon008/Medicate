@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
@@ -289,6 +290,23 @@ class PharmApi {
       );
       logger.d(response.data);
       return GetPharmacyKycResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updatePharmacyKyc(
+    UpdatePharmacyKycEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_pharm_kyc,
+        RequestMethod.patch,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

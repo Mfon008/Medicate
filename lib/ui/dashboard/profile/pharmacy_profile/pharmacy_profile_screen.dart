@@ -127,7 +127,7 @@ class PharmacyProfileScreen extends StatelessWidget {
                   profileContainer(
                     icon: AppImage.profile,
                     text: 'Profile Information',
-                    isactive:model.returnBool(),
+                    isactive: model.returnBool(),
                     topLeft: 12,
                     topRight: 12,
                     onTap: () =>
