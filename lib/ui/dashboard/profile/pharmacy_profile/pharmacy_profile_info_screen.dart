@@ -598,7 +598,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
@@ -619,7 +619,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
@@ -657,8 +657,8 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '--Select--',
-                          keyboardType: TextInputType.number,
+                          // label: '--Select--',
+                          keyboardType: TextInputType.text,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',

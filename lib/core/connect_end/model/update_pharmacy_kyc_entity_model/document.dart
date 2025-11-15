@@ -1,7 +1,9 @@
 
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart';
+
 class Document {
   String? documentType;
-  dynamic file;
+  File? file;
 
   Document({this.documentType, this.file});
 
@@ -12,6 +14,6 @@ class Document {
 
   Map<String, dynamic> toJson() => {
     'documentType': documentType,
-    'file': file?.toJson(),
+    'file': file,
   };
 }

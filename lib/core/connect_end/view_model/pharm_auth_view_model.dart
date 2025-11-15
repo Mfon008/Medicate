@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
+    as ph;
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -158,6 +159,7 @@ class PharmViewModel extends BaseViewModel {
     'Setup Reminders for Customers',
   ];
   List meansId = [
+    'NIN',
     'Driver’s License',
     'International Passport ',
     'National ID',
@@ -1820,6 +1822,7 @@ class PharmViewModel extends BaseViewModel {
       );
       if (v['statusCode'] == 200) {
         AppUtils.snackbar(context, message: v['message']);
+        getPharmacyKyc(context);
       } else {
         AppUtils.snackbar(context, message: v['message'], error: true);
       }
@@ -3098,7 +3101,14 @@ class PharmViewModel extends BaseViewModel {
           kycDocumentsList.add(
             Document(
               documentType: 'MEANS_OF_IDENTIFICATION%${meansIdController.text}',
-              file: _uploadImageResponseModelMeansID?.data?.toJson(),
+              file: ph.File(
+                width: _uploadImageResponseModelMeansID!.data!.width,
+                height: _uploadImageResponseModelMeansID!.data!.height,
+                format: _uploadImageResponseModelMeansID!.data!.format,
+                url: _uploadImageResponseModelMeansID!.data!.url!,
+                mimeType: _uploadImageResponseModelMeansID!.data!.mimeType,
+                size: _uploadImageResponseModelMeansID!.data!.size,
+              ),
             ),
           );
           _uploadImageResponseModel = null;
@@ -3130,7 +3140,14 @@ class PharmViewModel extends BaseViewModel {
           kycDocumentsList.add(
             Document(
               documentType: 'CAC_DOCUMENT',
-              file: _uploadImageResponseModelCAC?.data?.toJson(),
+              file: ph.File(
+                width: _uploadImageResponseModelCAC!.data!.width,
+                height: _uploadImageResponseModelCAC!.data!.height,
+                format: _uploadImageResponseModelCAC!.data!.format,
+                url: _uploadImageResponseModelCAC!.data!.url!,
+                mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+                size: _uploadImageResponseModelCAC!.data!.size,
+              ),
             ),
           );
           _uploadImageResponseModel = null;
@@ -3163,7 +3180,14 @@ class PharmViewModel extends BaseViewModel {
           kycDocumentsList.add(
             Document(
               documentType: 'PHARMACY_LICENSE',
-              file: _uploadImageResponseModelPharmLicense?.data?.toJson(),
+              file: ph.File(
+                width: _uploadImageResponseModelPharmLicense!.data!.width,
+                height: _uploadImageResponseModelPharmLicense!.data!.height,
+                format: _uploadImageResponseModelPharmLicense!.data!.format,
+                url: _uploadImageResponseModelPharmLicense!.data!.url!,
+                mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
+                size: _uploadImageResponseModelPharmLicense!.data!.size,
+              ),
             ),
           );
           _uploadImageResponseModel = null;
@@ -3193,10 +3217,17 @@ class PharmViewModel extends BaseViewModel {
           _isLoadingTIN = _isLoading;
           _uploadImageResponseModelTIN = _uploadImageResponseModel;
           _uploadImageResponseModel = null;
-           kycDocumentsList.add(
+          kycDocumentsList.add(
             Document(
               documentType: 'TAX_IDENTIFICATION_NUMBER',
-              file: _uploadImageResponseModelTIN?.data?.toJson(),
+              file: ph.File(
+                width: _uploadImageResponseModelTIN!.data!.width,
+                height: _uploadImageResponseModelTIN!.data!.height,
+                format: _uploadImageResponseModelTIN!.data!.format,
+                url: _uploadImageResponseModelTIN!.data!.url!,
+                mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
+                size: _uploadImageResponseModelTIN!.data!.size,
+              ),
             ),
           );
           notifyListeners();

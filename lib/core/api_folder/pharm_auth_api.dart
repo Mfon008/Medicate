@@ -300,6 +300,7 @@ class PharmApi {
     UpdatePharmacyKycEntityModel updateKyc,
   ) async {
     try {
+      print('Api:::${updateKyc.documents}');
       final response = await _service.call(
         UrlConfig.update_pharm_kyc,
         RequestMethod.patch,

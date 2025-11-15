@@ -10,6 +10,7 @@ class AppImage {
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';
   static const String users = 'assets/svgs/users.svg';
+  static const String upload_arr_up = 'assets/svgs/upload_arr_up.svg';
   static const String role = 'assets/svgs/role.svg';
   static const String kyc_file = 'assets/svgs/file_kyc.svg';
   static const String kyc_eye = 'assets/svgs/kyc_eye.svg';

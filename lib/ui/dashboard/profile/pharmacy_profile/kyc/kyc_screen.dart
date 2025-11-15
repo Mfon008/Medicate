@@ -180,7 +180,7 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   TextView(
-                                    text: model.meansIdController.text,
+                                    text: '${model.meansIdController.text}.jpg',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 13.2.sp,
@@ -212,9 +212,10 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   SizedBox(
-                                    width: 200.w,
+                                    width: 160.w,
                                     child: TextView(
-                                      text: model.filenameMeansId ?? "",
+                                      text:
+                                          "${model.filenameMeansId ?? ""}.jpg",
                                       textOverflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       textStyle: TextStyle(
@@ -226,6 +227,16 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.pickImageMeansId(context);
+                                      model.notifyListeners();
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppImage.upload_arr_up,
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
                                   GestureDetector(
                                     onTap: () {
                                       model.filenameMeansId = null;
@@ -341,13 +352,11 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   TextView(
-                                    text:
-                                        model
+                                    text:'${model
                                             .getPharmacyKycResponseModel
                                             ?.data
                                             ?.kycDocuments?[1]
-                                            .documentType ??
-                                        "",
+                                            .documentType??''}.jpg',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 13.2.sp,
@@ -379,9 +388,9 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   SizedBox(
-                                    width: 200.w,
+                                    width: 160.w,
                                     child: TextView(
-                                      text: model.filenameCAC ?? "",
+                                      text: "${model.filenameCAC ?? ""}.jpg",
                                       textOverflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       textStyle: TextStyle(
@@ -393,6 +402,16 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.pickImageCAC(context);
+                                      model.notifyListeners();
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppImage.upload_arr_up,
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
                                   GestureDetector(
                                     onTap: () {
                                       model.filenameCAC = null;
@@ -509,12 +528,11 @@ class KycScreen extends StatelessWidget {
                                   SizedBox(width: 14.20.w),
                                   TextView(
                                     text:
-                                        model
+                                        '${model
                                             .getPharmacyKycResponseModel
                                             ?.data
                                             ?.kycDocuments?[2]
-                                            .documentType ??
-                                        "",
+                                            .documentType ?? ''}.jpg',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 13.2.sp,
@@ -546,9 +564,10 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   SizedBox(
-                                    width: 200.w,
+                                    width: 160.w,
                                     child: TextView(
-                                      text: model.filenamePharmLicense ?? "",
+                                      text:
+                                          "${model.filenamePharmLicense ?? ""}.jpg",
                                       textOverflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       textStyle: TextStyle(
@@ -560,6 +579,16 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.pickImagePharmLicense(context);
+                                      model.notifyListeners();
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppImage.upload_arr_up,
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
                                   GestureDetector(
                                     onTap: () {
                                       model.filenamePharmLicense = null;
@@ -676,13 +705,13 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   TextView(
-                                    text:
+                                    text:'${
                                         model
                                             .getPharmacyKycResponseModel
                                             ?.data
                                             ?.kycDocuments?[3]
                                             .documentType ??
-                                        "",
+                                        ""}.jpg',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 13.2.sp,
@@ -714,9 +743,9 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   SizedBox(
-                                    width: 200.w,
+                                    width: 160.w,
                                     child: TextView(
-                                      text: model.filenameTIN ?? "",
+                                      text: "${model.filenameTIN ?? ""}.jpg",
                                       textOverflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       textStyle: TextStyle(
@@ -728,6 +757,16 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.pickImageTIN(context);
+                                      model.notifyListeners();
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppImage.upload_arr_up,
+                                    ),
+                                  ),
+                                  SizedBox(width: 12.w),
                                   GestureDetector(
                                     onTap: () {
                                       model.filenameTIN = null;
@@ -861,6 +900,7 @@ class KycScreen extends StatelessWidget {
                                     model.imageCAC != null &&
                                     model.imagePharmLicense != null &&
                                     model.imageTIN != null) {
+                                  // print('object::::${model.kycDocumentsList[0].file}');
                                   model.updatePharmacyKyc(
                                     context,
                                     updateKyc: UpdatePharmacyKycEntityModel(
