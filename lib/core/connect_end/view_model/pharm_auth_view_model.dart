@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
     as ph;
 import 'dart:async';
@@ -38,6 +39,7 @@ import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -48,6 +50,7 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
 import '../model/update_pharmacy_kyc_entity_model/document.dart';
+import '../model/update_role_entity_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -73,6 +76,7 @@ class PharmViewModel extends BaseViewModel {
   String? pinInput;
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateAddUser = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateAddRole = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerifyChange = GlobalKey<FormState>();
   SignUpPhamaryResponseModel? _signUpPhamaryResponseModel;
@@ -104,7 +108,12 @@ class PharmViewModel extends BaseViewModel {
   VerifyPassOtpRespnseModel? get verifyPassOtpRespnseModel =>
       _verifyPassOtpRespnseModel;
 
+  GetRolesResponseModel? _getRolesResponseModel;
+  GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
+
   TextEditingController countryController = TextEditingController();
+  TextEditingController rolenameController = TextEditingController();
+  TextEditingController roleDescriptionController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController lgaController = TextEditingController();
   TextEditingController meansIdController = TextEditingController();
@@ -1786,6 +1795,84 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> addRoles(context, {RolesEntityModel? roleEntity}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.addRole(roleEntity!),
+        throwException: true,
+      );
+      _isLoading = false;
+
+      await AppUtils.snackbar(context, message: v['message']);
+      rolenameController.clear();
+      roleDescriptionController.clear();
+      Navigator.pop(context);
+      getRoles(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getRoles(context) async {
+    try {
+      _isLoading = true;
+      _getRolesResponseModel = await runBusyFuture(
+        repositoryImply.getRoles(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateRole(context, {UpdateRoleEntityModel? updateRole}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateRoles(updateRole!),
+        throwException: true,
+      );
+      _isLoading = false;
+
+      await AppUtils.snackbar(context, message: v['message']);
+      Navigator.pop(context);
+      getRoles(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteRole(context, {String? roleId}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.deleteRole(roleId!),
+        throwException: true,
+      );
+
+      _isLoading = false;
+      await AppUtils.snackbar(context, message: v['message']);
+      Navigator.pop(context);
+      getRoles(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   bool returnBool() {
     if (_getTetantResponseModel == null ||
         _getTetantResponseModel!.data!.bankDetails == null) {
@@ -2387,7 +2474,13 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void modalBottomSheetMenuAddRole({context}) {
+  void modalBottomSheetMenuAddRole({
+    context,
+    bool isEdit = false,
+    rolename,
+    roleDes,
+    roleId,
+  }) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
     showModalBottomSheet(
@@ -2401,20 +2494,25 @@ class PharmViewModel extends BaseViewModel {
           ),
           child: DraggableScrollableSheet(
             expand: false,
-            initialChildSize: 0.5, // 80% of screen height
+            initialChildSize: 0.75, // 80% of screen height
             minChildSize: 0.5, // Can be dragged to 30% of screen height
             maxChildSize: 0.9,
             builder: (context, scrollController) {
               return ViewModelBuilder<PharmViewModel>.reactive(
                 viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) {},
+                onViewModelReady: (model) {
+                  if (isEdit) {
+                    model.rolenameController.text = rolename;
+                    model.roleDescriptionController.text = roleDes;
+                  }
+                },
                 disposeViewModel: false,
                 builder: (_, PharmViewModel model, __) {
                   return Padding(
                     padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(
-                        context,
-                      ).viewInsets.bottom, // 👈 pushes content above keyboard
+                      // bottom: MediaQuery.of(
+                      //   context,
+                      // ).viewInsets.bottom, // 👈 pushes content above keyboard
                     ), //could change this to Color(0xFF737373),
                     //so you don't have to change MaterialApp canvasColor
                     child: Container(
@@ -2441,7 +2539,7 @@ class PharmViewModel extends BaseViewModel {
                             horizontal: 20.w,
                           ),
                           child: Form(
-                            key: formKeyValidateAddUser,
+                            key: formKeyValidateAddRole,
                             child: Column(
                               children: [
                                 Row(
@@ -2450,7 +2548,7 @@ class PharmViewModel extends BaseViewModel {
                                   children: [
                                     SizedBox(width: 30.w),
                                     TextView(
-                                      text: 'Add Role',
+                                      text: !isEdit ? 'Add Role' : 'Edit Role',
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 16.20.sp,
@@ -2487,7 +2585,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  // controller: nameController,
+                                  controller: model.rolenameController,
                                   validator: AppValidator.validateString(),
                                   onChange: (p0) {},
                                 ),
@@ -2512,21 +2610,52 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  // controller: nameController,
+                                  controller: model.roleDescriptionController,
                                   validator: AppValidator.validateString(),
                                 ),
                                 SizedBox(height: 70.h),
                                 ButtonWidget(
                                   border: 100.r,
                                   buttonColor: AppColors.primary,
-                                  buttonText: 'Add',
+                                  buttonText: !isEdit ? 'Add' : "Save Changes",
                                   fontSize: 16.sp,
                                   color: AppColors.white,
-                                  isLoading: _isLoading,
+                                  isLoading: model.isLoading,
                                   buttonBorderColor: AppColors.transparent,
                                   onPressed: () {
-                                    if (formKeyValidateAddUser.currentState!
-                                        .validate()) {}
+                                    if (formKeyValidateAddRole.currentState!
+                                        .validate()) {
+                                      if (isEdit) {
+                                        // model.rolenameController.text =
+                                        //     rolename;
+                                        // model.roleDescriptionController.text =
+                                        //     roleDes;
+                                        model.updateRole(
+                                          context,
+                                          updateRole: UpdateRoleEntityModel(
+                                            roleId: roleId,
+                                            name: model.rolenameController.text
+                                                .trim(),
+                                            description: model
+                                                .roleDescriptionController
+                                                .text
+                                                .trim(),
+                                          ),
+                                        );
+                                      } else {
+                                        model.addRoles(
+                                          context,
+                                          roleEntity: RolesEntityModel(
+                                            name: model.rolenameController.text
+                                                .trim(),
+                                            description: model
+                                                .roleDescriptionController
+                                                .text
+                                                .trim(),
+                                          ),
+                                        );
+                                      }
+                                    }
                                     model.notifyListeners();
                                   },
                                 ),
@@ -3022,6 +3151,180 @@ class PharmViewModel extends BaseViewModel {
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void showRemoveRoleDialog(BuildContext context, {String? roleId}) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          builder: (_, PharmViewModel model, __) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.4.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(34.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.yellow.withOpacity(.2),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(24.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.yellow,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              SvgPicture.asset(AppImage.exclam),
+                            ],
+                          ),
+                          SizedBox(height: 12.h),
+                          TextView(
+                            text: 'Delete Role',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              color: AppColors.black,
+                              fontSize: 18.20.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          TextView(
+                            text:
+                                'Are you sure you want to make delete this role?',
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              color: AppColors.success,
+                              fontSize: 14.20.sp,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                          model.isLoading
+                              ? SpinKitDancingSquare(
+                                  color: AppColors.primary1,
+                                  size: 42.sp,
+                                )
+                              : SizedBox.fromSize(),
+                          SizedBox(height: 20.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              OutlinedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(color: AppColors.primary),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 32.w,
+                                    vertical: 12.w,
+                                  ),
+                                ),
+                                child: TextView(
+                                  text: "Cancel",
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 15.6.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 16.w),
+
+                              // Continue Button
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    // await Future.delayed(
+                                    //   Duration(milliseconds: 100),
+                                    // );
+                                    // Add your update logic here
+                                    model.deleteRole(context, roleId: roleId);
+                                    model.notifyListeners();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20.w,
+                                      vertical: 12.w,
+                                    ),
+                                    elevation: 0,
+                                  ),
+                                  child: TextView(
+                                    text: "Yes, Delete",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.6.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

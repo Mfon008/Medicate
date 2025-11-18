@@ -5,6 +5,7 @@ import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -12,12 +13,14 @@ import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dar
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
 import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
+import '../model/update_role_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -134,7 +137,9 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<dynamic> updatePharmacyKyc(UpdatePharmacyKycEntityModel updateKyc) async {
+  Future<dynamic> updatePharmacyKyc(
+    UpdatePharmacyKycEntityModel updateKyc,
+  ) async {
     final response = await _contract.updatePharmacyKyc(updateKyc);
     return response;
   }
@@ -157,6 +162,26 @@ class PharmRepoImpl {
     final response = await _contract.setPin(setPinEntity);
     _chache(response);
     _session.isLogin = true;
+    return response;
+  }
+
+  Future<dynamic> addRole(RolesEntityModel roleEntity) async {
+    final response = await _contract.addRole(roleEntity);
+    return response;
+  }
+
+  Future<GetRolesResponseModel> getRoles() async {
+    final response = await _contract.getRoles();
+    return response;
+  }
+
+  Future<dynamic> updateRoles(UpdateRoleEntityModel updateRole) async {
+    final response = await _contract.updateRoles(updateRole);
+    return response;
+  }
+
+  Future<dynamic> deleteRole(String roleId) async {
+    final response = await _contract.deleteRole(roleId);
     return response;
   }
 

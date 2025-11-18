@@ -5,6 +5,10 @@ class UrlConfig {
   static const String set_pin = 'auth/set-pin';
   static const String send_otp = 'auth/send-otp';
   static const String sign_in = 'auth/login';
+  static const String create_role = 'auth/create-role';
+  static const String get_role = 'auth/get-roles';
+  static const String update_role = 'auth/update-role';
+  static const String delete_role = 'auth/delete-role';
   static const String sign_up = 'auth/register-user';
   static const String sign_up_pharmacy = 'auth/register-pharmacy';
   static const String user_detail = 'auth/user-details/';

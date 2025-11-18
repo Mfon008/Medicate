@@ -352,11 +352,8 @@ class KycScreen extends StatelessWidget {
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
                                   TextView(
-                                    text:'${model
-                                            .getPharmacyKycResponseModel
-                                            ?.data
-                                            ?.kycDocuments?[1]
-                                            .documentType??''}.jpg',
+                                    text:
+                                        '${model.getPharmacyKycResponseModel?.data?.kycDocuments?[1].documentType ?? ''}.jpg',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 13.2.sp,
@@ -528,11 +525,7 @@ class KycScreen extends StatelessWidget {
                                   SizedBox(width: 14.20.w),
                                   TextView(
                                     text:
-                                        '${model
-                                            .getPharmacyKycResponseModel
-                                            ?.data
-                                            ?.kycDocuments?[2]
-                                            .documentType ?? ''}.jpg',
+                                        '${model.getPharmacyKycResponseModel?.data?.kycDocuments?[2].documentType ?? ''}.jpg',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 13.2.sp,
@@ -704,19 +697,20 @@ class KycScreen extends StatelessWidget {
                                 children: [
                                   SvgPicture.asset(AppImage.kyc_file),
                                   SizedBox(width: 14.20.w),
-                                  TextView(
-                                    text:'${
-                                        model
-                                            .getPharmacyKycResponseModel
-                                            ?.data
-                                            ?.kycDocuments?[3]
-                                            .documentType ??
-                                        ""}.jpg',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
+                                  SizedBox(
+                                    width: 160.w,
+                                    child: TextView(
+                                      text:
+                                          '${model.getPharmacyKycResponseModel?.data?.kycDocuments?[3].documentType ?? ""}.jpg',
+
+                                      textOverflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.black,
+                                      ),
                                     ),
                                   ),
                                   Spacer(),
