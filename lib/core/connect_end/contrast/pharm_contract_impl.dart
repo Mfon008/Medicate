@@ -83,6 +83,8 @@ class PharmContractsImpl {
   Future<dynamic> addRole(RolesEntityModel roleEntity) async =>
       await _api.addRole(roleEntity);
   Future<GetRolesResponseModel> getRoles() async => await _api.getRoles();
-  Future<dynamic> updateRoles(UpdateRoleEntityModel updateRole) async => await _api.updateRoles(updateRole);
-  Future<dynamic> deleteRole(String roleId) async => await _api.deleteRole(roleId);
+  Future<dynamic> updateRoles(UpdateRoleEntityModel updateRole) async =>
+      await _api.updateRoles(updateRole);
+  Future<dynamic> deleteRole(String roleId) async =>
+      await _api.deleteRole(roleId);
 }

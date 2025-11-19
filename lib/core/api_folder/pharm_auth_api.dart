@@ -383,7 +383,7 @@ class PharmApi {
       final response = await _service.call(
         UrlConfig.update_role,
         RequestMethod.patch,
-        data: updateRole.toJson()
+        data: updateRole.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -393,12 +393,12 @@ class PharmApi {
     }
   }
 
-  Future<dynamic>deleteRole(String roleId) async {
+  Future<dynamic> deleteRole(String roleId) async {
     try {
       final response = await _service.call(
         UrlConfig.delete_role,
         RequestMethod.delete,
-        data: {'roleId':roleId}
+        data: {'roleId': roleId},
       );
       logger.d(response.data);
       return response.data;
@@ -442,7 +442,7 @@ class PharmApi {
       final response = await _service.call(
         UrlConfig.update_role,
         RequestMethod.patch,
-        data: updateRole.toJson()
+        data: updateRole.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -452,12 +452,12 @@ class PharmApi {
     }
   }
 
-  Future<dynamic>deleteUser(String roleId) async {
+  Future<dynamic> deleteUser(String roleId) async {
     try {
       final response = await _service.call(
         UrlConfig.delete_role,
         RequestMethod.delete,
-        data: {'roleId':roleId}
+        data: {'roleId': roleId},
       );
       logger.d(response.data);
       return response.data;

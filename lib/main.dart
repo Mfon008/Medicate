@@ -13,14 +13,52 @@ final navigate = locator<NavigationService>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Lock orientation early
+  setupLocator();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  setupLocator();
-  await locator<SharedPreferencesService>().initilize();
-  runApp(const MyApp());
+  runApp(const AppBootstrap());
 }
+
+class AppBootstrap extends StatefulWidget {
+  const AppBootstrap({super.key});
+
+  @override
+  State<AppBootstrap> createState() => _AppBootstrapState();
+}
+
+class _AppBootstrapState extends State<AppBootstrap> {
+  bool initialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initAsync();
+  }
+
+  Future<void> _initAsync() async {
+    await locator<SharedPreferencesService>().initilize();
+    setState(() => initialized = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!initialized) {
+      return const MaterialApp(
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+          
+        ),
+        debugShowCheckedModeBanner: false,
+      );
+    }
+
+    // Move to real app
+    return const MyApp();
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

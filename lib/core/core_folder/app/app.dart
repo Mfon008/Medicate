@@ -43,6 +43,7 @@ import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
+import '../../../ui/widget/accelerate_payment_view.dart';
 import '../../api_folder/auth_api.dart';
 import '../../api_folder/pharm_auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
@@ -97,7 +98,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmResetSuccessScreen),
     MaterialRoute(page: UsersScreen),
     MaterialRoute(page: RolesAndPermissionScreen),
-    // MaterialRoute(page: AcceleratePaymentView),
+    MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

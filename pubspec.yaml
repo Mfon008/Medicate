@@ -59,12 +59,12 @@ dependencies:
   dotted_border: ^3.1.0
   pull_to_refresh: ^2.0.0
   http: ^1.5.0
-#   webview_flutter: ^4.4.2
-#   webview_flutter_wkwebview: ^3.18.0
-#   webview_flutter_platform_interface: ^2.11.0
+  webview_flutter: ^4.4.2
+  webview_flutter_wkwebview: ^3.18.0
+  webview_flutter_platform_interface: ^2.11.0
 
-# dependency_overrides:
-#   webview_flutter_wkwebview: 3.18.0
+dependency_overrides:
+  webview_flutter_wkwebview: 3.18.0
 
 
 

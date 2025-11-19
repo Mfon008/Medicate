@@ -92,7 +92,7 @@ class AuthApi {
   ) async {
     try {
       final response = await _service.call(
-        UrlConfig.verify_otp,
+        UrlConfig.verify_phone_otp,
         RequestMethod.post,
         data: verifyPhoneOtp.toJson(),
       );
