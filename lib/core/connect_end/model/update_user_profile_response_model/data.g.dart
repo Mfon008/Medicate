@@ -17,12 +17,6 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   height: (json['height'] as num?)?.toInt(),
   weight: (json['weight'] as num?)?.toInt(),
   profileCompletion: (json['profileCompletion'] as num?)?.toInt(),
-  createdAt: json['createdAt'] == null
-      ? null
-      : DateTime.parse(json['createdAt'] as String),
-  updatedAt: json['updatedAt'] == null
-      ? null
-      : DateTime.parse(json['updatedAt'] as String),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -36,6 +30,4 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'height': instance.height,
   'weight': instance.weight,
   'profileCompletion': instance.profileCompletion,
-  'createdAt': instance.createdAt?.toIso8601String(),
-  'updatedAt': instance.updatedAt?.toIso8601String(),
 };

@@ -55,35 +55,49 @@ class PharmacyProfileScreen extends StatelessWidget {
             centerTitle: true,
           ),
           body: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 16.20.w),
+            padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 16.20.w),
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child:
-                        SharedPreferencesService.instance.usersData == null ||
-                            SharedPreferencesService
-                                    .instance
-                                    .usersData['profile'] ==
-                                null ||
-                            SharedPreferencesService
-                                    .instance
-                                    .usersData['profile']['profilePicture'] ==
-                                null
-                        ? SvgPicture.asset(AppImage.profile_image)
-                        : CircleAvatar(
+                  model.getTetantResponseModel != null &&
+                          model.getTetantResponseModel!.data!.logo != null
+                      ? Center(
+                          child: CircleAvatar(
                             radius: 60.0, // Adjust the size as needed
                             backgroundImage: NetworkImage(
-                              SharedPreferencesService
-                                  .instance
-                                  .usersData['profile']['profilePicture']['url'],
+                              model.getTetantResponseModel!.data!.logo!.url!,
                             ),
                           ),
-                  ),
+                        )
+                      : Center(
+                          child:
+                              SharedPreferencesService.instance.usersData ==
+                                      null ||
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['user'] ==
+                                      null ||
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['profilePicture'] ==
+                                      null ||
+                                  model.getTetantResponseModel!.data!.logo ==
+                                      null
+                              ? SvgPicture.asset(AppImage.profile_image)
+                              : CircleAvatar(
+                                  radius: 60.0, // Adjust the size as needed
+                                  backgroundImage: NetworkImage(
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['profile']['profilePicture']['url'],
+                                  ),
+                                ),
+                        ),
+                  SizedBox(height: 10.h),
                   Center(
                     child: GestureDetector(
-                      // onTap: () => model.pickImage(context),
+                      onTap: () => model.pickImage(context),
                       child: TextView(
                         text: 'Change Photo',
                         textStyle: TextStyle(

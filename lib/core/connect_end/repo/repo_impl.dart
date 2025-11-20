@@ -13,6 +13,7 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -25,9 +26,10 @@ import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/support_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
-import '../model/update_user_profile_entity.dart';
+import '../model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
+import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
 
@@ -216,6 +218,16 @@ class AuthRepoImpl {
     String? reference,
   }) async {
     final response = await _contract.initiatePayment(reference: reference);
+    return response;
+  }
+
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
+    final response = await _contract.uploadImage(file);
+    return response;
+  }
+
+  Future<GetUserDetailsNoPhoneModel> getUserDetailsNoPhone() async{
+    final response = await _contract.getUserDetailsNoPhone();
     return response;
   }
 

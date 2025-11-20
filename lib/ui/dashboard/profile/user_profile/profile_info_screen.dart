@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
+import '../../../../core/connect_end/model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../../core/core_folder/app/app.locator.dart';
 import '../../../../core/core_folder/manager/shared_preference.dart';
@@ -512,8 +512,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '--Select--',
-                          // readOnly: true,
+                          // label: '--Select--',
                           keyboardType: TextInputType.number,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -525,10 +524,10 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                           isFilled: true,
                           controller: heightController,
                           validator: AppValidator.validateString(),
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(14.20.w),
-                            child: SvgPicture.asset(AppImage.arrow_down),
-                          ),
+                          // suffixWidget: Padding(
+                          //   padding: EdgeInsets.all(14.20.w),
+                          //   child: SvgPicture.asset(AppImage.arrow_down),
+                          // ),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -539,8 +538,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          label: '--Select--',
-                          // readOnly: true,
+                          // label: '--Select--',
                           keyboardType: TextInputType.number,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
@@ -552,10 +550,10 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                           isFilled: true,
                           controller: weightController,
                           validator: AppValidator.validateString(),
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(14.20.w),
-                            child: SvgPicture.asset(AppImage.arrow_down),
-                          ),
+                          // suffixWidget: Padding(
+                          //   padding: EdgeInsets.all(14.20.w),
+                          //   child: SvgPicture.asset(AppImage.arrow_down),
+                          // ),
                         ),
                       ],
                     ),
@@ -591,7 +589,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                                 context: context,
                                 userEntity: UpdateUserProfileEntity(
                                   dateOfBirth: dobController.text.trim(),
-                                  age: int.parse(ageController.text.trim()),
+                                  // age: int.parse(ageController.text.trim()),
                                   gender: genderController.text
                                       .trim()
                                       .toUpperCase(),

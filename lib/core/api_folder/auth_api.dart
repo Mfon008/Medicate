@@ -14,17 +14,19 @@ import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_p
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/update_reminder_entity_model.dart';
-import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
     as sup;
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../connect_end/model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
 import '../connect_end/model/update_doses_status_model/update_doses_status_model.dart';
+import '../connect_end/model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../connect_end/model/update_user_profile_response_model/update_user_profile_response_model.dart';
+import '../connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
@@ -109,7 +111,7 @@ class AuthApi {
   ) async {
     try {
       final response = await _service.call(
-        UrlConfig.forgot_password,
+        UrlConfig.forgot_pin,
         RequestMethod.post,
         data: forgotPassword.toJson(),
       );
@@ -126,7 +128,7 @@ class AuthApi {
   ) async {
     try {
       final response = await _service.call(
-        UrlConfig.verify_forget_pin_otp,
+        UrlConfig.verify_otp,
         RequestMethod.post,
         data: verifyPhoneEntity.toJson(),
       );
@@ -147,7 +149,7 @@ class AuthApi {
         UrlConfig.reset_password,
         RequestMethod.post,
         data: resetPasswordEntity?.toJson(),
-        options: Options(headers: {"x-token": "Bearer $resetToken"}),
+        options: Options(headers: {"x-reset-token": "$resetToken"}),
       );
       logger.d(response.data);
       return response.data;
@@ -197,6 +199,20 @@ class AuthApi {
       );
       logger.d(response.data);
       return GetUserDetailsResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetUserDetailsNoPhoneModel> getUserDetailsNoPhone() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.user_detail_no_phone,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetUserDetailsNoPhoneModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -294,6 +310,21 @@ class AuthApi {
       );
       logger.d(response.data);
       return UpdateUserProfileResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.uplaod_image,
+        RequestMethod.upload,
+        formData: FormData.fromMap({'file': file}),
+      );
+      logger.d(response.data);
+      return UploadImageResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

@@ -14,19 +14,23 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   licenseNumber: json['licenseNumber'] as String?,
   businessAddress: json['businessAddress'] as String?,
   email: json['email'] as String?,
-  servicesOffered: (json['servicesOffered'] as List<dynamic>?)
-      ?.map((e) => e as String)
+  kycDocuments: (json['kycDocuments'] as List<dynamic>?)
+      ?.map((e) => KycDocument.fromJson(e as Map<String, dynamic>))
       .toList(),
   bankDetails: (json['bankDetails'] as List<dynamic>?)
       ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
       .toList(),
-  contactEmail: json['contactEmail'] as String?,
-  contactPersonName: json['contactPersonName'] as String?,
-  country: json['country'] as String?,
-  lga: json['lga'] as String?,
-  state: json['state'] as String?,
+  logo: json['logo'] == null
+      ? null
+      : Logo.fromJson(json['logo'] as Map<String, dynamic>),
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
+  servicesOffered: (json['servicesOffered'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  state: json['state'] as String?,
+  lga: json['lga'] as String?,
+  country: json['country'] as String?,
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -37,10 +41,10 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'licenseNumber': instance.licenseNumber,
   'businessAddress': instance.businessAddress,
   'email': instance.email,
-  'servicesOffered': instance.servicesOffered,
+  'kycDocuments': instance.kycDocuments,
   'bankDetails': instance.bankDetails,
-  'contactEmail': instance.contactEmail,
-  'contactPersonName': instance.contactPersonName,
+  'logo': instance.logo,
+  'servicesOffered': instance.servicesOffered,
   'country': instance.country,
   'lga': instance.lga,
   'state': instance.state,

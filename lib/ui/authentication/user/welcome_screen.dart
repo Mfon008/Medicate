@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/core/core_folder/manager/shared_preference.dart';
@@ -114,16 +115,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ],
                   ),
                   SizedBox(height: 26.0.h),
-                  TextView(
-                    text:
-                        'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.black,
-                    ),
-                  ),
+                  SharedPreferencesService.instance.usersData['user'] != null
+                      ? TextView(
+                          text:
+                              'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalize()}',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.black,
+                          ),
+                        )
+                      : TextView(
+                          text:
+                              'Welcome back, ${model.getUserDetailsResponseModel?.data?.displayName?.capitalize() ?? ''}',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.black,
+                          ),
+                        ),
                   SizedBox(height: 3.70.h),
                   TextView(
                     text: 'Enter your 4 digit pin to continue',

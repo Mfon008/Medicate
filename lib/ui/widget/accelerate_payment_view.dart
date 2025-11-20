@@ -50,14 +50,14 @@ class _AcceleratePaymentViewState extends State<AcceleratePaymentView> {
     return Scaffold(
       appBar: AppBar(
         title: TextView(
-                text: 'Payment Screen',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.4.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.greygrey1,
-                ),
-              ),
+          text: 'Payment Screen',
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 15.4.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.greygrey1,
+          ),
+        ),
         backgroundColor: AppColors.dashboard,
         actions: [
           GestureDetector(

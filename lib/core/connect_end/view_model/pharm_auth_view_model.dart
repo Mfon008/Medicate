@@ -19,6 +19,7 @@ import 'package:medicate_app/core/connect_end/model/get_state_response_model.dar
 import 'package:medicate_app/core/connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/logo.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
@@ -156,6 +157,8 @@ class PharmViewModel extends BaseViewModel {
   String? filenamePharmLicense;
   List<Document> kycDocumentsList = [];
 
+  File? image;
+  String? filename;
   int _start = 60;
   String querySignUpCountry = '';
   String queryState = '';
@@ -200,6 +203,58 @@ class PharmViewModel extends BaseViewModel {
       borderRadius: BorderRadius.circular(10),
     ),
   );
+
+  void pickImage(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          image = file;
+          filename = image!.path.split("/").last;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(image).readAsBytesSync(),
+              filename: image!.path.split("/").last,
+            ),
+          );
+          updatePharmacy(
+            context,
+            update: UpdatePharmacyProfileEntityModel(
+              logo: Logo(
+                width: _uploadImageResponseModel!.data!.width,
+                height: _uploadImageResponseModel!.data!.height,
+                format: _uploadImageResponseModel!.data!.format,
+                url: _uploadImageResponseModel!.data!.url!,
+                mimeType: _uploadImageResponseModel!.data!.mimeType,
+                size: _uploadImageResponseModel!.data!.size,
+              ),
+            ),
+          );
+
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void uploadProfilePicture({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      await runBusyFuture(
+        repositoryImply.uploadProPicture(file!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 
   void modalBottomSheetMenu({
     context,
@@ -1934,6 +1989,7 @@ class PharmViewModel extends BaseViewModel {
       );
       _isLoading = false;
       AppUtils.snackbar(context, message: v['message']);
+      getTenant(context);
     } catch (e) {
       _isLoading = false;
       logger.d(e);

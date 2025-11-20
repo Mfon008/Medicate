@@ -10,9 +10,7 @@ class Data {
   String? refreshToken;
   User? user;
 
-  Data({this.accessToken, this.refreshToken, 
-  this.user
-  });
+  Data({this.accessToken, this.refreshToken, this.user});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

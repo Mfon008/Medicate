@@ -185,6 +185,11 @@ class PharmRepoImpl {
     return response;
   }
 
+  Future<dynamic> uploadProPicture(MultipartFile file) async {
+    final response = await _contract.uploadProPicture(file);
+    return response;
+  }
+
   void _chache(data) {
     if (data != null) {
       _session.authToken = data.data.accessToken;

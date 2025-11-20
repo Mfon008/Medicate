@@ -33,8 +33,8 @@ class _AppBootstrapState extends State<AppBootstrap> {
 
   @override
   void initState() {
-    super.initState();
     _initAsync();
+    super.initState();
   }
 
   Future<void> _initAsync() async {
@@ -46,10 +46,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
   Widget build(BuildContext context) {
     if (!initialized) {
       return const MaterialApp(
-        home: Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-          
-        ),
+        home: Scaffold(body: Center(child: CircularProgressIndicator())),
         debugShowCheckedModeBanner: false,
       );
     }
@@ -58,7 +55,6 @@ class _AppBootstrapState extends State<AppBootstrap> {
     return const MyApp();
   }
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -466,4 +466,19 @@ class PharmApi {
       rethrow;
     }
   }
+
+  Future<dynamic> uploadProPicture(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.upload_pro_picture,
+        RequestMethod.patch,
+        data: FormData.fromMap({'file': file}),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
 }

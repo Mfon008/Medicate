@@ -14,8 +14,8 @@ class Data {
   int? height;
   int? weight;
   int? profileCompletion;
-  DateTime? createdAt;
-  DateTime? updatedAt;
+  // DateTime? createdAt;
+  // DateTime? updatedAt;
 
   Data({
     this.id,
@@ -28,8 +28,8 @@ class Data {
     this.height,
     this.weight,
     this.profileCompletion,
-    this.createdAt,
-    this.updatedAt,
+    // this.createdAt,
+    // this.updatedAt,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

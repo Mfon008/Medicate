@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/bank_detail.dart';
 
-import 'bank_detail.dart';
+import 'kyc_document.dart';
+import 'logo.dart';
 
 part 'data.g.dart';
 
@@ -13,10 +15,10 @@ class Data {
   String? licenseNumber;
   String? businessAddress;
   String? email;
-  List<String>? servicesOffered;
+  List<KycDocument>? kycDocuments;
   List<BankDetail>? bankDetails;
-  String? contactEmail;
-  String? contactPersonName;
+  Logo? logo;
+  List<String>? servicesOffered;
   String? country;
   String? lga;
   String? state;
@@ -31,15 +33,15 @@ class Data {
     this.licenseNumber,
     this.businessAddress,
     this.email,
-    this.servicesOffered,
+    this.kycDocuments,
     this.bankDetails,
-    this.contactEmail,
-    this.contactPersonName,
-    this.country,
-    this.lga,
-    this.state,
+    this.logo,
     this.createdAt,
     this.updatedAt,
+    this.servicesOffered,
+    this.state,
+    this.lga,
+    this.country,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

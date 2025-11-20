@@ -87,4 +87,6 @@ class PharmContractsImpl {
       await _api.updateRoles(updateRole);
   Future<dynamic> deleteRole(String roleId) async =>
       await _api.deleteRole(roleId);
+  Future<dynamic> uploadProPicture(MultipartFile file) async =>
+      await _api.uploadProPicture(file);
 }

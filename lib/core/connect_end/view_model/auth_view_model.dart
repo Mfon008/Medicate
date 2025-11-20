@@ -26,7 +26,7 @@ import 'package:medicate_app/core/connect_end/model/login_response_model/login_r
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_doses_status_model/update_doses_status_model.dart';
-import 'package:medicate_app/core/connect_end/model/update_user_profile_entity.dart';
+import 'package:medicate_app/core/connect_end/model/update_user_profile_entity/profile_picture.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/daily_dose_time.dart'
     as upReminder;
@@ -55,6 +55,7 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/datum.dart';
+import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -65,7 +66,9 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
+import '../model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
+import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -106,7 +109,12 @@ class AuthViewModel extends BaseViewModel {
   InitiatePaymentResponseModel? _initiatePaymentResponseModel;
   InitiatePaymentResponseModel? get initiatePaymentResponseModel =>
       _initiatePaymentResponseModel;
-
+  GetUserDetailsNoPhoneModel? _getUserDetailsNoPhoneModel;
+  GetUserDetailsNoPhoneModel? get getUserDetailsNoPhoneModel =>
+      _getUserDetailsNoPhoneModel;
+  UploadImageResponseModel? _uploadImageResponseModel;
+  UploadImageResponseModel? get uploadImageResponseModel =>
+      _uploadImageResponseModel;
   SignUpResponseModel? _signUpResponseModel;
   SignUpResponseModel? get signUpResponseModel => _signUpResponseModel;
   UpdateUserProfileResponseModel? _updateUserProfileResponseModel;
@@ -2474,7 +2482,28 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _loginResponseModel?.message ?? '',
         );
-        navigate.navigateTo(Routes.dashboard);
+        if (_loginResponseModel!.data!.memberships!.isEmpty) {
+          navigate.navigateTo(Routes.dashboard);
+        } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+                'OWNER' &&
+            _loginResponseModel!.data!.memberships![0]['tenantType'] ==
+                'PHARMACY') {
+          navigate.navigateTo(Routes.pharmacyDashboard);
+        } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+                'OWNER' &&
+            _loginResponseModel!.data!.memberships![0]['tenantType'] == 'HMO') {
+          print(
+            'printing the HMO is not available ${loginResponseModel!.data!.memberships![0]['tenantType']}',
+          );
+          navigate.navigateTo(Routes.pharmacyDashboard);
+        } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+                'OWNER' &&
+            _loginResponseModel!.data!.memberships![0]['tenantType'] ==
+                'HEALTHCARE_PROVIDER') {
+          print(
+            'printing the health care is not available ${loginResponseModel!.data!.memberships![0]['"tenantType"']}',
+          );
+        }
       }
     } catch (e) {
       _isLoading = false;
@@ -2723,6 +2752,22 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void getUserDetailsNoPhone(context) async {
+    try {
+      _isLoading = true;
+      _getUserDetailsNoPhoneModel = await runBusyFuture(
+        repositoryImply.getUserDetailsNoPhone(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      // AppUtils.snackbar(context, message: e.toString(), error: true9090887781);
+    }
+    notifyListeners();
+  }
+
   void support({context, SupportEntityModel? supportEntity}) async {
     try {
       _isLoading = true;
@@ -2774,6 +2819,7 @@ class AuthViewModel extends BaseViewModel {
         message: _updateUserProfileResponseModel?.message ?? '',
       );
       _isLoading = false;
+      getUserDetailsNoPhone(context);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -2791,14 +2837,27 @@ class AuthViewModel extends BaseViewModel {
     try {
       _pickImage.pickImage(
         context: context,
-        file: (file) {
+        file: (file) async {
           image = file;
           filename = image!.path.split("/").last;
-          uploadProfilePicture(
+          await uploadImage(
             context: context,
             file: MultipartFile.fromBytes(
               formartFileImage(image).readAsBytesSync(),
               filename: image!.path.split("/").last,
+            ),
+          );
+          uploadUserProfile(
+            context: context,
+            userEntity: UpdateUserProfileEntity(
+              profilePicture: ProfilePicture(
+                width: _uploadImageResponseModel!.data!.width,
+                height: _uploadImageResponseModel!.data!.height,
+                format: _uploadImageResponseModel!.data!.format,
+                url: _uploadImageResponseModel!.data!.url!,
+                mimeType: _uploadImageResponseModel!.data!.mimeType,
+                size: _uploadImageResponseModel!.data!.size,
+              ),
             ),
           );
 
@@ -2808,6 +2867,22 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       logger.e(e);
     }
+  }
+
+  Future<void> uploadImage({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      _uploadImageResponseModel = await runBusyFuture(
+        repositoryImply.uploadImage(file!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
   }
 
   void pickDrugImage(BuildContext context) {

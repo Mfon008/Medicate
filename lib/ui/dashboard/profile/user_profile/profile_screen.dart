@@ -21,7 +21,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => locator<AuthViewModel>(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          model.getUserDetailsNoPhone(context);
+        });
+      },
       disposeViewModel: false,
       builder: (_, AuthViewModel model, __) {
         return Scaffold(
@@ -51,27 +55,49 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child:
-                        SharedPreferencesService.instance.usersData == null ||
-                            SharedPreferencesService
-                                    .instance
-                                    .usersData['profile'] ==
-                                null ||
-                            SharedPreferencesService
-                                    .instance
-                                    .usersData['profile']['profilePicture'] ==
-                                null
-                        ? SvgPicture.asset(AppImage.profile_image)
-                        : CircleAvatar(
+                  model.getUserDetailsNoPhoneModel != null &&
+                          model
+                                  .getUserDetailsNoPhoneModel!
+                                  .data!
+                                  .user!
+                                  .profilePicture !=
+                              null
+                      ? Center(
+                          child: CircleAvatar(
                             radius: 60.0, // Adjust the size as needed
                             backgroundImage: NetworkImage(
-                              SharedPreferencesService
-                                  .instance
-                                  .usersData['profile']['profilePicture']['url'],
+                              model
+                                  .getUserDetailsNoPhoneModel!
+                                  .data!
+                                  .user!
+                                  .profilePicture!
+                                  .url!,
                             ),
                           ),
-                  ),
+                        )
+                      : Center(
+                          child:
+                              SharedPreferencesService.instance.usersData ==
+                                      null ||
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['user'] ==
+                                      null ||
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['profilePictureUrl'] ==
+                                      null
+                              ? SvgPicture.asset(AppImage.profile_image)
+                              : CircleAvatar(
+                                  radius: 60.0, // Adjust the size as needed
+                                  backgroundImage: NetworkImage(
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['profilePictureUrl'],
+                                  ),
+                                ),
+                        ),
+                  SizedBox(height: 10.h),
                   Center(
                     child: GestureDetector(
                       onTap: () => model.pickImage(context),
@@ -92,7 +118,7 @@ class ProfileScreen extends StatelessWidget {
                   Center(
                     child: TextView(
                       text:
-                          '${SharedPreferencesService.instance.usersData['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
+                          '${SharedPreferencesService.instance.usersData['user']['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
                       textStyle: TextStyle(
                         fontSize: 18.2.sp,
                         fontWeight: FontWeight.w500,
@@ -104,7 +130,7 @@ class ProfileScreen extends StatelessWidget {
                   Center(
                     child: TextView(
                       text:
-                          '${SharedPreferencesService.instance.usersData['email'] ?? ''}',
+                          '${SharedPreferencesService.instance.usersData['user']['email'] ?? ''}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14.2.sp,
