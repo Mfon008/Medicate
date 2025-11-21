@@ -10,6 +10,7 @@ import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
 import 'package:medicate_app/ui/widget/ai_text_form_widget.dart';
+import '../../core/core_folder/manager/shared_preference.dart';
 import '../widget/text.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -88,12 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        // centerTitle: true,
-        // actions: [
-        //   // Padding(
-        //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
-        //   //   child: ),
-        // ],
       ),
       body: isTappToChat
           ? AskMeScreen(inText: chatText)
@@ -114,26 +109,58 @@ class _HomeScreenState extends State<HomeScreen> {
                             margin: EdgeInsets.symmetric(horizontal: 4.0.w),
                             padding: EdgeInsets.symmetric(
                               vertical: 12.w,
-                              horizontal: 14.w,
+                              horizontal: 11.4.w,
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.white,
                               borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: AppColors.yellow),
+                              border: Border.all(
+                                color:
+                                    SharedPreferencesService
+                                                .instance
+                                                .usersData['user'] !=
+                                            null &&
+                                        SharedPreferencesService
+                                                .instance
+                                                .usersData['user']['profileCompletionPercentage'] ==
+                                            100
+                                    ? AppColors.app_green
+                                    : AppColors.yellow,
+                              ),
                             ),
                             child: Row(
                               children: [
                                 Icon(
                                   Icons.info_outline,
-                                  color: AppColors.yellow,
+                                  color:
+                                      SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user'] !=
+                                              null &&
+                                          SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['profileCompletionPercentage'] ==
+                                              100
+                                      ? AppColors.app_green
+                                      : AppColors.yellow,
                                   size: 20.sp,
                                 ),
-                                SizedBox(width: 12.w),
+                                SizedBox(width: 10.12.w),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextView(
-                                      text: 'Complete Registration',
+                                      text:
+                                          SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user'] !=
+                                                  null &&
+                                              SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['profileCompletionPercentage'] ==
+                                                  100
+                                          ? 'Completed'
+                                          : 'Complete Registration',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 15.2.sp,
@@ -142,7 +169,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     TextView(
-                                      text: 'Please enter your new PIN.',
+                                      text:
+                                          SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user'] !=
+                                                  null &&
+                                              SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['profileCompletionPercentage'] !=
+                                                  null
+                                          ? 'Your registration is ${SharedPreferencesService.instance.usersData['user']['profileCompletionPercentage']}% completed'
+                                          : 'Please enter your new PIN.',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 13.2.sp,

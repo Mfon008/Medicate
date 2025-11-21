@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/pharm_auth_api.dart';
+import 'package:medicate_app/core/connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
@@ -20,6 +22,7 @@ import '../model/sign_up_pharmacy_entity_model.dart';
 import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -87,6 +90,12 @@ class PharmContractsImpl {
       await _api.updateRoles(updateRole);
   Future<dynamic> deleteRole(String roleId) async =>
       await _api.deleteRole(roleId);
+  Future<dynamic> addUser(CreateUserEntityModel createEntity) async =>
+      await _api.addUser(createEntity);
+  Future<GetCreatedUserResponseModel> getUsers() async => await _api.getUser();
+  Future<dynamic> updateUser(UpdateUserEntityModel updateEntity) async =>
+      await _api.updateUser(updateEntity);
+  Future<dynamic> deleteUser(String id) async => await _api.deleteUser(id);
   Future<dynamic> uploadProPicture(MultipartFile file) async =>
       await _api.uploadProPicture(file);
 }

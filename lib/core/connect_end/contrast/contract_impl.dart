@@ -122,6 +122,6 @@ class AuthContractsImpl {
 
   Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>
       await _api.uploadImage(file);
-   Future<GetUserDetailsNoPhoneModel> getUserDetailsNoPhone() async =>
+  Future<GetUserDetailsNoPhoneModel> getUserDetailsNoPhone() async =>
       await _api.getUserDetailsNoPhone();
 }

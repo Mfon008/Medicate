@@ -31,6 +31,7 @@ class SharedPreferencesService {
   static const String is_login = 'is_login';
   static const String is_sign_up = 'is_sign_up';
   static const String userData = 'user';
+  static const String userData1 = 'user1';
   static const String userType = 'user_type';
   static const String pin_set = 'pin';
 
@@ -45,6 +46,14 @@ class SharedPreferencesService {
   bool get isKycVerified => sharedPreferences?.getBool(kycVerified) ?? false;
   Map<String, dynamic> get usersData {
     final userDataString = sharedPreferences?.getString(userData);
+    if (userDataString != null && userDataString.isNotEmpty) {
+      return json.decode(userDataString);
+    }
+    return {};
+  }
+
+  Map<String, dynamic> get usersData1 {
+    final userDataString = sharedPreferences?.getString(userData1);
     if (userDataString != null && userDataString.isNotEmpty) {
       return json.decode(userDataString);
     }
@@ -67,6 +76,8 @@ class SharedPreferencesService {
 
   set usersData(Map<String, dynamic>? map) =>
       sharedPreferences?.setString(userData, json.encode(map));
+  set usersData1(Map<String, dynamic>? map) =>
+      sharedPreferences?.setString(userData1, json.encode(map));
 
   Future<bool> logOut() async {
     try {

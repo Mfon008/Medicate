@@ -8,6 +8,7 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/core_folder/app/app.router.dart';
+import '../../../core/core_folder/manager/shared_preference.dart';
 import '../../../main.dart';
 import '../../widget/ai_text_form_widget.dart';
 import '../../widget/text.dart';
@@ -108,32 +109,64 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                     child: Column(
                       children: [
                         GestureDetector(
-                          onTap: () {},
-                          // navigate.navigateTo(Routes.profileScreen),
+                          onTap: () =>
+                              navigate.navigateTo(Routes.profileScreen),
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 4.0.w),
                             padding: EdgeInsets.symmetric(
                               vertical: 12.w,
-                              horizontal: 14.w,
+                              horizontal: 11.4.w,
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.white,
                               borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: AppColors.yellow),
+                              border: Border.all(
+                                color:
+                                    SharedPreferencesService
+                                                .instance
+                                                .usersData['memberships'] !=
+                                            null &&
+                                        SharedPreferencesService
+                                                .instance
+                                                .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                                            100
+                                    ? AppColors.app_green
+                                    : AppColors.yellow,
+                              ),
                             ),
                             child: Row(
                               children: [
                                 Icon(
                                   Icons.info_outline,
-                                  color: AppColors.yellow,
+                                  color:
+                                      SharedPreferencesService
+                                                  .instance
+                                                  .usersData['memberships'] !=
+                                              null &&
+                                          SharedPreferencesService
+                                                  .instance
+                                                  .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                                              100
+                                      ? AppColors.app_green
+                                      : AppColors.yellow,
                                   size: 20.sp,
                                 ),
-                                SizedBox(width: 12.w),
+                                SizedBox(width: 10.12.w),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextView(
-                                      text: 'Complete Registration',
+                                      text:
+                                          SharedPreferencesService
+                                                      .instance
+                                                      .usersData['memberships'] !=
+                                                  null &&
+                                              SharedPreferencesService
+                                                      .instance
+                                                      .usersData['memberships'][0] ==
+                                                  100
+                                          ? 'Completed'
+                                          : 'Complete Registration',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 15.2.sp,
@@ -143,7 +176,16 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                                     ),
                                     TextView(
                                       text:
-                                          'Your registration is 80% complete.',
+                                          SharedPreferencesService
+                                                      .instance
+                                                      .usersData['memberships'] !=
+                                                  null &&
+                                              SharedPreferencesService
+                                                      .instance
+                                                      .usersData['memberships'][0]['profileCompletionPercentage'] !=
+                                                  null
+                                          ? 'Your registration is ${SharedPreferencesService.instance.usersData['memberships'][0]['profileCompletionPercentage']}% completed'
+                                          : 'Please enter your new PIN.',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 13.2.sp,

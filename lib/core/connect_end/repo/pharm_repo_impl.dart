@@ -3,7 +3,9 @@ import 'package:injectable/injectable.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
+import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
@@ -21,6 +23,7 @@ import '../model/sign_up_pharmacy_entity_model.dart';
 import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -182,6 +185,26 @@ class PharmRepoImpl {
 
   Future<dynamic> deleteRole(String roleId) async {
     final response = await _contract.deleteRole(roleId);
+    return response;
+  }
+
+  Future<dynamic> addUser(CreateUserEntityModel createEntity) async {
+    final response = await _contract.addUser(createEntity);
+    return response;
+  }
+
+  Future<GetCreatedUserResponseModel> getUsers() async {
+    final response = await _contract.getUsers();
+    return response;
+  }
+
+  Future<dynamic> updateUser(UpdateUserEntityModel updateEntity) async {
+    final response = await _contract.updateUser(updateEntity);
+    return response;
+  }
+
+  Future<dynamic> deleteUser(String id) async {
+    final response = await _contract.deleteUser(id);
     return response;
   }
 

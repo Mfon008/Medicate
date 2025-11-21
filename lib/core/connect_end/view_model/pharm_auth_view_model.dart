@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:medicate_app/core/connect_end/model/create_user_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
     as ph;
@@ -40,6 +41,7 @@ import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -52,6 +54,7 @@ import '../model/set_pin_entity_model.dart';
 import '../model/sign_up_pharmacy_entity_model.dart';
 import '../model/update_pharmacy_kyc_entity_model/document.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/update_user_entity_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -112,6 +115,9 @@ class PharmViewModel extends BaseViewModel {
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
 
+  GetCreatedUserResponseModel? _getCreatedUserResponseModel;
+  GetCreatedUserResponseModel? get getCreatedUserResponseModel =>
+      _getCreatedUserResponseModel;
   TextEditingController countryController = TextEditingController();
   TextEditingController rolenameController = TextEditingController();
   TextEditingController roleDescriptionController = TextEditingController();
@@ -122,6 +128,15 @@ class PharmViewModel extends BaseViewModel {
   bool? onTapToAddUser = false;
   bool? onTapToAddRole = false;
   List<String> selectService = [];
+  TextEditingController nameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController userPhoneController = TextEditingController();
+  TextEditingController userEmailController = TextEditingController();
+  TextEditingController userGenderController = TextEditingController();
+  TextEditingController userPinController = TextEditingController();
+  TextEditingController userAddressController = TextEditingController();
+  TextEditingController userRoleController = TextEditingController();
+  String? userRoleControllerId;
 
   GetStateResponseModel? _getStateResponseModel;
   GetStateResponseModel? get getStateResponseModel => _getStateResponseModel;
@@ -1138,180 +1153,115 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void modalBottomSheetMenuCountry(context) {
+  void modalBottomSheetMenuCountry(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Enables full-screen dragging
+      isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (builder) {
+      builder: (_) {
         return Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: DraggableScrollableSheet(
             expand: false,
-            initialChildSize: 0.5, // 50% of screen height
-            minChildSize: 0.3, // Can be dragged to 30% of screen height
-            maxChildSize: 0.9, // Can be dragged to 90% of screen height
+            initialChildSize: 0.5,
+            minChildSize: 0.3,
+            maxChildSize: 0.9,
             builder: (context, scrollController) {
               return ViewModelBuilder<PharmViewModel>.reactive(
-                viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) {},
+                viewModelBuilder: () => this, // 👈 use current model
                 disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
-                  return SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      children: [
-                        SizedBox(height: 22.0.h),
-                        Padding(
-                          padding: EdgeInsets.all(12.w),
-                          child: TextFormWidget(
-                            label: 'Search country',
-                            isFilled: true,
-                            borderTopLeft: 10.r,
-                            borderTopRight: 10.r,
-                            borderBottomLeft: 10.r,
-                            borderBottomRight: 10.r,
-                            fillColor: AppColors.grey,
-                            onChange: (p0) {
-                              querySignUpCountry = p0;
-                              model.notifyListeners();
-                            },
-                            suffixIcon: Icons.search_sharp,
-                            controller: countryController,
-                          ),
+                builder: (_, model, __) {
+                  final filtered = querySignUpCountry.isEmpty
+                      ? countryCodeFormat
+                      : countryCodeFormat.where((e) {
+                          return e['country']!.toLowerCase().contains(
+                            querySignUpCountry.toLowerCase(),
+                          );
+                        }).toList();
+                  return Column(
+                    children: [
+                      SizedBox(height: 22.h),
+
+                      // Search Bar
+                      Padding(
+                        padding: EdgeInsets.all(12.w),
+                        child: TextFormWidget(
+                          label: 'Search country',
+                          isFilled: true,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.grey,
+                          controller: countryController,
+                          suffixIcon: Icons.search_sharp,
+                          onChange: (value) {
+                            querySignUpCountry = value;
+                            model.notifyListeners();
+                          },
                         ),
-                        SizedBox(height: 16.h),
-                        querySignUpCountry == ''
-                            ? SizedBox(
-                                width: 400.w,
-                                child: Column(
+                      ),
+
+                      SizedBox(height: 10.h),
+
+                      // Expanded List
+                      Expanded(
+                        child: ListView.builder(
+                          controller: scrollController,
+                          itemCount: filtered.length,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          itemBuilder: (context, index) {
+                            final item = filtered[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                countryController.text = item['country'];
+                                Navigator.pop(context);
+                                notifyListeners();
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 8.h),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8.h,
+                                  horizontal: 6.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    ...countryCodeFormat.map(
-                                      (e) => GestureDetector(
-                                        onTap: () {
-                                          countryController.text = e['country'];
-                                          Navigator.pop(context);
-                                          model.notifyListeners();
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: AppColors.white,
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 4.6.w,
-                                            horizontal: 20.w,
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(6.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: AppColors.transparent,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: 160.w,
-                                                  child: TextView(
-                                                    text: '${e['country']}',
-                                                    textOverflow:
-                                                        TextOverflow.ellipsis,
-                                                    textStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 17.2.sp,
-
-                                                      color: AppColors.black,
-                                                    ),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-
-                                                buildImage(e['Flag']),
-                                              ],
-                                            ),
-                                          ),
+                                    SizedBox(
+                                      width: 180.w,
+                                      child: TextView(
+                                        text: item['country'],
+                                        textOverflow: TextOverflow.ellipsis,
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 17.2.sp,
+                                          color: AppColors.black,
                                         ),
                                       ),
                                     ),
+                                    buildImage(item['Flag']),
                                   ],
                                 ),
-                              )
-                            : Column(
-                                children: [
-                                  ...countryCodeFormat
-                                      .where(
-                                        (o) => o['country']!
-                                            .toLowerCase()
-                                            .contains(
-                                              querySignUpCountry.toLowerCase(),
-                                            ),
-                                      )
-                                      .map(
-                                        (e) => GestureDetector(
-                                          onTap: () {
-                                            countryController.text =
-                                                e['country']!;
-                                            Navigator.pop(context);
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 4.6.w,
-                                              horizontal: 20.w,
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(6.w),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: AppColors.transparent,
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 180.w,
-                                                    child: TextView(
-                                                      text: '${e['country']}',
-                                                      textOverflow:
-                                                          TextOverflow.ellipsis,
-                                                      textStyle: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 17.2.sp,
-
-                                                        color: AppColors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  buildImage(e['Flag']),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                ],
                               ),
-                        SizedBox(height: 14.0.h),
-                      ],
-                    ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 16.h),
+                    ],
                   );
                 },
               );
@@ -1328,6 +1278,7 @@ class PharmViewModel extends BaseViewModel {
     ).replace(queryParameters: {'country': country});
 
     try {
+      _isLoading = true;
       final response = await http.get(
         uri,
         headers: {
@@ -1340,12 +1291,16 @@ class PharmViewModel extends BaseViewModel {
         final jsonData = jsonDecode(response.body);
         _getStateResponseModel = GetStateResponseModel.fromJson(jsonData);
         print('✅ Success: ${_getStateResponseModel?.toJson()}');
+        _isLoading = false;
       } else {
+        _isLoading = false;
         print('❌ Error ${response.statusCode}: ${response.reasonPhrase}');
       }
     } catch (e) {
+      _isLoading = false;
       print('⚠️ Exception: $e');
     }
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -1355,6 +1310,7 @@ class PharmViewModel extends BaseViewModel {
     ).replace(queryParameters: {'country': country, 'state': state});
 
     try {
+      _isLoading = true;
       final response = await http.get(
         uri,
         headers: {
@@ -1367,12 +1323,16 @@ class PharmViewModel extends BaseViewModel {
         final jsonData = jsonDecode(response.body);
         _getCityResponseModel = GetCityResponseModel.fromJson(jsonData);
         print('✅ Success: ${_getCityResponseModel?.toJson()}');
+        _isLoading = false;
       } else {
+        _isLoading = false;
         print('❌ Error ${response.statusCode}: ${response.reasonPhrase}');
       }
     } catch (e) {
+      _isLoading = false;
       print('⚠️ Exception: $e');
     }
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -1428,60 +1388,78 @@ class PharmViewModel extends BaseViewModel {
                         ),
                         SizedBox(height: 16.h),
                         queryState == ''
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (model.getStateResponseModel != null &&
-                                      model
-                                          .getStateResponseModel!
-                                          .data!
-                                          .states!
-                                          .isNotEmpty)
-                                    ...model
-                                        .getStateResponseModel!
-                                        .data!
-                                        .states!
-                                        .map(
-                                          (e) => GestureDetector(
-                                            onTap: () {
-                                              stateController.text = e.name!;
-                                              Navigator.pop(context);
-                                              model.notifyListeners();
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 4.6.w,
-                                                horizontal: 20.w,
-                                              ),
-                                              child: Container(
-                                                padding: EdgeInsets.all(6.w),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: AppColors.transparent,
-                                                ),
-                                                child: TextView(
-                                                  text: '${e.name}',
-                                                  textOverflow:
-                                                      TextOverflow.ellipsis,
-                                                  textStyle: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 17.2.sp,
+                            ? model.isLoading
+                                  ? SpinKitFadingFour(
+                                      color: AppColors.primary1,
+                                      size: 40.sp,
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (model.getStateResponseModel !=
+                                                null &&
+                                            model
+                                                .getStateResponseModel!
+                                                .data!
+                                                .states!
+                                                .isNotEmpty)
+                                          ...model
+                                              .getStateResponseModel!
+                                              .data!
+                                              .states!
+                                              .map(
+                                                (e) => GestureDetector(
+                                                  onTap: () {
+                                                    stateController.text =
+                                                        e.name!;
+                                                    Navigator.pop(context);
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.white,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          vertical: 4.6.w,
+                                                          horizontal: 20.w,
+                                                        ),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(
+                                                        6.w,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10,
+                                                            ),
+                                                        color: AppColors
+                                                            .transparent,
+                                                      ),
+                                                      child: TextView(
+                                                        text: '${e.name}',
+                                                        textOverflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                        textStyle: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 17.2.sp,
 
-                                                    color: AppColors.black,
+                                                          color:
+                                                              AppColors.black,
+                                                        ),
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                    ),
                                                   ),
-                                                  fontWeight: FontWeight.w400,
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                ],
-                              )
+                                      ],
+                                    )
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -1608,58 +1586,76 @@ class PharmViewModel extends BaseViewModel {
                         ),
                         SizedBox(height: 16.h),
                         queryLga == ''
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (model.getCityResponseModel != null &&
-                                      model
-                                          .getCityResponseModel!
-                                          .data!
-                                          .isNotEmpty)
-                                    ...model.getCityResponseModel!.data!.map(
-                                      (e) => GestureDetector(
-                                        onTap: () {
-                                          lgaController.text = e;
-                                          Navigator.pop(context);
-                                          model.notifyListeners();
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: AppColors.white,
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 4.6.w,
-                                            horizontal: 20.w,
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(6.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: AppColors.transparent,
-                                            ),
-                                            child: SizedBox(
-                                              width: 200.w,
-                                              child: TextView(
-                                                text: e,
-                                                textOverflow:
-                                                    TextOverflow.ellipsis,
-                                                textStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 17.2.sp,
+                            ? model.isLoading
+                                  ? SpinKitFadingFour(
+                                      color: AppColors.primary1,
+                                      size: 40.sp,
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if (model.getCityResponseModel !=
+                                                null &&
+                                            model
+                                                .getCityResponseModel!
+                                                .data!
+                                                .isNotEmpty)
+                                          ...model.getCityResponseModel!.data!
+                                              .map(
+                                                (e) => GestureDetector(
+                                                  onTap: () {
+                                                    lgaController.text = e;
+                                                    Navigator.pop(context);
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.white,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                          vertical: 4.6.w,
+                                                          horizontal: 20.w,
+                                                        ),
+                                                    child: Container(
+                                                      padding: EdgeInsets.all(
+                                                        6.w,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10,
+                                                            ),
+                                                        color: AppColors
+                                                            .transparent,
+                                                      ),
+                                                      child: SizedBox(
+                                                        width: 200.w,
+                                                        child: TextView(
+                                                          text: e,
+                                                          textOverflow:
+                                                              TextOverflow
+                                                                  .ellipsis,
+                                                          textStyle: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 17.2.sp,
 
-                                                  color: AppColors.black,
+                                                            color:
+                                                                AppColors.black,
+                                                          ),
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                                fontWeight: FontWeight.w400,
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              )
+                                      ],
+                                    )
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -1872,11 +1868,49 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> addUsers(context, {CreateUserEntityModel? createEntity}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.addUser(createEntity!),
+        throwException: true,
+      );
+      _isLoading = false;
+
+      await AppUtils.snackbar(context, message: v['message']);
+      // rolenameController.clear();
+      // roleDescriptionController.clear();
+      Navigator.pop(context);
+      getUser(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> getRoles(context) async {
     try {
       _isLoading = true;
       _getRolesResponseModel = await runBusyFuture(
         repositoryImply.getRoles(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getUser(context) async {
+    try {
+      _isLoading = true;
+      _getCreatedUserResponseModel = await runBusyFuture(
+        repositoryImply.getUsers(),
         throwException: true,
       );
       _isLoading = false;
@@ -1908,6 +1942,26 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> updateUser(context, {UpdateUserEntityModel? updateUser}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateUser(updateUser!),
+        throwException: true,
+      );
+      _isLoading = false;
+
+      await AppUtils.snackbar(context, message: v['message']);
+      Navigator.pop(context);
+      getUser(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> deleteRole(context, {String? roleId}) async {
     try {
       _isLoading = true;
@@ -1920,6 +1974,26 @@ class PharmViewModel extends BaseViewModel {
       await AppUtils.snackbar(context, message: v['message']);
       Navigator.pop(context);
       getRoles(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deactivateUser(context, {String? id}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.deleteUser(id!),
+        throwException: true,
+      );
+
+      _isLoading = false;
+      await AppUtils.snackbar(context, message: v['message']);
+      Navigator.pop(context);
+      getUser(context);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -2732,7 +2806,20 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  void modalBottomSheetMenuAddUser({context}) {
+  void modalBottomSheetMenuAddUser({
+    context,
+    bool isEdit = false,
+    firstName,
+    lastName,
+    phone,
+    email,
+    address,
+    gender,
+    role,
+    roleId,
+    pin,
+    membershipId,
+  }) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
     showModalBottomSheet(
@@ -2752,14 +2839,34 @@ class PharmViewModel extends BaseViewModel {
             builder: (context, scrollController) {
               return ViewModelBuilder<PharmViewModel>.reactive(
                 viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) {},
+                onViewModelReady: (model) {
+                  if (isEdit) {
+                    nameController.text = firstName;
+                    lastNameController.text = lastName;
+                    userPhoneController.text = phone;
+                    userEmailController.text = email;
+                    userAddressController.text = address;
+                    userGenderController.text = gender;
+                    userRoleController.text = role;
+                    userRoleControllerId = roleId;
+                  } else {
+                    nameController.text = '';
+                    lastNameController.text = '';
+                    userPhoneController.text = '';
+                    userEmailController.text = '';
+                    userAddressController.text = '';
+                    userGenderController.text = '';
+                    userRoleController.text = '';
+                    userRoleControllerId = '';
+                  }
+                },
                 disposeViewModel: false,
                 builder: (_, PharmViewModel model, __) {
                   return Padding(
                     padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(
-                        context,
-                      ).viewInsets.bottom, // 👈 pushes content above keyboard
+                      // bottom: MediaQuery.of(
+                      //   context,
+                      // ).viewInsets.bottom, // 👈 pushes content above keyboard
                     ), //could change this to Color(0xFF737373),
                     //so you don't have to change MaterialApp canvasColor
                     child: Container(
@@ -2795,7 +2902,9 @@ class PharmViewModel extends BaseViewModel {
                                   children: [
                                     SizedBox(width: 30.w),
                                     TextView(
-                                      text: 'Add User',
+                                      text: !isEdit
+                                          ? 'Add User'
+                                          : 'Update User',
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 16.20.sp,
@@ -2832,7 +2941,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  // controller: nameController,
+                                  controller: nameController,
                                   validator: AppValidator.validateString(),
                                   onChange: (p0) {},
                                 ),
@@ -2855,7 +2964,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  // controller: nameController,
+                                  controller: lastNameController,
                                   validator: AppValidator.validateString(),
                                   onChange: (p0) {},
                                 ),
@@ -2878,7 +2987,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  // controller: nameController,
+                                  controller: userPhoneController,
                                   validator: AppValidator.validateInt(),
                                   onChange: (p0) {},
                                 ),
@@ -2901,7 +3010,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  // controller: nameController,
+                                  controller: userEmailController,
                                   validator: AppValidator.validateEmail(),
                                   onChange: (p0) {},
                                 ),
@@ -2924,7 +3033,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  // controller: nameController,
+                                  controller: userAddressController,
                                   validator: AppValidator.validateString(),
                                   onChange: (p0) {},
                                 ),
@@ -2945,18 +3054,50 @@ class PharmViewModel extends BaseViewModel {
                                     fontSize: 14.sp,
                                     color: AppColors.infoGrey,
                                   ),
+                                  readOnly: true,
                                   fillColor: AppColors.grey,
                                   isFilled: true,
                                   label: '--Select--',
-                                  // controller: nameController,
+                                  controller: userGenderController,
                                   validator: AppValidator.validateString(),
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(14.20.w),
-                                    child: GestureDetector(
+                                  suffixWidget: PopupMenuButton<String>(
+                                    color: AppColors.white,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(14.20.w),
                                       child: SvgPicture.asset(
                                         AppImage.arrow_down,
                                       ),
                                     ),
+                                    onSelected: (String result) {
+                                      userGenderController.text = result;
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuItem<String>>[
+                                          PopupMenuItem<String>(
+                                            value: 'MALE',
+                                            child: TextView(
+                                              text: 'Male',
+                                              textStyle: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Arial',
+                                                fontSize: 15.2.sp,
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+                                          ),
+                                          PopupMenuItem<String>(
+                                            value: 'FEMALE',
+                                            child: TextView(
+                                              text: 'Female',
+                                              textStyle: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Arial',
+                                                fontSize: 15.2.sp,
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                   ),
                                 ),
                                 SizedBox(height: 20.h),
@@ -2978,12 +3119,16 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  label: '--Select--',
-                                  // controller: nameController,
-                                  validator: AppValidator.validateString(),
+                                  readOnly: true,
+                                  label: userRoleController.text == ''
+                                      ? '--Select--'
+                                      : userRoleController.text,
+                                  controller: userRoleController,
+                                  // validator: AppValidator.validateString(),
                                   suffixWidget: Padding(
                                     padding: EdgeInsets.all(14.20.w),
                                     child: GestureDetector(
+                                      onTap: () {},
                                       child: SvgPicture.asset(
                                         AppImage.arrow_down,
                                       ),
@@ -2991,51 +3136,92 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                 ),
                                 SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Temporary 4-digit PIN',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  obscureText: true,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  // controller: nameController,
-                                  validator: AppValidator.validateString(),
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(14.20.w),
-                                    child: GestureDetector(
-                                      child: SvgPicture.asset(
-                                        AppImage.closed_eye_user,
-                                        // color: AppColors.app_green,
-                                        height: 20.h,
-                                        width: 20.w,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                !isEdit
+                                    ? TextFormWidget(
+                                        hint: 'Temporary 4-digit PIN',
+                                        borderColor: AppColors.transparent,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        obscureText: true,
+                                        hintSize: isTablet(context)
+                                            ? 6.82.sp
+                                            : 14.60.sp,
+                                        labelStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.sp,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        fillColor: AppColors.grey,
+                                        isFilled: true,
+                                        controller: userPinController,
+                                        validator:
+                                            AppValidator.validateString(),
+                                        suffixWidget: Padding(
+                                          padding: EdgeInsets.all(14.20.w),
+                                          child: GestureDetector(
+                                            child: SvgPicture.asset(
+                                              AppImage.closed_eye_user,
+                                              // color: AppColors.app_green,
+                                              height: 20.h,
+                                              width: 20.w,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
                                 SizedBox(height: 70.h),
                                 ButtonWidget(
                                   border: 100.r,
                                   buttonColor: AppColors.primary,
-                                  buttonText: 'Add',
+                                  buttonText: !isEdit ? 'Add' : 'Update',
                                   fontSize: 16.sp,
                                   color: AppColors.white,
-                                  isLoading: _isLoading,
+                                  isLoading: model.isLoading,
                                   buttonBorderColor: AppColors.transparent,
                                   onPressed: () {
                                     if (formKeyValidateAddUser.currentState!
-                                        .validate()) {}
+                                        .validate()) {
+                                      if (isEdit) {
+                                        model.updateUser(
+                                          context,
+                                          updateUser: UpdateUserEntityModel(
+                                            fullName:
+                                                '${nameController.text.trim()} ${lastNameController.text.trim()}',
+                                            email: userEmailController.text
+                                                .trim(),
+                                            phone: userPhoneController.text
+                                                .trim(),
+                                            gender: userGenderController.text
+                                                .trim(),
+                                            address: userAddressController.text
+                                                .trim(),
+                                            roleId: userRoleControllerId,
+                                            membershipId: membershipId,
+                                          ),
+                                        );
+                                      } else {
+                                        model.addUsers(
+                                          context,
+                                          createEntity: CreateUserEntityModel(
+                                            fullName:
+                                                '${nameController.text.trim()} ${lastNameController.text.trim()}',
+                                            email: userEmailController.text
+                                                .trim(),
+                                            phone: userPhoneController.text
+                                                .trim(),
+                                            gender: userGenderController.text
+                                                .trim(),
+                                            address: userAddressController.text
+                                                .trim(),
+                                            pin: userPinController.text.trim(),
+                                            roleId: userRoleControllerId,
+                                          ),
+                                        );
+                                      }
+                                    }
                                     model.notifyListeners();
                                   },
                                 ),
@@ -3056,157 +3242,175 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  void showRemoveUserDialog(BuildContext context) {
+  String getFirstWord(String fullName) {
+    return fullName.trim().split(' ').first;
+  }
+
+  String getSecondWord(String fullName) {
+    return fullName.trim().split(' ').last;
+  }
+
+  void showRemoveUserDialog(BuildContext context, {String? id}) {
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
-        return Container(
-          color: AppColors.transparent,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: TextButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close, color: Colors.white, size: 18),
-                  label: Text("Close", style: TextStyle(color: Colors.white)),
-                  style: TextButton.styleFrom(
-                    backgroundColor: AppColors.primary,
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          builder: (_, PharmViewModel model, __) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.w,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 6.10.h),
-              Dialog(
-                insetPadding: EdgeInsets.all(16.20.w),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: AppColors.white,
-                child: Padding(
-                  padding: EdgeInsets.all(16.4.w),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.4.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(34.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.yellow.withOpacity(.2),
-                              shape: BoxShape.circle,
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(34.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.yellow.withOpacity(.2),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(24.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.yellow,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              SvgPicture.asset(AppImage.exclam),
+                            ],
+                          ),
+                          SizedBox(height: 12.h),
+                          TextView(
+                            text: 'Remove User',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              color: AppColors.black,
+                              fontSize: 18.20.sp,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Container(
-                            padding: EdgeInsets.all(24.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.yellow,
-                              shape: BoxShape.circle,
+                          SizedBox(height: 12.h),
+                          TextView(
+                            text:
+                                'Are you sure you want to make remove this sub-user (James Smith)?',
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              color: AppColors.success,
+                              fontSize: 14.20.sp,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
-                          SvgPicture.asset(AppImage.exclam),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      TextView(
-                        text: 'Remove User',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          color: AppColors.black,
-                          fontSize: 18.20.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      TextView(
-                        text:
-                            'Are you sure you want to make remove this sub-user (James Smith)?',
-                        textAlign: TextAlign.center,
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          color: AppColors.success,
-                          fontSize: 14.20.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      SizedBox(height: 20.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () => Navigator.pop(context),
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: AppColors.primary),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                          SizedBox(height: 20.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              OutlinedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(color: AppColors.primary),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 32.w,
+                                    vertical: 12.w,
+                                  ),
+                                ),
+                                child: TextView(
+                                  text: "Cancel",
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 15.6.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 32.w,
-                                vertical: 12.w,
-                              ),
-                            ),
-                            child: TextView(
-                              text: "Cancel",
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 15.6.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 16.w),
+                              SizedBox(width: 16.w),
 
-                          // Continue Button
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                await Future.delayed(
-                                  Duration(milliseconds: 100),
-                                );
-                                // Add your update logic here
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                              // Continue Button
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    await Future.delayed(
+                                      Duration(milliseconds: 100),
+                                    );
+                                    // Add your update logic here
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 20.w,
+                                      vertical: 12.w,
+                                    ),
+                                    elevation: 0,
+                                  ),
+                                  child: TextView(
+                                    text: "Yes, Continue",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.6.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
                                 ),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 20.w,
-                                  vertical: 12.w,
-                                ),
-                                elevation: 0,
                               ),
-                              child: TextView(
-                                text: "Yes, Continue",
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 15.6.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.white,
-                                ),
-                              ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

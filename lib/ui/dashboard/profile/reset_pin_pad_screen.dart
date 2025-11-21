@@ -91,7 +91,7 @@ class ResetPinPadScreen extends StatelessWidget {
                           forgotPassword: ResendOtpEntityModel(
                             phone: SharedPreferencesService
                                 .instance
-                                .usersData['phone']['phoneNumber'],
+                                .usersData['user']['phone'],
                           ),
                         ),
                         child: Container(

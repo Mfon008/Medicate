@@ -95,54 +95,51 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         child: ViewModelBuilder<AuthViewModel>.reactive(
           viewModelBuilder: () => locator<AuthViewModel>(),
           onViewModelReady: (model) {
-            print(SharedPreferencesService.instance.usersData);
-            nameController.text =
-                SharedPreferencesService.instance.usersData['user']['fullName'];
-            phoneController.text = SharedPreferencesService
-                .instance
-                .usersData['user']['phone']
-                .toString()
-                .substring(4);
-            emailController.text =
-                SharedPreferencesService.instance.usersData['user']['email'] ??
-                '';
-            dobController.text =
-                SharedPreferencesService
-                        .instance
-                        .usersData['user']['dateOfBirth'] ==
-                    null
-                ? ''
-                : SharedPreferencesService
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              await model.getUserDetailsNoPhone(context);
+              nameController.text = SharedPreferencesService
+                  .instance
+                  .usersData1['user']['fullName'];
+              phoneController.text = SharedPreferencesService
+                  .instance
+                  .usersData1['user']['phone']['number']
+                  .toString()
+                  .substring(4);
+              emailController.text =
+                  SharedPreferencesService
                       .instance
-                      .usersData['user']['dateOfBirth']
-                      .toString()
-                      .substring(0, 10);
-            genderController.text =
-                SharedPreferencesService.instance.usersData['user']['gender'] ??
-                '';
-            ageController.text =
-                SharedPreferencesService.instance.usersData['user']['age'] ==
-                    null
-                ? ''
-                : SharedPreferencesService.instance.usersData['user']['age']
-                      .toString();
-            model.countryController.text =
-                SharedPreferencesService
-                    .instance
-                    .usersData['user']['country'] ??
-                '';
-            heightController.text =
-                SharedPreferencesService.instance.usersData['user']['height'] ==
-                    null
-                ? ''
-                : SharedPreferencesService.instance.usersData['user']['height']
-                      .toString();
-            weightController.text =
-                SharedPreferencesService.instance.usersData['user']['weight'] ==
-                    null
-                ? ''
-                : SharedPreferencesService.instance.usersData['user']['weight']
-                      .toString();
+                      .usersData1['user']['email'] ??
+                  '';
+              dobController.text = model.getDOB(
+                SharedPreferencesService.instance.usersData1['dateOfBirth'] ??
+                    "",
+              );
+              genderController.text =
+                  SharedPreferencesService.instance.usersData1['gender'] ?? '';
+              ageController.text = model
+                  .calculateAge(
+                    model.getDOB(
+                      SharedPreferencesService
+                          .instance
+                          .usersData1['dateOfBirth'],
+                    ),
+                  )
+                  .toString();
+              model.countryController.text =
+                  SharedPreferencesService.instance.usersData1['country'] ?? '';
+              heightController.text =
+                  SharedPreferencesService.instance.usersData1['heightCm'] ==
+                      null
+                  ? ''
+                  : SharedPreferencesService.instance.usersData1['heightCm']
+                        .toString();
+              weightController.text =
+                  SharedPreferencesService.instance.usersData1['weightKg'] ==
+                      null
+                  ? ''
+                  : SharedPreferencesService.instance.usersData1['weightKg']
+                        .toString();
+            });
           },
           disposeViewModel: false,
           builder: (_, AuthViewModel model, __) {
@@ -483,8 +480,11 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                           suffixWidget: Padding(
                             padding: EdgeInsets.all(14.20.w),
                             child: GestureDetector(
-                              onTap: () =>
-                                  model.modalBottomSheetMenuCountry(context),
+                              onTap: () {
+                                Future.microtask(() {
+                                  model.modalBottomSheetMenuCountry(context);
+                                });
+                              },
                               child: SvgPicture.asset(AppImage.arrow_down),
                             ),
                           ),

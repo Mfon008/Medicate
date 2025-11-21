@@ -302,6 +302,37 @@ class AuthViewModel extends BaseViewModel {
   var totalCount;
   var takenCount;
 
+  String getDOB(data) {
+    String raw = data;
+
+    // Remove the parenthesis part
+    String cleaned = raw.split(' (')[0];
+    // cleaned = "Sat Dec 22 1990 00:00:00 GMT+0000"
+
+    final formatter = DateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z");
+    DateTime dt = formatter.parse(cleaned, true).toLocal();
+
+    String formatted = DateFormat('yyyy-MM-dd').format(dt);
+
+    print(formatted); // 1990-12-22
+    return formatted;
+  }
+
+  int calculateAge(String dateString) {
+    DateTime dob = DateTime.parse(dateString);
+    DateTime today = DateTime.now();
+
+    int age = today.year - dob.year;
+
+    // If birthday hasn't occurred yet this year, subtract 1
+    if (today.month < dob.month ||
+        (today.month == dob.month && today.day < dob.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
   calculateDaysLeft() {
     if (getReminderByIdModel!.data!.medication!.endDateTime!
                 .difference(
@@ -2752,7 +2783,7 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getUserDetailsNoPhone(context) async {
+  Future<void> getUserDetailsNoPhone(context) async {
     try {
       _isLoading = true;
       _getUserDetailsNoPhoneModel = await runBusyFuture(
@@ -2763,7 +2794,7 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      // AppUtils.snackbar(context, message: e.toString(), error: true9090887781);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }
@@ -3475,180 +3506,115 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
-  void modalBottomSheetMenuCountry(context) {
+  void modalBottomSheetMenuCountry(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Enables full-screen dragging
+      isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (builder) {
+      builder: (_) {
         return Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: DraggableScrollableSheet(
             expand: false,
-            initialChildSize: 0.5, // 50% of screen height
-            minChildSize: 0.3, // Can be dragged to 30% of screen height
-            maxChildSize: 0.9, // Can be dragged to 90% of screen height
+            initialChildSize: 0.5,
+            minChildSize: 0.3,
+            maxChildSize: 0.9,
             builder: (context, scrollController) {
               return ViewModelBuilder<AuthViewModel>.reactive(
-                viewModelBuilder: () => AuthViewModel(),
-                onViewModelReady: (model) {},
+                viewModelBuilder: () => this, // 👈 use current model
                 disposeViewModel: false,
-                builder: (_, AuthViewModel model, __) {
-                  return SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      children: [
-                        SizedBox(height: 22.0.h),
-                        Padding(
-                          padding: EdgeInsets.all(12.w),
-                          child: TextFormWidget(
-                            label: 'Search country',
-                            isFilled: true,
-                            borderTopLeft: 10.r,
-                            borderTopRight: 10.r,
-                            borderBottomLeft: 10.r,
-                            borderBottomRight: 10.r,
-                            fillColor: AppColors.grey,
-                            onChange: (p0) {
-                              querySignUpCountry = p0;
-                              model.notifyListeners();
-                            },
-                            suffixIcon: Icons.search_sharp,
-                            controller: countryController,
-                          ),
+                builder: (_, model, __) {
+                  final filtered = querySignUpCountry.isEmpty
+                      ? countryCodeFormat
+                      : countryCodeFormat.where((e) {
+                          return e['country']!.toLowerCase().contains(
+                            querySignUpCountry.toLowerCase(),
+                          );
+                        }).toList();
+                  return Column(
+                    children: [
+                      SizedBox(height: 22.h),
+
+                      // Search Bar
+                      Padding(
+                        padding: EdgeInsets.all(12.w),
+                        child: TextFormWidget(
+                          label: 'Search country',
+                          isFilled: true,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.grey,
+                          controller: countryController,
+                          suffixIcon: Icons.search_sharp,
+                          onChange: (value) {
+                            querySignUpCountry = value;
+                            model.notifyListeners();
+                          },
                         ),
-                        SizedBox(height: 16.h),
-                        querySignUpCountry == ''
-                            ? SizedBox(
-                                width: 400.w,
-                                child: Column(
+                      ),
+
+                      SizedBox(height: 10.h),
+
+                      // Expanded List
+                      Expanded(
+                        child: ListView.builder(
+                          controller: scrollController,
+                          itemCount: filtered.length,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          itemBuilder: (context, index) {
+                            final item = filtered[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                countryController.text = item['country'];
+                                Navigator.pop(context);
+                                notifyListeners();
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 8.h),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8.h,
+                                  horizontal: 6.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    ...countryCodeFormat.map(
-                                      (e) => GestureDetector(
-                                        onTap: () {
-                                          countryController.text = e['country'];
-                                          Navigator.pop(context);
-                                          model.notifyListeners();
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: AppColors.white,
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 4.6.w,
-                                            horizontal: 20.w,
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(6.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: AppColors.transparent,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: 160.w,
-                                                  child: TextView(
-                                                    text: '${e['country']}',
-                                                    textOverflow:
-                                                        TextOverflow.ellipsis,
-                                                    textStyle: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 17.2.sp,
-
-                                                      color: AppColors.black,
-                                                    ),
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-
-                                                buildImage(e['Flag']),
-                                              ],
-                                            ),
-                                          ),
+                                    SizedBox(
+                                      width: 180.w,
+                                      child: TextView(
+                                        text: item['country'],
+                                        textOverflow: TextOverflow.ellipsis,
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 17.2.sp,
+                                          color: AppColors.black,
                                         ),
                                       ),
                                     ),
+                                    buildImage(item['Flag']),
                                   ],
                                 ),
-                              )
-                            : Column(
-                                children: [
-                                  ...countryCodeFormat
-                                      .where(
-                                        (o) => o['country']!
-                                            .toLowerCase()
-                                            .contains(
-                                              querySignUpCountry.toLowerCase(),
-                                            ),
-                                      )
-                                      .map(
-                                        (e) => GestureDetector(
-                                          onTap: () {
-                                            countryController.text =
-                                                e['country']!;
-                                            Navigator.pop(context);
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 4.6.w,
-                                              horizontal: 20.w,
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(6.w),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: AppColors.transparent,
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 180.w,
-                                                    child: TextView(
-                                                      text: '${e['country']}',
-                                                      textOverflow:
-                                                          TextOverflow.ellipsis,
-                                                      textStyle: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 17.2.sp,
-
-                                                        color: AppColors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  buildImage(e['Flag']),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                ],
                               ),
-                        SizedBox(height: 14.0.h),
-                      ],
-                    ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 16.h),
+                    ],
                   );
                 },
               );
@@ -12253,7 +12219,7 @@ class AuthViewModel extends BaseViewModel {
         ),
         throwException: true,
       );
-      AppUtils.snackbar(context, message: v['data']['message']);
+      await AppUtils.snackbar(context, message: v['data']['message']);
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

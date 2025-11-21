@@ -6,7 +6,9 @@ import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_role_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
+import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
@@ -19,6 +21,7 @@ import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../connect_end/model/sign_up_pharmacy_entity_model.dart';
 import '../connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
+import '../connect_end/model/update_user_entity_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
@@ -408,12 +411,12 @@ class PharmApi {
     }
   }
 
-  Future<dynamic> addUser(RolesEntityModel roleEntity) async {
+  Future<dynamic> addUser(CreateUserEntityModel createEntity) async {
     try {
       final response = await _service.call(
-        UrlConfig.create_role,
+        UrlConfig.create_user,
         RequestMethod.post,
-        data: roleEntity.toJson(),
+        data: createEntity.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -423,26 +426,26 @@ class PharmApi {
     }
   }
 
-  Future<GetRolesResponseModel> getUser() async {
+  Future<GetCreatedUserResponseModel> getUser() async {
     try {
       final response = await _service.call(
-        UrlConfig.get_role,
+        UrlConfig.get_user,
         RequestMethod.get,
       );
       logger.d(response.data);
-      return GetRolesResponseModel.fromJson(response.data);
+      return GetCreatedUserResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<dynamic> updateUser(UpdateRoleEntityModel updateRole) async {
+  Future<dynamic> updateUser(UpdateUserEntityModel createUser) async {
     try {
       final response = await _service.call(
-        UrlConfig.update_role,
+        UrlConfig.update_user,
         RequestMethod.patch,
-        data: updateRole.toJson(),
+        data: createUser.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -455,9 +458,9 @@ class PharmApi {
   Future<dynamic> deleteUser(String roleId) async {
     try {
       final response = await _service.call(
-        UrlConfig.delete_role,
-        RequestMethod.delete,
-        data: {'roleId': roleId},
+        UrlConfig.delete_user,
+        RequestMethod.patch,
+        data: {'membershipId': roleId},
       );
       logger.d(response.data);
       return response.data;

@@ -226,8 +226,9 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<GetUserDetailsNoPhoneModel> getUserDetailsNoPhone() async{
+  Future<GetUserDetailsNoPhoneModel> getUserDetailsNoPhone() async {
     final response = await _contract.getUserDetailsNoPhone();
+    _chacheUser(response);
     return response;
   }
 
@@ -237,6 +238,12 @@ class AuthRepoImpl {
       _session.authRefreshToken = data.data.refreshToken;
       _session.usersData = data.data.toJson();
       _session.authType = 'everyday_user';
+    }
+  }
+
+  void _chacheUser(data) {
+    if (data != null) {
+      _session.usersData1 = data.data.toJson();
     }
   }
 }

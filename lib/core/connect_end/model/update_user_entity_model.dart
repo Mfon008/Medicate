@@ -1,4 +1,4 @@
-class CreateUserEntityModel {
+class UpdateUserEntityModel {
   String? membershipId;
   String? fullName;
   String? email;
@@ -7,10 +7,9 @@ class CreateUserEntityModel {
   String? address;
   String? country;
   String? state;
-  String? pin;
   String? roleId;
 
-  CreateUserEntityModel({
+  UpdateUserEntityModel({
     this.fullName,
     this.membershipId,
     this.email,
@@ -19,12 +18,11 @@ class CreateUserEntityModel {
     this.address,
     this.country,
     this.state,
-    this.pin,
     this.roleId,
   });
 
-  factory CreateUserEntityModel.fromJson(Map<String, dynamic> json) {
-    return CreateUserEntityModel(
+  factory UpdateUserEntityModel.fromJson(Map<String, dynamic> json) {
+    return UpdateUserEntityModel(
       membershipId: json['membershipId'] as String?,
       fullName: json['fullName'] as String?,
       email: json['email'] as String?,
@@ -33,7 +31,6 @@ class CreateUserEntityModel {
       address: json['address'] as String?,
       country: json['country'] as String?,
       state: json['state'] as String?,
-      pin: json['pin'] as String?,
       roleId: json['roleId'] as String?,
     );
   }
@@ -47,7 +44,6 @@ class CreateUserEntityModel {
     'address': address,
     'country': country,
     'state': state,
-    'pin': pin,
     'roleId': roleId,
   };
 }

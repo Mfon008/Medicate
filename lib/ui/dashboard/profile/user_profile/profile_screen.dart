@@ -22,8 +22,8 @@ class ProfileScreen extends StatelessWidget {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => locator<AuthViewModel>(),
       onViewModelReady: (model) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          model.getUserDetailsNoPhone(context);
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await model.getUserDetailsNoPhone(context);
         });
       },
       disposeViewModel: false,
@@ -75,28 +75,8 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                      : Center(
-                          child:
-                              SharedPreferencesService.instance.usersData ==
-                                      null ||
-                                  SharedPreferencesService
-                                          .instance
-                                          .usersData['user'] ==
-                                      null ||
-                                  SharedPreferencesService
-                                          .instance
-                                          .usersData['user']['profilePictureUrl'] ==
-                                      null
-                              ? SvgPicture.asset(AppImage.profile_image)
-                              : CircleAvatar(
-                                  radius: 60.0, // Adjust the size as needed
-                                  backgroundImage: NetworkImage(
-                                    SharedPreferencesService
-                                        .instance
-                                        .usersData['user']['profilePictureUrl'],
-                                  ),
-                                ),
-                        ),
+                      : Center(child: SvgPicture.asset(AppImage.profile_image)),
+
                   SizedBox(height: 10.h),
                   Center(
                     child: GestureDetector(

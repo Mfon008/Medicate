@@ -426,8 +426,11 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           suffixWidget: Padding(
                             padding: EdgeInsets.all(14.20.w),
                             child: GestureDetector(
-                              onTap: () =>
-                                  model.modalBottomSheetMenuCountry(context),
+                              onTap: () {
+                                Future.microtask(() {
+                                  model.modalBottomSheetMenuCountry(context);
+                                });
+                              },
                               child: SvgPicture.asset(AppImage.arrow_down),
                             ),
                           ),
