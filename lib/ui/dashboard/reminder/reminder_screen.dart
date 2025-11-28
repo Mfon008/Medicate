@@ -30,7 +30,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+         await model.getTodaysReminder(
+            context,
+            period: model.timePeriod,
+            date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          );
           model.getReminder(
             context,
             status: model.isReminderStatus,
@@ -152,101 +157,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   await Future.delayed(
                                     Duration(milliseconds: 500),
                                   );
-                                  model.isReminderStatus = 'ongoing';
-                                  model.getReminder(
-                                    context,
-                                    status: model.isReminderStatus,
-                                    page: model.pageOngoing.toString(),
-                                  );
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10.w),
-                                  decoration:
-                                      model.isReminderStatus == 'ongoing'
-                                      ? BoxDecoration(
-                                          color: AppColors.primary.withOpacity(
-                                            .04,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            22.r,
-                                          ),
-                                        )
-                                      : BoxDecoration(),
-                                  alignment: Alignment.center,
-                                  child: TextView(
-                                    text: 'Ongoing',
-                                    textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: model.isReminderStatus == 'ongoing'
-                                          ? AppColors.primary
-                                          : AppColors.grey1,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () async {
-                                  model
-                                      .getReminderResponseModel!
-                                      .data!
-                                      .reminders!
-                                      .clear();
-                                  await Future.delayed(
-                                    Duration(milliseconds: 500),
-                                  );
-                                  model.isReminderStatus = 'completed';
-                                  model.getReminder(
-                                    context,
-                                    status: model.isReminderStatus,
-                                    page: model.pageCompleted.toString(),
-                                  );
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 10.w),
-                                  decoration:
-                                      model.isReminderStatus == 'completed'
-                                      ? BoxDecoration(
-                                          color: AppColors.primary.withOpacity(
-                                            .04,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            22.r,
-                                          ),
-                                        )
-                                      : BoxDecoration(),
-                                  alignment: Alignment.center,
-                                  child: TextView(
-                                    text: 'Completed',
-                                    textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color:
-                                          model.isReminderStatus == 'completed'
-                                          ? AppColors.primary
-                                          : AppColors.grey1,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () async {
-                                  model
-                                      .getReminderResponseModel!
-                                      .data!
-                                      .reminders!
-                                      .clear();
-                                  await Future.delayed(
-                                    Duration(milliseconds: 500),
-                                  );
                                   model.isReminderStatus = 'today';
                                   model.getTodaysReminder(
                                     context,
@@ -283,7 +193,201 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 ),
                               ),
                             ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  model
+                                      .getReminderResponseModel!
+                                      .data!
+                                      .reminders!
+                                      .clear();
+                                  await Future.delayed(
+                                    Duration(milliseconds: 500),
+                                  );
+                                  model.isReminderStatus = 'all';
+                                  model.getReminder(
+                                    context,
+                                    status: model.isReminderStatus,
+                                    page: model.pageOngoing.toString(),
+                                  );
+                                  setState(() {});
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 10.w),
+                                  decoration: model.isReminderStatus == 'all'
+                                      ? BoxDecoration(
+                                          color: AppColors.primary.withOpacity(
+                                            .04,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            22.r,
+                                          ),
+                                        )
+                                      : BoxDecoration(),
+                                  alignment: Alignment.center,
+                                  child: TextView(
+                                    text: 'My Reminders',
+                                    textStyle: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          model.isReminderStatus == 'all' ||
+                                              model.isReminderStatus ==
+                                                  'ongoing' ||
+                                              model.isReminderStatus ==
+                                                  'completed'
+                                          ? AppColors.primary
+                                          : AppColors.grey1,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // SizedBox(width: 8.w),
+                            // Expanded(
+                            //   child: GestureDetector(
+                            //     onTap: () async {
+                            //       model
+                            //           .getReminderResponseModel!
+                            //           .data!
+                            //           .reminders!
+                            //           .clear();
+                            //       await Future.delayed(
+                            //         Duration(milliseconds: 500),
+                            //       );
+                            //       model.isReminderStatus = 'completed';
+                            //       model.getReminder(
+                            //         context,
+                            //         status: model.isReminderStatus,
+                            //         page: model.pageCompleted.toString(),
+                            //       );
+                            //       setState(() {});
+                            //     },
+                            //     child: Container(
+                            //       padding: EdgeInsets.symmetric(vertical: 10.w),
+                            //       decoration:
+                            //           model.isReminderStatus == 'completed'
+                            //           ? BoxDecoration(
+                            //               color: AppColors.primary.withOpacity(
+                            //                 .04,
+                            //               ),
+                            //               borderRadius: BorderRadius.circular(
+                            //                 22.r,
+                            //               ),
+                            //             )
+                            //           : BoxDecoration(),
+                            //       alignment: Alignment.center,
+                            //       child: TextView(
+                            //         text: 'Completed',
+                            //         textStyle: TextStyle(
+                            //           fontSize: 14.sp,
+                            //           fontWeight: FontWeight.w500,
+                            //           color:
+                            //               model.isReminderStatus == 'completed'
+                            //               ? AppColors.primary
+                            //               : AppColors.grey1,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            // SizedBox(width: 8.w),
                           ],
+                        ),
+                      )
+                    : SizedBox.shrink(),
+
+                model.isReminderStatus == 'all' ||
+                        model.isReminderStatus == 'ongoing' ||
+                        model.isReminderStatus == 'completed'
+                    ? Align(
+                        alignment: Alignment.topLeft,
+                        child: PopupMenuButton<String>(
+                          color: AppColors.white,
+                          child: Container(
+                            width: 166.0.w,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 3.2.w,
+                              horizontal: 12.w,
+                            ),
+                            margin: EdgeInsets.symmetric(vertical: 20.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(.04),
+                              borderRadius: BorderRadius.circular(32.r),
+                              border: Border.all(color: AppColors.primary),
+                            ),
+                            alignment: Alignment.center,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextView(
+                                  text: model.isReminderStatus.capitalize(),
+                                  textStyle: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.primary,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(14.20.w),
+                                  child: SvgPicture.asset(AppImage.arrow_down),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          onSelected: (String result) async {
+                            // genderController.text = result;
+                            model.isReminderStatus = result;
+                            await Future.delayed(Duration(milliseconds: 400));
+                            model.getReminder(
+                              context,
+                              status: model.isReminderStatus,
+                              page: model.pageOngoing.toString(),
+                            );
+                            setState(() {});
+                            model.notifyListeners();
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuItem<String>>[
+                                PopupMenuItem<String>(
+                                  value: 'all',
+                                  child: TextView(
+                                    text: 'All',
+                                    textStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'ongoing',
+                                  child: TextView(
+                                    text: 'Ongoing',
+                                    textStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'completed',
+                                  child: TextView(
+                                    text: 'Completed',
+                                    textStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
                         ),
                       )
                     : SizedBox.shrink(),
@@ -712,6 +816,21 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   child: Column(
                                     children: [
                                       SizedBox(height: 30.h),
+                                      if (model.isReminderStatus == 'all')
+                                        ...model
+                                            .getReminderResponseModel!
+                                            .data!
+                                            .reminders!
+                                            .reversed
+                                            .map(
+                                              (e) => reminderWidget(
+                                                context: context,
+                                                isTab: isTablet(context),
+                                                reminder: e,
+                                                model: model,
+                                              ),
+                                            ),
+
                                       if (model.isReminderStatus == 'ongoing')
                                         ...model
                                             .getReminderResponseModel!
@@ -726,6 +845,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                 model: model,
                                               ),
                                             ),
+
                                       if (model.isReminderStatus == 'completed')
                                         ...model
                                             .getReminderResponseModel!

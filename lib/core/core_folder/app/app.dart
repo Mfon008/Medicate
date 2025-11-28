@@ -124,7 +124,7 @@ import '../network/support_network_service.dart';
     LazySingleton(classType: AuthRepoImpl),
     LazySingleton(classType: PharmRepoImpl),
     LazySingleton(classType: AuthViewModel),
-    LazySingleton(classType: PharmViewModel),
+    Factory(classType: PharmViewModel),
   ],
   logger: StackedLogger(),
 )

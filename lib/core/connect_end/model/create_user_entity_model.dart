@@ -1,5 +1,4 @@
 class CreateUserEntityModel {
-  String? membershipId;
   String? fullName;
   String? email;
   String? phone;
@@ -12,7 +11,6 @@ class CreateUserEntityModel {
 
   CreateUserEntityModel({
     this.fullName,
-    this.membershipId,
     this.email,
     this.phone,
     this.gender,
@@ -25,7 +23,6 @@ class CreateUserEntityModel {
 
   factory CreateUserEntityModel.fromJson(Map<String, dynamic> json) {
     return CreateUserEntityModel(
-      membershipId: json['membershipId'] as String?,
       fullName: json['fullName'] as String?,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
@@ -39,7 +36,6 @@ class CreateUserEntityModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'membershipId': membershipId,
     'fullName': fullName,
     'email': email,
     'phone': phone,

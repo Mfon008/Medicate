@@ -314,18 +314,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                     }
                                     setState(() {});
                                   },
-                                  // validator: (value) {
-                                  //   final result = AppValidator.validatePhone()(
-                                  //     value,
-                                  //   );
-                                  //   if (result != null) {
-                                  //     isPhoneValid = true;
-                                  //   } else {
-                                  //     isPhoneValid = false;
-                                  //   }
-                                  //   setState(() {});
-                                  //   return result;
-                                  // },
                                 ),
                               ),
                             ),
@@ -350,7 +338,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isFilled: true,
                           readOnly: true,
                           label: nameController.text,
-                          // validator: AppValidator.validateString(),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -374,7 +361,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isFilled: true,
                           readOnly: true,
                           label: licenceNoController.text,
-                          // validator: AppValidator.validateString(),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -423,14 +409,12 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isFilled: true,
                           controller: model.countryController,
                           validator: AppValidator.validateString(),
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(14.20.w),
-                            child: GestureDetector(
-                              onTap: () {
-                                Future.microtask(() {
-                                  model.modalBottomSheetMenuCountry(context);
-                                });
-                              },
+                          suffixWidget: GestureDetector(
+                            onTap: () =>
+                                model.modalBottomSheetMenuCountry(context),
+
+                            child: Padding(
+                              padding: EdgeInsets.all(14.20.w),
                               child: SvgPicture.asset(AppImage.arrow_down),
                             ),
                           ),
@@ -466,13 +450,13 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                               child: TextFormWidget(
                                 hint: 'State',
                                 hintSize: 14,
-                                label: '--Select--',
+                                label: '',
                                 borderColor: AppColors.transparent,
                                 borderTopLeft: 10.r,
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                readOnly: true,
+                                // readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -483,21 +467,19 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
-                                suffixWidget: Padding(
-                                  padding: EdgeInsets.all(14.20.w),
-                                  child: GestureDetector(
-                                    onTap: () => model
-                                        .modalBottomSheetMenuState(context),
-                                    child: GestureDetector(
-                                      child: SvgPicture.asset(
-                                        AppImage.arrow_down,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onChange: (p0) {
-                                  setState(() {});
-                                },
+                                // suffixWidget: GestureDetector(
+                                //   onTap: () =>
+                                //       model.modalBottomSheetMenuState(context),
+                                //   child: Padding(
+                                //     padding: EdgeInsets.all(14.20.w),
+                                //     child: SvgPicture.asset(
+                                //       AppImage.arrow_down,
+                                //     ),
+                                //   ),
+                                // ),
+                                // onChange: (p0) {
+                                //   setState(() {});
+                                // },
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -505,13 +487,13 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                               child: TextFormWidget(
                                 hint: 'LGA',
                                 hintSize: 14,
-                                label: '--Select--',
+                                label: '',
                                 borderColor: AppColors.transparent,
                                 borderTopLeft: 10.r,
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                readOnly: true,
+                                // readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -522,21 +504,19 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
-                                suffixWidget: Padding(
-                                  padding: EdgeInsets.all(14.20.w),
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        model.modalBottomSheetMenuLga(context),
-                                    child: GestureDetector(
-                                      child: SvgPicture.asset(
-                                        AppImage.arrow_down,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                onChange: (p0) {
-                                  setState(() {});
-                                },
+                                // suffixWidget: GestureDetector(
+                                //   onTap: () =>
+                                //       model.modalBottomSheetMenuLga(context),
+                                //   child: Padding(
+                                //     padding: EdgeInsets.all(14.20.w),
+                                //     child: SvgPicture.asset(
+                                //       AppImage.arrow_down,
+                                //     ),
+                                //   ),
+                                // ),
+                                // onChange: (p0) {
+                                //   setState(() {});
+                                // },
                               ),
                             ),
                           ],

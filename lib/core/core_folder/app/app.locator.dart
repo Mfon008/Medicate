@@ -50,5 +50,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => AuthRepoImpl());
   locator.registerLazySingleton(() => PharmRepoImpl());
   locator.registerLazySingleton(() => AuthViewModel());
-  locator.registerLazySingleton(() => PharmViewModel());
+  locator.registerFactory(() => PharmViewModel());
 }

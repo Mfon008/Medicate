@@ -1,9 +1,9 @@
-// ignore_for_file: strict_top_level_inference
+// ignore_for_file: strict_top_level_inference, use_build_context_synchronously, prefer_typing_uninitialized_variables, deprecated_member_use
 
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:medicate_app/core/connect_end/model/create_user_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
@@ -25,9 +25,13 @@ import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_enti
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
+import 'package:medicate_app/ui/widget/deactivate_user_modal_widget.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
+import '../../../ui/widget/add_role_modal_widget.dart';
+import '../../../ui/widget/add_user_modal_widget.dart';
 import '../../../ui/widget/button.dart';
+import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
@@ -172,7 +176,12 @@ class PharmViewModel extends BaseViewModel {
   String? filenamePharmLicense;
   List<Document> kycDocumentsList = [];
 
+  bool _onTempPinTap = false;
+  bool get onTempPinTap => _onTempPinTap;
+
   File? image;
+  String? searchUsers = '';
+  String? searchRoles = '';
   String? filename;
   int _start = 60;
   String querySignUpCountry = '';
@@ -199,6 +208,10 @@ class PharmViewModel extends BaseViewModel {
     'Alien ID Card',
   ];
 
+  var vdelete;
+  var vdeactivate;
+  String vdeleteErrorMessage = '';
+  String vdeactivateErrorMessage = '';
   final List<int> selectedIndexes = [];
 
   PharmViewModel({this.context});
@@ -218,6 +231,12 @@ class PharmViewModel extends BaseViewModel {
       borderRadius: BorderRadius.circular(10),
     ),
   );
+
+  bool isOnToggleTempPinTap() {
+    _onTempPinTap = !_onTempPinTap;
+    notifyListeners();
+    return _onTempPinTap;
+  }
 
   void pickImage(BuildContext context) {
     try {
@@ -296,7 +315,7 @@ class PharmViewModel extends BaseViewModel {
                 viewModelBuilder: () => PharmViewModel(),
                 onViewModelReady: (model) {},
                 disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
+                builder: (_, PharmViewModel model, _) {
                   return Padding(
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(
@@ -412,7 +431,6 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                     validator: AppValidator.validateOTP(),
                                     onCompleted: (pin) {
-                                      print('Entered PIN: $pin');
                                       pinInput = pin;
                                       notifyListeners();
                                     },
@@ -579,7 +597,7 @@ class PharmViewModel extends BaseViewModel {
                 viewModelBuilder: () => PharmViewModel(),
                 onViewModelReady: (model) {},
                 disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
+                builder: (_, PharmViewModel model, _) {
                   return Padding(
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(
@@ -695,7 +713,6 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                     validator: AppValidator.validateOTP(),
                                     onCompleted: (pin) {
-                                      print('Entered PIN: $pin');
                                       pinInput = pin;
                                       notifyListeners();
                                     },
@@ -862,7 +879,7 @@ class PharmViewModel extends BaseViewModel {
                 viewModelBuilder: () => PharmViewModel(),
                 onViewModelReady: (model) {},
                 disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
+                builder: (_, PharmViewModel model, _) {
                   return Padding(
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(
@@ -978,7 +995,6 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                     validator: AppValidator.validateOTP(),
                                     onCompleted: (pin) {
-                                      print('Entered PIN: $pin');
                                       pinInput = pin;
                                       notifyListeners();
                                     },
@@ -1175,7 +1191,7 @@ class PharmViewModel extends BaseViewModel {
               return ViewModelBuilder<PharmViewModel>.reactive(
                 viewModelBuilder: () => this, // 👈 use current model
                 disposeViewModel: false,
-                builder: (_, model, __) {
+                builder: (_, model, _) {
                   final filtered = querySignUpCountry.isEmpty
                       ? countryCodeFormat
                       : countryCodeFormat.where((e) {
@@ -1272,451 +1288,642 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> fetchStates(String country) async {
-    final uri = Uri.parse(
-      'https://countriesnow.space/api/v0.1/countries/states/q',
-    ).replace(queryParameters: {'country': country});
+  // Future<void> fetchStates(String country) async {
+  //   final uri = Uri.parse(
+  //     'https://countriesnow.space/api/v0.1/countries/states/q',
+  //   ).replace(queryParameters: {'country': country});
 
-    try {
-      _isLoading = true;
-      final response = await http.get(
-        uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+  //   try {
+  //     _isLoading = true;
+  //     final response = await http.get(
+  //       uri,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json',
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        _getStateResponseModel = GetStateResponseModel.fromJson(jsonData);
-        print('✅ Success: ${_getStateResponseModel?.toJson()}');
-        _isLoading = false;
-      } else {
-        _isLoading = false;
-        print('❌ Error ${response.statusCode}: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      _isLoading = false;
-      print('⚠️ Exception: $e');
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
+  //     if (response.statusCode == 200) {
+  //       final jsonData = jsonDecode(response.body);
+  //       _getStateResponseModel = GetStateResponseModel.fromJson(jsonData);
+  //       _isLoading = false;
+  //     } else {
+  //       _isLoading = false;
+  //     }
+  //   } catch (e) {
+  //     _isLoading = false;
+  //   }
+  //   _isLoading = false;
+  //   notifyListeners();
+  // }
 
-  Future<void> fetchLga({String? country, String? state}) async {
-    final uri = Uri.parse(
-      'https://countriesnow.space/api/v0.1/countries/state/cities/q',
-    ).replace(queryParameters: {'country': country, 'state': state});
+  // Future<void> fetchLga({String? country, String? state}) async {
+  //   final uri = Uri.parse(
+  //     'https://countriesnow.space/api/v0.1/countries/state/cities/q',
+  //   ).replace(queryParameters: {'country': country, 'state': state});
 
-    try {
-      _isLoading = true;
-      final response = await http.get(
-        uri,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      );
+  //   try {
+  //     _isLoading = true;
+  //     final response = await http.get(
+  //       uri,
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json',
+  //       },
+  //     );
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        _getCityResponseModel = GetCityResponseModel.fromJson(jsonData);
-        print('✅ Success: ${_getCityResponseModel?.toJson()}');
-        _isLoading = false;
-      } else {
-        _isLoading = false;
-        print('❌ Error ${response.statusCode}: ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      _isLoading = false;
-      print('⚠️ Exception: $e');
-    }
-    _isLoading = false;
-    notifyListeners();
-  }
+  //     if (response.statusCode == 200) {
+  //       final jsonData = jsonDecode(response.body);
+  //       _getCityResponseModel = GetCityResponseModel.fromJson(jsonData);
+  //       _isLoading = false;
+  //     } else {
+  //       _isLoading = false;
+  //     }
+  //   } catch (e) {
+  //     _isLoading = false;
+  //   }
+  //   _isLoading = false;
+  //   notifyListeners();
+  // }
 
-  void modalBottomSheetMenuState(context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Enables full-screen dragging
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (builder) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: 0.5, // 50% of screen height
-            minChildSize: 0.3, // Can be dragged to 30% of screen height
-            maxChildSize: 0.9, // Can be dragged to 90% of screen height
-            builder: (context, scrollController) {
-              return ViewModelBuilder<PharmViewModel>.reactive(
-                viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) async {
-                  await model.fetchStates(countryController.text);
-                },
-                disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
-                  return SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 22.0.h),
-                        Padding(
-                          padding: EdgeInsets.all(12.w),
-                          child: TextFormWidget(
-                            label: 'Search state',
-                            isFilled: true,
-                            borderTopLeft: 10.r,
-                            borderTopRight: 10.r,
-                            borderBottomLeft: 10.r,
-                            borderBottomRight: 10.r,
-                            fillColor: AppColors.grey,
-                            onChange: (p0) {
-                              queryState = p0;
-                              model.notifyListeners();
-                            },
-                            suffixIcon: Icons.search_sharp,
-                            controller: stateController,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        queryState == ''
-                            ? model.isLoading
-                                  ? SpinKitFadingFour(
-                                      color: AppColors.primary1,
-                                      size: 40.sp,
-                                    )
-                                  : Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (model.getStateResponseModel !=
-                                                null &&
-                                            model
-                                                .getStateResponseModel!
-                                                .data!
-                                                .states!
-                                                .isNotEmpty)
-                                          ...model
-                                              .getStateResponseModel!
-                                              .data!
-                                              .states!
-                                              .map(
-                                                (e) => GestureDetector(
-                                                  onTap: () {
-                                                    stateController.text =
-                                                        e.name!;
-                                                    Navigator.pop(context);
-                                                    model.notifyListeners();
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.white,
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                          vertical: 4.6.w,
-                                                          horizontal: 20.w,
-                                                        ),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(
-                                                        6.w,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              10,
-                                                            ),
-                                                        color: AppColors
-                                                            .transparent,
-                                                      ),
-                                                      child: TextView(
-                                                        text: '${e.name}',
-                                                        textOverflow:
-                                                            TextOverflow
-                                                                .ellipsis,
-                                                        textStyle: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 17.2.sp,
+  // void modalBottomSheetMenuStateUser(context) {
+  //   final model = this;
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true, // Enables full-screen dragging
+  //     backgroundColor: Colors.white,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  //     ),
+  //     builder: (builder) {
+  //       return StateBottomSheet(model: model);
+  //       // return Padding(
+  //       //   padding: EdgeInsets.only(
+  //       //     bottom: MediaQuery.of(context).viewInsets.bottom,
+  //       //   ),
+  //       //   child: DraggableScrollableSheet(
+  //       //     expand: false,
+  //       //     initialChildSize: 0.5, // 50% of screen height
+  //       //     minChildSize: 0.3, // Can be dragged to 30% of screen height
+  //       //     maxChildSize: 0.9, // Can be dragged to 90% of screen height
+  //       //     builder: (context, scrollController) {
+  //       //       return ViewModelBuilder<PharmViewModel>.reactive(
+  //       //         viewModelBuilder: () => PharmViewModel(),
+  //       //         onViewModelReady: (model) async {
+  //       //           await model.fetchStates(countryController.text);
+  //       //         },
+  //       //         disposeViewModel: false,
+  //       //         builder: (_, PharmViewModel model, _) {
+  //       //           return SingleChildScrollView(
+  //       //             controller: scrollController,
+  //       //             child: Column(
+  //       //               crossAxisAlignment: CrossAxisAlignment.start,
+  //       //               children: [
+  //       //                 SizedBox(height: 22.0.h),
+  //       //                 Padding(
+  //       //                   padding: EdgeInsets.all(12.w),
+  //       //                   child: TextFormWidget(
+  //       //                     label: 'Search state',
+  //       //                     isFilled: true,
+  //       //                     borderTopLeft: 10.r,
+  //       //                     borderTopRight: 10.r,
+  //       //                     borderBottomLeft: 10.r,
+  //       //                     borderBottomRight: 10.r,
+  //       //                     fillColor: AppColors.grey,
+  //       //                     onChange: (p0) {
+  //       //                       queryState = p0;
+  //       //                       model.notifyListeners();
+  //       //                     },
+  //       //                     suffixIcon: Icons.search_sharp,
+  //       //                     controller: stateController,
+  //       //                   ),
+  //       //                 ),
+  //       //                 SizedBox(height: 16.h),
+  //       //                 queryState == ''
+  //       //                     ? model.isLoading
+  //       //                           ? SpinKitFadingFour(
+  //       //                               color: AppColors.primary1,
+  //       //                               size: 40.sp,
+  //       //                             )
+  //       //                           : Column(
+  //       //                               crossAxisAlignment:
+  //       //                                   CrossAxisAlignment.start,
+  //       //                               children: [
+  //       //                                 if (model.getStateResponseModel !=
+  //       //                                         null &&
+  //       //                                     model
+  //       //                                         .getStateResponseModel!
+  //       //                                         .data!
+  //       //                                         .states!
+  //       //                                         .isNotEmpty)
+  //       //                                   ...model
+  //       //                                       .getStateResponseModel!
+  //       //                                       .data!
+  //       //                                       .states!
+  //       //                                       .map(
+  //       //                                         (e) => GestureDetector(
+  //       //                                           onTap: () {
+  //       //                                             stateController.text =
+  //       //                                                 e.name!;
+  //       //                                             Navigator.pop(context);
+  //       //                                             model.notifyListeners();
+  //       //                                           },
+  //       //                                           child: Container(
+  //       //                                             decoration: BoxDecoration(
+  //       //                                               color: AppColors.white,
+  //       //                                             ),
+  //       //                                             padding:
+  //       //                                                 EdgeInsets.symmetric(
+  //       //                                                   vertical: 4.6.w,
+  //       //                                                   horizontal: 20.w,
+  //       //                                                 ),
+  //       //                                             child: Container(
+  //       //                                               padding: EdgeInsets.all(
+  //       //                                                 6.w,
+  //       //                                               ),
+  //       //                                               decoration: BoxDecoration(
+  //       //                                                 borderRadius:
+  //       //                                                     BorderRadius.circular(
+  //       //                                                       10,
+  //       //                                                     ),
+  //       //                                                 color: AppColors
+  //       //                                                     .transparent,
+  //       //                                               ),
+  //       //                                               child: TextView(
+  //       //                                                 text: '${e.name}',
+  //       //                                                 textOverflow:
+  //       //                                                     TextOverflow
+  //       //                                                         .ellipsis,
+  //       //                                                 textStyle: TextStyle(
+  //       //                                                   fontWeight:
+  //       //                                                       FontWeight.w400,
+  //       //                                                   fontFamily: 'Arial',
+  //       //                                                   fontSize: 17.2.sp,
 
-                                                          color:
-                                                              AppColors.black,
-                                                        ),
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                      ],
-                                    )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (model.getStateResponseModel != null &&
-                                      model
-                                          .getStateResponseModel!
-                                          .data!
-                                          .states!
-                                          .isNotEmpty)
-                                    ...model
-                                        .getStateResponseModel!
-                                        .data!
-                                        .states!
-                                        .where(
-                                          (o) => o.name!.toLowerCase().contains(
-                                            queryState.toLowerCase(),
-                                          ),
-                                        )
-                                        .map(
-                                          (e) => GestureDetector(
-                                            onTap: () {
-                                              stateController.text = e.name!;
-                                              Navigator.pop(context);
-                                              model.notifyListeners();
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                              ),
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 4.6.w,
-                                                horizontal: 20.w,
-                                              ),
-                                              child: Container(
-                                                padding: EdgeInsets.all(6.w),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: AppColors.transparent,
-                                                ),
-                                                child: TextView(
-                                                  text: '${e.name}',
-                                                  textOverflow:
-                                                      TextOverflow.ellipsis,
-                                                  textStyle: TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 17.2.sp,
+  //       //                                                   color:
+  //       //                                                       AppColors.black,
+  //       //                                                 ),
+  //       //                                                 fontWeight:
+  //       //                                                     FontWeight.w400,
+  //       //                                               ),
+  //       //                                             ),
+  //       //                                           ),
+  //       //                                         ),
+  //       //                                       ),
+  //       //                               ],
+  //       //                             )
+  //       //                     : Column(
+  //       //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //       //                         children: [
+  //       //                           if (model.getStateResponseModel != null &&
+  //       //                               model
+  //       //                                   .getStateResponseModel!
+  //       //                                   .data!
+  //       //                                   .states!
+  //       //                                   .isNotEmpty)
+  //       //                             ...model
+  //       //                                 .getStateResponseModel!
+  //       //                                 .data!
+  //       //                                 .states!
+  //       //                                 .where(
+  //       //                                   (o) => o.name!.toLowerCase().contains(
+  //       //                                     queryState.toLowerCase(),
+  //       //                                   ),
+  //       //                                 )
+  //       //                                 .map(
+  //       //                                   (e) => GestureDetector(
+  //       //                                     onTap: () {
+  //       //                                       stateController.text = e.name!;
+  //       //                                       Navigator.pop(context);
+  //       //                                       model.notifyListeners();
+  //       //                                     },
+  //       //                                     child: Container(
+  //       //                                       decoration: BoxDecoration(
+  //       //                                         color: AppColors.white,
+  //       //                                       ),
+  //       //                                       padding: EdgeInsets.symmetric(
+  //       //                                         vertical: 4.6.w,
+  //       //                                         horizontal: 20.w,
+  //       //                                       ),
+  //       //                                       child: Container(
+  //       //                                         padding: EdgeInsets.all(6.w),
+  //       //                                         decoration: BoxDecoration(
+  //       //                                           borderRadius:
+  //       //                                               BorderRadius.circular(10),
+  //       //                                           color: AppColors.transparent,
+  //       //                                         ),
+  //       //                                         child: TextView(
+  //       //                                           text: '${e.name}',
+  //       //                                           textOverflow:
+  //       //                                               TextOverflow.ellipsis,
+  //       //                                           textStyle: TextStyle(
+  //       //                                             fontWeight: FontWeight.w400,
+  //       //                                             fontFamily: 'Arial',
+  //       //                                             fontSize: 17.2.sp,
 
-                                                    color: AppColors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                ],
-                              ),
-                        SizedBox(height: 14.0.h),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
+  //       //                                             color: AppColors.black,
+  //       //                                           ),
+  //       //                                         ),
+  //       //                                       ),
+  //       //                                     ),
+  //       //                                   ),
+  //       //                                 ),
+  //       //                         ],
+  //       //                       ),
+  //       //                 SizedBox(height: 14.0.h),
+  //       //               ],
+  //       //             ),
+  //       //           );
+  //       //         },
+  //       //       );
+  //       //     },
+  //       //   ),
+  //       // );
+  //     },
+  //   );
+  // }
 
-  void modalBottomSheetMenuLga(context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Enables full-screen dragging
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (builder) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: 0.5, // 50% of screen height
-            minChildSize: 0.3, // Can be dragged to 30% of screen height
-            maxChildSize: 0.9, // Can be dragged to 90% of screen height
-            builder: (context, scrollController) {
-              return ViewModelBuilder<PharmViewModel>.reactive(
-                viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) {
-                  model.fetchLga(
-                    country: countryController.text,
-                    state: stateController.text,
-                  );
-                },
-                disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
-                  return SingleChildScrollView(
-                    controller: scrollController,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 22.0.h),
-                        Padding(
-                          padding: EdgeInsets.all(12.w),
-                          child: TextFormWidget(
-                            label: 'Search city',
-                            isFilled: true,
-                            borderTopLeft: 10.r,
-                            borderTopRight: 10.r,
-                            borderBottomLeft: 10.r,
-                            borderBottomRight: 10.r,
-                            fillColor: AppColors.grey,
-                            onChange: (p0) {
-                              queryLga = p0;
-                              model.notifyListeners();
-                            },
-                            suffixIcon: Icons.search_sharp,
-                            controller: lgaController,
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        queryLga == ''
-                            ? model.isLoading
-                                  ? SpinKitFadingFour(
-                                      color: AppColors.primary1,
-                                      size: 40.sp,
-                                    )
-                                  : Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (model.getCityResponseModel !=
-                                                null &&
-                                            model
-                                                .getCityResponseModel!
-                                                .data!
-                                                .isNotEmpty)
-                                          ...model.getCityResponseModel!.data!
-                                              .map(
-                                                (e) => GestureDetector(
-                                                  onTap: () {
-                                                    lgaController.text = e;
-                                                    Navigator.pop(context);
-                                                    model.notifyListeners();
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.white,
-                                                    ),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                          vertical: 4.6.w,
-                                                          horizontal: 20.w,
-                                                        ),
-                                                    child: Container(
-                                                      padding: EdgeInsets.all(
-                                                        6.w,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              10,
-                                                            ),
-                                                        color: AppColors
-                                                            .transparent,
-                                                      ),
-                                                      child: SizedBox(
-                                                        width: 200.w,
-                                                        child: TextView(
-                                                          text: e,
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 17.2.sp,
+  // void modalBottomSheetMenuState(context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true, // Enables full-screen dragging
+  //     backgroundColor: Colors.white,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  //     ),
+  //     builder: (builder) {
+  //       return Padding(
+  //         padding: EdgeInsets.only(
+  //           bottom: MediaQuery.of(context).viewInsets.bottom,
+  //         ),
+  //         child: DraggableScrollableSheet(
+  //           expand: false,
+  //           initialChildSize: 0.5, // 50% of screen height
+  //           minChildSize: 0.3, // Can be dragged to 30% of screen height
+  //           maxChildSize: 0.9, // Can be dragged to 90% of screen height
+  //           builder: (context, scrollController) {
+  //             return ViewModelBuilder<PharmViewModel>.reactive(
+  //               viewModelBuilder: () => PharmViewModel(),
+  //               onViewModelReady: (model) async {
+  //                 await model.fetchStates(countryController.text);
+  //               },
+  //               disposeViewModel: false,
+  //               builder: (_, PharmViewModel model, _) {
+  //                 return SingleChildScrollView(
+  //                   controller: scrollController,
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       SizedBox(height: 22.0.h),
+  //                       Padding(
+  //                         padding: EdgeInsets.all(12.w),
+  //                         child: TextFormWidget(
+  //                           label: 'Search state',
+  //                           isFilled: true,
+  //                           borderTopLeft: 10.r,
+  //                           borderTopRight: 10.r,
+  //                           borderBottomLeft: 10.r,
+  //                           borderBottomRight: 10.r,
+  //                           fillColor: AppColors.grey,
+  //                           onChange: (p0) {
+  //                             queryState = p0;
+  //                             model.notifyListeners();
+  //                           },
+  //                           suffixIcon: Icons.search_sharp,
+  //                           controller: stateController,
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 16.h),
+  //                       queryState == ''
+  //                           ? model.isLoading
+  //                                 ? SpinKitFadingFour(
+  //                                     color: AppColors.primary1,
+  //                                     size: 40.sp,
+  //                                   )
+  //                                 : Column(
+  //                                     crossAxisAlignment:
+  //                                         CrossAxisAlignment.start,
+  //                                     children: [
+  //                                       if (model.getStateResponseModel !=
+  //                                               null &&
+  //                                           model
+  //                                               .getStateResponseModel!
+  //                                               .data!
+  //                                               .states!
+  //                                               .isNotEmpty)
+  //                                         ...model
+  //                                             .getStateResponseModel!
+  //                                             .data!
+  //                                             .states!
+  //                                             .map(
+  //                                               (e) => GestureDetector(
+  //                                                 onTap: () {
+  //                                                   stateController.text =
+  //                                                       e.name!;
+  //                                                   Navigator.pop(context);
+  //                                                   model.notifyListeners();
+  //                                                 },
+  //                                                 child: Container(
+  //                                                   decoration: BoxDecoration(
+  //                                                     color: AppColors.white,
+  //                                                   ),
+  //                                                   padding:
+  //                                                       EdgeInsets.symmetric(
+  //                                                         vertical: 4.6.w,
+  //                                                         horizontal: 20.w,
+  //                                                       ),
+  //                                                   child: Container(
+  //                                                     padding: EdgeInsets.all(
+  //                                                       6.w,
+  //                                                     ),
+  //                                                     decoration: BoxDecoration(
+  //                                                       borderRadius:
+  //                                                           BorderRadius.circular(
+  //                                                             10,
+  //                                                           ),
+  //                                                       color: AppColors
+  //                                                           .transparent,
+  //                                                     ),
+  //                                                     child: TextView(
+  //                                                       text: '${e.name}',
+  //                                                       textOverflow:
+  //                                                           TextOverflow
+  //                                                               .ellipsis,
+  //                                                       textStyle: TextStyle(
+  //                                                         fontWeight:
+  //                                                             FontWeight.w400,
+  //                                                         fontFamily: 'Arial',
+  //                                                         fontSize: 17.2.sp,
 
-                                                            color:
-                                                                AppColors.black,
-                                                          ),
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                      ],
-                                    )
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ...model.getCityResponseModel!.data!
-                                      .where(
-                                        (o) => o.toLowerCase().contains(
-                                          queryLga.toLowerCase(),
-                                        ),
-                                      )
-                                      .map(
-                                        (e) => GestureDetector(
-                                          onTap: () {
-                                            lgaController.text = e;
-                                            Navigator.pop(context);
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.white,
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 4.6.w,
-                                              horizontal: 20.w,
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.all(6.w),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: AppColors.transparent,
-                                              ),
-                                              child: TextView(
-                                                text: e,
-                                                textOverflow:
-                                                    TextOverflow.ellipsis,
-                                                textStyle: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 17.2.sp,
+  //                                                         color:
+  //                                                             AppColors.black,
+  //                                                       ),
+  //                                                       fontWeight:
+  //                                                           FontWeight.w400,
+  //                                                     ),
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+  //                                             ),
+  //                                     ],
+  //                                   )
+  //                           : Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 if (model.getStateResponseModel != null &&
+  //                                     model
+  //                                         .getStateResponseModel!
+  //                                         .data!
+  //                                         .states!
+  //                                         .isNotEmpty)
+  //                                   ...model
+  //                                       .getStateResponseModel!
+  //                                       .data!
+  //                                       .states!
+  //                                       .where(
+  //                                         (o) => o.name!.toLowerCase().contains(
+  //                                           queryState.toLowerCase(),
+  //                                         ),
+  //                                       )
+  //                                       .map(
+  //                                         (e) => GestureDetector(
+  //                                           onTap: () {
+  //                                             stateController.text = e.name!;
+  //                                             Navigator.pop(context);
+  //                                             model.notifyListeners();
+  //                                           },
+  //                                           child: Container(
+  //                                             decoration: BoxDecoration(
+  //                                               color: AppColors.white,
+  //                                             ),
+  //                                             padding: EdgeInsets.symmetric(
+  //                                               vertical: 4.6.w,
+  //                                               horizontal: 20.w,
+  //                                             ),
+  //                                             child: Container(
+  //                                               padding: EdgeInsets.all(6.w),
+  //                                               decoration: BoxDecoration(
+  //                                                 borderRadius:
+  //                                                     BorderRadius.circular(10),
+  //                                                 color: AppColors.transparent,
+  //                                               ),
+  //                                               child: TextView(
+  //                                                 text: '${e.name}',
+  //                                                 textOverflow:
+  //                                                     TextOverflow.ellipsis,
+  //                                                 textStyle: TextStyle(
+  //                                                   fontWeight: FontWeight.w400,
+  //                                                   fontFamily: 'Arial',
+  //                                                   fontSize: 17.2.sp,
 
-                                                  color: AppColors.black,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                ],
-                              ),
-                        SizedBox(height: 14.0.h),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
+  //                                                   color: AppColors.black,
+  //                                                 ),
+  //                                               ),
+  //                                             ),
+  //                                           ),
+  //                                         ),
+  //                                       ),
+  //                               ],
+  //                             ),
+  //                       SizedBox(height: 14.0.h),
+  //                     ],
+  //                   ),
+  //                 );
+  //               },
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  // void modalBottomSheetMenuLga(context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true, // Enables full-screen dragging
+  //     backgroundColor: Colors.white,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+  //     ),
+  //     builder: (builder) {
+  //       return Padding(
+  //         padding: EdgeInsets.only(
+  //           bottom: MediaQuery.of(context).viewInsets.bottom,
+  //         ),
+  //         child: DraggableScrollableSheet(
+  //           expand: false,
+  //           initialChildSize: 0.5, // 50% of screen height
+  //           minChildSize: 0.3, // Can be dragged to 30% of screen height
+  //           maxChildSize: 0.9, // Can be dragged to 90% of screen height
+  //           builder: (context, scrollController) {
+  //             return ViewModelBuilder<PharmViewModel>.reactive(
+  //               viewModelBuilder: () => PharmViewModel(),
+  //               onViewModelReady: (model) {
+  //                 model.fetchLga(
+  //                   country: countryController.text,
+  //                   state: stateController.text,
+  //                 );
+  //               },
+  //               disposeViewModel: false,
+  //               builder: (_, PharmViewModel model, _) {
+  //                 return SingleChildScrollView(
+  //                   controller: scrollController,
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       SizedBox(height: 22.0.h),
+  //                       Padding(
+  //                         padding: EdgeInsets.all(12.w),
+  //                         child: TextFormWidget(
+  //                           label: 'Search city',
+  //                           isFilled: true,
+  //                           borderTopLeft: 10.r,
+  //                           borderTopRight: 10.r,
+  //                           borderBottomLeft: 10.r,
+  //                           borderBottomRight: 10.r,
+  //                           fillColor: AppColors.grey,
+  //                           onChange: (p0) {
+  //                             queryLga = p0;
+  //                             model.notifyListeners();
+  //                           },
+  //                           suffixIcon: Icons.search_sharp,
+  //                           controller: lgaController,
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 16.h),
+  //                       queryLga == ''
+  //                           ? model.isLoading
+  //                                 ? SpinKitFadingFour(
+  //                                     color: AppColors.primary1,
+  //                                     size: 40.sp,
+  //                                   )
+  //                                 : Column(
+  //                                     crossAxisAlignment:
+  //                                         CrossAxisAlignment.start,
+  //                                     children: [
+  //                                       if (model.getCityResponseModel !=
+  //                                               null &&
+  //                                           model
+  //                                               .getCityResponseModel!
+  //                                               .data!
+  //                                               .isNotEmpty)
+  //                                         ...model.getCityResponseModel!.data!
+  //                                             .map(
+  //                                               (e) => GestureDetector(
+  //                                                 onTap: () {
+  //                                                   lgaController.text = e;
+  //                                                   Navigator.pop(context);
+  //                                                   model.notifyListeners();
+  //                                                 },
+  //                                                 child: Container(
+  //                                                   decoration: BoxDecoration(
+  //                                                     color: AppColors.white,
+  //                                                   ),
+  //                                                   padding:
+  //                                                       EdgeInsets.symmetric(
+  //                                                         vertical: 4.6.w,
+  //                                                         horizontal: 20.w,
+  //                                                       ),
+  //                                                   child: Container(
+  //                                                     padding: EdgeInsets.all(
+  //                                                       6.w,
+  //                                                     ),
+  //                                                     decoration: BoxDecoration(
+  //                                                       borderRadius:
+  //                                                           BorderRadius.circular(
+  //                                                             10,
+  //                                                           ),
+  //                                                       color: AppColors
+  //                                                           .transparent,
+  //                                                     ),
+  //                                                     child: SizedBox(
+  //                                                       width: 200.w,
+  //                                                       child: TextView(
+  //                                                         text: e,
+  //                                                         textOverflow:
+  //                                                             TextOverflow
+  //                                                                 .ellipsis,
+  //                                                         textStyle: TextStyle(
+  //                                                           fontWeight:
+  //                                                               FontWeight.w400,
+  //                                                           fontFamily: 'Arial',
+  //                                                           fontSize: 17.2.sp,
+
+  //                                                           color:
+  //                                                               AppColors.black,
+  //                                                         ),
+  //                                                         fontWeight:
+  //                                                             FontWeight.w400,
+  //                                                       ),
+  //                                                     ),
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+  //                                             ),
+  //                                     ],
+  //                                   )
+  //                           : Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 ...model.getCityResponseModel!.data!
+  //                                     .where(
+  //                                       (o) => o.toLowerCase().contains(
+  //                                         queryLga.toLowerCase(),
+  //                                       ),
+  //                                     )
+  //                                     .map(
+  //                                       (e) => GestureDetector(
+  //                                         onTap: () {
+  //                                           lgaController.text = e;
+  //                                           Navigator.pop(context);
+  //                                           model.notifyListeners();
+  //                                         },
+  //                                         child: Container(
+  //                                           decoration: BoxDecoration(
+  //                                             color: AppColors.white,
+  //                                           ),
+  //                                           padding: EdgeInsets.symmetric(
+  //                                             vertical: 4.6.w,
+  //                                             horizontal: 20.w,
+  //                                           ),
+  //                                           child: Container(
+  //                                             padding: EdgeInsets.all(6.w),
+  //                                             decoration: BoxDecoration(
+  //                                               borderRadius:
+  //                                                   BorderRadius.circular(10),
+  //                                               color: AppColors.transparent,
+  //                                             ),
+  //                                             child: TextView(
+  //                                               text: e,
+  //                                               textOverflow:
+  //                                                   TextOverflow.ellipsis,
+  //                                               textStyle: TextStyle(
+  //                                                 fontWeight: FontWeight.w400,
+  //                                                 fontFamily: 'Arial',
+  //                                                 fontSize: 17.2.sp,
+
+  //                                                 color: AppColors.black,
+  //                                               ),
+  //                                             ),
+  //                                           ),
+  //                                         ),
+  //                                       ),
+  //                                     ),
+  //                               ],
+  //                             ),
+  //                       SizedBox(height: 14.0.h),
+  //                     ],
+  //                   ),
+  //                 );
+  //               },
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget buildImage(String path) {
     if (path.toLowerCase().endsWith('.svg')) {
@@ -1825,7 +2032,6 @@ class PharmViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      // AppUtils.snackbar(context, message: e.toString(), error: true9090887781);
     }
     notifyListeners();
   }
@@ -1846,7 +2052,10 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> addRoles(context, {RolesEntityModel? roleEntity}) async {
+  Future<void> addRoles(
+    BuildContext context, {
+    RolesEntityModel? roleEntity,
+  }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
@@ -1858,8 +2067,6 @@ class PharmViewModel extends BaseViewModel {
       await AppUtils.snackbar(context, message: v['message']);
       rolenameController.clear();
       roleDescriptionController.clear();
-      Navigator.pop(context);
-      getRoles(context);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -1878,10 +2085,13 @@ class PharmViewModel extends BaseViewModel {
       _isLoading = false;
 
       await AppUtils.snackbar(context, message: v['message']);
-      // rolenameController.clear();
-      // roleDescriptionController.clear();
-      Navigator.pop(context);
-      getUser(context);
+      nameController.clear();
+      lastNameController.clear();
+      userPhoneController.clear();
+      userEmailController.clear();
+      userAddressController.clear();
+      userGenderController.clear();
+      userRoleController.clear();
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -1930,10 +2140,7 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-
       await AppUtils.snackbar(context, message: v['message']);
-      Navigator.pop(context);
-      getRoles(context);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -1950,10 +2157,7 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-
       await AppUtils.snackbar(context, message: v['message']);
-      Navigator.pop(context);
-      getUser(context);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -1962,22 +2166,20 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> deleteRole(context, {String? roleId}) async {
+  Future<void> deleteRole(BuildContext context, {String? roleId}) async {
     try {
       _isLoading = true;
-      var v = await runBusyFuture(
+      vdelete = await runBusyFuture(
         repositoryImply.deleteRole(roleId!),
         throwException: true,
       );
-
       _isLoading = false;
-      await AppUtils.snackbar(context, message: v['message']);
-      Navigator.pop(context);
-      getRoles(context);
+      await AppUtils.snackbar(context, message: vdelete['message']);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      vdeleteErrorMessage = e.toString();
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }
@@ -1985,19 +2187,20 @@ class PharmViewModel extends BaseViewModel {
   Future<void> deactivateUser(context, {String? id}) async {
     try {
       _isLoading = true;
-      var v = await runBusyFuture(
+      vdeactivate = await runBusyFuture(
         repositoryImply.deleteUser(id!),
         throwException: true,
       );
 
       _isLoading = false;
-      await AppUtils.snackbar(context, message: v['message']);
+      await AppUtils.snackbar(context, message: vdeactivate['message']);
       Navigator.pop(context);
       getUser(context);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      vdeactivateErrorMessage = e.toString();
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }
@@ -2328,7 +2531,7 @@ class PharmViewModel extends BaseViewModel {
           viewModelBuilder: () => locator<PharmViewModel>(),
           onViewModelReady: (model) {},
           disposeViewModel: false,
-          builder: (_, PharmViewModel model, __) {
+          builder: (_, PharmViewModel model, _) {
             return Padding(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(
@@ -2440,7 +2643,6 @@ class PharmViewModel extends BaseViewModel {
                               ),
                               validator: AppValidator.validateOTP(),
                               onCompleted: (pin) {
-                                print('Entered PIN: $pin');
                                 pinInput = pin;
                                 notifyListeners();
                               },
@@ -2604,209 +2806,34 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void modalBottomSheetMenuAddRole({
+  Future<bool?> modalBottomSheetMenuAddRole({
     context,
     bool isEdit = false,
     rolename,
     roleDes,
     roleId,
   }) {
-    bool isTablet(BuildContext context) =>
-        MediaQuery.of(context).size.shortestSide >= 600;
-    showModalBottomSheet(
+    return showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (builder) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: 0.75, // 80% of screen height
-            minChildSize: 0.5, // Can be dragged to 30% of screen height
-            maxChildSize: 0.9,
-            builder: (context, scrollController) {
-              return ViewModelBuilder<PharmViewModel>.reactive(
-                viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) {
-                  if (isEdit) {
-                    model.rolenameController.text = rolename;
-                    model.roleDescriptionController.text = roleDes;
-                  }
-                },
-                disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      // bottom: MediaQuery.of(
-                      //   context,
-                      // ).viewInsets.bottom, // 👈 pushes content above keyboard
-                    ), //could change this to Color(0xFF737373),
-                    //so you don't have to change MaterialApp canvasColor
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(20.0),
-                          topRight: const Radius.circular(20.0),
-                        ),
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            topRight: Radius.circular(20.0),
-                          ),
-                        ),
-                        child: SingleChildScrollView(
-                          controller: scrollController,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 20.w,
-                            horizontal: 20.w,
-                          ),
-                          child: Form(
-                            key: formKeyValidateAddRole,
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(width: 30.w),
-                                    TextView(
-                                      text: !isEdit ? 'Add Role' : 'Edit Role',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 16.20.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.pop(context),
-                                      child: SvgPicture.asset(
-                                        AppImage.x,
-                                        width: 24.w,
-                                        height: 24.h,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 32.h),
-                                TextFormWidget(
-                                  hint: 'Role Name',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: model.rolenameController,
-                                  validator: AppValidator.validateString(),
-                                  onChange: (p0) {},
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Description',
-                                  maxline: 4,
-                                  alignLabelWithHint: true,
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: model.roleDescriptionController,
-                                  validator: AppValidator.validateString(),
-                                ),
-                                SizedBox(height: 70.h),
-                                ButtonWidget(
-                                  border: 100.r,
-                                  buttonColor: AppColors.primary,
-                                  buttonText: !isEdit ? 'Add' : "Save Changes",
-                                  fontSize: 16.sp,
-                                  color: AppColors.white,
-                                  isLoading: model.isLoading,
-                                  buttonBorderColor: AppColors.transparent,
-                                  onPressed: () {
-                                    if (formKeyValidateAddRole.currentState!
-                                        .validate()) {
-                                      if (isEdit) {
-                                        // model.rolenameController.text =
-                                        //     rolename;
-                                        // model.roleDescriptionController.text =
-                                        //     roleDes;
-                                        model.updateRole(
-                                          context,
-                                          updateRole: UpdateRoleEntityModel(
-                                            roleId: roleId,
-                                            name: model.rolenameController.text
-                                                .trim(),
-                                            description: model
-                                                .roleDescriptionController
-                                                .text
-                                                .trim(),
-                                          ),
-                                        );
-                                      } else {
-                                        model.addRoles(
-                                          context,
-                                          roleEntity: RolesEntityModel(
-                                            name: model.rolenameController.text
-                                                .trim(),
-                                            description: model
-                                                .roleDescriptionController
-                                                .text
-                                                .trim(),
-                                          ),
-                                        );
-                                      }
-                                    }
-                                    model.notifyListeners();
-                                  },
-                                ),
-                                SizedBox(height: 20.h),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+        return AddRoleModalWidget(
+          isEdit: isEdit,
+          rolename: rolename,
+          roleDescription: roleDes,
+          roleId: roleId,
+          parentContext: context,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+            // close modal and return true
+          },
         );
       },
     );
   }
 
-  void modalBottomSheetMenuAddUser({
+  Future<bool?> modalBottomSheetMenuAddUser({
     context,
     bool isEdit = false,
     firstName,
@@ -2820,423 +2847,27 @@ class PharmViewModel extends BaseViewModel {
     pin,
     membershipId,
   }) {
-    bool isTablet(BuildContext context) =>
-        MediaQuery.of(context).size.shortestSide >= 600;
-    showModalBottomSheet(
+    return showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (builder) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: 0.9, // 80% of screen height
-            minChildSize: 0.5, // Can be dragged to 30% of screen height
-            maxChildSize: 0.9,
-            builder: (context, scrollController) {
-              return ViewModelBuilder<PharmViewModel>.reactive(
-                viewModelBuilder: () => PharmViewModel(),
-                onViewModelReady: (model) {
-                  if (isEdit) {
-                    nameController.text = firstName;
-                    lastNameController.text = lastName;
-                    userPhoneController.text = phone;
-                    userEmailController.text = email;
-                    userAddressController.text = address;
-                    userGenderController.text = gender;
-                    userRoleController.text = role;
-                    userRoleControllerId = roleId;
-                  } else {
-                    nameController.text = '';
-                    lastNameController.text = '';
-                    userPhoneController.text = '';
-                    userEmailController.text = '';
-                    userAddressController.text = '';
-                    userGenderController.text = '';
-                    userRoleController.text = '';
-                    userRoleControllerId = '';
-                  }
-                },
-                disposeViewModel: false,
-                builder: (_, PharmViewModel model, __) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      // bottom: MediaQuery.of(
-                      //   context,
-                      // ).viewInsets.bottom, // 👈 pushes content above keyboard
-                    ), //could change this to Color(0xFF737373),
-                    //so you don't have to change MaterialApp canvasColor
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(20.0),
-                          topRight: const Radius.circular(20.0),
-                        ),
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            topRight: Radius.circular(20.0),
-                          ),
-                        ),
-                        child: SingleChildScrollView(
-                          controller: scrollController,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 20.w,
-                            horizontal: 20.w,
-                          ),
-                          child: Form(
-                            key: formKeyValidateAddUser,
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(width: 30.w),
-                                    TextView(
-                                      text: !isEdit
-                                          ? 'Add User'
-                                          : 'Update User',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 16.20.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => Navigator.pop(context),
-                                      child: SvgPicture.asset(
-                                        AppImage.x,
-                                        width: 24.w,
-                                        height: 24.h,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 32.h),
-                                TextFormWidget(
-                                  hint: 'First Name',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: nameController,
-                                  validator: AppValidator.validateString(),
-                                  onChange: (p0) {},
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Last Name',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: lastNameController,
-                                  validator: AppValidator.validateString(),
-                                  onChange: (p0) {},
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Phone Number',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: userPhoneController,
-                                  validator: AppValidator.validateInt(),
-                                  onChange: (p0) {},
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Email Address',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: userEmailController,
-                                  validator: AppValidator.validateEmail(),
-                                  onChange: (p0) {},
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Address',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: userAddressController,
-                                  validator: AppValidator.validateString(),
-                                  onChange: (p0) {},
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Gender',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  readOnly: true,
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  label: '--Select--',
-                                  controller: userGenderController,
-                                  validator: AppValidator.validateString(),
-                                  suffixWidget: PopupMenuButton<String>(
-                                    color: AppColors.white,
-                                    child: Padding(
-                                      padding: EdgeInsets.all(14.20.w),
-                                      child: SvgPicture.asset(
-                                        AppImage.arrow_down,
-                                      ),
-                                    ),
-                                    onSelected: (String result) {
-                                      userGenderController.text = result;
-                                    },
-                                    itemBuilder: (BuildContext context) =>
-                                        <PopupMenuItem<String>>[
-                                          PopupMenuItem<String>(
-                                            value: 'MALE',
-                                            child: TextView(
-                                              text: 'Male',
-                                              textStyle: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Arial',
-                                                fontSize: 15.2.sp,
-                                                color: AppColors.black,
-                                              ),
-                                            ),
-                                          ),
-                                          PopupMenuItem<String>(
-                                            value: 'FEMALE',
-                                            child: TextView(
-                                              text: 'Female',
-                                              textStyle: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontFamily: 'Arial',
-                                                fontSize: 15.2.sp,
-                                                color: AppColors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                  ),
-                                ),
-                                SizedBox(height: 20.h),
-                                TextFormWidget(
-                                  hint: 'Role',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: isTablet(context)
-                                      ? 6.82.sp
-                                      : 14.60.sp,
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  readOnly: true,
-                                  label: userRoleController.text == ''
-                                      ? '--Select--'
-                                      : userRoleController.text,
-                                  controller: userRoleController,
-                                  // validator: AppValidator.validateString(),
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(14.20.w),
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: SvgPicture.asset(
-                                        AppImage.arrow_down,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 20.h),
-                                !isEdit
-                                    ? TextFormWidget(
-                                        hint: 'Temporary 4-digit PIN',
-                                        borderColor: AppColors.transparent,
-                                        borderTopLeft: 10.r,
-                                        borderTopRight: 10.r,
-                                        borderBottomLeft: 10.r,
-                                        borderBottomRight: 10.r,
-                                        obscureText: true,
-                                        hintSize: isTablet(context)
-                                            ? 6.82.sp
-                                            : 14.60.sp,
-                                        labelStyle: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.sp,
-                                          color: AppColors.infoGrey,
-                                        ),
-                                        fillColor: AppColors.grey,
-                                        isFilled: true,
-                                        controller: userPinController,
-                                        validator:
-                                            AppValidator.validateString(),
-                                        suffixWidget: Padding(
-                                          padding: EdgeInsets.all(14.20.w),
-                                          child: GestureDetector(
-                                            child: SvgPicture.asset(
-                                              AppImage.closed_eye_user,
-                                              // color: AppColors.app_green,
-                                              height: 20.h,
-                                              width: 20.w,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox.shrink(),
-                                SizedBox(height: 70.h),
-                                ButtonWidget(
-                                  border: 100.r,
-                                  buttonColor: AppColors.primary,
-                                  buttonText: !isEdit ? 'Add' : 'Update',
-                                  fontSize: 16.sp,
-                                  color: AppColors.white,
-                                  isLoading: model.isLoading,
-                                  buttonBorderColor: AppColors.transparent,
-                                  onPressed: () {
-                                    if (formKeyValidateAddUser.currentState!
-                                        .validate()) {
-                                      if (isEdit) {
-                                        model.updateUser(
-                                          context,
-                                          updateUser: UpdateUserEntityModel(
-                                            fullName:
-                                                '${nameController.text.trim()} ${lastNameController.text.trim()}',
-                                            email: userEmailController.text
-                                                .trim(),
-                                            phone: userPhoneController.text
-                                                .trim(),
-                                            gender: userGenderController.text
-                                                .trim(),
-                                            address: userAddressController.text
-                                                .trim(),
-                                            roleId: userRoleControllerId,
-                                            membershipId: membershipId,
-                                          ),
-                                        );
-                                      } else {
-                                        model.addUsers(
-                                          context,
-                                          createEntity: CreateUserEntityModel(
-                                            fullName:
-                                                '${nameController.text.trim()} ${lastNameController.text.trim()}',
-                                            email: userEmailController.text
-                                                .trim(),
-                                            phone: userPhoneController.text
-                                                .trim(),
-                                            gender: userGenderController.text
-                                                .trim(),
-                                            address: userAddressController.text
-                                                .trim(),
-                                            pin: userPinController.text.trim(),
-                                            roleId: userRoleControllerId,
-                                          ),
-                                        );
-                                      }
-                                    }
-                                    model.notifyListeners();
-                                  },
-                                ),
-                                SizedBox(height: 20.h),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+        return AddUserModalWidget(
+          parentContext: context,
+          isEdit: isEdit,
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone,
+          email: email,
+          address: address,
+          gender: gender,
+          role: role,
+          roleId: roleId,
+          membershipId: membershipId,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+            // close modal and return true
+          },
         );
       },
     );
@@ -3250,340 +2881,43 @@ class PharmViewModel extends BaseViewModel {
     return fullName.trim().split(' ').last;
   }
 
-  void showRemoveUserDialog(BuildContext context, {String? id}) {
-    showDialog(
+  Future<bool?> showRemoveUserDialog(
+    BuildContext context, {
+    String? id,
+    String? userName,
+  }) {
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
-        return ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => PharmViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          builder: (_, PharmViewModel model, __) {
-            return Container(
-              color: AppColors.transparent,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close, color: Colors.white, size: 18),
-                      label: Text(
-                        "Close",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.w,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6.10.h),
-                  Dialog(
-                    insetPadding: EdgeInsets.all(16.20.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: AppColors.white,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.4.w),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(34.w),
-                                decoration: BoxDecoration(
-                                  color: AppColors.yellow.withOpacity(.2),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(24.w),
-                                decoration: BoxDecoration(
-                                  color: AppColors.yellow,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              SvgPicture.asset(AppImage.exclam),
-                            ],
-                          ),
-                          SizedBox(height: 12.h),
-                          TextView(
-                            text: 'Remove User',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              color: AppColors.black,
-                              fontSize: 18.20.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 12.h),
-                          TextView(
-                            text:
-                                'Are you sure you want to make remove this sub-user (James Smith)?',
-                            textAlign: TextAlign.center,
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              color: AppColors.success,
-                              fontSize: 14.20.sp,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(color: AppColors.primary),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 32.w,
-                                    vertical: 12.w,
-                                  ),
-                                ),
-                                child: TextView(
-                                  text: "Cancel",
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 15.6.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 16.w),
-
-                              // Continue Button
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    await Future.delayed(
-                                      Duration(milliseconds: 100),
-                                    );
-                                    // Add your update logic here
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20.w,
-                                      vertical: 12.w,
-                                    ),
-                                    elevation: 0,
-                                  ),
-                                  child: TextView(
-                                    text: "Yes, Continue",
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.6.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
+        return DeactivateUserModalWidget(
+          onSuccess: () {
+            Navigator.of(context).pop(true);
           },
+          onFailed: () {
+            Navigator.of(context).pop(false);
+          },
+          parentContext: context,
+          userId: id,
+          userName: userName,
         );
       },
     );
   }
 
-  void showRemoveRoleDialog(BuildContext context, {String? roleId}) {
-    showDialog(
+  Future<bool?> showRemoveRoleDialog({context, String? roleId}) {
+    return showDialog<bool>(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
-        return ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => PharmViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          builder: (_, PharmViewModel model, __) {
-            return Container(
-              color: AppColors.transparent,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close, color: Colors.white, size: 18),
-                      label: Text(
-                        "Close",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.w,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6.10.h),
-                  Dialog(
-                    insetPadding: EdgeInsets.all(16.20.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: AppColors.white,
-                    child: Padding(
-                      padding: EdgeInsets.all(16.4.w),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(34.w),
-                                decoration: BoxDecoration(
-                                  color: AppColors.yellow.withOpacity(.2),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(24.w),
-                                decoration: BoxDecoration(
-                                  color: AppColors.yellow,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              SvgPicture.asset(AppImage.exclam),
-                            ],
-                          ),
-                          SizedBox(height: 12.h),
-                          TextView(
-                            text: 'Delete Role',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              color: AppColors.black,
-                              fontSize: 18.20.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          SizedBox(height: 12.h),
-                          TextView(
-                            text:
-                                'Are you sure you want to make delete this role?',
-                            textAlign: TextAlign.center,
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              color: AppColors.success,
-                              fontSize: 14.20.sp,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(height: 20.h),
-                          model.isLoading
-                              ? SpinKitDancingSquare(
-                                  color: AppColors.primary1,
-                                  size: 42.sp,
-                                )
-                              : SizedBox.fromSize(),
-                          SizedBox(height: 20.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: OutlinedButton.styleFrom(
-                                  side: BorderSide(color: AppColors.primary),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 32.w,
-                                    vertical: 12.w,
-                                  ),
-                                ),
-                                child: TextView(
-                                  text: "Cancel",
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 15.6.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 16.w),
-
-                              // Continue Button
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    // await Future.delayed(
-                                    //   Duration(milliseconds: 100),
-                                    // );
-                                    // Add your update logic here
-                                    model.deleteRole(context, roleId: roleId);
-                                    model.notifyListeners();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 20.w,
-                                      vertical: 12.w,
-                                    ),
-                                    elevation: 0,
-                                  ),
-                                  child: TextView(
-                                    text: "Yes, Delete",
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.6.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
+        return DeleteRoleModalWidget(
+          roleId: roleId,
+          parentContext: context,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+          },
+          onFailed: () {
+            Navigator.of(context).pop(false);
           },
         );
       },

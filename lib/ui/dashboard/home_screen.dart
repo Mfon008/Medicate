@@ -10,6 +10,8 @@ import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
 import 'package:medicate_app/ui/widget/ai_text_form_widget.dart';
+import 'package:stacked/stacked.dart';
+import '../../core/connect_end/view_model/auth_view_model.dart';
 import '../../core/core_folder/manager/shared_preference.dart';
 import '../widget/text.dart';
 
@@ -91,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: isTappToChat
-          ? AskMeScreen(inText: chatText)
+          ? AskMeScreen(inText: chatText,isDashboard: true,)
           : Column(
               children: [
                 Expanded(
@@ -248,35 +250,149 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: conContainer(
-                                icon: AppImage.today_pills,
-                                text: 'Today’s Med',
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  conContainer(
+                                    icon: AppImage.bell_small,
+                                    text: 'Create Reminder',
+                                    ontap: () {
+                                      chatText = 'Create Reminder';
+                                      setState(() {});
+                                    },
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  chatText == 'Create Reminder'
+                                      ? Container(
+                                          width: 156.0.w,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 18.22.w,
+                                            vertical: 18.20.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              20.w,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              ViewModelBuilder<
+                                                AuthViewModel
+                                              >.reactive(
+                                                viewModelBuilder: () =>
+                                                    AuthViewModel(),
+                                                onViewModelReady: (model) {},
+                                                disposeViewModel: false,
+                                                onDispose: (viewModel) {},
+                                                builder: (_, AuthViewModel model, _) {
+                                                  return GestureDetector(
+                                                    onTap: () =>
+                                                        model.showReminderModal(
+                                                          context,
+                                                        ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          AppImage.person_plus,
+                                                        ),
+                                                        SizedBox(width: 6.10.w),
+                                                        TextView(
+                                                          text:
+                                                              'Set up Yourself',
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 13.2.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: AppColors
+                                                                .reminder,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                              SizedBox(height: 10.h),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  isTappToChat = !isTappToChat;
+                                                  chatText = 'Create Reminder';
+                                                  setState(() {});
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.ai_star,
+                                                    ),
+                                                    SizedBox(width: 6.10.w),
+                                                    TextView(
+                                                      text: 'AI Setup',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 13.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
                               ),
                             ),
+
                             SizedBox(width: 12.w),
+
                             Expanded(
                               child: conContainer(
                                 icon: AppImage.today_pills,
-                                text: 'Tomorrow’s Med',
+                                text: 'Today’s Med',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Today’s Med';
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ],
                         ),
-
                         SizedBox(height: 22.10.h),
                         Row(
                           children: [
                             Expanded(
                               child: conContainer(
-                                icon: AppImage.appointment,
-                                text: 'Appointment',
+                                icon: AppImage.today_pills,
+                                text: 'Tomorrow’s Med',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Tomorrow’s Med';
+                                  setState(() {});
+                                },
                               ),
                             ),
                             SizedBox(width: 12.w),
                             Expanded(
                               child: conContainer(
-                                icon: AppImage.bell_small,
-                                text: 'Create Reminder',
+                                icon: AppImage.appointment,
+                                text: 'Appointment',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Appointment';
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ],
@@ -479,45 +595,44 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget conContainer({required String icon, required String text}) =>
-      GestureDetector(
-        onTap: () {
-          isTappToChat = !isTappToChat;
-          chatText = text;
-          setState(() {});
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            border: Border.all(color: AppColors.inactive),
-            borderRadius: BorderRadius.circular(22.r),
+  Widget conContainer({
+    required String icon,
+    required String text,
+    required Function()? ontap,
+  }) => GestureDetector(
+    onTap: ontap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border.all(color: AppColors.inactive),
+        borderRadius: BorderRadius.circular(22.r),
+      ),
+      child: Row(
+        children: [
+          SvgPicture.asset(
+            AppImage.curved_arrow,
+            width: 10.20.w,
+            height: 10.20.h,
           ),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                AppImage.curved_arrow,
-                width: 10.20.w,
-                height: 10.20.h,
+          SizedBox(width: 6.10.w),
+          SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
+          SizedBox(width: 6.10.w),
+          Flexible(
+            child: TextView(
+              text: text,
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.black,
               ),
-              SizedBox(width: 6.10.w),
-              SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
-              SizedBox(width: 6.10.w),
-              Flexible(
-                child: TextView(
-                  text: text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                  maxLines: 1,
-                  textOverflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+              maxLines: 1,
+              textOverflow: TextOverflow.ellipsis,
+            ),
           ),
-        ),
-      );
+        ],
+      ),
+    ),
+  );
 }

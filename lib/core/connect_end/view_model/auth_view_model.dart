@@ -255,6 +255,7 @@ class AuthViewModel extends BaseViewModel {
     MedType(medType: 'Drip', medTypeImage: AppImage.drip),
     MedType(medType: 'Ointment', medTypeImage: AppImage.ointment),
     MedType(medType: 'Inhaler', medTypeImage: AppImage.inhaler),
+    MedType(medType: 'Vaccines', medTypeImage: AppImage.vaccines),
     MedType(medType: 'Others', medTypeImage: AppImage.other_meds),
   ];
 
@@ -297,7 +298,8 @@ class AuthViewModel extends BaseViewModel {
   List<FocusNode> timesToTakeUpdateFocusNodes = [];
   List<FocusNode> noteUpdateFocusNodes = [];
 
-  String isReminderStatus = 'ongoing';
+  // String isReminderStatus = 'ongoing';
+  String isReminderStatus = 'today';
   String timePeriod = 'morning';
   var totalCount;
   var takenCount;
@@ -389,6 +391,7 @@ class AuthViewModel extends BaseViewModel {
 
     if (reminders == null || reminders.isEmpty) return true;
 
+    if (isReminderStatus == 'all' && reminders.isNotEmpty) return true;
     if (isReminderStatus == 'ongoing' && reminders.isNotEmpty) return true;
     if (isReminderStatus == 'completed' && reminders.isNotEmpty) return true;
     if (isReminderStatus == 'today' && reminders.isNotEmpty) return true;
@@ -2397,7 +2400,7 @@ class AuthViewModel extends BaseViewModel {
   Future<void> selectTimeUpdate(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(), // The time initially displayed
+      initialTime: TimeOfDay.now(), // The time initially displ∏ayed
     );
 
     if (pickedTime != null) {
@@ -12163,7 +12166,7 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getTodaysReminder(context, {String? period, String? date}) async {
+  Future<void> getTodaysReminder(context, {String? period, String? date}) async {
     try {
       _isLoading = true;
       _getTodaysReminderModel = await runBusyFuture(

@@ -51,6 +51,7 @@ class ApiError {
               dioError.response?.statusCode == 405 ||
               dioError.response?.statusCode == 403 ||
               dioError.response?.statusCode == 404 ||
+              dioError.response?.statusCode == 412 ||
               dioError.response?.statusCode == 409) {
             apiErrorModel = ApiErrorModel.fromJson(dioError.response?.data);
             print('..u... ${apiErrorModel?.msg}');

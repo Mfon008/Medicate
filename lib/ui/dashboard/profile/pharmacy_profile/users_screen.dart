@@ -1,3 +1,4 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,7 +24,7 @@ class UsersScreen extends StatelessWidget {
         });
       },
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, __) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -109,10 +110,18 @@ class UsersScreen extends StatelessWidget {
                                   SizedBox(height: 26.0.h),
                                   GestureDetector(
                                     onTap: () async {
-                                      model.modalBottomSheetMenuAddUser(
-                                        context: context,
-                                      );
-                                      model.notifyListeners();
+                                      bool? didAddOrEdit = await model
+                                          .modalBottomSheetMenuAddUser(
+                                            context: context,
+                                          );
+                                      if (didAddOrEdit == true) {
+                                        await Future.delayed(
+                                          Duration(seconds: 1),
+                                        );
+                                        model.getUser(
+                                          context,
+                                        ); // refresh roles after modal closes
+                                      }else {}
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(8.10.w),
@@ -130,7 +139,7 @@ class UsersScreen extends StatelessWidget {
                                 ],
                               )
                             : Padding(
-                                padding: const EdgeInsets.all(22.0),
+                                padding: EdgeInsets.all(22.0),
                                 child: Column(
                                   children: [
                                     TextFormWidget(
@@ -156,7 +165,10 @@ class UsersScreen extends StatelessWidget {
                                           width: 20.w,
                                         ),
                                       ),
-                                      onChange: (p0) {},
+                                      onChange: (p0) {
+                                        model.searchUsers = p0;
+                                        model.notifyListeners();
+                                      },
                                     ),
                                     SizedBox(height: 20.h),
                                     if (model.getCreatedUserResponseModel !=
@@ -166,152 +178,458 @@ class UsersScreen extends StatelessWidget {
                                             .data!
                                             .staff!
                                             .isNotEmpty)
-                                      ...model.getCreatedUserResponseModel!.data!.staff!.map(
-                                        (e) => Column(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                model
-                                                    .modalBottomSheetMenuAddUser(
-                                                      context: context,
-                                                      isEdit: true,
-                                                      firstName: model
-                                                          .getFirstWord(
-                                                            e.user?.fullName ??
-                                                                '',
-                                                          ),
-                                                      lastName: model
-                                                          .getSecondWord(
-                                                            e.user?.fullName ??
-                                                                '',
-                                                          ),
-                                                      phone: e.user?.phone,
-                                                      email: e.user?.email,
-                                                      address:
-                                                          e.profile?.address,
-                                                      gender: e.profile?.gender,
-                                                      role: e.role?.name,
-                                                      roleId: e.role?.id,
-                                                      membershipId:
-                                                          e.membershipId,
-                                                    );
-                                                model.notifyListeners();
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    padding: EdgeInsets.all(
-                                                      5.0.w,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors.f7,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: SvgPicture.asset(
-                                                      AppImage.user_pro_pic,
-                                                      height: 34.40.h,
-                                                      width: 34.40.w,
-                                                    ),
+                                      if (model.searchUsers != '')
+                                        ...model
+                                            .getCreatedUserResponseModel!
+                                            .data!
+                                            .staff!
+                                            .where(
+                                              (e) => model.searchUsers!
+                                                  .toLowerCase()
+                                                  .contains(
+                                                    e.user!.fullName!
+                                                        .toLowerCase(),
                                                   ),
-                                                  SizedBox(width: 11.20.w),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 180.w,
-                                                        child: TextView(
-                                                          text:
-                                                              e
-                                                                  .user
-                                                                  ?.fullName ??
-                                                              '',
-                                                          maxLines: 1,
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontFamily:
-                                                                'GoogleSans',
-                                                            fontSize: 14.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: AppColors
-                                                                .reminder,
+                                            )
+                                            .map(
+                                              (e) =>
+                                                  e.role?.name?.toLowerCase() ==
+                                                      'owner'
+                                                  ? SizedBox.shrink()
+                                                  : Column(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () async {
+                                                            bool?
+                                                            didAddOrEdit = await model.modalBottomSheetMenuAddUser(
+                                                              context: context,
+                                                              isEdit: true,
+                                                              firstName: model
+                                                                  .getFirstWord(
+                                                                    e.user?.fullName ??
+                                                                        '',
+                                                                  ),
+                                                              lastName: model
+                                                                  .getSecondWord(
+                                                                    e.user?.fullName ??
+                                                                        '',
+                                                                  ),
+                                                              phone:
+                                                                  e.user?.phone,
+                                                              email:
+                                                                  e.user?.email,
+                                                              address: e
+                                                                  .profile
+                                                                  ?.address,
+                                                              gender: e
+                                                                  .profile
+                                                                  ?.gender,
+                                                              role:
+                                                                  e.role?.name,
+                                                              roleId:
+                                                                  e.role?.id,
+                                                              membershipId: e
+                                                                  .membershipId,
+                                                            );
+                                                            if (didAddOrEdit ==
+                                                                true) {
+                                                              await Future.delayed(
+                                                                Duration(
+                                                                  seconds: 1,
+                                                                ),
+                                                              );
+                                                              model.getUser(
+                                                                context,
+                                                              ); // refresh roles after modal closes
+                                                            } else {}
+                                                          },
+                                                          child: Row(
+                                                            children: [
+                                                              Container(
+                                                                padding:
+                                                                    EdgeInsets.all(
+                                                                      5.0.w,
+                                                                    ),
+                                                                decoration: BoxDecoration(
+                                                                  color:
+                                                                      AppColors
+                                                                          .f7,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                                child: SvgPicture.asset(
+                                                                  AppImage
+                                                                      .user_pro_pic,
+                                                                  height:
+                                                                      34.40.h,
+                                                                  width:
+                                                                      34.40.w,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 11.20.w,
+                                                              ),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width:
+                                                                        180.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          e.user?.fullName ??
+                                                                          '',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'GoogleSans',
+                                                                        fontSize:
+                                                                            14.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color: AppColors
+                                                                            .reminder,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        3.10.h,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        150.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          e.user?.email ??
+                                                                          '',
+                                                                      maxLines:
+                                                                          1,
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            12.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .reminder,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        2.10.h,
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        100.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          e.role?.name ??
+                                                                          '',
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            12.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: AppColors
+                                                                            .infoGrey,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Spacer(),
+                                                              e.role?.name?.toLowerCase() ==
+                                                                      'owner'
+                                                                  ? SizedBox.shrink()
+                                                                  : GestureDetector(
+                                                                      onTap: () async {
+                                                                        bool?
+                                                                        delete = await model.showRemoveUserDialog(
+                                                                          context,
+                                                                          id: e
+                                                                              .membershipId,
+                                                                          userName: e
+                                                                              .user!
+                                                                              .fullName,
+                                                                        );
+                                                                        if (delete ==
+                                                                            true) {
+                                                                          await Future.delayed(
+                                                                            Duration(
+                                                                              seconds: 1,
+                                                                            ),
+                                                                          );
+                                                                          model.getUser(
+                                                                            context,
+                                                                          );
+                                                                        } else {}
+                                                                      },
+                                                                      child: SvgPicture.asset(
+                                                                        AppImage
+                                                                            .delete,
+                                                                        color: AppColors
+                                                                            .red,
+                                                                      ),
+                                                                    ),
+                                                              SizedBox(
+                                                                width: 14.80.w,
+                                                              ),
+
+                                                              SvgPicture.asset(
+                                                                AppImage
+                                                                    .arrow_forward,
+                                                                color: AppColors
+                                                                    .infoGrey,
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
-                                                      ),
-                                                      SizedBox(height: 3.10.h),
-                                                      SizedBox(
-                                                        width: 150.w,
-                                                        child: TextView(
-                                                          text:
-                                                              e.user?.email ??
-                                                              '',
-                                                          maxLines: 1,
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 12.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
+                                                        SizedBox(height: 10.h),
+                                                        Divider(
+                                                          color: AppColors.f1,
                                                         ),
-                                                      ),
-                                                      SizedBox(height: 2.10.h),
-                                                      SizedBox(
-                                                        width: 100.w,
-                                                        child: TextView(
-                                                          text:
-                                                              e.role?.name ??
-                                                              '',
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 12.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
+                                                        SizedBox(height: 10.h),
+                                                      ],
+                                                    ),
+                                            )
+                                      else
+                                        ...model.getCreatedUserResponseModel!.data!.staff!.map(
+                                          (e) =>
+                                              e.role?.name?.toLowerCase() ==
+                                                  'owner'
+                                              ? SizedBox.shrink()
+                                              : Column(
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        bool?
+                                                        didAddOrEdit = await model
+                                                            .modalBottomSheetMenuAddUser(
+                                                              context: context,
+                                                              isEdit: true,
+                                                              firstName: model
+                                                                  .getFirstWord(
+                                                                    e.user?.fullName ??
+                                                                        '',
+                                                                  ),
+                                                              lastName: model
+                                                                  .getSecondWord(
+                                                                    e.user?.fullName ??
+                                                                        '',
+                                                                  ),
+                                                              phone:
+                                                                  e.user?.phone,
+                                                              email:
+                                                                  e.user?.email,
+                                                              address: e
+                                                                  .profile
+                                                                  ?.address,
+                                                              gender: e
+                                                                  .profile
+                                                                  ?.gender,
+                                                              role:
+                                                                  e.role?.name,
+                                                              roleId:
+                                                                  e.role?.id,
+                                                              membershipId: e
+                                                                  .membershipId,
+                                                            );
+                                                        if (didAddOrEdit ==
+                                                            true) {
+                                                          await Future.delayed(
+                                                            Duration(
+                                                              seconds: 1,
+                                                            ),
+                                                          );
+                                                          model.getUser(
+                                                            context,
+                                                          ); // refresh roles after modal closes
+                                                        } else {}
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  5.0.w,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color:
+                                                                      AppColors
+                                                                          .f7,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                            child: SvgPicture.asset(
+                                                              AppImage
+                                                                  .user_pro_pic,
+                                                              height: 34.40.h,
+                                                              width: 34.40.w,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 11.20.w,
+                                                          ),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 180.w,
+                                                                child: TextView(
+                                                                  text:
+                                                                      e
+                                                                          .user
+                                                                          ?.fullName ??
+                                                                      '',
+                                                                  maxLines: 1,
+                                                                  textOverflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'GoogleSans',
+                                                                    fontSize:
+                                                                        14.2.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 3.10.h,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 150.w,
+                                                                child: TextView(
+                                                                  text:
+                                                                      e
+                                                                          .user
+                                                                          ?.email ??
+                                                                      '',
+                                                                  maxLines: 1,
+                                                                  textOverflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'Arial',
+                                                                    fontSize:
+                                                                        12.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 2.10.h,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 100.w,
+                                                                child: TextView(
+                                                                  text:
+                                                                      e
+                                                                          .role
+                                                                          ?.name ??
+                                                                      '',
+                                                                  textOverflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'Arial',
+                                                                    fontSize:
+                                                                        12.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: AppColors
+                                                                        .infoGrey,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Spacer(),
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              bool?
+                                                              delete = await model
+                                                                  .showRemoveUserDialog(
+                                                                    context,
+                                                                    id: e
+                                                                        .membershipId,
+                                                                    userName: e
+                                                                        .user!
+                                                                        .fullName,
+                                                                  );
+                                                              if (delete ==
+                                                                  true) {
+                                                                await Future.delayed(
+                                                                  Duration(
+                                                                    seconds: 1,
+                                                                  ),
+                                                                );
+                                                                model.getUser(
+                                                                  context,
+                                                                );
+                                                              } else {}
+                                                            },
+                                                            child:
+                                                                SvgPicture.asset(
+                                                                  AppImage
+                                                                      .delete,
+                                                                  color:
+                                                                      AppColors
+                                                                          .red,
+                                                                ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 14.80.w,
+                                                          ),
+
+                                                          SvgPicture.asset(
+                                                            AppImage
+                                                                .arrow_forward,
                                                             color: AppColors
                                                                 .infoGrey,
                                                           ),
-                                                        ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                  Spacer(),
-                                                  GestureDetector(
-                                                    onTap: () => model
-                                                        .showRemoveUserDialog(
-                                                          context,
-                                                          id: e.membershipId,
-                                                        ),
-                                                    child: SvgPicture.asset(
-                                                      AppImage.delete,
-                                                      color: AppColors.red,
                                                     ),
-                                                  ),
-                                                  SizedBox(width: 14.80.w),
-
-                                                  SvgPicture.asset(
-                                                    AppImage.arrow_forward,
-                                                    color: AppColors.infoGrey,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            SizedBox(height: 10.h),
-                                            Divider(color: AppColors.f1),
-                                            SizedBox(height: 10.h),
-                                          ],
+                                                    SizedBox(height: 10.h),
+                                                    Divider(
+                                                      color: AppColors.f1,
+                                                    ),
+                                                    SizedBox(height: 10.h),
+                                                  ],
+                                                ),
                                         ),
-                                      ),
                                   ],
                                 ),
                               ),
@@ -344,9 +662,15 @@ class UsersScreen extends StatelessWidget {
                         color: AppColors.white,
                         isLoading: model.isLoading,
                         buttonBorderColor: AppColors.transparent,
-                        onPressed: () {
-                          model.modalBottomSheetMenuAddUser(context: context);
-                          model.notifyListeners();
+                        onPressed: () async {
+                          bool? didAddOrEdit = await model
+                              .modalBottomSheetMenuAddUser(context: context);
+                          if (didAddOrEdit == true) {
+                            await Future.delayed(Duration(seconds: 1));
+                            model.getUser(
+                              context,
+                            ); // refresh roles after modal closes
+                          }else {}
                         },
                       )
                     : SizedBox.shrink(),

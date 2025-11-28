@@ -1,8 +1,9 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
@@ -24,7 +25,7 @@ class RolesAndPermissionScreen extends StatelessWidget {
         });
       },
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, __) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -111,10 +112,18 @@ class RolesAndPermissionScreen extends StatelessWidget {
                                     SizedBox(height: 26.0.h),
                                     GestureDetector(
                                       onTap: () async {
-                                        model.modalBottomSheetMenuAddRole(
-                                          context: context,
-                                        );
-                                        model.notifyListeners();
+                                        bool? didAddOrEdit = await model
+                                            .modalBottomSheetMenuAddRole(
+                                              context: context,
+                                            );
+                                        if (didAddOrEdit == true) {
+                                          await Future.delayed(
+                                            Duration(seconds: 2),
+                                          );
+                                          model.getRoles(
+                                            context,
+                                          ); // refresh roles after modal closes
+                                        } else {}
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(8.10.w),
@@ -132,7 +141,7 @@ class RolesAndPermissionScreen extends StatelessWidget {
                                   ],
                                 )
                               : Padding(
-                                  padding: const EdgeInsets.all(22.0),
+                                  padding: EdgeInsets.all(22.0),
                                   child: Column(
                                     children: [
                                       TextFormWidget(
@@ -158,7 +167,10 @@ class RolesAndPermissionScreen extends StatelessWidget {
                                             width: 20.w,
                                           ),
                                         ),
-                                        onChange: (p0) {},
+                                        onChange: (p0) {
+                                          model.searchRoles = p0;
+                                          model.notifyListeners();
+                                        },
                                       ),
                                       SizedBox(height: 20.h),
                                       if (model.getRolesResponseModel != null &&
@@ -167,110 +179,346 @@ class RolesAndPermissionScreen extends StatelessWidget {
                                               .data!
                                               .roles!
                                               .isNotEmpty)
-                                        ...model.getRolesResponseModel!.data!.roles!.map(
-                                          (e) => Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 180.w,
-                                                        child: TextView(
-                                                          text: '${e.name}',
-                                                          maxLines: 1,
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontFamily:
-                                                                'GoogleSans',
-                                                            fontSize: 14.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 3.10.h),
-                                                      SizedBox(
-                                                        width: 150.w,
-                                                        child: TextView(
-                                                          text:
-                                                              '${e.description}',
-                                                          maxLines: 4,
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 12.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(height: 2.10.h),
-                                                      GestureDetector(
-                                                        onTap: () => model
-                                                            .modalBottomSheetMenuAddRole(
-                                                              context: context,
-                                                              isEdit: true,
-                                                              rolename: e.name,
-                                                              roleDes:
-                                                                  e.description,
-                                                              roleId: e.id,
-                                                            ),
-                                                        child: TextView(
-                                                          text: 'Edit',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 12.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-
-                                                            color: AppColors
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Spacer(),
-                                                  GestureDetector(
-                                                    onTap: () => model
-                                                        .showRemoveRoleDialog(
-                                                          context,
-                                                          roleId: e.id,
-                                                        ),
-                                                    child: SvgPicture.asset(
-                                                      AppImage.delete,
-                                                      color: AppColors.red,
+                                        if (model.searchRoles != '')
+                                          ...model
+                                              .getRolesResponseModel!
+                                              .data!
+                                              .roles!
+                                              .where(
+                                                (e) => e.name!
+                                                    .toLowerCase()
+                                                    .contains(
+                                                      model.searchRoles!
+                                                          .toLowerCase(),
                                                     ),
-                                                  ),
-                                                  SizedBox(width: 14.80.w),
+                                              )
+                                              .map(
+                                                (e) => Column(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 180.w,
+                                                              child: TextView(
+                                                                text:
+                                                                    '${e.name}',
+                                                                maxLines: 1,
+                                                                textOverflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'GoogleSans',
+                                                                  fontSize:
+                                                                      14.2.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 3.10.h,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 150.w,
+                                                              child: TextView(
+                                                                text:
+                                                                    '${e.description}',
+                                                                maxLines: 4,
+                                                                textOverflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      12.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 2.10.h,
+                                                            ),
+                                                            e.name!.toLowerCase() ==
+                                                                    'owner'
+                                                                ? SizedBox.shrink()
+                                                                : GestureDetector(
+                                                                    onTap: () async {
+                                                                      bool?
+                                                                      didAddOrEdit = await model.modalBottomSheetMenuAddRole(
+                                                                        context:
+                                                                            context,
+                                                                        isEdit:
+                                                                            true,
+                                                                        rolename:
+                                                                            e.name,
+                                                                        roleDes:
+                                                                            e.description,
+                                                                        roleId:
+                                                                            e.id,
+                                                                      );
+                                                                      if (didAddOrEdit ==
+                                                                          true) {
+                                                                        await Future.delayed(
+                                                                          Duration(
+                                                                            seconds:
+                                                                                1,
+                                                                          ),
+                                                                        );
+                                                                        model.getRoles(
+                                                                          context,
+                                                                        ); // refresh roles after modal closes
+                                                                      } else {}
+                                                                    },
+                                                                    child: TextView(
+                                                                      text:
+                                                                          'Edit',
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Arial',
+                                                                        fontSize:
+                                                                            12.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        decoration:
+                                                                            TextDecoration.underline,
 
-                                                  SvgPicture.asset(
-                                                    AppImage.arrow_forward,
-                                                    color: AppColors.infoGrey,
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10.h),
-                                              Divider(color: AppColors.f1),
-                                              SizedBox(height: 10.h),
-                                            ],
+                                                                        color: AppColors
+                                                                            .primary,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                          ],
+                                                        ),
+                                                        Spacer(),
+                                                        e.name!.toLowerCase() ==
+                                                                'owner'
+                                                            ? SizedBox.shrink()
+                                                            : GestureDetector(
+                                                                onTap: () async {
+                                                                  bool?
+                                                                  delete = await model
+                                                                      .showRemoveRoleDialog(
+                                                                        context:
+                                                                            context,
+                                                                        roleId:
+                                                                            e.id,
+                                                                      );
+                                                                  if (delete ==
+                                                                      true) {
+                                                                    await Future.delayed(
+                                                                      Duration(
+                                                                        seconds:
+                                                                            1,
+                                                                      ),
+                                                                    );
+                                                                    model.getRoles(
+                                                                      context,
+                                                                    ); // refresh roles after modal closes
+                                                                  } else {}
+                                                                },
+
+                                                                child: SvgPicture.asset(
+                                                                  AppImage
+                                                                      .delete,
+                                                                  color:
+                                                                      AppColors
+                                                                          .red,
+                                                                ),
+                                                              ),
+                                                        SizedBox(
+                                                          width: 14.80.w,
+                                                        ),
+
+                                                        SvgPicture.asset(
+                                                          AppImage
+                                                              .arrow_forward,
+                                                          color: AppColors
+                                                              .infoGrey,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 10.h),
+                                                    Divider(
+                                                      color: AppColors.f1,
+                                                    ),
+                                                    SizedBox(height: 10.h),
+                                                  ],
+                                                ),
+                                              )
+                                        else
+                                          ...model.getRolesResponseModel!.data!.roles!.map(
+                                            (e) => Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 180.w,
+                                                          child: TextView(
+                                                            text: '${e.name}',
+                                                            maxLines: 1,
+                                                            textOverflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize: 14.2.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 3.10.h,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 150.w,
+                                                          child: TextView(
+                                                            text:
+                                                                '${e.description}',
+                                                            maxLines: 4,
+                                                            textOverflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              fontSize: 12.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 2.10.h,
+                                                        ),
+                                                        e.name!.toLowerCase() ==
+                                                                'owner'
+                                                            ? SizedBox.shrink()
+                                                            : GestureDetector(
+                                                                onTap: () async {
+                                                                  bool?
+                                                                  didAddOrEdit = await model.modalBottomSheetMenuAddRole(
+                                                                    context:
+                                                                        context,
+                                                                    isEdit:
+                                                                        true,
+                                                                    rolename:
+                                                                        e.name,
+                                                                    roleDes: e
+                                                                        .description,
+                                                                    roleId:
+                                                                        e.id,
+                                                                  );
+                                                                  if (didAddOrEdit ==
+                                                                      true) {
+                                                                    await Future.delayed(
+                                                                      Duration(
+                                                                        seconds:
+                                                                            1,
+                                                                      ),
+                                                                    );
+                                                                    model.getRoles(
+                                                                      context,
+                                                                    ); // refresh roles after modal closes
+                                                                  } else {}
+                                                                },
+
+                                                                child: TextView(
+                                                                  text: 'Edit',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'Arial',
+                                                                    fontSize:
+                                                                        12.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    decoration:
+                                                                        TextDecoration
+                                                                            .underline,
+
+                                                                    color: AppColors
+                                                                        .primary,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                      ],
+                                                    ),
+                                                    Spacer(),
+                                                    e.name!.toLowerCase() ==
+                                                            'owner'
+                                                        ? SizedBox.shrink()
+                                                        : GestureDetector(
+                                                            onTap: () async {
+                                                              bool?
+                                                              delete = await model
+                                                                  .showRemoveRoleDialog(
+                                                                    context:
+                                                                        context,
+                                                                    roleId:
+                                                                        e.id,
+                                                                  );
+                                                              if (delete ==
+                                                                  true) {
+                                                                await Future.delayed(
+                                                                  Duration(
+                                                                    seconds: 1,
+                                                                  ),
+                                                                );
+                                                                model.getRoles(
+                                                                  context,
+                                                                ); // refresh roles after modal closes
+                                                              } else {}
+                                                            },
+                                                            child:
+                                                                SvgPicture.asset(
+                                                                  AppImage
+                                                                      .delete,
+                                                                  color:
+                                                                      AppColors
+                                                                          .red,
+                                                                ),
+                                                          ),
+                                                    SizedBox(width: 14.80.w),
+
+                                                    SvgPicture.asset(
+                                                      AppImage.arrow_forward,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 10.h),
+                                                Divider(color: AppColors.f1),
+                                                SizedBox(height: 10.h),
+                                              ],
+                                            ),
                                           ),
-                                        ),
                                     ],
                                   ),
                                 ),
@@ -296,9 +544,15 @@ class RolesAndPermissionScreen extends StatelessWidget {
                         color: AppColors.white,
                         isLoading: model.isLoading,
                         buttonBorderColor: AppColors.transparent,
-                        onPressed: () {
-                          model.modalBottomSheetMenuAddRole(context: context);
-                          model.notifyListeners();
+                        onPressed: () async {
+                          bool? didAddOrEdit = await model
+                              .modalBottomSheetMenuAddRole(context: context);
+                          if (didAddOrEdit == true) {
+                            await Future.delayed(Duration(seconds: 1));
+                            model.getRoles(
+                              context,
+                            ); // refresh roles after modal closes
+                          } else {}
                         },
                       )
                     : SizedBox.shrink(),

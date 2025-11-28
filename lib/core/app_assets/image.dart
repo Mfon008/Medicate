@@ -76,6 +76,7 @@ class AppImage {
   static const String faq = 'assets/svgs/faq.svg';
   static const String drip = 'assets/svgs/drip.svg';
   static const String inhaler = 'assets/svgs/inhaler.svg';
+  static const String vaccines = 'assets/svgs/vaccines.svg';
   static const String ointment = 'assets/svgs/ointment.svg';
   static const String pill = 'assets/svgs/pill.svg';
   static const String syringe = 'assets/svgs/syringe.svg';
