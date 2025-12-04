@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
+import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../core/core_folder/manager/shared_preference.dart';
 import '../../../main.dart';
@@ -254,16 +256,124 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: conContainer(
-                                icon: AppImage.purchase,
-                                text: 'Purchase Meds',
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  conContainer(
+                                    icon: AppImage.bell_small,
+                                    text: 'Create Reminder',
+                                    ontap: () {
+                                      chatText = 'Create Reminder';
+                                      setState(() {});
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: chatText == 'Create Reminder'
+                                        ? 12.h
+                                        : 4.0.h,
+                                  ),
+                                  chatText == 'Create Reminder'
+                                      ? Container(
+                                          width: 156.0.w,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 18.22.w,
+                                            vertical: 18.20.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              20.w,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              ViewModelBuilder<
+                                                PharmViewModel
+                                              >.reactive(
+                                                viewModelBuilder: () =>
+                                                    PharmViewModel(),
+                                                onViewModelReady: (model) {},
+                                                disposeViewModel: false,
+                                                onDispose: (viewModel) {},
+                                                builder: (_, PharmViewModel model, _) {
+                                                  return GestureDetector(
+                                                    onTap: () => model
+                                                        .showCreateAddPhoneDialog(
+                                                          context,
+                                                        ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SvgPicture.asset(
+                                                          AppImage.person_plus,
+                                                        ),
+                                                        SizedBox(width: 6.10.w),
+                                                        TextView(
+                                                          text:
+                                                              'Set up Yourself',
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 13.2.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: AppColors
+                                                                .reminder,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                              SizedBox(height: 10.h),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  isTappToChat = !isTappToChat;
+                                                  chatText = 'Create Reminder';
+                                                  setState(() {});
+                                                },
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.ai_star,
+                                                    ),
+                                                    SizedBox(width: 6.10.w),
+                                                    TextView(
+                                                      text: 'AI Setup',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 13.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
                               ),
                             ),
+
                             SizedBox(width: 12.w),
                             Expanded(
                               child: conContainer(
-                                icon: AppImage.bell_small,
-                                text: 'Create Reminder',
+                                icon: AppImage.purchase,
+                                text: 'Purchase Meds',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Purchase Meds';
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ],
@@ -276,6 +386,11 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                               child: conContainer(
                                 icon: AppImage.level,
                                 text: 'Stock Levels',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Stock Levels';
+                                  setState(() {});
+                                },
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -283,6 +398,11 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                               child: conContainer(
                                 icon: AppImage.cart,
                                 text: 'Orders',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Orders';
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ],
@@ -294,6 +414,11 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                               child: conContainer(
                                 icon: AppImage.track_reminder,
                                 text: 'Track Reminders',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Track Reminder';
+                                  setState(() {});
+                                },
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -301,6 +426,11 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                               child: conContainer(
                                 icon: AppImage.appointment,
                                 text: 'Appointment',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Appointment';
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ],
@@ -398,50 +528,49 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
     );
   }
 
-  Widget conContainer({required String icon, required String text}) =>
-      GestureDetector(
-        onTap: () {
-          isTappToChat = !isTappToChat;
-          chatText = text;
-          setState(() {});
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            border: Border.all(color: AppColors.inactive),
-            borderRadius: BorderRadius.circular(22.r),
+  Widget conContainer({
+    required String icon,
+    required String text,
+    required Function()? ontap,
+  }) => GestureDetector(
+    onTap: ontap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        border: Border.all(color: AppColors.inactive),
+        borderRadius: BorderRadius.circular(22.r),
+      ),
+      child: Row(
+        children: [
+          SvgPicture.asset(
+            AppImage.curved_arrow,
+            width: 10.20.w,
+            height: 10.20.h,
           ),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                AppImage.curved_arrow,
-                width: 10.20.w,
-                height: 10.20.h,
-              ),
-              SizedBox(width: 6.10.w),
-              SvgPicture.asset(
-                icon,
-                width: 16.20.w,
-                height: 16.20.h,
-                color: AppColors.lightBlue,
-              ),
-              SizedBox(width: 6.10.w),
-              Flexible(
-                child: TextView(
-                  text: text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                  maxLines: 1,
-                  textOverflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+          SizedBox(width: 6.10.w),
+          SvgPicture.asset(
+            icon,
+            width: 16.20.w,
+            height: 16.20.h,
+            color: AppColors.lightBlue,
           ),
-        ),
-      );
+          SizedBox(width: 6.10.w),
+          Flexible(
+            child: TextView(
+              text: text,
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.black,
+              ),
+              maxLines: 1,
+              textOverflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

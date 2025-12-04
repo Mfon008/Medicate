@@ -24,8 +24,8 @@ void printDioLogs(Object object) {
 
 // @lazySingleton
 class NetworkService {
-  static const int connectTimeout = 30000;
-  static const int receiveTimeout = 30000;
+  // static const int connectTimeout = 60000;
+  // static const int receiveTimeout = 60000;
   Dio? dio;
   String? baseUrl, authToken;
 
@@ -43,8 +43,8 @@ class NetworkService {
   void _initialiseDio() {
     dio = Dio(
       BaseOptions(
-        connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
+        connectTimeout: const Duration(seconds:120),
+        receiveTimeout: const Duration(seconds: 120),
         baseUrl: baseUrl ?? AppConfig.apiUrl,
       ),
     );

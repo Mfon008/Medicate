@@ -117,7 +117,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   SizedBox(height: 26.0.h),
                   SharedPreferencesService.instance.usersData['user'] != null
                       ? TextView(
-                          text:
+                          text:// ignore: unnecessary_null_comparison
+                            SharedPreferencesService
+                                    .instance
+                                    .usersData['user'] ==
+                                null
+                            ? 'Welcome back'
+                            : 
                               'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalize()}',
                           textStyle: TextStyle(
                             fontFamily: 'GoogleSans',

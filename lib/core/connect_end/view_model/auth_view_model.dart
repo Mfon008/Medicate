@@ -193,6 +193,7 @@ class AuthViewModel extends BaseViewModel {
   bool isChecked = false;
   bool isCheckedUp = false;
   int? totalDuration;
+  int? numberOfTimes;
   bool isPhoneValid = false;
   bool _initializedUpdate = false;
   bool _initializedUpContoller = false;
@@ -6917,7 +6918,7 @@ class AuthViewModel extends BaseViewModel {
                   onPressed: () {
                     linIndex--;
                     indexOfMedicationClassList = 0;
-                    locator<AuthViewModel>().notifyListeners();
+                    model!.notifyListeners();
                   },
                 ),
               ),
@@ -7837,7 +7838,7 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       )
               : SizedBox.shrink(),
-          phoneReminderList.isNotEmpty
+          phoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -7916,7 +7917,7 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text: '3',
+                                    text: '${returnNumberOfTimes()}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -7943,7 +7944,7 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text: '${returnTotalDays() * 3}',
+                                    text: '${selectedIndexes.length * returnNumberOfTimes()}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -7954,6 +7955,88 @@ class AuthViewModel extends BaseViewModel {
                                 ],
                               ),
                               SizedBox(
+                                height: selectedIndexes.contains(0)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                             selectedIndexes.contains(0)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(0)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                              selectedIndexes.contains(0)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text:
+                                              'Email  (x${returnNumberOfTimes()} msgs)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text:
+                                              '₦0',
+                                          textStyle: TextStyle(
+                                            // fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height:selectedIndexes.contains(1)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                             selectedIndexes.contains(1)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(1)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                             selectedIndexes.contains(1)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text:
+                                              'Push  (x${returnNumberOfTimes()} msgs)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text:
+                                              '₦0',
+                                          textStyle: TextStyle(
+                                            // fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
                                 height: selectedIndexes.contains(3)
                                     ? 6.10.h
                                     : 0.h,
@@ -7972,7 +8055,8 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'WhatsApp  (x5 msgs)',
+                                          text:
+                                              'WhatsApp  (x${returnNumberOfTimes()} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -7981,7 +8065,8 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦25',
+                                          text:
+                                              '₦${20 * returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8011,7 +8096,8 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'SMS  (x5 msgs)',
+                                          text:
+                                              'SMS  (x${returnNumberOfTimes()} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8020,7 +8106,8 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦50',
+                                          text:
+                                              '₦${10 * returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8050,7 +8137,7 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'Phone Calls  (x5 calls)',
+                                          text: 'Phone Calls  (x${returnNumberOfTimes()} calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8059,7 +8146,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦100',
+                                          text: '₦${50*returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8587,7 +8674,7 @@ class AuthViewModel extends BaseViewModel {
     drugNameControllerUpdate.text = data.medication!.drugName!;
     medTypeControllerUpdate.text = data.medication!.medicationType!;
     medTypeResultImageUpdate = data.medication!.medicationType!;
-    noteControllerUpdate.text = data.medication!.note!;
+    noteControllerUpdate.text = data.medication?.note??'';
     endDateControllerUpdate.text = data.medication!.endDateTime.toString();
     imageReminderUpdate = data.medication!.medicationImage?.url ?? "";
     startDateIso = data.medication!.startDateTime.toString();
@@ -10645,7 +10732,7 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       )
               : SizedBox.shrink(),
-          phoneReminderList.isNotEmpty
+          phoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -10724,7 +10811,7 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text: '3',
+                                    text: '${returnNumberOfTimes()}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -10751,7 +10838,7 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text: '${returnTotalDays() * 3}',
+                                    text: '${selectedIndexes.length * returnNumberOfTimes()}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -10761,6 +10848,89 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                 ],
                               ),
+
+                              SizedBox(
+                                height: selectedIndexes.contains(0)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                             selectedIndexes.contains(0)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(0)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                              selectedIndexes.contains(0)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text:
+                                              'Email  (x${returnNumberOfTimes()} msgs)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text:
+                                              '₦0',
+                                          textStyle: TextStyle(
+                                            // fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height:selectedIndexes.contains(1)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                             selectedIndexes.contains(1)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(1)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                             selectedIndexes.contains(1)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text:
+                                              'Push  (x${returnNumberOfTimes()} msgs)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text:
+                                              '₦0',
+                                          textStyle: TextStyle(
+                                            // fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
                               SizedBox(
                                 height: selectedIndexes.contains(3)
                                     ? 6.10.h
@@ -10780,7 +10950,7 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'WhatsApp  (x5 msgs)',
+                                          text: 'WhatsApp  (x${returnNumberOfTimes()} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10789,7 +10959,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦25',
+                                          text: '₦${20*returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10819,7 +10989,7 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'SMS  (x5 msgs)',
+                                          text: 'SMS  (x${returnNumberOfTimes()} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10828,7 +10998,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦50',
+                                          text: '₦${10*returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10858,7 +11028,7 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'Phone Calls  (x5 calls)',
+                                          text: 'Phone Calls  (x${returnNumberOfTimes()} calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10867,7 +11037,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦100',
+                                          text: '₦${50*returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -11948,16 +12118,21 @@ class AuthViewModel extends BaseViewModel {
     return totalDuration;
   }
 
+  int returnNumberOfTimes() {
+    numberOfTimes = int.parse(medicationClassList[0].timesToTake!);
+    return numberOfTimes!;
+  }
+
   void addCostTotal() {
     costTotal = 0;
     if (selectedIndexes.contains(2)) {
-      costTotal += 50;
+      costTotal += 10*returnNumberOfTimes();
     }
     if (selectedIndexes.contains(3)) {
-      costTotal += 25;
+      costTotal += 20*returnNumberOfTimes();
     }
     if (selectedIndexes.contains(4)) {
-      costTotal += 100;
+      costTotal += 50*returnNumberOfTimes();
     }
     notifyListeners();
   }
@@ -12166,7 +12341,11 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getTodaysReminder(context, {String? period, String? date}) async {
+  Future<void> getTodaysReminder(
+    context, {
+    String? period,
+    String? date,
+  }) async {
     try {
       _isLoading = true;
       _getTodaysReminderModel = await runBusyFuture(

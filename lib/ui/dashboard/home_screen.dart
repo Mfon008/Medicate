@@ -261,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       setState(() {});
                                     },
                                   ),
-                                  SizedBox(height: 12.h),
+                                  SizedBox(height: chatText == 'Create Reminder'?12.h:4.0.h),
                                   chatText == 'Create Reminder'
                                       ? Container(
                                           width: 156.0.w,

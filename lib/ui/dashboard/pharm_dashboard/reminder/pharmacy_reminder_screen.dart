@@ -5,33 +5,34 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/payment.dart';
+import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'package:stacked/stacked.dart';
-import '../../../core/app_assets/image.dart';
-import '../../../core/config/colors.dart';
-import '../../../core/connect_end/model/get_reminder_response_model/payment.dart';
-import '../../../core/connect_end/model/get_reminder_response_model/reminder.dart';
-import '../../../core/connect_end/view_model/auth_view_model.dart';
-import '../../../core/core_folder/app/app.router.dart';
-import '../../../main.dart';
-import '../../widget/text.dart';
 
-class ReminderScreen extends StatefulWidget {
-  const ReminderScreen({super.key});
+import '../../../../core/app_assets/image.dart';
+import '../../../../core/config/colors.dart';
+import '../../../../core/connect_end/model/get_reminder_response_model/reminder.dart';
+import '../../../../core/core_folder/app/app.router.dart';
+import '../../../../main.dart';
+import '../../../widget/text.dart';
+
+class PharmacyReminderScreen extends StatefulWidget {
+  const PharmacyReminderScreen({super.key});
 
   @override
-  State<ReminderScreen> createState() => _ReminderScreenState();
+  State<PharmacyReminderScreen> createState() => _PharmacyReminderScreenState();
 }
 
-class _ReminderScreenState extends State<ReminderScreen> {
+class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
-    return ViewModelBuilder<AuthViewModel>.reactive(
-      viewModelBuilder: () => AuthViewModel(),
+    return ViewModelBuilder<PharmViewModel>.reactive(
+      viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-         await model.getTodaysReminder(
+          await model.getTodaysReminder(
             context,
             period: model.timePeriod,
             date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
@@ -45,7 +46,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
-      builder: (_, AuthViewModel model, _) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           floatingActionButton:
@@ -93,7 +94,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         height: isTablet(context) ? 34.h : 14.h,
                         width: isTablet(context) ? 34.w : 14.w,
                       ),
-                      onPressed: () => navigate.navigateTo(Routes.moreScreen),
+                      onPressed: () =>
+                          navigate.navigateTo(Routes.pharmMoreScreen),
                     ),
                   ),
                   TextView(
@@ -134,6 +136,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
               horizontal: 16.w,
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 model.checkReminderEmpty()
                     ? Container(
@@ -861,6 +864,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                 isComplete: true,
                                               ),
                                             ),
+
                                       if (model.isReminderStatus == 'today' &&
                                           model.getTodaysReminderModel != null)
                                         Container(
@@ -1410,9 +1414,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () =>
-                                                        model.showReminderModal(
-                                                          context,
-                                                        ),
+                                                        model
+                                                    .showCreateAddPhoneDialog(
+                                                      context,
+                                                    ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -1464,13 +1469,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                             ),
 
                                       SizedBox(
-                                        height: !model.isTapped ? 60.h : 30.h,
+                                        height: model.isTapped ? 70.h : 50.h,
                                       ),
                                     ],
                                   ),
                                 ),
                               )
                             : Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(height: 130.h),
                                   SvgPicture.asset(AppImage.reminder),
@@ -1539,7 +1545,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                             children: [
                                               GestureDetector(
                                                 onTap: () => model
-                                                    .showReminderModal(context),
+                                                    .showCreateAddPhoneDialog(
+                                                      context,
+                                                    ),
                                                 child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
@@ -1601,7 +1609,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
     context,
     isTab,
     Reminder? reminder,
-    AuthViewModel? model,
+    PharmViewModel? model,
     bool isComplete = false,
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(

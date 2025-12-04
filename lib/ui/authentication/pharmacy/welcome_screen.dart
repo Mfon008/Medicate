@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/core/core_folder/manager/shared_preference.dart';
@@ -119,7 +120,13 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
                     child: Center(
                       child: TextView(
                         text:
-                            'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName']}',
+                            // ignore: unnecessary_null_comparison
+                            SharedPreferencesService
+                                    .instance
+                                    .usersData['user'] ==
+                                null
+                            ? 'Welcome back'
+                            : 'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalize()}',
                         textOverflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         textStyle: TextStyle(
