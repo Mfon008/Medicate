@@ -15,6 +15,7 @@ import '../../../../core/connect_end/model/get_reminder_response_model/reminder.
 import '../../../../core/core_folder/app/app.router.dart';
 import '../../../../main.dart';
 import '../../../widget/text.dart';
+import '../../../widget/text_form_widget.dart';
 
 class PharmacyReminderScreen extends StatefulWidget {
   const PharmacyReminderScreen({super.key});
@@ -309,7 +310,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                         child: PopupMenuButton<String>(
                           color: AppColors.white,
                           child: Container(
-                            width: 166.0.w,
+                            width: double.infinity,
                             padding: EdgeInsets.symmetric(
                               vertical: 3.2.w,
                               horizontal: 12.w,
@@ -395,6 +396,45 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                       )
                     : SizedBox.shrink(),
 
+                model.isReminderStatus == 'all' ||
+                        model.isReminderStatus == 'ongoing' ||
+                        model.isReminderStatus == 'completed'
+                    ? TextFormWidget(
+                        borderColor: AppColors.f1,
+                        borderTopLeft: 32.0.r,
+                        borderTopRight: 32.0.r,
+                        borderBottomLeft: 32.0.r,
+                        borderBottomRight: 32.0.r,
+                        label: '',
+                        labelStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Arial',
+                          fontSize: 14.sp,
+                          color: AppColors.infoGrey,
+                        ),
+                        fillColor: AppColors.white,
+                        isFilled: true,
+                        prefixWidget: Padding(
+                          padding: EdgeInsets.all(16.w),
+                          child: SvgPicture.asset(
+                            AppImage.search,
+                            height: 20.h,
+                            width: 20.w,
+                          ),
+                        ),
+                        onChange: (p0) {
+                          model.searchuserByPharm = p0;
+                          model.notifyListeners();
+                        },
+                      )
+                    : SizedBox.shrink(),
+
+                model.isReminderStatus == 'all' ||
+                        model.isReminderStatus == 'ongoing' ||
+                        model.isReminderStatus == 'completed'
+                    ? SizedBox(height: 14.h)
+                    : SizedBox.shrink(),
+
                 model.isReminderStatus == 'today'
                     ? Center(
                         child: SizedBox(
@@ -467,9 +507,38 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               ),
                                             ],
                                           ),
+                                          SizedBox(height: 18.20.h),
+                                          TextFormWidget(
+                                            borderColor: AppColors.f1,
+                                            borderTopLeft: 32.0.r,
+                                            borderTopRight: 32.0.r,
+                                            borderBottomLeft: 32.0.r,
+                                            borderBottomRight: 32.0.r,
+                                            label: '',
+                                            labelStyle: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.sp,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                            fillColor: AppColors.f1,
+                                            isFilled: true,
+                                            prefixWidget: Padding(
+                                              padding: EdgeInsets.all(16.w),
+                                              child: SvgPicture.asset(
+                                                AppImage.search,
+                                                height: 20.h,
+                                                width: 20.w,
+                                              ),
+                                            ),
+                                            onChange: (p0) {
+                                              model.searchuserByPharm = p0;
+                                              model.notifyListeners();
+                                            },
+                                          ),
                                           SizedBox(height: 10.h),
                                           Divider(
-                                            thickness: .14,
+                                            thickness: .4,
                                             color: AppColors.infoGrey,
                                           ),
                                           SizedBox(height: 14.h),
@@ -1413,11 +1482,10 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               child: Column(
                                                 children: [
                                                   GestureDetector(
-                                                    onTap: () =>
-                                                        model
-                                                    .showCreateAddPhoneDialog(
-                                                      context,
-                                                    ),
+                                                    onTap: () => model
+                                                        .showCreateAddPhoneDialog(
+                                                          context,
+                                                        ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -1613,8 +1681,8 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
     bool isComplete = false,
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(
-      Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id),
+      Routes.pharmViewMedicationScreen,
+      arguments: PharmViewMedicationScreenArguments(id: reminder.id),
     ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),

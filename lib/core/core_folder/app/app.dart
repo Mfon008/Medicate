@@ -23,6 +23,7 @@ import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/notification/empty_notification.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_more_screen.dart';
+import '../../../ui/dashboard/pharm_dashboard/reminder/pharm_view_medication_screen.dart';
 import '../../../ui/dashboard/profile/faq_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart';
@@ -86,6 +87,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: FundWalletPayScreen),
     MaterialRoute(page: PaymentStatusScreen),
     MaterialRoute(page: ViewMedicationScreen),
+    MaterialRoute(page: PharmViewMedicationScreen),
     MaterialRoute(page: PharmacySignUpScreen),
     MaterialRoute(page: PharmacySetupPinScreen),
     MaterialRoute(page: PharmacyLoginScreen),
