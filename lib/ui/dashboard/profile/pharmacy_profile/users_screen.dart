@@ -230,6 +230,8 @@ class UsersScreen extends StatelessWidget {
                                                                   e.role?.id,
                                                               membershipId: e
                                                                   .membershipId,
+                                                              country: e.profile?.country,
+                                                              state: e.profile?.state
                                                             );
                                                             if (didAddOrEdit ==
                                                                 true) {
@@ -450,6 +452,8 @@ class UsersScreen extends StatelessWidget {
                                                                   e.role?.id,
                                                               membershipId: e
                                                                   .membershipId,
+                                                              country: e.profile?.country,
+                                                          state: e.profile?.state
                                                             );
                                                         if (didAddOrEdit ==
                                                             true) {

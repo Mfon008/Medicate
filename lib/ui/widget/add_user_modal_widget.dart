@@ -64,12 +64,12 @@ class AddUserModalWidget extends StatelessWidget {
         builder: (context, scrollController) {
           return ViewModelBuilder<PharmViewModel>.reactive(
             viewModelBuilder: () => PharmViewModel(),
-            onViewModelReady: (model) {
-              model.getRoles(context);
+            onViewModelReady: (model) async {
+              await model.getRoles(context);
               if (isEdit) {
                 model.nameController.text = firstName!;
                 model.lastNameController.text = lastName!;
-                model.userPhoneController.text = phone!;
+                model.userPhoneController.text = '0${phone!.substring(4)}';
                 model.userEmailController.text = email!;
                 model.userAddressController.text = address!;
                 model.userGenderController.text = gender!;
@@ -494,7 +494,9 @@ class AddUserModalWidget extends StatelessWidget {
                               color: AppColors.white,
                               isLoading: model.isLoading,
                               buttonBorderColor: AppColors.transparent,
-                              onPressed: () => saveUser(model),
+                              onPressed: () {
+                                if (model.formKeyValidateAddUser.currentState!.validate()){
+                                  saveUser(model);}},
                             ),
                             SizedBox(height: 20.h),
                           ],
@@ -511,10 +513,11 @@ class AddUserModalWidget extends StatelessWidget {
     );
   }
 
-  void saveUser(PharmViewModel model) {
-    if (model.formKeyValidateAddUser.currentState!.validate()) {
+  void saveUser(model) async {
+      print('hit 2');
       if (isEdit) {
-        model.updateUser(
+        print('hit 3');
+       await model.updateUser(
           parentContext,
           updateUser: UpdateUserEntityModel(
             fullName:
@@ -530,7 +533,7 @@ class AddUserModalWidget extends StatelessWidget {
           ),
         );
       } else {
-        model.addUsers(
+        await model.addUsers(
           parentContext,
           createEntity: CreateUserEntityModel(
             fullName:
@@ -545,9 +548,9 @@ class AddUserModalWidget extends StatelessWidget {
             state: model.stateController.text,
           ),
         );
-      }
+      // }
     }
-
     onSuccess();
   }
+
 }
