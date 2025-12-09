@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medicate_app/core/config/colors.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/medicate_enum.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 
@@ -37,10 +39,10 @@ class EverydayUserCard extends StatelessWidget {
             width: isSelected ? 2 : 1,
           ),
         ),
-        child: Row(
-          // crossAxisAlignment: CrossAxisAlignment.start,
+        child:Column(
+          children:[
+             Row(
           children: [
-            // Left image
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.only(
@@ -70,7 +72,6 @@ class EverydayUserCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // SizedBox(height: 20.h),
                     TextView(
                       text: text ?? '',
                       letterSpacing: 0,
@@ -90,14 +91,47 @@ class EverydayUserCard extends StatelessWidget {
                         fontSize: 12.82.sp,
                       ),
                     ),
-                    // SizedBox(height: 20.h),
+                   
                   ],
                 ),
               ),
             ),
           ],
         ),
+        SizedBox(height: isSelected && selectedUserType==UserType.healthCare? 20.h:0.h),
+         isSelected && selectedUserType==UserType.healthCare?
+         Column(
+          children:[
+            tapOnHealthCareProviderType(text:'Hospital & Clinic',onTap:()=>navigate.navigateTo(Routes.healthCareHospitalAndClinicSignUpScreen)),
+            SizedBox(height:10.h),
+            tapOnHealthCareProviderType(text:'Doctors/Specialist',onTap:(){}),
+            SizedBox(height:12.h),
+          ]
+         ):SizedBox.shrink()
+
+          ]
+        )
       ),
     );
   }
+
+  GestureDetector tapOnHealthCareProviderType({String? text, onTap})=>GestureDetector(onTap:onTap,child:Container(
+          width:double.infinity,
+          margin:EdgeInsets.only(
+                  left: 14.w,
+                  right: 14.w,
+                ),
+          padding:EdgeInsets.symmetric(vertical:12.w),
+                decoration:BoxDecoration(
+                  borderRadius:BorderRadius.circular(8.0),
+                  border:Border.all(color:AppColors.infoGrey1)
+                ),child:Center(child:TextView(
+                      text: text!,
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 14.2.sp,
+                        color:AppColors.reminder
+                      ),
+                    ),)));
 }

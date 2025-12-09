@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - image_cropper (0.0.4):
     - Flutter
-    - TOCropViewController (~> 2.7.4)
+    - TOCropViewController (~> 2.8.0)
   - image_picker_ios (0.0.1):
     - Flutter
   - local_auth_darwin (0.0.1):
@@ -14,10 +14,7 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - TOCropViewController (2.7.4)
-  - webview_flutter_wkwebview (0.0.1):
-    - Flutter
-    - FlutterMacOS
+  - TOCropViewController (2.8.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -26,7 +23,6 @@ DEPENDENCIES:
   - local_auth_darwin (from `.symlinks/plugins/local_auth_darwin/darwin`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -45,19 +41,16 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-  webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  image_cropper: e0bb0042e4404ff2ef134e5cf0492cbd892156cd
+  image_cropper: b8ef14d3fcff4040b0f9da2ca28d98219a5cba0e
   image_picker_ios: 4f2f91b01abdb52842a8e277617df877e40f905b
   local_auth_darwin: 63c73d6d28cc3e239be2b6aa460ea6e317cd5100
   path_provider_foundation: 0b743cbb62d8e47eab856f09262bb8c1ddcfe6ba
   shared_preferences_foundation: 5086985c1d43c5ba4d5e69a4e8083a389e2909e6
-  TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
-  webview_flutter_wkwebview: a4af96a051138e28e29f60101d094683b9f82188
+  TOCropViewController: 797deaf39c90e6e9ddd848d88817f6b9a8a09888
 
-PODFILE CHECKSUM: eaf17131dbb67963585c9d1ad0d6e7fbfdd1a51a
+PODFILE CHECKSUM: 81695f9bd7e59b0433af07f509022148f9a97fb9
 
 COCOAPODS: 1.16.2

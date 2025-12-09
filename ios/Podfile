@@ -42,6 +42,7 @@ post_install do |installer|
     target.build_configurations.each do |config|
       flutter_additional_ios_build_settings(target)
       config.build_settings['SWIFT_VERSION'] = '5.0'
+      config.build_settings['SWIFT_STRICT_CONCURRENCY'] = 'minimal'
     end
   end
 end

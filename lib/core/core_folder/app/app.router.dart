@@ -8,6 +8,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter/material.dart' as _i46;
 import 'package:flutter/material.dart';
+import 'package:medicate_app/ui/authentication/health_care/health_care_hospital_and_clinic_signup_screen.dart'
+    as _i43;
 import 'package:medicate_app/ui/authentication/pharmacy/pharm_change_no_screen.dart'
     as _i34;
 import 'package:medicate_app/ui/authentication/pharmacy/pharm_forgot_pin_screen.dart'
@@ -84,7 +86,6 @@ import 'package:medicate_app/ui/dashboard/support/support_screen.dart' as _i18;
 import 'package:medicate_app/ui/onboarding/get_started_onboarding.dart' as _i5;
 import 'package:medicate_app/ui/onboarding/role_onboarding.dart' as _i4;
 import 'package:medicate_app/ui/onboarding/splash_screen.dart' as _i23;
-import 'package:medicate_app/ui/widget/accelerate_payment_view.dart' as _i43;
 import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i47;
 
@@ -171,7 +172,8 @@ class Routes {
 
   static const rolesAndPermissionScreen = '/roles-and-permission-screen';
 
-  static const acceleratePaymentView = '/accelerate-payment-view';
+  static const healthCareHospitalAndClinicSignUpScreen =
+      '/health-care-hospital-and-clinic-sign-up-screen';
 
   static const moreScreen = '/more-screen';
 
@@ -219,7 +221,7 @@ class Routes {
     pharmResetSuccessScreen,
     usersScreen,
     rolesAndPermissionScreen,
-    acceleratePaymentView,
+    healthCareHospitalAndClinicSignUpScreen,
     moreScreen,
     pharmMoreScreen,
   };
@@ -302,8 +304,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i42.RolesAndPermissionScreen,
     ),
     _i1.RouteDef(
-      Routes.acceleratePaymentView,
-      page: _i43.AcceleratePaymentView,
+      Routes.healthCareHospitalAndClinicSignUpScreen,
+      page: _i43.HealthCareHospitalAndClinicSignUpScreen,
     ),
     _i1.RouteDef(Routes.moreScreen, page: _i44.MoreScreen),
     _i1.RouteDef(Routes.pharmMoreScreen, page: _i45.PharmMoreScreen),
@@ -695,11 +697,15 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i43.AcceleratePaymentView: (data) {
-      final args = data.getArgs<AcceleratePaymentViewArguments>(nullOk: false);
+    _i43.HealthCareHospitalAndClinicSignUpScreen: (data) {
+      final args = data
+          .getArgs<HealthCareHospitalAndClinicSignUpScreenArguments>(
+            orElse: () =>
+                const HealthCareHospitalAndClinicSignUpScreenArguments(),
+          );
       return _i46.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i43.AcceleratePaymentView(key: args.key, url: args.url),
+            _i43.HealthCareHospitalAndClinicSignUpScreen(key: args.key),
         settings: data,
       );
     },
@@ -1682,27 +1688,27 @@ class RolesAndPermissionScreenArguments {
   }
 }
 
-class AcceleratePaymentViewArguments {
-  const AcceleratePaymentViewArguments({this.key, required this.url});
+class HealthCareHospitalAndClinicSignUpScreenArguments {
+  const HealthCareHospitalAndClinicSignUpScreenArguments({this.key});
 
   final _i46.Key? key;
 
-  final String? url;
-
   @override
   String toString() {
-    return '{"key": "$key", "url": "$url"}';
+    return '{"key": "$key"}';
   }
 
   @override
-  bool operator ==(covariant AcceleratePaymentViewArguments other) {
+  bool operator ==(
+    covariant HealthCareHospitalAndClinicSignUpScreenArguments other,
+  ) {
     if (identical(this, other)) return true;
-    return other.key == key && other.url == url;
+    return other.key == key;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ url.hashCode;
+    return key.hashCode;
   }
 }
 
@@ -2520,9 +2526,8 @@ extension NavigatorStateExtension on _i47.NavigationService {
     );
   }
 
-  Future<dynamic> navigateToAcceleratePaymentView({
+  Future<dynamic> navigateToHealthCareHospitalAndClinicSignUpScreen({
     _i46.Key? key,
-    required String? url,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -2530,8 +2535,8 @@ extension NavigatorStateExtension on _i47.NavigationService {
     transition,
   }) async {
     return navigateTo<dynamic>(
-      Routes.acceleratePaymentView,
-      arguments: AcceleratePaymentViewArguments(key: key, url: url),
+      Routes.healthCareHospitalAndClinicSignUpScreen,
+      arguments: HealthCareHospitalAndClinicSignUpScreenArguments(key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -3344,9 +3349,8 @@ extension NavigatorStateExtension on _i47.NavigationService {
     );
   }
 
-  Future<dynamic> replaceWithAcceleratePaymentView({
+  Future<dynamic> replaceWithHealthCareHospitalAndClinicSignUpScreen({
     _i46.Key? key,
-    required String? url,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3354,8 +3358,8 @@ extension NavigatorStateExtension on _i47.NavigationService {
     transition,
   }) async {
     return replaceWith<dynamic>(
-      Routes.acceleratePaymentView,
-      arguments: AcceleratePaymentViewArguments(key: key, url: url),
+      Routes.healthCareHospitalAndClinicSignUpScreen,
+      arguments: HealthCareHospitalAndClinicSignUpScreenArguments(key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

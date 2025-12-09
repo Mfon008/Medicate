@@ -2499,7 +2499,9 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  String errorUser = '';
   Future<void> updateUser(context, {UpdateUserEntityModel? updateUser}) async {
+
     try {
       _isLoading = true;
       var v = await runBusyFuture(
@@ -2510,10 +2512,12 @@ class PharmViewModel extends BaseViewModel {
       await AppUtils.snackbar(context, message: v['message']);
     } catch (e) {
       _isLoading = false;
+      errorUser = e.toString();
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+
     }
     notifyListeners();
+    // return error;
   }
 
   Future<void> deleteRole(BuildContext context, {String? roleId}) async {
@@ -3219,7 +3223,12 @@ class PharmViewModel extends BaseViewModel {
           country: country,
           state: state,
           onSuccess: () {
-            Navigator.of(context).pop(true);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop(true);
+              }
+            });
+            // Navigator.of(context).pop(true);
             // close modal and return true
           },
         );
@@ -11861,12 +11870,12 @@ class PharmViewModel extends BaseViewModel {
         medicationClassList.clear();
         doseControllers.clear();
         periodLabels.clear();
-        navigate.navigateTo(
-          Routes.acceleratePaymentView,
-          arguments: AcceleratePaymentViewArguments(
-            url: _initiatePaymentResponseModel?.data?.redirectUrl,
-          ),
-        );
+        // navigate.navigateTo(
+        //   Routes.acceleratePaymentView,
+        //   arguments: AcceleratePaymentViewArguments(
+        //     url: _initiatePaymentResponseModel?.data?.redirectUrl,
+        //   ),
+        // );
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,

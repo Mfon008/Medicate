@@ -15,6 +15,7 @@ import '../../core/connect_end/model/update_user_entity_model.dart';
 import '../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'text_form_widget.dart';
 
+
 class AddUserModalWidget extends StatelessWidget {
   const AddUserModalWidget({
     super.key,
@@ -548,7 +549,7 @@ class AddUserModalWidget extends StatelessWidget {
             state: model.stateController.text,
           ),
         );
-      // }
+
     }
     onSuccess();
   }
