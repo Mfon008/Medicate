@@ -1,10 +1,8 @@
 
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
@@ -13,7 +11,7 @@ import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
 class HealthCareDoctorSpecialistSignUpScreen extends StatefulWidget {
-   HealthCareDoctorSpecialistSignUpScreen({super.key, required this.healthCareType,required this.healthCareArea});
+  HealthCareDoctorSpecialistSignUpScreen({super.key, required this.healthCareType,required this.healthCareArea});
   String? healthCareType;
   String? healthCareArea;
 
@@ -42,7 +40,6 @@ class _HealthCareDoctorSpecialistSignUpScreenState extends State<HealthCareDocto
 
   @override
   Widget build(BuildContext context) {
-    print(widget.healthCareArea);
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
     return Scaffold(
@@ -91,7 +88,6 @@ class _HealthCareDoctorSpecialistSignUpScreenState extends State<HealthCareDocto
                   ),
                 ),
                 SizedBox(height: 24.0.h),
-
                 TextFormWidget(
                   hint: 'Type of healthcare provider',
                   borderColor: AppColors.transparent,
@@ -212,7 +208,6 @@ class _HealthCareDoctorSpecialistSignUpScreenState extends State<HealthCareDocto
                         ),
                       ),
                 ),
-
                 SizedBox(height: 16.h),
                 TextFormWidget(
                   hint: 'Healthcare facility name',
@@ -236,7 +231,7 @@ class _HealthCareDoctorSpecialistSignUpScreenState extends State<HealthCareDocto
                 ),
                 SizedBox(height: 16.h),
                 TextFormWidget(
-                  hint: 'Registration number',
+                  hint: 'License number',
                   borderColor: AppColors.transparent,
                   borderTopLeft: 10.r,
                   borderTopRight: 10.r,

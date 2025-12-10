@@ -3,6 +3,7 @@ import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
 import '../../../ui/authentication/health_care/health_care_doctor_specialist_signup_screen.dart';
 import '../../../ui/authentication/health_care/health_care_hospital_and_clinic_signup_screen.dart';
+import '../../../ui/authentication/health_care/health_care_login_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_change_no_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_forgot_pin_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_login_screen.dart';
@@ -104,6 +105,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: RolesAndPermissionScreen),
     MaterialRoute(page: HealthCareHospitalAndClinicSignUpScreen),
     MaterialRoute(page: HealthCareDoctorSpecialistSignUpScreen),
+    MaterialRoute(page: HealthCareLoginScreen),
     // MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,

@@ -1,11 +1,9 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
 import '../../app_assets/app_validation.dart';
