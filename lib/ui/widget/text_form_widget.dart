@@ -40,6 +40,7 @@ class TextFormWidget extends StatelessWidget {
   final Color? borderColor;
   final Color labelColor;
   final Color hintColor;
+  final Color hintColor2;
   final Color? fillColor;
   final Color? prefixIconColor;
   final Key? formKey;
@@ -91,6 +92,7 @@ class TextFormWidget extends StatelessWidget {
     this.hintSize = 18,
     this.borderColor = AppColors.transparent,
     this.labelColor = AppColors.black,
+    this.hintColor2 = AppColors.infoGrey,
     this.maxline = 1,
     this.borderBottomLeft,
     this.borderBottomRight,
@@ -153,7 +155,7 @@ class TextFormWidget extends StatelessWidget {
               fontSize: 15.20.sp,
               fontWeight: FontWeight.w400,
               fontFamily: 'Arial',
-              color: AppColors.infoGrey,
+              color: hintColor2,
             ),
             floatingLabelBehavior: floatingLabelBehavior,
             filled: isFilled,
