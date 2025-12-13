@@ -2405,6 +2405,7 @@ class PharmViewModel extends BaseViewModel {
     BuildContext context, {
     RolesEntityModel? roleEntity,
   }) async {
+
     try {
       _isLoading = true;
       var v = await runBusyFuture(

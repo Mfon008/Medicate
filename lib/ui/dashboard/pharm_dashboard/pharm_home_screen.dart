@@ -229,15 +229,17 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TextView(
-                                  text: 'Good Morning, Ben!',
+                                SizedBox(width: 250.w,child: TextView(
+                                  text: 'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'] ?? ''}',
+                                  maxLines: 2,
+                                  textOverflow: TextOverflow.ellipsis,
                                   textStyle: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 15.2.sp,
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.infoGrey,
                                   ),
-                                ),
+                                ),),
                                 TextView(
                                   text: 'How can i help you?',
                                   textStyle: TextStyle(

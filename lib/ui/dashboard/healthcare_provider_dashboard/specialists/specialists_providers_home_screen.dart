@@ -1,30 +1,33 @@
-// ignore_for_file: deprecated_member_use, must_be_immutable
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:medicate_app/core/app_assets/app_validation.dart';
-import 'package:medicate_app/core/app_assets/image.dart';
-import 'package:medicate_app/core/config/colors.dart';
-import 'package:medicate_app/core/core_folder/app/app.router.dart';
-import 'package:medicate_app/main.dart';
-import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
-import 'package:medicate_app/ui/widget/ai_text_form_widget.dart';
-import 'package:stacked/stacked.dart';
-import '../../core/connect_end/view_model/auth_view_model.dart';
-import '../../core/core_folder/manager/shared_preference.dart';
-import '../widget/text.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+import '../../../../core/app_assets/app_validation.dart';
+import '../../../../core/app_assets/image.dart';
+import '../../../../core/config/colors.dart';
+import '../../../../core/core_folder/app/app.router.dart';
+import '../../../../core/core_folder/manager/shared_preference.dart';
+import '../../../../main.dart';
+import '../../../widget/ai_text_form_widget.dart';
+import '../../../widget/text.dart';
+import '../../ask_me_screen.dart';
+
+class SpecialistsProvidersHomeScreen extends StatefulWidget {
+  const SpecialistsProvidersHomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SpecialistsProvidersHomeScreen> createState() =>
+      _SpecialistsProvidersHomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SpecialistsProvidersHomeScreenState
+    extends State<SpecialistsProvidersHomeScreen> {
   bool isTappToChat = false;
-  bool isTapOnScreenOrChatButt = false;
+
+  // bool isTapOnScreenOrChatButt = false;
   String chatText = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -57,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: isTablet(context) ? 32.w : 12.w,
                   ),
                   onPressed: () => navigate.navigateTo(
-                    Routes.moreScreen,
+                    Routes.specialistsProvidersMoreScreen,
                   ), // makes ripple effect round
                 ),
               ),
@@ -83,14 +86,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: isTablet(context) ? 40.w : 20.w,
                     color: AppColors.primary,
                   ),
-                  onPressed: () =>
-                      navigate.navigateTo(Routes.emptyNotification),
+                  onPressed: () {},
+                  // navigate.navigateTo(Routes.emptyNotification),
                   splashRadius: 28,
                 ),
               ),
             ],
           ),
         ),
+        // centerTitle: true,
+        // actions: [
+        //   // Padding(
+        //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
+        //   //   child: ),
+        // ],
       ),
       body: isTappToChat
           ? AskMeScreen(inText: chatText, isDashboard: true)
@@ -120,11 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color:
                                     SharedPreferencesService
                                                 .instance
-                                                .usersData['user'] !=
+                                                .usersData['memberships'] !=
                                             null &&
                                         SharedPreferencesService
                                                 .instance
-                                                .usersData['user']['profileCompletionPercentage'] ==
+                                                .usersData['memberships'][0]['profileCompletionPercentage'] ==
                                             100
                                     ? AppColors.app_green
                                     : AppColors.yellow,
@@ -137,11 +146,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color:
                                       SharedPreferencesService
                                                   .instance
-                                                  .usersData['user'] !=
+                                                  .usersData['memberships'] !=
                                               null &&
                                           SharedPreferencesService
                                                   .instance
-                                                  .usersData['user']['profileCompletionPercentage'] ==
+                                                  .usersData['memberships'][0]['profileCompletionPercentage'] ==
                                               100
                                       ? AppColors.app_green
                                       : AppColors.yellow,
@@ -155,11 +164,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       text:
                                           SharedPreferencesService
                                                       .instance
-                                                      .usersData['user'] !=
+                                                      .usersData['memberships'] !=
                                                   null &&
                                               SharedPreferencesService
                                                       .instance
-                                                      .usersData['user']['profileCompletionPercentage'] ==
+                                                      .usersData['memberships'][0] ==
                                                   100
                                           ? 'Completed'
                                           : 'Complete Registration',
@@ -174,13 +183,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       text:
                                           SharedPreferencesService
                                                       .instance
-                                                      .usersData['user'] !=
+                                                      .usersData['memberships'] !=
                                                   null &&
                                               SharedPreferencesService
                                                       .instance
-                                                      .usersData['user']['profileCompletionPercentage'] !=
+                                                      .usersData['memberships'][0]['profileCompletionPercentage'] !=
                                                   null
-                                          ? 'Your registration is ${SharedPreferencesService.instance.usersData['user']['profileCompletionPercentage']}% completed'
+                                          ? 'Your registration is ${SharedPreferencesService.instance.usersData['memberships'][0]['profileCompletionPercentage']}% completed'
                                           : 'Please enter your new PIN.',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
@@ -203,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SizedBox(height: 24.h),
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             SizedBox(width: 4.0.w),
@@ -223,19 +232,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                TextView(
-                                  text:
-                                      SharedPreferencesService
-                                              .instance
-                                              .usersData['user'] !=
-                                          null
-                                      ? 'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'] ?? ''}!'
-                                      : 'Good Morning,',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 15.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.infoGrey,
+                                SizedBox(
+                                  width: 250.w,
+                                  child: TextView(
+                                    text:
+                                        'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalizeWords() ?? ''}',
+                                    maxLines: 2,
+                                    textOverflow: TextOverflow.ellipsis,
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
                                   ),
                                 ),
                                 TextView(
@@ -287,45 +296,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           child: Column(
                                             children: [
-                                              ViewModelBuilder<
-                                                AuthViewModel
-                                              >.reactive(
-                                                viewModelBuilder: () =>
-                                                    AuthViewModel(),
-                                                onViewModelReady: (model) {},
-                                                disposeViewModel: false,
-                                                onDispose: (viewModel) {},
-                                                builder: (_, AuthViewModel model, _) {
-                                                  return GestureDetector(
-                                                    onTap: () =>
-                                                        model.showReminderModal(
-                                                          context,
-                                                        ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          AppImage.person_plus,
-                                                        ),
-                                                        SizedBox(width: 6.10.w),
-                                                        TextView(
-                                                          text:
-                                                              'Set up Yourself',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 13.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
-                                                        ),
-                                                      ],
+                                              GestureDetector(
+                                                // onTap: () => model
+                                                //     .showCreateAddPhoneDialog(
+                                                //   context,
+                                                // ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.person_plus,
                                                     ),
-                                                  );
-                                                },
+                                                    SizedBox(width: 6.10.w),
+                                                    TextView(
+                                                      text: 'Set up Yourself',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 13.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                               SizedBox(height: 10.h),
                                               GestureDetector(
@@ -365,35 +361,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
 
                             SizedBox(width: 12.w),
-
-                            Expanded(
-                              child: conContainer(
-                                icon: AppImage.today_pills,
-                                text: 'Today’s Med',
-                                ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Today’s Med';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 22.10.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: conContainer(
-                                icon: AppImage.today_pills,
-                                text: 'Tomorrow’s Med',
-                                ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Tomorrow’s Med';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
                             Expanded(
                               child: conContainer(
                                 icon: AppImage.appointment,
@@ -407,189 +374,130 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 30.10.h),
+
+                        SizedBox(height: 22.10.h),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextView(
-                              text: 'Health Tips',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.black,
+                            Expanded(
+                              child: conContainer(
+                                icon: AppImage.today_pills,
+                                text: 'Today\'s Meds',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Today\'s Meds';
+                                  setState(() {});
+                                },
                               ),
                             ),
-                            TextView(
-                              text: 'View more',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 13.2.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.primary,
-                                decoration: TextDecoration.underline,
-                                decorationColor: AppColors.primary,
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: conContainer(
+                                icon: AppImage.today_pills,
+                                text: 'Tomorrow\'s Meds',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Tomorrow\'s Meds';
+                                  setState(() {});
+                                },
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 12.10.h),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              ...[1, 2, 3].map(
-                                (o) => Container(
-                                  width: 298.w,
-                                  margin: EdgeInsets.only(right: 20.w),
-                                  padding: EdgeInsets.all(24.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(22.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.tips,
-                                            color: AppColors.fineGrey,
-                                            height: 25.30.h,
-                                            width: 25.30.w,
-                                          ),
-                                          SizedBox(width: 12.2.w),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: o == 1
-                                                    ? 'Today’s Health Tip'
-                                                    : o == 2
-                                                    ? 'Tomorrow’s Health Tip'
-                                                    : 'Next Tomorrow’s Health Tip',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.2.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                              SizedBox(height: 8.10.h),
-                                              TextView(
-                                                text: 'Don’t Skip Breakfast',
-                                                textStyle: TextStyle(
-                                                  fontSize: 17.2.sp,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: AppColors.primary,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                        SizedBox(height: 22.10.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: conContainer(
+                                icon: AppImage.track_reminder,
+                                text: 'Track Reminders',
+                                ontap: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Track Reminder';
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 180.w),
+                          ],
+                        ),
+                        SizedBox(height: 60.10.h),
 
-                                      SizedBox(height: 100.h),
-                                      Row(
-                                        children: [
-                                          TextView(
-                                            text: 'Read more',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.lightBlue,
-                                            ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: double.infinity.w,
+                            padding: EdgeInsets.only(
+                              top: 2.4.w,
+                              bottom: 8.w,
+                              left: 10.w,
+                              right: 10.w,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(18.22.r),
+                              color: AppColors.white,
+                            ),
+                            child: Form(
+                              key: formKey,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AiTextFormWidget(
+                                    label: 'Chat with Medicate AI....',
+                                    validator: AppValidator.validateString(),
+                                    onChange: (p0) {
+                                      setState(() {
+                                        chatText = p0;
+                                      });
+                                    },
+                                    labelStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppImage.audio,
+                                        width: 22.w,
+                                        height: 22.h,
+                                      ),
+                                      Spacer(),
+                                      SvgPicture.asset(
+                                        AppImage.clipper,
+                                        color: AppColors.black,
+                                        width: 22.w,
+                                        height: 22.h,
+                                      ),
+                                      SizedBox(width: 20.w),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            isTappToChat = !isTappToChat;
+                                            chatText = chatText;
+                                            setState(() {});
+                                          }
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(14.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.primary,
                                           ),
-                                          SizedBox(width: 10.w),
-                                          SvgPicture.asset(
-                                            AppImage.arrow_forward,
-                                            color: AppColors.lightBlue,
-                                            height: 16.20.h,
-                                            width: 15.20.w,
+                                          child: SvgPicture.asset(
+                                            AppImage.arrow_up,
+                                            width: 20.w,
+                                            height: 17.20.h,
+                                            color: AppColors.white,
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 30.h),
-                        Container(
-                          width: double.infinity.w,
-                          padding: EdgeInsets.only(
-                            top: 2.4.w,
-                            bottom: 8.w,
-                            left: 10.w,
-                            right: 10.w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18.22.r),
-                            color: AppColors.white,
-                          ),
-                          child: Form(
-                            key: formKey,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                AiTextFormWidget(
-                                  label: 'Chat with Medicate AI....',
-                                  validator: AppValidator.validateString(),
-                                  onChange: (p0) {
-                                    setState(() {
-                                      chatText = p0;
-                                    });
-                                  },
-                                  labelStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 15.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      AppImage.audio,
-                                      width: 22.w,
-                                      height: 22.h,
-                                    ),
-                                    Spacer(),
-                                    SvgPicture.asset(
-                                      AppImage.clipper,
-                                      color: AppColors.black,
-                                      width: 22.w,
-                                      height: 22.h,
-                                    ),
-                                    SizedBox(width: 20.w),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (formKey.currentState!.validate()) {
-                                          isTappToChat = !isTappToChat;
-                                          chatText = chatText;
-                                          setState(() {});
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(14.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.primary,
-                                        ),
-                                        child: SvgPicture.asset(
-                                          AppImage.arrow_up,
-                                          width: 20.w,
-                                          height: 17.20.h,
-                                          color: AppColors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
                             ),
                           ),
                         ),
@@ -626,7 +534,12 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 10.20.h,
           ),
           SizedBox(width: 6.10.w),
-          SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
+          SvgPicture.asset(
+            icon,
+            width: 16.20.w,
+            height: 16.20.h,
+            color: AppColors.lightBlue,
+          ),
           SizedBox(width: 6.10.w),
           Flexible(
             child: TextView(

@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
@@ -439,10 +441,10 @@ class _HealthCareHospitalAndClinicSignUpScreenState extends State<HealthCareHosp
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                         ),
-                        // recognizer: TapGestureRecognizer()
-                        //   ..onTap = () => navigate.navigateTo(
-                        //     Routes.pharmacyLoginScreen,
-                        //   ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => navigate.navigateTo(
+                            Routes.healthCareLoginScreen,
+                          ),
                       ),
                     ],
                   ),

@@ -1,9 +1,16 @@
+import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_more_screen.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
+import '../../../ui/authentication/health_care/health_care_change_no_screen.dart';
 import '../../../ui/authentication/health_care/health_care_doctor_specialist_signup_screen.dart';
+import '../../../ui/authentication/health_care/health_care_forgot_pin_screen.dart';
 import '../../../ui/authentication/health_care/health_care_hospital_and_clinic_signup_screen.dart';
 import '../../../ui/authentication/health_care/health_care_login_screen.dart';
+import '../../../ui/authentication/health_care/health_care_reset_pin_screen.dart';
+import '../../../ui/authentication/health_care/health_care_reset_success_screen.dart';
+import '../../../ui/authentication/health_care/health_care_setup_pin_screen.dart';
+import '../../../ui/authentication/health_care/health_care_welcome_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_change_no_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_forgot_pin_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_login_screen.dart';
@@ -22,6 +29,11 @@ import '../../../ui/authentication/user/success_screen.dart';
 import '../../../ui/authentication/user/welcome_screen.dart';
 import '../../../ui/dashboard/ask_me_screen.dart';
 import '../../../ui/dashboard/dashboard_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_dashboard.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_home_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/notification/empty_notification.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
@@ -47,7 +59,6 @@ import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
-import '../../../ui/widget/accelerate_payment_view.dart';
 import '../../api_folder/auth_api.dart';
 import '../../api_folder/pharm_auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
@@ -106,6 +117,16 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HealthCareHospitalAndClinicSignUpScreen),
     MaterialRoute(page: HealthCareDoctorSpecialistSignUpScreen),
     MaterialRoute(page: HealthCareLoginScreen),
+    MaterialRoute(page: HealthCareChangePhoneNumber),
+    MaterialRoute(page: HealthCareForgotPinScreen),
+    MaterialRoute(page: HealthCareResetPinScreen),
+    MaterialRoute(page: HealthCareResetSuccessScreen),
+    MaterialRoute(page: HealthCareSetupPinScreen),
+    MaterialRoute(page: HealthCareWelcomeScreen),
+    MaterialRoute(page: BusinessProviderDashboard),
+    MaterialRoute(page: BusinessProvidersHomeScreen),
+    MaterialRoute(page: SpecialistsProviderDashboard),
+    MaterialRoute(page: SpecialistsProvidersHomeScreen),
     // MaterialRoute(page: AcceleratePaymentView),
     CustomRoute(
       page: MoreScreen,
@@ -114,6 +135,16 @@ import '../network/support_network_service.dart';
     ),
     CustomRoute(
       page: PharmMoreScreen,
+      transitionsBuilder: TransitionsBuilders.slideRight,
+      durationInMilliseconds: 300,
+    ),
+    CustomRoute(
+      page: BusinessProvidersMoreScreen,
+      transitionsBuilder: TransitionsBuilders.slideRight,
+      durationInMilliseconds: 300,
+    ),
+    CustomRoute(
+      page: SpecialistsProvidersMoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,
       durationInMilliseconds: 300,
     ),

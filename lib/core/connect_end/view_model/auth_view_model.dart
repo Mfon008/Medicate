@@ -2534,13 +2534,17 @@ class AuthViewModel extends BaseViewModel {
             'printing the HMO is not available ${loginResponseModel!.data!.memberships![0]['tenantType']}',
           );
           navigate.navigateTo(Routes.pharmacyDashboard);
-        } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+        }
+        else if (_loginResponseModel!.data!.memberships![0]['role'] ==
                 'OWNER' &&
             _loginResponseModel!.data!.memberships![0]['tenantType'] ==
                 'HEALTHCARE_PROVIDER') {
-          print(
-            'printing the health care is not available ${loginResponseModel!.data!.memberships![0]['"tenantType"']}',
-          );
+          navigate.navigateTo(Routes.businessProviderDashboard);
+        }else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+                'OWNER' &&
+            _loginResponseModel!.data!.memberships![0]['tenantType'] ==
+                'HEALTHCARE_PRACTITIONER') {
+          navigate.navigateTo(Routes.specialistsProviderDashboard);
         }
       }
     } catch (e) {
