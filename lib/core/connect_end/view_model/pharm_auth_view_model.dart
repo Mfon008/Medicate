@@ -2405,7 +2405,6 @@ class PharmViewModel extends BaseViewModel {
     BuildContext context, {
     RolesEntityModel? roleEntity,
   }) async {
-
     try {
       _isLoading = true;
       var v = await runBusyFuture(
@@ -2501,7 +2500,6 @@ class PharmViewModel extends BaseViewModel {
 
   String errorUser = '';
   Future<void> updateUser(context, {UpdateUserEntityModel? updateUser}) async {
-
     try {
       _isLoading = true;
       var v = await runBusyFuture(
@@ -2514,7 +2512,6 @@ class PharmViewModel extends BaseViewModel {
       _isLoading = false;
       errorUser = e.toString();
       logger.d(e);
-
     }
     notifyListeners();
     // return error;
@@ -3201,7 +3198,7 @@ class PharmViewModel extends BaseViewModel {
     pin,
     membershipId,
     country,
-    state
+    state,
   }) {
     return showModalBottomSheet<bool>(
       context: context,
@@ -4252,12 +4249,12 @@ class PharmViewModel extends BaseViewModel {
   );
 
   returnTotalDays() {
-    if(medicationClassList.isEmpty){
+    if (medicationClassList.isEmpty) {
       totalDuration = _getReminderByIdModel!.data!.medication!.durationInDays;
-    }else{
+    } else {
       totalDuration = medicationClassList.fold(
         0,
-            (sum, item) => sum! + int.parse(item.duration!.substring(0, 1)),
+        (sum, item) => sum! + int.parse(item.duration!.substring(0, 1)),
       );
     }
 
@@ -4266,9 +4263,9 @@ class PharmViewModel extends BaseViewModel {
 
   int returnNumberOfTimes() {
     // numberOfTimes = int.parse(medicationClassList[0].timesToTake!);
-    if(medicationClassList.isEmpty){
+    if (medicationClassList.isEmpty) {
       numberOfTimes = _getReminderByIdModel!.data!.medication!.timesPerDay!;
-    }else{
+    } else {
       numberOfTimes = int.parse(medicationClassList[0].timesToTake!);
     }
     return numberOfTimes!;
@@ -12150,7 +12147,7 @@ class PharmViewModel extends BaseViewModel {
 
   checkTimePeriod(time) {
     print('time::::$time');
-    if(time.contains('AM')||time.contains('PM')){
+    if (time.contains('AM') || time.contains('PM')) {
       return '';
     }
     if (time.isNotEmpty) {
@@ -12160,8 +12157,7 @@ class PharmViewModel extends BaseViewModel {
       } else {
         return "PM";
       }
-    }
-    else{
+    } else {
       return '';
     }
   }
@@ -12215,7 +12211,9 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     getReminderId.Data? data,
   }) async {
-    print('print the data:::::${data?.medication?.dailyDoseTimes?[0][0].toJson()}');
+    print(
+      'print the data:::::${data?.medication?.dailyDoseTimes?[0][0].toJson()}',
+    );
     return showDialog(
       context: context!,
       barrierDismissible: false, // Prevent dismiss when tapping outside
@@ -13025,7 +13023,6 @@ class PharmViewModel extends BaseViewModel {
                   SizedBox(height: 24.0.h),
                   if (intList.isNotEmpty &&
                       medDailyInTakenControllerUpdate.text.isNotEmpty)
-
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -13366,27 +13363,191 @@ class PharmViewModel extends BaseViewModel {
     }
 
     return ViewModelBuilder<PharmViewModel>.reactive(
-        viewModelBuilder: () => PharmViewModel(),
-        onViewModelReady: (model) {},
-        disposeViewModel: false,
-        onDispose: (viewModel) {},
-        builder: (_, PharmViewModel model, _) {
-          return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(bottom: 10.w),
-      padding: EdgeInsets.symmetric(
-        vertical: dosageValue == callback ? 12.w : 8.w,
-        horizontal: 14.w,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.grey, width: 2),
-      ),
-      child: dosageValue == callback
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+      viewModelBuilder: () => PharmViewModel(),
+      onViewModelReady: (model) {},
+      disposeViewModel: false,
+      onDispose: (viewModel) {},
+      builder: (_, PharmViewModel model, _) {
+        return Container(
+          width: double.infinity,
+          margin: EdgeInsets.only(bottom: 10.w),
+          padding: EdgeInsets.symmetric(
+            vertical: dosageValue == callback ? 12.w : 8.w,
+            horizontal: 14.w,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.grey, width: 2),
+          ),
+          child: dosageValue == callback
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextView(
+                          text: 'Day ${callback + 1}',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 15.20.sp,
+                            color: AppColors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            dosageValue = null;
+                            model.notifyListeners();
+                          },
+                          icon: Icon(
+                            Icons.keyboard_arrow_up,
+                            color: AppColors.grey1,
+                            size: 24.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10.h),
+                    ...listOfTimes.asMap().entries.map((entry) {
+                      final i = entry.key; // index
+                      final e = entry.value;
+                      print('print I $i and E $e');
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 10.w),
+                        child: TextFormDoseWidget(
+                          hint: 'Dose ${e + 1}',
+                          borderColor: AppColors.transparent,
+                          label: periodLabelsUpdate.isEmpty
+                              ? ''
+                              : periodLabelsUpdate[callback][i],
+                          hintSize: 13.40.sp,
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 14.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          readOnly: true,
+                          controller: TextEditingController(
+                            text: doseControllersUpdate.isEmpty
+                                ? ''
+                                : '${doseControllersUpdate[callback][i].text} ${checkTimePeriod(doseControllersUpdate[callback][i].text)}',
+                          ),
+                          suffixWidget: Padding(
+                            padding: EdgeInsets.all(8.w),
+                            child: GestureDetector(
+                              onTap: () async {
+                                final result = await selectDosageTime(
+                                  context: context,
+                                );
+
+                                if (result != null) {
+                                  doseControllersUpdate[callback][i].clear();
+                                  // 👉 Update the controller for this dose
+                                  doseControllersUpdate[callback][i].text =
+                                      result["time"]!;
+                                  // 👉 Update period label for this dose
+                                  periodLabelsUpdate[callback][i] =
+                                      result["period"]!;
+                                  print('result here::::$result');
+                                }
+                                model.notifyListeners();
+                              },
+                              child: TextView(
+                                text: 'Edit',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 13.60.sp,
+                                  color: AppColors.fineGrey,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: AppColors.fineGrey,
+                                ),
+                              ),
+                            ),
+                          ),
+                          validator: AppValidator.validateString(),
+                        ),
+                      );
+                    }),
+
+                    SizedBox(height: callback == 0 ? 12.0.h : 0.h),
+                    if (callback == 0)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextView(
+                            text: 'Apply to all days',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.black,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          Transform.scale(
+                            scale: isTablet(context) ? 1.5 : 1.1,
+                            child: Checkbox(
+                              value: isChecked,
+                              onChanged: (value) {
+                                if (value != null && value) {
+                                  // ✅ Copy Day 1 (callback = 0) values to all other days
+                                  for (
+                                    int day = 1;
+                                    day < doseControllersUpdate.length;
+                                    day++
+                                  ) {
+                                    for (
+                                      int i = 0;
+                                      i < doseControllersUpdate[0].length;
+                                      i++
+                                    ) {
+                                      // Copy text
+                                      doseControllersUpdate[day][i].text =
+                                          doseControllersUpdate[0][i].text;
+                                      // Copy period
+                                      periodLabelsUpdate[day][i] =
+                                          periodLabelsUpdate[0][i];
+                                    }
+                                  }
+                                } else {
+                                  for (
+                                    int day = 1;
+                                    day < doseControllersUpdate.length;
+                                    day++
+                                  ) {
+                                    for (
+                                      int i = 0;
+                                      i < doseControllersUpdate[day].length;
+                                      i++
+                                    ) {
+                                      doseControllersUpdate[day][i]
+                                          .clear(); // clear controller text
+                                      periodLabelsUpdate[day][i] =
+                                          ''; // reset label
+                                    }
+                                  }
+                                }
+                                isChecked = value ?? false;
+                                model.notifyListeners();
+                              },
+                              activeColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              visualDensity: VisualDensity
+                                  .compact, // 👈 reduces internal padding
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(height: 12.0.h),
+                  ],
+                )
+              : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextView(
@@ -13400,182 +13561,21 @@ class PharmViewModel extends BaseViewModel {
                     ),
                     IconButton(
                       onPressed: () {
-                        dosageValue = null;
+                        dosageValue = callback;
                         model.notifyListeners();
+                        print('print enter $dosageValue and $callback');
                       },
                       icon: Icon(
-                        Icons.keyboard_arrow_up,
+                        Icons.keyboard_arrow_down,
                         color: AppColors.grey1,
                         size: 24.sp,
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 10.h),
-                ...listOfTimes.asMap().entries.map((entry) {
-                  final i = entry.key; // index
-                  final e = entry.value;
-                  print('print I $i and E $e');
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 10.w),
-                    child: TextFormDoseWidget(
-                      hint: 'Dose ${e + 1}',
-                      borderColor: AppColors.transparent,
-                      label: periodLabelsUpdate.isEmpty
-                          ? ''
-                          : periodLabelsUpdate[callback][i],
-                      hintSize: 13.40.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
-                      fillColor: AppColors.grey,
-                      isFilled: true,
-                      readOnly: true,
-                      controller: TextEditingController(
-                        text: doseControllersUpdate.isEmpty?'':
-                            '${doseControllersUpdate[callback][i].text} ${checkTimePeriod(doseControllersUpdate[callback][i].text)}',
-                      ),
-                      suffixWidget: Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: GestureDetector(
-                          onTap: () async {
-                            final result = await selectDosageTime(
-                              context: context,
-                            );
-
-                            if (result != null) {
-                              doseControllersUpdate[callback][i].clear();
-                              // 👉 Update the controller for this dose
-                              doseControllersUpdate[callback][i].text =
-                                  result["time"]!;
-                              // 👉 Update period label for this dose
-                              periodLabelsUpdate[callback][i] =
-                                  result["period"]!;
-                             print('result here::::$result');
-                            }
-                            model.notifyListeners();
-                          },
-                          child: TextView(
-                            text: 'Edit',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              fontSize: 13.60.sp,
-                              color: AppColors.fineGrey,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                              decorationColor: AppColors.fineGrey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      validator: AppValidator.validateString(),
-                    ),
-                  );
-                }),
-
-                SizedBox(height: callback == 0 ? 12.0.h : 0.h),
-                if (callback == 0)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextView(
-                        text: 'Apply to all days',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.sp,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Transform.scale(
-                        scale: isTablet(context) ? 1.5 : 1.1,
-                        child: Checkbox(
-                          value: isChecked,
-                          onChanged: (value) {
-                            if (value != null && value) {
-                              // ✅ Copy Day 1 (callback = 0) values to all other days
-                              for (
-                                int day = 1;
-                                day < doseControllersUpdate.length;
-                                day++
-                              ) {
-                                for (
-                                  int i = 0;
-                                  i < doseControllersUpdate[0].length;
-                                  i++
-                                ) {
-                                  // Copy text
-                                  doseControllersUpdate[day][i].text =
-                                      doseControllersUpdate[0][i].text;
-                                  // Copy period
-                                  periodLabelsUpdate[day][i] =
-                                      periodLabelsUpdate[0][i];
-                                }
-                              }
-                            } else {
-                              for (
-                                int day = 1;
-                                day < doseControllersUpdate.length;
-                                day++
-                              ) {
-                                for (
-                                  int i = 0;
-                                  i < doseControllersUpdate[day].length;
-                                  i++
-                                ) {
-                                  doseControllersUpdate[day][i]
-                                      .clear(); // clear controller text
-                                  periodLabelsUpdate[day][i] =
-                                      ''; // reset label
-                                }
-                              }
-                            }
-                            isChecked = value ?? false;
-                            model.notifyListeners();
-                          },
-                          activeColor: AppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          visualDensity: VisualDensity
-                              .compact, // 👈 reduces internal padding
-                        ),
-                      ),
-                    ],
-                  ),
-                SizedBox(height: 12.0.h),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextView(
-                  text: 'Day ${callback + 1}',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 15.20.sp,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    dosageValue = callback;
-                    model.notifyListeners();
-                    print('print enter $dosageValue and $callback');
-                  },
-                  icon: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.grey1,
-                    size: 24.sp,
-                  ),
-                ),
-              ],
-            ),
-    );});
+        );
+      },
+    );
   }
 
   secondModalFlowUpdate({
@@ -14075,7 +14075,7 @@ class PharmViewModel extends BaseViewModel {
   }) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       addCostTotal();
-      setModalState!((){});// ✔ SAFE — executes AFTER build finishes
+      setModalState!(() {}); // ✔ SAFE — executes AFTER build finishes
     });
     return Container(
       decoration: BoxDecoration(
@@ -14124,10 +14124,7 @@ class PharmViewModel extends BaseViewModel {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
-                  width: MediaQuery
-                      .of(context!)
-                      .size
-                      .width * .82,
+                  width: MediaQuery.of(context!).size.width * .82,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(
                       Radius.circular(5.0),
@@ -14136,8 +14133,8 @@ class PharmViewModel extends BaseViewModel {
                       minHeight: 4.0, // Adjust height as needed
                       value: linIndexUpdate / 3,
                       color: AppColors.primary, // Progress bar color
-                      backgroundColor: Colors
-                          .grey[300], // Background track color
+                      backgroundColor:
+                          Colors.grey[300], // Background track color
                     ),
                   ),
                 ),
@@ -14187,1148 +14184,1145 @@ class PharmViewModel extends BaseViewModel {
 
             emailReminderList.isNotEmpty
                 ? isTappedEmailAdded
-                ? Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.infoGrey1),
-                borderRadius: BorderRadius.circular(12.r),
-                color: AppColors.white,
-              ),
-              padding: EdgeInsets.all(12.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Add Email Address',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.2.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.deep,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          TextView(
-                            text: 'Emails available',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14.8.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.fineGrey,
-                            ),
+                      ? Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.infoGrey1),
+                            borderRadius: BorderRadius.circular(12.r),
+                            color: AppColors.white,
                           ),
-                          SizedBox(width: 6.w),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(
-                                255,
-                                223,
-                                233,
-                                247,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                12.r,
-                              ),
-                              border: Border.all(
-                                color: AppColors.primary.withOpacity(
-                                  .4,
-                                ),
-                              ),
-                            ),
-                            child: TextView(
-                              text: '${emailReminderList.length}',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 11.8.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          isTappedEmailAdded = !isTappedEmailAdded;
-                          model!.notifyListeners();
-                        },
-                        child: SvgPicture.asset(
-                          AppImage.drop_up,
-                          height: 22.0.h,
-                          width: 22.0.w,
-                        ),
-                      ),
-                      SizedBox(width: 2.w),
-                      IconButton(
-                        onPressed: () => showEmailDialog(context),
-                        icon: Icon(
-                          Icons.add_circle,
-                          color: AppColors.primary1,
-                          size: 24.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-                : Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: AppColors.infoGrey1),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.infoGrey1),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12.r),
-                        topRight: Radius.circular(12.r),
-                      ),
-                      color: AppColors.dashboard,
-                    ),
-                    padding: EdgeInsets.all(12.w),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: [
-                            TextView(
-                              text: 'Add Email Address',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16.2.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.deep,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                TextView(
-                                  text: 'Emails available',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.8.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.fineGrey,
-                                  ),
-                                ),
-                                SizedBox(width: 6.w),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      223,
-                                      233,
-                                      247,
-                                    ),
-                                    borderRadius:
-                                    BorderRadius.circular(12.r),
-                                    border: Border.all(
-                                      color: AppColors.primary
-                                          .withOpacity(.4),
-                                    ),
-                                  ),
-                                  child: TextView(
-                                    text:
-                                    '${emailReminderList.length}',
+                          padding: EdgeInsets.all(12.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextView(
+                                    text: 'Add Email Address',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
-                                      fontSize: 11.8.sp,
+                                      fontSize: 16.2.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: AppColors.primary,
+                                      color: AppColors.deep,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                isTappedEmailAdded =
-                                !isTappedEmailAdded;
-                                model!.notifyListeners();
-                              },
-                              child: SvgPicture.asset(
-                                AppImage.drop_up,
-                                height: 22.0.h,
-                                width: 22.0.w,
-                              ),
-                            ),
-                            SizedBox(width: 2.w),
-                            IconButton(
-                              onPressed: () =>
-                                  showEmailDialog(context),
-                              icon: Icon(
-                                Icons.add_circle,
-                                color: AppColors.primary1,
-                                size: 24.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15.20.h),
-                  ...emailReminderList
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    final index = entry.key;
-                    final o = entry.value;
-                    final isLast =
-                        index == emailReminderList.length - 1;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 12.20.w,
-                            right: 20.w,
-                            bottom: 12.w,
-                          ),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (addedEmailReminderList.contains(
-                                    o,
-                                  )) {
-                                    addedEmailReminderList.remove(o);
-                                  } else {
-                                    addedEmailReminderList.add(o);
-                                  }
-                                  model!.notifyListeners();
-                                },
-                                child: Container(
-                                  padding:
-                                  addedEmailReminderList.contains(
-                                    o,
-                                  )
-                                      ? EdgeInsets.all(4.0.w)
-                                      : EdgeInsets.all(10.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(6.r),
-                                    color:
-                                    addedEmailReminderList
-                                        .contains(o)
-                                        ? AppColors.primary
-                                        : AppColors.transparent,
-                                    border: Border.all(
-                                      color:
-                                      addedEmailReminderList
-                                          .contains(o)
-                                          ? AppColors.transparent
-                                          : AppColors.infoGrey,
-                                      width: .78,
-                                    ),
+                                  Row(
+                                    children: [
+                                      TextView(
+                                        text: 'Emails available',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.8.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.fineGrey,
+                                        ),
+                                      ),
+                                      SizedBox(width: 6.w),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            223,
+                                            233,
+                                            247,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColors.primary
+                                                .withOpacity(.4),
+                                          ),
+                                        ),
+                                        child: TextView(
+                                          text: '${emailReminderList.length}',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 11.8.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  child:
-                                  addedEmailReminderList.contains(
-                                    o,
-                                  )
-                                      ? Icon(
-                                    Icons.check,
-                                    size: 12.sp,
-                                    color: AppColors.white,
-                                  )
-                                      : SizedBox.shrink(),
-                                ),
+                                ],
                               ),
-                              // Transform.scale(
-                              //   scale:
-                              //       MediaQuery.of(
-                              //             context,
-                              //           ).size.shortestSide >=
-                              //           600
-                              //       ? 1.5
-                              //       : 1.1,
-                              //   child: Checkbox(
-                              //     value: addedEmailReminderList
-                              //         .contains(o),
-                              //     onChanged: (_) {
-                              //       if (addedEmailReminderList
-                              //           .contains(o)) {
-                              //         addedEmailReminderList.remove(
-                              //           o,
-                              //         );
-                              //       } else {
-                              //         addedEmailReminderList.add(o);
-                              //       }
-                              //       model!.notifyListeners();
-                              //     },
-                              //     activeColor: AppColors.primary,
-                              //     shape: RoundedRectangleBorder(
-                              //       borderRadius:
-                              //           BorderRadius.circular(4),
-                              //     ),
-                              //     visualDensity: VisualDensity
-                              //         .compact, // 👈 reduces internal padding
-                              //   ),
-                              // ),
-                              SizedBox(width: 9.10.w),
-                              SizedBox(
-                                width: 220.w,
-                                child: TextView(
-                                  text: o,
-                                  maxLines: 1,
-                                  textOverflow: TextOverflow.ellipsis,
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.reminder,
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
                               Row(
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      showEmailDialog(
-                                        context,
-                                        isEdit: true,
-                                        index: index,
-                                        email:
-                                        emailReminderList[index],
-                                      );
+                                      isTappedEmailAdded = !isTappedEmailAdded;
                                       model!.notifyListeners();
                                     },
                                     child: SvgPicture.asset(
-                                      AppImage.edit_pen,
+                                      AppImage.drop_up,
                                       height: 22.0.h,
                                       width: 22.0.w,
                                     ),
                                   ),
-                                  SizedBox(width: 10.w),
-                                  GestureDetector(
-                                    onTap: () {
-                                      emailReminderList.removeAt(
-                                        index,
-                                      );
-                                      model!.notifyListeners();
-                                    },
-                                    child: SvgPicture.asset(
-                                      AppImage.delete,
-                                      height: 22.0.h,
-                                      width: 22.0.w,
+                                  SizedBox(width: 2.w),
+                                  IconButton(
+                                    onPressed: () => showEmailDialog(context),
+                                    icon: Icon(
+                                      Icons.add_circle,
+                                      color: AppColors.primary1,
+                                      size: 24.sp,
                                     ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        ),
-                        if (!isLast)
-                          Divider(color: AppColors.infoGrey1),
-                        SizedBox(height: 5.10.h),
-                      ],
-                    );
-                  }),
-                ],
-              ),
-            )
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(color: AppColors.infoGrey1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12.r),
+                                    topRight: Radius.circular(12.r),
+                                  ),
+                                  color: AppColors.dashboard,
+                                ),
+                                padding: EdgeInsets.all(12.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextView(
+                                          text: 'Add Email Address',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.deep,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            TextView(
+                                              text: 'Emails available',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.8.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.fineGrey,
+                                              ),
+                                            ),
+                                            SizedBox(width: 6.w),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 10.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  223,
+                                                  233,
+                                                  247,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                border: Border.all(
+                                                  color: AppColors.primary
+                                                      .withOpacity(.4),
+                                                ),
+                                              ),
+                                              child: TextView(
+                                                text:
+                                                    '${emailReminderList.length}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 11.8.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            isTappedEmailAdded =
+                                                !isTappedEmailAdded;
+                                            model!.notifyListeners();
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppImage.drop_up,
+                                            height: 22.0.h,
+                                            width: 22.0.w,
+                                          ),
+                                        ),
+                                        SizedBox(width: 2.w),
+                                        IconButton(
+                                          onPressed: () =>
+                                              showEmailDialog(context),
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: AppColors.primary1,
+                                            size: 24.sp,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 15.20.h),
+                              ...emailReminderList.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final o = entry.value;
+                                final isLast =
+                                    index == emailReminderList.length - 1;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 12.20.w,
+                                        right: 20.w,
+                                        bottom: 12.w,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (addedEmailReminderList
+                                                  .contains(o)) {
+                                                addedEmailReminderList.remove(
+                                                  o,
+                                                );
+                                              } else {
+                                                addedEmailReminderList.add(o);
+                                              }
+                                              model!.notifyListeners();
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  addedEmailReminderList
+                                                      .contains(o)
+                                                  ? EdgeInsets.all(4.0.w)
+                                                  : EdgeInsets.all(10.w),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6.r),
+                                                color:
+                                                    addedEmailReminderList
+                                                        .contains(o)
+                                                    ? AppColors.primary
+                                                    : AppColors.transparent,
+                                                border: Border.all(
+                                                  color:
+                                                      addedEmailReminderList
+                                                          .contains(o)
+                                                      ? AppColors.transparent
+                                                      : AppColors.infoGrey,
+                                                  width: .78,
+                                                ),
+                                              ),
+                                              child:
+                                                  addedEmailReminderList
+                                                      .contains(o)
+                                                  ? Icon(
+                                                      Icons.check,
+                                                      size: 12.sp,
+                                                      color: AppColors.white,
+                                                    )
+                                                  : SizedBox.shrink(),
+                                            ),
+                                          ),
+                                          // Transform.scale(
+                                          //   scale:
+                                          //       MediaQuery.of(
+                                          //             context,
+                                          //           ).size.shortestSide >=
+                                          //           600
+                                          //       ? 1.5
+                                          //       : 1.1,
+                                          //   child: Checkbox(
+                                          //     value: addedEmailReminderList
+                                          //         .contains(o),
+                                          //     onChanged: (_) {
+                                          //       if (addedEmailReminderList
+                                          //           .contains(o)) {
+                                          //         addedEmailReminderList.remove(
+                                          //           o,
+                                          //         );
+                                          //       } else {
+                                          //         addedEmailReminderList.add(o);
+                                          //       }
+                                          //       model!.notifyListeners();
+                                          //     },
+                                          //     activeColor: AppColors.primary,
+                                          //     shape: RoundedRectangleBorder(
+                                          //       borderRadius:
+                                          //           BorderRadius.circular(4),
+                                          //     ),
+                                          //     visualDensity: VisualDensity
+                                          //         .compact, // 👈 reduces internal padding
+                                          //   ),
+                                          // ),
+                                          SizedBox(width: 9.10.w),
+                                          SizedBox(
+                                            width: 220.w,
+                                            child: TextView(
+                                              text: o,
+                                              maxLines: 1,
+                                              textOverflow:
+                                                  TextOverflow.ellipsis,
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.2.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  showEmailDialog(
+                                                    context,
+                                                    isEdit: true,
+                                                    index: index,
+                                                    email:
+                                                        emailReminderList[index],
+                                                  );
+                                                  model!.notifyListeners();
+                                                },
+                                                child: SvgPicture.asset(
+                                                  AppImage.edit_pen,
+                                                  height: 22.0.h,
+                                                  width: 22.0.w,
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  emailReminderList.removeAt(
+                                                    index,
+                                                  );
+                                                  model!.notifyListeners();
+                                                },
+                                                child: SvgPicture.asset(
+                                                  AppImage.delete,
+                                                  height: 22.0.h,
+                                                  width: 22.0.w,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    if (!isLast)
+                                      Divider(color: AppColors.infoGrey1),
+                                    SizedBox(height: 5.10.h),
+                                  ],
+                                );
+                              }),
+                            ],
+                          ),
+                        )
                 : SizedBox.shrink(),
             SizedBox(height: phoneReminderList.isNotEmpty ? 20.h : 0.h),
 
             phoneReminderList.isNotEmpty
                 ? isTappedPhoneAdded
-                ? Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.infoGrey1),
-                borderRadius: BorderRadius.circular(12.r),
-                color: AppColors.white,
-              ),
-
-              padding: EdgeInsets.all(12.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Add Phone Number',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.2.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.deep,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          TextView(
-                            text: 'Numbers available',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 14.8.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.fineGrey,
-                            ),
+                      ? Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.infoGrey1),
+                            borderRadius: BorderRadius.circular(12.r),
+                            color: AppColors.white,
                           ),
-                          SizedBox(width: 6.w),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(
-                                255,
-                                223,
-                                233,
-                                247,
-                              ),
 
-                              borderRadius: BorderRadius.circular(
-                                12.r,
-                              ),
-                              border: Border.all(
-                                color: AppColors.primary.withOpacity(
-                                  .4,
-                                ),
-                              ),
-                            ),
-                            child: TextView(
-                              text: '${phoneReminderList.length}',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 11.8.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          isTappedPhoneAdded = !isTappedPhoneAdded;
-                          model!.notifyListeners();
-                        },
-                        child: SvgPicture.asset(
-                          AppImage.drop_up,
-                          height: 22.0.h,
-                          width: 22.0.w,
-                        ),
-                      ),
-                      SizedBox(width: 2.w),
-                      IconButton(
-                        onPressed: () {
-                          showPhoneDialog(context);
-                          isPhoneValid = false;
-                          model!.notifyListeners();
-                        },
-                        icon: Icon(
-                          Icons.add_circle,
-                          color: AppColors.primary1,
-                          size: 24.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-                : Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: AppColors.infoGrey1),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.infoGrey1),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12.r),
-                        topRight: Radius.circular(12.r),
-                      ),
-                      color: AppColors.dashboard,
-                    ),
-
-                    padding: EdgeInsets.all(12.w),
-                    child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: [
-                            TextView(
-                              text: 'Add Phone Number',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 15.8.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.deep,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                TextView(
-                                  text: 'Numbers available',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 15.8.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.fineGrey,
-                                  ),
-                                ),
-                                SizedBox(width: 6.w),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      223,
-                                      233,
-                                      247,
-                                    ),
-
-                                    borderRadius:
-                                    BorderRadius.circular(12.r),
-                                    border: Border.all(
-                                      color: AppColors.primary
-                                          .withOpacity(.4),
-                                    ),
-                                  ),
-                                  child: TextView(
-                                    text:
-                                    '${phoneReminderList.length}',
+                          padding: EdgeInsets.all(12.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextView(
+                                    text: 'Add Phone Number',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
-                                      fontSize: 11.8.sp,
+                                      fontSize: 16.2.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: AppColors.primary,
+                                      color: AppColors.deep,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                isTappedPhoneAdded =
-                                !isTappedPhoneAdded;
-                                model!.notifyListeners();
-                              },
-                              child: SvgPicture.asset(
-                                AppImage.drop_up,
-                                height: 22.0.h,
-                                width: 22.0.w,
-                              ),
-                            ),
-                            SizedBox(width: 2.w),
-                            IconButton(
-                              onPressed: () {
-                                showPhoneDialog(context);
+                                  Row(
+                                    children: [
+                                      TextView(
+                                        text: 'Numbers available',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.8.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.fineGrey,
+                                        ),
+                                      ),
+                                      SizedBox(width: 6.w),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 10.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            223,
+                                            233,
+                                            247,
+                                          ),
 
-                                isPhoneValid = false;
-                                model!.notifyListeners();
-                              },
-                              icon: Icon(
-                                Icons.add_circle,
-                                color: AppColors.primary1,
-                                size: 24.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 15.20.h),
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.w, right: 20.w),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            padding: EdgeInsets.all(4.0.w),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                6.r,
-                              ),
-                              color: AppColors.primary,
-                              border: Border.all(
-                                color: AppColors.transparent,
-                                width: .78,
-                              ),
-                            ),
-                            child: Icon(
-                              Icons.check,
-                              size: 12.sp,
-                              color: AppColors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 9.10.w),
-                        TextView(
-                          text: formatPhoneNumber(
-                            SharedPreferencesService
-                                .instance
-                                .usersData['user']['phone'],
-                          ),
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.reminder,
-                          ),
-                        ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(1.2.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.app_green,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.check,
-                                size: 13.4.sp,
-                                color: AppColors.white,
-                              ),
-                            ),
-                            SizedBox(width: 10.w),
-                            TextView(
-                              text: 'Primary',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 13.72.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.reminder,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 2.0.h),
-                  Divider(color: AppColors.infoGrey1),
-
-                  ...phoneReminderList
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    final index = entry.key;
-                    final o = entry.value;
-                    final isLast =
-                        index == phoneReminderList.length - 1;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 12.w,
-                            right: 20.w,
-                            bottom: 12.w,
-                          ),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (addedPhoneReminderList.contains(
-                                    o,
-                                  )) {
-                                    addedPhoneReminderList.remove(o);
-                                  } else {
-                                    addedPhoneReminderList.add(o);
-                                  }
-                                  model!.notifyListeners();
-                                },
-                                child: Container(
-                                  padding:
-                                  addedPhoneReminderList.contains(
-                                    o,
-                                  )
-                                      ? EdgeInsets.all(4.0.w)
-                                      : EdgeInsets.all(10.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius:
-                                    BorderRadius.circular(6.r),
-                                    color:
-                                    addedPhoneReminderList
-                                        .contains(o)
-                                        ? AppColors.primary
-                                        : AppColors.transparent,
-                                    border: Border.all(
-                                      color:
-                                      addedPhoneReminderList
-                                          .contains(o)
-                                          ? AppColors.transparent
-                                          : AppColors.infoGrey,
-                                      width: .78,
-                                    ),
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColors.primary
+                                                .withOpacity(.4),
+                                          ),
+                                        ),
+                                        child: TextView(
+                                          text: '${phoneReminderList.length}',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 11.8.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  child:
-                                  addedPhoneReminderList.contains(
-                                    o,
-                                  )
-                                      ? Icon(
-                                    Icons.check,
-                                    size: 12.sp,
-                                    color: AppColors.white,
-                                  )
-                                      : SizedBox.shrink(),
-                                ),
+                                ],
                               ),
-                              SizedBox(width: 9.10.w),
-                              TextView(
-                                text: formatPhoneNumber(o),
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
-                              Spacer(),
                               Row(
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      showPhoneDialog(
-                                        context,
-                                        isEdit: true,
-                                        index: index,
-                                        phoneNumber:
-                                        phoneReminderList[index],
-                                      );
-                                      isPhoneValid = false;
+                                      isTappedPhoneAdded = !isTappedPhoneAdded;
                                       model!.notifyListeners();
                                     },
                                     child: SvgPicture.asset(
-                                      AppImage.edit_pen,
+                                      AppImage.drop_up,
                                       height: 22.0.h,
                                       width: 22.0.w,
                                     ),
                                   ),
-                                  SizedBox(width: 16.10.w),
-                                  GestureDetector(
-                                    onTap: () {
-                                      phoneReminderList.removeAt(
-                                        index,
-                                      );
+                                  SizedBox(width: 2.w),
+                                  IconButton(
+                                    onPressed: () {
+                                      showPhoneDialog(context);
+                                      isPhoneValid = false;
                                       model!.notifyListeners();
                                     },
-                                    child: SvgPicture.asset(
-                                      AppImage.delete,
-                                      height: 22.0.h,
-                                      width: 22.0.w,
+                                    icon: Icon(
+                                      Icons.add_circle,
+                                      color: AppColors.primary1,
+                                      size: 24.sp,
                                     ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        ),
-                        if (!isLast)
-                          Divider(color: AppColors.infoGrey1),
-                        SizedBox(height: 5.10.h),
-                      ],
-                    );
-                  }),
-                ],
-              ),
-            )
+                        )
+                      : Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(color: AppColors.infoGrey1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12.r),
+                                    topRight: Radius.circular(12.r),
+                                  ),
+                                  color: AppColors.dashboard,
+                                ),
+
+                                padding: EdgeInsets.all(12.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextView(
+                                          text: 'Add Phone Number',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 15.8.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.deep,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            TextView(
+                                              text: 'Numbers available',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 15.8.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.fineGrey,
+                                              ),
+                                            ),
+                                            SizedBox(width: 6.w),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 10.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  223,
+                                                  233,
+                                                  247,
+                                                ),
+
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                border: Border.all(
+                                                  color: AppColors.primary
+                                                      .withOpacity(.4),
+                                                ),
+                                              ),
+                                              child: TextView(
+                                                text:
+                                                    '${phoneReminderList.length}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 11.8.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            isTappedPhoneAdded =
+                                                !isTappedPhoneAdded;
+                                            model!.notifyListeners();
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppImage.drop_up,
+                                            height: 22.0.h,
+                                            width: 22.0.w,
+                                          ),
+                                        ),
+                                        SizedBox(width: 2.w),
+                                        IconButton(
+                                          onPressed: () {
+                                            showPhoneDialog(context);
+
+                                            isPhoneValid = false;
+                                            model!.notifyListeners();
+                                          },
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: AppColors.primary1,
+                                            size: 24.sp,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 15.20.h),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 12.w,
+                                  right: 20.w,
+                                ),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                        padding: EdgeInsets.all(4.0.w),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            6.r,
+                                          ),
+                                          color: AppColors.primary,
+                                          border: Border.all(
+                                            color: AppColors.transparent,
+                                            width: .78,
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.check,
+                                          size: 12.sp,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 9.10.w),
+                                    TextView(
+                                      text: formatPhoneNumber(
+                                        SharedPreferencesService
+                                            .instance
+                                            .usersData['user']['phone'],
+                                      ),
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(1.2.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.app_green,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            Icons.check,
+                                            size: 13.4.sp,
+                                            color: AppColors.white,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        TextView(
+                                          text: 'Primary',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 13.72.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 2.0.h),
+                              Divider(color: AppColors.infoGrey1),
+
+                              ...phoneReminderList.asMap().entries.map((entry) {
+                                final index = entry.key;
+                                final o = entry.value;
+                                final isLast =
+                                    index == phoneReminderList.length - 1;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 12.w,
+                                        right: 20.w,
+                                        bottom: 12.w,
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (addedPhoneReminderList
+                                                  .contains(o)) {
+                                                addedPhoneReminderList.remove(
+                                                  o,
+                                                );
+                                              } else {
+                                                addedPhoneReminderList.add(o);
+                                              }
+                                              model!.notifyListeners();
+                                            },
+                                            child: Container(
+                                              padding:
+                                                  addedPhoneReminderList
+                                                      .contains(o)
+                                                  ? EdgeInsets.all(4.0.w)
+                                                  : EdgeInsets.all(10.w),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6.r),
+                                                color:
+                                                    addedPhoneReminderList
+                                                        .contains(o)
+                                                    ? AppColors.primary
+                                                    : AppColors.transparent,
+                                                border: Border.all(
+                                                  color:
+                                                      addedPhoneReminderList
+                                                          .contains(o)
+                                                      ? AppColors.transparent
+                                                      : AppColors.infoGrey,
+                                                  width: .78,
+                                                ),
+                                              ),
+                                              child:
+                                                  addedPhoneReminderList
+                                                      .contains(o)
+                                                  ? Icon(
+                                                      Icons.check,
+                                                      size: 12.sp,
+                                                      color: AppColors.white,
+                                                    )
+                                                  : SizedBox.shrink(),
+                                            ),
+                                          ),
+                                          SizedBox(width: 9.10.w),
+                                          TextView(
+                                            text: formatPhoneNumber(o),
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  showPhoneDialog(
+                                                    context,
+                                                    isEdit: true,
+                                                    index: index,
+                                                    phoneNumber:
+                                                        phoneReminderList[index],
+                                                  );
+                                                  isPhoneValid = false;
+                                                  model!.notifyListeners();
+                                                },
+                                                child: SvgPicture.asset(
+                                                  AppImage.edit_pen,
+                                                  height: 22.0.h,
+                                                  width: 22.0.w,
+                                                ),
+                                              ),
+                                              SizedBox(width: 16.10.w),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  phoneReminderList.removeAt(
+                                                    index,
+                                                  );
+                                                  model!.notifyListeners();
+                                                },
+                                                child: SvgPicture.asset(
+                                                  AppImage.delete,
+                                                  height: 22.0.h,
+                                                  width: 22.0.w,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    if (!isLast)
+                                      Divider(color: AppColors.infoGrey1),
+                                    SizedBox(height: 5.10.h),
+                                  ],
+                                );
+                              }),
+                            ],
+                          ),
+                        )
                 : SizedBox.shrink(),
             phoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
                 ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 24.0.h),
-                TextView(
-                  text: 'COST SUMMARY',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 14.80.sp,
-                    color: AppColors.grey1,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(height: 4.2.h),
-                Divider(color: AppColors.infoGrey1),
-                SizedBox(height: 10.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: DottedBorder(
-                    options: RoundedRectDottedBorderOptions(
-                      dashPattern: [3, 3],
-                      strokeWidth: .99,
-                      radius: Radius.circular(10),
-                      color: AppColors.infoGrey1,
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(
-                        vertical: 16.20.w,
-                        horizontal: 16.0.w,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 24.0.h),
+                      TextView(
+                        text: 'COST SUMMARY',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 14.80.sp,
+                          color: AppColors.grey1,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10.r),
-                        color: AppColors.dashboard,
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text: 'Total Days',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextView(
-                                text: '${returnTotalDays()}',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                      SizedBox(height: 4.2.h),
+                      Divider(color: AppColors.infoGrey1),
+                      SizedBox(height: 10.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: DottedBorder(
+                          options: RoundedRectDottedBorderOptions(
+                            dashPattern: [3, 3],
+                            strokeWidth: .99,
+                            radius: Radius.circular(10),
+                            color: AppColors.infoGrey1,
                           ),
-                          SizedBox(height: 6.10.h),
-                          Divider(color: AppColors.infoGrey1),
-                          SizedBox(height: 6.10.h),
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text: 'Reminders per day',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 16.20.w,
+                              horizontal: 16.0.w,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                              color: AppColors.dashboard,
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Total Days',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text: '${returnTotalDays()}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              TextView(
-                                text: '${returnNumberOfTimes()}',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
+                                SizedBox(height: 6.10.h),
+                                Divider(color: AppColors.infoGrey1),
+                                SizedBox(height: 6.10.h),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Reminders per day',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text: '${returnNumberOfTimes()}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 6.10.h),
-                          Divider(color: AppColors.infoGrey1),
-                          SizedBox(height: 6.10.h),
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text: 'Total Reminders',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
+                                SizedBox(height: 6.10.h),
+                                Divider(color: AppColors.infoGrey1),
+                                SizedBox(height: 6.10.h),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Total Reminders',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text:
+                                          '${selectedIndexes.length * returnNumberOfTimes()}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              TextView(
-                                text:
-                                '${selectedIndexes.length *
-                                    returnNumberOfTimes()}',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
 
-                          SizedBox(
-                            height: selectedIndexes.contains(0)
-                                ? 6.10.h
-                                : 0.h,
+                                SizedBox(
+                                  height: selectedIndexes.contains(0)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(0)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(0)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(0)
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Email  (x${returnNumberOfTimes()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text: '₦0',
+                                            textStyle: TextStyle(
+                                              // fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(1)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(1)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(1)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(1)
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Push  (x${returnNumberOfTimes()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text: '₦0',
+                                            textStyle: TextStyle(
+                                              // fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(3)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(3)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(3)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(3)
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'WhatsApp  (x${returnNumberOfTimes()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${20 * returnNumberOfTimes()}',
+                                            textStyle: TextStyle(
+                                              // fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(2)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(2)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(2)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(2)
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'SMS  (x${returnNumberOfTimes()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${10 * returnNumberOfTimes()}',
+                                            textStyle: TextStyle(
+                                              // fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(4)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(4)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: selectedIndexes.contains(4)
+                                      ? 6.10.h
+                                      : 0.h,
+                                ),
+                                selectedIndexes.contains(4)
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Phone Calls  (x${returnNumberOfTimes()} calls)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${50 * returnNumberOfTimes()}',
+                                            textStyle: TextStyle(
+                                              // fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(height: 6.10.h),
+                                Divider(color: AppColors.infoGrey1),
+                                SizedBox(height: 6.10.h),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Total',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text: '₦$costTotal.00',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          selectedIndexes.contains(0)
-                              ? Divider(color: AppColors.infoGrey1)
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(0)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(0)
-                              ? Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text:
-                                'Email  (x${returnNumberOfTimes()} msgs)',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextView(
-                                text: '₦0',
-                                textStyle: TextStyle(
-                                  // fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          )
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(1)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(1)
-                              ? Divider(color: AppColors.infoGrey1)
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(1)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(1)
-                              ? Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text:
-                                'Push  (x${returnNumberOfTimes()} msgs)',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextView(
-                                text: '₦0',
-                                textStyle: TextStyle(
-                                  // fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          )
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(3)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(3)
-                              ? Divider(color: AppColors.infoGrey1)
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(3)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(3)
-                              ? Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text:
-                                'WhatsApp  (x${returnNumberOfTimes()} msgs)',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextView(
-                                text:
-                                '₦${20 * returnNumberOfTimes()}',
-                                textStyle: TextStyle(
-                                  // fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          )
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(2)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(2)
-                              ? Divider(color: AppColors.infoGrey1)
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(2)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(2)
-                              ? Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text:
-                                'SMS  (x${returnNumberOfTimes()} msgs)',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextView(
-                                text:
-                                '₦${10 * returnNumberOfTimes()}',
-                                textStyle: TextStyle(
-                                  // fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          )
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(4)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(4)
-                              ? Divider(color: AppColors.infoGrey1)
-                              : SizedBox.shrink(),
-                          SizedBox(
-                            height: selectedIndexes.contains(4)
-                                ? 6.10.h
-                                : 0.h,
-                          ),
-                          selectedIndexes.contains(4)
-                              ? Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text:
-                                'Phone Calls  (x${returnNumberOfTimes()} calls)',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextView(
-                                text:
-                                '₦${50 * returnNumberOfTimes()}',
-                                textStyle: TextStyle(
-                                  // fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          )
-                              : SizedBox.shrink(),
-                          SizedBox(height: 6.10.h),
-                          Divider(color: AppColors.infoGrey1),
-                          SizedBox(height: 6.10.h),
-                          Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextView(
-                                text: 'Total',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              TextView(
-                                text: '₦$costTotal.00',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.80.sp,
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ],
-            )
+                    ],
+                  )
                 : SizedBox.shrink(),
             SizedBox(height: _isLoading ? 20.h : 0.h),
 
@@ -15406,630 +15400,634 @@ class PharmViewModel extends BaseViewModel {
         ),
       ),
     );
-    }
+  }
 
-    fourthModalFlowUpdate({
-      PharmViewModel? model,
-      BuildContext? context,
-      StateSetter? setModalState,
-      getReminderId.Data? data,
-      ScrollController? scrollController,
-    }) => Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22.r),
-        color: AppColors.white,
+  fourthModalFlowUpdate({
+    PharmViewModel? model,
+    BuildContext? context,
+    StateSetter? setModalState,
+    getReminderId.Data? data,
+    ScrollController? scrollController,
+  }) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22.r),
+      color: AppColors.white,
+    ),
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20, width: 20),
+              TextView(
+                text: modalNameUpdate(),
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.70.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 4.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context!);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.cancel,
+                    height: 14.20,
+                    width: 14.20,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 13.60.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context!).size.width * .82,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: linIndexUpdate / 4,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              TextView(
+                text: '$linIndexUpdate/4',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          TextView(
+            text: 'Amount',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.90.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 14.2.h),
+          Container(
+            height: 70.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.skyBlue,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Center(
+              child: TextView(
+                text: '₦$costTotal.00',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 20.90.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 22.h),
+          TextView(
+            text: 'Select Payment Method',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.90.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.deep,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          paymentWidget(
+            isWallet: true,
+            text: 'Pay with Wallet',
+            icon: AppImage.wallet_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Wallet';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Card',
+            icon: AppImage.card_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Card';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Bank Transfer',
+            icon: AppImage.bank_transfer,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Bank Transfer';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Mobile Money',
+            icon: AppImage.online_mobile,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Mobile Money';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with USSD',
+            icon: AppImage.ussd_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with USSD';
+              model!.notifyListeners();
+            },
+          ),
+          SizedBox(height: _isLoading ? 20.h : 0.h),
+          _isLoading
+              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+              : SizedBox.shrink(),
+          SizedBox(height: 120.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  buttonColor: AppColors.dashboard,
+                  buttonText: 'Previous',
+                  color: AppColors.deep,
+                  fontSize: 14.sp,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndexUpdate--;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  fontSize: 14.sp,
+                  buttonColor: onTapPaymentMeth != ''
+                      ? AppColors.primary
+                      : AppColors.infoGrey,
+                  buttonText: 'Continue',
+                  color: AppColors.white,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: onTapPaymentMeth != ''
+                      ? () {
+                          updateReminder(
+                            context,
+                            reminderId: data!.id!,
+                            setState: setModalState,
+                            updateReminder: UpdateReminderEntityModel(
+                              startDateTime: DateFormat(
+                                'dd MMM, yyyy',
+                              ).parse(dateTimeControllerUpdate.text),
+                              endDateTime: DateTime.parse(
+                                endDateControllerUpdate.text,
+                              ),
+                              durationInDays: int.parse(
+                                medDurationControllerUpdate.text,
+                              ),
+                              timesPerDay: int.parse(
+                                medDailyInTakenControllerUpdate.text,
+                              ),
+                              dailyDoseTimes: dailyDose,
+                              dosage: _dosageLabel,
+                              medicationImage: null,
+                              emails: emailReminderList,
+                              phoneNumbers: phoneReminderList,
+                              notificationChannels: notificationChannel,
+                              payment: update.Payment(
+                                amount: costTotal,
+                                currency: 'NGN',
+                              ),
+                            ),
+                          );
+                          model!.notifyListeners();
+                        }
+                      : () {},
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
+        ],
       ),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-        controller: scrollController,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(height: 20, width: 20),
-                TextView(
-                  text: modalNameUpdate(),
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 16.70.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.deep,
-                  ),
-                ),
+    ),
+  );
 
-                Padding(
-                  padding: EdgeInsets.only(top: 4.w),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context!);
-                    },
-                    child: SvgPicture.asset(
-                      AppImage.cancel,
-                      height: 14.20,
-                      width: 14.20,
-                      color: AppColors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 13.60.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context!).size.width * .82,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(5.0),
-                    ), // Adjust radius as needed
-                    child: LinearProgressIndicator(
-                      minHeight: 4.0, // Adjust height as needed
-                      value: linIndexUpdate / 4,
-                      color: AppColors.primary, // Progress bar color
-                      backgroundColor: Colors.grey[300], // Background track color
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                TextView(
-                  text: '$linIndexUpdate/4',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 32.h),
-            TextView(
-              text: 'Amount',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 15.90.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black,
+  chooseUpdateNotChannelWidget(
+    context, {
+    required String text,
+    required bool isTapped,
+    required VoidCallback onTap,
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 16.w),
+      margin: EdgeInsets.only(bottom: 10.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: AppColors.infoGrey1.withOpacity(.9)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: isTapped ? EdgeInsets.all(4.0.w) : EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6.r),
+              color: isTapped ? AppColors.primary : AppColors.transparent,
+              border: Border.all(
+                color: isTapped ? AppColors.transparent : AppColors.infoGrey,
+                width: .78,
               ),
             ),
-            SizedBox(height: 14.2.h),
-            Container(
-              height: 70.h,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.skyBlue,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Center(
-                child: TextView(
-                  text: '₦$costTotal.00',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 20.90.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.reminder,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 22.h),
-            TextView(
-              text: 'Select Payment Method',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 16.90.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.deep,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            paymentWidget(
-              isWallet: true,
-              text: 'Pay with Wallet',
-              icon: AppImage.wallet_pay,
-              onTap: () {
-                onTapPaymentMeth = 'Pay with Wallet';
-                model!.notifyListeners();
-              },
-            ),
-            paymentWidget(
-              isWallet: false,
-              text: 'Pay with Card',
-              icon: AppImage.card_pay,
-              onTap: () {
-                onTapPaymentMeth = 'Pay with Card';
-                model!.notifyListeners();
-              },
-            ),
-            paymentWidget(
-              isWallet: false,
-              text: 'Pay with Bank Transfer',
-              icon: AppImage.bank_transfer,
-              onTap: () {
-                onTapPaymentMeth = 'Pay with Bank Transfer';
-                model!.notifyListeners();
-              },
-            ),
-            paymentWidget(
-              isWallet: false,
-              text: 'Pay with Mobile Money',
-              icon: AppImage.online_mobile,
-              onTap: () {
-                onTapPaymentMeth = 'Pay with Mobile Money';
-                model!.notifyListeners();
-              },
-            ),
-            paymentWidget(
-              isWallet: false,
-              text: 'Pay with USSD',
-              icon: AppImage.ussd_pay,
-              onTap: () {
-                onTapPaymentMeth = 'Pay with USSD';
-                model!.notifyListeners();
-              },
-            ),
-            SizedBox(height: _isLoading ? 20.h : 0.h),
-            _isLoading
-                ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+            child: isTapped
+                ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
                 : SizedBox.shrink(),
-            SizedBox(height: 120.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: ButtonWidget(
-                    border: 100.r,
-                    buttonColor: AppColors.dashboard,
-                    buttonText: 'Previous',
-                    color: AppColors.deep,
-                    fontSize: 14.sp,
-                    buttonBorderColor: AppColors.transparent,
-                    onPressed: () {
-                      linIndexUpdate--;
-                      model!.notifyListeners();
-                    },
-                  ),
-                ),
-                SizedBox(width: 20.w),
-                Flexible(
-                  child: ButtonWidget(
-                    border: 100.r,
-                    fontSize: 14.sp,
-                    buttonColor: onTapPaymentMeth != ''
-                        ? AppColors.primary
-                        : AppColors.infoGrey,
-                    buttonText: 'Continue',
-                    color: AppColors.white,
-                    buttonBorderColor: AppColors.transparent,
-                    onPressed: onTapPaymentMeth != ''
-                        ? () {
-                      updateReminder(
-                        context,
-                        reminderId: data!.id!,
-                        setState: setModalState,
-                        updateReminder: UpdateReminderEntityModel(
-                          startDateTime: DateFormat(
-                            'dd MMM, yyyy',
-                          ).parse(dateTimeControllerUpdate.text),
-                          endDateTime: DateTime.parse(
-                            endDateControllerUpdate.text,
+          ),
+          SizedBox(width: 10.w),
+          TextView(
+            text: text,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  dosagePreviewUpdateWidgetContainer({
+    required BuildContext context,
+    required int callback,
+    required Color color,
+    required List<int> listOfTimes,
+    required List<upReminder.DailyDoseTime> dosageMap,
+  }) {
+    return ViewModelBuilder<PharmViewModel>.reactive(
+      viewModelBuilder: () => PharmViewModel(),
+      onViewModelReady: (model) {},
+      disposeViewModel: false,
+      onDispose: (viewModel) {},
+      builder: (_, PharmViewModel model, _) {
+        return Container(
+          width: double.infinity,
+          margin: EdgeInsets.only(bottom: 10.w),
+          padding: EdgeInsets.symmetric(
+            vertical: dosageAfterValue == callback ? 12.w : 8.w,
+            horizontal: 14.w,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: color, width: 2),
+            color: AppColors.white,
+          ),
+          child: dosageAfterValue == callback
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextView(
+                          text: "Day ${callback + 1}",
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.black,
                           ),
-                          durationInDays: int.parse(
-                            medDurationControllerUpdate.text,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            dosageAfterValue = null;
+                            model.notifyListeners();
+                          },
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: AppColors.grey1,
+                            size: 24.sp,
                           ),
-                          timesPerDay: int.parse(
-                            medDailyInTakenControllerUpdate.text,
-                          ),
-                          dailyDoseTimes: dailyDose,
-                          dosage: _dosageLabel,
-                          medicationImage: null,
-                          emails: emailReminderList,
-                          phoneNumbers: phoneReminderList,
-                          notificationChannels: notificationChannel,
-                          payment: update.Payment(
-                            amount: costTotal,
-                            currency: 'NGN',
-                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+
+                    // 🔹 Render each day
+                    ...dosageMap.asMap().entries.map((entry) {
+                      int i = entry.key;
+                      upReminder.DailyDoseTime v =
+                          entry.value; // {day: 1, doses: [...]}
+                      bool isLast = i == dosageMap.length - 1;
+
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 14.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 🔹 Day header
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 4.h),
+                                TextView(
+                                  text: "Dose ${i + 1}",
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.20.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                TextView(
+                                  text: "${v.time} ${checkTimePeriod(v.time)}",
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.20.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                SizedBox(height: 6.10.h),
+                                if (!isLast)
+                                  Divider(
+                                    color: AppColors.fineGrey,
+                                    thickness: .4,
+                                  ),
+                                if (!isLast) SizedBox(height: 6.10.h),
+                              ],
+                            ),
+                          ],
                         ),
                       );
-                      model!.notifyListeners();
-                    }
-                        : () {},
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 26.h),
-          ],
-        ),
-      ),
-    );
-
-    chooseUpdateNotChannelWidget(
-        context, {
-          required String text,
-          required bool isTapped,
-          required VoidCallback onTap,
-        }) => GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 16.w),
-        margin: EdgeInsets.only(bottom: 10.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(color: AppColors.infoGrey1.withOpacity(.9)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              padding: isTapped ? EdgeInsets.all(4.0.w) : EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.r),
-                color: isTapped ? AppColors.primary : AppColors.transparent,
-                border: Border.all(
-                  color: isTapped ? AppColors.transparent : AppColors.infoGrey,
-                  width: .78,
-                ),
-              ),
-              child: isTapped
-                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
-                  : SizedBox.shrink(),
-            ),
-            SizedBox(width: 10.w),
-            TextView(
-              text: text,
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 15.2.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.reminder,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    dosagePreviewUpdateWidgetContainer({
-      required BuildContext context,
-      required int callback,
-      required Color color,
-      required List<int> listOfTimes,
-      required List<upReminder.DailyDoseTime> dosageMap,
-    }) {
-      return ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => PharmViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          onDispose: (viewModel) {},
-          builder: (_, PharmViewModel model, _) {
-            return Container(
-              width: double.infinity,
-              margin: EdgeInsets.only(bottom: 10.w),
-              padding: EdgeInsets.symmetric(
-                vertical: dosageAfterValue == callback ? 12.w : 8.w,
-                horizontal: 14.w,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: color, width: 2),
-                color: AppColors.white,
-              ),
-              child: dosageAfterValue == callback
-                  ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextView(
-                        text: "Day ${callback + 1}",
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 15.20.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.black,
-                        ),
+                    }),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextView(
+                      text: 'Day ${callback + 1}',
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 15.20.sp,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w500,
                       ),
-                      IconButton(
-                        onPressed: () {
-                          dosageAfterValue = null;
-                          model.notifyListeners();
-                        },
-                        icon: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: AppColors.grey1,
-                          size: 24.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-
-                  // 🔹 Render each day
-                  ...dosageMap.asMap().entries.map((entry) {
-                    int i = entry.key;
-                    upReminder.DailyDoseTime v =
-                        entry.value; // {day: 1, doses: [...]}
-                    bool isLast = i == dosageMap.length - 1;
-
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 14.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 🔹 Day header
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 4.h),
-                              TextView(
-                                text: "Dose ${i + 1}",
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.20.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.infoGrey,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              TextView(
-                                text: "${v.time} ${checkTimePeriod(v.time)}",
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 16.20.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              SizedBox(height: 6.10.h),
-                              if (!isLast)
-                                Divider(color: AppColors.fineGrey, thickness: .4),
-                              if (!isLast) SizedBox(height: 6.10.h),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
-              )
-                  : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextView(
-                    text: 'Day ${callback + 1}',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 15.20.sp,
-                      color: AppColors.black,
-                      fontWeight: FontWeight.w500,
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      dosageAfterValue = callback;
-                      model.notifyListeners();
-                    },
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.grey1,
-                      size: 24.sp,
+                    IconButton(
+                      onPressed: () {
+                        dosageAfterValue = callback;
+                        model.notifyListeners();
+                      },
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: AppColors.grey1,
+                        size: 24.sp,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );});
-    }
-
-    void showUpdateReminderModal({context, data}) => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.transparent,
-      constraints: BoxConstraints(maxWidth: double.infinity),
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return DraggableScrollableSheet(
-              initialChildSize: 0.88, // Initial height as percentage of screen
-              minChildSize: 0.7, // Minimum height
-              maxChildSize: 0.89, // Maximum height
-              expand: true, // Set to true for full height initially
-              builder: (BuildContext context, ScrollController scrollController) {
-                return ViewModelBuilder<PharmViewModel>.reactive(
-                  viewModelBuilder: () => locator<PharmViewModel>(),
-                  onViewModelReady: (model) {},
-                  disposeViewModel: false,
-                  onDispose: (viewModel) {},
-                  builder: (_, PharmViewModel model, _) {
-                    return setModalFlowUpdate(
-                      model: model,
-                      data: data,
-                      context: context,
-                      setModalState: setModalState,
-                      scrollController: scrollController,
-                    );
-                  },
-                );
-              },
-            );
-          },
+                  ],
+                ),
         );
       },
     );
+  }
 
-    getListOfNotificationChannel(data) {
-      for (var pay in data.payments) {
-        for (var n in pay.notificationChannelsPaidFor) {
-          if (notificationChannel.contains(n)) {
-          } else {
-            notificationChannel.add(n);
-          }
+  void showUpdateReminderModal({context, data}) => showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: AppColors.transparent,
+    constraints: BoxConstraints(maxWidth: double.infinity),
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setModalState) {
+          return DraggableScrollableSheet(
+            initialChildSize: 0.88, // Initial height as percentage of screen
+            minChildSize: 0.7, // Minimum height
+            maxChildSize: 0.89, // Maximum height
+            expand: true, // Set to true for full height initially
+            builder: (BuildContext context, ScrollController scrollController) {
+              return ViewModelBuilder<PharmViewModel>.reactive(
+                viewModelBuilder: () => locator<PharmViewModel>(),
+                onViewModelReady: (model) {},
+                disposeViewModel: false,
+                onDispose: (viewModel) {},
+                builder: (_, PharmViewModel model, _) {
+                  return setModalFlowUpdate(
+                    model: model,
+                    data: data,
+                    context: context,
+                    setModalState: setModalState,
+                    scrollController: scrollController,
+                  );
+                },
+              );
+            },
+          );
+        },
+      );
+    },
+  );
+
+  getListOfNotificationChannel(data) {
+    for (var pay in data.payments) {
+      for (var n in pay.notificationChannelsPaidFor) {
+        if (notificationChannel.contains(n)) {
+        } else {
+          notificationChannel.add(n);
         }
       }
-      selectedIndexes.clear();
+    }
+    selectedIndexes.clear();
 
-      if (notificationChannel.contains('EMAIL')) {
-        selectedIndexes.add(0);
-      }
-      if (notificationChannel.contains('PUSH')) {
-        selectedIndexes.add(1);
-      }
-      if (notificationChannel.contains('SMS')) {
-        selectedIndexes.add(2);
-      }
-      if (notificationChannel.contains('WHATSAPP')) {
-        selectedIndexes.add(3);
-      }
-      if (notificationChannel.contains('PHONE_CALL')) {
-        selectedIndexes.add(4);
-      }
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        notifyListeners();
-      });
+    if (notificationChannel.contains('EMAIL')) {
+      selectedIndexes.add(0);
+    }
+    if (notificationChannel.contains('PUSH')) {
+      selectedIndexes.add(1);
+    }
+    if (notificationChannel.contains('SMS')) {
+      selectedIndexes.add(2);
+    }
+    if (notificationChannel.contains('WHATSAPP')) {
+      selectedIndexes.add(3);
+    }
+    if (notificationChannel.contains('PHONE_CALL')) {
+      selectedIndexes.add(4);
     }
 
-    getReminderUpdate(data) {
-      logger.d(data.toJson());
-      medNameControllerUpdate.text = data!.medication!.medicationName!;
-      medDosageControllerUpdate.text = data.medication!.dosage!;
-      medDurationControllerUpdate.text = data.medication!.durationInDays!
-          .toString();
-      medDailyInTakenControllerUpdate.text = data.medication!.timesPerDay
-          .toString();
-      drugNameControllerUpdate.text = data.medication!.drugName!;
-      medTypeControllerUpdate.text = data.medication!.medicationType!;
-      medTypeResultImageUpdate = data.medication!.medicationType!;
-      noteControllerUpdate.text = data.medication!.note!;
-      endDateControllerUpdate.text = data.medication!.endDateTime.toString();
-      imageReminderUpdate = data.medication!.medicationImage?.url ?? "";
-      startDateIso = data.medication!.startDateTime.toString();
-      notificationChannel.addAll(data.notificationChannels);
-      getListOfNotificationChannel(data);
-      phoneReminderList.addAll(data.phoneNumbers ?? []);
-      emailReminderList.addAll(data.emails ?? []);
-      dateTimeControllerUpdate.text = DateFormat(
-        'dd MMM, yyyy',
-      ).format(data.medication!.startDateTime!);
-      _dosageLabel = medDosageControllerUpdate.text;
-      intList = List.generate(
-        int.parse(medDurationControllerUpdate.text),
-            (index) => index,
-      );
-      listOfDosage.clear();
-      doseControllersUpdate.clear();
-      periodLabelsUpdate.clear();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
 
-      for (
+  getReminderUpdate(data) {
+    logger.d(data.toJson());
+    medNameControllerUpdate.text = data!.medication!.medicationName!;
+    medDosageControllerUpdate.text = data.medication!.dosage!;
+    medDurationControllerUpdate.text = data.medication!.durationInDays!
+        .toString();
+    medDailyInTakenControllerUpdate.text = data.medication!.timesPerDay
+        .toString();
+    drugNameControllerUpdate.text = data.medication!.drugName!;
+    medTypeControllerUpdate.text = data.medication!.medicationType!;
+    medTypeResultImageUpdate = data.medication!.medicationType!;
+    noteControllerUpdate.text = data.medication!.note!;
+    endDateControllerUpdate.text = data.medication!.endDateTime.toString();
+    imageReminderUpdate = data.medication!.medicationImage?.url ?? "";
+    startDateIso = data.medication!.startDateTime.toString();
+    notificationChannel.addAll(data.notificationChannels);
+    getListOfNotificationChannel(data);
+    phoneReminderList.addAll(data.phoneNumbers ?? []);
+    emailReminderList.addAll(data.emails ?? []);
+    dateTimeControllerUpdate.text = DateFormat(
+      'dd MMM, yyyy',
+    ).format(data.medication!.startDateTime!);
+    _dosageLabel = medDosageControllerUpdate.text;
+    intList = List.generate(
+      int.parse(medDurationControllerUpdate.text),
+      (index) => index,
+    );
+    listOfDosage.clear();
+    doseControllersUpdate.clear();
+    periodLabelsUpdate.clear();
+
+    for (
       int vIndex = 0;
       vIndex < data.medication.dailyDoseTimes.length;
       vIndex++
-      ) {
-        var v = data.medication.dailyDoseTimes[vIndex];
+    ) {
+      var v = data.medication.dailyDoseTimes[vIndex];
 
-        // Create a new list of controllers for this medication
-        List<TextEditingController> controllersForThisDose = [];
-        List<String> labelsForDay = [];
+      // Create a new list of controllers for this medication
+      List<TextEditingController> controllersForThisDose = [];
+      List<String> labelsForDay = [];
 
-        // Loop through each DailyDoseTime
-        for (var dose in v) {
-          listOfDosage.add(dose);
+      // Loop through each DailyDoseTime
+      for (var dose in v) {
+        listOfDosage.add(dose);
 
-          // Create controller for this dose
-          final controller = TextEditingController(text: '${dose.time}');
-          controllersForThisDose.add(controller);
-          labelsForDay.add(getPeriodLabel(getTimeOfDay(dose.time)));
-        }
-
-        // Add this sublist to the master list
-        doseControllersUpdate.add(controllersForThisDose);
-        periodLabelsUpdate.add(labelsForDay);
+        // Create controller for this dose
+        final controller = TextEditingController(text: '${dose.time}');
+        controllersForThisDose.add(controller);
+        labelsForDay.add(getPeriodLabel(getTimeOfDay(dose.time)));
       }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        notifyListeners();
-      });
+      // Add this sublist to the master list
+      doseControllersUpdate.add(controllersForThisDose);
+      periodLabelsUpdate.add(labelsForDay);
     }
 
-    TimeOfDay getTimeOfDay(String time) {
-      try {
-        // Handle AM/PM time format (e.g. "12:30 PM" or "00 AM")
-        if (time.contains('AM') || time.contains('PM')) {
-          final dateTime = DateFormat("hh:mm a").parse(time);
-          return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
-        }
-
-        // Handle 24-hour format (e.g. "13:45")
-        final parts = time.split(":");
-        final hour = int.parse(parts[0]);
-        final minute = int.parse(parts[1]);
-        return TimeOfDay(hour: hour, minute: minute);
-      } catch (e) {
-        debugPrint("Invalid time format: $time — $e");
-        // Fallback to midnight
-        return const TimeOfDay(hour: 0, minute: 0);
-      }
-    }
-
-    returnNumberOfDays(days) {
-      if (days > 1) {
-        return 'days';
-      }
-      return 'day';
-    }
-
-    Future<void> loopDoseMethod() async {
-      dailyDose.clear();
-
-      // Convert startDateIso (String) to DateTime once
-      DateTime currentDate = DateTime.parse(startDateIso);
-
-      for (int day = 0; day < intList.length; day++) {
-        // Create a new sublist for each day
-        List<upReminder.DailyDoseTime> dailyList = [];
-
-        for (int i = 0; i < doseControllersUpdate[day].length; i++) {
-          final controller = doseControllersUpdate[day][i];
-
-          // Add each time entry for this day
-          dailyList.add(
-            upReminder.DailyDoseTime(
-              time: controller.text.substring(0, 5),
-              date: DateFormat('yyyy-MM-dd').format(currentDate),
-              isoDate: currentDate,
-            ),
-          );
-        }
-
-        // Add the day's list to dailyDose
-        dailyDose.add(dailyList);
-
-        // ✅ Increment the day once per outer loop iteration
-        currentDate = currentDate.add(const Duration(days: 1));
-      }
-
-      logger.d('✅ DailyDoseTime list generated: $dailyDose');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
-    }
+    });
+  }
 
-    double getReminderStatusValue(
-        List<List<getR.DailyDoseTime>> dailyDoseStatus,
-        ) {
-      // Flatten nested list
-      final allDoses = dailyDoseStatus.expand((day) => day).toList();
+  TimeOfDay getTimeOfDay(String time) {
+    try {
+      // Handle AM/PM time format (e.g. "12:30 PM" or "00 AM")
+      if (time.contains('AM') || time.contains('PM')) {
+        final dateTime = DateFormat("hh:mm a").parse(time);
+        return TimeOfDay(hour: dateTime.hour, minute: dateTime.minute);
+      }
 
-      // Total and pending count
-      totalCount = allDoses.length;
-      takenCount = allDoses.where((d) => d.status == "TAKEN").length;
-
-      // Return ratio as double (e.g. 0.8 for 4/5)
-      if (totalCount == 0) return 0.0; // prevent divide-by-zero error
-      return takenCount / totalCount;
+      // Handle 24-hour format (e.g. "13:45")
+      final parts = time.split(":");
+      final hour = int.parse(parts[0]);
+      final minute = int.parse(parts[1]);
+      return TimeOfDay(hour: hour, minute: minute);
+    } catch (e) {
+      debugPrint("Invalid time format: $time — $e");
+      // Fallback to midnight
+      return const TimeOfDay(hour: 0, minute: 0);
     }
   }
 
+  returnNumberOfDays(days) {
+    if (days > 1) {
+      return 'days';
+    }
+    return 'day';
+  }
+
+  Future<void> loopDoseMethod() async {
+    dailyDose.clear();
+
+    // Convert startDateIso (String) to DateTime once
+    DateTime currentDate = DateTime.parse(startDateIso);
+
+    for (int day = 0; day < intList.length; day++) {
+      // Create a new sublist for each day
+      List<upReminder.DailyDoseTime> dailyList = [];
+
+      for (int i = 0; i < doseControllersUpdate[day].length; i++) {
+        final controller = doseControllersUpdate[day][i];
+
+        // Add each time entry for this day
+        dailyList.add(
+          upReminder.DailyDoseTime(
+            time: controller.text.substring(0, 5),
+            date: DateFormat('yyyy-MM-dd').format(currentDate),
+            isoDate: currentDate,
+          ),
+        );
+      }
+
+      // Add the day's list to dailyDose
+      dailyDose.add(dailyList);
+
+      // ✅ Increment the day once per outer loop iteration
+      currentDate = currentDate.add(const Duration(days: 1));
+    }
+
+    logger.d('✅ DailyDoseTime list generated: $dailyDose');
+    notifyListeners();
+  }
+
+  double getReminderStatusValue(
+    List<List<getR.DailyDoseTime>> dailyDoseStatus,
+  ) {
+    // Flatten nested list
+    final allDoses = dailyDoseStatus.expand((day) => day).toList();
+
+    // Total and pending count
+    totalCount = allDoses.length;
+    takenCount = allDoses.where((d) => d.status == "TAKEN").length;
+
+    // Return ratio as double (e.g. 0.8 for 4/5)
+    if (totalCount == 0) return 0.0; // prevent divide-by-zero error
+    return takenCount / totalCount;
+  }
+}

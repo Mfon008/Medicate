@@ -2534,13 +2534,12 @@ class AuthViewModel extends BaseViewModel {
             'printing the HMO is not available ${loginResponseModel!.data!.memberships![0]['tenantType']}',
           );
           navigate.navigateTo(Routes.pharmacyDashboard);
-        }
-        else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+        } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
                 'OWNER' &&
             _loginResponseModel!.data!.memberships![0]['tenantType'] ==
                 'HEALTHCARE_PROVIDER') {
           navigate.navigateTo(Routes.businessProviderDashboard);
-        }else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+        } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
                 'OWNER' &&
             _loginResponseModel!.data!.memberships![0]['tenantType'] ==
                 'HEALTHCARE_PRACTITIONER') {
@@ -7951,7 +7950,8 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text: '${selectedIndexes.length * returnNumberOfTimes()}',
+                                    text:
+                                        '${selectedIndexes.length * returnNumberOfTimes()}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -7966,7 +7966,7 @@ class AuthViewModel extends BaseViewModel {
                                     ? 6.10.h
                                     : 0.h,
                               ),
-                             selectedIndexes.contains(0)
+                              selectedIndexes.contains(0)
                                   ? Divider(color: AppColors.infoGrey1)
                                   : SizedBox.shrink(),
                               SizedBox(
@@ -7990,8 +7990,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text:
-                                              '₦0',
+                                          text: '₦0',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8003,11 +8002,11 @@ class AuthViewModel extends BaseViewModel {
                                     )
                                   : SizedBox.shrink(),
                               SizedBox(
-                                height:selectedIndexes.contains(1)
+                                height: selectedIndexes.contains(1)
                                     ? 6.10.h
                                     : 0.h,
                               ),
-                             selectedIndexes.contains(1)
+                              selectedIndexes.contains(1)
                                   ? Divider(color: AppColors.infoGrey1)
                                   : SizedBox.shrink(),
                               SizedBox(
@@ -8015,7 +8014,7 @@ class AuthViewModel extends BaseViewModel {
                                     ? 6.10.h
                                     : 0.h,
                               ),
-                             selectedIndexes.contains(1)
+                              selectedIndexes.contains(1)
                                   ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -8031,8 +8030,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text:
-                                              '₦0',
+                                          text: '₦0',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8144,7 +8142,8 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'Phone Calls  (x${returnNumberOfTimes()} calls)',
+                                          text:
+                                              'Phone Calls  (x${returnNumberOfTimes()} calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8153,7 +8152,8 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦${50*returnNumberOfTimes()}',
+                                          text:
+                                              '₦${50 * returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -8681,7 +8681,7 @@ class AuthViewModel extends BaseViewModel {
     drugNameControllerUpdate.text = data.medication!.drugName!;
     medTypeControllerUpdate.text = data.medication!.medicationType!;
     medTypeResultImageUpdate = data.medication!.medicationType!;
-    noteControllerUpdate.text = data.medication?.note??'';
+    noteControllerUpdate.text = data.medication?.note ?? '';
     endDateControllerUpdate.text = data.medication!.endDateTime.toString();
     imageReminderUpdate = data.medication!.medicationImage?.url ?? "";
     startDateIso = data.medication!.startDateTime.toString();
@@ -10845,7 +10845,8 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text: '${selectedIndexes.length * returnNumberOfTimes()}',
+                                    text:
+                                        '${selectedIndexes.length * returnNumberOfTimes()}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -10861,7 +10862,7 @@ class AuthViewModel extends BaseViewModel {
                                     ? 6.10.h
                                     : 0.h,
                               ),
-                             selectedIndexes.contains(0)
+                              selectedIndexes.contains(0)
                                   ? Divider(color: AppColors.infoGrey1)
                                   : SizedBox.shrink(),
                               SizedBox(
@@ -10885,8 +10886,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text:
-                                              '₦0',
+                                          text: '₦0',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10898,11 +10898,11 @@ class AuthViewModel extends BaseViewModel {
                                     )
                                   : SizedBox.shrink(),
                               SizedBox(
-                                height:selectedIndexes.contains(1)
+                                height: selectedIndexes.contains(1)
                                     ? 6.10.h
                                     : 0.h,
                               ),
-                             selectedIndexes.contains(1)
+                              selectedIndexes.contains(1)
                                   ? Divider(color: AppColors.infoGrey1)
                                   : SizedBox.shrink(),
                               SizedBox(
@@ -10910,7 +10910,7 @@ class AuthViewModel extends BaseViewModel {
                                     ? 6.10.h
                                     : 0.h,
                               ),
-                             selectedIndexes.contains(1)
+                              selectedIndexes.contains(1)
                                   ? Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -10926,38 +10926,38 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
+                                          text: '₦0',
+                                          textStyle: TextStyle(
+                                            // fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(3)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                              selectedIndexes.contains(3)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                height: selectedIndexes.contains(3)
+                                    ? 6.10.h
+                                    : 0.h,
+                              ),
+                              selectedIndexes.contains(3)
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
                                           text:
-                                              '₦0',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text: 'WhatsApp  (x${returnNumberOfTimes()} msgs)',
+                                              'WhatsApp  (x${returnNumberOfTimes()} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10966,7 +10966,8 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦${20*returnNumberOfTimes()}',
+                                          text:
+                                              '₦${20 * returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -10996,7 +10997,8 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'SMS  (x${returnNumberOfTimes()} msgs)',
+                                          text:
+                                              'SMS  (x${returnNumberOfTimes()} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -11005,7 +11007,8 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦${10*returnNumberOfTimes()}',
+                                          text:
+                                              '₦${10 * returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -11035,7 +11038,8 @@ class AuthViewModel extends BaseViewModel {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         TextView(
-                                          text: 'Phone Calls  (x${returnNumberOfTimes()} calls)',
+                                          text:
+                                              'Phone Calls  (x${returnNumberOfTimes()} calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -11044,7 +11048,8 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text: '₦${50*returnNumberOfTimes()}',
+                                          text:
+                                              '₦${50 * returnNumberOfTimes()}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -12133,13 +12138,13 @@ class AuthViewModel extends BaseViewModel {
   void addCostTotal() {
     costTotal = 0;
     if (selectedIndexes.contains(2)) {
-      costTotal += 10*returnNumberOfTimes();
+      costTotal += 10 * returnNumberOfTimes();
     }
     if (selectedIndexes.contains(3)) {
-      costTotal += 20*returnNumberOfTimes();
+      costTotal += 20 * returnNumberOfTimes();
     }
     if (selectedIndexes.contains(4)) {
-      costTotal += 50*returnNumberOfTimes();
+      costTotal += 50 * returnNumberOfTimes();
     }
     notifyListeners();
   }

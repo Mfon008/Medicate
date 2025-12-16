@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -38,7 +37,7 @@ class HealthCareResetSuccessScreen extends StatelessWidget {
             SizedBox(height: 30.h),
             TextView(
               text:
-              'You have successfully reset your PIN and can now log in with your new PIN.',
+                  'You have successfully reset your PIN and can now log in with your new PIN.',
               textAlign: TextAlign.center,
               textStyle: TextStyle(
                 fontFamily: 'Arial',

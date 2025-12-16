@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,7 +14,8 @@ class BusinessProviderDashboard extends StatefulWidget {
   int? index;
 
   @override
-  State<BusinessProviderDashboard> createState() => _BusinessProviderDashboardState();
+  State<BusinessProviderDashboard> createState() =>
+      _BusinessProviderDashboardState();
 }
 
 class _BusinessProviderDashboardState extends State<BusinessProviderDashboard> {

@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,10 +16,12 @@ class BusinessProvidersMoreScreen extends StatefulWidget {
   const BusinessProvidersMoreScreen({super.key});
 
   @override
-  State<BusinessProvidersMoreScreen> createState() => _BusinessProvidersMoreScreenState();
+  State<BusinessProvidersMoreScreen> createState() =>
+      _BusinessProvidersMoreScreenState();
 }
 
-class _BusinessProvidersMoreScreenState extends State<BusinessProvidersMoreScreen> {
+class _BusinessProvidersMoreScreenState
+    extends State<BusinessProvidersMoreScreen> {
   List<String> textHistoryList = [
     'Today’s Medication',
     'Good Morning! To keep you on track, here’s your morning medication schedule:',
@@ -37,7 +38,7 @@ class _BusinessProvidersMoreScreenState extends State<BusinessProvidersMoreScree
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 16.20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,20 +74,19 @@ class _BusinessProvidersMoreScreenState extends State<BusinessProvidersMoreScree
                   context,
                   icon: AppImage.profile,
                   text: 'Profile',
-                  onTap: () {}
-                      // navigate.navigateTo(Routes.pharmacyProfileScreen),
+                  onTap: () {},
+                  // navigate.navigateTo(Routes.pharmacyProfileScreen),
                 ),
               ],
             ),
             SizedBox(height: 10.h),
             Row(
               children: [
-
                 moreContainer(
-                    context,
-                    icon: AppImage.settings,
-                    text: 'Settings',
-                    onTap: () {}
+                  context,
+                  icon: AppImage.settings,
+                  text: 'Settings',
+                  onTap: () {},
                   // navigate.navigateTo(Routes.pharmacySettingScreen),
                 ),
                 SizedBox(width: 14.w),
@@ -107,7 +107,6 @@ class _BusinessProvidersMoreScreenState extends State<BusinessProvidersMoreScree
                   text: 'Track Medication Use',
                 ),
                 SizedBox(width: 180.w),
-
               ],
             ),
             SizedBox(height: 200.h),
@@ -144,7 +143,7 @@ class _BusinessProvidersMoreScreenState extends State<BusinessProvidersMoreScree
             ),
             SizedBox(height: 2.20.h),
             ...textHistoryList.map(
-                  (e) => GestureDetector(
+              (e) => GestureDetector(
                 onTap: () {
                   selectHistory = e;
                   setState(() {});
@@ -193,45 +192,49 @@ class _BusinessProvidersMoreScreenState extends State<BusinessProvidersMoreScree
             ),
           ],
         ),
-      )
+      ),
     );
   }
 
-  Expanded moreContainer(context, {String? icon, String? text, Function()? onTap}) =>
-      Expanded(
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 34.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r),
-              color: AppColors.dashboard,
-            ),
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  icon!,
-                  color: AppColors.primary,
-                  height: 26.h,
-                  width: 26.w,
-                ),
-                SizedBox(height: 12.h),
-                TextView(
-                  text: text ?? '',
-                  textAlign: TextAlign.center,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
+  Expanded moreContainer(
+    context, {
+    String? icon,
+    String? text,
+    Function()? onTap,
+  }) => Expanded(
+    child: GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2,
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 34.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.r),
+          color: AppColors.dashboard,
         ),
-      );
+        child: Column(
+          children: [
+            SvgPicture.asset(
+              icon!,
+              color: AppColors.primary,
+              height: 26.h,
+              width: 26.w,
+            ),
+            SizedBox(height: 12.h),
+            TextView(
+              text: text ?? '',
+              textAlign: TextAlign.center,
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 
   void _modalBottomSheetMenu() {
     showModalBottomSheet(

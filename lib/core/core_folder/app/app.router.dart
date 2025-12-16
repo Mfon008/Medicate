@@ -2001,7 +2001,7 @@ class HealthCareDoctorSpecialistSignUpScreenArguments {
 
   final String? healthCareType;
 
-  final String? healthCareArea;
+  final List<String>? healthCareArea;
 
   @override
   String toString() {
@@ -3163,7 +3163,7 @@ extension NavigatorStateExtension on _i61.NavigationService {
   Future<dynamic> navigateToHealthCareDoctorSpecialistSignUpScreen({
     _i60.Key? key,
     required String? healthCareType,
-    required String? healthCareArea,
+    required List<String>? healthCareArea,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4254,7 +4254,7 @@ extension NavigatorStateExtension on _i61.NavigationService {
   Future<dynamic> replaceWithHealthCareDoctorSpecialistSignUpScreen({
     _i60.Key? key,
     required String? healthCareType,
-    required String? healthCareArea,
+    required List<String>? healthCareArea,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,

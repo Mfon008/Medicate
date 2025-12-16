@@ -1,4 +1,3 @@
-
 // ignore: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +16,8 @@ class HealthCareResetPinScreen extends StatefulWidget {
   String? resetToken;
 
   @override
-  State<HealthCareResetPinScreen> createState() => _HealthCareResetPinScreenState();
+  State<HealthCareResetPinScreen> createState() =>
+      _HealthCareResetPinScreenState();
 }
 
 class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
@@ -48,10 +48,7 @@ class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
-        padding: EdgeInsetsGeometry.symmetric(
-          vertical: 60.w,
-          horizontal: 16.w,
-        ),
+        padding: EdgeInsetsGeometry.symmetric(vertical: 60.w, horizontal: 16.w),
         child: Form(
           key: formKey,
           child: Column(
@@ -99,10 +96,7 @@ class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
                   focusedPinTheme: defaultPinTheme.copyWith(
                     decoration: BoxDecoration(
                       color: AppColors.transparent,
-                      border: Border.all(
-                        color: AppColors.primary,
-                        width: 2,
-                      ),
+                      border: Border.all(color: AppColors.primary, width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -148,7 +142,7 @@ class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }

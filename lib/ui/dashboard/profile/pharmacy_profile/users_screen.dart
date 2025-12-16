@@ -121,7 +121,7 @@ class UsersScreen extends StatelessWidget {
                                         model.getUser(
                                           context,
                                         ); // refresh roles after modal closes
-                                      }else {}
+                                      } else {}
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(8.10.w),
@@ -230,8 +230,12 @@ class UsersScreen extends StatelessWidget {
                                                                   e.role?.id,
                                                               membershipId: e
                                                                   .membershipId,
-                                                              country: e.profile?.country,
-                                                              state: e.profile?.state
+                                                              country: e
+                                                                  .profile
+                                                                  ?.country,
+                                                              state: e
+                                                                  .profile
+                                                                  ?.state,
                                                             );
                                                             if (didAddOrEdit ==
                                                                 true) {
@@ -452,8 +456,12 @@ class UsersScreen extends StatelessWidget {
                                                                   e.role?.id,
                                                               membershipId: e
                                                                   .membershipId,
-                                                              country: e.profile?.country,
-                                                          state: e.profile?.state
+                                                              country: e
+                                                                  .profile
+                                                                  ?.country,
+                                                              state: e
+                                                                  .profile
+                                                                  ?.state,
                                                             );
                                                         if (didAddOrEdit ==
                                                             true) {
@@ -674,7 +682,7 @@ class UsersScreen extends StatelessWidget {
                             model.getUser(
                               context,
                             ); // refresh roles after modal closes
-                          }else {}
+                          } else {}
                         },
                       )
                     : SizedBox.shrink(),

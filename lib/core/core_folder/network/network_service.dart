@@ -43,7 +43,7 @@ class NetworkService {
   void _initialiseDio() {
     dio = Dio(
       BaseOptions(
-        connectTimeout: const Duration(seconds:120),
+        connectTimeout: const Duration(seconds: 120),
         receiveTimeout: const Duration(seconds: 120),
         baseUrl: baseUrl ?? AppConfig.apiUrl,
       ),

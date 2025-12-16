@@ -15,7 +15,6 @@ import '../../core/connect_end/model/update_user_entity_model.dart';
 import '../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'text_form_widget.dart';
 
-
 class AddUserModalWidget extends StatelessWidget {
   const AddUserModalWidget({
     super.key,
@@ -496,8 +495,11 @@ class AddUserModalWidget extends StatelessWidget {
                               isLoading: model.isLoading,
                               buttonBorderColor: AppColors.transparent,
                               onPressed: () {
-                                if (model.formKeyValidateAddUser.currentState!.validate()){
-                                  saveUser(model);}},
+                                if (model.formKeyValidateAddUser.currentState!
+                                    .validate()) {
+                                  saveUser(model);
+                                }
+                              },
                             ),
                             SizedBox(height: 20.h),
                           ],
@@ -515,43 +517,41 @@ class AddUserModalWidget extends StatelessWidget {
   }
 
   void saveUser(model) async {
-      print('hit 2');
-      if (isEdit) {
-        print('hit 3');
-       await model.updateUser(
-          parentContext,
-          updateUser: UpdateUserEntityModel(
-            fullName:
-                '${model.nameController.text.trim()} ${model.lastNameController.text.trim()}',
-            email: model.userEmailController.text.trim(),
-            phone: '+234${model.userPhoneController.text.trim().substring(1)}',
-            gender: model.userGenderController.text.trim(),
-            address: model.userAddressController.text.trim(),
-            roleId: model.userRoleControllerId,
-            membershipId: membershipId,
-            country: model.countryController.text,
-            state: model.stateController.text,
-          ),
-        );
-      } else {
-        await model.addUsers(
-          parentContext,
-          createEntity: CreateUserEntityModel(
-            fullName:
-                '${model.nameController.text.trim()} ${model.lastNameController.text.trim()}',
-            email: model.userEmailController.text.trim(),
-            phone: '+234${model.userPhoneController.text.trim().substring(1)}',
-            gender: model.userGenderController.text.trim(),
-            address: model.userAddressController.text.trim(),
-            pin: model.userPinController.text.trim(),
-            roleId: model.userRoleControllerId,
-            country: model.countryController.text,
-            state: model.stateController.text,
-          ),
-        );
-
+    print('hit 2');
+    if (isEdit) {
+      print('hit 3');
+      await model.updateUser(
+        parentContext,
+        updateUser: UpdateUserEntityModel(
+          fullName:
+              '${model.nameController.text.trim()} ${model.lastNameController.text.trim()}',
+          email: model.userEmailController.text.trim(),
+          phone: '+234${model.userPhoneController.text.trim().substring(1)}',
+          gender: model.userGenderController.text.trim(),
+          address: model.userAddressController.text.trim(),
+          roleId: model.userRoleControllerId,
+          membershipId: membershipId,
+          country: model.countryController.text,
+          state: model.stateController.text,
+        ),
+      );
+    } else {
+      await model.addUsers(
+        parentContext,
+        createEntity: CreateUserEntityModel(
+          fullName:
+              '${model.nameController.text.trim()} ${model.lastNameController.text.trim()}',
+          email: model.userEmailController.text.trim(),
+          phone: '+234${model.userPhoneController.text.trim().substring(1)}',
+          gender: model.userGenderController.text.trim(),
+          address: model.userAddressController.text.trim(),
+          pin: model.userPinController.text.trim(),
+          roleId: model.userRoleControllerId,
+          country: model.countryController.text,
+          state: model.stateController.text,
+        ),
+      );
     }
     onSuccess();
   }
-
 }

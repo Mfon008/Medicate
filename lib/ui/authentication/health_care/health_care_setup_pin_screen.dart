@@ -1,11 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pinput/pinput.dart';
+import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/set_pin_entity_model.dart';
+import '../../../core/connect_end/view_model/health_care_view_model.dart';
+import '../../../core/core_folder/app/app.locator.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
@@ -13,7 +16,8 @@ class HealthCareSetupPinScreen extends StatefulWidget {
   const HealthCareSetupPinScreen({super.key});
 
   @override
-  State<HealthCareSetupPinScreen> createState() => _HealthCareSetupPinScreenState();
+  State<HealthCareSetupPinScreen> createState() =>
+      _HealthCareSetupPinScreenState();
 }
 
 class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
@@ -43,11 +47,13 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        padding: EdgeInsetsGeometry.symmetric(
-          vertical: 60.w,
-          horizontal: 16.w,
-        ),
+      body: ViewModelBuilder<HealthCareViewModel>.reactive(
+          viewModelBuilder: () => locator<HealthCareViewModel>(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          builder: (_, HealthCareViewModel model, _) {
+            return SingleChildScrollView(
+        padding: EdgeInsetsGeometry.symmetric(vertical: 60.w, horizontal: 16.w),
         child: Form(
           key: formKey,
           child: Column(
@@ -78,7 +84,7 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
               SizedBox(height: 5.0.h),
               TextView(
                 text:
-                'This pin will give you access to the app anytime you log in.',
+                    'This pin will give you access to the app anytime you log in.',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 15.2.sp,
@@ -107,10 +113,7 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                   focusedPinTheme: defaultPinTheme.copyWith(
                     decoration: BoxDecoration(
                       color: AppColors.transparent,
-                      border: Border.all(
-                        color: AppColors.primary,
-                        width: 2,
-                      ),
+                      border: Border.all(color: AppColors.primary, width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -136,13 +139,13 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                 buttonText: 'Continue',
                 color: AppColors.white,
                 buttonBorderColor: AppColors.transparent,
-                // isLoading: model.isLoading,
+                isLoading: model.isLoading,
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
-                    // model.setPinPharmacy(
-                    //   context,
-                    //   setPinEntityModel: SetPinEntityModel(pin: pinInput),
-                    // );
+                    model.setPin(
+                      context,
+                      setPinEntityModel: SetPinEntityModel(pin: pinInput),
+                    );
                   }
                 },
               ),
@@ -161,7 +164,7 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
             ],
           ),
         ),
-      )
-    );
+      );}
+    ));
   }
 }

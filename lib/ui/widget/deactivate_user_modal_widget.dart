@@ -27,7 +27,8 @@ class DeactivateUserModalWidget extends StatelessWidget {
 
   void deactivateUser(modelPharm) async {
     await modelPharm.deactivateUser(parentContext, id: userId);
-    if ( modelPharm.vdeactivate != null && modelPharm.vdeactivate['statusCode'] == 200) {
+    if (modelPharm.vdeactivate != null &&
+        modelPharm.vdeactivate['statusCode'] == 200) {
       onSuccess();
     } else {
       await AppUtils.snackbar(

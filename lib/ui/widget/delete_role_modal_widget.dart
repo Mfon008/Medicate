@@ -28,7 +28,7 @@ class DeleteRoleModalWidget extends StatelessWidget {
 
   void deleteRole(modelPharm) async {
     await modelPharm.deleteRole(parentContext, roleId: roleId);
-    if ( modelPharm.vdelete != null && modelPharm.vdelete['statusCode'] == 200) {
+    if (modelPharm.vdelete != null && modelPharm.vdelete['statusCode'] == 200) {
       onSuccess();
     } else {
       await AppUtils.snackbar(

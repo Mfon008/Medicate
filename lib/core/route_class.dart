@@ -36,6 +36,20 @@ class AppRoutes {
         type.isLogin == true) {
       return Routes.pharmacyWelcomeScreen;
     }
+    // healthcare flow
+    if (type.authType == 'healthcare' &&
+        type.isSignUp == true &&
+        type.isLogin == true) {
+      return Routes.healthCareWelcomeScreen;
+    } else if (type.authType == 'healthcare' &&
+        type.isSignUp == true &&
+        type.isLogin == false) {
+      return Routes.healthCareLoginScreen;
+    } else if (type.authType == 'healthcare' &&
+        type.isSignUp == false &&
+        type.isLogin == true) {
+      return Routes.healthCareWelcomeScreen;
+    }
     return Routes.splashScreen;
   }
 }

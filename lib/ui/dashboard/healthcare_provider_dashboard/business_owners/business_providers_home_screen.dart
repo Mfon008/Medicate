@@ -15,7 +15,6 @@ import '../../../widget/ai_text_form_widget.dart';
 import '../../../widget/text.dart';
 import '../../ask_me_screen.dart';
 
-
 class BusinessProvidersHomeScreen extends StatefulWidget {
   const BusinessProvidersHomeScreen({super.key});
 
@@ -237,7 +236,7 @@ class _BusinessProvidersHomeScreenState
                                   width: 250.w,
                                   child: TextView(
                                     text:
-                                        'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalize() ?? ''}',
+                                        'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalizeWords() ?? ''}',
                                     maxLines: 2,
                                     textOverflow: TextOverflow.ellipsis,
                                     textStyle: TextStyle(

@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,10 +15,12 @@ class SpecialistsProviderDashboard extends StatefulWidget {
   int? index;
 
   @override
-  State<SpecialistsProviderDashboard> createState() => _SpecialistsProviderDashboardState();
+  State<SpecialistsProviderDashboard> createState() =>
+      _SpecialistsProviderDashboardState();
 }
 
-class _SpecialistsProviderDashboardState extends State<SpecialistsProviderDashboard> {
+class _SpecialistsProviderDashboardState
+    extends State<SpecialistsProviderDashboard> {
   int _currentIndex = 0;
 
   final List<Widget> _body = [

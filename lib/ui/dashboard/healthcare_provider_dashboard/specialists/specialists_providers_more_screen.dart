@@ -1,6 +1,5 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,15 +12,16 @@ import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 import '../../../widget/text_form_widget.dart';
 
-
 class SpecialistsProvidersMoreScreen extends StatefulWidget {
   const SpecialistsProvidersMoreScreen({super.key});
 
   @override
-  State<SpecialistsProvidersMoreScreen> createState() => _SpecialistsProvidersMoreScreenState();
+  State<SpecialistsProvidersMoreScreen> createState() =>
+      _SpecialistsProvidersMoreScreenState();
 }
 
-class _SpecialistsProvidersMoreScreenState extends State<SpecialistsProvidersMoreScreen> {
+class _SpecialistsProvidersMoreScreenState
+    extends State<SpecialistsProvidersMoreScreen> {
   List<String> textHistoryList = [
     'Today’s Medication',
     'Good Morning! To keep you on track, here’s your morning medication schedule:',
@@ -38,7 +38,7 @@ class _SpecialistsProvidersMoreScreenState extends State<SpecialistsProvidersMor
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 16.20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,13 +71,12 @@ class _SpecialistsProvidersMoreScreenState extends State<SpecialistsProvidersMor
                 ),
                 SizedBox(width: 14.w),
                 moreContainer(
-                    context,
-                    icon: AppImage.settings,
-                    text: 'Settings',
-                    onTap: () {}
+                  context,
+                  icon: AppImage.settings,
+                  text: 'Settings',
+                  onTap: () {},
                   // navigate.navigateTo(Routes.pharmacySettingScreen),
                 ),
-
               ],
             ),
             SizedBox(height: 10.h),
@@ -130,7 +129,7 @@ class _SpecialistsProvidersMoreScreenState extends State<SpecialistsProvidersMor
             ),
             SizedBox(height: 2.20.h),
             ...textHistoryList.map(
-                  (e) => GestureDetector(
+              (e) => GestureDetector(
                 onTap: () {
                   selectHistory = e;
                   setState(() {});
@@ -179,45 +178,49 @@ class _SpecialistsProvidersMoreScreenState extends State<SpecialistsProvidersMor
             ),
           ],
         ),
-      )
+      ),
     );
   }
 
-  Expanded moreContainer(context, {String? icon, String? text, Function()? onTap}) =>
-      Expanded(
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 34.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r),
-              color: AppColors.dashboard,
-            ),
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  icon!,
-                  color: AppColors.primary,
-                  height: 26.h,
-                  width: 26.w,
-                ),
-                SizedBox(height: 12.h),
-                TextView(
-                  text: text ?? '',
-                  textAlign: TextAlign.center,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
+  Expanded moreContainer(
+    context, {
+    String? icon,
+    String? text,
+    Function()? onTap,
+  }) => Expanded(
+    child: GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 34.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.r),
+          color: AppColors.dashboard,
         ),
-      );
+        child: Column(
+          children: [
+            SvgPicture.asset(
+              icon!,
+              color: AppColors.primary,
+              height: 26.h,
+              width: 26.w,
+            ),
+            SizedBox(height: 12.h),
+            TextView(
+              text: text ?? '',
+              textAlign: TextAlign.center,
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 
   void _modalBottomSheetMenu() {
     showModalBottomSheet(

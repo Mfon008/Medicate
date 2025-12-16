@@ -107,7 +107,7 @@ class PharmContractsImpl {
   Future<dynamic> deleteUser(String id) async => await _api.deleteUser(id);
   Future<dynamic> uploadProPicture(MultipartFile file) async =>
       await _api.uploadProPicture(file);
-    Future<CreateReminderResponseModel> createReminder(
+  Future<CreateReminderResponseModel> createReminder(
     CreateReminderEntityModel createReminderEntityModel,
   ) async => await _api.createReminder(createReminderEntityModel);
   Future<UploadImageReminderResponseModel> uploadImageReminder(
@@ -151,5 +151,4 @@ class PharmContractsImpl {
   Future<InitiatePaymentResponseModel> initiatePayment({
     String? reference,
   }) async => await _api.initiatePayment(reference: reference);
-
 }

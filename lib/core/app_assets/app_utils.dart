@@ -45,7 +45,7 @@ class AppUtils {
       borderRadius: BorderRadius.circular(8.r),
     ).show(context!);
   }
-  
+
   static Future<void> snackbarNoCap(
     BuildContext? context, {
     required String? message,

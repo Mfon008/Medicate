@@ -496,7 +496,6 @@ class PharmApi {
     }
   }
 
-
   Future<UploadImageReminderResponseModel> uploadImageReminder(
     MultipartFile file,
   ) async {
@@ -670,5 +669,4 @@ class PharmApi {
       rethrow;
     }
   }
-
 }

@@ -307,7 +307,6 @@ class PharmRepoImpl {
     return response;
   }
 
-
   void _chache(data) {
     if (data != null) {
       _session.authToken = data.data.accessToken;

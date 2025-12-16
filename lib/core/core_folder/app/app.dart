@@ -60,12 +60,16 @@ import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
 import '../../api_folder/auth_api.dart';
+import '../../api_folder/healthcare_api.dart';
 import '../../api_folder/pharm_auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
+import '../../connect_end/contrast/healthcare_contract_impl.dart';
 import '../../connect_end/contrast/pharm_contract_impl.dart';
+import '../../connect_end/repo/healthcare_repo_impl.dart';
 import '../../connect_end/repo/pharm_repo_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
 import '../../connect_end/view_model/auth_view_model.dart';
+import '../../connect_end/view_model/health_care_view_model.dart';
 import '../../connect_end/view_model/pharm_auth_view_model.dart';
 import '../manager/shared_preference.dart';
 import '../network/network_service.dart';
@@ -158,12 +162,16 @@ import '../network/support_network_service.dart';
     LazySingleton(classType: SupportNetworkService),
     LazySingleton(classType: AuthApi),
     LazySingleton(classType: PharmApi),
+    LazySingleton(classType: HealthcareApi),
     LazySingleton(classType: AuthContractsImpl),
     LazySingleton(classType: PharmContractsImpl),
+    LazySingleton(classType: HealthcareContractsImpl),
     LazySingleton(classType: AuthRepoImpl),
     LazySingleton(classType: PharmRepoImpl),
+    LazySingleton(classType: HealthcareRepoImpl),
     LazySingleton(classType: AuthViewModel),
     Factory(classType: PharmViewModel),
+    Factory(classType: HealthCareViewModel),
   ],
   logger: StackedLogger(),
 )

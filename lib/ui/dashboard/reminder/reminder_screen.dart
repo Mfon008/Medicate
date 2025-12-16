@@ -31,7 +31,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-         await model.getTodaysReminder(
+          await model.getTodaysReminder(
             context,
             period: model.timePeriod,
             date: DateFormat('yyyy-MM-dd').format(DateTime.now()),

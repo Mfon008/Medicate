@@ -115,26 +115,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ],
                   ),
                   SizedBox(height: 26.0.h),
-                  model.getUserDetailsResponseModel!=null && model.getUserDetailsResponseModel!.data!.displayName !=null
-
-                      ?TextView(
-                        text:
-                        'Welcome back, ${model.getUserDetailsResponseModel?.data?.displayName?.capitalizeWords() ?? ''}',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.black,
-                        ),
-                      ): TextView(
-                          text:// ignore: unnecessary_null_comparison
-                            SharedPreferencesService
-                                    .instance
-                                    .usersData['user'] ==
-                                null
-                            ? 'Welcome back'
-                            : 
-                              'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalizeWords()}',
+                  model.getUserDetailsResponseModel != null &&
+                          model
+                                  .getUserDetailsResponseModel!
+                                  .data!
+                                  .displayName !=
+                              null
+                      ? TextView(
+                          text:
+                              'Welcome back, ${model.getUserDetailsResponseModel?.data?.displayName?.capitalizeWords() ?? ''}',
                           textStyle: TextStyle(
                             fontFamily: 'GoogleSans',
                             fontSize: 20.sp,
@@ -142,7 +131,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             color: AppColors.black,
                           ),
                         )
-                      ,
+                      : TextView(
+                          text: // ignore: unnecessary_null_comparison
+                              SharedPreferencesService
+                                      .instance
+                                      .usersData['user'] ==
+                                  null
+                              ? 'Welcome back'
+                              : 'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalizeWords()}',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.black,
+                          ),
+                        ),
                   SizedBox(height: 3.70.h),
                   TextView(
                     text: 'Enter your 4 digit pin to continue',

@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,10 +41,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
-        padding: EdgeInsetsGeometry.symmetric(
-          vertical: 60.w,
-          horizontal: 16.w,
-        ),
+        padding: EdgeInsetsGeometry.symmetric(vertical: 60.w, horizontal: 16.w),
         child: Form(
           key: formKey,
           child: Column(
@@ -76,7 +72,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
               SizedBox(height: 10.h),
               TextView(
                 text:
-                'Enter the phone number associated with your account to get a PIN reset OTP.',
+                    'Enter the phone number associated with your account to get a PIN reset OTP.',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 15.2.sp,
@@ -162,9 +158,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
                           setState(() {});
                         },
                         validator: (value) {
-                          final result = AppValidator.validatePhone()(
-                            value,
-                          );
+                          final result = AppValidator.validatePhone()(value);
                           if (result != null) {
                             isPhoneValid = true;
                           } else {
@@ -192,15 +186,15 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
                 onPressed: !isPassed(isPhone: isPhone)
                     ? () {}
                     : () {
-                  if (formKey.currentState!.validate()) {
-                    // model.forgotPasswordPharmacy(
-                    //   context,
-                    //   forgotPassword: ResendOtpEntityModel(
-                    //     phone: '+234${phoneController.text}',
-                    //   ),
-                    // );
-                  }
-                },
+                        if (formKey.currentState!.validate()) {
+                          // model.forgotPasswordPharmacy(
+                          //   context,
+                          //   forgotPassword: ResendOtpEntityModel(
+                          //     phone: '+234${phoneController.text}',
+                          //   ),
+                          // );
+                        }
+                      },
               ),
               SizedBox(height: 30.h),
               Center(
@@ -232,7 +226,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
             ],
           ),
         ),
-      )
+      ),
     );
   }
 }

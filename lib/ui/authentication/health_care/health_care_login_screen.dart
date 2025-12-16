@@ -48,10 +48,7 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
-        padding: EdgeInsetsGeometry.symmetric(
-          vertical: 60.w,
-          horizontal: 16.w,
-        ),
+        padding: EdgeInsetsGeometry.symmetric(vertical: 60.w, horizontal: 16.w),
         child: Form(
           key: formKey,
           child: Column(
@@ -175,9 +172,7 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
                           setState(() {});
                         },
                         validator: (value) {
-                          final result = AppValidator.validatePhone()(
-                            value,
-                          );
+                          final result = AppValidator.validatePhone()(value);
                           if (result != null) {
                             isPhoneValid = true;
                           } else {
@@ -208,8 +203,7 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
                         color: AppColors.primary,
                         decoration: TextDecoration.underline,
                       ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {}
+                      recognizer: TapGestureRecognizer()..onTap = () {},
                     ),
                   ],
                 ),
@@ -226,19 +220,21 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
                 onPressed: !isPassed(isPhone: isPhone)
                     ? () {}
                     : () {
-                  if (formKey.currentState!.validate()) {
-
-                  }
-                },
+                        if (formKey.currentState!.validate()) {
+                          navigate.navigateTo(
+                            Routes.healthCareWelcomeScreen,
+                            arguments: HealthCareWelcomeScreenArguments(
+                              phone: '+234${phoneController.text}',
+                            ),
+                          );
+                        }
+                      },
               ),
               SizedBox(height: 30.h),
               Row(
                 children: [
                   Expanded(
-                    child: Divider(
-                      color: AppColors.buttonGrey1,
-                      thickness: 1,
-                    ),
+                    child: Divider(color: AppColors.buttonGrey1, thickness: 1),
                   ),
                   SizedBox(width: 20.w),
                   TextView(
@@ -252,10 +248,7 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
                   ),
                   SizedBox(width: 20.w),
                   Expanded(
-                    child: Divider(
-                      color: AppColors.buttonGrey1,
-                      thickness: 1,
-                    ),
+                    child: Divider(color: AppColors.buttonGrey1, thickness: 1),
                   ),
                 ],
               ),
