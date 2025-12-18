@@ -63,7 +63,7 @@ class HealthcareApi {
     }
   }
 
-  Future<SignUpPhamaryResponseModel> signUpBusineesOwner(
+  Future<SignUpPhamaryResponseModel> signUpBusinessOwner(
     SignUpHealthcareBusinessOwnerEntityModel signUpEntity,
   ) async {
     try {

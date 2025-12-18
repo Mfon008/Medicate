@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:stacked/stacked.dart';
 
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
@@ -34,7 +36,12 @@ class _HealthCareChangePhoneNumberState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
+      body: ViewModelBuilder<HealthCareViewModel>.reactive(
+          viewModelBuilder: () =>HealthCareViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          builder: (_, HealthCareViewModel model, _) {
+            return SingleChildScrollView(
         padding: EdgeInsetsGeometry.symmetric(vertical: 60.w, horizontal: 16.w),
         child: Form(
           key: formKey,
@@ -198,11 +205,11 @@ class _HealthCareChangePhoneNumberState
                     ? () {}
                     : () {
                         if (formKey.currentState!.validate()) {
-                          // model.changeNumberPharmacy(
-                          //   context,
-                          //   phone: '+234${phoneController.text.trim()}',
-                          //   id: widget.id,
-                          // );
+                          model.changeNumberHealthCare(
+                            context,
+                            phone: '+234${phoneController.text.trim()}',
+                            id: widget.id,
+                          );
                         }
                       },
               ),
@@ -210,8 +217,8 @@ class _HealthCareChangePhoneNumberState
             ],
           ),
         ),
-      ),
-    );
+      );}
+    ));
   }
 
   bool isPassed({required bool isPhone}) {

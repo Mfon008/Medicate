@@ -9,6 +9,9 @@ import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/set_pin_entity_model.dart';
 import '../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../core/core_folder/manager/shared_preference.dart';
+import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
@@ -157,7 +160,18 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                 color: AppColors.primary,
                 buttonBorderColor: AppColors.primary,
                 onPressed: () {
-                  // navigate.navigateTo(Routes.pharmacyDashboard);
+                 print('1::${SharedPreferencesService.instance.usersData}');
+                 if (SharedPreferencesService.instance.usersData['memberships'][0]['role'] ==
+                     'OWNER' &&
+                     SharedPreferencesService.instance.usersData['memberships'][0]['tenantType'] ==
+                         'HEALTHCARE_PROVIDER') {
+                   navigate.navigateTo(Routes.businessProviderDashboard);
+                 } else if (SharedPreferencesService.instance.usersData['memberships'][0]['role'] ==
+                     'OWNER' &&
+                     SharedPreferencesService.instance.usersData['memberships'][0]['tenantType'] ==
+                         'HEALTHCARE_PRACTITIONER') {
+                   navigate.navigateTo(Routes.specialistsProviderDashboard);
+                 }
                 },
               ),
               SizedBox(height: 16.30.h),

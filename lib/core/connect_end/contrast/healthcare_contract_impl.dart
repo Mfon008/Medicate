@@ -30,7 +30,7 @@ class HealthcareContractsImpl {
 
   Future<SignUpPhamaryResponseModel> signUpBusinessOwner(
       SignUpHealthcareBusinessOwnerEntityModel signUpEntity,) async =>
-      await _api.signUpBusineesOwner(signUpEntity);
+      await _api.signUpBusinessOwner(signUpEntity);
 
   Future<SignUpPhamaryResponseModel> signUpPractitioner(
       SignUpHealthcareProviderPractitionerEntityModel signUpEntity,) async =>

@@ -327,9 +327,9 @@ class HealthCareViewModel extends BaseViewModel {
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () => navigate.navigateTo(
-                                              Routes.pharmacyChangePhoneNumber,
+                                              Routes.healthCareChangePhoneNumber,
                                               arguments:
-                                              PharmacyChangePhoneNumberArguments(
+                                              HealthCareChangePhoneNumberArguments(
                                                 id: id,
                                               ),
                                             ),
@@ -1486,7 +1486,6 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-
   void verifyOtpHealthcare(
       context, {
         VerifyPhoneEntityModel? verifyEntity,
@@ -1505,6 +1504,26 @@ class HealthCareViewModel extends BaseViewModel {
         );
 
         navigate.navigateTo(Routes.healthCareSetupPinScreen);
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void changeNumberHealthCare(context, {String? phone, String? id}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.changePhoneNo(changePhoneNo: phone, id: id),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 200) {
+        await AppUtils.snackbar(context, message: v['message']);
+        modalBottomSheetMenuChangeVerifyPhone(context: context, phoneNo: phone);
       }
     } catch (e) {
       _isLoading = false;
