@@ -1375,8 +1375,8 @@ class HealthCareViewModel extends BaseViewModel {
           message: _verifyPassOtpRespnseModel?.message,
         );
         navigate.navigateTo(
-          Routes.pharmacyResetPinScreen,
-          arguments: PharmacyResetPinScreenArguments(
+          Routes.healthCareResetPinScreen,
+          arguments: HealthCareResetPinScreenArguments(
             phone: verifyPhoneEntity.phone,
             resetToken: _verifyPassOtpRespnseModel!.data!.resetToken,
           ),
