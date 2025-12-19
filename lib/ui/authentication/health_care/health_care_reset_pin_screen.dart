@@ -1,4 +1,7 @@
+// ignore: duplicate_ignore
 // ignore: must_be_immutable
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';

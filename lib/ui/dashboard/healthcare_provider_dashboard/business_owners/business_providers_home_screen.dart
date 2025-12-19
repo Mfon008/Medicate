@@ -236,7 +236,7 @@ class _BusinessProvidersHomeScreenState
                                   width: 250.w,
                                   child: TextView(
                                     text:
-                                        'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalizeWords() ?? ''}',
+                                        'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalizeWords()}',
                                     maxLines: 2,
                                     textOverflow: TextOverflow.ellipsis,
                                     textStyle: TextStyle(

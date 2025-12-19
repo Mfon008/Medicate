@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +10,6 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/view_model/health_care_view_model.dart';
-import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
 import '../../widget/button.dart';

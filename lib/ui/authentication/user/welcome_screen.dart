@@ -18,7 +18,6 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
-import '../../../core/core_folder/app/app.locator.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../bio_authentication.dart';

@@ -160,7 +160,6 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                 color: AppColors.primary,
                 buttonBorderColor: AppColors.primary,
                 onPressed: () {
-                 print('1::${SharedPreferencesService.instance.usersData}');
                  if (SharedPreferencesService.instance.usersData['memberships'][0]['role'] ==
                      'OWNER' &&
                      SharedPreferencesService.instance.usersData['memberships'][0]['tenantType'] ==
