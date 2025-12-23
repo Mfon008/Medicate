@@ -123,7 +123,7 @@ class TransactionScreen extends StatelessWidget {
     );
   }
 
-  profileContainer({
+  GestureDetector profileContainer({
     double topLeft = 0,
     double topRight = 0,
     double bottomLeft = 0,

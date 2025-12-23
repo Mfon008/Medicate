@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
+import '../../../../core/core_folder/app/app.router.dart';
 import '../../../../main.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
@@ -74,8 +75,7 @@ class _SpecialistsProvidersMoreScreenState
                   context,
                   icon: AppImage.settings,
                   text: 'Settings',
-                  onTap: () {},
-                  // navigate.navigateTo(Routes.pharmacySettingScreen),
+                  onTap: () => navigate.navigateTo(Routes.healthCarePractitionerProfileScreen),
                 ),
               ],
             ),

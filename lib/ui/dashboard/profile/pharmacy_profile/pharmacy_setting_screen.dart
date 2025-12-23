@@ -114,7 +114,7 @@ class PharmacySettingScreen extends StatelessWidget {
     );
   }
 
-  profileContainer({
+  GestureDetector profileContainer({
     String? icon,
     String? text,
     double topLeft = 0,

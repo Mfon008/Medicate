@@ -293,9 +293,8 @@ class _HealthCareWelcomeScreenState extends State<HealthCareWelcomeScreen> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => navigate.navigateTo(
-                                Routes.roleOnboarding
-                              ),
+                              ..onTap = () =>
+                                  navigate.navigateTo(Routes.roleOnboarding),
                           ),
                         ],
                       ),

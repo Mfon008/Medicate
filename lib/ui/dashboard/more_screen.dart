@@ -192,40 +192,44 @@ class _MoreScreenState extends State<MoreScreen> {
     );
   }
 
-  moreContainer(context, {String? icon, String? text, Function()? onTap}) =>
-      Expanded(
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: MediaQuery.of(context).size.width / 2,
-            padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 34.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r),
-              color: AppColors.dashboard,
-            ),
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  icon!,
-                  color: AppColors.primary,
-                  height: 26.h,
-                  width: 26.w,
-                ),
-                SizedBox(height: 12.h),
-                TextView(
-                  text: text ?? '',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.black,
-                  ),
-                ),
-              ],
-            ),
-          ),
+  Expanded moreContainer(
+    context, {
+    String? icon,
+    String? text,
+    Function()? onTap,
+  }) => Expanded(
+    child: GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2,
+        padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 34.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.r),
+          color: AppColors.dashboard,
         ),
-      );
+        child: Column(
+          children: [
+            SvgPicture.asset(
+              icon!,
+              color: AppColors.primary,
+              height: 26.h,
+              width: 26.w,
+            ),
+            SizedBox(height: 12.h),
+            TextView(
+              text: text ?? '',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 
   void _modalBottomSheetMenu() {
     showModalBottomSheet(

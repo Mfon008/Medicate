@@ -193,7 +193,11 @@ class SupportScreen extends StatelessWidget {
     );
   }
 
-  conContainer({String? icon, String? text1, String? text2}) => Container(
+  Container conContainer({
+    String? icon,
+    String? text1,
+    String? text2,
+  }) => Container(
     margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.12.w),
     padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.w),
     decoration: BoxDecoration(

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
 
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
@@ -74,8 +75,8 @@ class _BusinessProvidersMoreScreenState
                   context,
                   icon: AppImage.profile,
                   text: 'Profile',
-                  onTap: () {},
-                  // navigate.navigateTo(Routes.pharmacyProfileScreen),
+                  onTap: () =>
+                      navigate.navigateTo(Routes.healthCareProfileScreen),
                 ),
               ],
             ),

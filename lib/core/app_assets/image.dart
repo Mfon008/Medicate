@@ -18,6 +18,7 @@ class AppImage {
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String calendar = 'assets/svgs/calendar.svg';
   static const String delete = 'assets/svgs/delete.svg';
+  static const String round_edit = 'assets/svgs/round_edit.svg';
   static const String exclam = 'assets/svgs/exclam.svg';
   static const String upload = 'assets/svgs/upload.svg';
   static const String ex_error = 'assets/svgs/ex_error.svg';

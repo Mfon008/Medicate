@@ -52,7 +52,7 @@ class TextFormDoseWidget extends StatelessWidget {
   final double? borderBottomLeft;
 
   TextFormDoseWidget({
-    Key? key,
+    super.key,
     this.textCapitalization,
     this.label,
     this.floatingLabel,
@@ -96,7 +96,7 @@ class TextFormDoseWidget extends StatelessWidget {
     this.minline,
     this.focusNode,
     this.hintColor = AppColors.black,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

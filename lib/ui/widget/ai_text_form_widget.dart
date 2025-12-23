@@ -48,7 +48,7 @@ class AiTextFormWidget extends StatelessWidget {
   final double? borderBottomLeft;
 
   AiTextFormWidget({
-    Key? key,
+    super.key,
     this.textCapitalization,
     this.label,
     this.floatingLabel,
@@ -89,7 +89,7 @@ class AiTextFormWidget extends StatelessWidget {
     this.minline,
     this.focusNode,
     this.hintColor = AppColors.black,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

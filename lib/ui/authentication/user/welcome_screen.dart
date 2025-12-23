@@ -1,13 +1,10 @@
 // ignore_for_file: must_be_immutable
-
 import 'dart:io';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/core/core_folder/manager/shared_preference.dart';
@@ -122,7 +119,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               null
                       ? TextView(
                           text:
-                              'Welcome back, ${model.getUserDetailsResponseModel?.data?.displayName?.capitalizeWords() ?? ''}',
+                              'Welcome back, ${model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
                           textStyle: TextStyle(
                             fontFamily: 'GoogleSans',
                             fontSize: 20.sp,
@@ -137,7 +134,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       .usersData['user'] ==
                                   null
                               ? 'Welcome back'
-                              : 'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString().capitalizeWords()}',
+                              : 'Welcome back, ${SharedPreferencesService.instance.usersData['user']['fullName'].toString()}',
                           textStyle: TextStyle(
                             fontFamily: 'GoogleSans',
                             fontSize: 20.sp,

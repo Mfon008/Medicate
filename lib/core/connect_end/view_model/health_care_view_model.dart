@@ -1,5 +1,5 @@
+// ignore_for_file: strict_top_level_inference
 import 'dart:async';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,10 +10,14 @@ import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
+import '../../../ui/widget/add_role_modal_widget.dart';
 import '../../../ui/widget/button.dart';
+import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/text.dart';
+import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
+import '../../app_assets/country_code_format.dart';
 import '../../app_assets/image.dart';
 import '../../config/colors.dart';
 import '../../core_folder/app/app.locator.dart';
@@ -22,6 +26,7 @@ import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
@@ -78,6 +83,30 @@ class HealthCareViewModel extends BaseViewModel {
   VerifyPassOtpRespnseModel? get verifyPassOtpRespnseModel =>
       _verifyPassOtpRespnseModel;
 
+  GetRolesResponseModel? _getRolesResponseModel;
+  GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
+
+  TextEditingController countryController = TextEditingController();
+  TextEditingController stateController = TextEditingController();
+  TextEditingController lgaController = TextEditingController();
+  TextEditingController meansIdController = TextEditingController();
+  List<String> selectService = [];
+  List<String> selectServicePractitioner = [];
+  List services = [
+    'Appointment scheduling',
+    'Medication reminder',
+    'Bulk Purchase',
+    'Product listing',
+  ];
+  List servicesPractitioner = [
+    'Appointment scheduling',
+    'Medication reminder',
+    'Product listing',
+  ];
+
+  String querySignUpCountry = '';
+  String? searchRoles = '';
+
   final defaultPinTheme = PinTheme(
     width: 50.w,
     height: 50.h,
@@ -101,9 +130,215 @@ class HealthCareViewModel extends BaseViewModel {
     'Gynecology',
     'Pediatrics',
   ];
+
   List<String> addAreaExpertise = [];
 
   int _start = 60;
+  
+  List<String> meansId = [
+    'Driver’s License',
+    'International Passport',
+    'National ID',
+    'Citizenship Card',
+    'Biometric Residence Permit (BRP)',
+    'State ID Card',
+    'Green Card/Resident Card',
+    'Voter ID Card',
+    'Asylum Seeker ID',
+    'Alien ID Card'
+  ];
+
+  Widget buildImage(String path) {
+    if (path.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.network(
+        path,
+        height: 20.h,
+        width: 30.w,
+        fit: BoxFit.cover,
+        placeholderBuilder: (context) => Container(
+          height: 20.h,
+          width: 30.w,
+          decoration: BoxDecoration(color: AppColors.grey),
+        ),
+      );
+    }
+    return Image.network(
+      path,
+      height: 20.h,
+      width: 30.w,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => Container(
+        height: 20.h,
+        width: 30.w,
+        decoration: BoxDecoration(color: AppColors.grey),
+      ),
+    );
+  }
+
+  void modalBottomSheetMenuCountry(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.5,
+            minChildSize: 0.3,
+            maxChildSize: 0.9,
+            builder: (context, scrollController) {
+              return ViewModelBuilder<HealthCareViewModel>.reactive(
+                viewModelBuilder: () => this, // 👈 use current model
+                disposeViewModel: false,
+                builder: (_, model, _) {
+                  final filtered = querySignUpCountry.isEmpty
+                      ? countryCodeFormat
+                      : countryCodeFormat.where((e) {
+                          return e['country']!.toLowerCase().contains(
+                            querySignUpCountry.toLowerCase(),
+                          );
+                        }).toList();
+                  return Column(
+                    children: [
+                      SizedBox(height: 22.h),
+
+                      // Search Bar
+                      Padding(
+                        padding: EdgeInsets.all(12.w),
+                        child: TextFormWidget(
+                          label: 'Search country',
+                          isFilled: true,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.grey,
+                          controller: countryController,
+                          suffixIcon: Icons.search_sharp,
+                          onChange: (value) {
+                            querySignUpCountry = value;
+                            model.notifyListeners();
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 10.h),
+
+                      // Expanded List
+                      Expanded(
+                        child: ListView.builder(
+                          controller: scrollController,
+                          itemCount: filtered.length,
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          itemBuilder: (context, index) {
+                            final item = filtered[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                countryController.text = item['country'];
+                                Navigator.pop(context);
+                                notifyListeners();
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 8.h),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 8.h,
+                                  horizontal: 6.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width: 180.w,
+                                      child: TextView(
+                                        text: item['country'],
+                                        textOverflow: TextOverflow.ellipsis,
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 17.2.sp,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                    ),
+                                    buildImage(item['Flag']),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                      SizedBox(height: 16.h),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget chooseNotChannelWidget(
+    context, {
+    required String text,
+    required bool isTapped,
+    required VoidCallback onTap,
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 16.w),
+      margin: EdgeInsets.only(bottom: 10.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: AppColors.infoGrey1.withOpacity(.9)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: isTapped ? EdgeInsets.all(4.0.w) : EdgeInsets.all(10.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6.r),
+              color: isTapped ? AppColors.primary : AppColors.transparent,
+              border: Border.all(
+                color: isTapped ? AppColors.transparent : AppColors.infoGrey,
+                width: .78,
+              ),
+            ),
+            child: isTapped
+                ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+                : SizedBox.shrink(),
+          ),
+          SizedBox(width: 10.w),
+          TextView(
+            text: text,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 13.82.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 
   void modalBottomSheetMenu({
     context,
@@ -167,7 +402,7 @@ class HealthCareViewModel extends BaseViewModel {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 30.w),
                                     TextView(
@@ -202,7 +437,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     children: [
                                       const TextSpan(
                                         text:
-                                        "Enter the 4-digit code we sent to your phone number ",
+                                            "Enter the 4-digit code we sent to your phone number ",
                                       ),
                                       TextSpan(
                                         text: "$phoneNo",
@@ -279,17 +514,15 @@ class HealthCareViewModel extends BaseViewModel {
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             decoration:
-                                            TextDecoration.underline,
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () =>
-                                                model.resendOtp(
-                                                  context,
-                                                  resendotp:
-                                                  ResendOtpEntityModel(
-                                                    phone: phoneNo,
-                                                  ),
-                                                ),
+                                            ..onTap = () => model.resendOtp(
+                                              context,
+                                              resendotp: ResendOtpEntityModel(
+                                                phone: phoneNo,
+                                              ),
+                                            ),
                                         ),
                                       ],
                                     ),
@@ -323,15 +556,16 @@ class HealthCareViewModel extends BaseViewModel {
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             decoration:
-                                            TextDecoration.underline,
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () => navigate.navigateTo(
-                                              Routes.healthCareChangePhoneNumber,
+                                              Routes
+                                                  .healthCareChangePhoneNumber,
                                               arguments:
-                                              HealthCareChangePhoneNumberArguments(
-                                                id: id,
-                                              ),
+                                                  HealthCareChangePhoneNumberArguments(
+                                                    id: id,
+                                                  ),
                                             ),
                                         ),
                                       ],
@@ -341,11 +575,11 @@ class HealthCareViewModel extends BaseViewModel {
                                 SizedBox(height: model.isLoading ? 20.h : 0.h),
                                 model.isLoading
                                     ? Center(
-                                  child: SpinKitFadingCircle(
-                                    color: AppColors.primary,
-                                    size: 28.sp,
-                                  ),
-                                )
+                                        child: SpinKitFadingCircle(
+                                          color: AppColors.primary,
+                                          size: 28.sp,
+                                        ),
+                                      )
                                     : SizedBox.shrink(),
                                 SizedBox(height: 300.h),
                                 ButtonWidget(
@@ -411,10 +645,10 @@ class HealthCareViewModel extends BaseViewModel {
   }
 
   void resetPin(
-      context, {
-        ResetPasswordEntityModel? resetPasswordEntityModel,
-        String? resetToken,
-      }) async {
+    context, {
+    ResetPasswordEntityModel? resetPasswordEntityModel,
+    String? resetToken,
+  }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
@@ -429,7 +663,7 @@ class HealthCareViewModel extends BaseViewModel {
         await AppUtils.snackbar(context, message: v['data']['message']);
         navigate.navigateTo(Routes.pharmResetSuccessScreen);
         SharedPreferencesService.instance.pinSet =
-        resetPasswordEntityModel.newPin!;
+            resetPasswordEntityModel.newPin!;
       }
     } catch (e) {
       _isLoading = false;
@@ -439,10 +673,7 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void forgotPassword(
-      context, {
-        ResendOtpEntityModel? forgotPassword,
-      }) async {
+  void forgotPassword(context, {ResendOtpEntityModel? forgotPassword}) async {
     try {
       _isLoading = true;
       _forgotPasswordResponseModel = await runBusyFuture(
@@ -459,7 +690,7 @@ class HealthCareViewModel extends BaseViewModel {
           context: context,
           phoneNo: forgotPassword.phone,
           id:
-          SharedPreferencesService.instance.usersData['_id'] ??
+              SharedPreferencesService.instance.usersData['_id'] ??
               SharedPreferencesService.instance.usersData['id'],
         );
       }
@@ -533,7 +764,7 @@ class HealthCareViewModel extends BaseViewModel {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 30.w),
                                     TextView(
@@ -568,7 +799,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     children: [
                                       const TextSpan(
                                         text:
-                                        "Enter the 4-digit code we sent to your phone number ",
+                                            "Enter the 4-digit code we sent to your phone number ",
                                       ),
                                       TextSpan(
                                         text: "$phoneNo",
@@ -645,17 +876,15 @@ class HealthCareViewModel extends BaseViewModel {
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             decoration:
-                                            TextDecoration.underline,
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () =>
-                                                model.resendOtp(
-                                                  context,
-                                                  resendotp:
-                                                  ResendOtpEntityModel(
-                                                    phone: phoneNo,
-                                                  ),
-                                                ),
+                                            ..onTap = () => model.resendOtp(
+                                              context,
+                                              resendotp: ResendOtpEntityModel(
+                                                phone: phoneNo,
+                                              ),
+                                            ),
                                         ),
                                       ],
                                     ),
@@ -689,15 +918,15 @@ class HealthCareViewModel extends BaseViewModel {
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             decoration:
-                                            TextDecoration.underline,
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () => navigate.navigateTo(
                                               Routes.pharmacyChangePhoneNumber,
                                               arguments:
-                                              PharmacyChangePhoneNumberArguments(
-                                                id: id,
-                                              ),
+                                                  PharmacyChangePhoneNumberArguments(
+                                                    id: id,
+                                                  ),
                                             ),
                                         ),
                                       ],
@@ -707,11 +936,11 @@ class HealthCareViewModel extends BaseViewModel {
                                 SizedBox(height: model.isLoading ? 20.h : 0.h),
                                 model.isLoading
                                     ? Center(
-                                  child: SpinKitFadingCircle(
-                                    color: AppColors.primary,
-                                    size: 28.sp,
-                                  ),
-                                )
+                                        child: SpinKitFadingCircle(
+                                          color: AppColors.primary,
+                                          size: 28.sp,
+                                        ),
+                                      )
                                     : SizedBox.shrink(),
                                 SizedBox(height: 300.h),
                                 ButtonWidget(
@@ -728,10 +957,10 @@ class HealthCareViewModel extends BaseViewModel {
                                       verifyChangePhoneOtp(
                                         context: context,
                                         verifyPhoneEntity:
-                                        VerifyPhoneEntityModel(
-                                          phone: '$phoneNo',
-                                          otp: pinInput,
-                                        ),
+                                            VerifyPhoneEntityModel(
+                                              phone: '$phoneNo',
+                                              otp: pinInput,
+                                            ),
                                       );
                                     }
                                     model.notifyListeners();
@@ -868,7 +1097,7 @@ class HealthCareViewModel extends BaseViewModel {
                               children: [
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(width: 30.w),
                                     TextView(
@@ -903,7 +1132,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     children: [
                                       const TextSpan(
                                         text:
-                                        "Enter the 4-digit code we sent to your phone number ",
+                                            "Enter the 4-digit code we sent to your phone number ",
                                       ),
                                       TextSpan(
                                         text: "$phoneNo",
@@ -980,17 +1209,15 @@ class HealthCareViewModel extends BaseViewModel {
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             decoration:
-                                            TextDecoration.underline,
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () =>
-                                                model.resendOtp(
-                                                  context,
-                                                  resendotp:
-                                                  ResendOtpEntityModel(
-                                                    phone: phoneNo,
-                                                  ),
-                                                ),
+                                            ..onTap = () => model.resendOtp(
+                                              context,
+                                              resendotp: ResendOtpEntityModel(
+                                                phone: phoneNo,
+                                              ),
+                                            ),
                                         ),
                                       ],
                                     ),
@@ -1024,15 +1251,15 @@ class HealthCareViewModel extends BaseViewModel {
                                           style: TextStyle(
                                             color: AppColors.primary,
                                             decoration:
-                                            TextDecoration.underline,
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () => navigate.navigateTo(
                                               Routes.pharmacyChangePhoneNumber,
                                               arguments:
-                                              PharmacyChangePhoneNumberArguments(
-                                                id: id,
-                                              ),
+                                                  PharmacyChangePhoneNumberArguments(
+                                                    id: id,
+                                                  ),
                                             ),
                                         ),
                                       ],
@@ -1042,11 +1269,11 @@ class HealthCareViewModel extends BaseViewModel {
                                 SizedBox(height: model.isLoading ? 20.h : 0.h),
                                 model.isLoading
                                     ? Center(
-                                  child: SpinKitFadingCircle(
-                                    color: AppColors.primary,
-                                    size: 28.sp,
-                                  ),
-                                )
+                                        child: SpinKitFadingCircle(
+                                          color: AppColors.primary,
+                                          size: 28.sp,
+                                        ),
+                                      )
                                     : SizedBox.shrink(),
                                 SizedBox(height: 300.h),
                                 ButtonWidget(
@@ -1064,10 +1291,10 @@ class HealthCareViewModel extends BaseViewModel {
                                       verifyChangePhoneOtpChange(
                                         context: context,
                                         verifyPhoneEntity:
-                                        VerifyPhoneEntityModel(
-                                          phone: '$phoneNo',
-                                          otp: pinInput,
-                                        ),
+                                            VerifyPhoneEntityModel(
+                                              phone: '$phoneNo',
+                                              otp: pinInput,
+                                            ),
                                       );
                                     }
                                     model.notifyListeners();
@@ -1087,7 +1314,8 @@ class HealthCareViewModel extends BaseViewModel {
           ),
         );
       },
-    );}
+    );
+  }
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -1185,7 +1413,7 @@ class HealthCareViewModel extends BaseViewModel {
                               children: [
                                 const TextSpan(
                                   text:
-                                  "Enter the 4-digit code we sent to your phone number ",
+                                      "Enter the 4-digit code we sent to your phone number ",
                                 ),
                                 TextSpan(
                                   text: "$phoneNo",
@@ -1317,11 +1545,11 @@ class HealthCareViewModel extends BaseViewModel {
                           SizedBox(height: model.isLoading ? 20.h : 0.h),
                           model.isLoading
                               ? Center(
-                            child: SpinKitFadingCircle(
-                              color: AppColors.primary,
-                              size: 28.sp,
-                            ),
-                          )
+                                  child: SpinKitFadingCircle(
+                                    color: AppColors.primary,
+                                    size: 28.sp,
+                                  ),
+                                )
                               : SizedBox.shrink(),
                           SizedBox(height: 70.h),
                           ButtonWidget(
@@ -1359,9 +1587,9 @@ class HealthCareViewModel extends BaseViewModel {
   }
 
   void verifyForgotPassword(
-      context, {
-        VerifyPhoneEntityModel? verifyPhoneEntity,
-      }) async {
+    context, {
+    VerifyPhoneEntityModel? verifyPhoneEntity,
+  }) async {
     try {
       _isLoading = true;
       _verifyPassOtpRespnseModel = await runBusyFuture(
@@ -1390,11 +1618,10 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-
   void signUpBusinessOwner(
-      context, {
-        SignUpHealthcareBusinessOwnerEntityModel? signUpEntity,
-      }) async {
+    context, {
+    SignUpHealthcareBusinessOwnerEntityModel? signUpEntity,
+  }) async {
     try {
       _isLoading = true;
       _signUpHealthcareResponseModel = await runBusyFuture(
@@ -1423,9 +1650,9 @@ class HealthCareViewModel extends BaseViewModel {
   }
 
   void signUpPractitioner(
-      context, {
-        SignUpHealthcareProviderPractitionerEntityModel? signUpEntity,
-      }) async {
+    context, {
+    SignUpHealthcareProviderPractitionerEntityModel? signUpEntity,
+  }) async {
     try {
       _isLoading = true;
       _signUpHealthcareResponseModel = await runBusyFuture(
@@ -1467,12 +1694,12 @@ class HealthCareViewModel extends BaseViewModel {
           message: _loginPharmacyResponseModel?.message ?? '',
         );
         if (_loginPharmacyResponseModel!.data!.memberships![0].role ==
-            'OWNER' &&
+                'OWNER' &&
             _loginPharmacyResponseModel!.data!.memberships![0].tenantType ==
                 'HEALTHCARE_PROVIDER') {
           navigate.navigateTo(Routes.businessProviderDashboard);
         } else if (_loginPharmacyResponseModel!.data!.memberships![0].role ==
-            'OWNER' &&
+                'OWNER' &&
             _loginPharmacyResponseModel!.data!.memberships![0].tenantType ==
                 'HEALTHCARE_PRACTITIONER') {
           navigate.navigateTo(Routes.specialistsProviderDashboard);
@@ -1487,9 +1714,9 @@ class HealthCareViewModel extends BaseViewModel {
   }
 
   void verifyOtpHealthcare(
-      context, {
-        VerifyPhoneEntityModel? verifyEntity,
-      }) async {
+    context, {
+    VerifyPhoneEntityModel? verifyEntity,
+  }) async {
     try {
       _isLoading = true;
       _verifyPharmOtpRespnseModel = await runBusyFuture(
@@ -1546,13 +1773,12 @@ class HealthCareViewModel extends BaseViewModel {
           context,
           message: _setPinPharmResponseModel?.message,
         );
-        if (_setPinPharmResponseModel!.data!.memberships![0].role ==
-            'OWNER' &&
+        if (_setPinPharmResponseModel!.data!.memberships![0].role == 'OWNER' &&
             _setPinPharmResponseModel!.data!.memberships![0].tenantType ==
                 'HEALTHCARE_PROVIDER') {
           navigate.navigateTo(Routes.businessProviderDashboard);
         } else if (_setPinPharmResponseModel!.data!.memberships![0].role ==
-            'OWNER' &&
+                'OWNER' &&
             _setPinPharmResponseModel!.data!.memberships![0].tenantType ==
                 'HEALTHCARE_PRACTITIONER') {
           navigate.navigateTo(Routes.specialistsProviderDashboard);
@@ -1598,4 +1824,141 @@ class HealthCareViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
+
+  void sendOtpHealthCare(context, {String? phone}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.sendOtp(phone!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+
+        modalBottomSheetMenuVerifyPhone(context: context, phoneNo: phone);
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getRoles(context) async {
+    try {
+      _isLoading = true;
+      _getRolesResponseModel = await runBusyFuture(
+        repositoryImply.getRoles(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<bool?> modalBottomSheetMenuAddRole({
+    context,
+    bool isEdit = false,
+    rolename,
+    roleDes,
+    roleId,
+  }) {
+    return showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (builder) {
+        return AddRoleModalWidget(
+          isEdit: isEdit,
+          rolename: rolename,
+          roleDescription: roleDes,
+          roleId: roleId,
+          parentContext: context,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+            // close modal and return true
+          },
+        );
+      },
+    );
+  }
+
+  Future<bool?> showRemoveRoleDialog({context, String? roleId}) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return DeleteRoleModalWidget(
+          roleId: roleId,
+          parentContext: context,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+          },
+          onFailed: () {
+            Navigator.of(context).pop(false);
+          },
+        );
+      },
+    );
+  }
+
+  getPopUpMenuDialog(BuildContext context) => PopupMenuButton<String>(
+    onSelected: (String result) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Selected: $result')));
+    },
+    color: AppColors.white,
+    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+      ...meansId.map(
+        (o) => PopupMenuItem<String>(
+          value: o.toString().toLowerCase(),
+          child: TextView(
+            text: o,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.deep,
+            ),
+          ),
+          onTap: () {
+            meansIdController.text = o;
+            notifyListeners();
+          },
+        ),
+      ),
+    ],
+    child: Padding(
+      padding: EdgeInsets.all(14.20.w),
+      child: SvgPicture.asset(AppImage.arrow_down),
+    ),
+  );
+  
+  // void updateHealthCare(
+  //   context, {
+  //   UpdatePharmacyProfileEntityModel? update,
+  // }) async {
+  //   try {
+  //     _isLoading = true;
+  //     var v = await runBusyFuture(
+  //       repositoryImply.update(update),
+  //       throwException: true,
+  //     );
+  //     _isLoading = false;
+  //     AppUtils.snackbar(context, message: v['message']);
+  //     getTenant(context);
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     logger.d(e);
+  //     AppUtils.snackbar(context, message: e.toString(), error: true);
+  //   }
+  //   notifyListeners();
+  // }
 }

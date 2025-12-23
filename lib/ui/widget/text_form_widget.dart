@@ -55,7 +55,7 @@ class TextFormWidget extends StatelessWidget {
   final FloatingLabelBehavior? floatingLabelBehavior;
 
   TextFormWidget({
-    Key? key,
+    super.key,
     this.textCapitalization,
     this.label,
     this.floatingLabel,
@@ -102,7 +102,7 @@ class TextFormWidget extends StatelessWidget {
     this.minline,
     this.focusNode,
     this.hintColor = AppColors.black,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

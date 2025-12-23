@@ -545,7 +545,7 @@ class _FundScreenState extends State<FundScreen> {
     );
   }
 
-  cardRow({
+  Container cardRow({
     required String text1,
     required String text2,
     bool isLast = false,

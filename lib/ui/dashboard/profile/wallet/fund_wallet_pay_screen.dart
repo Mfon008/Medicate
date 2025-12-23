@@ -301,7 +301,10 @@ class _FundWalletPayScreenState extends State<FundWalletPayScreen> {
     );
   }
 
-  selectProvider({required image, required text}) => GestureDetector(
+  GestureDetector selectProvider({
+    required image,
+    required text,
+  }) => GestureDetector(
     onTap: () {
       _tap = text;
       setState(() {});

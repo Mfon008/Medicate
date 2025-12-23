@@ -865,7 +865,7 @@ class AuthViewModel extends BaseViewModel {
                           ),
                         ),
                       );
-                    }).toList(),
+                    }),
                   ],
                 ),
               ),

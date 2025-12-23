@@ -15,8 +15,10 @@ class UrlConfig {
   static const String delete_user = 'tenant/staff/deactivate';
   static const String sign_up = 'auth/register-user';
   static const String sign_up_pharmacy = 'auth/register-pharmacy';
-  static const String sign_up_practitioner = 'auth/register-healthcare-practitioner';
-  static const String sign_up_business_owner = 'auth/register-healthcare-provider';
+  static const String sign_up_practitioner =
+      'auth/register-healthcare-practitioner';
+  static const String sign_up_business_owner =
+      'auth/register-healthcare-provider';
   static const String user_detail = 'auth/user-details/';
   static const String user_detail_no_phone = 'auth/get-profile';
   static const String resend_otp = 'auth/resend-otp';

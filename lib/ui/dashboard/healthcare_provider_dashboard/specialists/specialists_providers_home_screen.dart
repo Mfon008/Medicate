@@ -94,12 +94,6 @@ class _SpecialistsProvidersHomeScreenState
             ],
           ),
         ),
-        // centerTitle: true,
-        // actions: [
-        //   // Padding(
-        //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
-        //   //   child: ),
-        // ],
       ),
       body: isTappToChat
           ? AskMeScreen(inText: chatText, isDashboard: true)
@@ -129,11 +123,11 @@ class _SpecialistsProvidersHomeScreenState
                                 color:
                                     SharedPreferencesService
                                                 .instance
-                                                .usersData['memberships'] !=
+                                                .usersData['user'] !=
                                             null &&
                                         SharedPreferencesService
                                                 .instance
-                                                .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                                                .usersData['user']['profileCompletionPercentage'] ==
                                             100
                                     ? AppColors.app_green
                                     : AppColors.yellow,
@@ -146,11 +140,11 @@ class _SpecialistsProvidersHomeScreenState
                                   color:
                                       SharedPreferencesService
                                                   .instance
-                                                  .usersData['memberships'] !=
+                                                  .usersData['user'] !=
                                               null &&
                                           SharedPreferencesService
                                                   .instance
-                                                  .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                                                  .usersData['user']['profileCompletionPercentage'] ==
                                               100
                                       ? AppColors.app_green
                                       : AppColors.yellow,
@@ -164,11 +158,11 @@ class _SpecialistsProvidersHomeScreenState
                                       text:
                                           SharedPreferencesService
                                                       .instance
-                                                      .usersData['memberships'] !=
+                                                      .usersData['user'] !=
                                                   null &&
                                               SharedPreferencesService
                                                       .instance
-                                                      .usersData['memberships'][0] ==
+                                                      .usersData['user']['profileCompletionPercentage'] ==
                                                   100
                                           ? 'Completed'
                                           : 'Complete Registration',
@@ -183,13 +177,13 @@ class _SpecialistsProvidersHomeScreenState
                                       text:
                                           SharedPreferencesService
                                                       .instance
-                                                      .usersData['memberships'] !=
+                                                      .usersData['user'] !=
                                                   null &&
                                               SharedPreferencesService
                                                       .instance
-                                                      .usersData['memberships'][0]['profileCompletionPercentage'] !=
+                                                      .usersData['user']['profileCompletionPercentage'] !=
                                                   null
-                                          ? 'Your registration is ${SharedPreferencesService.instance.usersData['memberships'][0]['profileCompletionPercentage']}% completed'
+                                          ? 'Your registration is ${SharedPreferencesService.instance.usersData['user']['profileCompletionPercentage']}% completed'
                                           : 'Please enter your new PIN.',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',

@@ -45,14 +45,19 @@ class _AppBootstrapState extends State<AppBootstrap> {
   @override
   Widget build(BuildContext context) {
     if (!initialized) {
-      return const MaterialApp(
-        home: Scaffold(body: Center(child: CircularProgressIndicator())),
+      return MaterialApp(
+        home: Scaffold(
+          backgroundColor: AppColors.white,
+          body: Center(
+            child: CircularProgressIndicator(color: AppColors.primary),
+          ),
+        ),
         debugShowCheckedModeBanner: false,
       );
     }
 
     // Move to real app
-    return const MyApp();
+    return MyApp();
   }
 }
 
@@ -61,7 +66,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
+      designSize: Size(375, 812),
       builder: (BuildContext context, Widget? child) => MaterialApp(
         title: 'Medicate',
         theme: ThemeData(

@@ -76,7 +76,7 @@ class _PharmacyDashboardState extends State<PharmacyDashboard> {
         false;
   }
 
-  exitApp() {
+  void exitApp() {
     Future.delayed(const Duration(milliseconds: 1000), () {
       SystemChannels.platform.invokeListMethod('SystemNavigator.pop');
     });

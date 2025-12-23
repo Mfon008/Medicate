@@ -96,74 +96,77 @@ class FaqScreen extends StatelessWidget {
     );
   }
 
-  conContainer({String? text1, String? text2, bool isCancel = false}) =>
-      Container(
-        margin: EdgeInsets.symmetric(vertical: 8.12.w),
-        padding: EdgeInsets.symmetric(
-          horizontal: 10.w,
-          vertical: text2 == '' ? 12.6.w : 14.w,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          border: Border.all(color: AppColors.reminder.withOpacity(.2)),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Container conContainer({
+    String? text1,
+    String? text2,
+    bool isCancel = false,
+  }) => Container(
+    margin: EdgeInsets.symmetric(vertical: 8.12.w),
+    padding: EdgeInsets.symmetric(
+      horizontal: 10.w,
+      vertical: text2 == '' ? 12.6.w : 14.w,
+    ),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      border: Border.all(color: AppColors.reminder.withOpacity(.2)),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 6.w),
-                  child: TextView(
-                    text: text1 ?? '',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 12.2.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.black,
+            Padding(
+              padding: EdgeInsets.only(top: 6.w),
+              child: TextView(
+                text: text1 ?? '',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 12.2.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.black,
+                ),
+              ),
+            ),
+            SizedBox(height: text2 == '' ? 0 : 5.10.h),
+            text2 == ''
+                ? SizedBox.shrink()
+                : SizedBox(
+                    width: 220.w,
+                    child: TextView(
+                      text: text2 ?? '',
+                      maxLines: 6,
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 12.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: text2 == '' ? 0 : 5.10.h),
-                text2 == ''
-                    ? SizedBox.shrink()
-                    : SizedBox(
-                        width: 220.w,
-                        child: TextView(
-                          text: text2 ?? '',
-                          maxLines: 6,
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 12.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.black,
-                          ),
-                        ),
-                      ),
-              ],
-            ),
-
-            SizedBox(width: 13.20.w),
-            Container(
-              padding: EdgeInsets.all(isCancel ? 8 : 5.2),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: AppColors.dashboard,
-              ),
-              child: isCancel
-                  ? SvgPicture.asset(
-                      AppImage.cancel,
-                      color: AppColors.red,
-                      width: 10.w,
-                      height: 10.w,
-                    )
-                  : Icon(Icons.add, color: AppColors.black, size: 18.20.sp),
-            ),
           ],
         ),
-      );
+
+        SizedBox(width: 13.20.w),
+        Container(
+          padding: EdgeInsets.all(isCancel ? 8 : 5.2),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+            color: AppColors.dashboard,
+          ),
+          child: isCancel
+              ? SvgPicture.asset(
+                  AppImage.cancel,
+                  color: AppColors.red,
+                  width: 10.w,
+                  height: 10.w,
+                )
+              : Icon(Icons.add, color: AppColors.black, size: 18.20.sp),
+        ),
+      ],
+    ),
+  );
 }

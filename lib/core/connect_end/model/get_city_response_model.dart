@@ -12,9 +12,9 @@ class GetCityResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['error'] = this.error;
-    data['msg'] = this.msg;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['error'] = error;
+    data['msg'] = msg;
     data['data'] = this.data;
     return data;
   }

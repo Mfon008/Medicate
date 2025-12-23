@@ -40,6 +40,11 @@ import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_more_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/reminder/pharm_view_medication_screen.dart';
 import '../../../ui/dashboard/profile/faq_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_info_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/health_care_profile_info_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/health_care_profile_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/health_care_setting_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_screen.dart';
@@ -59,6 +64,7 @@ import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
+import '../../../ui/widget/accelerate_payment_view.dart';
 import '../../api_folder/auth_api.dart';
 import '../../api_folder/healthcare_api.dart';
 import '../../api_folder/pharm_auth_api.dart';
@@ -131,7 +137,12 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: BusinessProvidersHomeScreen),
     MaterialRoute(page: SpecialistsProviderDashboard),
     MaterialRoute(page: SpecialistsProvidersHomeScreen),
-    // MaterialRoute(page: AcceleratePaymentView),
+    MaterialRoute(page: HealthCareProfileInfoScreen),
+    MaterialRoute(page: HealthCareProfileScreen),
+    MaterialRoute(page: HealthCareSettingScreen),
+    MaterialRoute(page: AcceleratePaymentView),
+    MaterialRoute(page: HealthCarePractitionerProfileInfoScreen),
+    MaterialRoute(page: HealthCarePractitionerProfileScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,
