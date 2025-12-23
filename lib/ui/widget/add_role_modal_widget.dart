@@ -81,120 +81,112 @@ class AddRoleModalWidget extends StatelessWidget {
             },
             disposeViewModel: true,
             builder: (_, PharmViewModel model, _) {
-              return Padding(
-                padding: EdgeInsets.only(
-                  // bottom: MediaQuery.of(
-                  //   context,
-                  // ).viewInsets.bottom, // 👈 pushes content above keyboard
-                ), //could change this to Color(0xFF737373),
-                //so you don't have to change MaterialApp canvasColor
+              return Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(20.0),
+                    topRight: const Radius.circular(20.0),
+                  ),
+                ),
                 child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(20.0),
-                      topRight: const Radius.circular(20.0),
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
                     ),
                   ),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20.0),
-                        topRight: Radius.circular(20.0),
-                      ),
+                  child: SingleChildScrollView(
+                    controller: scrollController,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 20.w,
+                      horizontal: 20.w,
                     ),
-                    child: SingleChildScrollView(
-                      controller: scrollController,
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20.w,
-                        horizontal: 20.w,
-                      ),
-                      child: Form(
-                        key: model.formKeyValidateAddRole,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(width: 30.w),
-                                TextView(
-                                  text: !isEdit ? 'Add Role' : 'Edit Role',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 16.20.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.black,
-                                  ),
+                    child: Form(
+                      key: model.formKeyValidateAddRole,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(width: 30.w),
+                              TextView(
+                                text: !isEdit ? 'Add Role' : 'Edit Role',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 16.20.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.black,
                                 ),
-                                GestureDetector(
-                                  onTap: () => Navigator.pop(context),
-                                  child: SvgPicture.asset(
-                                    AppImage.x,
-                                    width: 24.w,
-                                    height: 24.h,
-                                  ),
+                              ),
+                              GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: SvgPicture.asset(
+                                  AppImage.x,
+                                  width: 24.w,
+                                  height: 24.h,
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: 32.h),
-                            TextFormWidget(
-                              hint: 'Role Name',
-                              borderColor: AppColors.transparent,
-                              borderTopLeft: 10.r,
-                              borderTopRight: 10.r,
-                              borderBottomLeft: 10.r,
-                              borderBottomRight: 10.r,
-                              hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Arial',
-                                fontSize: 14.sp,
-                                color: AppColors.infoGrey,
                               ),
-                              fillColor: AppColors.grey,
-                              isFilled: true,
-                              controller: model.rolenameController,
-                              validator: AppValidator.validateString(),
-                              onChange: (p0) {},
+                            ],
+                          ),
+                          SizedBox(height: 32.h),
+                          TextFormWidget(
+                            hint: 'Role Name',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.sp,
+                              color: AppColors.infoGrey,
                             ),
-                            SizedBox(height: 20.h),
-                            TextFormWidget(
-                              hint: 'Description',
-                              maxline: 4,
-                              alignLabelWithHint: true,
-                              borderColor: AppColors.transparent,
-                              borderTopLeft: 10.r,
-                              borderTopRight: 10.r,
-                              borderBottomLeft: 10.r,
-                              borderBottomRight: 10.r,
-                              hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Arial',
-                                fontSize: 14.sp,
-                                color: AppColors.infoGrey,
-                              ),
-                              fillColor: AppColors.grey,
-                              isFilled: true,
-                              controller: model.roleDescriptionController,
-                              validator: AppValidator.validateString(),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: model.rolenameController,
+                            validator: AppValidator.validateString(),
+                            onChange: (p0) {},
+                          ),
+                          SizedBox(height: 20.h),
+                          TextFormWidget(
+                            hint: 'Description',
+                            maxline: 4,
+                            alignLabelWithHint: true,
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.sp,
+                              color: AppColors.infoGrey,
                             ),
-                            SizedBox(height: 70.h),
-                            ButtonWidget(
-                              border: 100.r,
-                              buttonColor: AppColors.primary,
-                              buttonText: !isEdit ? 'Add' : "Save Changes",
-                              fontSize: 16.sp,
-                              color: AppColors.white,
-                              isLoading: model.isLoading,
-                              buttonBorderColor: AppColors.transparent,
-                              onPressed: () => saveRole(model),
-                            ),
-                            SizedBox(height: 20.h),
-                          ],
-                        ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: model.roleDescriptionController,
+                            validator: AppValidator.validateString(),
+                          ),
+                          SizedBox(height: 70.h),
+                          ButtonWidget(
+                            border: 100.r,
+                            buttonColor: AppColors.primary,
+                            buttonText: !isEdit ? 'Add' : "Save Changes",
+                            fontSize: 16.sp,
+                            color: AppColors.white,
+                            isLoading: model.isLoading,
+                            buttonBorderColor: AppColors.transparent,
+                            onPressed: () => saveRole(model),
+                          ),
+                          SizedBox(height: 20.h),
+                        ],
                       ),
                     ),
                   ),

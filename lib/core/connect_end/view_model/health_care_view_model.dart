@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
+import '../../../ui/widget/add_education_experience.dart';
 import '../../../ui/widget/add_role_modal_widget.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
@@ -90,6 +92,14 @@ class HealthCareViewModel extends BaseViewModel {
   TextEditingController stateController = TextEditingController();
   TextEditingController lgaController = TextEditingController();
   TextEditingController meansIdController = TextEditingController();
+
+  TextEditingController schoolController = TextEditingController();
+  TextEditingController degreeController = TextEditingController();
+  TextEditingController startYearController = TextEditingController();
+  TextEditingController startMonthController = TextEditingController();
+  TextEditingController endMonthController = TextEditingController();
+  TextEditingController endYearController = TextEditingController();
+
   List<String> selectService = [];
   List<String> selectServicePractitioner = [];
   List services = [
@@ -124,6 +134,7 @@ class HealthCareViewModel extends BaseViewModel {
   );
 
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateAddExperience = GlobalKey<FormState>();
 
   List<String> areaExpertise = [
     'General Practitioners (GPs) & Family\nMedicine',
@@ -1912,7 +1923,19 @@ class HealthCareViewModel extends BaseViewModel {
     onSelected: (String result) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Selected: $result')));
+      ).showSnackBar(SnackBar(
+        backgroundColor: AppColors.skyBlue,
+        duration: Duration(milliseconds: 500),
+        content: TextView(
+            text:'Selected: ${result.capitalizeWords()}',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.lightBlue,
+            ),
+          )
+        ));
     },
     color: AppColors.white,
     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -1941,6 +1964,27 @@ class HealthCareViewModel extends BaseViewModel {
     ),
   );
   
+  Future<bool?> modalBottomSheetMenuAddEducationExperience({
+    context,
+    bool isEdit = false,
+  
+  }) {
+    return showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (builder) {
+        return AddEducationExperienceModalWidget(
+          isEdit: isEdit,
+          parentContext: context,
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+            // close modal and return true
+          },
+        );
+      },
+    );
+  }
   // void updateHealthCare(
   //   context, {
   //   UpdatePharmacyProfileEntityModel? update,

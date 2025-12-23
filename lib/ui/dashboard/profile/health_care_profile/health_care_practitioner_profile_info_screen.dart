@@ -465,7 +465,6 @@ class _HealthCarePractitionerProfileInfoScreenState
                           ),
                         ),
                         SizedBox(height: 20.h),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -544,6 +543,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                             ),
                           ],
                         ),
+                        SizedBox(height: 20.h),
                         TextFormWidget(
                           hint: 'Means of ID',
                           hintSize: 14,
@@ -806,17 +806,31 @@ class _HealthCarePractitionerProfileInfoScreenState
                           validator: AppValidator.validateString(),
                           // ),
                         ),
-
-                        SizedBox(height: 30.h),
-                        TextView(
-                          text: 'Educational Experience',
-                          textStyle: TextStyle(
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
-                          ),
+                        SizedBox(height: 20.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextView(
+                              text: 'Educational Experience',
+                              textStyle: TextStyle(
+                                fontSize: 16.2.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => model
+                                  .modalBottomSheetMenuAddEducationExperience(
+                                    context: context,
+                                  ),
+                              icon: Icon(
+                                Icons.add,
+                                color: AppColors.black,
+                                size: 22.sp,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 6.h),
                         Divider(
                           color: const Color.fromARGB(255, 227, 227, 228),
                         ),
@@ -850,7 +864,8 @@ class _HealthCarePractitionerProfileInfoScreenState
                                   SizedBox(
                                     width: 182.w,
                                     child: TextView(
-                                      text: 'Bachelor of Science - Bs, Computer Science',
+                                      text:
+                                          'Bachelor of Science - Bs, Computer Science',
                                       maxLines: 2,
                                       textStyle: TextStyle(
                                         fontSize: 12.sp,
@@ -864,13 +879,12 @@ class _HealthCarePractitionerProfileInfoScreenState
                                   TextView(
                                     text: '2016 - 2021',
                                     textStyle: TextStyle(
-                                      fontSize: 14.sp,
+                                      fontSize: 12.sp,
                                       fontWeight: FontWeight.w400,
                                       color: AppColors.infoGrey,
                                       fontFamily: 'Arial',
                                     ),
                                   ),
-                                 
                                 ],
                               ),
                               Row(
@@ -878,73 +892,73 @@ class _HealthCarePractitionerProfileInfoScreenState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SvgPicture.asset(AppImage.round_edit),
-                                  SizedBox(width: 12.w,),
-                                  SvgPicture.asset(AppImage.delete)
+                                  SizedBox(width: 12.w),
+                                  SvgPicture.asset(AppImage.delete),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ),
+
+                        SizedBox(height: 50.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.white,
+                                buttonText: 'Discard',
+                                fontSize: 14.sp,
+                                color: AppColors.primary,
+                                buttonBorderColor: AppColors.primary,
+                                onPressed: () {
+                                  navigate.back();
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 20.w),
+                            Expanded(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary,
+                                fontSize: 14.sp,
+                                buttonText: 'Save Changes',
+                                color: AppColors.white,
+                                isLoading: model.isLoading,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    // model.updatePharmacy(
+                                    //   context,
+                                    //   update: UpdatePharmacyProfileEntityModel(
+                                    //     country: model.countryController.text,
+                                    //     state: model.stateController.text,
+                                    //     lga: model.lgaController.text,
+                                    //     businessAddress: businessAddController.text,
+                                    //     servicesOffered: model.selectService,
+                                    //     contactPersonName:
+                                    //         contactDetailsController.text,
+                                    //     contactEmail: emailController.text,
+                                    //     bankDetails: [
+                                    //       BankDetail(
+                                    //         bankName: bankNameController.text,
+                                    //         accountName:
+                                    //             contactDetailsController.text,
+                                    //         accountNumber: bankNoController.text,
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
                       ],
                     ),
                   ),
-
-                  SizedBox(height: 50.h),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ButtonWidget(
-                          border: 100.r,
-                          buttonColor: AppColors.white,
-                          buttonText: 'Discard',
-                          fontSize: 14.sp,
-                          color: AppColors.primary,
-                          buttonBorderColor: AppColors.primary,
-                          onPressed: () {
-                            navigate.back();
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 20.w),
-                      Expanded(
-                        child: ButtonWidget(
-                          border: 100.r,
-                          buttonColor: AppColors.primary,
-                          fontSize: 14.sp,
-                          buttonText: 'Save Changes',
-                          color: AppColors.white,
-                          isLoading: model.isLoading,
-                          buttonBorderColor: AppColors.transparent,
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              // model.updatePharmacy(
-                              //   context,
-                              //   update: UpdatePharmacyProfileEntityModel(
-                              //     country: model.countryController.text,
-                              //     state: model.stateController.text,
-                              //     lga: model.lgaController.text,
-                              //     businessAddress: businessAddController.text,
-                              //     servicesOffered: model.selectService,
-                              //     contactPersonName:
-                              //         contactDetailsController.text,
-                              //     contactEmail: emailController.text,
-                              //     bankDetails: [
-                              //       BankDetail(
-                              //         bankName: bankNameController.text,
-                              //         accountName:
-                              //             contactDetailsController.text,
-                              //         accountNumber: bankNoController.text,
-                              //       ),
-                              //     ],
-                              //   ),
-                              // );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 50.h),
                 ],
               ),
             );
