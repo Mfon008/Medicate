@@ -1,5 +1,4 @@
-// ignore_for_file: must_be_immutable
-
+// ignore_for_file: must_be_immutable, deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -281,31 +280,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              // SizedBox(height: 5.10.h),
-                              // Divider(
-                              //   color: AppColors.infoGrey,
-                              //   thickness: .14,
-                              // ),
-                              // SizedBox(height: 5.10.h),
-                              // TextView(
-                              //   text: 'Description',
-                              //   textStyle: TextStyle(
-                              //     fontFamily: 'Arial',
-                              //     fontSize: 12.8.sp,
-                              //     fontWeight: FontWeight.w400,
-                              //     color: AppColors.infoGrey,
-                              //   ),
-                              // ),
-                              // SizedBox(height: 4.10.h),
-                              // TextView(
-                              //   text: 'Pain Relief',
-                              //   textStyle: TextStyle(
-                              //     fontFamily: 'Arial',
-                              //     fontSize: 14.8.sp,
-                              //     fontWeight: FontWeight.w400,
-                              //     color: AppColors.reminder,
-                              //   ),
-                              // ),
+
                               SizedBox(height: 10.h),
                             ],
                           ),

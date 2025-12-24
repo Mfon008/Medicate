@@ -1,3 +1,4 @@
+// ignore_for_file: strict_top_level_inference, must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,12 +8,10 @@ import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/medicate_enum.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../core/app_assets/image.dart';
 import '../../core/connect_end/view_model/health_care_view_model.dart';
 import 'button.dart';
 
-// ignore: must_be_immutable
 class EverydayUserCard extends StatefulWidget {
   EverydayUserCard({
     super.key,
@@ -36,10 +35,6 @@ class EverydayUserCard extends StatefulWidget {
 }
 
 class _EverydayUserCardState extends State<EverydayUserCard> {
-  // bool isTapped = false;
-
-  // String areaExpertiseText = '';
-
   @override
   Widget build(BuildContext context) {
     bool isSelected = widget.selectedUserType == widget.userType;

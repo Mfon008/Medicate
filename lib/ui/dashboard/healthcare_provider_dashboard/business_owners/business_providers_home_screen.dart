@@ -1,9 +1,7 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/constant.dart';
 import '../../../../core/app_assets/image.dart';
@@ -26,8 +24,6 @@ class BusinessProvidersHomeScreen extends StatefulWidget {
 class _BusinessProvidersHomeScreenState
     extends State<BusinessProvidersHomeScreen> {
   bool isTappToChat = false;
-
-  // bool isTapOnScreenOrChatButt = false;
   String chatText = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

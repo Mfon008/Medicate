@@ -1,10 +1,11 @@
+// ignore_for_file: strict_top_level_inference
+
 import 'core_folder/app/app.router.dart';
 
 class AppRoutes {
   AppRoutes();
 
   String returnAppRoutes(type) {
-    print('${type.isSignUp} and ${type.isSignUp}');
     if (type == null) {
       return Routes.splashScreen;
     }

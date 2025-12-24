@@ -244,55 +244,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 ),
                               ),
                             ),
-                            // SizedBox(width: 8.w),
-                            // Expanded(
-                            //   child: GestureDetector(
-                            //     onTap: () async {
-                            //       model
-                            //           .getReminderResponseModel!
-                            //           .data!
-                            //           .reminders!
-                            //           .clear();
-                            //       await Future.delayed(
-                            //         Duration(milliseconds: 500),
-                            //       );
-                            //       model.isReminderStatus = 'completed';
-                            //       model.getReminder(
-                            //         context,
-                            //         status: model.isReminderStatus,
-                            //         page: model.pageCompleted.toString(),
-                            //       );
-                            //       setState(() {});
-                            //     },
-                            //     child: Container(
-                            //       padding: EdgeInsets.symmetric(vertical: 10.w),
-                            //       decoration:
-                            //           model.isReminderStatus == 'completed'
-                            //           ? BoxDecoration(
-                            //               color: AppColors.primary.withOpacity(
-                            //                 .04,
-                            //               ),
-                            //               borderRadius: BorderRadius.circular(
-                            //                 22.r,
-                            //               ),
-                            //             )
-                            //           : BoxDecoration(),
-                            //       alignment: Alignment.center,
-                            //       child: TextView(
-                            //         text: 'Completed',
-                            //         textStyle: TextStyle(
-                            //           fontSize: 14.sp,
-                            //           fontWeight: FontWeight.w500,
-                            //           color:
-                            //               model.isReminderStatus == 'completed'
-                            //               ? AppColors.primary
-                            //               : AppColors.grey1,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                            // SizedBox(width: 8.w),
                           ],
                         ),
                       )

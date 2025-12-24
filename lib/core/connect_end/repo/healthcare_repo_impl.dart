@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
@@ -18,7 +19,11 @@ import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
+import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
+import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -151,6 +156,11 @@ class HealthcareRepoImpl {
     return response;
   }
 
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
+    final response = await _contract.uploadImage(file);
+    return response;
+  }
+
   Future<GetRolesResponseModel> getRoles() async {
     final response = await _contract.getRoles();
     return response;
@@ -163,6 +173,24 @@ class HealthcareRepoImpl {
 
   Future<dynamic> deleteRole(String roleId) async {
     final response = await _contract.deleteRole(roleId);
+    return response;
+  }
+
+  Future<UpdateBusinessOwnerProfileResponseModel> updateHealthCareBusinessOwner(
+    UpdateBusinessOwnerProfileEntityModel? updateBusinessOwner,
+  ) async {
+    final response = await _contract.updateHealthCareBusinessOwner(
+      updateBusinessOwner,
+    );
+    return response;
+  }
+
+  Future<dynamic> updateHealthCarePractitioner(
+    UpdatePractitionerProfileEntityModel? updatePractitioner,
+  ) async {
+    final response = await _contract.updateHealthCarePractitioner(
+      updatePractitioner,
+    );
     return response;
   }
 

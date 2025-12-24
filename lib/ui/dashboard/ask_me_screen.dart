@@ -276,7 +276,7 @@ class _AskMeScreenState extends State<AskMeScreen> {
     );
   }
 
-  String returnTextBot(text) {
+  String returnTextBot(String? text) {
     if (text == 'Today’s Med') {
       return 'What medication do I need to take today?';
     }
@@ -289,14 +289,14 @@ class _AskMeScreenState extends State<AskMeScreen> {
     if (text == 'Create Reminder') {
       return 'Hey medicate, create a medication reminder for me.';
     }
-    if (text != null || text != '' || text.isNotEmpty) {
+    if (text != null || text != '' || text!.isNotEmpty) {
       return text ?? 'Hey medicate, create a medication reminder for me.';
     }
 
     return 'Hey medicate, create a medication reminder for me.';
   }
 
-  String returnTextAiBot(text) {
+  String returnTextAiBot(String? text) {
     if (text == 'Today’s Med') {
       return BriefText().chatAiTodayText;
     }

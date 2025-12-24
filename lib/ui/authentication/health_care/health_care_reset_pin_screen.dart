@@ -55,7 +55,7 @@ class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
         viewModelBuilder: () => locator<HealthCareViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, HealthCareViewModel model, __) {
+        builder: (_, HealthCareViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,

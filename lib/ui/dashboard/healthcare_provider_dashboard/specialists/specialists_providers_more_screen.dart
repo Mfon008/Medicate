@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, must_be_immutable
+// ignore_for_file: deprecated_member_use, must_be_immutable, strict_top_level_inference
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,7 +75,9 @@ class _SpecialistsProvidersMoreScreenState
                   context,
                   icon: AppImage.settings,
                   text: 'Settings',
-                  onTap: () => navigate.navigateTo(Routes.healthCarePractitionerProfileScreen),
+                  onTap: () => navigate.navigateTo(
+                    Routes.healthCarePractitionerProfileScreen,
+                  ),
                 ),
               ],
             ),

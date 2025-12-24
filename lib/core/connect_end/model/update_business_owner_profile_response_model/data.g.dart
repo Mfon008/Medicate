@@ -11,35 +11,28 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   tenantType: json['tenantType'] as String?,
   name: json['name'] as String?,
   owner: json['owner'] as String?,
-  licenseNumber: json['licenseNumber'] as String?,
-  businessAddress: json['businessAddress'] as String?,
-  businessEmail: json['businessEmail'] as String?,
-  email: json['email'] as String?,
+  providerType: json['providerType'] as String?,
   healthcareFacilityName: json['healthcareFacilityName'] as String?,
-  kycDocuments: (json['kycDocuments'] as List<dynamic>?)
-      ?.map((e) => KycDocument.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  bankDetails: (json['bankDetails'] as List<dynamic>?)
-      ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  logo: json['logo'] == null
-      ? null
-      : Logo.fromJson(json['logo'] as Map<String, dynamic>),
-  createdAt: json['createdAt'] as String?,
-  updatedAt: json['updatedAt'] as String?,
+  registrationNumber: json['registrationNumber'] as String?,
   servicesOffered: (json['servicesOffered'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  website: json['website'] as String?,
+  businessEmail: json['businessEmail'] as String?,
+  businessAddress: json['businessAddress'] as String?,
+  bankDetails: (json['bankDetails'] as List<dynamic>?)
+      ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  country: json['country'] as String?,
   state: json['state'] as String?,
   lga: json['lga'] as String?,
-  registrationNumber: json['registrationNumber'] as String?,
-  country: json['country'] as String?,
   authorizedRepInfo: json['authorizedRepInfo'] == null
       ? null
       : AuthorizedRepInfo.fromJson(
           json['authorizedRepInfo'] as Map<String, dynamic>,
         ),
-  website: json['website'] as String?,
+  createdAt: json['createdAt'] as String?,
+  updatedAt: json['updatedAt'] as String?,
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -47,20 +40,17 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'tenantType': instance.tenantType,
   'name': instance.name,
   'owner': instance.owner,
-  'licenseNumber': instance.licenseNumber,
-  'businessAddress': instance.businessAddress,
-  'email': instance.email,
-  'kycDocuments': instance.kycDocuments,
-  'bankDetails': instance.bankDetails,
-  'logo': instance.logo,
-  'servicesOffered': instance.servicesOffered,
-  'country': instance.country,
-  'lga': instance.lga,
+  'providerType': instance.providerType,
   'healthcareFacilityName': instance.healthcareFacilityName,
-  'website': instance.website,
   'registrationNumber': instance.registrationNumber,
+  'servicesOffered': instance.servicesOffered,
+  'website': instance.website,
   'businessEmail': instance.businessEmail,
+  'businessAddress': instance.businessAddress,
+  'bankDetails': instance.bankDetails,
+  'country': instance.country,
   'state': instance.state,
+  'lga': instance.lga,
   'authorizedRepInfo': instance.authorizedRepInfo,
   'createdAt': instance.createdAt,
   'updatedAt': instance.updatedAt,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
-
 import '../../../core/config/colors.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';

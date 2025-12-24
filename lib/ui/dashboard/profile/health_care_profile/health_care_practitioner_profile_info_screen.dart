@@ -129,7 +129,7 @@ class _HealthCarePractitionerProfileInfoScreenState
             });
           },
           disposeViewModel: false,
-          builder: (_, HealthCareViewModel model, __) {
+          builder: (_, HealthCareViewModel model, _) {
             return Form(
               key: formKey,
               child: Column(
@@ -927,29 +927,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                                 isLoading: model.isLoading,
                                 buttonBorderColor: AppColors.transparent,
                                 onPressed: () {
-                                  if (formKey.currentState!.validate()) {
-                                    // model.updatePharmacy(
-                                    //   context,
-                                    //   update: UpdatePharmacyProfileEntityModel(
-                                    //     country: model.countryController.text,
-                                    //     state: model.stateController.text,
-                                    //     lga: model.lgaController.text,
-                                    //     businessAddress: businessAddController.text,
-                                    //     servicesOffered: model.selectService,
-                                    //     contactPersonName:
-                                    //         contactDetailsController.text,
-                                    //     contactEmail: emailController.text,
-                                    //     bankDetails: [
-                                    //       BankDetail(
-                                    //         bankName: bankNameController.text,
-                                    //         accountName:
-                                    //             contactDetailsController.text,
-                                    //         accountNumber: bankNoController.text,
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // );
-                                  }
+                                  if (formKey.currentState!.validate()) {}
                                 },
                               ),
                             ),

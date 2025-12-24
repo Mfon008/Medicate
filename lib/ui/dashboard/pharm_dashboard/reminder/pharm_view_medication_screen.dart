@@ -1,10 +1,11 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../widget/button.dart';
@@ -281,31 +282,6 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              // SizedBox(height: 5.10.h),
-                              // Divider(
-                              //   color: AppColors.infoGrey,
-                              //   thickness: .14,
-                              // ),
-                              // SizedBox(height: 5.10.h),
-                              // TextView(
-                              //   text: 'Description',
-                              //   textStyle: TextStyle(
-                              //     fontFamily: 'Arial',
-                              //     fontSize: 12.8.sp,
-                              //     fontWeight: FontWeight.w400,
-                              //     color: AppColors.infoGrey,
-                              //   ),
-                              // ),
-                              // SizedBox(height: 4.10.h),
-                              // TextView(
-                              //   text: 'Pain Relief',
-                              //   textStyle: TextStyle(
-                              //     fontFamily: 'Arial',
-                              //     fontSize: 14.8.sp,
-                              //     fontWeight: FontWeight.w400,
-                              //     color: AppColors.reminder,
-                              //   ),
-                              // ),
                               SizedBox(height: 10.h),
                             ],
                           ),

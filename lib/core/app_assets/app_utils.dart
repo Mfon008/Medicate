@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
-
 import '../../ui/widget/text.dart';
 import '../config/colors.dart';
 

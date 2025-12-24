@@ -1,5 +1,7 @@
 // ignore_for_file: strict_top_level_inference
 import 'dart:async';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +23,7 @@ import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
 import '../../app_assets/country_code_format.dart';
 import '../../app_assets/image.dart';
+import '../../app_assets/image_picker.dart';
 import '../../config/colors.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
@@ -39,6 +42,11 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
+import '../model/update_business_owner_profile_entity_model/upload_means_of_id.dart';
+import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
+import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
+import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
@@ -53,6 +61,8 @@ class HealthCareViewModel extends BaseViewModel {
   final repositoryImply = HealthcareRepoImpl();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _isLoadingMeansId = false;
+  bool get isLoadingMeansId => _isLoadingMeansId;
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerifyChange = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
@@ -70,6 +80,15 @@ class HealthCareViewModel extends BaseViewModel {
       _loginPharmacyResponseModel;
   GetTenantResponseModel? _getTetantResponseModel;
   GetTenantResponseModel? get getTetantResponseModel => _getTetantResponseModel;
+  UpdateBusinessOwnerProfileResponseModel?
+  _updateBusinessOwnerProfileResponseModel;
+  UpdateBusinessOwnerProfileResponseModel?
+  get updateBusinessOwnerProfileResponseModel =>
+      _updateBusinessOwnerProfileResponseModel;
+
+  UploadImageResponseModel? _uploadImageResponseModel;
+  UploadImageResponseModel? get uploadImageResponseModel =>
+      _uploadImageResponseModel;
   GetUserDetailsResponseModel? _getUserDetailsResponseModel;
   GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
       _getUserDetailsResponseModel;
@@ -87,6 +106,9 @@ class HealthCareViewModel extends BaseViewModel {
 
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
+  UploadImageResponseModel? _uploadImageResponseModelMeansID;
+  UploadImageResponseModel? get uploadImageResponseModelMeansID =>
+      _uploadImageResponseModelMeansID;
 
   TextEditingController countryController = TextEditingController();
   TextEditingController stateController = TextEditingController();
@@ -102,6 +124,8 @@ class HealthCareViewModel extends BaseViewModel {
 
   List<String> selectService = [];
   List<String> selectServicePractitioner = [];
+
+  List<UploadMeansOfId> authDocumentsList = [];
   List services = [
     'Appointment scheduling',
     'Medication reminder',
@@ -144,8 +168,79 @@ class HealthCareViewModel extends BaseViewModel {
 
   List<String> addAreaExpertise = [];
 
+  final _pickImage = ImagePickerHandler();
+  File? imageMeansId;
+  String? filenameMeansId;
   int _start = 60;
-  
+
+  String getMeansOFIDApp(id) {
+    if (id == "NATIONAL_ID") {
+      return 'National ID';
+    }
+    if (id == "DRIVERS_LICENSE") {
+      return 'Driver’s License';
+    }
+    if (id == "INTERNATIONAL_PASSPORT") {
+      return 'International Passport';
+    }
+    if (id == "CITIZENSHIP_CARD") {
+      return 'Citizenship Card';
+    }
+    if (id == "BIOMETRIC_RESIDENCE_PERMIT") {
+      return 'Biometric Residence Permit (BRP)';
+    }
+    if (id == "STATE_ID_CARD") {
+      return 'State ID Card';
+    }
+    if (id == "GREEN_CARD") {
+      return 'Green Card/Resident Card';
+    }
+    if (id == "VOTER ID CARD") {
+      return 'Voter ID Card';
+    }
+    if (id == "ASYLUM_SEEKER_ID") {
+      return 'Asylum Seeker ID';
+    }
+    if (id == "ALIEN_ID_CARD") {
+      return 'Alien ID Card';
+    }
+    return '';
+  }
+
+  String getMeansOFIDAppReverse(id) {
+    if (id == "National ID") {
+      return 'NATIONAL_ID';
+    }
+    if (id == "Driver’s License") {
+      return 'DRIVERS_LICENSE';
+    }
+    if (id == "International Passport") {
+      return 'INTERNATIONAL_PASSPORT';
+    }
+    if (id == "Citizenship Card") {
+      return 'CITIZENSHIP_CARD';
+    }
+    if (id == "Biometric Residence Permit (BRP)") {
+      return 'BIOMETRIC_RESIDENCE_PERMIT';
+    }
+    if (id == "State ID Card") {
+      return 'STATE_ID_CARD';
+    }
+    if (id == "Green Card/Resident Card") {
+      return 'GREEN_CARD';
+    }
+    if (id == "Voter ID Card") {
+      return 'VOTER ID CARD';
+    }
+    if (id == "Asylum Seeker ID") {
+      return 'ASYLUM_SEEKER_ID';
+    }
+    if (id == "Alien ID Card") {
+      return 'ALIEN_ID_CARD';
+    }
+    return '';
+  }
+
   List<String> meansId = [
     'Driver’s License',
     'International Passport',
@@ -156,8 +251,65 @@ class HealthCareViewModel extends BaseViewModel {
     'Green Card/Resident Card',
     'Voter ID Card',
     'Asylum Seeker ID',
-    'Alien ID Card'
+    'Alien ID Card',
   ];
+
+  void pickImageMeansId(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageMeansId = file;
+          filenameMeansId = imageMeansId!.path.split("/").last;
+          _isLoadingMeansId = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageMeansId).readAsBytesSync(),
+              filename: imageMeansId!.path.split("/").last,
+            ),
+          );
+          _isLoadingMeansId = _isLoading;
+          _uploadImageResponseModelMeansID = _uploadImageResponseModel;
+          authDocumentsList.add(
+            UploadMeansOfId(
+              width: _uploadImageResponseModelMeansID!.data!.width,
+              height: _uploadImageResponseModelMeansID!.data!.height,
+              format: _uploadImageResponseModelMeansID!.data!.format,
+              url: _uploadImageResponseModelMeansID!.data!.url!,
+              mimeType: _uploadImageResponseModelMeansID!.data!.mimeType,
+              size: _uploadImageResponseModelMeansID!.data!.size,
+            ),
+          );
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  formartFileImage(File? imageFile) {
+    if (imageFile == null) return;
+    return File(imageFile.path.replaceAll('\'', '').replaceAll('File: ', ''));
+  }
+
+  Future<void> uploadImage({context, MultipartFile? file}) async {
+    try {
+      _isLoading = true;
+      _uploadImageResponseModel = await runBusyFuture(
+        repositoryImply.uploadImage(file!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 
   Widget buildImage(String path) {
     if (path.toLowerCase().endsWith('.svg')) {
@@ -1921,21 +2073,21 @@ class HealthCareViewModel extends BaseViewModel {
 
   getPopUpMenuDialog(BuildContext context) => PopupMenuButton<String>(
     onSelected: (String result) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(
-        backgroundColor: AppColors.skyBlue,
-        duration: Duration(milliseconds: 500),
-        content: TextView(
-            text:'Selected: ${result.capitalizeWords()}',
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.skyBlue,
+          duration: Duration(milliseconds: 500),
+          content: TextView(
+            text: 'Selected: ${result.capitalizeWords()}',
             textStyle: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14.2.sp,
               fontWeight: FontWeight.w400,
               color: AppColors.lightBlue,
             ),
-          )
-        ));
+          ),
+        ),
+      );
     },
     color: AppColors.white,
     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -1963,11 +2115,10 @@ class HealthCareViewModel extends BaseViewModel {
       child: SvgPicture.asset(AppImage.arrow_down),
     ),
   );
-  
+
   Future<bool?> modalBottomSheetMenuAddEducationExperience({
     context,
     bool isEdit = false,
-  
   }) {
     return showModalBottomSheet<bool>(
       context: context,
@@ -1985,24 +2136,49 @@ class HealthCareViewModel extends BaseViewModel {
       },
     );
   }
-  // void updateHealthCare(
-  //   context, {
-  //   UpdatePharmacyProfileEntityModel? update,
-  // }) async {
-  //   try {
-  //     _isLoading = true;
-  //     var v = await runBusyFuture(
-  //       repositoryImply.update(update),
-  //       throwException: true,
-  //     );
-  //     _isLoading = false;
-  //     AppUtils.snackbar(context, message: v['message']);
-  //     getTenant(context);
-  //   } catch (e) {
-  //     _isLoading = false;
-  //     logger.d(e);
-  //     AppUtils.snackbar(context, message: e.toString(), error: true);
-  //   }
-  //   notifyListeners();
-  // }
+
+  void updateHealthCareBusinessOwner(
+    context, {
+    UpdateBusinessOwnerProfileEntityModel? updateBusinessOwner,
+  }) async {
+    try {
+      _isLoading = true;
+      _updateBusinessOwnerProfileResponseModel = await runBusyFuture(
+        repositoryImply.updateHealthCareBusinessOwner(updateBusinessOwner),
+        throwException: true,
+      );
+      _isLoading = false;
+      AppUtils.snackbar(
+        context,
+        message: _updateBusinessOwnerProfileResponseModel?.message ?? '',
+      );
+      getTenant(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateHealthCarePractitioner(
+    context, {
+    UpdatePractitionerProfileEntityModel? updatePractitioner,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHealthCarePractitioner(updatePractitioner),
+        throwException: true,
+      );
+      _isLoading = false;
+      AppUtils.snackbar(context, message: v['message']);
+      getTenant(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 }

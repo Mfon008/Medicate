@@ -32,7 +32,7 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
         });
       },
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, __) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -145,8 +145,8 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                     topLeft: 12,
                     topRight: 12,
                     onTap: () => navigate.navigateTo(
-                            Routes.healthCarePractitionerProfileInfoScreen,
-                          ),
+                      Routes.healthCarePractitionerProfileInfoScreen,
+                    ),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(

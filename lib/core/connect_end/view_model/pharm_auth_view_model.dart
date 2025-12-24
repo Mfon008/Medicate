@@ -1,5 +1,4 @@
-// ignore_for_file: strict_top_level_inference, use_build_context_synchronously, prefer_typing_uninitialized_variables, deprecated_member_use, unnecessary_null_comparison
-
+// ignore_for_file: strict_top_level_inference, use_build_context_synchronously, prefer_typing_uninitialized_variables, deprecated_member_use, unnecessary_null_comparison, library_prefixes
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';

@@ -10,7 +10,6 @@ import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/dashboard/reminder/payment_status_string.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 

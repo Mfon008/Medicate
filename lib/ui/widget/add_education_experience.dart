@@ -328,7 +328,7 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                                   fontFamily: 'Arial',
                                 ),
                               ),
-                              SizedBox(width: 4.w,),
+                              SizedBox(width: 4.w),
                               TextView(
                                 text: '*',
                                 textStyle: TextStyle(

@@ -37,7 +37,6 @@ class _HealthCareHospitalAndClinicSignUpScreenState
   bool isChecked = false;
   bool isPhone = false;
   bool isPhoneValid = false;
-  // bool isName = false;
 
   @override
   Widget build(BuildContext context) {

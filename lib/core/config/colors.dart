@@ -26,7 +26,6 @@ class AppColors {
   static const buttonGrey1 = Color(0xFFCCCCCC);
   static const infoGrey = Color(0xFFA9A9A9);
   static const infoGrey1 = Color(0xFFEAEAEA);
-  //
   static const secondaryTextColor = Color(0xFF475467);
   static const primaryTextColor = Color(0xFF101828);
 

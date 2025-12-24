@@ -43,11 +43,6 @@ class _HealthCareDoctorSpecialistSignUpScreenState
   bool isPhone = false;
   bool isPhoneValid = false;
   bool isName = false;
-  // List<String> areaExpertise = [
-  //   'General Practitioners (GPs) & Family\nMedicine',
-  //   'Gynecology',
-  //   'Pediatrics',
-  // ];
 
   @override
   Widget build(BuildContext context) {

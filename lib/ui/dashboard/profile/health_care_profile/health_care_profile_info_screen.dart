@@ -4,11 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
+import '../../../../core/connect_end/model/update_business_owner_profile_entity_model/bank_detail.dart';
+import '../../../../core/connect_end/model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
+import '../../../../core/connect_end/model/update_business_owner_profile_entity_model/upload_means_of_id.dart';
 import '../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../../core/core_folder/manager/shared_preference.dart';
 import '../../../widget/button.dart';
@@ -29,13 +33,18 @@ class _HealthCareProfileInfoScreenState
 
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController licenceNoController = TextEditingController();
+  TextEditingController authFullNameController = TextEditingController();
+  TextEditingController authPhoneNoController = TextEditingController();
+  TextEditingController authEmailController = TextEditingController();
+  TextEditingController registrationNoController = TextEditingController();
   TextEditingController businessAddController = TextEditingController();
+  TextEditingController businessEmailController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController countryController = TextEditingController();
   TextEditingController contactDetailsController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
   TextEditingController bankNoController = TextEditingController();
+  TextEditingController websiteController = TextEditingController();
 
   bool isPhone = false;
   bool isPhoneValid = false;
@@ -77,10 +86,12 @@ class _HealthCareProfileInfoScreenState
                   .toString()
                   .substring(4);
 
-              licenceNoController.text =
-                  model.getTetantResponseModel?.data?.licenseNumber ?? '';
+              registrationNoController.text =
+                  model.getTetantResponseModel?.data?.registrationNumber ?? '';
               businessAddController.text =
                   model.getTetantResponseModel?.data?.businessAddress ?? '';
+              businessEmailController.text =
+                  model.getTetantResponseModel?.data?.businessEmail ?? '';
               bankNameController.text =
                   model
                       .getTetantResponseModel
@@ -98,11 +109,12 @@ class _HealthCareProfileInfoScreenState
               emailController.text =
                   model.getTetantResponseModel?.data?.email ?? '';
               model.countryController.text =
-                  model.getTetantResponseModel?.data?.country ?? '';
+                  model.getTetantResponseModel?.data?.country?.capitalize() ??
+                  '';
               model.stateController.text =
-                  model.getTetantResponseModel?.data?.state ?? '';
+                  model.getTetantResponseModel?.data?.state?.capitalize() ?? '';
               model.lgaController.text =
-                  model.getTetantResponseModel?.data?.lga ?? '';
+                  model.getTetantResponseModel?.data?.lga?.capitalize() ?? '';
               model.selectService =
                   model.getTetantResponseModel?.data?.servicesOffered ?? [];
               contactDetailsController.text =
@@ -126,10 +138,43 @@ class _HealthCareProfileInfoScreenState
                       ?.bankDetails?[0]
                       .accountNumber ??
                   '';
+              websiteController.text =
+                  model.getTetantResponseModel?.data?.website ?? '';
+              authFullNameController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.authorizedRepInfo
+                      ?.fullName ??
+                  '';
+              authPhoneNoController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.authorizedRepInfo
+                      ?.phone ??
+                  '';
+              authEmailController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.authorizedRepInfo
+                      ?.email ??
+                  '';
+              model.selectService =
+                  model.getTetantResponseModel?.data?.servicesOffered ?? [];
+              model.meansIdController.text = model.getMeansOFIDApp(
+                model
+                        .getTetantResponseModel
+                        ?.data
+                        ?.authorizedRepInfo
+                        ?.meansOfIdType ??
+                    '',
+              );
             });
           },
           disposeViewModel: false,
-          builder: (_, HealthCareViewModel model, __) {
+          builder: (_, HealthCareViewModel model, _) {
             return Form(
               key: formKey,
               child: Column(
@@ -335,7 +380,7 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
-                          label: nameController.text,
+                          label: 'Hospital/Clinic',
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -358,7 +403,7 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
-                          label: licenceNoController.text,
+                          label: nameController.text,
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -380,11 +425,8 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: businessAddController,
-                          validator: AppValidator.validateString(),
-                          onChange: (p0) {
-                            setState(() {});
-                          },
+                          readOnly: true,
+                          label: registrationNoController.text,
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -432,7 +474,6 @@ class _HealthCareProfileInfoScreenState
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -443,19 +484,6 @@ class _HealthCareProfileInfoScreenState
                                 isFilled: true,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuState(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -469,7 +497,6 @@ class _HealthCareProfileInfoScreenState
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -480,19 +507,6 @@ class _HealthCareProfileInfoScreenState
                                 isFilled: true,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuLga(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
                               ),
                             ),
                           ],
@@ -515,8 +529,8 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           isShowHint: true,
-                          controller: emailController,
-                          validator: AppValidator.validateEmail(),
+                          controller: websiteController,
+                          validator: AppValidator.validateString(),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -587,7 +601,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: contactDetailsController,
+                          controller: businessAddController,
                           validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
@@ -608,7 +622,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: emailController,
+                          controller: businessEmailController,
                           inputFormatters: <TextInputFormatter>[
                             FilteringTextInputFormatter.allow(RegExp("[a-z]")),
                           ],
@@ -702,7 +716,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: bankNameController,
+                          controller: authFullNameController,
                           validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
@@ -723,8 +737,8 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: bankNoController,
-                          validator: AppValidator.validateString(),
+                          controller: authPhoneNoController,
+                          validator: AppValidator.validatePhone(),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -744,8 +758,6 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: bankNoController,
-                          validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -765,7 +777,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: bankNoController,
+                          controller: authEmailController,
                           validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
@@ -789,71 +801,140 @@ class _HealthCareProfileInfoScreenState
                           readOnly: true,
                           controller: model.meansIdController,
                           validator: AppValidator.validateString(),
-                          suffixWidget: model.getPopUpMenuDialog(context)
+                          suffixWidget: model.getPopUpMenuDialog(context),
                         ),
                         SizedBox(height: 20.h),
-                        SizedBox(
-                          width: double.infinity,
-                          child: DottedBorder(
-                            options: RoundedRectDottedBorderOptions(
-                              dashPattern: [10, 10],
-                              strokeWidth: .94,
-                              radius: Radius.circular(10),
-                              color: AppColors.primary,
-                            ),
-                            child: GestureDetector(
-                              // onTap: () => model.pickImageMeansId(context),
-                              child: Container(
-                                width: double.infinity,
+                        model.getTetantResponseModel != null &&
+                                model
+                                        .getTetantResponseModel!
+                                        .data!
+                                        .authorizedRepInfo!
+                                        .meansOfId !=
+                                    null || model.filenameMeansId!=null
+                            ? Container(
                                 padding: EdgeInsets.symmetric(
-                                  vertical: 24.30.w,
-                                  horizontal: 22.0.w,
+                                  vertical: 16.w,
+                                  horizontal: 12.w,
                                 ),
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.r),
-                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: AppColors.grey,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                child: Row(
                                   children: [
-                                    SvgPicture.asset(AppImage.upload_doc),
-                                    SizedBox(height: 16.0.w),
-                                    TextView(
-                                      text: 'Upload Document',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 14.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.reminder,
+                                    SvgPicture.asset(AppImage.kyc_file),
+                                    SizedBox(width: 8.w),
+                                    SizedBox(
+                                      width: 140.w,
+                                      child: TextView(
+                                        text: model.filenameMeansId != null
+                                            ? '${model.filenameMeansId}.png'
+                                            : model.getMeansOFIDApp(
+                                                model
+                                                    .getTetantResponseModel!
+                                                    .data!
+                                                    .authorizedRepInfo!
+                                                    .meansOfIdType,
+                                              ),
+                                        maxLines: 1,
+                                        textOverflow: TextOverflow.ellipsis,
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.2.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.black,
+                                        ),
                                       ),
                                     ),
-                                    SizedBox(height: 2.0.h),
-                                    TextView(
-                                      text:
-                                          '(.jpg, .jpeg, png, or .pdf supported)',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.6.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.fineGrey,
-                                      ),
+                                    Spacer(),
+                                    GestureDetector(
+                                      onTap: () =>
+                                          model.pickImageMeansId(context),
+                                      child: SvgPicture.asset(AppImage.upload),
                                     ),
-                                    SizedBox(height: 2.0.h),
-                                    TextView(
-                                      text: 'Max file size: 2MB',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.6.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.fineGrey,
-                                      ),
+                                    SizedBox(width: 10.w),
+                                    GestureDetector(
+                                      onTap: () {
+                                        model.filenameMeansId = null;
+                                        model
+                                                .getTetantResponseModel!
+                                                .data!
+                                                .authorizedRepInfo!
+                                                .meansOfId =
+                                            null;
+                                        model.notifyListeners();
+                                      },
+                                      child: SvgPicture.asset(AppImage.delete),
                                     ),
                                   ],
                                 ),
+                              )
+                            : SizedBox(
+                                width: double.infinity,
+                                child: DottedBorder(
+                                  options: RoundedRectDottedBorderOptions(
+                                    dashPattern: [10, 10],
+                                    strokeWidth: .94,
+                                    radius: Radius.circular(10),
+                                    color: AppColors.primary,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        model.pickImageMeansId(context),
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 24.30.w,
+                                        horizontal: 22.0.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          10.r,
+                                        ),
+                                        color: AppColors.white,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(AppImage.upload_doc),
+                                          SizedBox(height: 16.0.w),
+                                          TextView(
+                                            text: 'Upload Document',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 14.2.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.0.h),
+                                          TextView(
+                                            text:
+                                                '(.jpg, .jpeg, png, or .pdf supported)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 13.6.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.fineGrey,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.0.h),
+                                          TextView(
+                                            text: 'Max file size: 2MB',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 13.6.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.fineGrey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -884,29 +965,80 @@ class _HealthCareProfileInfoScreenState
                           color: AppColors.white,
                           isLoading: model.isLoading,
                           buttonBorderColor: AppColors.transparent,
-                          onPressed: () {
+                          onPressed: model.isLoading?(){}: () {
                             if (formKey.currentState!.validate()) {
-                              // model.updatePharmacy(
-                              //   context,
-                              //   update: UpdatePharmacyProfileEntityModel(
-                              //     country: model.countryController.text,
-                              //     state: model.stateController.text,
-                              //     lga: model.lgaController.text,
-                              //     businessAddress: businessAddController.text,
-                              //     servicesOffered: model.selectService,
-                              //     contactPersonName:
-                              //         contactDetailsController.text,
-                              //     contactEmail: emailController.text,
-                              //     bankDetails: [
-                              //       BankDetail(
-                              //         bankName: bankNameController.text,
-                              //         accountName:
-                              //             contactDetailsController.text,
-                              //         accountNumber: bankNoController.text,
-                              //       ),
-                              //     ],
-                              //   ),
-                              // );
+                              print('::::${UpdateBusinessOwnerProfileEntityModel(
+                                  logo: null,
+                                  typeOfHealthcareProvider: 'HOSPITAL',
+                                  healthcareFacilityName: nameController.text.trim(),
+                                  registrationNumber: registrationNoController.text.trim(),
+                                  country: model.countryController.text.trim(),
+                                  state: model.stateController.text.trim(),
+                                  lga: model.lgaController.text.trim(),
+                                  website: websiteController.text.trim(),
+                                  servicesOffered: model.selectService,
+                                  businessAddress: businessAddController.text.trim(),
+                                  businessEmail: businessEmailController.text.trim(),
+                                  bankDetails: [
+                                    BankDetail(
+                                      bankName: bankNameController.text,
+                                      accountName:
+                                          contactDetailsController.text,
+                                      accountNumber: bankNoController.text,
+                                    ),
+                                  ],
+                                  fullName: authFullNameController.text.trim(),
+                                  phoneNumber: authPhoneNoController.text.trim(),
+                                  email: authEmailController.text.trim(),
+                                  meansOfId: model.getMeansOFIDAppReverse(model.meansIdController.text),
+                                  uploadMeansOfId:model.authDocumentsList.isEmpty?null: UploadMeansOfId(
+                                    url: model.authDocumentsList[0].url,
+                                    mimeType: model.authDocumentsList[0].mimeType,
+                                    width: model.authDocumentsList[0].width,
+                                    size: model.authDocumentsList[0].size,
+                                    height: model.authDocumentsList[0].height,
+                                    format: model.authDocumentsList[0].format,
+                                  )
+
+                                ).toJson()}');
+                              model.updateHealthCareBusinessOwner(
+                                context,
+                                updateBusinessOwner: UpdateBusinessOwnerProfileEntityModel(
+                                  logo: null,
+                                  typeOfHealthcareProvider: 'HOSPITAL',
+                                  healthcareFacilityName: nameController.text.trim(),
+                                  registrationNumber: registrationNoController.text.trim(),
+                                  country: model.countryController.text.trim(),
+                                  state: model.stateController.text.trim(),
+                                  lga: model.lgaController.text.trim(),
+                                  website: websiteController.text.trim(),
+                                  servicesOffered: model.selectService,
+                                  businessAddress: businessAddController.text.trim(),
+                                  businessEmail: businessEmailController.text.trim(),
+                                  bankDetails: [
+                                    BankDetail(
+                                      bankName: bankNameController.text,
+                                      accountName:
+                                          contactDetailsController.text,
+                                      accountNumber: bankNoController.text,
+                                    ),
+                                  ],
+                                  fullName: authFullNameController.text.trim(),
+                                  phoneNumber: authPhoneNoController.text.trim(),
+                                  email: authEmailController.text.trim(),
+                                  meansOfId: model.getMeansOFIDAppReverse(model.meansIdController.text),
+                                  uploadMeansOfId:model.authDocumentsList.isEmpty?null: UploadMeansOfId(
+                                    url: model.authDocumentsList[0].url,
+                                    mimeType: model.authDocumentsList[0].mimeType,
+                                    width: model.authDocumentsList[0].width,
+                                    size: model.authDocumentsList[0].size,
+                                    height: model.authDocumentsList[0].height,
+                                    format: model.authDocumentsList[0].format,
+                                  )
+
+                                )
+                              );
+
                             }
                           },
                         ),

@@ -1,11 +1,10 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/ui/dashboard/pharm_dashboard/pharm_home_screen.dart';
-
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/text.dart';

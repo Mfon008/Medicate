@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use, unnecessary_null_comparison, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -32,7 +31,7 @@ class HealthCareProfileScreen extends StatelessWidget {
         });
       },
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, __) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -144,9 +143,8 @@ class HealthCareProfileScreen extends StatelessWidget {
                     isactive: model.returnBool(),
                     topLeft: 12,
                     topRight: 12,
-                    onTap: () =>navigate.navigateTo(
-                            Routes.healthCareProfileInfoScreen,
-                          ),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.healthCareProfileInfoScreen),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(

@@ -135,7 +135,6 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                       ),
                       validator: AppValidator.validateOTP(),
                       onCompleted: (pin) {
-                        print('Entered PIN: $pin');
                         pinInput = pin;
                         setState(() {});
                       },

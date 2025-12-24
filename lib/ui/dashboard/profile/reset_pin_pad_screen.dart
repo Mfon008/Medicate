@@ -20,7 +20,7 @@ class ResetPinPadScreen extends StatelessWidget {
       viewModelBuilder: () => locator<AuthViewModel>(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
-      builder: (_, AuthViewModel model, __) {
+      builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(

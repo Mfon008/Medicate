@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, must_be_immutable
+// ignore_for_file: deprecated_member_use, must_be_immutable, strict_top_level_inference
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +9,6 @@ import 'package:medicate_app/core/core_folder/app/app.locator.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../widget/button.dart';
@@ -46,7 +45,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
           // model.getUserDetails(context: context, phoneNo: widget.phoneNumber);
         },
         disposeViewModel: false,
-        builder: (_, PharmViewModel model, __) {
+        builder: (_, PharmViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 16.20.w),
             child: Column(

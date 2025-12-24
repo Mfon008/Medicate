@@ -40,6 +40,8 @@ class UrlConfig {
       'auth/individual-user/upload/profile-picture';
   static const String update_user_profile = 'auth/update-profile';
   static const String update_pharmacy_profile = 'auth/update-pharmacy-profile';
+  static const String update_healthcare_business_owner_profile = 'auth/update-healthcare-provider-profile';
+  static const String update_healthcare_practitioner_profile = 'auth/update-healthcare-practitioner-profile';
   static const String reminder = 'reminders';
   static const String today_reminder = 'reminders/daily';
   static const String upload_image_reminder = 'reminders/image';

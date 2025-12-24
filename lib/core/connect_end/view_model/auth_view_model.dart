@@ -3953,9 +3953,6 @@ class AuthViewModel extends BaseViewModel {
                                             GestureDetector(
                                               onTap: () {
                                                 model.imageDrug = null;
-                                                print(
-                                                  'null delete${model.imageDrug}',
-                                                );
                                                 model.notifyListeners();
                                               },
                                               child: SvgPicture.asset(

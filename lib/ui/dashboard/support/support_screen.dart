@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -28,7 +27,7 @@ class SupportScreen extends StatelessWidget {
       viewModelBuilder: () => locator<AuthViewModel>(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
-      builder: (_, AuthViewModel model, __) {
+      builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(

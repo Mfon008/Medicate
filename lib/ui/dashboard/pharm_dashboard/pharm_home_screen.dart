@@ -91,12 +91,6 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
             ],
           ),
         ),
-        // centerTitle: true,
-        // actions: [
-        //   // Padding(
-        //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
-        //   //   child: ),
-        // ],
       ),
       body: isTappToChat
           ? AskMeScreen(inText: chatText, isDashboard: true)

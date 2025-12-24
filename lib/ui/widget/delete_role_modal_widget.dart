@@ -7,7 +7,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/app_utils.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
 import '../../core/connect_end/view_model/pharm_auth_view_model.dart';

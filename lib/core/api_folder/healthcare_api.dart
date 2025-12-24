@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
 
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_roles_response_model/get_roles_response_model.dart';
@@ -16,7 +17,10 @@ import '../connect_end/model/roles_entity_model.dart';
 import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../connect_end/model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
+import '../connect_end/model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
 import '../connect_end/model/update_role_entity_model.dart';
+import '../connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
@@ -314,6 +318,21 @@ class HealthcareApi {
     }
   }
 
+  Future<UploadImageResponseModel> uploadImage(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.uplaod_image,
+        RequestMethod.upload,
+        formData: FormData.fromMap({'file': file}),
+      );
+      logger.d(response.data);
+      return UploadImageResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<GetRolesResponseModel> getRoles() async {
     try {
       final response = await _service.call(
@@ -349,6 +368,40 @@ class HealthcareApi {
         UrlConfig.delete_role,
         RequestMethod.delete,
         data: {'roleId': roleId},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<UpdateBusinessOwnerProfileResponseModel> updateHealthCareBusinessOwner(
+    UpdateBusinessOwnerProfileEntityModel? updateBusinessOwner,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_healthcare_business_owner_profile,
+        RequestMethod.patch,
+        data: updateBusinessOwner!.toJson(),
+      );
+      logger.d(response.data);
+      return UpdateBusinessOwnerProfileResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateHealthCarePractitioner(
+    UpdatePractitionerProfileEntityModel? updatePractitioner,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_healthcare_practitioner_profile,
+        RequestMethod.patch,
+        data: updatePractitioner!.toJson(),
       );
       logger.d(response.data);
       return response.data;

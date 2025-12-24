@@ -1,10 +1,8 @@
-// ignore_for_file: deprecated_member_use, must_be_immutable
-
+// ignore_for_file: deprecated_member_use, must_be_immutable, strict_top_level_inference
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
-
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';

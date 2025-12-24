@@ -9,7 +9,6 @@ import 'package:medicate_app/core/core_folder/app/app.locator.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../core/app_assets/app_validation.dart';
 import '../../core/connect_end/view_model/auth_view_model.dart';
 import '../widget/button.dart';
