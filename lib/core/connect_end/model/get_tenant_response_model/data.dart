@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/bank_detail.dart';
+import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/educational_experience/educational_experience.dart';
+import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/means_of_id.dart';
 
 import 'authorized_rep_info/authorized_rep_info.dart';
 import 'kyc_document.dart';
@@ -16,10 +18,12 @@ class Data {
   String? licenseNumber;
   String? businessAddress;
   String? email;
+  String? meansOfIdType;
   List<KycDocument>? kycDocuments;
   List<BankDetail>? bankDetails;
   Logo? logo;
   List<String>? servicesOffered;
+  String? bio;
   String? country;
   String? lga;
   String? healthcareFacilityName;
@@ -27,9 +31,12 @@ class Data {
   String? registrationNumber;
   String? businessEmail;
   String? state;
+  String? yearsOfExperience;
   AuthorizedRepInfo? authorizedRepInfo;
   String? createdAt;
   String? updatedAt;
+  MeansOfId? meansOfId;
+  List<EducationalExperience>? educationalExperience;
 
   Data({
     this.id,
@@ -42,9 +49,13 @@ class Data {
     this.email,
     this.healthcareFacilityName,
     this.kycDocuments,
+    this.bio,
     this.bankDetails,
+    this.meansOfIdType,
     this.logo,
+    this.meansOfId,
     this.createdAt,
+    this.yearsOfExperience,
     this.updatedAt,
     this.servicesOffered,
     this.state,
@@ -53,6 +64,7 @@ class Data {
     this.country,
     this.authorizedRepInfo,
     this.website,
+    this.educationalExperience,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

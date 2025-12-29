@@ -4,7 +4,10 @@ import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
 
+import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
+import '../connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../connect_end/model/get_roles_response_model/get_roles_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -18,8 +21,10 @@ import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../connect_end/model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
+import '../connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../connect_end/model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
 import '../connect_end/model/update_role_entity_model.dart';
+import '../connect_end/model/update_user_entity_model.dart';
 import '../connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -402,6 +407,96 @@ class HealthcareApi {
         UrlConfig.update_healthcare_practitioner_profile,
         RequestMethod.patch,
         data: updatePractitioner!.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetPharmacyKycResponseModel> getHealthCareKyc() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_kyc,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetPharmacyKycResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateHealthCareKyc(
+    UpdatePharmacyKycEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_pharm_kyc,
+        RequestMethod.patch,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> addDoctor(CreateUserEntityModel createEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.create_user,
+        RequestMethod.post,
+        data: createEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetCreatedUserResponseModel> getDoctors() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_user,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetCreatedUserResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateDoctor(UpdateUserEntityModel createUser) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_user,
+        RequestMethod.patch,
+        data: createUser.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deleteDoctor(String id) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.delete_user,
+        RequestMethod.patch,
+        data: {'membershipId': id},
       );
       logger.d(response.data);
       return response.data;

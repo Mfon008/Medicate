@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use, must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,25 +6,25 @@ import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
+import '../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../../core/core_folder/app/app.locator.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 
-class UsersScreen extends StatelessWidget {
-  const UsersScreen({super.key});
+class DoctorScreen extends StatelessWidget {
+  const DoctorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<PharmViewModel>.reactive(
-      viewModelBuilder: () => locator<PharmViewModel>(),
+    return ViewModelBuilder<HealthCareViewModel>.reactive(
+      viewModelBuilder: () => locator<HealthCareViewModel>(),
       onViewModelReady: (model) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          model.getUser(context);
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await model.getDoctors(context);
         });
       },
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, _) {
+      builder: (_, HealthCareViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -36,7 +36,7 @@ class UsersScreen extends StatelessWidget {
               child: GlobalNavigator(),
             ),
             title: TextView(
-              text: 'Users',
+              text: 'Doctors',
               textStyle: TextStyle(
                 fontFamily: 'GoogleSans',
                 fontSize: 17.2.sp,
@@ -63,7 +63,7 @@ class UsersScreen extends StatelessWidget {
                     ),
                     child: RefreshIndicator(
                       onRefresh: () async {
-                        model.getUser(context);
+                        model.getDoctors(context);
                       },
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(
@@ -82,7 +82,7 @@ class UsersScreen extends StatelessWidget {
                                     SvgPicture.asset(AppImage.no_user_data),
                                     SizedBox(height: 20.h),
                                     TextView(
-                                      text: 'No Sub User Added',
+                                      text: 'No Doctor Added',
                                       textStyle: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 15.2.sp,
@@ -104,14 +104,14 @@ class UsersScreen extends StatelessWidget {
                                     GestureDetector(
                                       onTap: () async {
                                         bool? didAddOrEdit = await model
-                                            .modalBottomSheetMenuAddUser(
+                                            .modalBottomSheetMenuAddDoctors(
                                               context: context,
                                             );
                                         if (didAddOrEdit == true) {
                                           await Future.delayed(
                                             Duration(seconds: 1),
                                           );
-                                          model.getUser(
+                                          model.getDoctors(
                                             context,
                                           ); // refresh roles after modal closes
                                         } else {}
@@ -160,7 +160,7 @@ class UsersScreen extends StatelessWidget {
                                         ),
                                       ),
                                       onChange: (p0) {
-                                        model.searchUsers = p0;
+                                        model.searchDoctors = p0;
                                         model.notifyListeners();
                                       },
                                     ),
@@ -172,13 +172,13 @@ class UsersScreen extends StatelessWidget {
                                             .data!
                                             .staff!
                                             .isNotEmpty)
-                                      if (model.searchUsers != '')
+                                      if (model.searchDoctors != '')
                                         ...model
                                             .getCreatedUserResponseModel!
                                             .data!
                                             .staff!
                                             .where(
-                                              (e) => model.searchUsers!
+                                              (e) => model.searchDoctors!
                                                   .toLowerCase()
                                                   .contains(
                                                     e.user!.fullName!
@@ -195,7 +195,7 @@ class UsersScreen extends StatelessWidget {
                                                         GestureDetector(
                                                           onTap: () async {
                                                             bool?
-                                                            didAddOrEdit = await model.modalBottomSheetMenuAddUser(
+                                                            didAddOrEdit = await model.modalBottomSheetMenuAddDoctors(
                                                               context: context,
                                                               isEdit: true,
                                                               firstName: model
@@ -230,6 +230,7 @@ class UsersScreen extends StatelessWidget {
                                                               state: e
                                                                   .profile
                                                                   ?.state,
+                                                              // licenseNo: e.
                                                             );
                                                             if (didAddOrEdit ==
                                                                 true) {
@@ -238,7 +239,7 @@ class UsersScreen extends StatelessWidget {
                                                                   seconds: 1,
                                                                 ),
                                                               );
-                                                              model.getUser(
+                                                              model.getDoctors(
                                                                 context,
                                                               ); // refresh roles after modal closes
                                                             } else {}
@@ -376,7 +377,7 @@ class UsersScreen extends StatelessWidget {
                                                                               seconds: 1,
                                                                             ),
                                                                           );
-                                                                          model.getUser(
+                                                                          model.getDoctors(
                                                                             context,
                                                                           );
                                                                         } else {}
@@ -421,7 +422,7 @@ class UsersScreen extends StatelessWidget {
                                                       onTap: () async {
                                                         bool?
                                                         didAddOrEdit = await model
-                                                            .modalBottomSheetMenuAddUser(
+                                                            .modalBottomSheetMenuAddDoctors(
                                                               context: context,
                                                               isEdit: true,
                                                               firstName: model
@@ -464,7 +465,7 @@ class UsersScreen extends StatelessWidget {
                                                               seconds: 1,
                                                             ),
                                                           );
-                                                          model.getUser(
+                                                          model.getDoctors(
                                                             context,
                                                           ); // refresh roles after modal closes
                                                         } else {}
@@ -601,9 +602,10 @@ class UsersScreen extends StatelessWidget {
                                                                     seconds: 1,
                                                                   ),
                                                                 );
-                                                                model.getUser(
-                                                                  context,
-                                                                );
+                                                                model
+                                                                    .getDoctors(
+                                                                      context,
+                                                                    );
                                                               } else {}
                                                             },
                                                             child:
@@ -659,17 +661,17 @@ class UsersScreen extends StatelessWidget {
                     ? ButtonWidget(
                         border: 100.r,
                         buttonColor: AppColors.primary,
-                        buttonText: 'Add User',
+                        buttonText: 'Add Doctor',
                         fontSize: 16.8.sp,
                         color: AppColors.white,
                         isLoading: model.isLoading,
                         buttonBorderColor: AppColors.transparent,
                         onPressed: () async {
                           bool? didAddOrEdit = await model
-                              .modalBottomSheetMenuAddUser(context: context);
+                              .modalBottomSheetMenuAddDoctors(context: context);
                           if (didAddOrEdit == true) {
                             await Future.delayed(Duration(seconds: 1));
-                            model.getUser(
+                            model.getDoctors(
                               context,
                             ); // refresh roles after modal closes
                           } else {}

@@ -207,7 +207,7 @@ class _HealthCareChangePhoneNumberState
                     buttonText: 'Continue',
                     color: AppColors.white,
                     buttonBorderColor: AppColors.transparent,
-                    // isLoading: model.isLoading,
+                    isLoading: model.isLoading,
                     onPressed: !isPassed(isPhone: isPhone)
                         ? () {}
                         : () {

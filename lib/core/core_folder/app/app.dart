@@ -40,14 +40,19 @@ import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_more_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/reminder/pharm_view_medication_screen.dart';
 import '../../../ui/dashboard/profile/faq_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/doctors_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/health_care_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/health_care_profile_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/health_care_reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/health_care_setting_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/kyc/kyc_screen.dart';
+import '../../../ui/dashboard/profile/health_care_profile/roles_and_permission_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_screen.dart';
+import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_reset_pin_pad_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_setting_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/roles_and_permission_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/users_screen.dart';
@@ -101,6 +106,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmacyProfileInfoScreen),
     MaterialRoute(page: SupportScreen),
     MaterialRoute(page: ResetPinPadScreen),
+    MaterialRoute(page: HealthCareResetPinPadScreen),
+    MaterialRoute(page: PharmacyResetPinPadScreen),
     MaterialRoute(page: AskMeScreen),
     MaterialRoute(page: EmptyNotification),
     MaterialRoute(page: FaqScreen),
@@ -120,10 +127,13 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmacyResetPinScreen),
     MaterialRoute(page: PharmacyWelcomeScreen),
     MaterialRoute(page: KycScreen),
+    MaterialRoute(page: HealthCareKycScreen),
     MaterialRoute(page: PharmacySettingScreen),
     MaterialRoute(page: PharmResetSuccessScreen),
     MaterialRoute(page: UsersScreen),
+    MaterialRoute(page: DoctorScreen),
     MaterialRoute(page: RolesAndPermissionScreen),
+    MaterialRoute(page: HealthCareRolesAndPermissionScreen),
     MaterialRoute(page: HealthCareHospitalAndClinicSignUpScreen),
     MaterialRoute(page: HealthCareDoctorSpecialistSignUpScreen),
     MaterialRoute(page: HealthCareLoginScreen),

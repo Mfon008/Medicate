@@ -2,11 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
-
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/healthcare_contract_impl.dart';
+import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_created_user_response_model/get_created_user_response_model.dart';
+import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -21,8 +23,10 @@ import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart'
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
+import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -191,6 +195,38 @@ class HealthcareRepoImpl {
     final response = await _contract.updateHealthCarePractitioner(
       updatePractitioner,
     );
+    return response;
+  }
+
+  Future<GetPharmacyKycResponseModel> getHealthCareKyc() async {
+    final response = await _contract.getHealthCareKyc();
+    return response;
+  }
+
+  Future<dynamic> updateHealthCareKyc(
+    UpdatePharmacyKycEntityModel updateKyc,
+  ) async {
+    final response = await _contract.updateHealthCareKyc(updateKyc);
+    return response;
+  }
+
+  Future<dynamic> addUser(CreateUserEntityModel createEntity) async {
+    final response = await _contract.addDoctor(createEntity);
+    return response;
+  }
+
+  Future<GetCreatedUserResponseModel> getDoctors() async {
+    final response = await _contract.getDoctors();
+    return response;
+  }
+
+  Future<dynamic> updateDoctor(UpdateUserEntityModel updateEntity) async {
+    final response = await _contract.updateDoctor(updateEntity);
+    return response;
+  }
+
+  Future<dynamic> deleteDoctor(String id) async {
+    final response = await _contract.deleteDoctor(id);
     return response;
   }
 

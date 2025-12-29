@@ -8,6 +8,8 @@ class UpdateUserEntityModel {
   String? country;
   String? state;
   String? roleId;
+  String? licenseNumber;
+  List<String>? specialty;
 
   UpdateUserEntityModel({
     this.fullName,
@@ -19,6 +21,8 @@ class UpdateUserEntityModel {
     this.country,
     this.state,
     this.roleId,
+    this.licenseNumber,
+    this.specialty,
   });
 
   factory UpdateUserEntityModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class UpdateUserEntityModel {
       country: json['country'] as String?,
       state: json['state'] as String?,
       roleId: json['roleId'] as String?,
+      licenseNumber: json['licenseNumber'] as String?,
+      specialty: json['specialty'],
     );
   }
 
@@ -45,5 +51,7 @@ class UpdateUserEntityModel {
     'country': country,
     'state': state,
     'roleId': roleId,
+    'licenseNumber': licenseNumber,
+    'specialty': specialty,
   };
 }

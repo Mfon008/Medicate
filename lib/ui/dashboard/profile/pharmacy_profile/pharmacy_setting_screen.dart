@@ -65,7 +65,8 @@ class PharmacySettingScreen extends StatelessWidget {
                     text: 'Login & Security',
                     topLeft: 12,
                     topRight: 12,
-                    // onTap: () => navigate.navigateTo(Routes.profileInfoScreen),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.pharmacyResetPinPadScreen),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(

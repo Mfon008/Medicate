@@ -26,9 +26,7 @@ class UrlConfig {
   static const String verify_otp = 'auth/verify-otp';
   static const String verify_change_phone_otp = 'auth/verify-change-phone-otp';
   static const String verify_phone_otp = 'auth/verify-phone-otp';
-  // static const String forgot_password = 'auth/forgot-password';
   static const String forgot_pin = 'auth/forgot-pin';
-  // static const String verify_forget_pin_otp = 'auth/verify-forgot-pin-otp';
   static const String change_number = 'auth/change-phonenumber/';
   static const String change_number_pharmacy = 'auth/change-phone';
   static const String change_pin = 'auth/change-pin';
@@ -40,8 +38,10 @@ class UrlConfig {
       'auth/individual-user/upload/profile-picture';
   static const String update_user_profile = 'auth/update-profile';
   static const String update_pharmacy_profile = 'auth/update-pharmacy-profile';
-  static const String update_healthcare_business_owner_profile = 'auth/update-healthcare-provider-profile';
-  static const String update_healthcare_practitioner_profile = 'auth/update-healthcare-practitioner-profile';
+  static const String update_healthcare_business_owner_profile =
+      'auth/update-healthcare-provider-profile';
+  static const String update_healthcare_practitioner_profile =
+      'auth/update-healthcare-practitioner-profile';
   static const String reminder = 'reminders';
   static const String today_reminder = 'reminders/daily';
   static const String upload_image_reminder = 'reminders/image';

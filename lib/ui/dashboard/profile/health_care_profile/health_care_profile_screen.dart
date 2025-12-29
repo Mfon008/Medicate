@@ -8,8 +8,7 @@ import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/button.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
-import '../../../../core/core_folder/app/app.locator.dart';
+import '../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../../core/core_folder/manager/shared_preference.dart';
 import '../../../widget/text.dart';
 
@@ -18,8 +17,8 @@ class HealthCareProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<PharmViewModel>.reactive(
-      viewModelBuilder: () => locator<PharmViewModel>(),
+    return ViewModelBuilder<HealthCareViewModel>.reactive(
+      viewModelBuilder: () => HealthCareViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await model.getTenant(context);
@@ -31,7 +30,7 @@ class HealthCareProfileScreen extends StatelessWidget {
         });
       },
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, _) {
+      builder: (_, HealthCareViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -96,7 +95,7 @@ class HealthCareProfileScreen extends StatelessWidget {
                   SizedBox(height: 10.h),
                   Center(
                     child: GestureDetector(
-                      onTap: () => model.pickImage(context),
+                      onTap: () => model.pickImageBusinessOwner(context),
                       child: TextView(
                         text: 'Change Photo',
                         textStyle: TextStyle(
@@ -126,7 +125,7 @@ class HealthCareProfileScreen extends StatelessWidget {
                   Center(
                     child: TextView(
                       text:
-                          '${SharedPreferencesService.instance.usersData['user']['email'] ?? ''}',
+                          '${model.getTetantResponseModel?.data?.businessEmail ?? SharedPreferencesService.instance.usersData['user']['email'] ?? ''}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14.2.sp,
@@ -149,9 +148,26 @@ class HealthCareProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: true,
+                    isactive: model.getKycStatusBool(
+                      cac: model
+                          .getTetantResponseModel
+                          ?.data
+                          ?.kycDocuments?[0]
+                          .status,
+                      license: model
+                          .getTetantResponseModel
+                          ?.data
+                          ?.kycDocuments?[1]
+                          .status,
+                      tin: model
+                          .getTetantResponseModel
+                          ?.data
+                          ?.kycDocuments?[2]
+                          .status,
+                    ),
                     text: 'KYC',
-                    onTap: () => navigate.navigateTo(Routes.kycScreen),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.healthCareKycScreen),
                   ),
                   SizedBox(height: 30.h),
                   TextView(

@@ -12,8 +12,8 @@ import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 import '../../../widget/text_form_widget.dart';
 
-class RolesAndPermissionScreen extends StatelessWidget {
-  const RolesAndPermissionScreen({super.key});
+class HealthCareRolesAndPermissionScreen extends StatelessWidget {
+  const HealthCareRolesAndPermissionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class RolesAndPermissionScreen extends StatelessWidget {
       viewModelBuilder: () => locator<HealthCareViewModel>(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          // model.getRoles(context);
+          model.getRoles(context);
         });
       },
       disposeViewModel: false,

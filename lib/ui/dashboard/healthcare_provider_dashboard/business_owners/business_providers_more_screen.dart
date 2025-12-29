@@ -85,8 +85,8 @@ class _BusinessProvidersMoreScreenState
                   context,
                   icon: AppImage.settings,
                   text: 'Settings',
-                  onTap: () {},
-                  // navigate.navigateTo(Routes.pharmacySettingScreen),
+                  onTap: () =>
+                      navigate.navigateTo(Routes.healthCareSettingScreen),
                 ),
                 SizedBox(width: 14.w),
                 moreContainer(

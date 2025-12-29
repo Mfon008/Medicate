@@ -2533,7 +2533,7 @@ class AuthViewModel extends BaseViewModel {
           print(
             'printing the HMO is not available ${loginResponseModel!.data!.memberships![0]['tenantType']}',
           );
-          navigate.navigateTo(Routes.pharmacyDashboard);
+          // navigate.navigateTo(Routes.pharmacyDashboard);
         } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
                 'OWNER' &&
             _loginResponseModel!.data!.memberships![0]['tenantType'] ==

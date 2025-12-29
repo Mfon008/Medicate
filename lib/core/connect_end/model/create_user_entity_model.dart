@@ -8,6 +8,8 @@ class CreateUserEntityModel {
   String? state;
   String? pin;
   String? roleId;
+  String? licenseNumber;
+  List<String>? specialty;
 
   CreateUserEntityModel({
     this.fullName,
@@ -19,6 +21,8 @@ class CreateUserEntityModel {
     this.state,
     this.pin,
     this.roleId,
+    this.licenseNumber,
+    this.specialty,
   });
 
   factory CreateUserEntityModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +36,8 @@ class CreateUserEntityModel {
       state: json['state'] as String?,
       pin: json['pin'] as String?,
       roleId: json['roleId'] as String?,
+      licenseNumber: json['licenseNumber'] as String?,
+      specialty: json['specialty'],
     );
   }
 
@@ -45,5 +51,7 @@ class CreateUserEntityModel {
     'state': state,
     'pin': pin,
     'roleId': roleId,
+    'licenseNumber': licenseNumber,
+    'specialty': specialty,
   };
 }

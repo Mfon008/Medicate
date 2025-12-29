@@ -7,6 +7,8 @@ import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../../core/core_folder/app/app.locator.dart';
+import '../../../../core/core_folder/app/app.router.dart';
+import '../../../../main.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 
@@ -63,7 +65,8 @@ class HealthCareSettingScreen extends StatelessWidget {
                     text: 'Login & Security',
                     topLeft: 12,
                     topRight: 12,
-                    // onTap: () => navigate.navigateTo(Routes.profileInfoScreen),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.healthCareResetPinPadScreen),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(
@@ -87,10 +90,10 @@ class HealthCareSettingScreen extends StatelessWidget {
                   SizedBox(height: 20.h),
                   profileContainer(
                     icon: AppImage.users,
-                    text: 'Users',
+                    text: 'Doctors',
                     topLeft: 12,
                     topRight: 12,
-                    // onTap: () => navigate.navigateTo(Routes.usersScreen),
+                    onTap: () => navigate.navigateTo(Routes.doctorScreen),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(
@@ -98,8 +101,9 @@ class HealthCareSettingScreen extends StatelessWidget {
                     bottomLeft: 12,
                     bottomRight: 12,
                     text: 'Roles and Permissions',
-                    // onTap: () =>
-                    //     navigate.navigateTo(Routes.rolesAndPermissionScreen),
+                    onTap: () => navigate.navigateTo(
+                      Routes.healthCareRolesAndPermissionScreen,
+                    ),
                   ),
                   SizedBox(height: 30.h),
                 ],

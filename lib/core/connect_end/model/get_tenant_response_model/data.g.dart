@@ -10,6 +10,12 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   id: json['id'] as String?,
   tenantType: json['tenantType'] as String?,
   name: json['name'] as String?,
+  bio: json['bio'] as String?,
+  meansOfId: json['meansOfId'] == null
+          ? null
+          : MeansOfId.fromJson(json['meansOfId'] as Map<String, dynamic>),
+  meansOfIdType: json['meansOfIdType'] as String?,
+  yearsOfExperience: json['yearsOfExperience'] as String?,
   owner: json['owner'] as String?,
   licenseNumber: json['licenseNumber'] as String?,
   businessAddress: json['businessAddress'] as String?,
@@ -21,6 +27,9 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
       .toList(),
   bankDetails: (json['bankDetails'] as List<dynamic>?)
       ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  educationalExperience: (json['educationalExperience'] as List<dynamic>?)
+      ?.map((e) => EducationalExperience.fromJson(e as Map<String, dynamic>))
       .toList(),
   logo: json['logo'] == null
       ? null
@@ -45,8 +54,12 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'id': instance.id,
   'tenantType': instance.tenantType,
+  'yearsOfExperience': instance.yearsOfExperience,
   'name': instance.name,
   'owner': instance.owner,
+  'meansOfIdType': instance.meansOfIdType,
+  'meansOfId': instance.meansOfId,
+  'bio': instance.bio,
   'licenseNumber': instance.licenseNumber,
   'businessAddress': instance.businessAddress,
   'email': instance.email,

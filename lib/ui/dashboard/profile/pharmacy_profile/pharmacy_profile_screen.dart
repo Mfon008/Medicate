@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, unnecessary_null_comparison
+// ignore_for_file: deprecated_member_use, unnecessary_null_comparison, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -150,7 +150,23 @@ class PharmacyProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: true,
+                    isactive: model.getKycStatusBool(
+                      cac: model
+                          .getTetantResponseModel
+                          ?.data
+                          ?.kycDocuments?[0]
+                          .status,
+                      license: model
+                          .getTetantResponseModel
+                          ?.data
+                          ?.kycDocuments?[1]
+                          .status,
+                      tin: model
+                          .getTetantResponseModel
+                          ?.data
+                          ?.kycDocuments?[2]
+                          .status,
+                    ),
                     text: 'KYC',
                     onTap: () => navigate.navigateTo(Routes.kycScreen),
                   ),

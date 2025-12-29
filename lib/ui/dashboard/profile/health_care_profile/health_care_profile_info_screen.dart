@@ -805,12 +805,13 @@ class _HealthCareProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         model.getTetantResponseModel != null &&
-                                model
-                                        .getTetantResponseModel!
-                                        .data!
-                                        .authorizedRepInfo!
-                                        .meansOfId !=
-                                    null || model.filenameMeansId!=null
+                                    model
+                                            .getTetantResponseModel!
+                                            .data!
+                                            .authorizedRepInfo!
+                                            .meansOfId !=
+                                        null ||
+                                model.filenameMeansId != null
                             ? Container(
                                 padding: EdgeInsets.symmetric(
                                   vertical: 16.w,
@@ -965,82 +966,90 @@ class _HealthCareProfileInfoScreenState
                           color: AppColors.white,
                           isLoading: model.isLoading,
                           buttonBorderColor: AppColors.transparent,
-                          onPressed: model.isLoading?(){}: () {
-                            if (formKey.currentState!.validate()) {
-                              print('::::${UpdateBusinessOwnerProfileEntityModel(
-                                  logo: null,
-                                  typeOfHealthcareProvider: 'HOSPITAL',
-                                  healthcareFacilityName: nameController.text.trim(),
-                                  registrationNumber: registrationNoController.text.trim(),
-                                  country: model.countryController.text.trim(),
-                                  state: model.stateController.text.trim(),
-                                  lga: model.lgaController.text.trim(),
-                                  website: websiteController.text.trim(),
-                                  servicesOffered: model.selectService,
-                                  businessAddress: businessAddController.text.trim(),
-                                  businessEmail: businessEmailController.text.trim(),
-                                  bankDetails: [
-                                    BankDetail(
-                                      bankName: bankNameController.text,
-                                      accountName:
-                                          contactDetailsController.text,
-                                      accountNumber: bankNoController.text,
-                                    ),
-                                  ],
-                                  fullName: authFullNameController.text.trim(),
-                                  phoneNumber: authPhoneNoController.text.trim(),
-                                  email: authEmailController.text.trim(),
-                                  meansOfId: model.getMeansOFIDAppReverse(model.meansIdController.text),
-                                  uploadMeansOfId:model.authDocumentsList.isEmpty?null: UploadMeansOfId(
-                                    url: model.authDocumentsList[0].url,
-                                    mimeType: model.authDocumentsList[0].mimeType,
-                                    width: model.authDocumentsList[0].width,
-                                    size: model.authDocumentsList[0].size,
-                                    height: model.authDocumentsList[0].height,
-                                    format: model.authDocumentsList[0].format,
-                                  )
-
-                                ).toJson()}');
-                              model.updateHealthCareBusinessOwner(
-                                context,
-                                updateBusinessOwner: UpdateBusinessOwnerProfileEntityModel(
-                                  logo: null,
-                                  typeOfHealthcareProvider: 'HOSPITAL',
-                                  healthcareFacilityName: nameController.text.trim(),
-                                  registrationNumber: registrationNoController.text.trim(),
-                                  country: model.countryController.text.trim(),
-                                  state: model.stateController.text.trim(),
-                                  lga: model.lgaController.text.trim(),
-                                  website: websiteController.text.trim(),
-                                  servicesOffered: model.selectService,
-                                  businessAddress: businessAddController.text.trim(),
-                                  businessEmail: businessEmailController.text.trim(),
-                                  bankDetails: [
-                                    BankDetail(
-                                      bankName: bankNameController.text,
-                                      accountName:
-                                          contactDetailsController.text,
-                                      accountNumber: bankNoController.text,
-                                    ),
-                                  ],
-                                  fullName: authFullNameController.text.trim(),
-                                  phoneNumber: authPhoneNoController.text.trim(),
-                                  email: authEmailController.text.trim(),
-                                  meansOfId: model.getMeansOFIDAppReverse(model.meansIdController.text),
-                                  uploadMeansOfId:model.authDocumentsList.isEmpty?null: UploadMeansOfId(
-                                    url: model.authDocumentsList[0].url,
-                                    mimeType: model.authDocumentsList[0].mimeType,
-                                    width: model.authDocumentsList[0].width,
-                                    size: model.authDocumentsList[0].size,
-                                    height: model.authDocumentsList[0].height,
-                                    format: model.authDocumentsList[0].format,
-                                  )
-
-                                )
-                              );
-
-                            }
-                          },
+                          onPressed: model.isLoading
+                              ? () {}
+                              : () {
+                                  if (formKey.currentState!.validate()) {
+                                    model.updateHealthCareBusinessOwner(
+                                      context,
+                                      updateBusinessOwner:
+                                          UpdateBusinessOwnerProfileEntityModel(
+                                            logo: null,
+                                            typeOfHealthcareProvider:
+                                                'HOSPITAL',
+                                            healthcareFacilityName:
+                                                nameController.text.trim(),
+                                            registrationNumber:
+                                                registrationNoController.text
+                                                    .trim(),
+                                            country: model
+                                                .countryController
+                                                .text
+                                                .trim(),
+                                            state: model.stateController.text
+                                                .trim(),
+                                            lga: model.lgaController.text
+                                                .trim(),
+                                            website: websiteController.text
+                                                .trim(),
+                                            servicesOffered:
+                                                model.selectService,
+                                            businessAddress:
+                                                businessAddController.text
+                                                    .trim(),
+                                            businessEmail:
+                                                businessEmailController.text
+                                                    .trim(),
+                                            bankDetails: [
+                                              BankDetail(
+                                                bankName:
+                                                    bankNameController.text,
+                                                accountName:
+                                                    contactDetailsController
+                                                        .text,
+                                                accountNumber:
+                                                    bankNoController.text,
+                                              ),
+                                            ],
+                                            fullName: authFullNameController
+                                                .text
+                                                .trim(),
+                                            phoneNumber: authPhoneNoController
+                                                .text
+                                                .trim(),
+                                            email: authEmailController.text
+                                                .trim(),
+                                            meansOfId: model
+                                                .getMeansOFIDAppReverse(
+                                                  model.meansIdController.text,
+                                                ),
+                                            uploadMeansOfId:
+                                                model.authDocumentsList.isEmpty
+                                                ? null
+                                                : UploadMeansOfId(
+                                                    url: model
+                                                        .authDocumentsList[0]
+                                                        .url,
+                                                    mimeType: model
+                                                        .authDocumentsList[0]
+                                                        .mimeType,
+                                                    width: model
+                                                        .authDocumentsList[0]
+                                                        .width,
+                                                    size: model
+                                                        .authDocumentsList[0]
+                                                        .size,
+                                                    height: model
+                                                        .authDocumentsList[0]
+                                                        .height,
+                                                    format: model
+                                                        .authDocumentsList[0]
+                                                        .format,
+                                                  ),
+                                          ),
+                                    );
+                                  }
+                                },
                         ),
                       ),
                     ],

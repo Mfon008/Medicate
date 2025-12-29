@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, strict_top_level_inference
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,11 +12,11 @@ import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
 import '../../core/connect_end/model/create_user_entity_model.dart';
 import '../../core/connect_end/model/update_user_entity_model.dart';
-import '../../core/connect_end/view_model/pharm_auth_view_model.dart';
+import '../../core/connect_end/view_model/health_care_view_model.dart';
 import 'text_form_widget.dart';
 
-class AddUserModalWidget extends StatelessWidget {
-  const AddUserModalWidget({
+class AddDoctorsModalWidget extends StatelessWidget {
+  const AddDoctorsModalWidget({
     super.key,
     required this.isEdit,
     required this.onSuccess,
@@ -31,6 +31,8 @@ class AddUserModalWidget extends StatelessWidget {
     this.state,
     this.role,
     this.roleId,
+    this.specialty,
+    this.licenseNo,
     this.membershipId,
   });
   final bool isEdit;
@@ -45,7 +47,9 @@ class AddUserModalWidget extends StatelessWidget {
   final String? country;
   final String? state;
   final String? role;
+  final String? licenseNo;
   final String? roleId;
+  final List<String>? specialty;
   final dynamic membershipId;
 
   @override
@@ -62,36 +66,40 @@ class AddUserModalWidget extends StatelessWidget {
         minChildSize: 0.5, // Can be dragged to 50% of screen height
         maxChildSize: 0.9,
         builder: (context, scrollController) {
-          return ViewModelBuilder<PharmViewModel>.reactive(
-            viewModelBuilder: () => PharmViewModel(),
+          return ViewModelBuilder<HealthCareViewModel>.reactive(
+            viewModelBuilder: () => HealthCareViewModel(),
             onViewModelReady: (model) async {
               await model.getRoles(context);
               if (isEdit) {
-                model.nameController.text = firstName!;
+                model.firstNameController.text = firstName!;
                 model.lastNameController.text = lastName!;
-                model.userPhoneController.text = '0${phone!.substring(4)}';
-                model.userEmailController.text = email!;
-                model.userAddressController.text = address!;
-                model.userGenderController.text = gender!;
-                model.userRoleController.text = role!;
-                model.userRoleControllerId = roleId;
+                model.doctorsPhoneController.text = '0${phone!.substring(4)}';
+                model.doctorsEmailController.text = email!;
+                model.doctorsGenderController.text = gender!;
+                model.doctorsRoleController.text = role!;
+                model.doctorsRoleControllerId = roleId;
                 model.countryController.text = country!;
+                model.doctorsAddressController.text = address!;
+                // model.doctorsLicenseNoController.text = licenseNo!;
                 model.stateController.text = state!;
+                // model.selectService = specialty!;
               } else {
-                model.nameController.text = '';
+                model.firstNameController.text = '';
                 model.lastNameController.text = '';
-                model.userPhoneController.text = '';
-                model.userEmailController.text = '';
-                model.userAddressController.text = '';
-                model.userGenderController.text = '';
-                model.userRoleController.text = '';
-                model.userRoleControllerId = '';
+                model.doctorsPhoneController.text = '';
+                model.doctorsEmailController.text = '';
+                model.doctorsGenderController.text = '';
+                model.doctorsRoleController.text = '';
+                model.doctorsRoleControllerId = '';
+                model.doctorsLicenseNoController.text = '';
                 model.countryController.text = '';
+                model.doctorsAddressController.text = '';
                 model.stateController.text = '';
+                model.selectService = [];
               }
             },
             disposeViewModel: false,
-            builder: (_, PharmViewModel model, _) {
+            builder: (_, HealthCareViewModel model, _) {
               return Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -116,15 +124,16 @@ class AddUserModalWidget extends StatelessWidget {
                       horizontal: 20.w,
                     ),
                     child: Form(
-                      key: model.formKeyValidateAddUser,
+                      key: model.formKeyValidateAddDoctor,
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               SizedBox(width: 30.w),
                               TextView(
-                                text: !isEdit ? 'Add User' : 'Update User',
+                                text: !isEdit ? 'Add Doctor' : 'Update Doctor',
                                 textStyle: TextStyle(
                                   fontFamily: 'GoogleSans',
                                   fontSize: 16.20.sp,
@@ -159,7 +168,7 @@ class AddUserModalWidget extends StatelessWidget {
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-                            controller: model.nameController,
+                            controller: model.firstNameController,
                             validator: AppValidator.validateString(),
                             onChange: (p0) {},
                           ),
@@ -201,7 +210,7 @@ class AddUserModalWidget extends StatelessWidget {
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-                            controller: model.userPhoneController,
+                            controller: model.doctorsPhoneController,
                             validator: AppValidator.validatePhoneUser(),
                             onChange: (p0) {},
                           ),
@@ -222,8 +231,29 @@ class AddUserModalWidget extends StatelessWidget {
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-                            controller: model.userEmailController,
+                            controller: model.doctorsEmailController,
                             validator: AppValidator.validateEmail(),
+                            onChange: (p0) {},
+                          ),
+                          SizedBox(height: 20.h),
+                          TextFormWidget(
+                            hint: 'License Number',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: model.doctorsLicenseNoController,
+                            validator: AppValidator.validateString(),
                             onChange: (p0) {},
                           ),
                           SizedBox(height: 20.h),
@@ -243,11 +273,13 @@ class AddUserModalWidget extends StatelessWidget {
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
-                            controller: model.userAddressController,
+                            controller: model.doctorsAddressController,
                             validator: AppValidator.validateString(),
                             onChange: (p0) {},
                           ),
+
                           SizedBox(height: 20.h),
+
                           TextFormWidget(
                             hint: 'Gender',
                             borderColor: AppColors.transparent,
@@ -266,7 +298,7 @@ class AddUserModalWidget extends StatelessWidget {
                             fillColor: AppColors.grey,
                             isFilled: true,
                             label: '--Select--',
-                            controller: model.userGenderController,
+                            controller: model.doctorsGenderController,
                             validator: AppValidator.validateString(),
                             suffixWidget: PopupMenuButton<String>(
                               color: AppColors.white,
@@ -275,7 +307,7 @@ class AddUserModalWidget extends StatelessWidget {
                                 child: SvgPicture.asset(AppImage.arrow_down),
                               ),
                               onSelected: (String result) {
-                                model.userGenderController.text = result;
+                                model.doctorsGenderController.text = result;
                               },
                               itemBuilder: (BuildContext context) =>
                                   <PopupMenuItem<String>>[
@@ -376,10 +408,10 @@ class AddUserModalWidget extends StatelessWidget {
                             fillColor: AppColors.grey,
                             isFilled: true,
                             readOnly: true,
-                            label: model.userRoleController.text == ''
+                            label: model.doctorsRoleController.text == ''
                                 ? '--Select--'
-                                : model.userRoleController.text,
-                            controller: model.userRoleController,
+                                : model.doctorsRoleController.text,
+                            controller: model.doctorsRoleController,
                             suffixWidget: PopupMenuButton<Role>(
                               color: AppColors.white,
                               child: Padding(
@@ -387,8 +419,9 @@ class AddUserModalWidget extends StatelessWidget {
                                 child: SvgPicture.asset(AppImage.arrow_down),
                               ),
                               onSelected: (Role? result) {
-                                model.userRoleController.text = result!.name!;
-                                model.userRoleControllerId = result.id!;
+                                model.doctorsRoleController.text =
+                                    result!.name!;
+                                model.doctorsRoleControllerId = result.id!;
                                 model.notifyListeners();
                               },
                               itemBuilder: (BuildContext context) =>
@@ -443,7 +476,7 @@ class AddUserModalWidget extends StatelessWidget {
                                   ),
                                   fillColor: AppColors.grey,
                                   isFilled: true,
-                                  controller: model.userPinController,
+                                  controller: model.doctorPinController,
                                   validator: AppValidator.validateString(),
                                   suffixWidget: Padding(
                                     padding: EdgeInsets.all(14.20.w),
@@ -468,6 +501,61 @@ class AddUserModalWidget extends StatelessWidget {
                                   ),
                                 )
                               : SizedBox.shrink(),
+                          SizedBox(height: 20.h),
+                          Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              TextView(
+                                text: 'Specialty',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              Positioned(
+                                right: -12.10,
+                                child: TextView(
+                                  text: '*',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20.h),
+                          ...List.generate(model.areaExpertise.length, (index) {
+                            return model.chooseNotChannelWidget(
+                              context,
+                              text: model.areaExpertise[index],
+                              isTapped: model.addAreaExpertiseDoctorShow
+                                  .contains(
+                                    model.areaExpertise[index],
+                                  ), // ✅ reflect state
+                              onTap: () {
+                                if (model.addAreaExpertiseDoctor.contains(
+                                  model.areaExpertise[index],
+                                )) {
+                                  // unselect
+                                  model.removeSpecialtyFormat(
+                                    model.areaExpertise[index],
+                                  );
+                                } else {
+                                  // select
+                                  model.addSpecialtyFormat(
+                                    model.areaExpertise[index],
+                                  );
+                                } // ✅ update selection
+
+                                model.notifyListeners();
+                              },
+                            );
+                          }),
                           SizedBox(height: 70.h),
                           ButtonWidget(
                             border: 100.r,
@@ -478,7 +566,7 @@ class AddUserModalWidget extends StatelessWidget {
                             isLoading: model.isLoading,
                             buttonBorderColor: AppColors.transparent,
                             onPressed: () {
-                              if (model.formKeyValidateAddUser.currentState!
+                              if (model.formKeyValidateAddDoctor.currentState!
                                   .validate()) {
                                 saveUser(model);
                               }
@@ -499,38 +587,40 @@ class AddUserModalWidget extends StatelessWidget {
   }
 
   void saveUser(model) async {
-    print('hit 2');
     if (isEdit) {
-      print('hit 3');
-      await model.updateUser(
+      await model.updateDoctor(
         parentContext,
         updateUser: UpdateUserEntityModel(
           fullName:
-              '${model.nameController.text.trim()} ${model.lastNameController.text.trim()}',
-          email: model.userEmailController.text.trim(),
-          phone: '+234${model.userPhoneController.text.trim().substring(1)}',
-          gender: model.userGenderController.text.trim(),
-          address: model.userAddressController.text.trim(),
-          roleId: model.userRoleControllerId,
+              '${model.firstNameController.text.trim()} ${model.lastNameController.text.trim()}',
+          email: model.doctorsEmailController.text.trim(),
+          phone: '+234${model.doctorsPhoneController.text.trim().substring(1)}',
+          gender: model.doctorsGenderController.text.trim(),
+          address: model.doctorsAddressController.text.trim(),
+          roleId: model.doctorsRoleControllerId,
           membershipId: membershipId,
           country: model.countryController.text,
           state: model.stateController.text,
+          licenseNumber: model.doctorsLicenseNoController.text.trim(),
+          specialty: model.addAreaExpertiseDoctor,
         ),
       );
     } else {
-      await model.addUsers(
+      await model.addDoctors(
         parentContext,
         createEntity: CreateUserEntityModel(
           fullName:
-              '${model.nameController.text.trim()} ${model.lastNameController.text.trim()}',
-          email: model.userEmailController.text.trim(),
-          phone: '+234${model.userPhoneController.text.trim().substring(1)}',
-          gender: model.userGenderController.text.trim(),
-          address: model.userAddressController.text.trim(),
-          pin: model.userPinController.text.trim(),
-          roleId: model.userRoleControllerId,
+              '${model.firstNameController.text.trim()} ${model.lastNameController.text.trim()}',
+          email: model.doctorsEmailController.text.trim(),
+          phone: '+234${model.doctorsPhoneController.text.trim().substring(1)}',
+          gender: model.doctorsGenderController.text.trim(),
+          address: model.doctorsAddressController.text.trim(),
+          pin: model.doctorPinController.text.trim(),
+          roleId: model.doctorsRoleControllerId,
           country: model.countryController.text,
           state: model.stateController.text,
+          licenseNumber: model.doctorsLicenseNoController.text.trim(),
+          specialty: model.addAreaExpertiseDoctor,
         ),
       );
     }

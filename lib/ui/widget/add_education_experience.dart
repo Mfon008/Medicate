@@ -1,5 +1,4 @@
 // ignore_for_file: strict_top_level_inference
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,45 +9,73 @@ import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../core/app_assets/app_validation.dart';
 import '../../core/app_assets/image.dart';
+import '../../core/connect_end/model/update_practitioner_profile_entity_model/educational_experience.dart';
 import '../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../main.dart';
 
 class AddEducationExperienceModalWidget extends StatelessWidget {
   final bool isEdit;
-  final VoidCallback onSuccess;
+  // final VoidCallback onSuccess;
   final BuildContext parentContext;
+  final int? index;
+  final EducationalExperience? educationalExperience;
 
   const AddEducationExperienceModalWidget({
     super.key,
     this.isEdit = false,
+    this.index,
+    this.educationalExperience,
     required this.parentContext,
-    required this.onSuccess,
+    // required this.onSuccess,
   });
 
-  void addExperience(modelPharm) async {
-    if (modelPharm.formKeyValidateAddRole.currentState!.validate()) {
-      if (isEdit) {
-        // await modelPharm.updateRole(
-        //   parentContext,
-        //   updateRole: UpdateRoleEntityModel(
-        //     roleId: roleId,
-        //     name: modelPharm.rolenameController.text.trim(),
-        //     description: modelPharm.roleDescriptionController.text.trim(),
-        //   ),
-        // );
-      } else {
-        // await modelPharm.addRoles(
-        //   parentContext,
-        //   roleEntity: RolesEntityModel(
-        //     name: modelPharm.rolenameController.text.trim(),
-        //     description: modelPharm.roleDescriptionController.text.trim(),
-        //   ),
-        // );
-      }
-    }
-    // on success:
-    onSuccess();
+  void addExperience(model, context, {int? index}) async {
+    if (!model.formKeyValidateAddExperience.currentState!.validate()) return;
+
+    final experience = EducationalExperience(
+      school: model.schoolController.text.trim(),
+      degree: model.degreeController.text.trim(),
+      startMonth: model.startMonthController.text.trim(),
+      startYear: int.parse(model.startYearController.text.trim()),
+      endMonth: model.endMonthController.text.trim(),
+      endYear: int.parse(model.endYearController.text.trim()),
+    );
+
+    Navigator.pop(context, experience);
   }
+
+  // void addExperience(model, {index}) async {
+  //   if (model.formKeyValidateAddExperience.currentState!.validate()) {
+  //     if (isEdit) {
+  //       model.educationalExperienceList.insert(
+  //         index,
+  //         EducationalExperience(
+  //           school: model.schoolController.text.trim(),
+  //           degree: model.degreeController.text.trim(),
+  //           startMonth: model.startMonthController.text.trim(),
+  //           startYear: int.parse(model.startYearController.text.trim()),
+  //           endMonth: model.endMonthController.text.trim(),
+  //           endYear: int.parse(model.endYearController.text.trim()),
+  //         ),
+  //       );
+  //     } else {
+  //       model.educationalExperienceList.add(
+  //         EducationalExperience(
+  //           school: model.schoolController.text.trim(),
+  //           degree: model.degreeController.text.trim(),
+  //           startMonth: model.startMonthController.text.trim(),
+  //           startYear: int.parse(model.startYearController.text.trim()),
+  //           endMonth: model.endMonthController.text.trim(),
+  //           endYear: int.parse(model.endYearController.text.trim()),
+  //         ),
+  //       );
+  //     }
+  //   }
+
+  //   model.notifyListeners();
+  //   // on success:
+  //   onSuccess();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +95,18 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
             viewModelBuilder: () => HealthCareViewModel(),
             onViewModelReady: (model) {
               if (isEdit) {
-                // model.rolenameController.text = rolename!;
-                // model.roleDescriptionController.text = roleDescription!;
+                model.schoolController.text =
+                    educationalExperience?.school ?? '';
+                model.degreeController.text =
+                    educationalExperience?.degree ?? '';
+                model.startYearController.text =
+                    educationalExperience?.startYear.toString() ?? '';
+                model.endYearController.text =
+                    educationalExperience?.endYear?.toString() ?? '';
+                model.startMonthController.text =
+                    educationalExperience?.startMonth ?? '';
+                model.endMonthController.text =
+                    educationalExperience?.endMonth ?? '';
               }
             },
             disposeViewModel: true,
@@ -194,14 +231,38 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                                   isFilled: true,
                                   controller: model.startMonthController,
                                   validator: AppValidator.validateString(),
-                                  suffixWidget: GestureDetector(
-                                    onTap: () {},
+                                  suffixWidget: PopupMenuButton<String>(
+                                    color: AppColors.white,
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          450.h, // 👈 controls popup height
+                                    ),
                                     child: Padding(
                                       padding: EdgeInsets.all(14.20.w),
                                       child: SvgPicture.asset(
                                         AppImage.arrow_down,
                                       ),
                                     ),
+                                    onSelected: (String result) {
+                                      model.startMonthController.text = result;
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuItem<String>>[
+                                          ...model.monthList.map(
+                                            (e) => PopupMenuItem<String>(
+                                              value: e.toString(),
+                                              child: TextView(
+                                                text: e.toString(),
+                                                textStyle: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                   ),
                                 ),
                               ),
@@ -228,14 +289,38 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                                   isFilled: true,
                                   controller: model.startYearController,
                                   validator: AppValidator.validateString(),
-                                  suffixWidget: GestureDetector(
-                                    onTap: () {},
+                                  suffixWidget: PopupMenuButton<String>(
+                                    color: AppColors.white,
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          450.h, // 👈 controls popup height
+                                    ),
                                     child: Padding(
                                       padding: EdgeInsets.all(14.20.w),
                                       child: SvgPicture.asset(
                                         AppImage.arrow_down,
                                       ),
                                     ),
+                                    onSelected: (String result) {
+                                      model.startYearController.text = result;
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuItem<String>>[
+                                          ...model.yearList.reversed.map(
+                                            (e) => PopupMenuItem<String>(
+                                              value: e.toString(),
+                                              child: TextView(
+                                                text: e.toString(),
+                                                textStyle: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                   ),
                                 ),
                               ),
@@ -267,14 +352,38 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                                   isFilled: true,
                                   controller: model.endMonthController,
                                   validator: AppValidator.validateString(),
-                                  suffixWidget: GestureDetector(
-                                    onTap: () {},
+                                  suffixWidget: PopupMenuButton<String>(
+                                    color: AppColors.white,
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          450.h, // 👈 controls popup height
+                                    ),
                                     child: Padding(
                                       padding: EdgeInsets.all(14.20.w),
                                       child: SvgPicture.asset(
                                         AppImage.arrow_down,
                                       ),
                                     ),
+                                    onSelected: (String result) {
+                                      model.endMonthController.text = result;
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuItem<String>>[
+                                          ...model.monthList.map(
+                                            (e) => PopupMenuItem<String>(
+                                              value: e.toString(),
+                                              child: TextView(
+                                                text: e.toString(),
+                                                textStyle: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                   ),
                                 ),
                               ),
@@ -301,109 +410,133 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                                   isFilled: true,
                                   controller: model.endYearController,
                                   validator: AppValidator.validateString(),
-                                  suffixWidget: GestureDetector(
-                                    onTap: () {},
+                                  suffixWidget: PopupMenuButton<String>(
+                                    color: AppColors.white,
+                                    constraints: BoxConstraints(
+                                      maxHeight:
+                                          450.h, // 👈 controls popup height
+                                    ),
                                     child: Padding(
                                       padding: EdgeInsets.all(14.20.w),
                                       child: SvgPicture.asset(
                                         AppImage.arrow_down,
                                       ),
                                     ),
+                                    onSelected: (String result) {
+                                      model.endYearController.text = result;
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                        <PopupMenuItem<String>>[
+                                          ...model.yearList.reversed.map(
+                                            (e) => PopupMenuItem<String>(
+                                              value: e.toString(),
+                                              child: TextView(
+                                                text: e.toString(),
+                                                textStyle: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 20.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              TextView(
-                                text: 'Certificate of Graduation',
-                                textStyle: TextStyle(
-                                  fontSize: 14.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                  fontFamily: 'Arial',
-                                ),
-                              ),
-                              SizedBox(width: 4.w),
-                              TextView(
-                                text: '*',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10.h),
-                          SizedBox(
-                            width: double.infinity,
-                            child: DottedBorder(
-                              options: RoundedRectDottedBorderOptions(
-                                dashPattern: [10, 10],
-                                strokeWidth: .94,
-                                radius: Radius.circular(10),
-                                color: AppColors.primary,
-                              ),
-                              child: GestureDetector(
-                                // onTap: () => model.pickImageMeansId(context),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 24.30.w,
-                                    horizontal: 22.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(AppImage.upload_doc),
-                                      SizedBox(height: 16.0.w),
-                                      TextView(
-                                        text: 'Upload Document',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 14.2.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
-                                        ),
-                                      ),
-                                      SizedBox(height: 2.0.h),
-                                      TextView(
-                                        text:
-                                            '(.jpg, .jpeg, png, or .pdf supported)',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 13.6.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.fineGrey,
-                                        ),
-                                      ),
-                                      SizedBox(height: 2.0.h),
-                                      TextView(
-                                        text: 'Max file size: 2MB',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 13.6.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.fineGrey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // SizedBox(height: 20.h),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.start,
+                          //   crossAxisAlignment: CrossAxisAlignment.end,
+                          //   children: [
+                          //     TextView(
+                          //       text: 'Certificate of Graduation',
+                          //       textStyle: TextStyle(
+                          //         fontSize: 14.2.sp,
+                          //         fontWeight: FontWeight.w400,
+                          //         color: AppColors.reminder,
+                          //         fontFamily: 'Arial',
+                          //       ),
+                          //     ),
+                          //     SizedBox(width: 4.w),
+                          //     TextView(
+                          //       text: '*',
+                          //       textStyle: TextStyle(
+                          //         fontFamily: 'Arial',
+                          //         fontSize: 18.sp,
+                          //         fontWeight: FontWeight.w500,
+                          //         color: AppColors.red,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+                          // SizedBox(height: 10.h),
+                          // SizedBox(
+                          //   width: double.infinity,
+                          //   child: DottedBorder(
+                          //     options: RoundedRectDottedBorderOptions(
+                          //       dashPattern: [10, 10],
+                          //       strokeWidth: .94,
+                          //       radius: Radius.circular(10),
+                          //       color: AppColors.primary,
+                          //     ),
+                          //     child: GestureDetector(
+                          //       // onTap: () => model.pickImageMeansId(context),
+                          //       child: Container(
+                          //         width: double.infinity,
+                          //         padding: EdgeInsets.symmetric(
+                          //           vertical: 24.30.w,
+                          //           horizontal: 22.0.w,
+                          //         ),
+                          //         decoration: BoxDecoration(
+                          //           borderRadius: BorderRadius.circular(10.r),
+                          //           color: AppColors.white,
+                          //         ),
+                          //         child: Column(
+                          //           crossAxisAlignment:
+                          //               CrossAxisAlignment.center,
+                          //           children: [
+                          //             SvgPicture.asset(AppImage.upload_doc),
+                          //             SizedBox(height: 16.0.w),
+                          //             TextView(
+                          //               text: 'Upload Document',
+                          //               textStyle: TextStyle(
+                          //                 fontFamily: 'GoogleSans',
+                          //                 fontSize: 14.2.sp,
+                          //                 fontWeight: FontWeight.w500,
+                          //                 color: AppColors.reminder,
+                          //               ),
+                          //             ),
+                          //             SizedBox(height: 2.0.h),
+                          //             TextView(
+                          //               text:
+                          //                   '(.jpg, .jpeg, png, or .pdf supported)',
+                          //               textStyle: TextStyle(
+                          //                 fontFamily: 'Arial',
+                          //                 fontSize: 13.6.sp,
+                          //                 fontWeight: FontWeight.w400,
+                          //                 color: AppColors.fineGrey,
+                          //               ),
+                          //             ),
+                          //             SizedBox(height: 2.0.h),
+                          //             TextView(
+                          //               text: 'Max file size: 2MB',
+                          //               textStyle: TextStyle(
+                          //                 fontFamily: 'Arial',
+                          //                 fontSize: 13.6.sp,
+                          //                 fontWeight: FontWeight.w400,
+                          //                 color: AppColors.fineGrey,
+                          //               ),
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
 
                           SizedBox(height: 70.h),
                           Row(
@@ -431,12 +564,8 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                                   color: AppColors.white,
                                   isLoading: model.isLoading,
                                   buttonBorderColor: AppColors.primary,
-                                  onPressed: () {
-                                    if (model
-                                        .formKeyValidateAddExperience
-                                        .currentState!
-                                        .validate()) {}
-                                  },
+                                  onPressed: () =>
+                                      addExperience(model, context),
                                 ),
                               ),
                             ],

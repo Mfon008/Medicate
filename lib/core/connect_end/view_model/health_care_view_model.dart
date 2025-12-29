@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference
+// ignore_for_file: strict_top_level_inference, prefer_typing_uninitialized_variables
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -8,14 +8,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
+import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
+import '../../../ui/widget/add_doctors_modal_widget.dart';
 import '../../../ui/widget/add_education_experience.dart';
-import '../../../ui/widget/add_role_modal_widget.dart';
+import '../../../ui/widget/add_role_modal"_health_care_widget.dart';
 import '../../../ui/widget/button.dart';
+import '../../../ui/widget/deactivate_user_modal_widget.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_widget.dart';
@@ -30,7 +33,11 @@ import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_created_user_response_model/get_created_user_response_model.dart';
+import '../model/get_created_user_response_model/staff.dart';
+import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -45,18 +52,40 @@ import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.d
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_entity_model/upload_means_of_id.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
+import '../model/update_pharmacy_kyc_entity_model/document.dart';
+import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
+import '../model/update_practitioner_profile_entity_model/educational_experience.dart';
+import '../model/update_practitioner_profile_entity_model/means_of_id.dart';
 import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
+import '../model/update_role_entity_model.dart';
+import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/healthcare_repo_impl.dart';
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
+    as ph;
+import 'package:medicate_app/core/connect_end/model/update_practitioner_profile_entity_model/means_of_id.dart'
+    as md;
+import 'package:medicate_app/core/connect_end/model/update_practitioner_profile_entity_model/logo.dart'
+    as pkPra;
+import 'package:medicate_app/core/connect_end/model/update_business_owner_profile_entity_model/logo.dart'
+    as pkBus;
+import 'package:medicate_app/core/connect_end/model/get_tenant_response_model/educational_experience/educational_experience.dart'
+    as getTEx;
 
 class HealthCareViewModel extends BaseViewModel {
   String? pinInput;
   final session = locator<SharedPreferencesService>();
 
   final logger = getLogger('HealthcareViewModel');
+
+  String errorUser = '';
+  String vdeactivateErrorMessage = '';
+
+  String? searchDoctors = '';
+  var vdeactivate;
 
   final repositoryImply = HealthcareRepoImpl();
   bool _isLoading = false;
@@ -103,12 +132,56 @@ class HealthCareViewModel extends BaseViewModel {
   VerifyPassOtpRespnseModel? _verifyPassOtpRespnseModel;
   VerifyPassOtpRespnseModel? get verifyPassOtpRespnseModel =>
       _verifyPassOtpRespnseModel;
+  GetPharmacyKycResponseModel? get getPharmacyKycResponseModel =>
+      _getPharmacyKycResponseModel;
+  GetPharmacyKycResponseModel? _getPharmacyKycResponseModel;
 
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
   UploadImageResponseModel? _uploadImageResponseModelMeansID;
   UploadImageResponseModel? get uploadImageResponseModelMeansID =>
       _uploadImageResponseModelMeansID;
+  UploadImageResponseModel? _uploadImageResponseModelCAC;
+  UploadImageResponseModel? get uploadImageResponseModelCAC =>
+      _uploadImageResponseModelCAC;
+  UploadImageResponseModel? _uploadImageResponseModelPharmLicense;
+  UploadImageResponseModel? get uploadImageResponseModelPharmLicense =>
+      _uploadImageResponseModelPharmLicense;
+  UploadImageResponseModel? _uploadImageResponseModelTIN;
+  UploadImageResponseModel? get uploadImageResponseModelTIN =>
+      _uploadImageResponseModelTIN;
+  GetCreatedUserResponseModel? _getCreatedUserResponseModel;
+  GetCreatedUserResponseModel? get getCreatedUserResponseModel =>
+      _getCreatedUserResponseModel;
+
+  File? imageCAC;
+  String? filenameCAC;
+  File? imageTIN;
+  String? filenameTIN;
+  File? imagePharmLicense;
+  String? filenamePharmLicense;
+  List<Document> kycDocumentsList = [];
+  List<Staff> checkOwnerRole = [];
+
+  bool _onTempPinTap = false;
+  bool get onTempPinTap => _onTempPinTap;
+
+  bool isOnToggleTempPinTap() {
+    _onTempPinTap = !_onTempPinTap;
+    notifyListeners();
+    return _onTempPinTap;
+  }
+
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController doctorsPhoneController = TextEditingController();
+  TextEditingController doctorsLicenseNoController = TextEditingController();
+  TextEditingController doctorsEmailController = TextEditingController();
+  TextEditingController doctorsGenderController = TextEditingController();
+  TextEditingController doctorsAddressController = TextEditingController();
+  TextEditingController doctorsRoleController = TextEditingController();
+  TextEditingController doctorPinController = TextEditingController();
+  String? doctorsRoleControllerId;
 
   TextEditingController countryController = TextEditingController();
   TextEditingController stateController = TextEditingController();
@@ -122,10 +195,15 @@ class HealthCareViewModel extends BaseViewModel {
   TextEditingController endMonthController = TextEditingController();
   TextEditingController endYearController = TextEditingController();
 
+  TextEditingController rolenameController = TextEditingController();
+  TextEditingController roleDescriptionController = TextEditingController();
+
   List<String> selectService = [];
   List<String> selectServicePractitioner = [];
 
   List<UploadMeansOfId> authDocumentsList = [];
+  List<MeansOfId> pracAuthDocumentsList = [];
+
   List services = [
     'Appointment scheduling',
     'Medication reminder',
@@ -140,6 +218,13 @@ class HealthCareViewModel extends BaseViewModel {
 
   String querySignUpCountry = '';
   String? searchRoles = '';
+
+  bool _isLoadingCAC = false;
+  bool get isLoadingCAC => _isLoadingCAC;
+  bool _isLoadingLicense = false;
+  bool get isLoadingLicense => _isLoadingLicense;
+  bool _isLoadingTIN = false;
+  bool get isLoadingTIN => _isLoadingTIN;
 
   final defaultPinTheme = PinTheme(
     width: 50.w,
@@ -159,6 +244,9 @@ class HealthCareViewModel extends BaseViewModel {
 
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateAddExperience = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateAddRole = GlobalKey<FormState>();
+
+  GlobalKey<FormState> formKeyValidateAddDoctor = GlobalKey<FormState>();
 
   List<String> areaExpertise = [
     'General Practitioners (GPs) & Family\nMedicine',
@@ -167,11 +255,91 @@ class HealthCareViewModel extends BaseViewModel {
   ];
 
   List<String> addAreaExpertise = [];
+  List<String> addAreaExpertiseDoctor = [];
+  List<String> addAreaExpertiseDoctorShow = [];
 
   final _pickImage = ImagePickerHandler();
   File? imageMeansId;
   String? filenameMeansId;
   int _start = 60;
+
+  File? image;
+  String? filename;
+
+  var vdelete;
+  String vdeleteErrorMessage = '';
+  List<EducationalExperience> educationalExperienceList = [];
+
+  EducationalExperience convertEducationalExperience(
+    getTEx.EducationalExperience tenantExp,
+  ) {
+    return EducationalExperience(
+      school: tenantExp.school,
+      degree: tenantExp.degree,
+      startMonth: tenantExp.startMonth,
+      startYear: tenantExp.startYear,
+      endMonth: tenantExp.endMonth,
+      endYear: tenantExp.endYear,
+      // map other fields...
+    );
+  }
+
+  List<String> monthList = [
+    'January',
+    'February',
+    'March',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  List yearList = List.generate(
+    DateTime.now().year - 1900 + 1,
+    (index) => '${1900 + index}',
+  );
+
+  addSpecialtyFormat(specialty) {
+    if (specialty == 'General Practitioners (GPs) & Family\nMedicine') {
+      addAreaExpertiseDoctor.add('GENERAL_PRACTITIONERS_AND_FAMILY_MEDICINE');
+      addAreaExpertiseDoctorShow.add(
+        'General Practitioners (GPs) & Family\nMedicine',
+      );
+    }
+    if (specialty == 'Gynecology') {
+      addAreaExpertiseDoctor.add('GYNECOLOGY');
+      addAreaExpertiseDoctorShow.add('Gynecology');
+    }
+    if (specialty == 'Pediatrics') {
+      addAreaExpertiseDoctor.add('PEDIATRICS');
+      addAreaExpertiseDoctorShow.add('Pediatrics');
+    }
+    notifyListeners();
+  }
+
+  removeSpecialtyFormat(specialty) {
+    if (specialty == 'General Practitioners (GPs) & Family\nMedicine') {
+      addAreaExpertiseDoctor.remove(
+        'GENERAL_PRACTITIONERS_AND_FAMILY_MEDICINE',
+      );
+      addAreaExpertiseDoctorShow.remove(
+        'General Practitioners (GPs) & Family\nMedicine',
+      );
+    }
+    if (specialty == 'Gynecology') {
+      addAreaExpertiseDoctor.remove('GYNECOLOGY');
+      addAreaExpertiseDoctorShow.remove('Gynecology');
+    }
+    if (specialty == 'Pediatrics') {
+      addAreaExpertiseDoctor.remove('PEDIATRICS');
+      addAreaExpertiseDoctorShow.remove('Pediatrics');
+    }
+    notifyListeners();
+  }
 
   String getMeansOFIDApp(id) {
     if (id == "NATIONAL_ID") {
@@ -241,6 +409,10 @@ class HealthCareViewModel extends BaseViewModel {
     return '';
   }
 
+  bool isUpperCase(String text) {
+    return text == text.toUpperCase();
+  }
+
   List<String> meansId = [
     'Driver’s License',
     'International Passport',
@@ -253,6 +425,86 @@ class HealthCareViewModel extends BaseViewModel {
     'Asylum Seeker ID',
     'Alien ID Card',
   ];
+
+  bool returnBool() {
+    if (_getTetantResponseModel == null ||
+        _getTetantResponseModel!.data!.bankDetails == null) {
+      return true;
+    }
+    return false;
+  }
+
+  void pickImagePractitioner(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          image = file;
+          filename = image!.path.split("/").last;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(image).readAsBytesSync(),
+              filename: image!.path.split("/").last,
+            ),
+          );
+          updateHealthCarePractitioner(
+            context,
+            updatePractitioner: UpdatePractitionerProfileEntityModel(
+              logo: pkPra.Logo(
+                width: _uploadImageResponseModel!.data!.width,
+                height: _uploadImageResponseModel!.data!.height,
+                format: _uploadImageResponseModel!.data!.format,
+                url: _uploadImageResponseModel!.data!.url!,
+                mimeType: _uploadImageResponseModel!.data!.mimeType,
+                size: _uploadImageResponseModel!.data!.size,
+              ),
+            ),
+          );
+
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickImageBusinessOwner(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          image = file;
+          filename = image!.path.split("/").last;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(image).readAsBytesSync(),
+              filename: image!.path.split("/").last,
+            ),
+          );
+          updateHealthCareBusinessOwner(
+            context,
+            updateBusinessOwner: UpdateBusinessOwnerProfileEntityModel(
+              logo: pkBus.Logo(
+                width: _uploadImageResponseModel!.data!.width,
+                height: _uploadImageResponseModel!.data!.height,
+                format: _uploadImageResponseModel!.data!.format,
+                url: _uploadImageResponseModel!.data!.url!,
+                mimeType: _uploadImageResponseModel!.data!.mimeType,
+                size: _uploadImageResponseModel!.data!.size,
+              ),
+            ),
+          );
+
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
 
   void pickImageMeansId(BuildContext context) {
     try {
@@ -281,6 +533,43 @@ class HealthCareViewModel extends BaseViewModel {
               size: _uploadImageResponseModelMeansID!.data!.size,
             ),
           );
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickImageMeansIdPractitioner(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageMeansId = file;
+          filenameMeansId = imageMeansId!.path.split("/").last;
+          _isLoadingMeansId = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageMeansId).readAsBytesSync(),
+              filename: imageMeansId!.path.split("/").last,
+            ),
+          );
+          _isLoadingMeansId = _isLoading;
+          _uploadImageResponseModelMeansID = _uploadImageResponseModel;
+          pracAuthDocumentsList.add(
+            md.MeansOfId(
+              width: _uploadImageResponseModelMeansID!.data!.width,
+              height: _uploadImageResponseModelMeansID!.data!.height,
+              format: _uploadImageResponseModelMeansID!.data!.format,
+              url: _uploadImageResponseModelMeansID!.data!.url!,
+              mimeType: _uploadImageResponseModelMeansID!.data!.mimeType,
+              size: _uploadImageResponseModelMeansID!.data!.size,
+            ),
+          );
+          //
           _uploadImageResponseModel = null;
           notifyListeners();
         },
@@ -1161,8 +1450,8 @@ class HealthCareViewModel extends BaseViewModel {
         await AppUtils.snackbar(context, message: v['message']);
 
         navigate.navigateTo(
-          Routes.pharmacyChangePhoneNumber,
-          arguments: PharmacyChangePhoneNumberArguments(
+          Routes.healthCareChangePhoneNumber,
+          arguments: HealthCareChangePhoneNumberArguments(
             id: v['data']['resetToken'],
           ),
         );
@@ -1189,7 +1478,7 @@ class HealthCareViewModel extends BaseViewModel {
       if (v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['message']);
 
-        navigate.navigateTo(Routes.pharmacyLoginScreen);
+        navigate.navigateTo(Routes.healthCareLoginScreen);
       }
     } catch (e) {
       _isLoading = false;
@@ -1418,9 +1707,9 @@ class HealthCareViewModel extends BaseViewModel {
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () => navigate.navigateTo(
-                                              Routes.pharmacyChangePhoneNumber,
+                                              Routes.healthCareChangePhoneNumber,
                                               arguments:
-                                                  PharmacyChangePhoneNumberArguments(
+                                                 HealthCareChangePhoneNumberArguments(
                                                     id: id,
                                                   ),
                                             ),
@@ -2037,7 +2326,7 @@ class HealthCareViewModel extends BaseViewModel {
       isScrollControlled: true,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (builder) {
-        return AddRoleModalWidget(
+        return AddRoleModalHealthCareWidget(
           isEdit: isEdit,
           rolename: rolename,
           roleDescription: roleDes,
@@ -2116,25 +2405,38 @@ class HealthCareViewModel extends BaseViewModel {
     ),
   );
 
-  Future<bool?> modalBottomSheetMenuAddEducationExperience({
+  Future<EducationalExperience?> modalBottomSheetMenuAddEducationExperience({
     context,
     bool isEdit = false,
+    EducationalExperience? educationalExperience,
   }) {
-    return showModalBottomSheet<bool>(
+    return showModalBottomSheet<EducationalExperience>(
       context: context,
       isScrollControlled: true,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (builder) {
         return AddEducationExperienceModalWidget(
+          educationalExperience: educationalExperience,
           isEdit: isEdit,
           parentContext: context,
-          onSuccess: () {
-            Navigator.of(context).pop(true);
-            // close modal and return true
-          },
         );
       },
     );
+  }
+
+  void addExperience(EducationalExperience experience) {
+    educationalExperienceList.add(experience);
+    notifyListeners();
+  }
+
+  void updateExperience(int index, EducationalExperience experience) {
+    educationalExperienceList[index] = experience;
+    notifyListeners();
+  }
+
+  void removeExperience(EducationalExperience experience) {
+    educationalExperienceList.remove(experience);
+    notifyListeners();
   }
 
   void updateHealthCareBusinessOwner(
@@ -2180,5 +2482,440 @@ class HealthCareViewModel extends BaseViewModel {
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  Future<void> updateRole(context, {UpdateRoleEntityModel? updateRole}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateRoles(updateRole!),
+        throwException: true,
+      );
+      _isLoading = false;
+      await AppUtils.snackbar(context, message: v['message']);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteRole(BuildContext context, {String? roleId}) async {
+    try {
+      _isLoading = true;
+      vdelete = await runBusyFuture(
+        repositoryImply.deleteRole(roleId!),
+        throwException: true,
+      );
+      _isLoading = false;
+      await AppUtils.snackbar(context, message: vdelete['message']);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      vdeleteErrorMessage = e.toString();
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> addRoles(
+    BuildContext context, {
+    RolesEntityModel? roleEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.addRole(roleEntity!),
+        throwException: true,
+      );
+      _isLoading = false;
+
+      await AppUtils.snackbar(context, message: v['message']);
+      rolenameController.clear();
+      roleDescriptionController.clear();
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getHealthCareKyc(context) async {
+    try {
+      _isLoading = true;
+      _getPharmacyKycResponseModel = await runBusyFuture(
+        repositoryImply.getHealthCareKyc(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateHealthCareKyc(
+    context, {
+    UpdatePharmacyKycEntityModel? updateKyc,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHealthCareKyc(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHealthCareKyc(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  String getKycStatus({id, cac, license, tin}) {
+    if (id == 'PENDING' ||
+        cac == 'PENDING' ||
+        license == 'PENDING' ||
+        tin == 'PENDING') {
+      return 'Your KYC is submitted and under\nreview. We’ll notify you once it’s\nverified.';
+    }
+    if (id == 'APPROVED' &&
+        cac == 'APPROVED' &&
+        license == 'APPROVED' &&
+        tin == 'APPROVED') {
+      return 'Your KYC has been successfully\nverified. You can now access all\nservices.';
+    }
+    return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
+  }
+
+  Color getKycStatusColor({cac, license, tin}) {
+    if (cac == 'PENDING' || license == 'PENDING' || tin == 'PENDING') {
+      return AppColors.fadedyellow;
+    }
+    if (cac == 'APPROVED' && license == 'APPROVED' && tin == 'APPROVED') {
+      return AppColors.app_green_light;
+    }
+    return AppColors.fadedyellow;
+  }
+
+  bool getKycStatusBool({cac, license, tin}) {
+    if (cac == 'PENDING' || license == 'PENDING' || tin == 'PENDING') {
+      return true;
+    }
+    if (cac == 'APPROVED' && license == 'APPROVED' && tin == 'APPROVED') {
+      return true;
+    }
+    return false;
+  }
+
+  void pickImageCAC(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageCAC = file;
+          filenameCAC = imageCAC!.path.split("/").last;
+          _isLoadingCAC = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageCAC).readAsBytesSync(),
+              filename: imageCAC!.path.split("/").last,
+            ),
+          );
+          _isLoadingCAC = _isLoading;
+          _uploadImageResponseModelCAC = _uploadImageResponseModel;
+          kycDocumentsList.add(
+            Document(
+              documentType: 'CAC_DOCUMENT',
+              file: ph.File(
+                width: _uploadImageResponseModelCAC!.data!.width,
+                height: _uploadImageResponseModelCAC!.data!.height,
+                format: _uploadImageResponseModelCAC!.data!.format,
+                url: _uploadImageResponseModelCAC!.data!.url!,
+                mimeType: _uploadImageResponseModelCAC!.data!.mimeType,
+                size: _uploadImageResponseModelCAC!.data!.size,
+              ),
+            ),
+          );
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickImagePharmLicense(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imagePharmLicense = file;
+          filenamePharmLicense = imagePharmLicense!.path.split("/").last;
+          _isLoadingLicense = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imagePharmLicense).readAsBytesSync(),
+              filename: imagePharmLicense!.path.split("/").last,
+            ),
+          );
+          _isLoadingLicense = _isLoading;
+          _uploadImageResponseModelPharmLicense = _uploadImageResponseModel;
+
+          kycDocumentsList.add(
+            Document(
+              documentType: 'PHARMACY_LICENSE',
+              file: ph.File(
+                width: _uploadImageResponseModelPharmLicense!.data!.width,
+                height: _uploadImageResponseModelPharmLicense!.data!.height,
+                format: _uploadImageResponseModelPharmLicense!.data!.format,
+                url: _uploadImageResponseModelPharmLicense!.data!.url!,
+                mimeType: _uploadImageResponseModelPharmLicense!.data!.mimeType,
+                size: _uploadImageResponseModelPharmLicense!.data!.size,
+              ),
+            ),
+          );
+          _uploadImageResponseModel = null;
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickImageTIN(BuildContext context) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageTIN = file;
+          filenameTIN = imageTIN!.path.split("/").last;
+          _isLoadingTIN = true;
+          await uploadImage(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageTIN).readAsBytesSync(),
+              filename: imageTIN!.path.split("/").last,
+            ),
+          );
+          _isLoadingTIN = _isLoading;
+          _uploadImageResponseModelTIN = _uploadImageResponseModel;
+          _uploadImageResponseModel = null;
+          kycDocumentsList.add(
+            Document(
+              documentType: 'TAX_IDENTIFICATION_NUMBER',
+              file: ph.File(
+                width: _uploadImageResponseModelTIN!.data!.width,
+                height: _uploadImageResponseModelTIN!.data!.height,
+                format: _uploadImageResponseModelTIN!.data!.format,
+                url: _uploadImageResponseModelTIN!.data!.url!,
+                mimeType: _uploadImageResponseModelTIN!.data!.mimeType,
+                size: _uploadImageResponseModelTIN!.data!.size,
+              ),
+            ),
+          );
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  Future<void> addDoctors(
+    context, {
+    CreateUserEntityModel? createEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.addUser(createEntity!),
+        throwException: true,
+      );
+      _isLoading = false;
+
+      await AppUtils.snackbar(context, message: v['message']);
+      firstNameController.clear();
+      lastNameController.clear();
+      doctorsPhoneController.clear();
+      doctorsEmailController.clear();
+      doctorsGenderController.clear();
+      doctorsRoleController.clear();
+      doctorsLicenseNoController.clear();
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getDoctors(context) async {
+    try {
+      _isLoading = true;
+      _getCreatedUserResponseModel = await runBusyFuture(
+        repositoryImply.getDoctors(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  bool checkIfOnlyRoleIsOwner() {
+    checkOwnerRole = getCreatedUserResponseModel!.data!.staff!;
+    String searchValue = "OWNER";
+
+    if (checkOwnerRole.every((item) => item.role!.name == searchValue)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> updateDoctor(
+    context, {
+    UpdateUserEntityModel? updateUser,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateDoctor(updateUser!),
+        throwException: true,
+      );
+      _isLoading = false;
+      await AppUtils.snackbar(context, message: v['message']);
+    } catch (e) {
+      _isLoading = false;
+      errorUser = e.toString();
+      logger.d(e);
+    }
+    notifyListeners();
+    // return error;
+  }
+
+  Future<void> deactivateUser(context, {String? id}) async {
+    try {
+      _isLoading = true;
+      vdeactivate = await runBusyFuture(
+        repositoryImply.deleteDoctor(id!),
+        throwException: true,
+      );
+
+      _isLoading = false;
+      await AppUtils.snackbar(context, message: vdeactivate['message']);
+      Navigator.pop(context);
+      getDoctors(context);
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      vdeactivateErrorMessage = e.toString();
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<bool?> modalBottomSheetMenuAddDoctors({
+    context,
+    bool isEdit = false,
+    firstName,
+    lastName,
+    phone,
+    email,
+    address,
+    gender,
+    role,
+    roleId,
+    pin,
+    membershipId,
+    country,
+    state,
+    licenseNo,
+    specialty,
+  }) {
+    return showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (builder) {
+        return AddDoctorsModalWidget(
+          parentContext: context,
+          isEdit: isEdit,
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone,
+          email: email,
+          address: address,
+          gender: gender,
+          role: role,
+          roleId: roleId,
+          membershipId: membershipId,
+          country: country,
+          state: state,
+          licenseNo: licenseNo,
+          specialty: specialty,
+          onSuccess: () {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop(true);
+              }
+            });
+            // Navigator.of(context).pop(true);
+            // close modal and return true
+          },
+        );
+      },
+    );
+  }
+
+  String getFirstWord(String fullName) {
+    return fullName.trim().split(' ').first;
+  }
+
+  String getSecondWord(String fullName) {
+    return fullName.trim().split(' ').last;
+  }
+
+  Future<bool?> showRemoveUserDialog(
+    BuildContext context, {
+    String? id,
+    String? userName,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return DeactivateUserModalWidget(
+          onSuccess: () {
+            Navigator.of(context).pop(true);
+          },
+          onFailed: () {
+            Navigator.of(context).pop(false);
+          },
+          parentContext: context,
+          userId: id,
+          userName: userName,
+        );
+      },
+    );
   }
 }

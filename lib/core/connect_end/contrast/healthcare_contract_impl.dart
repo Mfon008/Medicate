@@ -5,7 +5,10 @@ import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_
 
 import '../../api_folder/healthcare_api.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_created_user_response_model/get_created_user_response_model.dart';
+import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -20,8 +23,10 @@ import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart'
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
+import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -105,4 +110,18 @@ class HealthcareContractsImpl {
   Future<dynamic> updateHealthCarePractitioner(
     UpdatePractitionerProfileEntityModel? updatePractitioner,
   ) async => await _api.updateHealthCarePractitioner(updatePractitioner);
+
+  Future<GetPharmacyKycResponseModel> getHealthCareKyc() async =>
+      await _api.getHealthCareKyc();
+  Future<dynamic> updateHealthCareKyc(
+    UpdatePharmacyKycEntityModel updateKyc,
+  ) async => await _api.updateHealthCareKyc(updateKyc);
+
+  Future<dynamic> addDoctor(CreateUserEntityModel createEntity) async =>
+      await _api.addDoctor(createEntity);
+  Future<GetCreatedUserResponseModel> getDoctors() async =>
+      await _api.getDoctors();
+  Future<dynamic> updateDoctor(UpdateUserEntityModel updateEntity) async =>
+      await _api.updateDoctor(updateEntity);
+  Future<dynamic> deleteDoctor(String id) async => await _api.deleteDoctor(id);
 }

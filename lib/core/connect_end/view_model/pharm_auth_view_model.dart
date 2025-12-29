@@ -65,6 +65,7 @@ import '../model/create_reminder_entity_model/payment.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
+import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_reminder_response_model/reminder.dart';
@@ -347,6 +348,8 @@ class PharmViewModel extends BaseViewModel {
   final _pickImage = ImagePickerHandler();
 
   List listOfDosage = [];
+
+  List<Staff> checkOwnerRole = [];
   File? imageMeansId;
   String? filenameMeansId;
   File? imageCAC;
@@ -1785,6 +1788,17 @@ class PharmViewModel extends BaseViewModel {
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  bool checkIfOnlyRoleIsOwner() {
+    checkOwnerRole = getCreatedUserResponseModel!.data!.staff!;
+    String searchValue = "OWNER";
+
+    if (checkOwnerRole.every((item) => item.role!.name == searchValue)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<void> addUsers(context, {CreateUserEntityModel? createEntity}) async {
