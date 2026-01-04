@@ -8,7 +8,7 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/resend_otp_entity_model.dart';
-import '../../../core/connect_end/view_model/health_care_view_model.dart';
+import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
@@ -16,15 +16,14 @@ import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class HealthCareForgotPinScreen extends StatefulWidget {
-  const HealthCareForgotPinScreen({super.key});
+class HMOForgotPinScreen extends StatefulWidget {
+  const HMOForgotPinScreen({super.key});
 
   @override
-  State<HealthCareForgotPinScreen> createState() =>
-      _HealthCareForgotPinScreenState();
+  State<HMOForgotPinScreen> createState() => _HMOForgotPinScreenState();
 }
 
-class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
+class _HMOForgotPinScreenState extends State<HMOForgotPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
@@ -44,11 +43,11 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<HealthCareViewModel>.reactive(
-        viewModelBuilder: () => locator<HealthCareViewModel>(),
+      body: ViewModelBuilder<HMOViewModel>.reactive(
+        viewModelBuilder: () => locator<HMOViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, HealthCareViewModel model, _) {
+        builder: (_, HMOViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -201,7 +200,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
-                              model.forgotPassword(
+                              model.forgotPasswordHMO(
                                 context,
                                 forgotPassword: ResendOtpEntityModel(
                                   phone: '+234${phoneController.text}',
@@ -229,7 +228,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => navigate.navigateTo(
-                                Routes.healthCareDoctorSpecialistSignUpScreen,
+                                Routes.hMOSignUpScreen,
                               ),
                           ),
                         ],

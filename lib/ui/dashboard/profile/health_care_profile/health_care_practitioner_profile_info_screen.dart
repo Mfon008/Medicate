@@ -1098,12 +1098,19 @@ class _HealthCarePractitionerProfileInfoScreenState
                                                       bankNoController.text,
                                                 ),
                                               ],
-                                              meansOfIdType:model.isUpperCase(model.meansIdController.text)?model.meansIdController.text: model
-                                                  .getMeansOFIDAppReverse(
+                                              meansOfIdType:
+                                                  model.isUpperCase(
                                                     model
                                                         .meansIdController
                                                         .text,
-                                                  ),
+                                                  )
+                                                  ? model.meansIdController.text
+                                                  : model
+                                                        .getMeansOFIDAppReverse(
+                                                          model
+                                                              .meansIdController
+                                                              .text,
+                                                        ),
                                               meansOfId:
                                                   model
                                                       .pracAuthDocumentsList

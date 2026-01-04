@@ -16,10 +16,10 @@ import 'package:stacked/stacked.dart';
 import '../../../main.dart';
 import '../../../ui/widget/add_doctors_modal_widget.dart';
 import '../../../ui/widget/add_education_experience.dart';
-import '../../../ui/widget/add_role_modal"_health_care_widget.dart';
+import '../../../ui/widget/add_role_modal_health_care_widget.dart';
 import '../../../ui/widget/button.dart';
-import '../../../ui/widget/deactivate_user_modal_widget.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
+import '../../../ui/widget/health_care_deactivate_user_modal_widget.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
@@ -166,12 +166,6 @@ class HealthCareViewModel extends BaseViewModel {
   bool _onTempPinTap = false;
   bool get onTempPinTap => _onTempPinTap;
 
-  bool isOnToggleTempPinTap() {
-    _onTempPinTap = !_onTempPinTap;
-    notifyListeners();
-    return _onTempPinTap;
-  }
-
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController doctorsPhoneController = TextEditingController();
@@ -269,6 +263,13 @@ class HealthCareViewModel extends BaseViewModel {
   var vdelete;
   String vdeleteErrorMessage = '';
   List<EducationalExperience> educationalExperienceList = [];
+
+
+  bool isOnToggleTempPinTap() {
+    _onTempPinTap = !_onTempPinTap;
+    notifyListeners();
+    return _onTempPinTap;
+  }
 
   EducationalExperience convertEducationalExperience(
     getTEx.EducationalExperience tenantExp,
@@ -1707,9 +1708,10 @@ class HealthCareViewModel extends BaseViewModel {
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () => navigate.navigateTo(
-                                              Routes.healthCareChangePhoneNumber,
+                                              Routes
+                                                  .healthCareChangePhoneNumber,
                                               arguments:
-                                                 HealthCareChangePhoneNumberArguments(
+                                                  HealthCareChangePhoneNumberArguments(
                                                     id: id,
                                                   ),
                                             ),
@@ -2904,7 +2906,7 @@ class HealthCareViewModel extends BaseViewModel {
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
-        return DeactivateUserModalWidget(
+        return HealthCareDeactivateUserModalWidget(
           onSuccess: () {
             Navigator.of(context).pop(true);
           },

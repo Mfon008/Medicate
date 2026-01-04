@@ -10,22 +10,21 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/reset_password_entity_model.dart';
-import '../../../core/connect_end/view_model/health_care_view_model.dart';
+import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
-class HealthCareResetPinScreen extends StatefulWidget {
-  HealthCareResetPinScreen({super.key, this.phone, this.resetToken});
+class HMOResetPinScreen extends StatefulWidget {
+  HMOResetPinScreen({super.key, this.phone, this.resetToken});
   String? phone;
   String? resetToken;
 
   @override
-  State<HealthCareResetPinScreen> createState() =>
-      _HealthCareResetPinScreenState();
+  State<HMOResetPinScreen> createState() => _HMOResetPinScreenState();
 }
 
-class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
+class _HMOResetPinScreenState extends State<HMOResetPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isPhoneValid = false;
@@ -51,11 +50,11 @@ class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<HealthCareViewModel>.reactive(
-        viewModelBuilder: () => locator<HealthCareViewModel>(),
+      body: ViewModelBuilder<HMOViewModel>.reactive(
+        viewModelBuilder: () => locator<HMOViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, HealthCareViewModel model, _) {
+        builder: (_, HMOViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -139,7 +138,7 @@ class _HealthCareResetPinScreenState extends State<HealthCareResetPinScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        model.resetPin(
+                        model.resetPinHMO(
                           context,
                           resetToken: widget.resetToken,
                           resetPasswordEntityModel: ResetPasswordEntityModel(

@@ -14,6 +14,7 @@ class UrlConfig {
   static const String update_user = 'tenant/staff/update';
   static const String delete_user = 'tenant/staff/deactivate';
   static const String sign_up = 'auth/register-user';
+  static const String sign_up_hmo = 'auth/register-hmo';
   static const String sign_up_pharmacy = 'auth/register-pharmacy';
   static const String sign_up_practitioner =
       'auth/register-healthcare-practitioner';
@@ -37,6 +38,7 @@ class UrlConfig {
   static const String upload_pro_picture =
       'auth/individual-user/upload/profile-picture';
   static const String update_user_profile = 'auth/update-profile';
+  static const String update_hmo_profile = 'auth/update-hmo-profile';
   static const String update_pharmacy_profile = 'auth/update-pharmacy-profile';
   static const String update_healthcare_business_owner_profile =
       'auth/update-healthcare-provider-profile';

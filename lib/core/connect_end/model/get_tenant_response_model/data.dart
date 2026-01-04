@@ -30,6 +30,9 @@ class Data {
   String? website;
   String? registrationNumber;
   String? businessEmail;
+  String? contactPersonFirstName;
+  String? contactPersonLastName;
+  String? contactPersonDesignation;
   String? state;
   String? yearsOfExperience;
   AuthorizedRepInfo? authorizedRepInfo;
@@ -65,6 +68,9 @@ class Data {
     this.authorizedRepInfo,
     this.website,
     this.educationalExperience,
+    this.contactPersonDesignation,
+    this.contactPersonFirstName,
+    this.contactPersonLastName
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

@@ -693,8 +693,7 @@ class HealthCareKycScreen extends StatelessWidget {
                                 ) ==
                                 false
                             ? () {
-                                if (
-                                    model.imageCAC != null &&
+                                if (model.imageCAC != null &&
                                     model.imagePharmLicense != null &&
                                     model.imageTIN != null) {
                                   model.updateHealthCareKyc(

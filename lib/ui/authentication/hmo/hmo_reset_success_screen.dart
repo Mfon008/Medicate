@@ -8,8 +8,8 @@ import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
-class HealthCareResetSuccessScreen extends StatelessWidget {
-  const HealthCareResetSuccessScreen({super.key});
+class HMOResetSuccessScreen extends StatelessWidget {
+  const HMOResetSuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class HealthCareResetSuccessScreen extends StatelessWidget {
               color: AppColors.white,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                navigate.navigateTo(Routes.healthCareLoginScreen);
+                navigate.navigateTo(Routes.hMOLoginScreen);
               },
             ),
             SizedBox(height: 20.30.h),

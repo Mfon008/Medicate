@@ -1,21 +1,19 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:io';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/connect_end/view_model/hmo_view_model.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/constant.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/login_entity_model.dart';
-import '../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../core/core_folder/manager/shared_preference.dart';
@@ -24,17 +22,16 @@ import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../bio_authentication.dart';
 
-class HealthCareWelcomeScreen extends StatefulWidget {
-  HealthCareWelcomeScreen({super.key, this.phone});
+class HMOWelcomeScreen extends StatefulWidget {
+  HMOWelcomeScreen({super.key, this.phone});
 
   String? phone;
 
   @override
-  State<HealthCareWelcomeScreen> createState() =>
-      _HealthCareWelcomeScreenState();
+  State<HMOWelcomeScreen> createState() => _HMOWelcomeScreenState();
 }
 
-class _HealthCareWelcomeScreenState extends State<HealthCareWelcomeScreen> {
+class _HMOWelcomeScreenState extends State<HMOWelcomeScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isPhoneValid = false;
@@ -61,8 +58,8 @@ class _HealthCareWelcomeScreenState extends State<HealthCareWelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<HealthCareViewModel>.reactive(
-        viewModelBuilder: () => locator<HealthCareViewModel>(),
+      body: ViewModelBuilder<HMOViewModel>.reactive(
+        viewModelBuilder: () => locator<HMOViewModel>(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             model.getUserDetails(
@@ -74,7 +71,7 @@ class _HealthCareWelcomeScreenState extends State<HealthCareWelcomeScreen> {
           });
         },
         disposeViewModel: false,
-        builder: (_, HealthCareViewModel model, _) {
+        builder: (_, HMOViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -213,7 +210,7 @@ class _HealthCareWelcomeScreenState extends State<HealthCareWelcomeScreen> {
                                 bool auth =
                                     await Authentication.authentication();
                                 if (auth) {
-                                  model.signInHealthcare(
+                                  model.signInHMO(
                                     context,
                                     signInEntity: LoginEntityModel(
                                       phone:
@@ -261,7 +258,7 @@ class _HealthCareWelcomeScreenState extends State<HealthCareWelcomeScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        model.signInHealthcare(
+                        model.signInHMO(
                           context,
                           signInEntity: LoginEntityModel(
                             phone:

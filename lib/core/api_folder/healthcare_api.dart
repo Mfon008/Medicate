@@ -3,7 +3,6 @@ import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_practitioner_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
-
 import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';

@@ -12,14 +12,14 @@ import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class HealthCareLoginScreen extends StatefulWidget {
-  const HealthCareLoginScreen({super.key});
+class HMOLoginScreen extends StatefulWidget {
+  const HMOLoginScreen({super.key});
 
   @override
-  State<HealthCareLoginScreen> createState() => _HealthCareLoginScreenState();
+  State<HMOLoginScreen> createState() => _HMOLoginScreenState();
 }
 
-class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
+class _HMOLoginScreenState extends State<HMOLoginScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
@@ -222,8 +222,8 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
                     : () {
                         if (formKey.currentState!.validate()) {
                           navigate.navigateTo(
-                            Routes.healthCareWelcomeScreen,
-                            arguments: HealthCareWelcomeScreenArguments(
+                            Routes.hMOWelcomeScreen,
+                            arguments: HMOWelcomeScreenArguments(
                               phone: '+234${phoneController.text}',
                             ),
                           );
@@ -305,9 +305,9 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
                           color: AppColors.primary,
                           decoration: TextDecoration.underline,
                         ),
-                        recognizer: TapGestureRecognizer(),
-                        // ..onTap = () =>
-                        //     navigate.navigateTo(Routes.signUpScreen),
+                        recognizer: TapGestureRecognizer()
+                        ..onTap = () =>
+                            navigate.navigateTo(Routes.hMOSignUpScreen),
                       ),
                     ],
                   ),

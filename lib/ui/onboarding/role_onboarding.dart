@@ -141,6 +141,7 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
         break;
       case UserType.healthCare:
       case UserType.hmo:
+        navigate.navigateTo(Routes.hMOSignUpScreen);
         break;
 
       case null:

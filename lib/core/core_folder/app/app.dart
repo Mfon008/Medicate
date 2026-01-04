@@ -11,6 +11,14 @@ import '../../../ui/authentication/health_care/health_care_reset_pin_screen.dart
 import '../../../ui/authentication/health_care/health_care_reset_success_screen.dart';
 import '../../../ui/authentication/health_care/health_care_setup_pin_screen.dart';
 import '../../../ui/authentication/health_care/health_care_welcome_screen.dart';
+import '../../../ui/authentication/hmo/hmo_change_no_screen.dart';
+import '../../../ui/authentication/hmo/hmo_forgot_pin_screen.dart';
+import '../../../ui/authentication/hmo/hmo_login_screen.dart';
+import '../../../ui/authentication/hmo/hmo_reset_pin_screen.dart';
+import '../../../ui/authentication/hmo/hmo_reset_success_screen.dart';
+import '../../../ui/authentication/hmo/hmo_setup_pin_screen.dart';
+import '../../../ui/authentication/hmo/hmo_signup_screen.dart';
+import '../../../ui/authentication/hmo/hmo_welcome_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_change_no_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_forgot_pin_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_login_screen.dart';
@@ -34,6 +42,9 @@ import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/busi
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_dashboard.dart';
+import '../../../ui/dashboard/hmo/hmo_home_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_more_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/notification/empty_notification.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
@@ -49,6 +60,13 @@ import '../../../ui/dashboard/profile/health_care_profile/health_care_reset_pin_
 import '../../../ui/dashboard/profile/health_care_profile/health_care_setting_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/kyc/kyc_screen.dart';
 import '../../../ui/dashboard/profile/health_care_profile/roles_and_permission_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_profile_info_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_profile_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_reset_pin_pad_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_setting_screen.dart';
+import '../../../ui/dashboard/profile/hmo/kyc/hmo_kyc_screen.dart';
+import '../../../ui/dashboard/profile/hmo/roles_and_permission_screen.dart';
+import '../../../ui/dashboard/profile/hmo/users_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart';
 import '../../../ui/dashboard/profile/pharmacy_profile/pharmacy_profile_screen.dart';
@@ -72,15 +90,19 @@ import '../../../ui/onboarding/splash_screen.dart';
 import '../../../ui/widget/accelerate_payment_view.dart';
 import '../../api_folder/auth_api.dart';
 import '../../api_folder/healthcare_api.dart';
+import '../../api_folder/hmo_api.dart';
 import '../../api_folder/pharm_auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
 import '../../connect_end/contrast/healthcare_contract_impl.dart';
+import '../../connect_end/contrast/hmo_contract_impl.dart';
 import '../../connect_end/contrast/pharm_contract_impl.dart';
 import '../../connect_end/repo/healthcare_repo_impl.dart';
+import '../../connect_end/repo/hmo_repo_impl.dart';
 import '../../connect_end/repo/pharm_repo_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
 import '../../connect_end/view_model/auth_view_model.dart';
 import '../../connect_end/view_model/health_care_view_model.dart';
+import '../../connect_end/view_model/hmo_view_model.dart';
 import '../../connect_end/view_model/pharm_auth_view_model.dart';
 import '../manager/shared_preference.dart';
 import '../network/network_service.dart';
@@ -127,6 +149,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmacyResetPinScreen),
     MaterialRoute(page: PharmacyWelcomeScreen),
     MaterialRoute(page: KycScreen),
+    MaterialRoute(page: HMOKycScreen),
     MaterialRoute(page: HealthCareKycScreen),
     MaterialRoute(page: PharmacySettingScreen),
     MaterialRoute(page: PharmResetSuccessScreen),
@@ -147,12 +170,28 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: BusinessProvidersHomeScreen),
     MaterialRoute(page: SpecialistsProviderDashboard),
     MaterialRoute(page: SpecialistsProvidersHomeScreen),
+    MaterialRoute(page: HMODashboard),
+    MaterialRoute(page: HMOHomeScreen),
     MaterialRoute(page: HealthCareProfileInfoScreen),
     MaterialRoute(page: HealthCareProfileScreen),
     MaterialRoute(page: HealthCareSettingScreen),
     MaterialRoute(page: AcceleratePaymentView),
     MaterialRoute(page: HealthCarePractitionerProfileInfoScreen),
     MaterialRoute(page: HealthCarePractitionerProfileScreen),
+    MaterialRoute(page: HMOWelcomeScreen),
+    MaterialRoute(page: HMOSignUpScreen),
+    MaterialRoute(page: HMOSetupPinScreen),
+    MaterialRoute(page: HMOResetSuccessScreen),
+    MaterialRoute(page: HMOResetPinScreen),
+    MaterialRoute(page: HMOLoginScreen),
+    MaterialRoute(page: HMOForgotPinScreen),
+    MaterialRoute(page: HMOChangePhoneNumber),
+    MaterialRoute(page: HMOProfileInfoScreen),
+    MaterialRoute(page: HMOProfileScreen),
+    MaterialRoute(page: HMOResetPinPadScreen),
+    MaterialRoute(page: HMOSettingScreen),
+    MaterialRoute(page: HMORolesAndPermissionScreen),
+    MaterialRoute(page: HMOUsersScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,
@@ -173,6 +212,11 @@ import '../network/support_network_service.dart';
       transitionsBuilder: TransitionsBuilders.slideRight,
       durationInMilliseconds: 300,
     ),
+    CustomRoute(
+      page: HMOMoreScreen,
+      transitionsBuilder: TransitionsBuilders.slideRight,
+      durationInMilliseconds: 300,
+    ),
   ],
   dependencies: [
     LazySingleton(classType: NavigationService),
@@ -184,15 +228,19 @@ import '../network/support_network_service.dart';
     LazySingleton(classType: AuthApi),
     LazySingleton(classType: PharmApi),
     LazySingleton(classType: HealthcareApi),
+    LazySingleton(classType: HMOApi),
     LazySingleton(classType: AuthContractsImpl),
     LazySingleton(classType: PharmContractsImpl),
     LazySingleton(classType: HealthcareContractsImpl),
+    LazySingleton(classType: HMOContractsImpl),
     LazySingleton(classType: AuthRepoImpl),
     LazySingleton(classType: PharmRepoImpl),
     LazySingleton(classType: HealthcareRepoImpl),
+    LazySingleton(classType: HMORepoImpl),
     LazySingleton(classType: AuthViewModel),
     Factory(classType: PharmViewModel),
     Factory(classType: HealthCareViewModel),
+    Factory(classType: HMOViewModel),
   ],
   logger: StackedLogger(),
 )

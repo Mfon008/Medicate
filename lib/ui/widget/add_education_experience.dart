@@ -447,6 +447,7 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                               ),
                             ],
                           ),
+
                           // SizedBox(height: 20.h),
                           // Row(
                           //   mainAxisAlignment: MainAxisAlignment.start,
@@ -537,7 +538,6 @@ class AddEducationExperienceModalWidget extends StatelessWidget {
                           //     ),
                           //   ),
                           // ),
-
                           SizedBox(height: 70.h),
                           Row(
                             children: [

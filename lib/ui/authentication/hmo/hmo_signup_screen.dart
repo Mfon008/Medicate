@@ -2,12 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_business_owner_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
-import '../../../core/connect_end/view_model/health_care_view_model.dart';
+import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
@@ -15,24 +15,22 @@ import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class HealthCareHospitalAndClinicSignUpScreen extends StatefulWidget {
-  const HealthCareHospitalAndClinicSignUpScreen({super.key});
+class HMOSignUpScreen extends StatefulWidget {
+  const HMOSignUpScreen({super.key});
 
   @override
-  State<HealthCareHospitalAndClinicSignUpScreen> createState() =>
-      _HealthCareHospitalAndClinicSignUpScreenState();
+  State<HMOSignUpScreen> createState() => _HMOSignUpScreenState();
 }
 
-class _HealthCareHospitalAndClinicSignUpScreenState
-    extends State<HealthCareHospitalAndClinicSignUpScreen> {
+class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
-  TextEditingController registrationNumberController = TextEditingController();
-  TextEditingController healthCareTypeController = TextEditingController(
-    text: 'Hospital',
-  );
-  TextEditingController facilityNameController = TextEditingController();
+  TextEditingController hmoNameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController designationController = TextEditingController();
+  TextEditingController busEmailController = TextEditingController();
 
   bool isChecked = false;
   bool isPhone = false;
@@ -44,11 +42,11 @@ class _HealthCareHospitalAndClinicSignUpScreenState
         MediaQuery.of(context).size.shortestSide >= 600;
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<HealthCareViewModel>.reactive(
-        viewModelBuilder: () => locator<HealthCareViewModel>(),
+      body: ViewModelBuilder<HMOViewModel>.reactive(
+        viewModelBuilder: () => locator<HMOViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, HealthCareViewModel model, _) {
+        builder: (_, HMOViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -84,7 +82,7 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                   SizedBox(height: 4.10.h),
                   TextView(
                     text:
-                        'Manage prescriptions, simplify treatment, and deliver expert care across the patient journey.',
+                        'Manage prescriptions and support patient care as a pharmacist.',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 15.2.sp,
@@ -93,79 +91,6 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     ),
                   ),
                   SizedBox(height: 24.0.h),
-
-                  TextFormWidget(
-                    hint: 'Type of healthcare provider',
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    label: 'Hospital & Clinic',
-                    readOnly: true,
-                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 14.sp,
-                      color: AppColors.infoGrey,
-                    ),
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    controller: healthCareTypeController,
-                    validator: AppValidator.validateString(),
-                    onChange: (p0) {
-                      // if (p0.isEmpty) {
-                      //   isName = false;
-                      // } else {
-                      //   isName = true;
-                      // }
-                      // setState(() {});
-                    },
-                  ),
-                  SizedBox(height: 16.h),
-                  TextFormWidget(
-                    hint: 'Healthcare facility name',
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    label: 'Enter healthcare facility name',
-                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 14.sp,
-                      color: AppColors.infoGrey,
-                    ),
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    controller: facilityNameController,
-                    validator: AppValidator.validateString(),
-                  ),
-                  SizedBox(height: 16.h),
-                  TextFormWidget(
-                    hint: 'Registration number',
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    label: 'Enter registration number',
-                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 14.sp,
-                      color: AppColors.infoGrey,
-                    ),
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    controller: registrationNumberController,
-                    validator: AppValidator.validateString(),
-                  ),
-                  SizedBox(height: 16.h),
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
@@ -277,6 +202,113 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     ],
                   ),
                   SizedBox(height: 16.h),
+
+                  TextFormWidget(
+                    hint: 'HMO name',
+                    borderColor: AppColors.transparent,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    label: 'Enter HMO name',
+                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Arial',
+                      fontSize: 14.sp,
+                      color: AppColors.infoGrey,
+                    ),
+                    fillColor: AppColors.grey,
+                    isFilled: true,
+                    controller: hmoNameController,
+                    validator: AppValidator.validateString(),
+                  ),
+                  SizedBox(height: 16.h),
+                  TextFormWidget(
+                    hint: 'First Name (Contact Person)',
+                    borderColor: AppColors.transparent,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    label: '',
+                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Arial',
+                      fontSize: 14.sp,
+                      color: AppColors.infoGrey,
+                    ),
+                    fillColor: AppColors.grey,
+                    isFilled: true,
+                    controller: firstNameController,
+                    validator: AppValidator.validateString(),
+                  ),
+                  SizedBox(height: 16.h),
+                  TextFormWidget(
+                    hint: 'Last Name (Contact Person)',
+                    borderColor: AppColors.transparent,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    label: '',
+                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Arial',
+                      fontSize: 14.sp,
+                      color: AppColors.infoGrey,
+                    ),
+                    fillColor: AppColors.grey,
+                    isFilled: true,
+                    controller: lastNameController,
+                    validator: AppValidator.validateString(),
+                  ),
+                  SizedBox(height: 16.h),
+                  TextFormWidget(
+                    hint: 'Designation (Contact Person)',
+                    borderColor: AppColors.transparent,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    label: 'Enter designation',
+                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Arial',
+                      fontSize: 14.sp,
+                      color: AppColors.infoGrey,
+                    ),
+                    fillColor: AppColors.grey,
+                    isFilled: true,
+                    controller: designationController,
+                    validator: AppValidator.validateString(),
+                  ),
+                  SizedBox(height: 16.h),
+                  TextFormWidget(
+                    hint: 'Business email',
+                    borderColor: AppColors.transparent,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    label: 'Enter email address',
+                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Arial',
+                      fontSize: 14.sp,
+                      color: AppColors.infoGrey,
+                    ),
+                    fillColor: AppColors.grey,
+                    isFilled: true,
+                    controller: busEmailController,
+                    validator: AppValidator.validateEmail(),
+                  ),
+                  SizedBox(height: 16.h),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -338,7 +370,6 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     buttonColor:
                         !isPassed(
                           isPhone: isPhone,
-                          // isName: isName,
                           isChecked: isChecked,
                         )
                         ? AppColors.buttonGrey1
@@ -347,31 +378,20 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                     color: AppColors.white,
                     isLoading: model.isLoading,
                     buttonBorderColor: AppColors.transparent,
-                    onPressed:
-                        !isPassed(
-                          isPhone: isPhone,
-                          // isName: isName,
-                          isChecked: isChecked,
-                        )
+                    onPressed: !isPassed(isPhone: isPhone, isChecked: isChecked)
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
-                              model.signUpBusinessOwner(
+                              model.signUpHMO(
                                 context,
-                                signUpEntity:
-                                    SignUpHealthcareBusinessOwnerEntityModel(
-                                      registrationNumber:
-                                          registrationNumberController.text
-                                              .trim(),
-                                      phone:
-                                          '+234${phoneController.text.trim()}',
-                                      healthcareProviderType:
-                                          healthCareTypeController.text
-                                              .trim()
-                                              .toUpperCase(),
-                                      healthcareFacilityName:
-                                          facilityNameController.text.trim(),
-                                    ),
+                                signUpEntity: HmoSignUpEntityModel(
+                                  phone: '+234${phoneController.text.trim()}',
+                                  hmoName: hmoNameController.text.trim(),
+                                  firstName: firstNameController.text.trim(),
+                                  lastName: lastNameController.text.trim(),
+                                  designation: designationController.text.trim(),
+                                  businessEmail: busEmailController.text.trim()
+                                ),
                               );
                             }
                           },
@@ -459,7 +479,7 @@ class _HealthCareHospitalAndClinicSignUpScreenState
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => navigate.navigateTo(
-                                Routes.healthCareLoginScreen,
+                                Routes.hMOLoginScreen,
                               ),
                           ),
                         ],

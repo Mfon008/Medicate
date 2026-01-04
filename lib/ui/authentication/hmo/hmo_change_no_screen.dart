@@ -4,28 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
-import '../../../core/connect_end/view_model/health_care_view_model.dart';
+import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class HealthCareChangePhoneNumber extends StatefulWidget {
-  HealthCareChangePhoneNumber({super.key, required this.id});
+class HMOChangePhoneNumber extends StatefulWidget {
+  HMOChangePhoneNumber({super.key, required this.id});
 
   String? id;
   String? name;
 
   @override
-  State<HealthCareChangePhoneNumber> createState() =>
-      _HealthCareChangePhoneNumberState();
+  State<HMOChangePhoneNumber> createState() => _HMOChangePhoneNumberState();
 }
 
-class _HealthCareChangePhoneNumberState
-    extends State<HealthCareChangePhoneNumber> {
+class _HMOChangePhoneNumberState extends State<HMOChangePhoneNumber> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
 
@@ -38,11 +35,11 @@ class _HealthCareChangePhoneNumberState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<HealthCareViewModel>.reactive(
-        viewModelBuilder: () => HealthCareViewModel(),
+      body: ViewModelBuilder<HMOViewModel>.reactive(
+        viewModelBuilder: () => HMOViewModel(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, HealthCareViewModel model, _) {
+        builder: (_, HMOViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -212,7 +209,7 @@ class _HealthCareChangePhoneNumberState
                         ? () {}
                         : () {
                             if (formKey.currentState!.validate()) {
-                              model.changeNumberHealthCare(
+                              model.changeNumberHMO(
                                 context,
                                 phone: '+234${phoneController.text.trim()}',
                                 id: widget.id,

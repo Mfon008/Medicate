@@ -1,42 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/bank_detail.dart';
-import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
-// import 'package:intl/intl.dart';
-import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
+import '../../../../core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
+import '../../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../../core/core_folder/manager/shared_preference.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 import '../../../widget/text_form_widget.dart';
 
-class PharmacyProfileInfoScreen extends StatefulWidget {
-  const PharmacyProfileInfoScreen({super.key});
+class HMOProfileInfoScreen extends StatefulWidget {
+  const HMOProfileInfoScreen({super.key});
 
   @override
-  State<PharmacyProfileInfoScreen> createState() =>
-      _PharmacyProfileInfoScreenState();
+  State<HMOProfileInfoScreen> createState() =>
+      _HMOProfileInfoScreenState();
 }
 
-class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
+class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController licenceNoController = TextEditingController();
   TextEditingController businessAddController = TextEditingController();
+  TextEditingController businessEmailController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController countryController = TextEditingController();
-  TextEditingController contactDetailsController = TextEditingController();
-  TextEditingController bankNameController = TextEditingController();
-  TextEditingController bankNoController = TextEditingController();
+  TextEditingController contactFirstNameController = TextEditingController();
+  TextEditingController contactLastNameController = TextEditingController();
+  TextEditingController contactDesignationController = TextEditingController();
 
   bool isPhone = false;
   bool isPhoneValid = false;
@@ -65,8 +62,8 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.h),
-        child: ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => PharmViewModel(),
+        child: ViewModelBuilder<HMOViewModel>.reactive(
+          viewModelBuilder: () => HMOViewModel(),
           onViewModelReady: (model) async {
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               await model.getTenant(context);
@@ -77,60 +74,38 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                   .usersData['user']['phone']
                   .toString()
                   .substring(4);
-
-              licenceNoController.text =
-                  model.getTetantResponseModel?.data?.licenseNumber ?? '';
               businessAddController.text =
                   model.getTetantResponseModel?.data?.businessAddress ?? '';
-              bankNameController.text =
+              contactFirstNameController.text =
                   model
                       .getTetantResponseModel
                       ?.data
-                      ?.bankDetails?[0]
-                      .bankName ??
+                      ?.contactPersonFirstName??
                   "";
-              bankNoController.text =
+              contactLastNameController.text =
                   model
                       .getTetantResponseModel
                       ?.data
-                      ?.bankDetails?[0]
-                      .accountNumber ??
+                      ?.contactPersonLastName ??
                   '';
               emailController.text =
-                  model.getTetantResponseModel?.data?.email ?? '';
+                  model.getTetantResponseModel?.data?.businessEmail ?? '';
               model.countryController.text =
                   model.getTetantResponseModel?.data?.country ?? '';
               model.stateController.text =
                   model.getTetantResponseModel?.data?.state ?? '';
               model.lgaController.text =
                   model.getTetantResponseModel?.data?.lga ?? '';
-              model.selectService =
-                  model.getTetantResponseModel?.data?.servicesOffered ?? [];
-              contactDetailsController.text =
+              contactDesignationController.text =
                   model
                       .getTetantResponseModel
                       ?.data
-                      ?.bankDetails?[0]
-                      .accountName ??
-                  '';
-              bankNameController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .bankName ??
-                  '';
-              bankNoController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .accountNumber ??
+                      ?.contactPersonDesignation ??
                   '';
             });
           },
           disposeViewModel: false,
-          builder: (_, PharmViewModel model, __) {
+          builder: (_, HMOViewModel model, _) {
             return Form(
               key: formKey,
               child: Column(
@@ -147,9 +122,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        bankNameController.text.isEmpty ||
-                                bankNoController.text.isEmpty
-                            ? Container(
+                        Container(
                                 padding: EdgeInsets.symmetric(
                                   vertical: 12.w,
                                   horizontal: 12.w,
@@ -174,15 +147,9 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                     ),
                                   ],
                                 ),
-                              )
-                            : SizedBox.shrink(),
-                        SizedBox(
-                          height:
-                              bankNameController.text.isEmpty ||
-                                  bankNoController.text.isEmpty
-                              ? 0.h
-                              : 16.8.h,
-                        ),
+                              ),
+                            // : SizedBox.shrink(),
+                         SizedBox(height: 10.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -215,7 +182,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                             ),
 
                             GestureDetector(
-                              onTap: () => model.sendOtpPharmacy(
+                              onTap: () => model.sendOtpHMO(
                                 context,
                                 phone: SharedPreferencesService
                                     .instance
@@ -321,7 +288,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Pharmacy name',
+                          hint: 'HMO Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -338,29 +305,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isFilled: true,
                           readOnly: true,
                           label: nameController.text,
-                          onChange: (p0) {
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Pharmacy license number',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          readOnly: true,
-                          label: licenceNoController.text,
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -384,6 +328,30 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           isFilled: true,
                           controller: businessAddController,
                           validator: AppValidator.validateString(),
+                          onChange: (p0) {
+                            setState(() {});
+                          },
+                        ),
+                        SizedBox(height: 20.h),
+                        
+                        TextFormWidget(
+                          hint: 'Business email',
+                          hintSize: 14,
+                          borderColor: AppColors.transparent,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 14.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          controller: emailController,
+                          validator: AppValidator.validateEmail(),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -420,29 +388,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                         ),
                         SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Email Address',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: emailController,
-                          validator: AppValidator.validateEmail(),
-                          onChange: (p0) {
-                            setState(() {});
-                          },
-                        ),
-                        SizedBox(height: 20.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -456,7 +401,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -467,19 +411,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuState(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
+                                
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -493,7 +425,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 borderTopRight: 10.r,
                                 borderBottomLeft: 10.r,
                                 borderBottomRight: 10.r,
-                                // readOnly: true,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Arial',
@@ -504,59 +435,12 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
-                                // suffixWidget: GestureDetector(
-                                //   onTap: () =>
-                                //       model.modalBottomSheetMenuLga(context),
-                                //   child: Padding(
-                                //     padding: EdgeInsets.all(14.20.w),
-                                //     child: SvgPicture.asset(
-                                //       AppImage.arrow_down,
-                                //     ),
-                                //   ),
-                                // ),
-                                // onChange: (p0) {
-                                //   setState(() {});
-                                // },
+                                
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.h),
-                        TextView(
-                          text: 'Select service',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.black,
-                          ),
-                        ),
-
-                        SizedBox(height: 20.h),
-                        ...List.generate(model.services.length, (index) {
-                          return model.chooseNotChannelWidget(
-                            context,
-                            text: model.services[index],
-                            isTapped: model.selectService.contains(
-                              model.services[index],
-                            ), // ✅ reflect state
-                            onTap: () {
-                              if (model.selectService.contains(
-                                model.services[index],
-                              )) {
-                                // unselect
-                                model.selectService.remove(
-                                  model.services[index],
-                                );
-                              } else {
-                                // select
-                                model.selectService.add(model.services[index]);
-                              } // ✅ update selection
-
-                              model.notifyListeners();
-                            },
-                          );
-                        }),
+                        
 
                         SizedBox(height: 30.h),
                         TextView(
@@ -574,7 +458,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         SizedBox(height: 6.h),
 
                         TextFormWidget(
-                          hint: 'Contact person name',
+                          hint: 'First Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -590,12 +474,12 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: contactDetailsController,
+                          controller: contactFirstNameController,
                           validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'Contact email',
+                          hint: 'Last Name',
                           hintSize: 14,
                           borderColor: AppColors.transparent,
                           borderTopLeft: 10.r,
@@ -611,71 +495,33 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
-                          controller: emailController,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp("[a-z]")),
-                          ],
-                          // validator: AppValidator.validateString(),
+                          controller: contactLastNameController,
+                          validator: AppValidator.validateString(),
                         ),
+                        SizedBox(height: 20.h),
+                        TextFormWidget(
+                          hint: 'Designation',
+                          hintSize: 14,
+                          borderColor: AppColors.transparent,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          keyboardType: TextInputType.text,
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 14.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          controller: contactDesignationController,
+                          validator: AppValidator.validateString(),
+                        ),
+                        
                         SizedBox(height: 30.h),
-                        TextView(
-                          text: 'Bank Information',
-                          textStyle: TextStyle(
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 6.h),
-                        Divider(
-                          color: const Color.fromARGB(255, 227, 227, 228),
-                        ),
-                        SizedBox(height: 6.h),
-
-                        TextFormWidget(
-                          hint: 'Bank name',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          keyboardType: TextInputType.text,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: bankNameController,
-                          validator: AppValidator.validateString(),
-                        ),
-                        SizedBox(height: 20.h),
-                        TextFormWidget(
-                          hint: 'Account number',
-                          hintSize: 14,
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          label: 'Enter account number',
-                          keyboardType: TextInputType.number,
-                          labelStyle: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Arial',
-                            fontSize: 14.2.sp,
-                            color: AppColors.infoGrey,
-                          ),
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: bankNoController,
-                          validator: AppValidator.validateString(),
-                          // ),
-                        ),
-                      ],
+                        ],
                     ),
                   ),
 
@@ -707,25 +553,20 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                           buttonBorderColor: AppColors.transparent,
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              model.updatePharmacy(
+                              model.updateHMO(
                                 context,
-                                update: UpdatePharmacyProfileEntityModel(
-                                  country: model.countryController.text,
-                                  state: model.stateController.text,
-                                  lga: model.lgaController.text,
-                                  businessAddress: businessAddController.text,
-                                  servicesOffered: model.selectService,
-                                  contactPersonName:
-                                      contactDetailsController.text,
-                                  contactEmail: emailController.text,
-                                  bankDetails: [
-                                    BankDetail(
-                                      bankName: bankNameController.text,
-                                      accountName:
-                                          contactDetailsController.text,
-                                      accountNumber: bankNoController.text,
-                                    ),
-                                  ],
+                                update: UpdateHmoProfileEntityModel(
+                                  country: model.countryController.text.trim(),
+                                  state: model.stateController.text.trim(),
+                                  lga: model.lgaController.text.trim(),
+                                  businessAddress: businessAddController.text.trim(),
+                                  name:nameController.text.trim(),
+                                  businessEmail: emailController.text.trim(),
+                                  contactPersonDesignation: contactDesignationController.text.trim(),
+                                  contactPersonFirstName: contactFirstNameController.text.trim(),
+                                  contactPersonLastName: contactLastNameController.text.trim(),
+                                  bankDetails: []
+
                                 ),
                               );
                             }

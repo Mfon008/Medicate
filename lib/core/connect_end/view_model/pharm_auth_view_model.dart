@@ -391,6 +391,7 @@ class PharmViewModel extends BaseViewModel {
   String querySignUpCountry = '';
   String queryState = '';
   String queryLga = '';
+  String errorUser = '';
   List services = [
     'Sell Medications',
     'Bulk Purchase',
@@ -1875,7 +1876,6 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String errorUser = '';
   Future<void> updateUser(context, {UpdateUserEntityModel? updateUser}) async {
     try {
       _isLoading = true;
@@ -11523,7 +11523,6 @@ class PharmViewModel extends BaseViewModel {
   }
 
   checkTimePeriod(time) {
-    print('time::::$time');
     if (time.contains('AM') || time.contains('PM')) {
       return '';
     }
@@ -11588,9 +11587,6 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     getReminderId.Data? data,
   }) async {
-    print(
-      'print the data:::::${data?.medication?.dailyDoseTimes?[0][0].toJson()}',
-    );
     return showDialog(
       context: context!,
       barrierDismissible: false, // Prevent dismiss when tapping outside
@@ -11771,8 +11767,6 @@ class PharmViewModel extends BaseViewModel {
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
-      print('After time select → startDateIso: $startDateIso');
-      print('iso$startDateIso');
     }
     notifyListeners();
   }

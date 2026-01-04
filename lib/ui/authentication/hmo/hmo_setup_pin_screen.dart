@@ -7,23 +7,19 @@ import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/set_pin_entity_model.dart';
-import '../../../core/connect_end/view_model/health_care_view_model.dart';
+import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
-import '../../../core/core_folder/app/app.router.dart';
-import '../../../core/core_folder/manager/shared_preference.dart';
-import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
-class HealthCareSetupPinScreen extends StatefulWidget {
-  const HealthCareSetupPinScreen({super.key});
+class HMOSetupPinScreen extends StatefulWidget {
+  const HMOSetupPinScreen({super.key});
 
   @override
-  State<HealthCareSetupPinScreen> createState() =>
-      _HealthCareSetupPinScreenState();
+  State<HMOSetupPinScreen> createState() => _HMOSetupPinScreenState();
 }
 
-class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
+class _HMOSetupPinScreenState extends State<HMOSetupPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isPhoneValid = false;
@@ -50,11 +46,11 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: ViewModelBuilder<HealthCareViewModel>.reactive(
-        viewModelBuilder: () => locator<HealthCareViewModel>(),
+      body: ViewModelBuilder<HMOViewModel>.reactive(
+        viewModelBuilder: () => locator<HMOViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, HealthCareViewModel model, _) {
+        builder: (_, HMOViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,
@@ -150,7 +146,7 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        model.setPin(
+                        model.setPinHMO(
                           context,
                           setPinEntityModel: SetPinEntityModel(pin: pinInput),
                         );
@@ -165,27 +161,9 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                     color: AppColors.primary,
                     buttonBorderColor: AppColors.primary,
                     onPressed: () {
-                      if (SharedPreferencesService
-                                  .instance
-                                  .usersData['memberships'][0]['role'] ==
-                              'OWNER' &&
-                          SharedPreferencesService
-                                  .instance
-                                  .usersData['memberships'][0]['tenantType'] ==
-                              'HEALTHCARE_PROVIDER') {
-                        navigate.navigateTo(Routes.businessProviderDashboard);
-                      } else if (SharedPreferencesService
-                                  .instance
-                                  .usersData['memberships'][0]['role'] ==
-                              'OWNER' &&
-                          SharedPreferencesService
-                                  .instance
-                                  .usersData['memberships'][0]['tenantType'] ==
-                              'HEALTHCARE_PRACTITIONER') {
-                        navigate.navigateTo(
-                          Routes.specialistsProviderDashboard,
-                        );
-                      }
+                      // navigate.navigateTo(
+                      //   Routes.hMODashboard,
+                      // );
                     },
                   ),
                   SizedBox(height: 16.30.h),
