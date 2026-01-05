@@ -227,6 +227,7 @@ class _HealthCareProfileInfoScreenState
                               ? 0.h
                               : 16.8.h,
                         ),
+                        SizedBox(height: 9.8.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -805,6 +806,13 @@ class _HealthCareProfileInfoScreenState
                         ),
                         SizedBox(height: 20.h),
                         model.getTetantResponseModel != null &&
+                                    model.getTetantResponseModel!.data !=
+                                        null &&
+                                    model
+                                            .getTetantResponseModel!
+                                            .data!
+                                            .authorizedRepInfo !=
+                                        null &&
                                     model
                                             .getTetantResponseModel!
                                             .data!
