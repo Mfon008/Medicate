@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../widget/text.dart';
+import '../../ask_me_screen.dart';
 import 'business_providers_home_screen.dart';
 
 class BusinessProviderDashboard extends StatefulWidget {
@@ -25,7 +26,7 @@ class _BusinessProviderDashboardState extends State<BusinessProviderDashboard> {
     // BusinessProviderDashboardReminderScreen(),
     Container(),
     Container(),
-    Container(),
+    AskMeScreen(),
   ];
 
   Future<bool> willPopControl() async {
