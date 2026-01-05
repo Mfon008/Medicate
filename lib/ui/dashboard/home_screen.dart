@@ -256,114 +256,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  conContainer(
-                                    icon: AppImage.bell_small,
-                                    text: 'Create Reminder',
-                                    ontap: () {
-                                      chatText = 'Create Reminder';
-                                      setState(() {});
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: chatText == 'Create Reminder'
-                                        ? 12.h
-                                        : 4.0.h,
-                                  ),
-                                  chatText == 'Create Reminder'
-                                      ? Container(
-                                          width: 156.0.w,
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 18.22.w,
-                                            vertical: 18.20.w,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              20.w,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              ViewModelBuilder<
-                                                AuthViewModel
-                                              >.reactive(
-                                                viewModelBuilder: () =>
-                                                    AuthViewModel(),
-                                                onViewModelReady: (model) {},
-                                                disposeViewModel: false,
-                                                onDispose: (viewModel) {},
-                                                builder: (_, AuthViewModel model, _) {
-                                                  return GestureDetector(
-                                                    onTap: () =>
-                                                        model.showReminderModal(
-                                                          context,
-                                                        ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SvgPicture.asset(
-                                                          AppImage.person_plus,
-                                                        ),
-                                                        SizedBox(width: 6.10.w),
-                                                        TextView(
-                                                          text:
-                                                              'Set up Yourself',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 13.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                              SizedBox(height: 10.h),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  isTappToChat = !isTappToChat;
-                                                  chatText = 'Create Reminder';
-                                                  setState(() {});
-                                                },
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      AppImage.ai_star,
-                                                    ),
-                                                    SizedBox(width: 6.10.w),
-                                                    TextView(
-                                                      text: 'AI Setup',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 13.2.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.reminder,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      : SizedBox.shrink(),
-                                ],
+                              child: conContainerReminder(
+                                icon: AppImage.bell_small,
+                                text: 'Create Reminder',
+                                ontapAi: () {
+                                  isTappToChat = !isTappToChat;
+                                  chatText = 'Create Reminder';
+                                  setState(() {});
+                                },
                               ),
                             ),
-
                             SizedBox(width: 12.w),
 
                             Expanded(
@@ -644,5 +546,117 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     ),
+  );
+
+  Widget conContainerReminder({
+    required String icon,
+    required String text,
+    required Function()? ontapAi,
+  }) => ViewModelBuilder<AuthViewModel>.reactive(
+    viewModelBuilder: () => AuthViewModel(),
+    onViewModelReady: (model) {},
+    disposeViewModel: false,
+    onDispose: (viewModel) {},
+    builder: (_, AuthViewModel model, _) {
+      return PopupMenuButton(
+        color: AppColors.white,
+        offset: const Offset(0, 50),
+        padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 18.20.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.w),
+        ),
+        onSelected: (String value) {},
+        itemBuilder: (BuildContext context) {
+          return [
+            PopupMenuItem(
+              value: 'setup yourself',
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.22.w,
+                vertical: 12.w,
+              ),
+              onTap: () => model.showReminderModal(context),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(AppImage.person_plus),
+                  SizedBox(width: 6.10.w),
+                  TextView(
+                    text: 'Set up Yourself',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'ai setup',
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.22.w,
+                vertical: 12.w,
+              ),
+              onTap: ontapAi,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(AppImage.ai_star),
+                  SizedBox(width: 6.10.w),
+                  TextView(
+                    text: 'AI Setup',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ];
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(color: AppColors.inactive),
+            borderRadius: BorderRadius.circular(22.r),
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                AppImage.curved_arrow,
+                width: 10.20.w,
+                height: 10.20.h,
+              ),
+              SizedBox(width: 6.10.w),
+              SvgPicture.asset(
+                icon,
+                width: 16.20.w,
+                height: 16.20.h,
+                color: AppColors.lightBlue,
+              ),
+              SizedBox(width: 6.10.w),
+              Flexible(
+                child: TextView(
+                  text: text,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
   );
 }

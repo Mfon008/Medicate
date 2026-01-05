@@ -20,6 +20,7 @@ import '../../../ui/widget/hmo_add_role_modal_widget.dart';
 import '../../../ui/widget/hmo_add_user_modal_widget.dart';
 import '../../../ui/widget/hmo_deactivate_user_modal_widget.dart';
 import '../../../ui/widget/info_item_widget.dart';
+import '../../../ui/widget/kyc_url_view.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
@@ -3046,13 +3047,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-                            getPharmacyKycResponseModel!
-                                .data!
-                                .kycDocuments!
-                                .isNotEmpty &&
-                            getPharmacyKycResponseModel!.data!.kycDocuments!
-                                .any((doc) => doc.documentType == 'HMOLOGO')
+                    docKycLogo != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -3077,7 +3072,17 @@ class HMOViewModel extends BaseViewModel {
                                   ),
                                 ),
                                 Spacer(),
-                                SvgPicture.asset(AppImage.kyc_eye),
+                                GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    contxxt!,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: docKycLogo?.file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                               ],
                             ),
                           )
@@ -3221,17 +3226,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-                            getPharmacyKycResponseModel!
-                                .data!
-                                .kycDocuments!
-                                .isNotEmpty &&
-                            getPharmacyKycResponseModel!.data!.kycDocuments!
-                                .any(
-                                  (doc) =>
-                                      doc.documentType ==
-                                      'CACREGISTRATIONCERTIFICATE',
-                                )
+                    docKycCac != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -3256,7 +3251,17 @@ class HMOViewModel extends BaseViewModel {
                                   ),
                                 ),
                                 Spacer(),
-                                SvgPicture.asset(AppImage.kyc_eye),
+                                GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    contxxt!,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: docKycCac?.file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                               ],
                             ),
                           )
@@ -3405,13 +3410,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-                            getPharmacyKycResponseModel!
-                                .data!
-                                .kycDocuments!
-                                .isNotEmpty &&
-                            getPharmacyKycResponseModel!.data!.kycDocuments!
-                                .any((doc) => doc.documentType == 'NHISLICENSE')
+                    docKycLicense != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -3431,8 +3430,18 @@ class HMOViewModel extends BaseViewModel {
                                     color: AppColors.black,
                                   ),
                                 ),
-                                Spacer(),
-                                SvgPicture.asset(AppImage.kyc_eye),
+                                GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    contxxt!,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl:
+                                            docKycLicense?.file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                               ],
                             ),
                           )
@@ -3576,17 +3585,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-                            getPharmacyKycResponseModel!
-                                .data!
-                                .kycDocuments!
-                                .isNotEmpty &&
-                            getPharmacyKycResponseModel!.data!.kycDocuments!
-                                .any(
-                                  (doc) =>
-                                      doc.documentType ==
-                                      'TAXIDENTIFICATIONNUMBER',
-                                )
+                    docKycTin != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -3613,7 +3612,17 @@ class HMOViewModel extends BaseViewModel {
                                   ),
                                 ),
                                 Spacer(),
-                                SvgPicture.asset(AppImage.kyc_eye),
+                                GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    contxxt!,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: docKycTin?.file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                               ],
                             ),
                           )
@@ -3956,16 +3965,7 @@ class HMOViewModel extends BaseViewModel {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-                              getPharmacyKycResponseModel!
-                                  .data!
-                                  .kycDocuments!
-                                  .isNotEmpty &&
-                              getPharmacyKycResponseModel!.data!.kycDocuments!
-                                  .any(
-                                    (doc) =>
-                                        doc.documentType == 'APPLICATION_FORM',
-                                  )
+                      docKycForm != null
                           ? Container(
                               padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
@@ -3990,7 +3990,17 @@ class HMOViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                    onTap: () => Navigator.push(
+                                      contxxt!,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl: docKycForm?.file?.url ?? '',
+                                        ),
+                                      ),
+                                    ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
+                                  ),
                                 ],
                               ),
                             )
@@ -4135,16 +4145,7 @@ class HMOViewModel extends BaseViewModel {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-                              getPharmacyKycResponseModel!
-                                  .data!
-                                  .kycDocuments!
-                                  .isNotEmpty &&
-                              getPharmacyKycResponseModel!.data!.kycDocuments!
-                                  .any(
-                                    (doc) =>
-                                        doc.documentType == 'AVAILABLE_PLAN',
-                                  )
+                      docKycPlan != null
                           ? Container(
                               padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
@@ -4169,7 +4170,17 @@ class HMOViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                    onTap: () => Navigator.push(
+                                      contxxt!,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl: docKycPlan?.file?.url ?? '',
+                                        ),
+                                      ),
+                                    ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
+                                  ),
                                 ],
                               ),
                             )
@@ -4318,16 +4329,7 @@ class HMOViewModel extends BaseViewModel {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-                              getPharmacyKycResponseModel!
-                                  .data!
-                                  .kycDocuments!
-                                  .isNotEmpty &&
-                              getPharmacyKycResponseModel!.data!.kycDocuments!
-                                  .any(
-                                    (doc) =>
-                                        doc.documentType == 'ASSOCIATED_CLINIC',
-                                  )
+                      docKycAss != null
                           ? Container(
                               padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
@@ -4348,7 +4350,17 @@ class HMOViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                    onTap: () => Navigator.push(
+                                      contxxt!,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl: docKycAss?.file?.url ?? '',
+                                        ),
+                                      ),
+                                    ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
+                                  ),
                                 ],
                               ),
                             )
@@ -4504,15 +4516,45 @@ class HMOViewModel extends BaseViewModel {
                                     contxxt,
                                     update: UpdateHmoProfileEntityModel(
                                       logo: null,
-                                      name: getTetantResponseModel!.data!.name??'',
-                                      businessAddress: getTetantResponseModel?.data?.businessAddress??'',
-                                      businessEmail: getTetantResponseModel?.data?.businessEmail??"",
-                                      country: getTetantResponseModel?.data?.country??'',
-                                      state: getTetantResponseModel?.data?.state??"",
-                                      lga: getTetantResponseModel?.data?.lga??'',
-                                      contactPersonFirstName: getTetantResponseModel?.data?.contactPersonFirstName??'',
-                                      contactPersonLastName: getTetantResponseModel?.data?.contactPersonLastName??'',
-                                      contactPersonDesignation: getTetantResponseModel?.data?.contactPersonDesignation??'',
+                                      name:
+                                          getTetantResponseModel!.data!.name ??
+                                          '',
+                                      businessAddress:
+                                          getTetantResponseModel
+                                              ?.data
+                                              ?.businessAddress ??
+                                          '',
+                                      businessEmail:
+                                          getTetantResponseModel
+                                              ?.data
+                                              ?.businessEmail ??
+                                          "",
+                                      country:
+                                          getTetantResponseModel
+                                              ?.data
+                                              ?.country ??
+                                          '',
+                                      state:
+                                          getTetantResponseModel?.data?.state ??
+                                          "",
+                                      lga:
+                                          getTetantResponseModel?.data?.lga ??
+                                          '',
+                                      contactPersonFirstName:
+                                          getTetantResponseModel
+                                              ?.data
+                                              ?.contactPersonFirstName ??
+                                          '',
+                                      contactPersonLastName:
+                                          getTetantResponseModel
+                                              ?.data
+                                              ?.contactPersonLastName ??
+                                          '',
+                                      contactPersonDesignation:
+                                          getTetantResponseModel
+                                              ?.data
+                                              ?.contactPersonDesignation ??
+                                          '',
                                       bankDetails: [
                                         BankDetail(
                                           bankName: bankNameController.text

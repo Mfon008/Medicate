@@ -12,6 +12,7 @@ import '../../../../../core/config/colors.dart';
 import '../../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../../../core/core_folder/app/app.locator.dart';
 import '../../../../widget/button.dart';
+import '../../../../widget/kyc_url_view.dart';
 import '../../../../widget/text.dart';
 import '../../../../widget/text_form_widget.dart';
 
@@ -189,7 +190,17 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                 GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[0].file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                                 ],
                               ),
                             )
@@ -362,7 +373,17 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[1].file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                                 ],
                               ),
                             )
@@ -534,7 +555,17 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[2].file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                                 ],
                               ),
                             )
@@ -714,7 +745,17 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[3].file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                                 ],
                               ),
                             )

@@ -11,6 +11,7 @@ import '../../../../../core/config/colors.dart';
 import '../../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../../../core/core_folder/app/app.locator.dart';
 import '../../../../widget/button.dart';
+import '../../../../widget/kyc_url_view.dart';
 import '../../../../widget/text.dart';
 
 class HealthCareKycScreen extends StatelessWidget {
@@ -527,7 +528,17 @@ class HealthCareKycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[2].file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                                 ],
                               ),
                             )

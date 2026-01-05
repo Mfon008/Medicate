@@ -12257,12 +12257,12 @@ class AuthViewModel extends BaseViewModel {
         medicationClassList.clear();
         doseControllers.clear();
         periodLabels.clear();
-        // navigate.navigateTo(
-        //   Routes.acceleratePaymentView,
-        //   arguments: AcceleratePaymentViewArguments(
-        //     url: _initiatePaymentResponseModel?.data?.redirectUrl,
-        //   ),
-        // );
+        navigate.navigateTo(
+          Routes.acceleratePaymentView,
+          arguments: AcceleratePaymentViewArguments(
+            url: _initiatePaymentResponseModel?.data?.redirectUrl,
+          ),
+        );
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
