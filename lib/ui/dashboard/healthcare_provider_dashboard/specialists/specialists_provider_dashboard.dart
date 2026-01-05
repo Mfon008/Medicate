@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../widget/text.dart';
+import '../../ask_me_screen.dart';
 import 'specialists_providers_home_screen.dart';
 
 class SpecialistsProviderDashboard extends StatefulWidget {
@@ -27,7 +28,7 @@ class _SpecialistsProviderDashboardState
     SpecialistsProvidersHomeScreen(),
     Container(),
     Container(),
-    Container(),
+    AskMeScreen(),
   ];
 
   Future<bool> willPopControl() async {

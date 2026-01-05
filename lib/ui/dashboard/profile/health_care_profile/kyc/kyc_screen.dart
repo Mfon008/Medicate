@@ -176,7 +176,17 @@ class HealthCareKycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[0].file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                                 ],
                               ),
                             )
@@ -348,7 +358,17 @@ class HealthCareKycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                  SvgPicture.asset(AppImage.kyc_eye),
+                                  GestureDetector(
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => ImageWebViewScreen(
+                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[1].file?.url ?? '',
+                                      ),
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(AppImage.kyc_eye),
+                                ),
                                 ],
                               ),
                             )
@@ -529,16 +549,23 @@ class HealthCareKycScreen extends StatelessWidget {
                                   ),
                                   Spacer(),
                                   GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[2].file?.url ?? '',
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl:
+                                              model
+                                                  .getPharmacyKycResponseModel
+                                                  ?.data
+                                                  ?.kycDocuments?[2]
+                                                  .file
+                                                  ?.url ??
+                                              '',
+                                        ),
                                       ),
                                     ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
                                   ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
                                 ],
                               ),
                             )

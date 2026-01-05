@@ -502,10 +502,10 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                 vertical: 12.w,
               ),
               // onTap: () => model
-              //                       //     .showCreateAddPhoneDialog(
-              //                       //       context,
-              //                       //     )
-              //                       // },
+              //     .showCreateAddPhoneDialog(
+              //       context,
+              //     )
+              // },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

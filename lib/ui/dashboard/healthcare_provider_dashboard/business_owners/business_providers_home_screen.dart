@@ -471,22 +471,27 @@ class _BusinessProvidersHomeScreenState
     required String text,
     required Function()? ontapAi,
   }) => ViewModelBuilder<HealthCareViewModel>.reactive(
-            viewModelBuilder: () => HealthCareViewModel(),
-            onViewModelReady: (model) {},
-            disposeViewModel: false,
-            onDispose: (viewModel) {},
-            builder: (_, HealthCareViewModel model, _) {
+    viewModelBuilder: () => HealthCareViewModel(),
+    onViewModelReady: (model) {},
+    disposeViewModel: false,
+    onDispose: (viewModel) {},
+    builder: (_, HealthCareViewModel model, _) {
       return PopupMenuButton(
         color: AppColors.white,
         offset: const Offset(0, 50),
         padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 18.20.w),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.w)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.w),
+        ),
         onSelected: (String value) {},
         itemBuilder: (BuildContext context) {
           return [
             PopupMenuItem(
               value: 'setup yourself',
-              padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 12.w),
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.22.w,
+                vertical: 12.w,
+              ),
               // onTap: () => model
               //                       .showCreateAddPhoneDialog(
               //                         context,
@@ -510,7 +515,10 @@ class _BusinessProvidersHomeScreenState
             ),
             PopupMenuItem(
               value: 'ai setup',
-              padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 12.w),
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.22.w,
+                vertical: 12.w,
+              ),
               onTap: ontapAi,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -570,6 +578,6 @@ class _BusinessProvidersHomeScreenState
           ),
         ),
       );
-    }
+    },
   );
 }

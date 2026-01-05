@@ -260,16 +260,10 @@ class _SpecialistsProvidersHomeScreenState
                         SizedBox(height: 36.10.h),
                         Row(
                           children: [
-                           Expanded(
+                            Expanded(
                               child: conContainerReminder(
                                 icon: AppImage.bell_small,
                                 text: 'Create Reminder',
-                                ontapManual: () {},
-                                // () => model
-                                //     .showCreateAddPhoneDialog(
-                                //       context,
-                                //     )
-                                // },
                                 ontapAi: () {
                                   isTappToChat = !isTappToChat;
                                   chatText = 'Create Reminder';
@@ -477,33 +471,37 @@ class _SpecialistsProvidersHomeScreenState
     ),
   );
 
-
-
-
   Widget conContainerReminder({
     required String icon,
     required String text,
-    required Function()? ontapManual,
     required Function()? ontapAi,
-  }) => PopupMenuButton(
-    color: AppColors.white,
-    offset: const Offset(0, 50),
-    padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 18.20.w),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.w)),
-    onSelected: (String value) {},
-    itemBuilder: (BuildContext context) {
-      return [
-        PopupMenuItem(
-          value: 'setup yourself',
-          padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 12.w),
-          onTap: ontapManual,
-          child: ViewModelBuilder<HealthCareViewModel>.reactive(
-            viewModelBuilder: () => HealthCareViewModel(),
-            onViewModelReady: (model) {},
-            disposeViewModel: false,
-            onDispose: (viewModel) {},
-            builder: (_, HealthCareViewModel model, _) {
-              return Row(
+  }) => ViewModelBuilder<HealthCareViewModel>.reactive(
+    viewModelBuilder: () => HealthCareViewModel(),
+    onViewModelReady: (model) {},
+    disposeViewModel: false,
+    onDispose: (viewModel) {},
+    builder: (_, HealthCareViewModel model, _) {
+      return PopupMenuButton(
+        color: AppColors.white,
+        offset: const Offset(0, 50),
+        padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 18.20.w),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.w),
+        ),
+        onSelected: (String value) {},
+        itemBuilder: (BuildContext context) {
+          return [
+            PopupMenuItem(
+              value: 'setup yourself',
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.22.w,
+                vertical: 12.w,
+              ),
+              // onTap: () => model
+              //     .showCreateAddPhoneDialog(
+              //       context,
+              //     ),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SvgPicture.asset(AppImage.person_plus),
@@ -518,71 +516,73 @@ class _SpecialistsProvidersHomeScreenState
                     ),
                   ),
                 ],
-              );
-            },
+              ),
+            ),
+            PopupMenuItem(
+              value: 'ai setup',
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.22.w,
+                vertical: 12.w,
+              ),
+              onTap: ontapAi,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(AppImage.ai_star),
+                  SizedBox(width: 6.10.w),
+                  TextView(
+                    text: 'AI Setup',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ];
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            border: Border.all(color: AppColors.inactive),
+            borderRadius: BorderRadius.circular(22.r),
           ),
-        ),
-        PopupMenuItem(
-          value: 'ai setup',
-          padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 12.w),
-          onTap: ontapAi,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SvgPicture.asset(AppImage.ai_star),
+              SvgPicture.asset(
+                AppImage.curved_arrow,
+                width: 10.20.w,
+                height: 10.20.h,
+              ),
               SizedBox(width: 6.10.w),
-              TextView(
-                text: 'AI Setup',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
+              SvgPicture.asset(
+                icon,
+                width: 16.20.w,
+                height: 16.20.h,
+                color: AppColors.lightBlue,
+              ),
+              SizedBox(width: 6.10.w),
+              Flexible(
+                child: TextView(
+                  text: text,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                  maxLines: 1,
+                  textOverflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
         ),
-      ];
+      );
     },
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        border: Border.all(color: AppColors.inactive),
-        borderRadius: BorderRadius.circular(22.r),
-      ),
-      child: Row(
-        children: [
-          SvgPicture.asset(
-            AppImage.curved_arrow,
-            width: 10.20.w,
-            height: 10.20.h,
-          ),
-          SizedBox(width: 6.10.w),
-          SvgPicture.asset(
-            icon,
-            width: 16.20.w,
-            height: 16.20.h,
-            color: AppColors.lightBlue,
-          ),
-          SizedBox(width: 6.10.w),
-          Flexible(
-            child: TextView(
-              text: text,
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14.2.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black,
-              ),
-              maxLines: 1,
-              textOverflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    ),
   );
-
 }
