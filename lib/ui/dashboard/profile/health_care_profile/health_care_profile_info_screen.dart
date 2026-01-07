@@ -624,9 +624,9 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: businessEmailController,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp("[a-z]")),
-                          ],
+                          // inputFormatters: <TextInputFormatter>[
+                          //   FilteringTextInputFormatter.allow(RegExp("[a-z]")),
+                          // ],
                         ),
                         SizedBox(height: 30.h),
                         TextView(
@@ -739,7 +739,7 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: authPhoneNoController,
-                          validator: AppValidator.validatePhone(),
+                          validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(
@@ -750,7 +750,7 @@ class _HealthCareProfileInfoScreenState
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
@@ -769,7 +769,7 @@ class _HealthCareProfileInfoScreenState
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.emailAddress,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
@@ -779,7 +779,7 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: authEmailController,
-                          validator: AppValidator.validateString(),
+                          validator: AppValidator.validateEmail(),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(

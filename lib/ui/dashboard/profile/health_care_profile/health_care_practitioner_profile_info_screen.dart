@@ -415,6 +415,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
+                          keyboardType: TextInputType.number,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
@@ -854,7 +855,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
                           label: 'Enter account name',
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.text,
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
