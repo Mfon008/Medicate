@@ -1,6 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -41,8 +40,8 @@ class _HealthCareProfileInfoScreenState
   TextEditingController businessEmailController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController countryController = TextEditingController();
-  TextEditingController contactDetailsController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
+  TextEditingController bankAccountNameController = TextEditingController();
   TextEditingController bankNoController = TextEditingController();
   TextEditingController websiteController = TextEditingController();
 
@@ -117,19 +116,12 @@ class _HealthCareProfileInfoScreenState
                   model.getTetantResponseModel?.data?.lga?.capitalize() ?? '';
               model.selectService =
                   model.getTetantResponseModel?.data?.servicesOffered ?? [];
-              contactDetailsController.text =
+              bankAccountNameController.text =
                   model
                       .getTetantResponseModel
                       ?.data
                       ?.bankDetails?[0]
                       .accountName ??
-                  '';
-              bankNameController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.bankDetails?[0]
-                      .bankName ??
                   '';
               bankNoController.text =
                   model
@@ -483,6 +475,7 @@ class _HealthCareProfileInfoScreenState
                                 ),
                                 fillColor: AppColors.grey,
                                 isFilled: true,
+                                readOnly: model.isProfileUpdated,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
                               ),
@@ -506,6 +499,7 @@ class _HealthCareProfileInfoScreenState
                                 ),
                                 fillColor: AppColors.grey,
                                 isFilled: true,
+                                readOnly: model.isProfileUpdated,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
                               ),
@@ -530,6 +524,7 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           isShowHint: true,
+                          readOnly: model.isProfileUpdated,
                           controller: websiteController,
                           validator: AppValidator.validateString(),
                           onChange: (p0) {
@@ -602,6 +597,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: businessAddController,
                           validator: AppValidator.validateString(),
                         ),
@@ -624,6 +620,7 @@ class _HealthCareProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: businessEmailController,
+                          readOnly: model.isProfileUpdated,
                           // inputFormatters: <TextInputFormatter>[
                           //   FilteringTextInputFormatter.allow(RegExp("[a-z]")),
                           // ],
@@ -659,7 +656,30 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: bankNameController,
+                          validator: AppValidator.validateString(),
+                        ),
+                        SizedBox(height: 20.h),
+                        TextFormWidget(
+                          hint: 'Account name',
+                          hintSize: 14,
+                          borderColor: AppColors.transparent,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          keyboardType: TextInputType.text,
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 14.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          readOnly: model.isProfileUpdated,
+                          controller: bankAccountNameController,
                           validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
@@ -681,6 +701,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: bankNoController,
                           validator: AppValidator.validateString(),
                           // ),
@@ -717,6 +738,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: authFullNameController,
                           validator: AppValidator.validateString(),
                         ),
@@ -738,6 +760,7 @@ class _HealthCareProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: authPhoneNoController,
                           validator: AppValidator.validateString(),
                         ),
@@ -757,6 +780,7 @@ class _HealthCareProfileInfoScreenState
                             fontSize: 14.2.sp,
                             color: AppColors.infoGrey,
                           ),
+                          readOnly: model.isProfileUpdated,
                           fillColor: AppColors.grey,
                           isFilled: true,
                         ),
@@ -776,6 +800,7 @@ class _HealthCareProfileInfoScreenState
                             fontSize: 14.2.sp,
                             color: AppColors.infoGrey,
                           ),
+                          readOnly: model.isProfileUpdated,
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: authEmailController,
@@ -949,7 +974,18 @@ class _HealthCareProfileInfoScreenState
                   ),
 
                   SizedBox(height: 50.h),
-                  Row(
+                   model.isProfileUpdated?ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary1,
+                                buttonText: 'Update',
+                                fontSize: 16.sp,
+                                color: AppColors.white,
+                                buttonBorderColor: AppColors.primary,
+                                onPressed: () {
+                                  model.isProfileUpdated = false;
+                                  model.notifyListeners();
+                                },
+                              ):Row(
                     children: [
                       Expanded(
                         child: ButtonWidget(
@@ -1013,7 +1049,7 @@ class _HealthCareProfileInfoScreenState
                                                 bankName:
                                                     bankNameController.text,
                                                 accountName:
-                                                    contactDetailsController
+                                                    bankAccountNameController
                                                         .text,
                                                 accountNumber:
                                                     bankNoController.text,

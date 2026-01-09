@@ -58,6 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         viewModelBuilder: () => AuthViewModel(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
+            print('user');
             model.getUserDetails(
               context: context,
               phoneNo:

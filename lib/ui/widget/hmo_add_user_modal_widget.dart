@@ -444,7 +444,7 @@ class HMOAddUserModalWidget extends StatelessWidget {
                                   fillColor: AppColors.grey,
                                   isFilled: true,
                                   controller: model.userPinController,
-                                  validator: AppValidator.validateString(),
+                                  validator: AppValidator.validate4String(),
                                   suffixWidget: Padding(
                                     padding: EdgeInsets.all(14.20.w),
                                     child: GestureDetector(

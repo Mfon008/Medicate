@@ -62,6 +62,7 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
         viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
+            print('pharmacy');
             model.getUserDetails(
               context: context,
               phoneNo:

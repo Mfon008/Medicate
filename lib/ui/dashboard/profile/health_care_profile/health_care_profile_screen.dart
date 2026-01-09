@@ -148,23 +148,7 @@ class HealthCareProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: model.getKycStatusBool(
-                      cac: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[0]
-                          .status,
-                      license: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[1]
-                          .status,
-                      tin: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[2]
-                          .status,
-                    ),
+                    isactive: model.returnBoolKyc(),
                     text: 'KYC',
                     onTap: () =>
                         navigate.navigateTo(Routes.healthCareKycScreen),

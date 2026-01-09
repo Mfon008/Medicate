@@ -174,14 +174,7 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
                                   .usersData['memberships'][0]['tenantType'] ==
                               'HEALTHCARE_PROVIDER') {
                         navigate.navigateTo(Routes.businessProviderDashboard);
-                      } else if (SharedPreferencesService
-                                  .instance
-                                  .usersData['memberships'][0]['role'] ==
-                              'OWNER' &&
-                          SharedPreferencesService
-                                  .instance
-                                  .usersData['memberships'][0]['tenantType'] ==
-                              'HEALTHCARE_PRACTITIONER') {
+                      } else {
                         navigate.navigateTo(
                           Routes.specialistsProviderDashboard,
                         );

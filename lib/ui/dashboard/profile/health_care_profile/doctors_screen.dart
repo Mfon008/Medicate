@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/app_assets/app_utils.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
 import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -114,7 +115,13 @@ class DoctorScreen extends StatelessWidget {
                                           model.getDoctors(
                                             context,
                                           ); // refresh roles after modal closes
-                                        } else {}
+                                        } else {
+                                          AppUtils.snackbar(
+                                            context,
+                                            message: model.doctorError,
+                                            error: true,
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(8.10.w),
@@ -468,7 +475,14 @@ class DoctorScreen extends StatelessWidget {
                                                           model.getDoctors(
                                                             context,
                                                           ); // refresh roles after modal closes
-                                                        } else {}
+                                                        } else {
+                                                          AppUtils.snackbar(
+                                                            context,
+                                                            message: model
+                                                                .doctorError,
+                                                            error: true,
+                                                          );
+                                                        }
                                                       },
                                                       child: Row(
                                                         children: [
@@ -674,7 +688,13 @@ class DoctorScreen extends StatelessWidget {
                             model.getDoctors(
                               context,
                             ); // refresh roles after modal closes
-                          } else {}
+                          } else {
+                            AppUtils.snackbar(
+                              context,
+                              message: model.doctorError,
+                              error: true,
+                            );
+                          }
                         },
                       )
                     : SizedBox.shrink(),

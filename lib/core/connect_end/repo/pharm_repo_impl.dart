@@ -308,6 +308,7 @@ class PharmRepoImpl {
   }
 
   void _chache(data) {
+     print('print me lemme see ${data.data.toJson()}');
     if (data != null) {
       _session.authToken = data.data.accessToken;
       _session.authRefreshToken = data.data.refreshToken;

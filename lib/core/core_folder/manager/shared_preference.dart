@@ -83,12 +83,8 @@ class SharedPreferencesService {
     try {
       await sharedPreferences!.clear();
       navigate.clearStackAndShow(Routes.loginScreen);
-      // await box.clear();
-
-      // getLogger('logout').d(sharedPreferences.toString());
       return true;
     } catch (e) {
-      // getLogger("error clearing cache").d('logout');
       return false;
     }
   }

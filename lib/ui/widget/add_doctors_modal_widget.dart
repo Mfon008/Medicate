@@ -341,7 +341,7 @@ class AddDoctorsModalWidget extends StatelessWidget {
                           SizedBox(height: 20.h),
                           TextFormWidget(
                             hint: 'Country',
-                            hintSize: 14,
+                            hintSize:isTablet(context) ? 6.82.sp : 14.60.sp,
                             borderColor: AppColors.transparent,
                             borderTopLeft: 10.r,
                             borderTopRight: 10.r,
@@ -372,7 +372,7 @@ class AddDoctorsModalWidget extends StatelessWidget {
                           SizedBox(height: 20.h),
                           TextFormWidget(
                             hint: 'State',
-                            hintSize: 14,
+                            hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
                             label: '',
                             borderColor: AppColors.transparent,
                             borderTopLeft: 10.r,
@@ -477,7 +477,7 @@ class AddDoctorsModalWidget extends StatelessWidget {
                                   fillColor: AppColors.grey,
                                   isFilled: true,
                                   controller: model.doctorPinController,
-                                  validator: AppValidator.validateString(),
+                                  validator: AppValidator.validate4String(),
                                   suffixWidget: Padding(
                                     padding: EdgeInsets.all(14.20.w),
                                     child: GestureDetector(
@@ -568,7 +568,7 @@ class AddDoctorsModalWidget extends StatelessWidget {
                             onPressed: () {
                               if (model.formKeyValidateAddDoctor.currentState!
                                   .validate()) {
-                                saveUser(model);
+                                saveUser(context,model:model);
                               }
                             },
                           ),
@@ -586,10 +586,10 @@ class AddDoctorsModalWidget extends StatelessWidget {
     );
   }
 
-  void saveUser(model) async {
+  void saveUser(context,{HealthCareViewModel? model}) async {
     if (isEdit) {
-      await model.updateDoctor(
-        parentContext,
+      await model!.updateDoctor(
+        context,
         updateUser: UpdateUserEntityModel(
           fullName:
               '${model.firstNameController.text.trim()} ${model.lastNameController.text.trim()}',
@@ -606,8 +606,8 @@ class AddDoctorsModalWidget extends StatelessWidget {
         ),
       );
     } else {
-      await model.addDoctors(
-        parentContext,
+      await model!.addDoctors(
+        context,
         createEntity: CreateUserEntityModel(
           fullName:
               '${model.firstNameController.text.trim()} ${model.lastNameController.text.trim()}',

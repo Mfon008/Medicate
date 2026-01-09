@@ -62,6 +62,7 @@ class _HMOWelcomeScreenState extends State<HMOWelcomeScreen> {
         viewModelBuilder: () => locator<HMOViewModel>(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
+            print('hmo');
             model.getUserDetails(
               context: context,
               phoneNo:
@@ -183,7 +184,7 @@ class _HMOWelcomeScreenState extends State<HMOWelcomeScreen> {
                   SizedBox(height: 20.0.h),
                   GestureDetector(
                     onTap: () =>
-                        navigate.navigateTo(Routes.pharmacyForgotPinScreen),
+                        navigate.navigateTo(Routes.hMOForgotPinScreen),
                     child: TextView(
                       text: 'Forgot PIN',
                       decoration: TextDecoration.underline,

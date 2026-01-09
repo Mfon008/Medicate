@@ -454,7 +454,7 @@ class _HealthCareDoctorSpecialistSignUpScreenState
                                               .trim(),
                                       healthcareFacilityName:
                                           facilityNameController.text.trim(),
-                                      areaOfExpertise: model.addAreaExpertise,
+                                      areaOfExpertise: widget.healthCareArea,
                                     ),
                               );
                             }

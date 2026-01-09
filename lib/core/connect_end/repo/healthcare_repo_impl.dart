@@ -231,6 +231,7 @@ class HealthcareRepoImpl {
   }
 
   void _chache(data) {
+    print('print me lemme helath see ${data.data.toJson()}');
     if (data != null) {
       _session.authToken = data.data.accessToken;
       _session.authRefreshToken = data.data.refreshToken;

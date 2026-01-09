@@ -355,7 +355,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
-                          label: nameController.text,
+                          label: 'Doctor',
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -378,7 +378,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
-                          label: 'Doctor',
+                          label: nameController.text,
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -400,6 +400,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: licenceNoController,
                           validator: AppValidator.validateString(),
                           onChange: (p0) {
@@ -424,6 +425,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: experienceYears,
                           validator: AppValidator.validateString(),
                           onChange: (p0) {
@@ -448,6 +450,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: bioController,
                           validator: AppValidator.validateString(),
                           onChange: (p0) {
@@ -507,6 +510,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                                 ),
                                 fillColor: AppColors.grey,
                                 isFilled: true,
+                                readOnly: model.isProfileUpdated,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
                               ),
@@ -530,6 +534,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                                 ),
                                 fillColor: AppColors.grey,
                                 isFilled: true,
+                                readOnly: model.isProfileUpdated,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
                               ),
@@ -710,7 +715,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           isFilled: true,
                           isShowHint: true,
                           controller: websiteController,
-                          // validator: AppValidator.validateString(),
+                          readOnly: model.isProfileUpdated,
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -785,6 +790,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           ),
                           fillColor: AppColors.grey,
                           isFilled: true,
+                          readOnly: model.isProfileUpdated,
                           controller: businessAddController,
                           validator: AppValidator.validateString(),
                         ),
@@ -807,6 +813,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: businessEmailController,
+                          readOnly: model.isProfileUpdated,
                           // inputFormatters: <TextInputFormatter>[
                           //   FilteringTextInputFormatter.allow(RegExp("[a-z]")),
                           // ],
@@ -843,6 +850,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: bankNameController,
+                          readOnly: model.isProfileUpdated,
                           validator: AppValidator.validateString(),
                         ),
                         SizedBox(height: 20.h),
@@ -865,6 +873,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: bankAccountNameController,
+                          readOnly: model.isProfileUpdated,
                           validator: AppValidator.validateString(),
                           // ),
                         ),
@@ -888,6 +897,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                           fillColor: AppColors.grey,
                           isFilled: true,
                           controller: bankNoController,
+                          readOnly: model.isProfileUpdated,
                           validator: AppValidator.validateString(),
                           // ),
                         ),
@@ -904,15 +914,17 @@ class _HealthCarePractitionerProfileInfoScreenState
                               ),
                             ),
                             IconButton(
-                              onPressed: () async {
-                                final experience = await model
-                                    .modalBottomSheetMenuAddEducationExperience(
-                                      context: context,
-                                    );
-                                if (experience != null) {
-                                  model.addExperience(experience);
-                                }
-                              },
+                              onPressed: model.isProfileUpdated
+                                  ? () {}
+                                  : () async {
+                                      final experience = await model
+                                          .modalBottomSheetMenuAddEducationExperience(
+                                            context: context,
+                                          );
+                                      if (experience != null) {
+                                        model.addExperience(experience);
+                                      }
+                                    },
                               icon: Icon(
                                 Icons.add,
                                 color: AppColors.black,
@@ -1026,14 +1038,25 @@ class _HealthCarePractitionerProfileInfoScreenState
                             ),
                           ),
                         SizedBox(height: 50.h),
-                        Row(
+                         model.isProfileUpdated?ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary1,
+                                buttonText: 'Update',
+                                fontSize: 16.sp,
+                                color: AppColors.white,
+                                buttonBorderColor: AppColors.primary,
+                                onPressed: () {
+                                  model.isProfileUpdated = false;
+                                  model.notifyListeners();
+                                },
+                              ):Row(
                           children: [
                             Expanded(
                               child: ButtonWidget(
                                 border: 100.r,
                                 buttonColor: AppColors.white,
                                 buttonText: 'Discard',
-                                fontSize: 14.sp,
+                                fontSize: 16.sp,
                                 color: AppColors.primary,
                                 buttonBorderColor: AppColors.primary,
                                 onPressed: () {
@@ -1046,7 +1069,7 @@ class _HealthCarePractitionerProfileInfoScreenState
                               child: ButtonWidget(
                                 border: 100.r,
                                 buttonColor: AppColors.primary,
-                                fontSize: 14.sp,
+                                fontSize: 16.sp,
                                 buttonText: 'Save Changes',
                                 color: AppColors.white,
                                 isLoading: model.isLoading,

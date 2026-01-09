@@ -166,6 +166,8 @@ class HealthCareViewModel extends BaseViewModel {
   bool _onTempPinTap = false;
   bool get onTempPinTap => _onTempPinTap;
 
+  bool isProfileUpdated = true;
+
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController doctorsPhoneController = TextEditingController();
@@ -263,7 +265,6 @@ class HealthCareViewModel extends BaseViewModel {
   var vdelete;
   String vdeleteErrorMessage = '';
   List<EducationalExperience> educationalExperienceList = [];
-
 
   bool isOnToggleTempPinTap() {
     _onTempPinTap = !_onTempPinTap;
@@ -399,7 +400,7 @@ class HealthCareViewModel extends BaseViewModel {
       return 'GREEN_CARD';
     }
     if (id == "Voter ID Card") {
-      return 'VOTER ID CARD';
+      return 'VOTERS_CARD';
     }
     if (id == "Asylum Seeker ID") {
       return 'ASYLUM_SEEKER_ID';
@@ -432,6 +433,20 @@ class HealthCareViewModel extends BaseViewModel {
         _getTetantResponseModel!.data!.bankDetails == null) {
       return true;
     }
+    return false;
+  }
+  bool returnBoolKyc() {
+    print('1:::::$_getTetantResponseModel');
+    print('2:::::${_getTetantResponseModel?.data}');
+    print('3:::::${_getTetantResponseModel?.data?.kycDocuments}');
+    if (_getTetantResponseModel == null || _getTetantResponseModel!.data==null ||
+        _getTetantResponseModel!.data!.kycDocuments==null) {
+      return true;
+    }
+    // if (_getTetantResponseModel != null && _getTetantResponseModel!.data!=null ||
+    //     _getTetantResponseModel!.data!.kycDocuments!.isEmpty) {
+    //   return true;
+    // }
     return false;
   }
 
@@ -2452,6 +2467,7 @@ class HealthCareViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
+      isProfileUpdated = true;
       AppUtils.snackbar(
         context,
         message: _updateBusinessOwnerProfileResponseModel?.message ?? '',
@@ -2476,6 +2492,7 @@ class HealthCareViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
+      isProfileUpdated = true;
       AppUtils.snackbar(context, message: v['message']);
       getTenant(context);
     } catch (e) {
@@ -2739,19 +2756,20 @@ class HealthCareViewModel extends BaseViewModel {
     }
   }
 
+  var doctorError;
   Future<void> addDoctors(
     context, {
     CreateUserEntityModel? createEntity,
   }) async {
     try {
       _isLoading = true;
-      var v = await runBusyFuture(
+      doctorError = await runBusyFuture(
         repositoryImply.addUser(createEntity!),
         throwException: true,
       );
       _isLoading = false;
 
-      await AppUtils.snackbar(context, message: v['message']);
+      await AppUtils.snackbar(context, message: doctorError['message']);
       firstNameController.clear();
       lastNameController.clear();
       doctorsPhoneController.clear();
@@ -2762,7 +2780,8 @@ class HealthCareViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      doctorError = e;
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }
@@ -2787,11 +2806,13 @@ class HealthCareViewModel extends BaseViewModel {
     checkOwnerRole = getCreatedUserResponseModel!.data!.staff!;
     String searchValue = "OWNER";
 
+    print('booooooll on $checkOwnerRole');
     if (checkOwnerRole.every((item) => item.role!.name == searchValue)) {
       return true;
     } else {
       return false;
     }
+    
   }
 
   Future<void> updateDoctor(

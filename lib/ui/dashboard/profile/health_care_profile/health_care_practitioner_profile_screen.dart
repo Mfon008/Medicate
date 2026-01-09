@@ -126,7 +126,7 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                   Center(
                     child: TextView(
                       text:
-                          '${model.getTetantResponseModel?.data?.businessEmail ?? SharedPreferencesService.instance.usersData['user']['email'] ?? ''}',
+                          '${ SharedPreferencesService.instance.usersData['user']['email'] ?? model.getTetantResponseModel?.data?.businessEmail ?? ''}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14.2.sp,
@@ -150,23 +150,7 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: model.getKycStatusBool(
-                      cac: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[0]
-                          .status,
-                      license: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[1]
-                          .status,
-                      tin: model
-                          .getTetantResponseModel
-                          ?.data
-                          ?.kycDocuments?[2]
-                          .status,
-                    ),
+                    isactive: model.returnBoolKyc(),
                     text: 'KYC',
                     onTap: () =>
                         navigate.navigateTo(Routes.healthCareKycScreen),

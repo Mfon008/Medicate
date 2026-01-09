@@ -6,6 +6,7 @@ class AppRoutes {
   AppRoutes();
 
   String returnAppRoutes(type) {
+    print('typetypeytpe:::${type.authType}');
     if (type == null) {
       return Routes.splashScreen;
     }
@@ -50,6 +51,20 @@ class AppRoutes {
         type.isSignUp == false &&
         type.isLogin == true) {
       return Routes.healthCareWelcomeScreen;
+    }
+    // hmo flow
+    if (type.authType == 'hmo' &&
+        type.isSignUp == true &&
+        type.isLogin == true) {
+      return Routes.hMOWelcomeScreen;
+    } else if (type.authType == 'hmo' &&
+        type.isSignUp == true &&
+        type.isLogin == false) {
+      return Routes.hMOWelcomeScreen;
+    } else if (type.authType == 'hmo' &&
+        type.isSignUp == false &&
+        type.isLogin == true) {
+      return Routes.hMOWelcomeScreen;
     }
     return Routes.splashScreen;
   }
