@@ -65,7 +65,6 @@ class _HealthCareWelcomeScreenState extends State<HealthCareWelcomeScreen> {
         viewModelBuilder: () => locator<HealthCareViewModel>(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            print('health care');
             model.getUserDetails(
               context: context,
               phoneNo:

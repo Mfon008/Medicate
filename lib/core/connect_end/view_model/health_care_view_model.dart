@@ -1129,7 +1129,7 @@ class HealthCareViewModel extends BaseViewModel {
       _isLoading = false;
       if (v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['data']['message']);
-        navigate.navigateTo(Routes.pharmResetSuccessScreen);
+        navigate.navigateTo(Routes.healthCareResetSuccessScreen);
         SharedPreferencesService.instance.pinSet =
             resetPasswordEntityModel.newPin!;
       }

@@ -84,7 +84,7 @@ class _HealthCareForgotPinScreenState extends State<HealthCareForgotPinScreen> {
                   SizedBox(height: 10.h),
                   TextView(
                     text:
-                        'Enter the phone number associated with your account to get a PIN reset OTP.',
+                        'Enter the phone number associated with your account to get a PIN reset OTP.iiiiii',
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 15.2.sp,

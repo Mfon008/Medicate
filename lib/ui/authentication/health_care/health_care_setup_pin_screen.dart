@@ -48,11 +48,16 @@ class _HealthCareSetupPinScreenState extends State<HealthCareSetupPinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('grace::::${ SharedPreferencesService
+                                  .instance
+                                  .usersData['memberships'][0]['tenantType']}');
     return Scaffold(
       backgroundColor: AppColors.white,
       body: ViewModelBuilder<HealthCareViewModel>.reactive(
         viewModelBuilder: () => locator<HealthCareViewModel>(),
-        onViewModelReady: (model) {},
+        onViewModelReady: (model) {
+
+        },
         disposeViewModel: false,
         builder: (_, HealthCareViewModel model, _) {
           return SingleChildScrollView(
