@@ -10,6 +10,9 @@ class AppColors {
   static const transparent = Colors.transparent;
   static const red = Colors.red;
   static const inactive = Color(0xFFB9DCEA);
+  static const thickGrey = Color(0xFF2C2E34);
+  static const appRed = Color(0xFFF04444);
+  static const faintedRed = Color(0xFFFDECEC);
   static const skyBlue = Color(0xFFF5F9FF);
   static const greygrey = Color(0xFF7D7F81);
   static const greygrey1 = Color(0xFF75808A);
@@ -36,6 +39,7 @@ class AppColors {
   static const grey = Color(0xFFF5F6F8);
   static const grey1 = Color(0xFF8F8F8F);
   static const dashboard = Color(0xFFF5F6F8);
+  static const nearDashboard = Color(0xFFF9FAFC);
   static const fineGrey = Color(0xFFA9A9A9);
   static const lightBlue = Color(0xFF29A9FF);
   static const green = Color(0xFF039754);

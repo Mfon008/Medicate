@@ -9,6 +9,7 @@ import 'package:medicate_app/ui/dashboard/hmo/hmo_home_screen.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/text.dart';
+import 'subscribers/subsribers_screen.dart';
 
 class HMODashboard extends StatefulWidget {
   HMODashboard({super.key, this.index});
@@ -23,7 +24,7 @@ class _HMODashboardState extends State<HMODashboard> {
 
   final List<Widget> _body = [
     HMOHomeScreen(),
-    Container(),
+    SubsribersScreen(),
     Container(),
     AskMeScreen(),
   ];
@@ -144,7 +145,7 @@ class _HMODashboardState extends State<HMODashboard> {
                   icon: Column(
                     children: [
                       SvgPicture.asset(
-                        AppImage.pills_filled,
+                        AppImage.subscription,
                         color: _currentIndex == 1
                             ? AppColors.primary
                             : AppColors.fineGrey,
@@ -154,13 +155,13 @@ class _HMODashboardState extends State<HMODashboard> {
                       SizedBox(height: 6.0.w),
                     ],
                   ),
-                  label: 'Reminder',
+                  label: 'Subscribers',
                 ),
                 BottomNavigationBarItem(
                   icon: Column(
                     children: [
                       SvgPicture.asset(
-                        AppImage.cart,
+                        AppImage.pills_filled,
                         color: _currentIndex == 2
                             ? AppColors.primary
                             : AppColors.fineGrey,
@@ -171,7 +172,7 @@ class _HMODashboardState extends State<HMODashboard> {
                       SizedBox(height: 6.0.w),
                     ],
                   ),
-                  label: 'Wholesale Store',
+                  label: 'Reminder',
                 ),
                 BottomNavigationBarItem(
                   icon: Column(

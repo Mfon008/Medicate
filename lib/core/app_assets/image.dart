@@ -2,8 +2,10 @@
 
 class AppImage {
   static const String applogo = 'assets/images/logo.png';
+  static const String pro_health = 'assets/images/pro_health.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
   static const String info = 'assets/svgs/info.svg';
+  static const String locator = 'assets/svgs/locator.svg';
   static const String search = 'assets/svgs/search.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
@@ -16,6 +18,7 @@ class AppImage {
   static const String kyc_eye = 'assets/svgs/kyc_eye.svg';
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
+  static const String subscription = 'assets/svgs/subscription.svg';
   static const String calendar = 'assets/svgs/calendar.svg';
   static const String delete = 'assets/svgs/delete.svg';
   static const String round_edit = 'assets/svgs/round_edit.svg';
@@ -43,13 +46,20 @@ class AppImage {
   static const String closed_eye = 'assets/svgs/closed_eye.svg';
   static const String closed_eye_user = 'assets/svgs/closed_eye_user.svg';
   static const String opened_eye = 'assets/svgs/opened_eye.svg';
+  static const String sub_frame = 'assets/svgs/sub_frame.svg';
   static const String person_plus = 'assets/svgs/person_plus.svg';
   static const String ai_star = 'assets/svgs/ai_star.svg';
+  static const String star = 'assets/svgs/star.svg';
   static const String no_user_data = 'assets/svgs/no_user_data.svg';
+  static const String person2 = 'assets/svgs/person2.svg';
   static const String up_stroke = 'assets/svgs/upstroke.svg';
+  static const String thick_check = 'assets/svgs/thick_check.svg';
+  static const String light_check = 'assets/svgs/light_check.svg';
   static const String down_stroke = 'assets/svgs/downstroke.svg';
   static const String message = 'assets/svgs/message.svg';
   static const String phone = 'assets/svgs/phone.svg';
+  static const String world_web = 'assets/svgs/world_web.svg';
+  static const String infinity_arrow = 'assets/svgs/infinity_arrow.svg';
   static const String whatsapp = 'assets/svgs/whatsapp.svg';
   static const String big_logo = 'assets/svgs/big_logo.svg';
   static const String cart = 'assets/svgs/cart.svg';

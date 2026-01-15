@@ -264,6 +264,9 @@ class HMOViewModel extends BaseViewModel {
   KycDocument? docKycPlan;
   KycDocument? docKycAss;
 
+  String isSubStatus = 'Plans';
+  String isProSubStatus = 'individual';
+
   void pickImage(BuildContext context) {
     try {
       _pickImage.pickImage(
