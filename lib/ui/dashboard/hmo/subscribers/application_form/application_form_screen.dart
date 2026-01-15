@@ -1,0 +1,83 @@
+// ignore_for_file: must_be_immutable
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:stacked/stacked.dart';
+import '../../../../../core/config/colors.dart';
+import '../../../../../core/connect_end/view_model/hmo_view_model.dart';
+import '../../../../widget/button.dart';
+import '../../../../widget/text.dart';
+
+class ApplicationFormScreen extends StatelessWidget {
+  // ignore: prefer_const_constructors_in_immutables
+  ApplicationFormScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // bool isTablet(BuildContext context) =>
+    //     MediaQuery.of(context).size.shortestSide >= 600;
+    return ViewModelBuilder<HMOViewModel>.reactive(
+      viewModelBuilder: () => HMOViewModel(),
+      onViewModelReady: (model) {},
+      disposeViewModel: false,
+      onDispose: (viewModel) {},
+      builder: (_, HMOViewModel model, _) {
+        return Scaffold(
+          backgroundColor: AppColors.dashboard,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: AppColors.white,
+            toolbarHeight: 80.0,
+            title: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GlobalNavigator(),
+                  TextView(
+                    text: 'Apply for Ruby Individual Basic',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.deep,
+                    ),
+                  ),
+                  TextView(
+                    text: 'View',
+                    textStyle: TextStyle(
+                      fontSize: 14.sp,
+                      fontFamily: 'Arial',
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.primary,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 14.50.w, horizontal: 16.w),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 18.0.w,
+                    horizontal: 17.6.w,
+                  ),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: model.setModalFlow(model:model,context:  context) ,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

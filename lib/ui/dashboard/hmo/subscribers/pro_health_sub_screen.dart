@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../../core/config/colors.dart';
@@ -275,170 +277,173 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                             SizedBox(height: 10.h),
                             Divider(color: AppColors.infoGrey1),
                             SizedBox(height: 20.h),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 22.w,
-                                horizontal: 22.w,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0.r),
-                                border: Border.all(color: AppColors.infoGrey1),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(AppImage.person2),
-                                          SizedBox(width: 6.w),
-                                          TextView(
-                                            text: 'Basic Plan',
-                                            textStyle: TextStyle(
-                                              fontSize: 18.6.sp,
-                                              fontFamily: 'Arial',
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.deep,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 4.w,
-                                          horizontal: 10.w,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: AppColors.appRed,
-                                          ),
-                                          color: AppColors.faintedRed,
-                                          borderRadius: BorderRadius.circular(
-                                            100.r,
-                                          ),
-                                        ),
-                                        child: Row(
+                            GestureDetector(
+                              onTap: () => navigate.navigateTo(Routes.applicationFormScreen),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 22.w,
+                                  horizontal: 22.w,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0.r),
+                                  border: Border.all(color: AppColors.infoGrey1),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
                                           children: [
-                                            SvgPicture.asset(
-                                              AppImage.star,
-                                              color: AppColors.red,
-                                            ),
+                                            SvgPicture.asset(AppImage.person2),
                                             SizedBox(width: 6.w),
                                             TextView(
-                                              text: 'Ruby',
+                                              text: 'Basic Plan',
                                               textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 15.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.red,
+                                                fontSize: 18.6.sp,
+                                                fontFamily: 'Arial',
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.deep,
                                               ),
                                             ),
                                           ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  TextView(
-                                    text:
-                                        'Essential healthcare coverage for individuals with access to quality medical services at affordable rates.',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.fineGrey,
-                                    ),
-                                  ),
-                                  SizedBox(height: 16.h),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: '₦75,000 ',
-                                        textStyle: TextStyle(
-                                          fontSize: 28.8.sp,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.deep,
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 4.w,
+                                            horizontal: 10.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: AppColors.appRed,
+                                            ),
+                                            color: AppColors.faintedRed,
+                                            borderRadius: BorderRadius.circular(
+                                              100.r,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              SvgPicture.asset(
+                                                AppImage.star,
+                                                color: AppColors.red,
+                                              ),
+                                              SizedBox(width: 6.w),
+                                              TextView(
+                                                text: 'Ruby',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.red,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    TextView(
+                                      text:
+                                          'Essential healthcare coverage for individuals with access to quality medical services at affordable rates.',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.fineGrey,
                                       ),
-                                      TextView(
-                                        text: '/12 months',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 15.8.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.fineGrey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  TextView(
-                                    text: '3 hospitals in network',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.fineGrey,
                                     ),
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  rowlightCheckWidget(
-                                    'Outpatient consultations',
-                                  ),
-                                  rowlightCheckWidget('Inpatient care'),
-                                  rowlightCheckWidget('Laboratory tests'),
-                                  rowlightCheckWidget('Pharmacy benefits'),
-                                  SizedBox(height: 10.h),
-                                  TextView(
-                                    text: '+1 more benefits',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 12.w,
-                                    ),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                        100.r,
-                                      ),
-                                      color: AppColors.primary,
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                    SizedBox(height: 16.h),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         TextView(
-                                          text: 'Subscribe Now',
+                                          text: '₦75,000 ',
+                                          textStyle: TextStyle(
+                                            fontSize: 28.8.sp,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.deep,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: '/12 months',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 15.8.sp,
                                             fontWeight: FontWeight.w400,
-                                            color: AppColors.white,
+                                            color: AppColors.fineGrey,
                                           ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Icon(
-                                          Icons.arrow_forward,
-                                          color: AppColors.white,
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(height: 20.h),
+                                    TextView(
+                                      text: '3 hospitals in network',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.fineGrey,
+                                      ),
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    rowlightCheckWidget(
+                                      'Outpatient consultations',
+                                    ),
+                                    rowlightCheckWidget('Inpatient care'),
+                                    rowlightCheckWidget('Laboratory tests'),
+                                    rowlightCheckWidget('Pharmacy benefits'),
+                                    SizedBox(height: 10.h),
+                                    TextView(
+                                      text: '+1 more benefits',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    SizedBox(height: 20.h),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 12.w,
+                                      ),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          100.r,
+                                        ),
+                                        color: AppColors.primary,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          TextView(
+                                            text: 'Subscribe Now',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.8.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.white,
+                                            ),
+                                          ),
+                                          SizedBox(width: 10),
+                                          Icon(
+                                            Icons.arrow_forward,
+                                            color: AppColors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(height: 30.h),

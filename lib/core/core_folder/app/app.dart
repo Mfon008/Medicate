@@ -45,7 +45,9 @@ import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/speciali
 import '../../../ui/dashboard/hmo/hmo_dashboard.dart';
 import '../../../ui/dashboard/hmo/hmo_home_screen.dart';
 import '../../../ui/dashboard/hmo/hmo_more_screen.dart';
+import '../../../ui/dashboard/hmo/subscribers/application_form/application_form_screen.dart';
 import '../../../ui/dashboard/hmo/subscribers/pro_health_sub_screen.dart';
+import '../../../ui/dashboard/hmo/subscribers/subsribers_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
 import '../../../ui/dashboard/notification/empty_notification.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
@@ -194,6 +196,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HMORolesAndPermissionScreen),
     MaterialRoute(page: HMOUsersScreen),
     MaterialRoute(page: ProHealthSubScreen),
+    MaterialRoute(page: ApplicationFormScreen),
+    MaterialRoute(page: SubsribersScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

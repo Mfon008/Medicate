@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, deprecated_member_use
+// ignore_for_file: strict_top_level_inference, deprecated_member_use, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +14,8 @@ import '../../../../main.dart';
 import '../../../widget/text.dart';
 
 class SubsribersScreen extends StatefulWidget {
-  const SubsribersScreen({super.key});
+   SubsribersScreen({super.key, this.isSubStatus});
+  String? isSubStatus;
 
   @override
   State<SubsribersScreen> createState() => _SubsribersScreenState();
@@ -27,10 +28,15 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
         MediaQuery.of(context).size.shortestSide >= 600;
     return ViewModelBuilder<HMOViewModel>.reactive(
       viewModelBuilder: () => HMOViewModel(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+       if(widget.isSubStatus!=null){
+        model.isSubStatus=widget.isSubStatus!;
+       }
+      },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, HMOViewModel model, _) {
+         print('object:::${model.isSubStatus}');
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
