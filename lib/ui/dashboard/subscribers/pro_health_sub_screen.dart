@@ -6,12 +6,12 @@ import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/view_model/hmo_view_model.dart';
-import '../../../widget/button.dart';
-import '../../../widget/divider_widget.dart';
-import '../../../widget/text.dart';
-import '../../../widget/xela_divider_models.dart';
+import '../../../core/config/colors.dart';
+import '../../../core/connect_end/view_model/auth_view_model.dart';
+import '../../widget/button.dart';
+import '../../widget/divider_widget.dart';
+import '../../widget/text.dart';
+import '../../widget/xela_divider_models.dart';
 
 class ProHealthSubScreen extends StatefulWidget {
   const ProHealthSubScreen({super.key});
@@ -23,14 +23,12 @@ class ProHealthSubScreen extends StatefulWidget {
 class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
   @override
   Widget build(BuildContext context) {
-    // bool isTablet(BuildContext context) =>
-    //     MediaQuery.of(context).size.shortestSide >= 600;
-    return ViewModelBuilder<HMOViewModel>.reactive(
-      viewModelBuilder: () => HMOViewModel(),
+    return ViewModelBuilder<AuthViewModel>.reactive(
+      viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
       onDispose: (viewModel) {},
-      builder: (_, HMOViewModel model, _) {
+      builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -789,6 +787,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       ],
     ),
   );
+  
   Widget rowlightCheckWidget(String text) => Padding(
     padding: EdgeInsets.only(bottom: 10.w),
     child: Row(

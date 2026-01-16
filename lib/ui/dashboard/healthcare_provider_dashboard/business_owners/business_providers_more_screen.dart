@@ -60,7 +60,7 @@ class _BusinessProvidersMoreScreenState
               ],
             ),
             Divider(color: AppColors.f1),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
             Row(
               children: [
                 moreContainer(
@@ -68,7 +68,7 @@ class _BusinessProvidersMoreScreenState
                   icon: AppImage.appointment,
                   text: 'Appointment',
                 ),
-                SizedBox(width: 14.w),
+                SizedBox(width: 20.w),
                 moreContainer(
                   context,
                   icon: AppImage.profile,
@@ -78,7 +78,7 @@ class _BusinessProvidersMoreScreenState
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
             Row(
               children: [
                 moreContainer(
@@ -88,7 +88,7 @@ class _BusinessProvidersMoreScreenState
                   onTap: () =>
                       navigate.navigateTo(Routes.healthCareSettingScreen),
                 ),
-                SizedBox(width: 14.w),
+                SizedBox(width: 20.w),
                 moreContainer(
                   context,
                   icon: AppImage.cart,
@@ -96,7 +96,7 @@ class _BusinessProvidersMoreScreenState
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -108,7 +108,7 @@ class _BusinessProvidersMoreScreenState
                 SizedBox(width: 180.w),
               ],
             ),
-            SizedBox(height: 200.h),
+            SizedBox(height: 100.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

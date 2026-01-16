@@ -9,12 +9,10 @@ import 'package:medicate_app/ui/dashboard/hmo/hmo_home_screen.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/text.dart';
-import 'subscribers/subsribers_screen.dart';
 
 class HMODashboard extends StatefulWidget {
-  HMODashboard({super.key, this.index, this.isSubStatus});
+  HMODashboard({super.key, this.index});
   int? index;
-  String? isSubStatus;
 
   @override
   State<HMODashboard> createState() => _HMODashboardState();
@@ -22,11 +20,10 @@ class HMODashboard extends StatefulWidget {
 
 class _HMODashboardState extends State<HMODashboard> {
   int _currentIndex = 0;
-  String _isSubStatus = 'Plans';
 
   List<Widget> get _body => [
     HMOHomeScreen(),
-    SubsribersScreen(isSubStatus: _isSubStatus),
+    Container(),
     Container(),
     AskMeScreen(),
   ];
@@ -87,7 +84,7 @@ class _HMODashboardState extends State<HMODashboard> {
   @override
   void initState() {
     _currentIndex = widget.index ?? 0;
-    _isSubStatus = widget.isSubStatus??'Plans';
+    // _isSubStatus = widget.isSubStatus??'Plans';
     super.initState();
   }
 

@@ -62,7 +62,7 @@ class _SpecialistsProvidersMoreScreenState
               ],
             ),
             Divider(color: AppColors.f1),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
             Row(
               children: [
                 moreContainer(
@@ -70,7 +70,7 @@ class _SpecialistsProvidersMoreScreenState
                   icon: AppImage.appointment,
                   text: 'Appointment',
                 ),
-                SizedBox(width: 14.w),
+                SizedBox(width: 20.w),
                 moreContainer(
                   context,
                   icon: AppImage.settings,
@@ -81,7 +81,7 @@ class _SpecialistsProvidersMoreScreenState
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
             Row(
               children: [
                 moreContainer(
@@ -89,7 +89,7 @@ class _SpecialistsProvidersMoreScreenState
                   icon: AppImage.cart,
                   text: 'Order History',
                 ),
-                SizedBox(width: 14.w),
+                SizedBox(width: 20.w),
                 moreContainer(
                   context,
                   icon: AppImage.track_meds_use,
@@ -97,7 +97,7 @@ class _SpecialistsProvidersMoreScreenState
                 ),
               ],
             ),
-            SizedBox(height: 200.h),
+            SizedBox(height: 100.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

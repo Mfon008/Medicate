@@ -69,7 +69,7 @@ class _MoreScreenState extends State<MoreScreen> {
                   ],
                 ),
                 Divider(color: AppColors.f1),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     moreContainer(
@@ -77,7 +77,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       icon: AppImage.appointment,
                       text: 'Appointment',
                     ),
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.profile,
@@ -86,7 +86,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     moreContainer(
@@ -94,7 +94,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       icon: AppImage.timer,
                       text: 'Track Reminder',
                     ),
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.timer,
@@ -102,7 +102,18 @@ class _MoreScreenState extends State<MoreScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 200.h),
+                SizedBox(height: 20.h),
+                Row(
+                  children: [
+                    moreContainer(
+                      context,
+                      icon: AppImage.providers,
+                      text: 'Providers',
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width / 2.1,),
+                  ],
+                ),
+                SizedBox(height: 90.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -201,7 +212,7 @@ class _MoreScreenState extends State<MoreScreen> {
       onTap: onTap,
       child: Container(
         width: MediaQuery.of(context).size.width / 2,
-        padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 34.w),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 34.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
           color: AppColors.dashboard,
@@ -217,6 +228,7 @@ class _MoreScreenState extends State<MoreScreen> {
             SizedBox(height: 12.h),
             TextView(
               text: text ?? '',
+              textAlign: TextAlign.center,
               textStyle: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 13.2.sp,

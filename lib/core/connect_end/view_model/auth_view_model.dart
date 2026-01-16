@@ -298,12 +298,1613 @@ class AuthViewModel extends BaseViewModel {
   List<FocusNode> durationUpdateFocusNodes = [];
   List<FocusNode> timesToTakeUpdateFocusNodes = [];
   List<FocusNode> noteUpdateFocusNodes = [];
-
-  // String isReminderStatus = 'ongoing';
   String isReminderStatus = 'today';
   String timePeriod = 'morning';
   var totalCount;
   var takenCount;
+
+  String isSubStatus = 'Plans';
+  String isProSubStatus = 'individual';
+
+  int linSubIndex = 1;
+  bool isSubTapped = false;
+  bool isPaidTapped = false;
+
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+  TextEditingController phoneNoController = TextEditingController();
+  TextEditingController resAddressController = TextEditingController();
+  TextEditingController filterStateController = TextEditingController();
+  TextEditingController hospitalController = TextEditingController();
+
+  setSubscriptionModalFlow({AuthViewModel? model, BuildContext? context}) {
+    if (linSubIndex == 2) {
+      return secondSubModalFlow(model: model, context: context);
+    }
+    if (linSubIndex == 3) {
+      return thirdSubModalFlow(model: model, context: context);
+    }
+    if (linSubIndex == 4) {
+      return fourthSubModalFlow(model: model, context: context);
+    }
+    if (linSubIndex == 5) {
+      return fifthSubModalFlow(model: model, context: context);
+    }
+    return firstSubModalFlow(model: model, context: context);
+  }
+
+  firstSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Center(
+        child: TextView(
+          text: modalSubscriptionName(),
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 16.70.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 20.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context!).size.width * .80,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(5.0),
+                ), // Adjust radius as needed
+                child: LinearProgressIndicator(
+                  minHeight: 4.0, // Adjust height as needed
+                  value: model!.linSubIndex / 5,
+                  color: AppColors.primary, // Progress bar color
+                  backgroundColor: Colors.grey[300], // Background track color
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          TextView(
+            text: '${model.linSubIndex}/5',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 13.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 14.20.h),
+      TextView(
+        text: 'Personal Information',
+        textStyle: TextStyle(
+          fontFamily: 'GoogleSans',
+          fontSize: 17.2.sp,
+          fontWeight: FontWeight.w700,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
+      TextFormWidget(
+        hint: 'Full Name',
+        borderColor: AppColors.transparent,
+        borderTopLeft: 10.r,
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        controller: fullNameController,
+        validator: AppValidator.validateString(),
+        style: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'GoogleSans',
+        ),
+      ),
+      SizedBox(height: 18.6.h),
+      TextFormWidget(
+        hint: 'Date of Birth',
+        borderColor: AppColors.transparent,
+        borderTopLeft: 10.r,
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        readOnly: true,
+        controller: dobController,
+        validator: AppValidator.validateString(),
+        suffixWidget: Padding(
+          padding: EdgeInsets.all(8.w),
+          child: SvgPicture.asset(AppImage.calendar),
+        ),
+        style: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'GoogleSans',
+        ),
+      ),
+      SizedBox(height: 20.6.h),
+      TextFormWidget(
+        hint: 'Gender',
+        borderColor: AppColors.transparent,
+        borderTopLeft: 10.r,
+        label: 'Select Gender',
+        labelStyle: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'GoogleSans',
+          color: AppColors.infoGrey,
+        ),
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        controller: genderController,
+        validator: AppValidator.validateString(),
+        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+        style: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'GoogleSans',
+          color: AppColors.infoGrey,
+        ),
+      ),
+      SizedBox(height: 20.6.h),
+      TextFormWidget(
+        hint: 'Phone Number',
+        borderColor: AppColors.transparent,
+        borderTopLeft: 10.r,
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        controller: phoneNoController,
+        validator: AppValidator.validateString(),
+        style: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'GoogleSans',
+        ),
+      ),
+      SizedBox(height: 20.6.h),
+      TextFormWidget(
+        hint: 'Residential Address',
+        borderColor: AppColors.transparent,
+        borderTopLeft: 10.r,
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        controller: resAddressController,
+        maxline: 4,
+        validator: AppValidator.validateString(),
+        style: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'GoogleSans',
+        ),
+      ),
+      SizedBox(height: 20.6.h),
+      TextView(
+        text: 'Preferred Hospital ',
+        textStyle: TextStyle(
+          fontFamily: 'GoogleSans',
+          fontSize: 17.2.sp,
+          fontWeight: FontWeight.w700,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      TextView(
+        text:
+            'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
+        textStyle: TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 15.2.sp,
+          fontWeight: FontWeight.w400,
+          color: AppColors.infoGrey,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
+      TextFormWidget(
+        hint: 'Filter by State',
+        borderColor: AppColors.transparent,
+        borderTopLeft: 10.r,
+        label: 'All State',
+        labelStyle: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'Arial',
+          color: AppColors.infoGrey,
+        ),
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        controller: filterStateController,
+        validator: AppValidator.validateString(),
+        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+      ),
+      SizedBox(height: 20.h),
+      TextFormWidget(
+        hint: 'Select Hospital',
+        borderColor: AppColors.transparent,
+        borderTopLeft: 10.r,
+        label: 'Choose a hospital',
+        labelStyle: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'Arial',
+          color: AppColors.infoGrey,
+        ),
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        controller: hospitalController,
+        validator: AppValidator.validateString(),
+        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+      ),
+      SizedBox(height: 24.60.h),
+      ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.primary,
+        buttonText: 'Continue',
+        color: AppColors.white,
+        isLoading: model.isLoading,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () {
+          model.linSubIndex++;
+          model.notifyListeners();
+        },
+      ),
+      SizedBox(height: 16.60.h),
+      ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.dashboard,
+        buttonText: 'Save as Draft',
+        color: AppColors.deep,
+        isLoading: model.isLoading,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () {
+          navigate.back();
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              index: 0,
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+            ),
+          );
+          model.notifyListeners();
+        },
+      ),
+      SizedBox(height: 20.60.h),
+    ],
+  );
+
+  secondSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Center(
+        child: TextView(
+          text: modalSubscriptionName(),
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 16.70.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 14.20.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context!).size.width * .80,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(5.0),
+                ), // Adjust radius as needed
+                child: LinearProgressIndicator(
+                  minHeight: 4.0, // Adjust height as needed
+                  value: model!.linSubIndex / 5,
+                  color: AppColors.primary, // Progress bar color
+                  backgroundColor: Colors.grey[300], // Background track color
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          TextView(
+            text: '${model.linSubIndex}/5',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 13.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 20.h),
+      TextView(
+        text: 'Medical History Declaration',
+        textStyle: TextStyle(
+          fontFamily: 'GoogleSans',
+          fontSize: 17.2.sp,
+          fontWeight: FontWeight.w700,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
+      Container(
+        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.4.w),
+        decoration: BoxDecoration(
+          color: AppColors.skyBlue,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 8.w),
+              child: Icon(
+                Icons.info_outline,
+                color: AppColors.primary1,
+                size: 20.sp,
+              ),
+            ),
+            SizedBox(width: 10.12.w),
+            Expanded(
+              child: TextView(
+                text:
+                    'Pre-existing conditions may be subject to waiting periods. Please provide accurate information as false declarations may affect your coverage.',
+                maxLines: 5,
+                textOverflow: TextOverflow.ellipsis,
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.deep,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 20.h),
+      TextFormWidget(
+        hint: 'Medical History',
+        borderColor: AppColors.transparent,
+        label:
+            'Please describe any relevant medical history, previous surgeries, ongoing treatments, allergies, or current medications...',
+        borderTopLeft: 10.r,
+        borderTopRight: 10.r,
+        borderBottomLeft: 10.r,
+        borderBottomRight: 10.r,
+        hintSize: 14.sp,
+        fillColor: AppColors.grey,
+        isFilled: true,
+        controller: fullNameController,
+        maxline: 3,
+        alignLabelWithHint: true,
+        validator: AppValidator.validateString(),
+        labelStyle: TextStyle(
+          fontSize: 15.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'Arial',
+          color: AppColors.infoGrey,
+        ),
+        style: TextStyle(
+          fontSize: 16.20.sp,
+          fontWeight: FontWeight.w400,
+          fontFamily: 'GoogleSans',
+        ),
+      ),
+      // Container(
+      //   padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.4.w),
+      //   decoration: BoxDecoration(
+      //     color: AppColors.dashboard,
+      //     borderRadius: BorderRadius.circular(12.r),
+      //   ),
+      //   child: TextView(
+      //     text:
+      //         'Please describe any relevant medical history, previous surgeries, ongoing treatments, allergies, or current medications...',
+
+      //     textStyle: TextStyle(
+      //       fontFamily: 'Arial',
+      //       fontSize: 15.2.sp,
+      //       fontWeight: FontWeight.w400,
+      //       color: AppColors.infoGrey,
+      //     ),
+      //   ),
+      // ),
+      SizedBox(height: 14.60.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              isSubTapped = !isSubTapped;
+              model.notifyListeners();
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 4.w),
+              padding: isSubTapped
+                  ? EdgeInsets.all(3.0.w)
+                  : EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.r),
+                color: isSubTapped ? AppColors.primary : AppColors.transparent,
+                border: Border.all(
+                  color: isSubTapped
+                      ? AppColors.transparent
+                      : AppColors.infoGrey,
+                  width: .48,
+                ),
+              ),
+              child: isSubTapped
+                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+                  : SizedBox.shrink(),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: TextView(
+              text: 'I have a chronic ailment or pre-existing condition',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 15.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      SizedBox(height: 20.h),
+      !isSubTapped
+          ? SizedBox.shrink()
+          : TextFormWidget(
+              hint: 'Please provide details',
+              borderColor: AppColors.transparent,
+              label:
+                  'Describe your condition, when it was diagnosed, current treatment...',
+              borderTopLeft: 10.r,
+              borderTopRight: 10.r,
+              borderBottomLeft: 10.r,
+              borderBottomRight: 10.r,
+              hintSize: 14.sp,
+              fillColor: AppColors.grey,
+              isFilled: true,
+              controller: fullNameController,
+              maxline: 3,
+              alignLabelWithHint: true,
+              validator: AppValidator.validateString(),
+              labelStyle: TextStyle(
+                fontSize: 15.20.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Arial',
+                color: AppColors.infoGrey,
+              ),
+              style: TextStyle(
+                fontSize: 16.20.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'GoogleSans',
+              ),
+            ),
+      //     : Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           Stack(
+      //             clipBehavior: Clip.none,
+      //             children: [
+      //               TextView(
+      //                 text: 'Please provide details',
+      //                 textStyle: TextStyle(
+      //                   fontFamily: 'Arial',
+      //                   fontSize: 15.2.sp,
+      //                   fontWeight: FontWeight.w400,
+      //                   color: AppColors.reminder,
+      //                 ),
+      //               ),
+      //               Positioned(
+      //                 right: -12.10,
+      //                 child: TextView(
+      //                   text: '*',
+      //                   textStyle: TextStyle(
+      //                     fontFamily: 'Arial',
+      //                     fontSize: 18.sp,
+      //                     fontWeight: FontWeight.w500,
+      //                     color: AppColors.red,
+      //                   ),
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //           SizedBox(height: 10.h),
+      //           Container(
+      //             padding: EdgeInsets.symmetric(
+      //               vertical: 12.w,
+      //               horizontal: 10.4.w,
+      //             ),
+      //             decoration: BoxDecoration(
+      //               color: AppColors.dashboard,
+      //               borderRadius: BorderRadius.circular(12.r),
+      //             ),
+      //             child: TextView(
+      //               text:
+      //                   'Describe your condition, when it was diagnosed, current treatment...',
+
+      //               textStyle: TextStyle(
+      //                 fontFamily: 'Arial',
+      //                 fontSize: 15.2.sp,
+      //                 fontWeight: FontWeight.w400,
+      //                 color: AppColors.infoGrey,
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      SizedBox(height: 25.60.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.white,
+              buttonText: 'Previous',
+              color: AppColors.primary,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.primary,
+              onPressed: () {
+                model.linSubIndex--;
+                model.notifyListeners();
+              },
+            ),
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.primary,
+              buttonText: 'Continue',
+              color: AppColors.white,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.transparent,
+              onPressed: () {
+                model.linSubIndex++;
+                model.notifyListeners();
+              },
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 16.60.h),
+      ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.dashboard,
+        buttonText: 'Save as Draft',
+        color: AppColors.deep,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () async {
+          navigate.back();
+          navigate.back();
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              index: 0,
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+            ),
+          );
+          model.notifyListeners();
+        },
+      ),
+      SizedBox(height: 20.60.h),
+    ],
+  );
+
+  thirdSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Center(
+        child: TextView(
+          text: modalSubscriptionName(),
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 16.70.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 14.20.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context!).size.width * .80,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(5.0),
+                ), // Adjust radius as needed
+                child: LinearProgressIndicator(
+                  minHeight: 4.0, // Adjust height as needed
+                  value: model!.linSubIndex / 5,
+                  color: AppColors.primary, // Progress bar color
+                  backgroundColor: Colors.grey[300], // Background track color
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          TextView(
+            text: '${model.linSubIndex}/5',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 13.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 20.h),
+      TextView(
+        text: 'Required Documents',
+        textStyle: TextStyle(
+          fontFamily: 'GoogleSans',
+          fontSize: 17.2.sp,
+          fontWeight: FontWeight.w700,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
+      Stack(
+        clipBehavior: Clip.none,
+        children: [
+          TextView(
+            text: 'Birth Certificate or Age Declaration',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+          Positioned(
+            right: -12.10,
+            child: TextView(
+              text: '*',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.red,
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 10.20.h),
+      SizedBox(
+        width: double.infinity,
+        child: DottedBorder(
+          options: RoundedRectDottedBorderOptions(
+            dashPattern: [10, 10],
+            strokeWidth: .94,
+            radius: Radius.circular(10),
+            color: AppColors.primary,
+          ),
+          child: GestureDetector(
+            // onTap: () => model.pickImageCAC(context),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                vertical: 16.20.w,
+                horizontal: 22.0.w,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),
+                color: AppColors.white,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(AppImage.upload_doc),
+                  SizedBox(width: 10.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextView(
+                        text: 'Upload Document',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.reminder,
+                        ),
+                      ),
+                      SizedBox(height: 2.0.h),
+                      TextView(
+                        text:
+                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.fineGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      SizedBox(height: 20.h),
+      Stack(
+        clipBehavior: Clip.none,
+        children: [
+          SizedBox(
+            width: 300.w,
+            child: TextView(
+              text:
+                  'Valid ID (National ID, International Passport, Driver\'s License, Voter\'s Card)',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 2.0,
+            child: TextView(
+              text: '*',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.red,
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 10.20.h),
+      SizedBox(
+        width: double.infinity,
+        child: DottedBorder(
+          options: RoundedRectDottedBorderOptions(
+            dashPattern: [10, 10],
+            strokeWidth: .94,
+            radius: Radius.circular(10),
+            color: AppColors.primary,
+          ),
+          child: GestureDetector(
+            // onTap: () => model.pickImageCAC(context),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                vertical: 16.20.w,
+                horizontal: 22.0.w,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),
+                color: AppColors.white,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(AppImage.upload_doc),
+                  SizedBox(width: 10.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextView(
+                        text: 'Upload Document',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.reminder,
+                        ),
+                      ),
+                      SizedBox(height: 2.0.h),
+                      TextView(
+                        text:
+                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.fineGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      SizedBox(height: 35.60.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.white,
+              buttonText: 'Previous',
+              color: AppColors.primary,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.primary,
+              onPressed: () {
+                model.linSubIndex--;
+                model.notifyListeners();
+              },
+            ),
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.primary,
+              buttonText: 'Continue',
+              color: AppColors.white,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.transparent,
+              onPressed: () {
+                model.linSubIndex++;
+                model.notifyListeners();
+              },
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 20.60.h),
+      ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.dashboard,
+        buttonText: 'Save as Draft',
+        color: AppColors.deep,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () async {
+          navigate.back();
+          navigate.back();
+          navigate.back();
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              index: 0,
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+            ),
+          );
+          model.notifyListeners();
+        },
+      ),
+      SizedBox(height: 20.60.h),
+    ],
+  );
+
+  fourthSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Center(
+        child: TextView(
+          text: modalSubscriptionName(),
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 16.70.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 14.20.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context!).size.width * .80,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(5.0),
+                ), // Adjust radius as needed
+                child: LinearProgressIndicator(
+                  minHeight: 4.0, // Adjust height as needed
+                  value: model!.linSubIndex / 5,
+                  color: AppColors.primary, // Progress bar color
+                  backgroundColor: Colors.grey[300], // Background track color
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          TextView(
+            text: '${model.linSubIndex}/5',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 13.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 20.h),
+      TextView(
+        text: 'Payment Summary',
+        textStyle: TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 14.2.sp,
+          fontWeight: FontWeight.w400,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.infoGrey1),
+          color: AppColors.grey,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Plan',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: 'Ruby Individual Basic',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Tier',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 4.w,
+                    horizontal: 10.w,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.appRed),
+                    color: AppColors.faintedRed,
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(AppImage.star, color: AppColors.red),
+                      SizedBox(width: 6.w),
+                      TextView(
+                        text: 'Ruby',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Duration',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: '12 months',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.20.h),
+            Divider(color: AppColors.infoGrey1),
+            SizedBox(height: 10.20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Total Amount',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 16.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: '₦75,000',
+                  textStyle: TextStyle(
+                    fontSize: 20.2.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 22.0.h),
+      TextView(
+        text: 'Select Payment Method',
+        textStyle: TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 14.2.sp,
+          fontWeight: FontWeight.w400,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+
+      paymentWidget(
+        isWallet: false,
+        text: 'Pay with Card',
+        icon: AppImage.card_pay,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Card';
+          model.notifyListeners();
+        },
+      ),
+      paymentWidget(
+        isWallet: false,
+        text: 'Pay with Bank Transfer',
+        icon: AppImage.bank_transfer,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Bank Transfer';
+          model.notifyListeners();
+        },
+      ),
+      paymentWidget(
+        isWallet: false,
+        text: 'Pay with Opay',
+        icon: AppImage.opay,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Bank Transfer';
+          model.notifyListeners();
+        },
+      ),
+      SizedBox(height: 10.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              isPaidTapped = !isPaidTapped;
+              model.notifyListeners();
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 4.w),
+              padding: isPaidTapped
+                  ? EdgeInsets.all(3.0.w)
+                  : EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.r),
+                color: isPaidTapped ? AppColors.primary : AppColors.transparent,
+                border: Border.all(
+                  color: isPaidTapped
+                      ? AppColors.transparent
+                      : AppColors.infoGrey,
+                  width: .48,
+                ),
+              ),
+              child: isPaidTapped
+                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+                  : SizedBox.shrink(),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'I confirm that I have made the payment of ',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: '₦75,000',
+                  textStyle: TextStyle(
+                    fontSize: 15.8.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 35.60.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.white,
+              buttonText: 'Previous',
+              color: AppColors.primary,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.primary,
+              onPressed: () {
+                model.linSubIndex--;
+                model.notifyListeners();
+              },
+            ),
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.primary,
+              buttonText: 'Continue',
+              color: AppColors.white,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.transparent,
+              onPressed: () {
+                model.linSubIndex++;
+                model.notifyListeners();
+              },
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 20.60.h),
+      ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.dashboard,
+        buttonText: 'Save as Draft',
+        color: AppColors.deep,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () async {
+          navigate.back();
+          navigate.back();
+          navigate.back();
+          navigate.back();
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              index: 0,
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+            ),
+          );
+          model.notifyListeners();
+        },
+      ),
+      SizedBox(height: 20.60.h),
+    ],
+  );
+
+  fifthSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Center(
+        child: TextView(
+          text: modalSubscriptionName(),
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 16.70.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 14.20.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context!).size.width * .80,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(5.0),
+                ), // Adjust radius as needed
+                child: LinearProgressIndicator(
+                  minHeight: 4.0, // Adjust height as needed
+                  value: model!.linSubIndex / 5,
+                  color: AppColors.primary, // Progress bar color
+                  backgroundColor: Colors.grey[300], // Background track color
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          TextView(
+            text: '${model.linSubIndex}/5',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 13.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 20.h),
+      TextView(
+        text: 'Review & Medical Service Agreement',
+        textStyle: TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 14.2.sp,
+          fontWeight: FontWeight.w400,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppColors.infoGrey1),
+          color: AppColors.grey,
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Plan',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: 'Ruby Individual Basic',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Tier',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 4.w,
+                    horizontal: 10.w,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.appRed),
+                    color: AppColors.faintedRed,
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(AppImage.star, color: AppColors.red),
+                      SizedBox(width: 6.w),
+                      TextView(
+                        text: 'Ruby',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Duration',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: '12 months',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.20.h),
+            Divider(color: AppColors.infoGrey1),
+            SizedBox(height: 10.20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Total Amount',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 16.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: '₦75,000',
+                  textStyle: TextStyle(
+                    fontSize: 20.2.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 22.0.h),
+      TextView(
+        text: 'Select Payment Method',
+        textStyle: TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 14.2.sp,
+          fontWeight: FontWeight.w400,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+
+      paymentWidget(
+        isWallet: false,
+        text: 'Pay with Card',
+        icon: AppImage.card_pay,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Card';
+          model.notifyListeners();
+        },
+      ),
+      paymentWidget(
+        isWallet: false,
+        text: 'Pay with Bank Transfer',
+        icon: AppImage.bank_transfer,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Bank Transfer';
+          model.notifyListeners();
+        },
+      ),
+      paymentWidget(
+        isWallet: false,
+        text: 'Pay with Opay',
+        icon: AppImage.opay,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Bank Transfer';
+          model.notifyListeners();
+        },
+      ),
+      SizedBox(height: 10.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () {
+              isPaidTapped = !isPaidTapped;
+              model.notifyListeners();
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 4.w),
+              padding: isPaidTapped
+                  ? EdgeInsets.all(3.0.w)
+                  : EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4.r),
+                color: isPaidTapped ? AppColors.primary : AppColors.transparent,
+                border: Border.all(
+                  color: isPaidTapped
+                      ? AppColors.transparent
+                      : AppColors.infoGrey,
+                  width: .48,
+                ),
+              ),
+              child: isPaidTapped
+                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+                  : SizedBox.shrink(),
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'I confirm that I have made the payment of ',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                TextView(
+                  text: '₦75,000',
+                  textStyle: TextStyle(
+                    fontSize: 15.8.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 35.60.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.white,
+              buttonText: 'Previous',
+              color: AppColors.primary,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.primary,
+              onPressed: () {
+                model.linSubIndex--;
+                model.notifyListeners();
+              },
+            ),
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.primary,
+              buttonText: 'Submit Application',
+              color: AppColors.white,
+              isLoading: model.isLoading,
+              buttonBorderColor: AppColors.transparent,
+              onPressed: () {
+                model.notifyListeners();
+              },
+            ),
+          ),
+        ],
+      ),
+      
+      SizedBox(height: 20.60.h),
+    ],
+  );
+
+  String modalSubscriptionName() {
+    if (linSubIndex == 2) {
+      return 'Medical History';
+    } else if (linSubIndex == 3) {
+      return 'Documents';
+    } else if (linSubIndex == 4) {
+      return 'Payments';
+    } else if (linSubIndex == 5) {
+      return 'Agreement';
+    }
+    return 'Personal Info';
+  }
 
   String getDOB(data) {
     String raw = data;

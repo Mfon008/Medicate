@@ -9,6 +9,7 @@ import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
+import 'package:medicate_app/ui/dashboard/subscribers/subsribers_screen.dart';
 import 'package:medicate_app/ui/widget/ai_text_form_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../core/connect_end/view_model/auth_view_model.dart';
@@ -16,7 +17,9 @@ import '../../core/core_folder/manager/shared_preference.dart';
 import '../widget/text.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+   HomeScreen({super.key, this.isTapHMOPlan,this.isSubStatus});
+  String? isSubStatus;
+   bool? isTapHMOPlan;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,9 +27,19 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isTappToChat = false;
+  bool isTapHMOPlan = false;
   bool isTapOnScreenOrChatButt = false;
   String chatText = '';
+  String isSubStatus = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    @override
+  void initState() {
+    isTapHMOPlan = widget.isTapHMOPlan??false;
+    isSubStatus = widget.isSubStatus??'Plans';
+    super.initState();
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +74,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ), // makes ripple effect round
                 ),
               ),
-              GestureDetector(
+              isTapHMOPlan?TextView(
+                    text: 'HMO Plans',
+                    textStyle: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.black,
+                    ),
+                  ): GestureDetector(
                 onTap: () => setState(() => isTappToChat = false),
                 child: SvgPicture.asset(
                   AppImage.applogoSvg,
@@ -94,6 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: isTappToChat
           ? AskMeScreen(inText: chatText, isDashboard: true)
+          : isTapHMOPlan
+          ? SubsribersScreen(isSubStatus: isSubStatus)
           : Column(
               children: [
                 Expanded(
@@ -262,6 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ontapAi: () {
                                   isTappToChat = !isTappToChat;
                                   chatText = 'Create Reminder';
+                                  isTapHMOPlan = false;
                                   setState(() {});
                                 },
                               ),
@@ -275,6 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ontap: () {
                                   isTappToChat = !isTappToChat;
                                   chatText = 'Today’s Med';
+                                  isTapHMOPlan = false;
                                   setState(() {});
                                 },
                               ),
@@ -291,6 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ontap: () {
                                   isTappToChat = !isTappToChat;
                                   chatText = 'Tomorrow’s Med';
+                                  isTapHMOPlan = false;
                                   setState(() {});
                                 },
                               ),
@@ -298,11 +323,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(width: 12.w),
                             Expanded(
                               child: conContainer(
-                                icon: AppImage.appointment,
-                                text: 'Appointment',
+                                icon: AppImage.hmo_plan,
+                                text: 'HMO Plans',
                                 ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Appointment';
+                                  isTapHMOPlan = true;
+                                  chatText = 'hmo_plans';
                                   setState(() {});
                                 },
                               ),
@@ -495,13 +520,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-
                         SizedBox(height: 10.h),
                       ],
                     ),
                   ),
                 ),
-                // SizedBox(height: 20.h),
               ],
             ),
     );

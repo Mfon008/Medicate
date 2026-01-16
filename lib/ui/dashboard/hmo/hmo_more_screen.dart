@@ -69,7 +69,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                   ],
                 ),
                 Divider(color: AppColors.f1),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     moreContainer(
@@ -79,7 +79,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                       onTap: () =>
                           navigate.navigateTo(Routes.hMOProfileScreen),
                     ),
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.settings,
@@ -89,7 +89,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     moreContainer(
@@ -97,7 +97,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                       icon: AppImage.cart,
                       text: 'Order History',
                     ),
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.timer,
@@ -106,7 +106,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                   ],
                 ),
                
-                SizedBox(height: 200.h),
+                SizedBox(height: 100.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -205,7 +205,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
       onTap: onTap,
       child: Container(
         width: MediaQuery.of(context).size.width / 2,
-        padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 34.w),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 34.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
           color: AppColors.dashboard,
@@ -221,6 +221,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
             SizedBox(height: 12.h),
             TextView(
               text: text ?? '',
+              textAlign: TextAlign.center,
               textStyle: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 13.2.sp,

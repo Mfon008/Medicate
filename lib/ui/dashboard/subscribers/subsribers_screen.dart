@@ -5,13 +5,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
-
-import '../../../../core/app_assets/image.dart';
-import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/view_model/hmo_view_model.dart';
-import '../../../../core/core_folder/app/app.router.dart';
-import '../../../../main.dart';
-import '../../../widget/text.dart';
+import '../../../core/app_assets/image.dart';
+import '../../../core/config/colors.dart';
+import '../../../core/connect_end/view_model/auth_view_model.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
+import '../../widget/text.dart';
 
 class SubsribersScreen extends StatefulWidget {
    SubsribersScreen({super.key, this.isSubStatus});
@@ -26,8 +25,8 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
-    return ViewModelBuilder<HMOViewModel>.reactive(
-      viewModelBuilder: () => HMOViewModel(),
+    return ViewModelBuilder<AuthViewModel>.reactive(
+      viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
        if(widget.isSubStatus!=null){
         model.isSubStatus=widget.isSubStatus!;
@@ -35,68 +34,69 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
-      builder: (_, HMOViewModel model, _) {
-         print('object:::${model.isSubStatus}');
+      builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: AppColors.white,
-            toolbarHeight: 80.0,
-            title: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.inactive.withOpacity(.1),
-                      border: Border.all(
-                        color: AppColors.inactive.withOpacity(.4),
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        AppImage.burger,
-                        color: AppColors.primary,
-                        height: isTablet(context) ? 34.h : 14.h,
-                        width: isTablet(context) ? 34.w : 14.w,
-                      ),
-                      onPressed: () => navigate.navigateTo(Routes.moreScreen),
-                    ),
-                  ),
-                  TextView(
-                    text: 'HMO Plans',
-                    textStyle: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.black,
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.inactive.withOpacity(.1),
-                      border: Border.all(
-                        color: AppColors.inactive..withOpacity(.4),
-                      ),
-                    ),
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        AppImage.bell,
-                        height: isTablet(context) ? 40.h : 20.h,
-                        width: isTablet(context) ? 40.w : 20.w,
-                        color: AppColors.primary,
-                      ),
-                      onPressed: () {},
-                      splashRadius: 28,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          
+          // appBar: AppBar(
+          //   automaticallyImplyLeading: false,
+          //   backgroundColor: AppColors.white,
+          //   toolbarHeight: 80.0,
+          //   title: Padding(
+          //     padding: EdgeInsets.symmetric(horizontal: 4.w),
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         Container(
+          //           decoration: BoxDecoration(
+          //             shape: BoxShape.circle,
+          //             color: AppColors.inactive.withOpacity(.1),
+          //             border: Border.all(
+          //               color: AppColors.inactive.withOpacity(.4),
+          //             ),
+          //           ),
+          //           child: IconButton(
+          //             icon: SvgPicture.asset(
+          //               AppImage.burger,
+          //               color: AppColors.primary,
+          //               height: isTablet(context) ? 34.h : 14.h,
+          //               width: isTablet(context) ? 34.w : 14.w,
+          //             ),
+          //             onPressed: () => navigate.navigateTo(Routes.moreScreen),
+          //           ),
+          //         ),
+                  // TextView(
+                  //   text: 'HMO Plans',
+                  //   textStyle: TextStyle(
+                  //     fontSize: 16.sp,
+                  //     fontWeight: FontWeight.w700,
+                  //     color: AppColors.black,
+                  //   ),
+                  // ),
+          //         Container(
+          //           decoration: BoxDecoration(
+          //             shape: BoxShape.circle,
+          //             color: AppColors.inactive.withOpacity(.1),
+          //             border: Border.all(
+          //               color: AppColors.inactive..withOpacity(.4),
+          //             ),
+          //           ),
+          //           child: IconButton(
+          //             icon: SvgPicture.asset(
+          //               AppImage.bell,
+          //               height: isTablet(context) ? 40.h : 20.h,
+          //               width: isTablet(context) ? 40.w : 20.w,
+          //               color: AppColors.primary,
+          //             ),
+          //             onPressed: () {},
+          //             splashRadius: 28,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 24.50.w, horizontal: 16.w),
             child: Column(
@@ -457,7 +457,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
   GestureDetector subscriberWidget({
     context,
     isTab,
-    HMOViewModel? model,
+    AuthViewModel? model,
     bool isComplete = false,
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(Routes.proHealthSubScreen),

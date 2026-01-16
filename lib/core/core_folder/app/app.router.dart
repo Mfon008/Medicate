@@ -6,8 +6,8 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as _i92;
+import 'package:flutter/material.dart';
 import 'package:medicate_app/ui/authentication/health_care/health_care_change_no_screen.dart'
     as _i52;
 import 'package:medicate_app/ui/authentication/health_care/health_care_doctor_specialist_signup_screen.dart'
@@ -89,12 +89,6 @@ import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/speciali
 import 'package:medicate_app/ui/dashboard/hmo/hmo_dashboard.dart' as _i62;
 import 'package:medicate_app/ui/dashboard/hmo/hmo_home_screen.dart' as _i63;
 import 'package:medicate_app/ui/dashboard/hmo/hmo_more_screen.dart' as _i91;
-import 'package:medicate_app/ui/dashboard/hmo/subscribers/application_form/application_form_screen.dart'
-    as _i85;
-import 'package:medicate_app/ui/dashboard/hmo/subscribers/pro_health_sub_screen.dart'
-    as _i84;
-import 'package:medicate_app/ui/dashboard/hmo/subscribers/subsribers_screen.dart'
-    as _i86;
 import 'package:medicate_app/ui/dashboard/more_screen.dart' as _i87;
 import 'package:medicate_app/ui/dashboard/notification/empty_notification.dart'
     as _i23;
@@ -169,6 +163,12 @@ import 'package:medicate_app/ui/dashboard/reminder/payment_status_screen.dart'
     as _i30;
 import 'package:medicate_app/ui/dashboard/reminder/view_medication_screen.dart'
     as _i31;
+import 'package:medicate_app/ui/dashboard/subscribers/application_form/application_form_screen.dart'
+    as _i85;
+import 'package:medicate_app/ui/dashboard/subscribers/pro_health_sub_screen.dart'
+    as _i84;
+import 'package:medicate_app/ui/dashboard/subscribers/subsribers_screen.dart'
+    as _i86;
 import 'package:medicate_app/ui/dashboard/support/support_screen.dart' as _i18;
 import 'package:medicate_app/ui/onboarding/get_started_onboarding.dart' as _i5;
 import 'package:medicate_app/ui/onboarding/role_onboarding.dart' as _i4;
@@ -676,7 +676,12 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const DashboardArguments(),
       );
       return _i92.MaterialPageRoute<dynamic>(
-        builder: (context) => _i2.Dashboard(key: args.key, index: args.index),
+        builder: (context) => _i2.Dashboard(
+          key: args.key,
+          index: args.index,
+          isTapHMOPlan: args.isTapHMOPlan,
+          isSubStatus: args.isSubStatus,
+        ),
         settings: data,
       );
     },
@@ -1250,11 +1255,8 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const HMODashboardArguments(),
       );
       return _i92.MaterialPageRoute<dynamic>(
-        builder: (context) => _i62.HMODashboard(
-          key: args.key,
-          index: args.index,
-          isSubStatus: args.isSubStatus,
-        ),
+        builder: (context) =>
+            _i62.HMODashboard(key: args.key, index: args.index),
         settings: data,
       );
     },
@@ -1557,26 +1559,41 @@ class StackedRouter extends _i1.RouterBase {
 }
 
 class DashboardArguments {
-  const DashboardArguments({this.key, this.index});
+  const DashboardArguments({
+    this.key,
+    this.index,
+    this.isTapHMOPlan,
+    this.isSubStatus,
+  });
 
   final _i92.Key? key;
 
   final int? index;
 
+  final bool? isTapHMOPlan;
+
+  final String? isSubStatus;
+
   @override
   String toString() {
-    return '{"key": "$key", "index": "$index"}';
+    return '{"key": "$key", "index": "$index", "isTapHMOPlan": "$isTapHMOPlan", "isSubStatus": "$isSubStatus"}';
   }
 
   @override
   bool operator ==(covariant DashboardArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key && other.index == index;
+    return other.key == key &&
+        other.index == index &&
+        other.isTapHMOPlan == isTapHMOPlan &&
+        other.isSubStatus == isSubStatus;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ index.hashCode;
+    return key.hashCode ^
+        index.hashCode ^
+        isTapHMOPlan.hashCode ^
+        isSubStatus.hashCode;
   }
 }
 
@@ -2953,30 +2970,26 @@ class SpecialistsProvidersHomeScreenArguments {
 }
 
 class HMODashboardArguments {
-  const HMODashboardArguments({this.key, this.index, this.isSubStatus});
+  const HMODashboardArguments({this.key, this.index});
 
   final _i92.Key? key;
 
   final int? index;
 
-  final String? isSubStatus;
-
   @override
   String toString() {
-    return '{"key": "$key", "index": "$index", "isSubStatus": "$isSubStatus"}';
+    return '{"key": "$key", "index": "$index"}';
   }
 
   @override
   bool operator ==(covariant HMODashboardArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key &&
-        other.index == index &&
-        other.isSubStatus == isSubStatus;
+    return other.key == key && other.index == index;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ index.hashCode ^ isSubStatus.hashCode;
+    return key.hashCode ^ index.hashCode;
   }
 }
 
@@ -3640,6 +3653,8 @@ extension NavigatorStateExtension on _i93.NavigationService {
   Future<dynamic> navigateToDashboard({
     _i92.Key? key,
     int? index,
+    bool? isTapHMOPlan,
+    String? isSubStatus,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3648,7 +3663,12 @@ extension NavigatorStateExtension on _i93.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.dashboard,
-      arguments: DashboardArguments(key: key, index: index),
+      arguments: DashboardArguments(
+        key: key,
+        index: index,
+        isTapHMOPlan: isTapHMOPlan,
+        isSubStatus: isSubStatus,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -4767,7 +4787,6 @@ extension NavigatorStateExtension on _i93.NavigationService {
   Future<dynamic> navigateToHMODashboard({
     _i92.Key? key,
     int? index,
-    String? isSubStatus,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4776,11 +4795,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.hMODashboard,
-      arguments: HMODashboardArguments(
-        key: key,
-        index: index,
-        isSubStatus: isSubStatus,
-      ),
+      arguments: HMODashboardArguments(key: key, index: index),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -5323,6 +5338,8 @@ extension NavigatorStateExtension on _i93.NavigationService {
   Future<dynamic> replaceWithDashboard({
     _i92.Key? key,
     int? index,
+    bool? isTapHMOPlan,
+    String? isSubStatus,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5331,7 +5348,12 @@ extension NavigatorStateExtension on _i93.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.dashboard,
-      arguments: DashboardArguments(key: key, index: index),
+      arguments: DashboardArguments(
+        key: key,
+        index: index,
+        isTapHMOPlan: isTapHMOPlan,
+        isSubStatus: isSubStatus,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -6450,7 +6472,6 @@ extension NavigatorStateExtension on _i93.NavigationService {
   Future<dynamic> replaceWithHMODashboard({
     _i92.Key? key,
     int? index,
-    String? isSubStatus,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6459,11 +6480,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.hMODashboard,
-      arguments: HMODashboardArguments(
-        key: key,
-        index: index,
-        isSubStatus: isSubStatus,
-      ),
+      arguments: HMODashboardArguments(key: key, index: index),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

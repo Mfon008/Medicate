@@ -5,6 +5,7 @@ class AppImage {
   static const String pro_health = 'assets/images/pro_health.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
   static const String info = 'assets/svgs/info.svg';
+  static const String opay = 'assets/svgs/opay.svg';
   static const String locator = 'assets/svgs/locator.svg';
   static const String search = 'assets/svgs/search.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
@@ -19,6 +20,7 @@ class AppImage {
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String subscription = 'assets/svgs/subscription.svg';
+  static const String hmo_plan = 'assets/svgs/hmo_plan.svg';
   static const String calendar = 'assets/svgs/calendar.svg';
   static const String delete = 'assets/svgs/delete.svg';
   static const String round_edit = 'assets/svgs/round_edit.svg';

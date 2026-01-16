@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stacked/stacked.dart';
-import '../../../../../core/config/colors.dart';
-import '../../../../../core/connect_end/view_model/hmo_view_model.dart';
-import '../../../../widget/button.dart';
-import '../../../../widget/text.dart';
+import '../../../../core/config/colors.dart';
+import '../../../../core/connect_end/view_model/auth_view_model.dart';
+import '../../../widget/button.dart';
+import '../../../widget/text.dart';
 
 class ApplicationFormScreen extends StatelessWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -15,12 +15,12 @@ class ApplicationFormScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // bool isTablet(BuildContext context) =>
     //     MediaQuery.of(context).size.shortestSide >= 600;
-    return ViewModelBuilder<HMOViewModel>.reactive(
-      viewModelBuilder: () => HMOViewModel(),
+    return ViewModelBuilder<AuthViewModel>.reactive(
+      viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
       onDispose: (viewModel) {},
-      builder: (_, HMOViewModel model, _) {
+      builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -71,7 +71,7 @@ class ApplicationFormScreen extends StatelessWidget {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: model.setModalFlow(model:model,context:  context) ,
+                  child: model.setSubscriptionModalFlow(model:model,context:  context) ,
                 ),
               ],
             ),

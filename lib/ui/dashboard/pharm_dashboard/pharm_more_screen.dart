@@ -23,6 +23,7 @@ class PharmMoreScreen extends StatefulWidget {
 }
 
 class _PharmMoreScreenState extends State<PharmMoreScreen> {
+  
   List<String> textHistoryList = [
     'Today’s Medication',
     'Good Morning! To keep you on track, here’s your morning medication schedule:',
@@ -42,7 +43,6 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
       body: ViewModelBuilder<PharmViewModel>.reactive(
         viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {
-          // model.getUserDetails(context: context, phoneNo: widget.phoneNumber);
         },
         disposeViewModel: false,
         builder: (_, PharmViewModel model, _) {
@@ -69,7 +69,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                   ],
                 ),
                 Divider(color: AppColors.f1),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     moreContainer(
@@ -79,7 +79,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                       onTap: () =>
                           navigate.navigateTo(Routes.pharmacySettingScreen),
                     ),
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.profile,
@@ -89,7 +89,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 20.h),
                 Row(
                   children: [
                     moreContainer(
@@ -97,7 +97,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                       icon: AppImage.appointment,
                       text: 'Appointment',
                     ),
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.cart,
@@ -113,7 +113,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                       icon: AppImage.timer,
                       text: 'Reminder History',
                     ),
-                    SizedBox(width: 14.w),
+                    SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.providers,
@@ -121,7 +121,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 200.h),
+                SizedBox(height: 100.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -220,7 +220,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
       onTap: onTap,
       child: Container(
         width: MediaQuery.of(context).size.width / 2,
-        padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 34.w),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 34.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
           color: AppColors.dashboard,
@@ -236,6 +236,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
             SizedBox(height: 12.h),
             TextView(
               text: text ?? '',
+              textAlign: TextAlign.center,
               textStyle: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 13.2.sp,

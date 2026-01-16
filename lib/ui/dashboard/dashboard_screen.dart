@@ -13,7 +13,9 @@ import 'reminder/reminder_screen.dart';
 
 // ignore: must_be_immutable
 class Dashboard extends StatefulWidget {
-  Dashboard({super.key, this.index});
+  Dashboard({super.key, this.index,this.isTapHMOPlan,this.isSubStatus});
+  String? isSubStatus;
+  bool? isTapHMOPlan;
   int? index;
 
   @override
@@ -22,9 +24,11 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _currentIndex = 0;
+  bool _isTapHMOPlan = false;
+  String? _isSubStatus;
 
-  final List<Widget> _body = [
-    HomeScreen(),
+  List<Widget> get _body => [
+    HomeScreen(isTapHMOPlan: _isTapHMOPlan,isSubStatus: _isSubStatus),
     ReminderScreen(),
     Container(),
     AskMeScreen(),
@@ -86,6 +90,8 @@ class _DashboardState extends State<Dashboard> {
   @override
   void initState() {
     _currentIndex = widget.index ?? 0;
+    _isTapHMOPlan = widget.isTapHMOPlan?? false;
+    _isSubStatus = widget.isSubStatus;
     super.initState();
   }
 
