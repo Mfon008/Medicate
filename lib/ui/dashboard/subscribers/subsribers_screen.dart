@@ -13,8 +13,9 @@ import '../../../main.dart';
 import '../../widget/text.dart';
 
 class SubsribersScreen extends StatefulWidget {
-   SubsribersScreen({super.key, this.isSubStatus});
+  SubsribersScreen({super.key, this.isSubStatus, this.mySubPlans});
   String? isSubStatus;
+  String? mySubPlans;
 
   @override
   State<SubsribersScreen> createState() => _SubsribersScreenState();
@@ -28,16 +29,18 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
-       if(widget.isSubStatus!=null){
-        model.isSubStatus=widget.isSubStatus!;
-       }
+        if (widget.isSubStatus != null) {
+          model.isSubStatus = widget.isSubStatus!;
+        }
+        if (widget.mySubPlans != '') {
+          model.mySubPlans = widget.mySubPlans??'';
+        }
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
-          
           // appBar: AppBar(
           //   automaticallyImplyLeading: false,
           //   backgroundColor: AppColors.white,
@@ -65,14 +68,14 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
           //             onPressed: () => navigate.navigateTo(Routes.moreScreen),
           //           ),
           //         ),
-                  // TextView(
-                  //   text: 'HMO Plans',
-                  //   textStyle: TextStyle(
-                  //     fontSize: 16.sp,
-                  //     fontWeight: FontWeight.w700,
-                  //     color: AppColors.black,
-                  //   ),
-                  // ),
+          // TextView(
+          //   text: 'HMO Plans',
+          //   textStyle: TextStyle(
+          //     fontSize: 16.sp,
+          //     fontWeight: FontWeight.w700,
+          //     color: AppColors.black,
+          //   ),
+          // ),
           //         Container(
           //           decoration: BoxDecoration(
           //             shape: BoxShape.circle,
@@ -96,7 +99,6 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
           //     ),
           //   ),
           // ),
-          
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 24.50.w, horizontal: 16.w),
             child: Column(
@@ -313,12 +315,28 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                         color: AppColors.app_green,
                                         mainText: 'All Plans',
                                         statusText: '10',
+                                        onTap: () {
+                                          model.mySubPlans = 'All Plans';
+                                          model.notifyListeners();
+                                        },
+                                        borderColor:
+                                            model.mySubPlans == 'All Plans'
+                                            ? AppColors.primary
+                                            : AppColors.transparent,
                                       ),
                                       SizedBox(width: 12.30.w),
                                       subStatusWidget(
                                         color: AppColors.yellow,
                                         mainText: 'Under Review',
                                         statusText: '1',
+                                        onTap: () {
+                                          model.mySubPlans = 'Under Review';
+                                          model.notifyListeners();
+                                        },
+                                        borderColor:
+                                            model.mySubPlans == 'Under Review'
+                                            ? AppColors.primary
+                                            : AppColors.transparent,
                                       ),
                                     ],
                                   ),
@@ -331,73 +349,107 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                         color: AppColors.grey1,
                                         mainText: 'Draft',
                                         statusText: '1',
+                                        onTap: () {
+                                          model.mySubPlans = 'Draft';
+                                          model.notifyListeners();
+                                        },
+                                        borderColor: model.mySubPlans == 'Draft'
+                                            ? AppColors.primary
+                                            : AppColors.transparent,
                                       ),
                                       SizedBox(width: 12.30.w),
                                       subStatusWidget(
                                         color: AppColors.red,
                                         mainText: 'Rejected',
                                         statusText: '1',
+                                        onTap: () {
+                                          model.mySubPlans = 'Rejected';
+                                          model.notifyListeners();
+                                        },
+                                        borderColor:
+                                            model.mySubPlans == 'Rejected'
+                                            ? AppColors.primary
+                                            : AppColors.transparent,
                                       ),
                                     ],
                                   ),
                                   SizedBox(height: 20.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      TextView(
-                                        text: 'All Plans',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 18.4.sp,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.deep,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.all(12.w),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
-                                          ),
-                                        ),
-                                        child: Row(
+                                  model.mySubPlans == 'All Plans'
+                                      ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
-                                              children: [
-                                                TextView(
-                                                  text: 'Status: ',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 15.4.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
+                                            TextView(
+                                              text: 'All Plans',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 18.4.sp,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.deep,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.all(12.w),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.r),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      TextView(
+                                                        text: 'Status: ',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 15.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                      TextView(
+                                                        text: 'All',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 15.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .infoGrey,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                                TextView(
-                                                  text: 'All',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 15.4.sp,
-                                                    fontWeight: FontWeight.w400,
+                                                  SizedBox(width: 12.w),
+                                                  Icon(
+                                                    Icons
+                                                        .keyboard_arrow_down_rounded,
                                                     color: AppColors.infoGrey,
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(width: 12.w),
-                                            Icon(
-                                              Icons.keyboard_arrow_down_rounded,
-                                              color: AppColors.infoGrey,
+                                                ],
+                                              ),
                                             ),
                                           ],
+                                        )
+                                      : Align(
+                                          alignment: Alignment.topLeft,
+                                          child: TextView(
+                                            text: model.mySubPlans,
+                                            textAlign: TextAlign.left,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 18.4.sp,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.deep,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
                                   SizedBox(height: 20.h),
                                   Container(
                                     padding: EdgeInsets.symmetric(
@@ -623,44 +675,50 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
     required Color color,
     required String mainText,
     required String statusText,
+    Function()? onTap,
+    Color borderColor = AppColors.transparent,
   }) => Expanded(
-    child: Container(
-      width: double.infinity.w,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextView(
-            text: mainText,
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 15.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
-            ),
-          ),
-          SizedBox(height: 4.2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SvgPicture.asset(AppImage.sub_frame, color: color),
-              SizedBox(width: 6.2.w),
-              TextView(
-                text: statusText,
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.reminder,
-                ),
+    child: GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity.w,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(color: borderColor, width: 2),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextView(
+              text: mainText,
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 15.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
               ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox(height: 4.2.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SvgPicture.asset(AppImage.sub_frame, color: color),
+                SizedBox(width: 6.2.w),
+                TextView(
+                  text: statusText,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     ),
   );

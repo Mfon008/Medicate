@@ -63,7 +63,10 @@ class _MoreScreenState extends State<MoreScreen> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () => navigate.back(),
+                      onPressed: () {
+                        navigate.back();
+                        navigate.navigateTo(Routes.dashboard,arguments: DashboardArguments(index: 0));
+                      },
                       icon: SvgPicture.asset(AppImage.cancel),
                     ),
                   ],

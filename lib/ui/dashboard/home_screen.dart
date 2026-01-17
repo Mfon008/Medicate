@@ -17,8 +17,9 @@ import '../../core/core_folder/manager/shared_preference.dart';
 import '../widget/text.dart';
 
 class HomeScreen extends StatefulWidget {
-   HomeScreen({super.key, this.isTapHMOPlan,this.isSubStatus});
+   HomeScreen({super.key, this.isTapHMOPlan,this.isSubStatus,this.mySubPlans});
   String? isSubStatus;
+  String? mySubPlans;
    bool? isTapHMOPlan;
 
   @override
@@ -28,16 +29,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool isTappToChat = false;
   bool isTapHMOPlan = false;
-  bool isTapOnScreenOrChatButt = false;
   String chatText = '';
   String isSubStatus = '';
+  String mySubPlans = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
     @override
   void initState() {
     isTapHMOPlan = widget.isTapHMOPlan??false;
     isSubStatus = widget.isSubStatus??'Plans';
+    mySubPlans = widget.mySubPlans??'';
+    print('op in initstate$isTapHMOPlan');
     super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    print('opposite sourse$isTapHMOPlan');
+    isTapHMOPlan = false;
+    print('opposite sourseeeeee$isTapHMOPlan');
+    super.dispose();
   }
   
 
@@ -115,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: isTappToChat
           ? AskMeScreen(inText: chatText, isDashboard: true)
           : isTapHMOPlan
-          ? SubsribersScreen(isSubStatus: isSubStatus)
+          ? SubsribersScreen(isSubStatus: isSubStatus,mySubPlans: mySubPlans)
           : Column(
               children: [
                 Expanded(

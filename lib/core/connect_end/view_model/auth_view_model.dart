@@ -35,6 +35,7 @@ import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
 import '../../../ui/dashboard/reminder/med_type.dart';
+import '../../../ui/widget/bullet_text_widget.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
 import '../../../ui/widget/text_form_dose_widget.dart';
@@ -304,6 +305,7 @@ class AuthViewModel extends BaseViewModel {
   var takenCount;
 
   String isSubStatus = 'Plans';
+  String mySubPlans = '';
   String isProSubStatus = 'individual';
 
   int linSubIndex = 1;
@@ -598,6 +600,7 @@ class AuthViewModel extends BaseViewModel {
               index: 0,
               isTapHMOPlan: true,
               isSubStatus: 'subscribers',
+              mySubPlans: 'Draft'
             ),
           );
           model.notifyListeners();
@@ -928,6 +931,7 @@ class AuthViewModel extends BaseViewModel {
               index: 0,
               isTapHMOPlan: true,
               isSubStatus: 'subscribers',
+              mySubPlans: 'Draft'
             ),
           );
           model.notifyListeners();
@@ -1223,6 +1227,7 @@ class AuthViewModel extends BaseViewModel {
               index: 0,
               isTapHMOPlan: true,
               isSubStatus: 'subscribers',
+              mySubPlans: 'Draft'
             ),
           );
           model.notifyListeners();
@@ -1246,7 +1251,7 @@ class AuthViewModel extends BaseViewModel {
           ),
         ),
       ),
-      SizedBox(height: 14.20.h),
+      SizedBox(height: 10.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -1278,7 +1283,20 @@ class AuthViewModel extends BaseViewModel {
           ),
         ],
       ),
-      SizedBox(height: 20.h),
+      SizedBox(height: 10.h),
+      TextView(
+        text: 'Payment',
+        textStyle: TextStyle(
+          fontFamily: 'GoogleSans',
+          fontSize: 17.2.sp,
+          fontWeight: FontWeight.w700,
+          color: AppColors.reminder,
+        ),
+      ),
+
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
       TextView(
         text: 'Payment Summary',
         textStyle: TextStyle(
@@ -1288,8 +1306,6 @@ class AuthViewModel extends BaseViewModel {
           color: AppColors.reminder,
         ),
       ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
       SizedBox(height: 10.h),
       Container(
         padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.w),
@@ -1565,6 +1581,7 @@ class AuthViewModel extends BaseViewModel {
               index: 0,
               isTapHMOPlan: true,
               isSubStatus: 'subscribers',
+              mySubPlans: 'Draft'
             ),
           );
           model.notifyListeners();
@@ -1588,7 +1605,7 @@ class AuthViewModel extends BaseViewModel {
           ),
         ),
       ),
-      SizedBox(height: 14.20.h),
+      SizedBox(height: 10.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -1620,9 +1637,21 @@ class AuthViewModel extends BaseViewModel {
           ),
         ],
       ),
-      SizedBox(height: 20.h),
+      SizedBox(height: 10.h),
       TextView(
         text: 'Review & Medical Service Agreement',
+        textStyle: TextStyle(
+          fontFamily: 'GoogleSans',
+          fontSize: 15.2.sp,
+          fontWeight: FontWeight.w700,
+          color: AppColors.reminder,
+        ),
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 10.h),
+      TextView(
+        text: 'Application Summary',
         textStyle: TextStyle(
           fontFamily: 'Arial',
           fontSize: 14.2.sp,
@@ -1630,8 +1659,6 @@ class AuthViewModel extends BaseViewModel {
           color: AppColors.reminder,
         ),
       ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
       SizedBox(height: 10.h),
       Container(
         padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 20.w),
@@ -1646,7 +1673,40 @@ class AuthViewModel extends BaseViewModel {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextView(
-                  text: 'Plan',
+                  text: 'Applicant',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                TextView(
+                  text: 'Mercy A',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Email',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                TextView(
+                  text: 'mercy@medicatehealth.com',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -1654,12 +1714,51 @@ class AuthViewModel extends BaseViewModel {
                     color: AppColors.reminder,
                   ),
                 ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Phone',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                TextView(
+                  text: '+2349054345643',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextView(
+                  text: 'Plan',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
                 TextView(
                   text: 'Ruby Individual Basic',
                   textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
+                    fontFamily: 'Arial',
                     fontSize: 15.2.sp,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                     color: AppColors.reminder,
                   ),
                 ),
@@ -1675,7 +1774,7 @@ class AuthViewModel extends BaseViewModel {
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
+                    color: AppColors.infoGrey,
                   ),
                 ),
                 Container(
@@ -1711,18 +1810,42 @@ class AuthViewModel extends BaseViewModel {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextView(
-                  text: 'Duration',
+                  text: 'Hospital',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                TextView(
+                  text: 'Maitama District Hospital',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
                     fontSize: 15.2.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.reminder,
                   ),
                 ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 TextView(
-                  text: '12 months',
+                  text: 'Documents',
                   textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
+                    fontFamily: 'Arial',
+                    fontSize: 15.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                TextView(
+                  text: '2 file(s) uploaded',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
                     fontSize: 15.2.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.reminder,
@@ -1750,7 +1873,7 @@ class AuthViewModel extends BaseViewModel {
                   textStyle: TextStyle(
                     fontSize: 20.2.sp,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.reminder,
+                    color: AppColors.primary,
                   ),
                 ),
               ],
@@ -1760,7 +1883,7 @@ class AuthViewModel extends BaseViewModel {
       ),
       SizedBox(height: 22.0.h),
       TextView(
-        text: 'Select Payment Method',
+        text: 'Medical Service Agreement',
         textStyle: TextStyle(
           fontFamily: 'Arial',
           fontSize: 14.2.sp,
@@ -1769,33 +1892,211 @@ class AuthViewModel extends BaseViewModel {
         ),
       ),
       SizedBox(height: 10.h),
-
-      paymentWidget(
-        isWallet: false,
-        text: 'Pay with Card',
-        icon: AppImage.card_pay,
-        onTap: () {
-          onTapPaymentMeth = 'Pay with Card';
-          model.notifyListeners();
-        },
-      ),
-      paymentWidget(
-        isWallet: false,
-        text: 'Pay with Bank Transfer',
-        icon: AppImage.bank_transfer,
-        onTap: () {
-          onTapPaymentMeth = 'Pay with Bank Transfer';
-          model.notifyListeners();
-        },
-      ),
-      paymentWidget(
-        isWallet: false,
-        text: 'Pay with Opay',
-        icon: AppImage.opay,
-        onTap: () {
-          onTapPaymentMeth = 'Pay with Bank Transfer';
-          model.notifyListeners();
-        },
+      Container(
+        height: 262.h,
+        width: double.infinity,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.infoGrey1),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextView(
+                text: 'TERMS AND CONDITIONS OF HMO COVERAGE',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.10.h),
+              TextView(
+                text: '1. DECLARATIONS',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              TextView(
+                text:
+                    'I, the undersigned subscriber, hereby declare that all information provided in this application is true, complete, and accurate to the best of my knowledge. I understand that any misrepresentation or concealment of facts may result in denial of claims or termination of coverage.',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '2. AUTHORIZATION',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              TextView(
+                text:
+                    'I, authorize the HMO and its agents to verify any information provided in this application, including but not limited to medical records, employment status, and identity documents.',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '3. COVERAGE TERMS',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BulletText(
+                    'Coverage begins upon approval of this application and payment confirmation',
+                  ),
+                  BulletText(
+                    'Pre-existing conditions may be subject to a 6–12 month waiting period',
+                  ),
+                  BulletText(
+                    'Annual coverage limits apply as specified in the plan details',
+                  ),
+                  BulletText(
+                    'Services must be obtained from network providers unless authorized otherwise',
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '4. SUBSCRIBERS OBLIGATIONS',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BulletText('Present valid HMO card before receiving service'),
+                  BulletText(
+                    'Notify HMO of any changes in personal information within 30 days',
+                  ),
+                  BulletText(
+                    'Pay all applicable co-payments and fees at point of service',
+                  ),
+                  BulletText(
+                    'Follow pre-authorization procedures for specialist referrals',
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '5. EXCLUSIONS',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              TextView(
+                text:
+                    'Coverage does not include: cosmetic procedures, experimental treatments , self-inflicted injuries, injuries from illegal activities, and services not mentally necessary.',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '6. PRIVACY AND DATA PROTECTION',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              TextView(
+                text:
+                    'I consent to collection, processing and storage of my personal and health information for the purpose of administering my health coverage, in compliance with the Nigeria Data Protection Regulation (NDPR)',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '7. DISPUTE RESOLUTION',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              TextView(
+                text:
+                    "Any dispute arising from this agreement shall first be addressed through the HMO's internal grievance procedure, and if unresolved, through arbitration in accordance with Nigeria law.",
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '8. TERMINATION',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 2.0.h),
+              TextView(
+                text:
+                    "This agreement may be terminated by either party with 30 days written notice. Refunds for early termination are subject to the plan's refund policy.",
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+              SizedBox(height: 10.h),
+            ],
+          ),
+        ),
       ),
       SizedBox(height: 10.h),
       Row(
@@ -1829,40 +2130,74 @@ class AuthViewModel extends BaseViewModel {
           ),
           SizedBox(width: 10.w),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: TextView(
+              text:
+                  'I have read, understood, and agree to the Medical Service Agreement and Terms and Conditions. I confirm that all information provided is accurate and I accept the terms of coverage including waiting periods, exclusions, and limitations. ',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 20.h),
+      Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: AppColors.app_green_light,
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                TextView(
-                  text: 'I confirm that I have made the payment of ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
+                Container(
+                  padding: EdgeInsets.all(4.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.app_green,
+                    shape: BoxShape.circle,
                   ),
+                  child: Icon(Icons.check, color: AppColors.white, size: 10.sp),
                 ),
+                SizedBox(width: 10.w,),
                 TextView(
-                  text: '₦75,000',
+                  text: 'What happens next?',
                   textStyle: TextStyle(
-                    fontSize: 15.8.sp,
+                    fontFamily: 'GoogleSans',
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.reminder,
+                    color: AppColors.app_green,
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            SizedBox(height: 10.w,),
+            NumberBulletText('Your application will be submitted to the HMO provider for review', '1'),
+            NumberBulletText('Payment will be verified within 24-48 hours','2'),
+            NumberBulletText(' Application review takes approximately 2 weeks', '3'),
+            NumberBulletText("You'll receive email notifications on status updates", '4'),
+            NumberBulletText("Upon approval, your HMO card will be issued", '5'),
+          ],
+
+        ),
       ),
       SizedBox(height: 35.60.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
+            flex: 4,
             child: ButtonWidget(
               border: 100.r,
               buttonColor: AppColors.white,
               buttonText: 'Previous',
+              fontSize: 16.sp,
               color: AppColors.primary,
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.primary,
@@ -1872,14 +2207,16 @@ class AuthViewModel extends BaseViewModel {
               },
             ),
           ),
-          SizedBox(width: 20.w),
+          SizedBox(width: 13.20.w),
           Expanded(
+            flex: 5,
             child: ButtonWidget(
               border: 100.r,
               buttonColor: AppColors.primary,
               buttonText: 'Submit Application',
               color: AppColors.white,
               isLoading: model.isLoading,
+              fontSize: 14.sp,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
                 model.notifyListeners();
@@ -1888,7 +2225,7 @@ class AuthViewModel extends BaseViewModel {
           ),
         ],
       ),
-      
+
       SizedBox(height: 20.60.h),
     ],
   );
@@ -1899,7 +2236,7 @@ class AuthViewModel extends BaseViewModel {
     } else if (linSubIndex == 3) {
       return 'Documents';
     } else if (linSubIndex == 4) {
-      return 'Payments';
+      return 'Payment';
     } else if (linSubIndex == 5) {
       return 'Agreement';
     }

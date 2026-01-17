@@ -681,6 +681,7 @@ class StackedRouter extends _i1.RouterBase {
           index: args.index,
           isTapHMOPlan: args.isTapHMOPlan,
           isSubStatus: args.isSubStatus,
+          mySubPlans: args.mySubPlans,
         ),
         settings: data,
       );
@@ -1479,8 +1480,11 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const SubsribersScreenArguments(),
       );
       return _i92.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i86.SubsribersScreen(key: args.key, isSubStatus: args.isSubStatus),
+        builder: (context) => _i86.SubsribersScreen(
+          key: args.key,
+          isSubStatus: args.isSubStatus,
+          mySubPlans: args.mySubPlans,
+        ),
         settings: data,
       );
     },
@@ -1564,6 +1568,7 @@ class DashboardArguments {
     this.index,
     this.isTapHMOPlan,
     this.isSubStatus,
+    this.mySubPlans,
   });
 
   final _i92.Key? key;
@@ -1574,9 +1579,11 @@ class DashboardArguments {
 
   final String? isSubStatus;
 
+  final String? mySubPlans;
+
   @override
   String toString() {
-    return '{"key": "$key", "index": "$index", "isTapHMOPlan": "$isTapHMOPlan", "isSubStatus": "$isSubStatus"}';
+    return '{"key": "$key", "index": "$index", "isTapHMOPlan": "$isTapHMOPlan", "isSubStatus": "$isSubStatus", "mySubPlans": "$mySubPlans"}';
   }
 
   @override
@@ -1585,7 +1592,8 @@ class DashboardArguments {
     return other.key == key &&
         other.index == index &&
         other.isTapHMOPlan == isTapHMOPlan &&
-        other.isSubStatus == isSubStatus;
+        other.isSubStatus == isSubStatus &&
+        other.mySubPlans == mySubPlans;
   }
 
   @override
@@ -1593,7 +1601,8 @@ class DashboardArguments {
     return key.hashCode ^
         index.hashCode ^
         isTapHMOPlan.hashCode ^
-        isSubStatus.hashCode;
+        isSubStatus.hashCode ^
+        mySubPlans.hashCode;
   }
 }
 
@@ -3516,26 +3525,34 @@ class ApplicationFormScreenArguments {
 }
 
 class SubsribersScreenArguments {
-  const SubsribersScreenArguments({this.key, this.isSubStatus});
+  const SubsribersScreenArguments({
+    this.key,
+    this.isSubStatus,
+    this.mySubPlans,
+  });
 
   final _i92.Key? key;
 
   final String? isSubStatus;
 
+  final String? mySubPlans;
+
   @override
   String toString() {
-    return '{"key": "$key", "isSubStatus": "$isSubStatus"}';
+    return '{"key": "$key", "isSubStatus": "$isSubStatus", "mySubPlans": "$mySubPlans"}';
   }
 
   @override
   bool operator ==(covariant SubsribersScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key && other.isSubStatus == isSubStatus;
+    return other.key == key &&
+        other.isSubStatus == isSubStatus &&
+        other.mySubPlans == mySubPlans;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ isSubStatus.hashCode;
+    return key.hashCode ^ isSubStatus.hashCode ^ mySubPlans.hashCode;
   }
 }
 
@@ -3655,6 +3672,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
     int? index,
     bool? isTapHMOPlan,
     String? isSubStatus,
+    String? mySubPlans,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3668,6 +3686,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
         index: index,
         isTapHMOPlan: isTapHMOPlan,
         isSubStatus: isSubStatus,
+        mySubPlans: mySubPlans,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -5229,6 +5248,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
   Future<dynamic> navigateToSubsribersScreen({
     _i92.Key? key,
     String? isSubStatus,
+    String? mySubPlans,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5237,7 +5257,11 @@ extension NavigatorStateExtension on _i93.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.subsribersScreen,
-      arguments: SubsribersScreenArguments(key: key, isSubStatus: isSubStatus),
+      arguments: SubsribersScreenArguments(
+        key: key,
+        isSubStatus: isSubStatus,
+        mySubPlans: mySubPlans,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -5340,6 +5364,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
     int? index,
     bool? isTapHMOPlan,
     String? isSubStatus,
+    String? mySubPlans,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5353,6 +5378,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
         index: index,
         isTapHMOPlan: isTapHMOPlan,
         isSubStatus: isSubStatus,
+        mySubPlans: mySubPlans,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -6914,6 +6940,7 @@ extension NavigatorStateExtension on _i93.NavigationService {
   Future<dynamic> replaceWithSubsribersScreen({
     _i92.Key? key,
     String? isSubStatus,
+    String? mySubPlans,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6922,7 +6949,11 @@ extension NavigatorStateExtension on _i93.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.subsribersScreen,
-      arguments: SubsribersScreenArguments(key: key, isSubStatus: isSubStatus),
+      arguments: SubsribersScreenArguments(
+        key: key,
+        isSubStatus: isSubStatus,
+        mySubPlans: mySubPlans,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
