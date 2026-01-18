@@ -1,14 +1,14 @@
-// ignore_for_file: must_be_immutable, prefer_const_constructors_in_immutables
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stacked/stacked.dart';
+
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 
-class ApplicationFormScreen extends StatelessWidget {
-  ApplicationFormScreen({super.key});
+class CoorporateFormScreen extends StatelessWidget {
+  const CoorporateFormScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class ApplicationFormScreen extends StatelessWidget {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: model.setSubscriptionModalFlow(model:model,context:  context) ,
+                  child: model.setCoorporateModalFlow(model:model,context:  context) ,
                 ),
               ],
             ),
@@ -78,3 +78,4 @@ class ApplicationFormScreen extends StatelessWidget {
     );
   }
 }
+

@@ -39,17 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     isTapHMOPlan = widget.isTapHMOPlan??false;
     isSubStatus = widget.isSubStatus??'Plans';
     mySubPlans = widget.mySubPlans??'';
-    print('op in initstate$isTapHMOPlan');
     super.initState();
-  }
-
-
-  @override
-  void dispose() {
-    print('opposite sourse$isTapHMOPlan');
-    isTapHMOPlan = false;
-    print('opposite sourseeeeee$isTapHMOPlan');
-    super.dispose();
   }
   
 

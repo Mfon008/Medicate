@@ -156,7 +156,6 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                       ),
                                     ),
                                   ),
-
                                   SizedBox(width: 8.w),
                                   Expanded(
                                     child: GestureDetector(
@@ -196,255 +195,11 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                 ],
                               ),
                             ),
-
-                            SizedBox(height: 20.h),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.symmetric(
-                                vertical: 12.w,
-                                horizontal: 16.w,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100.r),
-                                border: Border.all(color: AppColors.infoGrey1),
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'All Tiers',
-                                    textStyle: TextStyle(
-                                      fontSize: 15.6.sp,
-                                      fontFamily: 'Arial',
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.w),
-                              child: TextView(
-                                text: 'Individual Plans',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 17.2.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.deep,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 5.10.h),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.w),
-                              child: TextView(
-                                text:
-                                    'Personal health coverage designed for single individuals. Choose your tier based on your coverage needs.',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 15.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.fineGrey,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-                            rowthickCheckWidget(
-                              text: 'Must provide medical history declaration',
-                              color: AppColors.app_green,
-                            ),
-                            rowthickCheckWidget(
-                              text: 'Valid identification documents required',
-                              color: AppColors.app_green,
-                            ),
-                            rowthickCheckWidget(
-                              text: 'Hospital choice from network',
-                              color: AppColors.app_green,
-                            ),
-                            rowthickCheckWidget(
-                              text: 'Processing time: 2 weeks',
-                              color: AppColors.app_green,
-                            ),
-                            SizedBox(height: 10.h),
-                            Divider(color: AppColors.infoGrey1),
-                            SizedBox(height: 20.h),
-                            GestureDetector(
-                              onTap: () => navigate.navigateTo(Routes.applicationFormScreen),
-                              child: Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 22.w,
-                                  horizontal: 22.w,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0.r),
-                                  border: Border.all(color: AppColors.infoGrey1),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(AppImage.person2),
-                                            SizedBox(width: 6.w),
-                                            TextView(
-                                              text: 'Basic Plan',
-                                              textStyle: TextStyle(
-                                                fontSize: 18.6.sp,
-                                                fontFamily: 'Arial',
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.deep,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 4.w,
-                                            horizontal: 10.w,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: AppColors.appRed,
-                                            ),
-                                            color: AppColors.faintedRed,
-                                            borderRadius: BorderRadius.circular(
-                                              100.r,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                AppImage.star,
-                                                color: AppColors.red,
-                                              ),
-                                              SizedBox(width: 6.w),
-                                              TextView(
-                                                text: 'Ruby',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'GoogleSans',
-                                                  fontSize: 15.2.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.red,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20.h),
-                                    TextView(
-                                      text:
-                                          'Essential healthcare coverage for individuals with access to quality medical services at affordable rates.',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.fineGrey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 16.h),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        TextView(
-                                          text: '₦75,000 ',
-                                          textStyle: TextStyle(
-                                            fontSize: 28.8.sp,
-                                            fontWeight: FontWeight.w700,
-                                            color: AppColors.deep,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '/12 months',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 15.8.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.fineGrey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20.h),
-                                    TextView(
-                                      text: '3 hospitals in network',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.fineGrey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 20.h),
-                                    rowlightCheckWidget(
-                                      'Outpatient consultations',
-                                    ),
-                                    rowlightCheckWidget('Inpatient care'),
-                                    rowlightCheckWidget('Laboratory tests'),
-                                    rowlightCheckWidget('Pharmacy benefits'),
-                                    SizedBox(height: 10.h),
-                                    TextView(
-                                      text: '+1 more benefits',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.primary,
-                                      ),
-                                    ),
-                                    SizedBox(height: 20.h),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 12.w,
-                                      ),
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          100.r,
-                                        ),
-                                        color: AppColors.primary,
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          TextView(
-                                            text: 'Subscribe Now',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 15.8.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.white,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Icon(
-                                            Icons.arrow_forward,
-                                            color: AppColors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 30.h),
+                            model.isProSubStatus == 'individual'
+                                ? individualWidget()
+                                : model.isProSubStatus == 'family'
+                                ? familyWidget()
+                                : coorporateWidget(),
                           ],
                         ),
                       ),
@@ -765,6 +520,692 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     );
   }
 
+  Column individualWidget() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 20.h),
+      Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100.r),
+          border: Border.all(color: AppColors.infoGrey1),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextView(
+              text: 'All Tiers',
+              textStyle: TextStyle(
+                fontSize: 15.6.sp,
+                fontFamily: 'Arial',
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.infoGrey),
+          ],
+        ),
+      ),
+      SizedBox(height: 20.h),
+      Padding(
+        padding: EdgeInsets.only(left: 10.w),
+        child: TextView(
+          text: 'Individual Plans',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 5.10.h),
+      Padding(
+        padding: EdgeInsets.only(left: 10.w),
+        child: TextView(
+          text:
+              'Personal health coverage designed for single individuals. Choose your tier based on your coverage needs.',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 15.2.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.fineGrey,
+          ),
+        ),
+      ),
+      SizedBox(height: 20.h),
+      rowthickCheckWidget(
+        text: 'Must provide medical history declaration',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Valid identification documents required',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Hospital choice from network',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Processing time: 2 weeks',
+        color: AppColors.lightBlue,
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 20.h),
+      GestureDetector(
+        onTap: () => navigate.navigateTo(Routes.applicationFormScreen),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0.r),
+            border: Border.all(color: AppColors.infoGrey1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(AppImage.person2),
+                      SizedBox(width: 6.w),
+                      TextView(
+                        text: 'Basic Plan',
+                        textStyle: TextStyle(
+                          fontSize: 18.6.sp,
+                          fontFamily: 'Arial',
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.deep,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 4.w,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.appRed),
+                      color: AppColors.faintedRed,
+                      borderRadius: BorderRadius.circular(100.r),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(AppImage.star, color: AppColors.red),
+                        SizedBox(width: 6.w),
+                        TextView(
+                          text: 'Ruby',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 15.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              TextView(
+                text:
+                    'Essential healthcare coverage for individuals with access to quality medical services at affordable rates.',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.fineGrey,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: '₦75,000 ',
+                    textStyle: TextStyle(
+                      fontSize: 28.8.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.deep,
+                    ),
+                  ),
+                  TextView(
+                    text: '/12 months',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.fineGrey,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              TextView(
+                text: '3 hospitals in network',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.fineGrey,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              rowlightCheckWidget('Outpatient consultations'),
+              rowlightCheckWidget('Inpatient care'),
+              rowlightCheckWidget('Laboratory tests'),
+              rowlightCheckWidget('Pharmacy benefits'),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '+1 more benefits',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primary,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12.w),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.r),
+                  color: AppColors.primary,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextView(
+                      text: 'Subscribe Now',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 15.8.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.arrow_forward, color: AppColors.white),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(height: 30.h),
+    ],
+  );
+
+  Column coorporateWidget() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 20.h),
+      Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100.r),
+          border: Border.all(color: AppColors.infoGrey1),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextView(
+              text: 'All Tiers',
+              textStyle: TextStyle(
+                fontSize: 15.6.sp,
+                fontFamily: 'Arial',
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.infoGrey),
+          ],
+        ),
+      ),
+      SizedBox(height: 20.h),
+      Padding(
+        padding: EdgeInsets.only(left: 10.w),
+        child: TextView(
+          text: 'Corporate Plans',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 5.10.h),
+      Padding(
+        padding: EdgeInsets.only(left: 10.w),
+        child: TextView(
+          text:
+              'Group health insurance solutions for organizations. Flexible enrollment and dedicated account management.',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 15.2.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.fineGrey,
+          ),
+        ),
+      ),
+      SizedBox(height: 20.h),
+      rowthickCheckWidget(
+        text: 'Organization registration required',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Staff list upload (CSV/Excel)',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'HR contact person details',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Bulk enrollment support',
+        color: AppColors.lightBlue,
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 20.h),
+      GestureDetector(
+        onTap: () => navigate.navigateTo(Routes.coorporateFormScreen),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0.r),
+            border: Border.all(color: AppColors.infoGrey1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(AppImage.person2),
+                      SizedBox(width: 6.w),
+                      TextView(
+                        text: 'Basic Plan',
+                        textStyle: TextStyle(
+                          fontSize: 18.6.sp,
+                          fontFamily: 'Arial',
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.deep,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 4.w,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.appRed),
+                      color: AppColors.faintedRed,
+                      borderRadius: BorderRadius.circular(100.r),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(AppImage.star, color: AppColors.red),
+                        SizedBox(width: 6.w),
+                        TextView(
+                          text: 'Ruby',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 15.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              TextView(
+                text:
+                    'Basic group coverage for organizations with 10+ employees.',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.fineGrey,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: '₦65,000 ',
+                    textStyle: TextStyle(
+                      fontSize: 28.8.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.deep,
+                    ),
+                  ),
+                  TextView(
+                    text: '/12 months',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.fineGrey,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              TextView(
+                text: '3 hospitals in network',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.fineGrey,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              rowlightCheckWidget('Staff outpatient care'),
+              rowlightCheckWidget('Staff inpatient care'),
+              rowlightCheckWidget('Basic pharmacy'),
+              rowlightCheckWidget('Emergency care'),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '+1 more benefits',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primary,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12.w),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.r),
+                  color: AppColors.primary,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextView(
+                      text: 'Subscribe Now',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 15.8.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.arrow_forward, color: AppColors.white),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(height: 30.h),
+    ],
+  );
+
+  Column familyWidget() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 20.h),
+      Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 16.w),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100.r),
+          border: Border.all(color: AppColors.infoGrey1),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextView(
+              text: 'All Tiers',
+              textStyle: TextStyle(
+                fontSize: 15.6.sp,
+                fontFamily: 'Arial',
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+            Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.infoGrey),
+          ],
+        ),
+      ),
+      SizedBox(height: 20.h),
+      Padding(
+        padding: EdgeInsets.only(left: 10.w),
+        child: TextView(
+          text: 'Family Plans',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.deep,
+          ),
+        ),
+      ),
+      SizedBox(height: 5.10.h),
+      Padding(
+        padding: EdgeInsets.only(left: 10.w),
+        child: TextView(
+          text:
+              'Comprehensive coverage for your entire family including spouse and up to 4 dependents under 18 years.',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 15.2.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.fineGrey,
+          ),
+        ),
+      ),
+      SizedBox(height: 20.h),
+      rowthickCheckWidget(
+        text: 'Covers husband, wife and up to 4 dependents',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Dependents must be 18 years or less',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Birth certificates required for dependents',
+        color: AppColors.lightBlue,
+      ),
+      rowthickCheckWidget(
+        text: 'Adoption certificates for adopted children',
+        color: AppColors.lightBlue,
+      ),
+      SizedBox(height: 10.h),
+      Divider(color: AppColors.infoGrey1),
+      SizedBox(height: 20.h),
+      GestureDetector(
+        onTap: () => navigate.navigateTo(Routes.familyFormScreen),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0.r),
+            border: Border.all(color: AppColors.infoGrey1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(AppImage.person2),
+                      SizedBox(width: 6.w),
+                      TextView(
+                        text: 'Basic Plan',
+                        textStyle: TextStyle(
+                          fontSize: 18.6.sp,
+                          fontFamily: 'Arial',
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.deep,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 4.w,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.appRed),
+                      color: AppColors.faintedRed,
+                      borderRadius: BorderRadius.circular(100.r),
+                    ),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(AppImage.star, color: AppColors.red),
+                        SizedBox(width: 6.w),
+                        TextView(
+                          text: 'Ruby',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 15.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.red,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              TextView(
+                text:
+                    'Basic family coverage for spouse and up to 4 dependents under 18.',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.fineGrey,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: '₦180,000 ',
+                    textStyle: TextStyle(
+                      fontSize: 28.8.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.deep,
+                    ),
+                  ),
+                  TextView(
+                    text: '/12 months',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.fineGrey,
+                    ),
+                  ),
+                 
+                ],
+              ),
+              SizedBox(height: 20.h),
+               TextView(
+                    text: 'Up to 4 dependents included',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+              SizedBox(height: 20.h),
+              TextView(
+                text: '3 hospitals in network',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.fineGrey,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              rowlightCheckWidget('Family outpatient care'),
+              rowlightCheckWidget('Family inpatient care'),
+              rowlightCheckWidget('Antenatal & postnatal care'),
+              rowlightCheckWidget('Child immunization'),
+              SizedBox(height: 10.h),
+              TextView(
+                text: '+1 more benefits',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primary,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 12.w),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100.r),
+                  color: AppColors.primary,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextView(
+                      text: 'Subscribe Now',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 15.8.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.arrow_forward, color: AppColors.white),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      SizedBox(height: 30.h),
+    ],
+  );
+
   Widget rowthickCheckWidget({String? text, Color? color}) => Padding(
     padding: EdgeInsets.only(bottom: 10.w, left: 10.w),
     child: Row(
@@ -787,7 +1228,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       ],
     ),
   );
-  
+
   Widget rowlightCheckWidget(String text) => Padding(
     padding: EdgeInsets.only(bottom: 10.w),
     child: Row(
