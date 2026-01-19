@@ -553,7 +553,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 10.20.h,
           ),
           SizedBox(width: 6.10.w),
-          SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h),
+          SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h,color: AppColors.lightBlue),
           SizedBox(width: 6.10.w),
           Flexible(
             child: TextView(
