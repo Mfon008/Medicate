@@ -1,16 +1,18 @@
+// ignore_for_file: strict_top_level_inference
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
-import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
+import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
-import '../model/get_reminder_response_model/get_reminder_response_model.dart';
+import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
@@ -223,7 +225,7 @@ class PharmRepoImpl {
   }
 
   Future<CreateReminderResponseModel> createReminder(
-    CreateReminderEntityModel createReminderEntityModel,
+    CreateTenantReminderEntityModel createReminderEntityModel,
   ) async {
     final response = await _contract.createReminder(createReminderEntityModel);
     return response;
@@ -244,24 +246,6 @@ class PharmRepoImpl {
       file: file,
       id: id,
     );
-    return response;
-  }
-
-  Future<GetReminderResponseModel> getReminder({
-    String? status,
-    String? page,
-    String? limit,
-  }) async {
-    final response = await _contract.getReminder(
-      status: status,
-      page: page,
-      limit: limit,
-    );
-    return response;
-  }
-
-  Future<GetReminderById> getReminderById(String? id) async {
-    final response = await _contract.getReminderById(id);
     return response;
   }
 
@@ -307,8 +291,69 @@ class PharmRepoImpl {
     return response;
   }
 
+  Future<dynamic> getUserDetailsByTenant({String? phone}) async {
+    final response = await _contract.getUserDetailsByTenant(phone: phone);
+    return response;
+  }
+
+  Future<dynamic> registerUserByTenant({String? phone}) async {
+    final response = await _contract.registerUserByTenant(phone: phone);
+    return response;
+  }
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenant({
+    String? status,
+    String? page,
+    String? limit,
+  }) async {
+    final response = await _contract.getReminderForTenant(
+      status: status,
+      page: page,
+      limit: limit,
+    );
+    return response;
+  }
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantAll({
+    String? page,
+    String? limit,
+  }) async {
+    final response = await _contract.getReminderForTenantAll(
+      page: page,
+      limit: limit,
+    );
+    return response;
+  }
+
+  Future<GetReminderById> getReminderForTenantByUserIdAll({
+    String? page,
+    String? limit,
+    String? userId,
+  }) async {
+    final response = await _contract.getReminderForTenantByUserIdAll(
+      page: page,
+      limit: limit,
+      userId: userId,
+    );
+    return response;
+  }
+
+  Future<GetReminderById> getReminderForTenantByUserId({
+    String? status,
+    String? page,
+    String? limit,
+    String? userId,
+  }) async {
+    final response = await _contract.getReminderForTenantByUserId(
+      status: status,
+      page: page,
+      limit: limit,
+      userId: userId,
+    );
+    return response;
+  }
+
   void _chache(data) {
-     print('print me lemme see ${data.data.toJson()}');
     if (data != null) {
       _session.authToken = data.data.accessToken;
       _session.authRefreshToken = data.data.refreshToken;

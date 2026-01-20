@@ -17,10 +17,10 @@ import '../../core/core_folder/manager/shared_preference.dart';
 import '../widget/text.dart';
 
 class HomeScreen extends StatefulWidget {
-   HomeScreen({super.key, this.isTapHMOPlan,this.isSubStatus,this.mySubPlans});
+  HomeScreen({super.key, this.isTapHMOPlan, this.isSubStatus, this.mySubPlans});
   String? isSubStatus;
   String? mySubPlans;
-   bool? isTapHMOPlan;
+  bool? isTapHMOPlan;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -34,14 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String mySubPlans = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    @override
+  @override
   void initState() {
-    isTapHMOPlan = widget.isTapHMOPlan??false;
-    isSubStatus = widget.isSubStatus??'Plans';
-    mySubPlans = widget.mySubPlans??'';
+    isTapHMOPlan = widget.isTapHMOPlan ?? false;
+    isSubStatus = widget.isSubStatus ?? 'Plans';
+    mySubPlans = widget.mySubPlans ?? '';
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -76,21 +75,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   ), // makes ripple effect round
                 ),
               ),
-              isTapHMOPlan?TextView(
-                    text: 'HMO Plans',
-                    textStyle: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.black,
+              isTapHMOPlan
+                  ? TextView(
+                      text: 'HMO Plans',
+                      textStyle: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () => setState(() => isTappToChat = false),
+                      child: SvgPicture.asset(
+                        AppImage.applogoSvg,
+                        height: 28.h,
+                        width: 28.w,
+                      ),
                     ),
-                  ): GestureDetector(
-                onTap: () => setState(() => isTappToChat = false),
-                child: SvgPicture.asset(
-                  AppImage.applogoSvg,
-                  height: 28.h,
-                  width: 28.w,
-                ),
-              ),
               Container(
                 margin: EdgeInsets.only(right: 2.4.w),
                 decoration: BoxDecoration(
@@ -117,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: isTappToChat
           ? AskMeScreen(inText: chatText, isDashboard: true)
           : isTapHMOPlan
-          ? SubsribersScreen(isSubStatus: isSubStatus,mySubPlans: mySubPlans)
+          ? SubsribersScreen(isSubStatus: isSubStatus, mySubPlans: mySubPlans)
           : Column(
               children: [
                 Expanded(
@@ -553,7 +554,12 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 10.20.h,
           ),
           SizedBox(width: 6.10.w),
-          SvgPicture.asset(icon, width: 16.20.w, height: 16.20.h,color: AppColors.lightBlue),
+          SvgPicture.asset(
+            icon,
+            width: 16.20.w,
+            height: 16.20.h,
+            color: AppColors.lightBlue,
+          ),
           SizedBox(width: 6.10.w),
           Flexible(
             child: TextView(

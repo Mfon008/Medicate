@@ -68,7 +68,10 @@ class CoorporateFormScreen extends StatelessWidget {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: model.setCoorporateModalFlow(model:model,context:  context) ,
+                  child: model.setCoorporateModalFlow(
+                    model: model,
+                    context: context,
+                  ),
                 ),
               ],
             ),
@@ -78,4 +81,3 @@ class CoorporateFormScreen extends StatelessWidget {
     );
   }
 }
-

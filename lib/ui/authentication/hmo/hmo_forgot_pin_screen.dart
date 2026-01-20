@@ -227,9 +227,8 @@ class _HMOForgotPinScreenState extends State<HMOForgotPinScreen> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => navigate.navigateTo(
-                                Routes.hMOSignUpScreen,
-                              ),
+                              ..onTap = () =>
+                                  navigate.navigateTo(Routes.hMOSignUpScreen),
                           ),
                         ],
                       ),

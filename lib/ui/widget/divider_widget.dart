@@ -5,15 +5,14 @@ import 'package:flutter/material.dart';
 import 'xela_divider_models.dart';
 
 class XelaDivider extends StatefulWidget {
-
   final XelaDividerStyle style;
   final XelaDividerOrientation orientation;
   final Color color;
 
   XelaDivider({
-    super.key, 
-    this.style = XelaDividerStyle.SOLID, 
-    this.orientation = XelaDividerOrientation.HORIZONTAL, 
+    super.key,
+    this.style = XelaDividerStyle.SOLID,
+    this.orientation = XelaDividerOrientation.HORIZONTAL,
     this.color = Colors.blue,
   });
 
@@ -26,29 +25,24 @@ class _XelaDividerState extends State<XelaDivider> {
 
   @override
   Widget build(BuildContext context) {
-
-    if(widget.style == XelaDividerStyle.SOLID) {
+    if (widget.style == XelaDividerStyle.SOLID) {
       if (widget.orientation == XelaDividerOrientation.HORIZONTAL) {
-        return Divider(
-          height: 1,
-          thickness: 1,
-          color: widget.color,
-        );
-      }
-      else {
-        return VerticalDivider(
-          width: 1,
-          thickness: 1,
-          color: widget.color,
-        );
+        return Divider(height: 1, thickness: 1, color: widget.color);
+      } else {
+        return VerticalDivider(width: 1, thickness: 1, color: widget.color);
       }
     }
     if (widget.orientation == XelaDividerOrientation.HORIZONTAL) {
       return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints){
+        builder: (BuildContext context, BoxConstraints constraints) {
           final boxWidth = constraints.constrainWidth();
-          final dashWidth = (widget.style == XelaDividerStyle.DASHED ? 8 : 2).floorToDouble();
-          final dashCount = (boxWidth / ((widget.style == XelaDividerStyle.DASHED ? 1.5 : 3) * dashWidth)).floor();
+          final dashWidth = (widget.style == XelaDividerStyle.DASHED ? 8 : 2)
+              .floorToDouble();
+          final dashCount =
+              (boxWidth /
+                      ((widget.style == XelaDividerStyle.DASHED ? 1.5 : 3) *
+                          dashWidth))
+                  .floor();
           return Flex(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             direction: Axis.horizontal,
@@ -64,16 +58,21 @@ class _XelaDividerState extends State<XelaDivider> {
           );
         },
       );
-    }
-    else {
+    } else {
       return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           var boxHeight = constraints.constrainHeight();
           if (boxHeight == double.infinity) {
             boxHeight = 0;
           }
-          final dashHeight = (widget.style == XelaDividerStyle.DASHED ? 7 : 1.90).floorToDouble();
-          final dashCount = (boxHeight / ((widget.style == XelaDividerStyle.DASHED ? 1.5 : 3) * dashHeight)).floor();
+          final dashHeight =
+              (widget.style == XelaDividerStyle.DASHED ? 7 : 1.90)
+                  .floorToDouble();
+          final dashCount =
+              (boxHeight /
+                      ((widget.style == XelaDividerStyle.DASHED ? 1.5 : 3) *
+                          dashHeight))
+                  .floor();
           return Flex(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             direction: Axis.vertical,
@@ -90,6 +89,5 @@ class _XelaDividerState extends State<XelaDivider> {
         },
       );
     }
-
   }
 }

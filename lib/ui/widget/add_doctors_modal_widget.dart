@@ -341,7 +341,7 @@ class AddDoctorsModalWidget extends StatelessWidget {
                           SizedBox(height: 20.h),
                           TextFormWidget(
                             hint: 'Country',
-                            hintSize:isTablet(context) ? 6.82.sp : 14.60.sp,
+                            hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
                             borderColor: AppColors.transparent,
                             borderTopLeft: 10.r,
                             borderTopRight: 10.r,
@@ -568,7 +568,7 @@ class AddDoctorsModalWidget extends StatelessWidget {
                             onPressed: () {
                               if (model.formKeyValidateAddDoctor.currentState!
                                   .validate()) {
-                                saveUser(context,model:model);
+                                saveUser(context, model: model);
                               }
                             },
                           ),
@@ -586,7 +586,7 @@ class AddDoctorsModalWidget extends StatelessWidget {
     );
   }
 
-  void saveUser(context,{HealthCareViewModel? model}) async {
+  void saveUser(context, {HealthCareViewModel? model}) async {
     if (isEdit) {
       await model!.updateDoctor(
         context,

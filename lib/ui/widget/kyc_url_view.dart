@@ -4,10 +4,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class ImageWebViewScreen extends StatefulWidget {
   final String imageUrl;
 
-  const ImageWebViewScreen({
-    super.key,
-    required this.imageUrl,
-  });
+  const ImageWebViewScreen({super.key, required this.imageUrl});
 
   @override
   State<ImageWebViewScreen> createState() => _ImageWebViewScreenState();
@@ -58,7 +55,8 @@ class _ImageWebViewScreenState extends State<ImageWebViewScreen> {
       appBar: AppBar(title: const Text("KYC File Preview")),
       body: SizedBox(
         height: double.infinity,
-        child: WebViewWidget(controller: controller)),
+        child: WebViewWidget(controller: controller),
+      ),
     );
   }
 }

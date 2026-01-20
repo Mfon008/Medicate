@@ -42,11 +42,27 @@ class HMOKycScreen extends StatelessWidget {
               await model.getTenant(context);
               await model.getHMOKyc(context);
               model.hmoKycStatus();
-              model.bankNameController.text = model.getTetantResponseModel?.data?.bankDetails?[0].bankName??'';
-              model.accountNameController.text = model.getTetantResponseModel?.data?.bankDetails?[0].accountName??'';
-              model.accountNumberController.text = model.getTetantResponseModel?.data?.bankDetails?[0].accountNumber??'';
-              
-
+              model.bankNameController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .bankName ??
+                  '';
+              model.accountNameController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .accountName ??
+                  '';
+              model.accountNumberController.text =
+                  model
+                      .getTetantResponseModel
+                      ?.data
+                      ?.bankDetails?[0]
+                      .accountNumber ??
+                  '';
             });
           },
           disposeViewModel: false,
@@ -74,7 +90,7 @@ class HMOKycScreen extends StatelessWidget {
                           model.thirdLevelKyc = false;
                           model.notifyListeners();
                         },
-                        contxt: context
+                        contxt: context,
                       ),
                       model.kycLevelWidget(
                         level: '2',
@@ -85,7 +101,7 @@ class HMOKycScreen extends StatelessWidget {
                           model.firstLevelKyc = false;
                           model.notifyListeners();
                         },
-                        contxt: context
+                        contxt: context,
                       ),
                       model.kycLevelWidget(
                         level: '3',
@@ -96,9 +112,8 @@ class HMOKycScreen extends StatelessWidget {
                           model.firstLevelKyc = false;
                           model.notifyListeners();
                         },
-                        contxt: context
+                        contxt: context,
                       ),
-                      
                     ],
                   ),
                 ),

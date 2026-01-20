@@ -126,7 +126,7 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                   Center(
                     child: TextView(
                       text:
-                          '${ SharedPreferencesService.instance.usersData['user']['email'] ?? model.getTetantResponseModel?.data?.businessEmail ?? ''}',
+                          '${SharedPreferencesService.instance.usersData['user']['email'] ?? model.getTetantResponseModel?.data?.businessEmail ?? ''}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 14.2.sp,

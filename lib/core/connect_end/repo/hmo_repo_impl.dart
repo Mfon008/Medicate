@@ -1,4 +1,3 @@
-
 // ignore_for_file: strict_top_level_inference
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -142,16 +141,12 @@ class HMORepoImpl {
     return response;
   }
 
-  Future<dynamic> updateHMOKyc(
-    UpdatePharmacyKycEntityModel updateKyc,
-  ) async {
+  Future<dynamic> updateHMOKyc(UpdatePharmacyKycEntityModel updateKyc) async {
     final response = await _contract.updateHMOKyc(updateKyc);
     return response;
   }
 
-  Future<dynamic> updateHMO(
-    UpdateHmoProfileEntityModel? updateHMO,
-  ) async {
+  Future<dynamic> updateHMO(UpdateHmoProfileEntityModel? updateHMO) async {
     final response = await _contract.updateHMO(updateHMO);
     return response;
   }

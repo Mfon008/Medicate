@@ -76,16 +76,14 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                       context,
                       icon: AppImage.profile,
                       text: 'Profile',
-                      onTap: () =>
-                          navigate.navigateTo(Routes.hMOProfileScreen),
+                      onTap: () => navigate.navigateTo(Routes.hMOProfileScreen),
                     ),
                     SizedBox(width: 20.w),
                     moreContainer(
                       context,
                       icon: AppImage.settings,
                       text: 'Settings',
-                      onTap: () =>
-                          navigate.navigateTo(Routes.hMOSettingScreen),
+                      onTap: () => navigate.navigateTo(Routes.hMOSettingScreen),
                     ),
                   ],
                 ),
@@ -105,7 +103,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                     ),
                   ],
                 ),
-               
+
                 SizedBox(height: 100.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

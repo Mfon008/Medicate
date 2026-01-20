@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
@@ -304,9 +303,7 @@ class HMOApi {
     }
   }
 
-  Future<dynamic> updateHMOKyc(
-    UpdatePharmacyKycEntityModel updateKyc,
-  ) async {
+  Future<dynamic> updateHMOKyc(UpdatePharmacyKycEntityModel updateKyc) async {
     try {
       final response = await _service.call(
         UrlConfig.update_pharm_kyc,
@@ -321,9 +318,7 @@ class HMOApi {
     }
   }
 
-  Future<dynamic> updateHMO(
-    UpdateHmoProfileEntityModel? updateHMO,
-  ) async {
+  Future<dynamic> updateHMO(UpdateHmoProfileEntityModel? updateHMO) async {
     try {
       final response = await _service.call(
         UrlConfig.update_hmo_profile,

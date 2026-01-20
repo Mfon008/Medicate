@@ -33,7 +33,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
           model.isSubStatus = widget.isSubStatus!;
         }
         if (widget.mySubPlans != '') {
-          model.mySubPlans = widget.mySubPlans??'';
+          model.mySubPlans = widget.mySubPlans ?? '';
         }
       },
       disposeViewModel: false,

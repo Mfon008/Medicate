@@ -137,12 +137,12 @@ class AppValidator {
     };
   }
 
-    static String? Function(String?) validate4String({String? error}) {
+  static String? Function(String?) validate4String({String? error}) {
     return (String? value) {
       if (value == null || value.isEmpty || value.trim().isEmpty) {
         return error ?? 'Field is required.';
       }
-      if (value.length>4 || value.length<4) {
+      if (value.length > 4 || value.length < 4) {
         return error ?? 'Field is expected to be four input digit.';
       }
       return null;

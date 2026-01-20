@@ -23,7 +23,6 @@ class PharmMoreScreen extends StatefulWidget {
 }
 
 class _PharmMoreScreenState extends State<PharmMoreScreen> {
-  
   List<String> textHistoryList = [
     'Today’s Medication',
     'Good Morning! To keep you on track, here’s your morning medication schedule:',
@@ -42,8 +41,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
       backgroundColor: AppColors.white,
       body: ViewModelBuilder<PharmViewModel>.reactive(
         viewModelBuilder: () => locator<PharmViewModel>(),
-        onViewModelReady: (model) {
-        },
+        onViewModelReady: (model) {},
         disposeViewModel: false,
         builder: (_, PharmViewModel model, _) {
           return SingleChildScrollView(

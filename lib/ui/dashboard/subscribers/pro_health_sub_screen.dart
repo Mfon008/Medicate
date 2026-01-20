@@ -1134,19 +1134,18 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                       color: AppColors.fineGrey,
                     ),
                   ),
-                 
                 ],
               ),
               SizedBox(height: 20.h),
-               TextView(
-                    text: 'Up to 4 dependents included',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 15.2.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.reminder,
-                    ),
-                  ),
+              TextView(
+                text: 'Up to 4 dependents included',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
               SizedBox(height: 20.h),
               TextView(
                 text: '3 hospitals in network',

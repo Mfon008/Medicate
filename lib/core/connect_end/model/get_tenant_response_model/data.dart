@@ -70,7 +70,7 @@ class Data {
     this.educationalExperience,
     this.contactPersonDesignation,
     this.contactPersonFirstName,
-    this.contactPersonLastName
+    this.contactPersonLastName,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

@@ -2247,7 +2247,8 @@ class AuthViewModel extends BaseViewModel {
                       SizedBox(
                         width: 220.w,
                         child: TextView(
-                          text: 'Max file size: 2MB (.CSV, .XLSX/XLS, supported)',
+                          text:
+                              'Max file size: 2MB (.CSV, .XLSX/XLS, supported)',
                           maxLines: 2,
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
@@ -3529,8 +3530,7 @@ class AuthViewModel extends BaseViewModel {
           SizedBox(
             width: 300.w,
             child: TextView(
-              text:
-                  'Payment evidence/receipt',
+              text: 'Payment evidence/receipt',
               textStyle: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 14.2.sp,

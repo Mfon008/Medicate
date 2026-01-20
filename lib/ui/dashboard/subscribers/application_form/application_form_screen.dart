@@ -68,7 +68,10 @@ class ApplicationFormScreen extends StatelessWidget {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: model.setSubscriptionModalFlow(model:model,context:  context) ,
+                  child: model.setSubscriptionModalFlow(
+                    model: model,
+                    context: context,
+                  ),
                 ),
               ],
             ),

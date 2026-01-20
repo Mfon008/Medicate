@@ -435,12 +435,14 @@ class HealthCareViewModel extends BaseViewModel {
     }
     return false;
   }
+
   bool returnBoolKyc() {
     print('1:::::$_getTetantResponseModel');
     print('2:::::${_getTetantResponseModel?.data}');
     print('3:::::${_getTetantResponseModel?.data?.kycDocuments}');
-    if (_getTetantResponseModel == null || _getTetantResponseModel!.data==null ||
-        _getTetantResponseModel!.data!.kycDocuments==null) {
+    if (_getTetantResponseModel == null ||
+        _getTetantResponseModel!.data == null ||
+        _getTetantResponseModel!.data!.kycDocuments == null) {
       return true;
     }
     // if (_getTetantResponseModel != null && _getTetantResponseModel!.data!=null ||
@@ -2812,7 +2814,6 @@ class HealthCareViewModel extends BaseViewModel {
     } else {
       return false;
     }
-    
   }
 
   Future<void> updateDoctor(

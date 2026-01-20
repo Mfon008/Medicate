@@ -18,8 +18,7 @@ class HMOProfileInfoScreen extends StatefulWidget {
   const HMOProfileInfoScreen({super.key});
 
   @override
-  State<HMOProfileInfoScreen> createState() =>
-      _HMOProfileInfoScreenState();
+  State<HMOProfileInfoScreen> createState() => _HMOProfileInfoScreenState();
 }
 
 class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
@@ -77,16 +76,10 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
               businessAddController.text =
                   model.getTetantResponseModel?.data?.businessAddress ?? '';
               contactFirstNameController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.contactPersonFirstName??
+                  model.getTetantResponseModel?.data?.contactPersonFirstName ??
                   "";
               contactLastNameController.text =
-                  model
-                      .getTetantResponseModel
-                      ?.data
-                      ?.contactPersonLastName ??
+                  model.getTetantResponseModel?.data?.contactPersonLastName ??
                   '';
               emailController.text =
                   model.getTetantResponseModel?.data?.businessEmail ?? '';
@@ -123,33 +116,33 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 12.w,
-                                  horizontal: 12.w,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.fadedyellow,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(AppImage.info),
-                                    SizedBox(width: 10.w),
-                                    TextView(
-                                      text:
-                                          'Complete your profile by updating the\nremaining fields.',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
+                          padding: EdgeInsets.symmetric(
+                            vertical: 12.w,
+                            horizontal: 12.w,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.fadedyellow,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(AppImage.info),
+                              SizedBox(width: 10.w),
+                              TextView(
+                                text:
+                                    'Complete your profile by updating the\nremaining fields.',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.black,
                                 ),
                               ),
-                            // : SizedBox.shrink(),
-                         SizedBox(height: 10.h),
+                            ],
+                          ),
+                        ),
+                        // : SizedBox.shrink(),
+                        SizedBox(height: 10.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -333,7 +326,7 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                           },
                         ),
                         SizedBox(height: 20.h),
-                        
+
                         TextFormWidget(
                           hint: 'Business email',
                           hintSize: 14,
@@ -411,7 +404,6 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.stateController,
                                 validator: AppValidator.validateString(),
-                                
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -435,12 +427,10 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                                 isFilled: true,
                                 controller: model.lgaController,
                                 validator: AppValidator.validateString(),
-                                
                               ),
                             ),
                           ],
                         ),
-                        
 
                         SizedBox(height: 30.h),
                         TextView(
@@ -519,9 +509,9 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                           controller: contactDesignationController,
                           validator: AppValidator.validateString(),
                         ),
-                        
+
                         SizedBox(height: 30.h),
-                        ],
+                      ],
                     ),
                   ),
 
@@ -559,14 +549,17 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                                   country: model.countryController.text.trim(),
                                   state: model.stateController.text.trim(),
                                   lga: model.lgaController.text.trim(),
-                                  businessAddress: businessAddController.text.trim(),
-                                  name:nameController.text.trim(),
+                                  businessAddress: businessAddController.text
+                                      .trim(),
+                                  name: nameController.text.trim(),
                                   businessEmail: emailController.text.trim(),
-                                  contactPersonDesignation: contactDesignationController.text.trim(),
-                                  contactPersonFirstName: contactFirstNameController.text.trim(),
-                                  contactPersonLastName: contactLastNameController.text.trim(),
-                                  bankDetails: []
-
+                                  contactPersonDesignation:
+                                      contactDesignationController.text.trim(),
+                                  contactPersonFirstName:
+                                      contactFirstNameController.text.trim(),
+                                  contactPersonLastName:
+                                      contactLastNameController.text.trim(),
+                                  bankDetails: [],
                                 ),
                               );
                             }

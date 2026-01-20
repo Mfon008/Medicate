@@ -368,10 +368,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                   ButtonWidget(
                     border: 100.r,
                     buttonColor:
-                        !isPassed(
-                          isPhone: isPhone,
-                          isChecked: isChecked,
-                        )
+                        !isPassed(isPhone: isPhone, isChecked: isChecked)
                         ? AppColors.buttonGrey1
                         : AppColors.primary,
                     buttonText: 'Sign Up',
@@ -389,8 +386,9 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                                   hmoName: hmoNameController.text.trim(),
                                   firstName: firstNameController.text.trim(),
                                   lastName: lastNameController.text.trim(),
-                                  designation: designationController.text.trim(),
-                                  businessEmail: busEmailController.text.trim()
+                                  designation: designationController.text
+                                      .trim(),
+                                  businessEmail: busEmailController.text.trim(),
                                 ),
                               );
                             }
@@ -478,9 +476,8 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () => navigate.navigateTo(
-                                Routes.hMOLoginScreen,
-                              ),
+                              ..onTap = () =>
+                                  navigate.navigateTo(Routes.hMOLoginScreen),
                           ),
                         ],
                       ),

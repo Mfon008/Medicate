@@ -3,13 +3,13 @@ import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/pharm_auth_api.dart';
 import 'package:medicate_app/core/connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../../core_folder/app/app.locator.dart';
-import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
+import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
-import '../model/get_reminder_response_model/get_reminder_response_model.dart';
+import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
@@ -108,7 +108,7 @@ class PharmContractsImpl {
   Future<dynamic> uploadProPicture(MultipartFile file) async =>
       await _api.uploadProPicture(file);
   Future<CreateReminderResponseModel> createReminder(
-    CreateReminderEntityModel createReminderEntityModel,
+    CreateTenantReminderEntityModel createReminderEntityModel,
   ) async => await _api.createReminder(createReminderEntityModel);
   Future<UploadImageReminderResponseModel> uploadImageReminder(
     MultipartFile file,
@@ -117,14 +117,7 @@ class PharmContractsImpl {
     MultipartFile? file,
     String? id,
   }) async => await _api.uploadImageReminderUpdate(file: file, id: id);
-  Future<GetReminderResponseModel> getReminder({
-    String? status,
-    String? page,
-    String? limit,
-  }) async => await _api.getReminder(status: status, page: page, limit: limit);
 
-  Future<GetReminderById> getReminderById(String? id) async =>
-      await _api.getReminderById(id!);
   Future<GetTodayReminderModel> getTodaysReminder({
     String? period,
     String? date,
@@ -151,4 +144,37 @@ class PharmContractsImpl {
   Future<InitiatePaymentResponseModel> initiatePayment({
     String? reference,
   }) async => await _api.initiatePayment(reference: reference);
+
+  Future<dynamic> getUserDetailsByTenant({String? phone}) async =>
+      await _api.getUserDetailsByTenant(phone: phone);
+  Future<dynamic> registerUserByTenant({String? phone}) async =>
+      await _api.registerUserByTenant(phone: phone);
+  Future<GetReminderForTenantResponseModel> getReminderForTenant({
+    String? status,
+    String? page,
+    String? limit,
+  }) async =>
+      await _api.getReminderForTenant(status: status, page: page, limit: limit);
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantAll({
+    String? status,
+    String? page,
+    String? limit,
+  }) async =>
+      await _api.getReminderForTenantAll(page: page, limit: limit);
+  
+  Future<GetReminderById> getReminderForTenantByUserIdAll({
+    String? page,
+    String? limit,
+    String? userId,
+  }) async =>
+      await _api.getReminderForTenantByUserIdAll(page: page, limit: limit,userId: userId);
+
+  Future<GetReminderById> getReminderForTenantByUserId({
+    String? status,
+    String? page,
+    String? limit,
+    String? userId,
+  }) async =>
+      await _api.getReminderForTenantByUserId(status: status, page: page, limit: limit,userId: userId);
 }

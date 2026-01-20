@@ -6,13 +6,13 @@ import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_role_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
-import '../connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
+import '../connect_end/model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
-import '../connect_end/model/get_reminder_response_model/get_reminder_response_model.dart';
+import '../connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -44,6 +44,7 @@ import '../core_folder/network/url_path.dart';
 
 @lazySingleton
 class PharmApi {
+  
   final _service = locator<NetworkService>();
   // final _servicesupport = locator<sup.SupportNetworkService>();
   final logger = getLogger('Pharm Api');
@@ -548,7 +549,7 @@ class PharmApi {
   }
 
   Future<CreateReminderResponseModel> createReminder(
-    CreateReminderEntityModel createReminderEntityModel,
+    CreateTenantReminderEntityModel createReminderEntityModel,
   ) async {
     try {
       final response = await _service.call(
@@ -564,19 +565,6 @@ class PharmApi {
     }
   }
 
-  Future<GetReminderById> getReminderById(String? id) async {
-    try {
-      final response = await _service.call(
-        '${UrlConfig.reminder}/$id',
-        RequestMethod.get,
-      );
-      logger.d(response.data);
-      return GetReminderById.fromJson(response.data);
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
 
   Future<GetTodayReminderModel> getTodaysReminder({
     String? period,
@@ -590,25 +578,6 @@ class PharmApi {
       );
       logger.d(response.data);
       return GetTodayReminderModel.fromJson(response.data);
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
-
-  Future<GetReminderResponseModel> getReminder({
-    String? status,
-    String? page,
-    String? limit,
-  }) async {
-    try {
-      final response = await _service.call(
-        UrlConfig.reminder,
-        RequestMethod.get,
-        data: {'status': status, 'page': page, 'limit': limit},
-      );
-      logger.d(response.data);
-      return GetReminderResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -663,6 +632,115 @@ class PharmApi {
       );
       logger.d(response.data);
       return InitiatePaymentResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> getUserDetailsByTenant({
+    String? phone,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_user_details_by_tenant,
+        RequestMethod.post,
+        data: {"phone": phone},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> registerUserByTenant({
+    String? phone,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.register_user_by_tenant,
+        RequestMethod.post,
+        data: {"phone": phone},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenant({
+    String? status,
+    String? page,
+    String? limit,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminders_tenant,
+        RequestMethod.get,
+        data: {'status': status, 'page': page, 'limit': limit},
+      );
+      logger.d(response.data);
+      return GetReminderForTenantResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<GetReminderForTenantResponseModel> getReminderForTenantAll({
+    String? page,
+    String? limit,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminders_tenant,
+        RequestMethod.get,
+        data: {'page': page, 'limit': limit},
+      );
+      logger.d(response.data);
+      return GetReminderForTenantResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetReminderById> getReminderForTenantByUserIdAll({
+    String? page,
+    String? limit,
+    String? userId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminders_tenant}/$userId',
+        RequestMethod.get,
+        data: {'page': page, 'limit': limit},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetReminderById> getReminderForTenantByUserId({
+    String? status,
+    String? page,
+    String? limit,
+    String? userId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminders_tenant}/$userId',
+        RequestMethod.get,
+        data: {'status': status, 'page': page, 'limit': limit},
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

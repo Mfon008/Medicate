@@ -183,8 +183,7 @@ class _HMOWelcomeScreenState extends State<HMOWelcomeScreen> {
 
                   SizedBox(height: 20.0.h),
                   GestureDetector(
-                    onTap: () =>
-                        navigate.navigateTo(Routes.hMOForgotPinScreen),
+                    onTap: () => navigate.navigateTo(Routes.hMOForgotPinScreen),
                     child: TextView(
                       text: 'Forgot PIN',
                       decoration: TextDecoration.underline,

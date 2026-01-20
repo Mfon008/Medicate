@@ -5,12 +5,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
-import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/payment.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/payment.dart';
 import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/model/get_reminder_response_model/reminder.dart';
+import '../../../../core/connect_end/model/get_reminder_for_tenant_response_model/reminder.dart';
 import '../../../../core/core_folder/app/app.router.dart';
 import '../../../../main.dart';
 import '../../../widget/text.dart';
@@ -51,7 +51,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
           backgroundColor: AppColors.dashboard,
           floatingActionButton:
               model.getReminderResponseModel != null &&
-                  model.getReminderResponseModel!.data!.reminders!.isEmpty
+                  model.getReminderResponseModel!.data!.data!.isEmpty
               ? SizedBox.shrink()
               : FloatingActionButton(
                   onPressed: () {
@@ -130,7 +130,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
             ),
           ),
           body: SingleChildScrollView(
-            // physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(
               vertical: model.checkReminderEmpty() ? 20.w : 50.w,
               horizontal: 16.w,
@@ -152,10 +151,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () async {
-                                  model
-                                      .getReminderResponseModel!
-                                      .data!
-                                      .reminders!
+                                  model.getReminderResponseModel!.data!.data!
                                       .clear();
                                   await Future.delayed(
                                     Duration(milliseconds: 500),
@@ -200,10 +196,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () async {
-                                  model
-                                      .getReminderResponseModel!
-                                      .data!
-                                      .reminders!
+                                  model.getReminderResponseModel!.data!.data!
                                       .clear();
                                   await Future.delayed(
                                     Duration(milliseconds: 500),
@@ -211,7 +204,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                   model.isReminderStatus = 'all';
                                   model.getReminder(
                                     context,
-                                    status: model.isReminderStatus,
                                     page: model.pageOngoing.toString(),
                                   );
                                   setState(() {});
@@ -292,7 +284,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                           ),
 
                           onSelected: (String result) async {
-                            // genderController.text = result;
                             model.isReminderStatus = result;
                             await Future.delayed(Duration(milliseconds: 400));
                             model.getReminder(
@@ -373,7 +364,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                           ),
                         ),
                         onChange: (p0) {
-                          model.searchuserByPharm = p0;
+                          model.searchuserByPharmReminder = p0;
                           model.notifyListeners();
                         },
                       )
@@ -661,156 +652,320 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                             ),
                                           ),
                                           SizedBox(height: 30.h),
-                                          ...model.getTodaysReminderModel!.data!.asMap().entries.map((
-                                            entry,
-                                          ) {
-                                            final index = entry.key;
-                                            final o = entry.value;
-                                            final isLast =
-                                                index ==
-                                                model
-                                                        .getTodaysReminderModel!
-                                                        .data!
-                                                        .length -
-                                                    1;
-                                            return Column(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () => model
-                                                      .showUpdateDoseDialog(
-                                                        context,
-                                                        o: o,
-                                                      ),
-                                                  child: Container(
-                                                    color:
-                                                        AppColors.transparent,
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                14.w,
-                                                              ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                color: AppColors
-                                                                    .skyBlue,
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                              ),
-                                                          child: SvgPicture.asset(
-                                                            model.isMedTypeView(
-                                                              o.medicationType,
+                                          if (model.searchuserByPharm != '')
+                                            ...model
+                                                .getTodaysReminderModel!
+                                                .data!
+                                                .asMap()
+                                                .entries
+                                                .where(
+                                                  (e) =>
+                                                      e.value.medicationType
+                                                          ?.toLowerCase()==model.searchuserByPharm
+                                                          ?.toLowerCase()
+                                                )
+                                                .map((entry) {
+                                                  final index = entry.key;
+                                                  final o = entry.value;
+                                                  final isLast =
+                                                      index ==
+                                                      model
+                                                              .getTodaysReminderModel!
+                                                              .data!
+                                                              .length -
+                                                          1;
+                                                  return Column(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () => model
+                                                            .showUpdateDoseDialog(
+                                                              context,
+                                                              o: o,
                                                             ),
-                                                            color: AppColors
-                                                                .primary,
-                                                            height: 18.h,
-                                                            width: 18.w,
+                                                        child: Container(
+                                                          color: AppColors
+                                                              .transparent,
+                                                          child: Row(
+                                                            children: [
+                                                              Container(
+                                                                padding:
+                                                                    EdgeInsets.all(
+                                                                      14.w,
+                                                                    ),
+                                                                decoration: BoxDecoration(
+                                                                  color: AppColors
+                                                                      .skyBlue,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                                child: SvgPicture.asset(
+                                                                  model.isMedTypeView(
+                                                                    o.medicationType,
+                                                                  ),
+                                                                  color: AppColors
+                                                                      .primary,
+                                                                  height: 18.h,
+                                                                  width: 18.w,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 20.w,
+                                                              ),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  TextView(
+                                                                    text:
+                                                                        o.medicationType
+                                                                            ?.capitalize() ??
+                                                                        '',
+                                                                    textStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'Arial',
+                                                                      fontSize:
+                                                                          13.2.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: AppColors
+                                                                          .grey1,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width:
+                                                                        120.w,
+                                                                    child: TextView(
+                                                                      text:
+                                                                          o.drugName ??
+                                                                          '',
+                                                                      textOverflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                      maxLines:
+                                                                          1,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'GoogleSans',
+                                                                        fontSize:
+                                                                            15.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color: AppColors
+                                                                            .deep,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Spacer(),
+                                                              Row(
+                                                                children: [
+                                                                  TextView(
+                                                                    text:
+                                                                        '${o.time} ${model.checkTimePeriod(o.time)}',
+                                                                    textStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'GoogleSans',
+                                                                      fontSize:
+                                                                          18.2.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: AppColors
+                                                                          .reminder,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 10.w,
+                                                                  ),
+                                                                  Container(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                          1.2.w,
+                                                                        ),
+                                                                    decoration: BoxDecoration(
+                                                                      color: model
+                                                                          .checkMedsStatusColor(
+                                                                            o.status,
+                                                                          ),
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                    ),
+                                                                    child: model
+                                                                        .checkMedsStatusWidget(
+                                                                          o.status,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
                                                           ),
                                                         ),
-                                                        SizedBox(width: 20.w),
-                                                        Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            TextView(
-                                                              text:
-                                                                  o.medicationType
-                                                                      ?.capitalize() ??
-                                                                  '',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'Arial',
-                                                                fontSize:
-                                                                    13.2.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: AppColors
-                                                                    .grey1,
+                                                      ),
+                                                      SizedBox(height: 10.30.h),
+                                                      if (!isLast)
+                                                        Divider(
+                                                          color: AppColors
+                                                              .infoGrey,
+                                                          thickness: .14,
+                                                        ),
+                                                    ],
+                                                  );
+                                                })
+                                          else
+                                            ...model.getTodaysReminderModel!.data!.asMap().entries.map((
+                                              entry,
+                                            ) {
+                                              final index = entry.key;
+                                              final o = entry.value;
+                                              final isLast =
+                                                  index ==
+                                                  model
+                                                          .getTodaysReminderModel!
+                                                          .data!
+                                                          .length -
+                                                      1;
+                                              return Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () => model
+                                                        .showUpdateDoseDialog(
+                                                          context,
+                                                          o: o,
+                                                        ),
+                                                    child: Container(
+                                                      color:
+                                                          AppColors.transparent,
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  14.w,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color: AppColors
+                                                                      .skyBlue,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                            child: SvgPicture.asset(
+                                                              model.isMedTypeView(
+                                                                o.medicationType,
                                                               ),
+                                                              color: AppColors
+                                                                  .primary,
+                                                              height: 18.h,
+                                                              width: 18.w,
                                                             ),
-                                                            SizedBox(
-                                                              width: 120.w,
-                                                              child: TextView(
+                                                          ),
+                                                          SizedBox(width: 20.w),
+                                                          Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              TextView(
                                                                 text:
-                                                                    o.drugName ??
+                                                                    o.medicationType
+                                                                        ?.capitalize() ??
                                                                     '',
-                                                                textOverflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                maxLines: 1,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      13.2.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color:
+                                                                      AppColors
+                                                                          .grey1,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 120.w,
+                                                                child: TextView(
+                                                                  text:
+                                                                      o.drugName ??
+                                                                      '',
+                                                                  textOverflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  maxLines: 1,
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'GoogleSans',
+                                                                    fontSize:
+                                                                        15.2.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color:
+                                                                        AppColors
+                                                                            .deep,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          Spacer(),
+                                                          Row(
+                                                            children: [
+                                                              TextView(
+                                                                text:
+                                                                    '${o.time} ${model.checkTimePeriod(o.time)}',
                                                                 textStyle: TextStyle(
                                                                   fontFamily:
                                                                       'GoogleSans',
                                                                   fontSize:
-                                                                      15.2.sp,
+                                                                      18.2.sp,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w500,
-                                                                  color:
-                                                                      AppColors
-                                                                          .deep,
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Spacer(),
-                                                        Row(
-                                                          children: [
-                                                            TextView(
-                                                              text:
-                                                                  '${o.time} ${model.checkTimePeriod(o.time)}',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'GoogleSans',
-                                                                fontSize:
-                                                                    18.2.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: AppColors
-                                                                    .reminder,
+                                                              SizedBox(
+                                                                width: 10.w,
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10.w,
-                                                            ),
-                                                            Container(
-                                                              padding:
-                                                                  EdgeInsets.all(
-                                                                    1.2.w,
-                                                                  ),
-                                                              decoration: BoxDecoration(
-                                                                color: model
-                                                                    .checkMedsStatusColor(
+                                                              Container(
+                                                                padding:
+                                                                    EdgeInsets.all(
+                                                                      1.2.w,
+                                                                    ),
+                                                                decoration: BoxDecoration(
+                                                                  color: model
+                                                                      .checkMedsStatusColor(
+                                                                        o.status,
+                                                                      ),
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                                child: model
+                                                                    .checkMedsStatusWidget(
                                                                       o.status,
                                                                     ),
-                                                                shape: BoxShape
-                                                                    .circle,
                                                               ),
-                                                              child: model
-                                                                  .checkMedsStatusWidget(
-                                                                    o.status,
-                                                                  ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(height: 10.30.h),
-                                                if (!isLast)
-                                                  Divider(
-                                                    color: AppColors.infoGrey,
-                                                    thickness: .14,
-                                                  ),
-                                              ],
-                                            );
-                                          }),
+                                                  SizedBox(height: 10.30.h),
+                                                  if (!isLast)
+                                                    Divider(
+                                                      color: AppColors.infoGrey,
+                                                      thickness: .14,
+                                                    ),
+                                                ],
+                                              );
+                                            }),
                                         ],
                                       ),
                                     ),
@@ -828,7 +983,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                 model
                                     .getReminderResponseModel!
                                     .data!
-                                    .reminders!
+                                    .data!
                                     .isNotEmpty
                             ? SizedBox(
                                 height:
@@ -839,50 +994,131 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                     children: [
                                       SizedBox(height: 30.h),
                                       if (model.isReminderStatus == 'all')
-                                        ...model
-                                            .getReminderResponseModel!
-                                            .data!
-                                            .reminders!
-                                            .reversed
-                                            .map(
-                                              (e) => reminderWidget(
-                                                context: context,
-                                                isTab: isTablet(context),
-                                                reminder: e,
-                                                model: model,
+                                        if (model.searchuserByPharmReminder !=
+                                            '')
+                                          ...model
+                                              .getReminderResponseModel!
+                                              .data!
+                                              .data!
+                                              .reversed
+                                              .where(
+                                                (e) => e
+                                                    .medication!
+                                                    .medicationName!
+                                                    .toLowerCase()
+                                                    .contains(
+                                                      model
+                                                          .searchuserByPharmReminder!
+                                                          .toLowerCase(),
+                                                    ),
+                                              )
+                                              .map(
+                                                (e) => reminderWidget(
+                                                  context: context,
+                                                  isTab: isTablet(context),
+                                                  reminder: e,
+                                                  model: model,
+                                                ),
+                                              )
+                                        else
+                                          ...model
+                                              .getReminderResponseModel!
+                                              .data!
+                                              .data!
+                                              .reversed
+                                              .map(
+                                                (e) => reminderWidget(
+                                                  context: context,
+                                                  isTab: isTablet(context),
+                                                  reminder: e,
+                                                  model: model,
+                                                ),
                                               ),
-                                            ),
 
                                       if (model.isReminderStatus == 'ongoing')
-                                        ...model
-                                            .getReminderResponseModel!
-                                            .data!
-                                            .reminders!
-                                            .reversed
-                                            .map(
-                                              (e) => reminderWidget(
-                                                context: context,
-                                                isTab: isTablet(context),
-                                                reminder: e,
-                                                model: model,
+                                        if (model.searchuserByPharmReminder !=
+                                            '')
+                                          ...model
+                                              .getReminderResponseModel!
+                                              .data!
+                                              .data!
+                                              .reversed
+                                              .where(
+                                                (e) => e
+                                                    .medication!
+                                                    .medicationName!
+                                                    .toLowerCase()
+                                                    .contains(
+                                                      model
+                                                          .searchuserByPharmReminder!
+                                                          .toLowerCase(),
+                                                    ),
+                                              )
+                                              .map(
+                                                (e) => reminderWidget(
+                                                  context: context,
+                                                  isTab: isTablet(context),
+                                                  reminder: e,
+                                                  model: model,
+                                                ),
+                                              )
+                                        else
+                                          ...model
+                                              .getReminderResponseModel!
+                                              .data!
+                                              .data!
+                                              .reversed
+                                              .map(
+                                                (e) => reminderWidget(
+                                                  context: context,
+                                                  isTab: isTablet(context),
+                                                  reminder: e,
+                                                  model: model,
+                                                ),
                                               ),
-                                            ),
 
                                       if (model.isReminderStatus == 'completed')
-                                        ...model
-                                            .getReminderResponseModel!
-                                            .data!
-                                            .reminders!
-                                            .reversed
-                                            .map(
-                                              (e) => reminderWidget(
-                                                context: context,
-                                                isTab: isTablet(context),
-                                                reminder: e,
-                                                model: model,
-                                                isComplete: true,
+                                        if (model.searchuserByPharmReminder !=
+                                            '')
+                                          ...model
+                                              .getReminderResponseModel!
+                                              .data!
+                                              .data!
+                                              .reversed
+                                              .where(
+                                                (e) => e
+                                                    .medication!
+                                                    .medicationName!
+                                                    .toLowerCase()
+                                                    .contains(
+                                                      model
+                                                          .searchuserByPharmReminder!
+                                                          .toLowerCase(),
+                                                    ),
+                                              )
+                                              .map(
+                                                (e) => reminderWidget(
+                                                  context: context,
+                                                  isTab: isTablet(context),
+                                                  reminder: e,
+                                                  model: model,
+                                                ),
+                                              )
+                                        else
+                                          ...model
+                                              .getReminderResponseModel!
+                                              .data!
+                                              .data!
+                                              .reversed
+                                              .map(
+                                                (e) => reminderWidget(
+                                                  context: context,
+                                                  isTab: isTablet(context),
+                                                  reminder: e,
+                                                  model: model,
+                                                  isComplete: true,
+                                                ),
                                               ),
-                                            ),
 
                                       if (model.isReminderStatus == 'today' &&
                                           model.getTodaysReminderModel != null)

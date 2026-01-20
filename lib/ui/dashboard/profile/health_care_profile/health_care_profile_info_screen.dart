@@ -974,130 +974,135 @@ class _HealthCareProfileInfoScreenState
                   ),
 
                   SizedBox(height: 50.h),
-                   model.isProfileUpdated?ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.primary1,
-                                buttonText: 'Update',
-                                fontSize: 16.sp,
-                                color: AppColors.white,
-                                buttonBorderColor: AppColors.primary,
-                                onPressed: () {
-                                  model.isProfileUpdated = false;
-                                  model.notifyListeners();
-                                },
-                              ):Row(
-                    children: [
-                      Expanded(
-                        child: ButtonWidget(
+                  model.isProfileUpdated
+                      ? ButtonWidget(
                           border: 100.r,
-                          buttonColor: AppColors.white,
-                          buttonText: 'Discard',
-                          fontSize: 14.sp,
-                          color: AppColors.primary,
+                          buttonColor: AppColors.primary1,
+                          buttonText: 'Update',
+                          fontSize: 16.sp,
+                          color: AppColors.white,
                           buttonBorderColor: AppColors.primary,
                           onPressed: () {
-                            navigate.back();
+                            model.isProfileUpdated = false;
+                            model.notifyListeners();
                           },
-                        ),
-                      ),
-                      SizedBox(width: 20.w),
-                      Expanded(
-                        child: ButtonWidget(
-                          border: 100.r,
-                          buttonColor: AppColors.primary,
-                          fontSize: 14.sp,
-                          buttonText: 'Save Changes',
-                          color: AppColors.white,
-                          isLoading: model.isLoading,
-                          buttonBorderColor: AppColors.transparent,
-                          onPressed: model.isLoading
-                              ? () {}
-                              : () {
-                                  if (formKey.currentState!.validate()) {
-                                    model.updateHealthCareBusinessOwner(
-                                      context,
-                                      updateBusinessOwner:
-                                          UpdateBusinessOwnerProfileEntityModel(
-                                            logo: null,
-                                            typeOfHealthcareProvider:
-                                                'HOSPITAL',
-                                            healthcareFacilityName:
-                                                nameController.text.trim(),
-                                            registrationNumber:
-                                                registrationNoController.text
-                                                    .trim(),
-                                            country: model
-                                                .countryController
-                                                .text
-                                                .trim(),
-                                            state: model.stateController.text
-                                                .trim(),
-                                            lga: model.lgaController.text
-                                                .trim(),
-                                            website: websiteController.text
-                                                .trim(),
-                                            servicesOffered:
-                                                model.selectService,
-                                            businessAddress:
-                                                businessAddController.text
-                                                    .trim(),
-                                            businessEmail:
-                                                businessEmailController.text
-                                                    .trim(),
-                                            bankDetails: [
-                                              BankDetail(
-                                                bankName:
-                                                    bankNameController.text,
-                                                accountName:
-                                                    bankAccountNameController
-                                                        .text,
-                                                accountNumber:
-                                                    bankNoController.text,
-                                              ),
-                                            ],
-                                            fullName: authFullNameController
-                                                .text
-                                                .trim(),
-                                            phoneNumber: authPhoneNoController
-                                                .text
-                                                .trim(),
-                                            email: authEmailController.text
-                                                .trim(),
-                                            meansOfId: model
-                                                .getMeansOFIDAppReverse(
-                                                  model.meansIdController.text,
-                                                ),
-                                            uploadMeansOfId:
-                                                model.authDocumentsList.isEmpty
-                                                ? null
-                                                : UploadMeansOfId(
-                                                    url: model
-                                                        .authDocumentsList[0]
-                                                        .url,
-                                                    mimeType: model
-                                                        .authDocumentsList[0]
-                                                        .mimeType,
-                                                    width: model
-                                                        .authDocumentsList[0]
-                                                        .width,
-                                                    size: model
-                                                        .authDocumentsList[0]
-                                                        .size,
-                                                    height: model
-                                                        .authDocumentsList[0]
-                                                        .height,
-                                                    format: model
-                                                        .authDocumentsList[0]
-                                                        .format,
-                                                  ),
-                                          ),
-                                    );
-                                  }
+                        )
+                      : Row(
+                          children: [
+                            Expanded(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.white,
+                                buttonText: 'Discard',
+                                fontSize: 14.sp,
+                                color: AppColors.primary,
+                                buttonBorderColor: AppColors.primary,
+                                onPressed: () {
+                                  navigate.back();
                                 },
+                              ),
+                            ),
+                            SizedBox(width: 20.w),
+                            Expanded(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary,
+                                fontSize: 14.sp,
+                                buttonText: 'Save Changes',
+                                color: AppColors.white,
+                                isLoading: model.isLoading,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: model.isLoading
+                                    ? () {}
+                                    : () {
+                                        if (formKey.currentState!.validate()) {
+                                          model.updateHealthCareBusinessOwner(
+                                            context,
+                                            updateBusinessOwner: UpdateBusinessOwnerProfileEntityModel(
+                                              logo: null,
+                                              typeOfHealthcareProvider:
+                                                  'HOSPITAL',
+                                              healthcareFacilityName:
+                                                  nameController.text.trim(),
+                                              registrationNumber:
+                                                  registrationNoController.text
+                                                      .trim(),
+                                              country: model
+                                                  .countryController
+                                                  .text
+                                                  .trim(),
+                                              state: model.stateController.text
+                                                  .trim(),
+                                              lga: model.lgaController.text
+                                                  .trim(),
+                                              website: websiteController.text
+                                                  .trim(),
+                                              servicesOffered:
+                                                  model.selectService,
+                                              businessAddress:
+                                                  businessAddController.text
+                                                      .trim(),
+                                              businessEmail:
+                                                  businessEmailController.text
+                                                      .trim(),
+                                              bankDetails: [
+                                                BankDetail(
+                                                  bankName:
+                                                      bankNameController.text,
+                                                  accountName:
+                                                      bankAccountNameController
+                                                          .text,
+                                                  accountNumber:
+                                                      bankNoController.text,
+                                                ),
+                                              ],
+                                              fullName: authFullNameController
+                                                  .text
+                                                  .trim(),
+                                              phoneNumber: authPhoneNoController
+                                                  .text
+                                                  .trim(),
+                                              email: authEmailController.text
+                                                  .trim(),
+                                              meansOfId: model
+                                                  .getMeansOFIDAppReverse(
+                                                    model
+                                                        .meansIdController
+                                                        .text,
+                                                  ),
+                                              uploadMeansOfId:
+                                                  model
+                                                      .authDocumentsList
+                                                      .isEmpty
+                                                  ? null
+                                                  : UploadMeansOfId(
+                                                      url: model
+                                                          .authDocumentsList[0]
+                                                          .url,
+                                                      mimeType: model
+                                                          .authDocumentsList[0]
+                                                          .mimeType,
+                                                      width: model
+                                                          .authDocumentsList[0]
+                                                          .width,
+                                                      size: model
+                                                          .authDocumentsList[0]
+                                                          .size,
+                                                      height: model
+                                                          .authDocumentsList[0]
+                                                          .height,
+                                                      format: model
+                                                          .authDocumentsList[0]
+                                                          .format,
+                                                    ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: 50.h),
                 ],
               ),

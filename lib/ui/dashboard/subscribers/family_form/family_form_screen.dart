@@ -70,7 +70,10 @@ class FamilyFormScreen extends StatelessWidget {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(10.r),
                   ),
-                  child: model.setFamilyAppModalFlow(model:model,context:  context) ,
+                  child: model.setFamilyAppModalFlow(
+                    model: model,
+                    context: context,
+                  ),
                 ),
               ],
             ),
@@ -80,4 +83,3 @@ class FamilyFormScreen extends StatelessWidget {
     );
   }
 }
-

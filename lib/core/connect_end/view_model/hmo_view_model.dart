@@ -272,7 +272,6 @@ class HMOViewModel extends BaseViewModel {
   KycDocument? docKycPlan;
   KycDocument? docKycAss;
 
-
   void pickImage(BuildContext context) {
     try {
       _pickImage.pickImage(

@@ -2,7 +2,8 @@
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
-import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/daily_dose_time.dart';
+import 'package:medicate_app/core/connect_end/model/create_tenant_reminder_entity_model/daily_dose_time.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/datum.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart'
     as phImg;
@@ -58,17 +59,15 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
-import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
-import '../model/create_reminder_entity_model/medication.dart';
-import '../model/create_reminder_entity_model/medication_image.dart';
-import '../model/create_reminder_entity_model/payment.dart';
+import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
+import '../model/create_tenant_reminder_entity_model/medication.dart';
+import '../model/create_tenant_reminder_entity_model/medication_image.dart';
+import '../model/create_tenant_reminder_entity_model/payment.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
-import '../model/get_reminder_response_model/get_reminder_response_model.dart';
-import '../model/get_reminder_response_model/reminder.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
@@ -91,11 +90,13 @@ import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dar
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/pharm_repo_impl.dart';
-import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/daily_dose_time.dart'
+import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/daily_dose_time.dart'
     as getR;
+import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/reminder.dart'
+    as tenantReminder;
 import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/daily_dose_time.dart'
     as upReminder;
-import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/payment.dart'
+import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/payment.dart'
     as pyR;
 
 String startDateIso = '';
@@ -213,8 +214,8 @@ class PharmViewModel extends BaseViewModel {
   InitiatePaymentResponseModel? _initiatePaymentResponseModel;
   InitiatePaymentResponseModel? get initiatePaymentResponseModel =>
       _initiatePaymentResponseModel;
-  GetReminderResponseModel? _getReminderResponseModel;
-  GetReminderResponseModel? get getReminderResponseModel =>
+  GetReminderForTenantResponseModel? _getReminderResponseModel;
+  GetReminderForTenantResponseModel? get getReminderResponseModel =>
       _getReminderResponseModel;
 
   GetReminderById? _getReminderByIdModel;
@@ -287,6 +288,8 @@ class PharmViewModel extends BaseViewModel {
   String timePeriod = 'morning';
   var totalCount;
   var takenCount;
+
+  dynamic userDetailData;
 
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
@@ -385,6 +388,7 @@ class PharmViewModel extends BaseViewModel {
   String? searchUsers = '';
   String? searchRoles = '';
   String? searchuserByPharm = '';
+  String? searchuserByPharmReminder = '';
   String? imageReminderUpdate;
   String? filename;
   int _start = 60;
@@ -3241,7 +3245,7 @@ class PharmViewModel extends BaseViewModel {
   }
 
   bool checkReminderEmpty() {
-    final reminders = getReminderResponseModel?.data?.reminders;
+    final reminders = getReminderResponseModel?.data?.data;
 
     if (reminders == null || reminders.isEmpty) return true;
 
@@ -3770,7 +3774,7 @@ class PharmViewModel extends BaseViewModel {
   reminderWidget({
     context,
     isTab,
-    Reminder? reminder,
+    tenantReminder.Reminder? reminder,
     PharmViewModel? model,
     bool isComplete = false,
   }) => GestureDetector(
@@ -4090,7 +4094,7 @@ class PharmViewModel extends BaseViewModel {
                       ),
                       SizedBox(height: 10.h),
                       TextView(
-                        text: 'John Doe',
+                        text: '${userDetailData['data']['fullName']??userDetailData['data']['generatedName']??''}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.2.sp,
@@ -4112,7 +4116,7 @@ class PharmViewModel extends BaseViewModel {
                       ),
                       SizedBox(height: 10.h),
                       TextView(
-                        text: '09098765412',
+                        text: '0${userDetailData['data']['phone'].toString().substring(4)}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.2.sp,
@@ -4134,7 +4138,7 @@ class PharmViewModel extends BaseViewModel {
                       ),
                       SizedBox(height: 10.h),
                       TextView(
-                        text: 'johndoe@gmail.com',
+                        text: '${userDetailData['data']['email']}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.2.sp,
@@ -4240,11 +4244,7 @@ class PharmViewModel extends BaseViewModel {
                 Center(
                   child:
                       model.getReminderResponseModel != null &&
-                          model
-                              .getReminderResponseModel!
-                              .data!
-                              .reminders!
-                              .isNotEmpty
+                          model.getReminderResponseModel!.data!.data!.isNotEmpty
                       ? SizedBox(
                           height: MediaQuery.of(context).size.height * .62,
                           child: SingleChildScrollView(
@@ -4256,7 +4256,7 @@ class PharmViewModel extends BaseViewModel {
                                   ...model
                                       .getReminderResponseModel!
                                       .data!
-                                      .reminders!
+                                      .data!
                                       .reversed
                                       .map(
                                         (e) => reminderWidget(
@@ -4271,7 +4271,7 @@ class PharmViewModel extends BaseViewModel {
                                   ...model
                                       .getReminderResponseModel!
                                       .data!
-                                      .reminders!
+                                      .data!
                                       .reversed
                                       .map(
                                         (e) => reminderWidget(
@@ -4286,7 +4286,7 @@ class PharmViewModel extends BaseViewModel {
                                   ...model
                                       .getReminderResponseModel!
                                       .data!
-                                      .reminders!
+                                      .data!
                                       .reversed
                                       .map(
                                         (e) => reminderWidget(
@@ -4730,7 +4730,11 @@ class PharmViewModel extends BaseViewModel {
                                                         .data!
                                                         .meta!
                                                         .totalPages
-                                                        .toString()
+                                                        .toString() || model
+                                                        .getReminderResponseModel!
+                                                        .data!
+                                                        .meta!
+                                                        .totalPages==0
                                                 ? () {}
                                                 : () async {
                                                     if (model
@@ -4763,7 +4767,11 @@ class PharmViewModel extends BaseViewModel {
                                                           .data!
                                                           .meta!
                                                           .totalPages
-                                                          .toString()
+                                                          .toString()|| model
+                                                        .getReminderResponseModel!
+                                                        .data!
+                                                        .meta!
+                                                        .totalPages==0
                                                   ? AppColors.primary1
                                                         .withOpacity(.4)
                                                   : AppColors.primary1,
@@ -9721,7 +9729,7 @@ class PharmViewModel extends BaseViewModel {
                           createReminderPaid(
                             context,
                             createReminderEntityModel:
-                                CreateReminderEntityModel(
+                                CreateTenantReminderEntityModel(
                                   medications: medicationClassList.map((m) {
                                     return Medication(
                                       medicationName: m.medicationName,
@@ -11008,195 +11016,263 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  void showCreateAddPhoneDialog(BuildContext context, {String? phoneNumber}) {
+  void showCreateAddPhoneDialog(BuildContext context) {
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
-        return Container(
-          color: AppColors.transparent,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: TextButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: Icon(Icons.close, color: Colors.white, size: 18),
-                  label: Text("Close", style: TextStyle(color: Colors.white)),
-                  style: TextButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 4.w,
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => locator<PharmViewModel>(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, PharmViewModel model, _) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(height: 6.10.h),
-              Dialog(
-                insetPadding: EdgeInsets.all(16.20.w),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                backgroundColor: AppColors.white,
-                child: Padding(
-                  padding: EdgeInsets.all(34.w),
-                  child: Form(
-                    key: formKeyCreateAddPhoneReminder,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextView(
-                          text: 'What’s the patients phone number?',
-                          textStyle: TextStyle(
-                            fontFamily: 'GoogleSans',
-                            color: AppColors.black,
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        TextView(
-                          text: 'Phone Number',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            color: AppColors.black,
-                            fontSize: 12.20.sp,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(34.w),
+                      child: Form(
+                        key: formKeyCreateAddPhoneReminder,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(13.8.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.grey,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(10.r),
-                                  topRight: Radius.circular(0.r),
-                                  bottomLeft: Radius.circular(10.r),
-                                  bottomRight: Radius.circular(0.r),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.nigeria,
-                                    width: 22.w,
-                                    height: 22.h,
-                                  ),
-                                  SizedBox(width: 4.w),
-                                  TextView(
-                                    text: '+234',
-                                    textStyle: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Arial',
-                                      fontSize: 14.2.sp,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                ],
+                            TextView(
+                              text: 'What’s the patients phone number?',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                color: AppColors.black,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            SizedBox(width: 2.w),
-                            Expanded(
-                              child: Container(
-                                margin: isPhoneValid
-                                    ? EdgeInsets.only(top: 20.w)
-                                    : EdgeInsets.zero,
-                                child: TextFormWidget(
-                                  hint: null,
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 0,
-                                  borderTopRight: 10,
-                                  borderBottomLeft: 0,
-                                  borderBottomRight: 10,
-                                  label: '',
-
-                                  labelStyle: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.2.sp,
-                                    color: AppColors.infoGrey,
+                            SizedBox(height: 12.h),
+                            TextView(
+                              text: 'Phone Number',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                color: AppColors.black,
+                                fontSize: 12.20.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(13.8.w),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.grey,
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10.r),
+                                      topRight: Radius.circular(0.r),
+                                      bottomLeft: Radius.circular(10.r),
+                                      bottomRight: Radius.circular(0.r),
+                                    ),
                                   ),
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  controller: createAddPhoneController,
-                                  onChange: (p0) {},
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) {
-                                    final result = AppValidator.validatePhone()(
-                                      value,
-                                    );
-                                    if (result != null) {
-                                      isPhoneValid = true;
-                                    } else {
-                                      isPhoneValid = false;
-                                    }
-                                    print(isPhoneValid);
-                                    notifyListeners();
-                                    return result;
-                                  },
+                                  child: Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppImage.nigeria,
+                                        width: 22.w,
+                                        height: 22.h,
+                                      ),
+                                      SizedBox(width: 4.w),
+                                      TextView(
+                                        text: '+234',
+                                        textStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.2.sp,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                                SizedBox(width: 2.w),
+                                Expanded(
+                                  child: Container(
+                                    margin: isPhoneValid
+                                        ? EdgeInsets.only(top: 20.w)
+                                        : EdgeInsets.zero,
+                                    child: TextFormWidget(
+                                      hint: null,
+                                      borderColor: AppColors.transparent,
+                                      borderTopLeft: 0,
+                                      borderTopRight: 10,
+                                      borderBottomLeft: 0,
+                                      borderBottomRight: 10,
+                                      label: '',
+
+                                      labelStyle: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Arial',
+                                        fontSize: 14.2.sp,
+                                        color: AppColors.infoGrey,
+                                      ),
+                                      fillColor: AppColors.grey,
+                                      isFilled: true,
+                                      controller: createAddPhoneController,
+                                      onChange: (p0) {},
+                                      keyboardType: TextInputType.number,
+                                      validator: (value) {
+                                        final result =
+                                            AppValidator.validatePhone()(value);
+                                        if (result != null) {
+                                          isPhoneValid = true;
+                                        } else {
+                                          isPhoneValid = false;
+                                        }
+                                        print(isPhoneValid);
+                                        notifyListeners();
+                                        return result;
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 35.h),
+                            // 🔹 Save button
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (formKeyCreateAddPhoneReminder
+                                      .currentState!
+                                      .validate()) {
+                                    model.getUserDetailsByTenant(
+                                      context,
+                                      phone:
+                                          '+234${createAddPhoneController.text.trim()}',
+                                    );
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  padding: EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: model.isLoading
+                                    ? SpinKitCircle(
+                                        size: 26.0.sp,
+                                        color: AppColors.white,
+                                      )
+                                    : Text(
+                                        "Save",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 35.h),
-                        // 🔹 Save button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              if (formKeyCreateAddPhoneReminder.currentState!
-                                  .validate()) {
-                                // Navigator.pop(context);
-                                // await Future.delayed(Duration(seconds: 2));
-                                showReminderModal(context);
-                              }
-                              print('phoneReminderList:::$phoneReminderList');
-                              locator<PharmViewModel>().notifyListeners();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            child: Text(
-                              "Save",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
 
+  void getUserDetailsByTenant(context, {String? phone}) async {
+    try {
+      _isLoading = true;
+      userDetailData = await runBusyFuture(
+        repositoryImply.getUserDetailsByTenant(phone: phone),
+        throwException: true,
+      );
+      _isLoading = false;
+
+      createAddPhoneController.clear();
+      await Future.delayed(Duration(seconds: 2));
+
+      Navigator.pop(context);
+
+      if (userDetailData['statusCode'] == 201) {
+        showReminderModal(context);
+      }
+    } catch (e) {
+
+      _isLoading = false;
+      logger.d(e);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
+      registerUserByTenant(context, phone: phone);
+    }
+    notifyListeners();
+  }
+
+  void registerUserByTenant(context, {String? phone}) async {
+    try {
+      _isLoading = true;
+      userDetailData = await runBusyFuture(
+        repositoryImply.registerUserByTenant(phone: phone),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (userDetailData['statusCode'] == 201) {
+        showReminderModal(context);
+      } else {
+        AppUtils.snackbar(
+          context,
+          message: userDetailData['message'].toString(),
+          error: true,
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   void createReminder(
     context, {
-    CreateReminderEntityModel? createReminderEntityModel,
+    CreateTenantReminderEntityModel? createReminderEntityModel,
   }) async {
     try {
       _isLoading = true;
@@ -11266,7 +11342,7 @@ class PharmViewModel extends BaseViewModel {
 
   void createReminderPaid(
     context, {
-    CreateReminderEntityModel? createReminderEntityModel,
+    CreateTenantReminderEntityModel? createReminderEntityModel,
   }) async {
     try {
       _isLoading = true;
@@ -11301,12 +11377,38 @@ class PharmViewModel extends BaseViewModel {
   void getReminder(context, {String? status, String? page}) async {
     try {
       _isLoading = true;
-      _getReminderResponseModel = await runBusyFuture(
-        repositoryImply.getReminder(
-          status: status,
-          page: page,
-          limit: 20.toString(),
-        ),
+      if (status == 'all' || status == '' || status == null) {
+        _getReminderResponseModel = await runBusyFuture(
+          repositoryImply.getReminderForTenantAll(
+            page: page,
+            limit: 20.toString(),
+          ),
+          throwException: true,
+        );
+      } else {
+        _getReminderResponseModel = await runBusyFuture(
+          repositoryImply.getReminderForTenant(
+            status: status,
+            page: page,
+            limit: 20.toString(),
+          ),
+          throwException: true,
+        );
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void getReminderByIdAll(context, String? id) async {
+    try {
+      _isLoading = true;
+      _getReminderByIdModel = await runBusyFuture(
+        repositoryImply.getReminderForTenantByUserIdAll(userId: id),
         throwException: true,
       );
       _isLoading = false;
@@ -11322,7 +11424,7 @@ class PharmViewModel extends BaseViewModel {
     try {
       _isLoading = true;
       _getReminderByIdModel = await runBusyFuture(
-        repositoryImply.getReminderById(id),
+        repositoryImply.getReminderForTenantByUserId(userId: id),
         throwException: true,
       );
       _isLoading = false;
@@ -11451,11 +11553,11 @@ class PharmViewModel extends BaseViewModel {
   Future<void> onLoading(page) async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (_getReminderResponseModel!.data!.reminders!.isNotEmpty) {
+    if (_getReminderResponseModel!.data!.data!.isNotEmpty) {
       try {
         _isLoading = true;
         _getReminderResponseModel = await runBusyFuture(
-          repositoryImply.getReminder(
+          repositoryImply.getReminderForTenant(
             status: isReminderStatus,
             page: page.toString(),
             limit: 20.toString(),

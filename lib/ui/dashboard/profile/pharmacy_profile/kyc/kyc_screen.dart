@@ -190,17 +190,24 @@ class KycScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Spacer(),
-                                 GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[0].file?.url ?? '',
+                                  GestureDetector(
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl:
+                                              model
+                                                  .getPharmacyKycResponseModel
+                                                  ?.data
+                                                  ?.kycDocuments?[0]
+                                                  .file
+                                                  ?.url ??
+                                              '',
+                                        ),
                                       ),
                                     ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
                                   ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
                                 ],
                               ),
                             )
@@ -374,16 +381,23 @@ class KycScreen extends StatelessWidget {
                                   ),
                                   Spacer(),
                                   GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[1].file?.url ?? '',
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl:
+                                              model
+                                                  .getPharmacyKycResponseModel
+                                                  ?.data
+                                                  ?.kycDocuments?[1]
+                                                  .file
+                                                  ?.url ??
+                                              '',
+                                        ),
                                       ),
                                     ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
                                   ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
                                 ],
                               ),
                             )
@@ -556,16 +570,23 @@ class KycScreen extends StatelessWidget {
                                   ),
                                   Spacer(),
                                   GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[2].file?.url ?? '',
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl:
+                                              model
+                                                  .getPharmacyKycResponseModel
+                                                  ?.data
+                                                  ?.kycDocuments?[2]
+                                                  .file
+                                                  ?.url ??
+                                              '',
+                                        ),
                                       ),
                                     ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
                                   ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
                                 ],
                               ),
                             )
@@ -746,16 +767,23 @@ class KycScreen extends StatelessWidget {
                                   ),
                                   Spacer(),
                                   GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ImageWebViewScreen(
-                                        imageUrl: model.getPharmacyKycResponseModel?.data?.kycDocuments?[3].file?.url ?? '',
+                                    onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => ImageWebViewScreen(
+                                          imageUrl:
+                                              model
+                                                  .getPharmacyKycResponseModel
+                                                  ?.data
+                                                  ?.kycDocuments?[3]
+                                                  .file
+                                                  ?.url ??
+                                              '',
+                                        ),
                                       ),
                                     ),
+                                    child: SvgPicture.asset(AppImage.kyc_eye),
                                   ),
-                                  child: SvgPicture.asset(AppImage.kyc_eye),
-                                ),
                                 ],
                               ),
                             )

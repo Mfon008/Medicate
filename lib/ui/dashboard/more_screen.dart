@@ -65,7 +65,10 @@ class _MoreScreenState extends State<MoreScreen> {
                     IconButton(
                       onPressed: () {
                         navigate.back();
-                        navigate.navigateTo(Routes.dashboard,arguments: DashboardArguments(index: 0));
+                        navigate.navigateTo(
+                          Routes.dashboard,
+                          arguments: DashboardArguments(index: 0),
+                        );
                       },
                       icon: SvgPicture.asset(AppImage.cancel),
                     ),
@@ -113,7 +116,7 @@ class _MoreScreenState extends State<MoreScreen> {
                       icon: AppImage.providers,
                       text: 'Providers',
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width / 2.1,),
+                    SizedBox(width: MediaQuery.of(context).size.width / 2.1),
                   ],
                 ),
                 SizedBox(height: 90.h),

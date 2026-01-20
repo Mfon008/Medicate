@@ -16,23 +16,17 @@ class BulletText extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '•',
-            style: TextStyle(
-              fontSize: 18,
-              height: 1.4,
-            ),
-          ),
+          const Text('•', style: TextStyle(fontSize: 18, height: 1.4)),
           const SizedBox(width: 8),
           Expanded(
             child: TextView(
-              text:text,
+              text: text,
               textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
+                fontFamily: 'Arial',
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
             ),
           ),
         ],
@@ -45,7 +39,7 @@ class NumberBulletText extends StatelessWidget {
   final String text;
   final String noText;
 
-  const NumberBulletText(this.text, this.noText,{super.key});
+  const NumberBulletText(this.text, this.noText, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,25 +48,25 @@ class NumberBulletText extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           TextView(
-              text:'$noText. ',
-              textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
+          TextView(
+            text: '$noText. ',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
             ),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: TextView(
-              text:text,
+              text: text,
               textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
+                fontFamily: 'Arial',
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
             ),
           ),
         ],

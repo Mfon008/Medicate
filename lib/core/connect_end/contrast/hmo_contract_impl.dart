@@ -1,5 +1,3 @@
-
-
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/hmo_api.dart';
@@ -78,12 +76,10 @@ class HMOContractsImpl {
   Future<GetTenantResponseModel> getTenant() async => await _api.getTenant();
   Future<GetPharmacyKycResponseModel> getHMOKyc() async =>
       await _api.getHMOKyc();
-  Future<dynamic> updateHMOKyc(
-    UpdatePharmacyKycEntityModel updateKyc,
-  ) async => await _api.updateHMOKyc(updateKyc);
-  Future<dynamic> updateHMO(
-    UpdateHmoProfileEntityModel? updateHMO,
-  ) async => await _api.updateHMO(updateHMO);
+  Future<dynamic> updateHMOKyc(UpdatePharmacyKycEntityModel updateKyc) async =>
+      await _api.updateHMOKyc(updateKyc);
+  Future<dynamic> updateHMO(UpdateHmoProfileEntityModel? updateHMO) async =>
+      await _api.updateHMO(updateHMO);
   Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>
       await _api.uploadImage(file);
   Future<dynamic> addRole(RolesEntityModel roleEntity) async =>

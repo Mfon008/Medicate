@@ -1038,7 +1038,8 @@ class _HealthCarePractitionerProfileInfoScreenState
                             ),
                           ),
                         SizedBox(height: 50.h),
-                         model.isProfileUpdated?ButtonWidget(
+                        model.isProfileUpdated
+                            ? ButtonWidget(
                                 border: 100.r,
                                 buttonColor: AppColors.primary1,
                                 buttonText: 'Update',
@@ -1049,125 +1050,140 @@ class _HealthCarePractitionerProfileInfoScreenState
                                   model.isProfileUpdated = false;
                                   model.notifyListeners();
                                 },
-                              ):Row(
-                          children: [
-                            Expanded(
-                              child: ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.white,
-                                buttonText: 'Discard',
-                                fontSize: 16.sp,
-                                color: AppColors.primary,
-                                buttonBorderColor: AppColors.primary,
-                                onPressed: () {
-                                  navigate.back();
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 20.w),
-                            Expanded(
-                              child: ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.primary,
-                                fontSize: 16.sp,
-                                buttonText: 'Save Changes',
-                                color: AppColors.white,
-                                isLoading: model.isLoading,
-                                buttonBorderColor: AppColors.transparent,
-                                onPressed: model.isLoading
-                                    ? () {}
-                                    : () {
-                                        if (formKey.currentState!.validate()) {
-                                          model.updateHealthCarePractitioner(
-                                            context,
-                                            updatePractitioner: UpdatePractitionerProfileEntityModel(
-                                              logo: null,
-                                              typeOfHealthcareProvider:
-                                                  'DOCTOR',
-                                              healthcareFacilityName:
-                                                  nameController.text.trim(),
-                                              registrationNumber:
-                                                  licenceNoController.text
-                                                      .trim(),
-                                              yearsOfExperience: int.parse(
-                                                experienceYears.text.trim(),
-                                              ),
-                                              bio: bioController.text.trim(),
-                                              country: model
-                                                  .countryController
-                                                  .text
-                                                  .trim(),
-                                              state: model.stateController.text
-                                                  .trim(),
-                                              lga: model.lgaController.text
-                                                  .trim(),
-                                              servicesOffered: model
-                                                  .selectServicePractitioner,
-                                              businessAddress:
-                                                  businessAddController.text
-                                                      .trim(),
-                                              businessEmail:
-                                                  businessEmailController.text
-                                                      .trim(),
-                                              educationalExperience: model
-                                                  .educationalExperienceList,
-                                              bankDetails: [
-                                                BankDetail(
-                                                  bankName:
-                                                      bankNameController.text,
-                                                  accountName:
-                                                      bankAccountNameController
-                                                          .text,
-                                                  accountNumber:
-                                                      bankNoController.text,
-                                                ),
-                                              ],
-                                              meansOfIdType:
-                                                  model.isUpperCase(
-                                                    model
-                                                        .meansIdController
-                                                        .text,
-                                                  )
-                                                  ? model.meansIdController.text
-                                                  : model
-                                                        .getMeansOFIDAppReverse(
+                              )
+                            : Row(
+                                children: [
+                                  Expanded(
+                                    child: ButtonWidget(
+                                      border: 100.r,
+                                      buttonColor: AppColors.white,
+                                      buttonText: 'Discard',
+                                      fontSize: 16.sp,
+                                      color: AppColors.primary,
+                                      buttonBorderColor: AppColors.primary,
+                                      onPressed: () {
+                                        navigate.back();
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(width: 20.w),
+                                  Expanded(
+                                    child: ButtonWidget(
+                                      border: 100.r,
+                                      buttonColor: AppColors.primary,
+                                      fontSize: 16.sp,
+                                      buttonText: 'Save Changes',
+                                      color: AppColors.white,
+                                      isLoading: model.isLoading,
+                                      buttonBorderColor: AppColors.transparent,
+                                      onPressed: model.isLoading
+                                          ? () {}
+                                          : () {
+                                              if (formKey.currentState!
+                                                  .validate()) {
+                                                model.updateHealthCarePractitioner(
+                                                  context,
+                                                  updatePractitioner: UpdatePractitionerProfileEntityModel(
+                                                    logo: null,
+                                                    typeOfHealthcareProvider:
+                                                        'DOCTOR',
+                                                    healthcareFacilityName:
+                                                        nameController.text
+                                                            .trim(),
+                                                    registrationNumber:
+                                                        licenceNoController.text
+                                                            .trim(),
+                                                    yearsOfExperience:
+                                                        int.parse(
+                                                          experienceYears.text
+                                                              .trim(),
+                                                        ),
+                                                    bio: bioController.text
+                                                        .trim(),
+                                                    country: model
+                                                        .countryController
+                                                        .text
+                                                        .trim(),
+                                                    state: model
+                                                        .stateController
+                                                        .text
+                                                        .trim(),
+                                                    lga: model
+                                                        .lgaController
+                                                        .text
+                                                        .trim(),
+                                                    servicesOffered: model
+                                                        .selectServicePractitioner,
+                                                    businessAddress:
+                                                        businessAddController
+                                                            .text
+                                                            .trim(),
+                                                    businessEmail:
+                                                        businessEmailController
+                                                            .text
+                                                            .trim(),
+                                                    educationalExperience: model
+                                                        .educationalExperienceList,
+                                                    bankDetails: [
+                                                      BankDetail(
+                                                        bankName:
+                                                            bankNameController
+                                                                .text,
+                                                        accountName:
+                                                            bankAccountNameController
+                                                                .text,
+                                                        accountNumber:
+                                                            bankNoController
+                                                                .text,
+                                                      ),
+                                                    ],
+                                                    meansOfIdType:
+                                                        model.isUpperCase(
                                                           model
                                                               .meansIdController
                                                               .text,
-                                                        ),
-                                              meansOfId:
-                                                  model
-                                                      .pracAuthDocumentsList
-                                                      .isEmpty
-                                                  ? null
-                                                  : MeansOfId(
-                                                      url: model
-                                                          .pracAuthDocumentsList[0]
-                                                          .url,
-                                                      mimeType: model
-                                                          .pracAuthDocumentsList[0]
-                                                          .mimeType,
-                                                      width: model
-                                                          .pracAuthDocumentsList[0]
-                                                          .width,
-                                                      size: model
-                                                          .pracAuthDocumentsList[0]
-                                                          .size,
-                                                      height: model
-                                                          .pracAuthDocumentsList[0]
-                                                          .height,
-                                                      format: model
-                                                          .pracAuthDocumentsList[0]
-                                                          .format,
-                                                    ),
-                                            ),
-                                          );
-                                        }
-                                      },
+                                                        )
+                                                        ? model
+                                                              .meansIdController
+                                                              .text
+                                                        : model.getMeansOFIDAppReverse(
+                                                            model
+                                                                .meansIdController
+                                                                .text,
+                                                          ),
+                                                    meansOfId:
+                                                        model
+                                                            .pracAuthDocumentsList
+                                                            .isEmpty
+                                                        ? null
+                                                        : MeansOfId(
+                                                            url: model
+                                                                .pracAuthDocumentsList[0]
+                                                                .url,
+                                                            mimeType: model
+                                                                .pracAuthDocumentsList[0]
+                                                                .mimeType,
+                                                            width: model
+                                                                .pracAuthDocumentsList[0]
+                                                                .width,
+                                                            size: model
+                                                                .pracAuthDocumentsList[0]
+                                                                .size,
+                                                            height: model
+                                                                .pracAuthDocumentsList[0]
+                                                                .height,
+                                                            format: model
+                                                                .pracAuthDocumentsList[0]
+                                                                .format,
+                                                          ),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
                         SizedBox(height: 10.h),
                       ],
                     ),

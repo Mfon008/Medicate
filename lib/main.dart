@@ -11,7 +11,6 @@ import 'core/core_folder/manager/shared_preference.dart';
 final navigate = locator<NavigationService>();
 
 Future<void> main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
   // Lock orientation early
   setupLocator();
