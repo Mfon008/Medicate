@@ -93,6 +93,7 @@ import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
 import '../../../ui/widget/accelerate_payment_view.dart';
+import '../../../ui/widget/accelerate_payment_view_pharmacy.dart';
 import '../../api_folder/auth_api.dart';
 import '../../api_folder/healthcare_api.dart';
 import '../../api_folder/hmo_api.dart';
@@ -181,6 +182,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HealthCareProfileScreen),
     MaterialRoute(page: HealthCareSettingScreen),
     MaterialRoute(page: AcceleratePaymentView),
+    MaterialRoute(page: AcceleratePaymentViewPharmacy),
     MaterialRoute(page: HealthCarePractitionerProfileInfoScreen),
     MaterialRoute(page: HealthCarePractitionerProfileScreen),
     MaterialRoute(page: HMOWelcomeScreen),

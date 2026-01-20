@@ -325,7 +325,7 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<GetReminderById> getReminderForTenantByUserIdAll({
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserIdAll({
     String? page,
     String? limit,
     String? userId,
@@ -338,7 +338,7 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<GetReminderById> getReminderForTenantByUserId({
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserId({
     String? status,
     String? page,
     String? limit,
@@ -350,6 +350,13 @@ class PharmRepoImpl {
       limit: limit,
       userId: userId,
     );
+    return response;
+  }
+
+
+  Future<GetReminderById> getReminderByUserId({String? userId}) async {
+    final response = await _contract.getReminderByUserId(userId:userId);
+  
     return response;
   }
 

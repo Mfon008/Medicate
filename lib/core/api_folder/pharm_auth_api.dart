@@ -46,7 +46,6 @@ import '../core_folder/network/url_path.dart';
 class PharmApi {
   
   final _service = locator<NetworkService>();
-  // final _servicesupport = locator<sup.SupportNetworkService>();
   final logger = getLogger('Pharm Api');
   final session = locator<SharedPreferencesService>();
 
@@ -708,7 +707,7 @@ class PharmApi {
     }
   }
 
-  Future<GetReminderById> getReminderForTenantByUserIdAll({
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserIdAll({
     String? page,
     String? limit,
     String? userId,
@@ -720,14 +719,14 @@ class PharmApi {
         data: {'page': page, 'limit': limit},
       );
       logger.d(response.data);
-      return response.data;
+      return GetReminderForTenantResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<GetReminderById> getReminderForTenantByUserId({
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserId({
     String? status,
     String? page,
     String? limit,
@@ -740,7 +739,23 @@ class PharmApi {
         data: {'status': status, 'page': page, 'limit': limit},
       );
       logger.d(response.data);
-      return response.data;
+      return GetReminderForTenantResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetReminderById> getReminderByUserId({
+    String? userId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminder}/$userId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetReminderById.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

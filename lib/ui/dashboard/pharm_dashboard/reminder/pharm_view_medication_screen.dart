@@ -22,11 +22,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
       viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if(model.isReminderStatus=='all'){
-            model.getReminderByIdAll(context, id);
-          }else{
-            model.getReminderById(context, id);
-          }
+           model.getReminderById(context, id:id);
         });
       },
       disposeViewModel: false,

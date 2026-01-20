@@ -10,6 +10,7 @@ class Reminder {
   @JsonKey(name: '_id')
   String? id;
   String? userId;
+  String? tenantId;
   Medication? medication;
   String? timeZone;
   bool? isActive;
@@ -24,6 +25,7 @@ class Reminder {
   Reminder({
     this.id,
     this.userId,
+    this.tenantId,
     this.medication,
     this.timeZone,
     this.isActive,

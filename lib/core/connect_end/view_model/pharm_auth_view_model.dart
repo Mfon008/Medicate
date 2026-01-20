@@ -217,7 +217,9 @@ class PharmViewModel extends BaseViewModel {
   GetReminderForTenantResponseModel? _getReminderResponseModel;
   GetReminderForTenantResponseModel? get getReminderResponseModel =>
       _getReminderResponseModel;
-
+  GetReminderForTenantResponseModel? _getReminderForTenantResponseModel;
+  GetReminderForTenantResponseModel? get getReminderForTenantResponseModel =>
+      _getReminderForTenantResponseModel;
   GetReminderById? _getReminderByIdModel;
   GetReminderById? get getReminderByIdModel => _getReminderByIdModel;
 
@@ -2972,13 +2974,13 @@ class PharmViewModel extends BaseViewModel {
         file: (file) {
           imageDrug = file;
           drugFilename = imageDrug!.path.split("/").last;
-          // uploadImageReminder(
-          //   context: context,
-          //   file: MultipartFile.fromBytes(
-          //     formartFileImage(imageDrug).readAsBytesSync(),
-          //     filename: imageDrug!.path.split("/").last,
-          //   ),
-          // );
+          uploadImageReminder(
+            context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageDrug).readAsBytesSync(),
+              filename: imageDrug!.path.split("/").last,
+            ),
+          );
           notifyListeners();
         },
       );
@@ -2990,10 +2992,10 @@ class PharmViewModel extends BaseViewModel {
   Future<void> uploadImageReminder({context, MultipartFile? file}) async {
     try {
       _isLoading = true;
-      // _uploadImageReminderResponseModel = await runBusyFuture(
-      // repositoryImply.uploadImageReminder(file!),
-      // throwException: true,
-      // );
+      _uploadImageReminderResponseModel = await runBusyFuture(
+        repositoryImply.uploadImageReminder(file!),
+        throwException: true,
+      );
       _isLoading = false;
       if (_uploadImageReminderResponseModel?.statusCode == 201) {
         await AppUtils.snackbar(
@@ -3186,7 +3188,7 @@ class PharmViewModel extends BaseViewModel {
         description: descriptionController.text,
         medicationFile: model.imageDrug,
         dosage: model.getStringFrLabel(medDosageController.text),
-        imageData: model.uploadImageReminderResponseModel?.data ?? phImg.Data(),
+        imageData: _uploadImageReminderResponseModel?.data ?? phImg.Data(),
         dateAndTime: model.dateTimeController.text,
         duration: medDurationController.text,
         endDate: endDateController.text,
@@ -3427,7 +3429,7 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  void showReminderModal(context) => showModalBottomSheet(
+  void showReminderModal(context, {String? userId}) => showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: AppColors.transparent,
@@ -3452,6 +3454,7 @@ class PharmViewModel extends BaseViewModel {
                     context: context,
                     setModalState: setModalState,
                     scrollController: scrollController,
+                    id: userId,
                   );
                 },
               );
@@ -3631,7 +3634,8 @@ class PharmViewModel extends BaseViewModel {
 
   returnTotalDays() {
     if (medicationClassList.isEmpty) {
-      totalDuration = _getReminderByIdModel!.data!.medication!.durationInDays;
+      totalDuration =
+          _getReminderByIdModel?.data?.medication?.durationInDays ?? 0;
     } else {
       totalDuration = medicationClassList.fold(
         0,
@@ -3733,6 +3737,7 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     StateSetter? setModalState,
     ScrollController? scrollController,
+    String? id,
   }) {
     if (linIndex == 2) {
       return firstModalFLow(
@@ -3754,6 +3759,7 @@ class PharmViewModel extends BaseViewModel {
         context: context,
         setModalState: setModalState,
         scrollController: scrollController,
+        id: id,
       );
     } else if (linIndex == 5) {
       return fourthModalFlow(
@@ -3761,6 +3767,7 @@ class PharmViewModel extends BaseViewModel {
         context: context,
         setModalState: setModalState,
         scrollController: scrollController,
+        id: id,
       );
     }
     return firstUserReminderModalFLow(
@@ -3768,6 +3775,7 @@ class PharmViewModel extends BaseViewModel {
       context: context,
       setModalState: setModalState,
       scrollController: scrollController,
+      id: id,
     );
   }
 
@@ -3976,6 +3984,7 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     StateSetter? setModalState,
     ScrollController? scrollController,
+    String? id,
   }) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
@@ -3988,15 +3997,17 @@ class PharmViewModel extends BaseViewModel {
         viewModelBuilder: () => PharmViewModel(),
         onViewModelReady: (model) {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
+            model.isReminderStatus = 'all';
             await model.getTodaysReminder(
               context,
               period: model.timePeriod,
               date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
             );
-            model.getReminder(
+            model.getTenantReminderById(
               context,
-              status: model.isReminderStatus,
+              id: id,
               page: model.pageOngoing.toString(),
+              limit: 20.toString(),
             );
           });
         },
@@ -4094,7 +4105,8 @@ class PharmViewModel extends BaseViewModel {
                       ),
                       SizedBox(height: 10.h),
                       TextView(
-                        text: '${userDetailData['data']['fullName']??userDetailData['data']['generatedName']??''}',
+                        text:
+                            '${userDetailData['data']['fullName'] ?? userDetailData['data']['generatedName'] ?? ''}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.2.sp,
@@ -4116,7 +4128,8 @@ class PharmViewModel extends BaseViewModel {
                       ),
                       SizedBox(height: 10.h),
                       TextView(
-                        text: '0${userDetailData['data']['phone'].toString().substring(4)}',
+                        text:
+                            '0${userDetailData['data']['phone'].toString().substring(4)}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.2.sp,
@@ -4138,7 +4151,7 @@ class PharmViewModel extends BaseViewModel {
                       ),
                       SizedBox(height: 10.h),
                       TextView(
-                        text: '${userDetailData['data']['email']}',
+                        text: '${userDetailData['data']['email'] ?? ''}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.2.sp,
@@ -4188,13 +4201,14 @@ class PharmViewModel extends BaseViewModel {
                     ),
 
                     onSelected: (String result) async {
-                      // genderController.text = result;
                       model.isReminderStatus = result;
                       await Future.delayed(Duration(milliseconds: 400));
-                      model.getReminder(
+                      model.getTenantReminderById(
                         context,
+                        id: id,
                         status: model.isReminderStatus,
                         page: model.pageOngoing.toString(),
+                        limit: 20.toString(),
                       );
                       setModalState!(() {});
                       model.notifyListeners();
@@ -4243,8 +4257,12 @@ class PharmViewModel extends BaseViewModel {
                 SizedBox(height: 20.h),
                 Center(
                   child:
-                      model.getReminderResponseModel != null &&
-                          model.getReminderResponseModel!.data!.data!.isNotEmpty
+                      model.getReminderForTenantResponseModel != null &&
+                          model
+                              .getReminderForTenantResponseModel!
+                              .data!
+                              .data!
+                              .isNotEmpty
                       ? SizedBox(
                           height: MediaQuery.of(context).size.height * .62,
                           child: SingleChildScrollView(
@@ -4254,7 +4272,7 @@ class PharmViewModel extends BaseViewModel {
                                 SizedBox(height: 30.h),
                                 if (model.isReminderStatus == 'all')
                                   ...model
-                                      .getReminderResponseModel!
+                                      .getReminderForTenantResponseModel!
                                       .data!
                                       .data!
                                       .reversed
@@ -4269,7 +4287,7 @@ class PharmViewModel extends BaseViewModel {
 
                                 if (model.isReminderStatus == 'ongoing')
                                   ...model
-                                      .getReminderResponseModel!
+                                      .getReminderForTenantResponseModel!
                                       .data!
                                       .data!
                                       .reversed
@@ -4284,7 +4302,7 @@ class PharmViewModel extends BaseViewModel {
 
                                 if (model.isReminderStatus == 'completed')
                                   ...model
-                                      .getReminderResponseModel!
+                                      .getReminderForTenantResponseModel!
                                       .data!
                                       .data!
                                       .reversed
@@ -4663,11 +4681,11 @@ class PharmViewModel extends BaseViewModel {
                                           IconButton(
                                             onPressed:
                                                 model
-                                                        .getReminderResponseModel!
+                                                        .getReminderForTenantResponseModel!
                                                         .data!
                                                         .meta!
                                                         .page ==
-                                                    '1'
+                                                    1
                                                 ? () {}
                                                 : () async {
                                                     if (model
@@ -4691,11 +4709,11 @@ class PharmViewModel extends BaseViewModel {
                                               Icons.arrow_back,
                                               color:
                                                   model
-                                                          .getReminderResponseModel!
+                                                          .getReminderForTenantResponseModel!
                                                           .data!
                                                           .meta!
                                                           .page ==
-                                                      '1'
+                                                      1
                                                   ? AppColors.primary1
                                                         .withOpacity(.4)
                                                   : AppColors.primary1,
@@ -4710,7 +4728,7 @@ class PharmViewModel extends BaseViewModel {
                                                 )
                                               : TextView(
                                                   text:
-                                                      'Page ${model.getReminderResponseModel!.data!.meta!.page} of ${model.getReminderResponseModel!.data!.meta!.totalPages}',
+                                                      'Page ${model.getReminderForTenantResponseModel!.data!.meta!.page} of ${model.getReminderForTenantResponseModel!.data!.meta!.totalPages}',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'Arial',
                                                     fontSize: 15.2.sp,
@@ -4721,20 +4739,21 @@ class PharmViewModel extends BaseViewModel {
                                           IconButton(
                                             onPressed:
                                                 model
-                                                        .getReminderResponseModel!
-                                                        .data!
-                                                        .meta!
-                                                        .page ==
+                                                            .getReminderForTenantResponseModel!
+                                                            .data!
+                                                            .meta!
+                                                            .page ==
+                                                        model
+                                                            .getReminderForTenantResponseModel!
+                                                            .data!
+                                                            .meta!
+                                                            .totalPages ||
                                                     model
-                                                        .getReminderResponseModel!
-                                                        .data!
-                                                        .meta!
-                                                        .totalPages
-                                                        .toString() || model
-                                                        .getReminderResponseModel!
-                                                        .data!
-                                                        .meta!
-                                                        .totalPages==0
+                                                            .getReminderForTenantResponseModel!
+                                                            .data!
+                                                            .meta!
+                                                            .totalPages ==
+                                                        0
                                                 ? () {}
                                                 : () async {
                                                     if (model
@@ -4758,20 +4777,21 @@ class PharmViewModel extends BaseViewModel {
                                               Icons.arrow_forward,
                                               color:
                                                   model
-                                                          .getReminderResponseModel!
-                                                          .data!
-                                                          .meta!
-                                                          .page ==
+                                                              .getReminderForTenantResponseModel!
+                                                              .data!
+                                                              .meta!
+                                                              .page ==
+                                                          model
+                                                              .getReminderForTenantResponseModel!
+                                                              .data!
+                                                              .meta!
+                                                              .totalPages ||
                                                       model
-                                                          .getReminderResponseModel!
-                                                          .data!
-                                                          .meta!
-                                                          .totalPages
-                                                          .toString()|| model
-                                                        .getReminderResponseModel!
-                                                        .data!
-                                                        .meta!
-                                                        .totalPages==0
+                                                              .getReminderForTenantResponseModel!
+                                                              .data!
+                                                              .meta!
+                                                              .totalPages ==
+                                                          0
                                                   ? AppColors.primary1
                                                         .withOpacity(.4)
                                                   : AppColors.primary1,
@@ -4791,6 +4811,7 @@ class PharmViewModel extends BaseViewModel {
                                     linIndex++;
                                     setModalState!(() {});
                                     model.notifyListeners();
+                                    print('objectmeee');
                                   },
                                 ),
                                 SizedBox(height: 16.h),
@@ -4811,10 +4832,12 @@ class PharmViewModel extends BaseViewModel {
                                         child: Column(
                                           children: [
                                             GestureDetector(
-                                              onTap: () => model
-                                                  .showCreateAddPhoneDialog(
-                                                    context,
-                                                  ),
+                                              onTap: () {
+                                                linIndex++;
+                                                setModalState!(() {});
+                                                model.notifyListeners();
+                                                print('objectmeeesssssss');
+                                              },
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
@@ -4931,10 +4954,12 @@ class PharmViewModel extends BaseViewModel {
                                     child: Column(
                                       children: [
                                         GestureDetector(
-                                          onTap: () =>
-                                              model.showCreateAddPhoneDialog(
-                                                context,
-                                              ),
+                                          onTap: () {
+                                            linIndex++;
+                                            setModalState!(() {});
+                                            model.notifyListeners();
+                                            print('object0000000e');
+                                          },
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
@@ -6819,9 +6844,10 @@ class PharmViewModel extends BaseViewModel {
                                   buttonText: 'Preview',
                                   color: AppColors.white,
                                   buttonBorderColor: AppColors.transparent,
-                                  onPressed: () {
+                                  onPressed: () async {
+                                    await addReminderToList(model!);
                                     linIndex++;
-                                    model!.notifyListeners();
+                                    model.notifyListeners();
                                   },
                                 ),
                               ],
@@ -8180,6 +8206,7 @@ class PharmViewModel extends BaseViewModel {
     StateSetter? setModalState,
     ScrollController? scrollController,
     BuildContext? context,
+    String? id,
   }) => Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(22.r),
@@ -9478,43 +9505,46 @@ class PharmViewModel extends BaseViewModel {
                         );
                       }
                     } else {
-                      // createReminder(
-                      //   context,
-                      //   createReminderEntityModel: CreateReminderEntityModel(
-                      //     medications: medicationClassList.map((m) {
-                      //       return Medication(
-                      //         medicationName: m.medicationName,
-                      //         drugName: m.drugName,
-                      //         dosage: m.dosage,
-                      //         medicationType: m.medicationType!.toUpperCase(),
-                      //         startDateTime: m.startDateIso,
-                      //         endDateTime: m.endDateIso,
-                      //         durationInDays: int.parse(m.duration!),
-                      //         timesPerDay: int.parse(m.timesToTake!),
-                      //         dailyDoseTimes: (m.dosageMap as List)
-                      //             .map(
-                      //               (dayData) => (dayData['doses'] as List)
-                      //                   .map(
-                      //                     (dose) => DailyDoseTime.fromJson(
-                      //                       dose as Map<String, dynamic>,
-                      //                     ),
-                      //                   )
-                      //                   .toList(),
-                      //             )
-                      //             .toList(),
-                      //         note: m.note,
-                      //         medicationImage: m.imageData != null
-                      //             ? null
-                      //             : MedicationImage.fromJson(
-                      //                 m.imageData!.toJson(),
-                      //               ),
-                      //       );
-                      //     }).toList(),
-                      //     timeZone: "Africa/Lagos",
-                      //     notificationChannels: notificationChannel,
-                      //     emails: emailReminderList,
-                      //   ),
-                      // );
+                      createReminder(
+                        context,
+                        createReminderEntityModel:
+                            CreateTenantReminderEntityModel(
+                              patientId: id,
+                              medications: medicationClassList.map((m) {
+                                return Medication(
+                                  medicationName: m.medicationName,
+                                  drugName: m.drugName,
+                                  dosage: m.dosage,
+                                  medicationType: m.medicationType!
+                                      .toUpperCase(),
+                                  startDateTime: m.startDateIso,
+                                  endDateTime: m.endDateIso,
+                                  durationInDays: int.parse(m.duration!),
+                                  timesPerDay: int.parse(m.timesToTake!),
+                                  dailyDoseTimes: (m.dosageMap as List)
+                                      .map(
+                                        (dayData) => (dayData['doses'] as List)
+                                            .map(
+                                              (dose) => DailyDoseTime.fromJson(
+                                                dose as Map<String, dynamic>,
+                                              ),
+                                            )
+                                            .toList(),
+                                      )
+                                      .toList(),
+                                  note: m.note,
+                                  medicationImage: m.imageData != null
+                                      ? null
+                                      : MedicationImage.fromJson(
+                                          m.imageData!.toJson(),
+                                        ),
+                                );
+                              }).toList(),
+                              timeZone: "Africa/Lagos",
+                              notificationChannels: notificationChannel,
+                              emails: emailReminderList,
+                            ),
+                      );
                     }
                     model!.notifyListeners();
                   },
@@ -9533,6 +9563,7 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     StateSetter? setModalState,
     ScrollController? scrollController,
+    String? id,
   }) => Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(22.r),
@@ -9730,6 +9761,7 @@ class PharmViewModel extends BaseViewModel {
                             context,
                             createReminderEntityModel:
                                 CreateTenantReminderEntityModel(
+                                  patientId: id,
                                   medications: medicationClassList.map((m) {
                                     return Medication(
                                       medicationName: m.medicationName,
@@ -11233,14 +11265,15 @@ class PharmViewModel extends BaseViewModel {
       Navigator.pop(context);
 
       if (userDetailData['statusCode'] == 201) {
-        showReminderModal(context);
+        showReminderModal(context, userId: userDetailData['data']['userId']);
       }
     } catch (e) {
-
       _isLoading = false;
-      logger.d(e);
-      await AppUtils.snackbar(context, message: e.toString(), error: true);
-      registerUserByTenant(context, phone: phone);
+      createAddPhoneController.clear();
+      await Future.delayed(Duration(seconds: 2));
+
+      Navigator.pop(context);
+      unregisteredPatientsDialog(context: context, phone: phone);
     }
     notifyListeners();
   }
@@ -11254,7 +11287,9 @@ class PharmViewModel extends BaseViewModel {
       );
       _isLoading = false;
       if (userDetailData['statusCode'] == 201) {
-        showReminderModal(context);
+        Navigator.pop(context);
+        await Future.delayed(Duration(milliseconds: 100));
+        showReminderModal(context, userId: userDetailData['data']['userId']);
       } else {
         AppUtils.snackbar(
           context,
@@ -11321,8 +11356,8 @@ class PharmViewModel extends BaseViewModel {
         doseControllers.clear();
         periodLabels.clear();
         navigate.navigateTo(
-          Routes.acceleratePaymentView,
-          arguments: AcceleratePaymentViewArguments(
+          Routes.acceleratePaymentViewPharmacy,
+          arguments: AcceleratePaymentViewPharmacyArguments(
             url: _initiatePaymentResponseModel?.data?.redirectUrl,
           ),
         );
@@ -11404,11 +11439,11 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getReminderByIdAll(context, String? id) async {
+  void getReminderById(context, {String? id}) async {
     try {
       _isLoading = true;
       _getReminderByIdModel = await runBusyFuture(
-        repositoryImply.getReminderForTenantByUserIdAll(userId: id),
+        repositoryImply.getReminderByUserId(userId: id),
         throwException: true,
       );
       _isLoading = false;
@@ -11420,13 +11455,35 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getReminderById(context, String? id) async {
+  void getTenantReminderById(
+    context, {
+    String? id,
+    String? limit,
+    String? status,
+    String? page,
+  }) async {
     try {
       _isLoading = true;
-      _getReminderByIdModel = await runBusyFuture(
-        repositoryImply.getReminderForTenantByUserId(userId: id),
-        throwException: true,
-      );
+      if ((status == 'all' || status == '' || status == null)) {
+        _getReminderForTenantResponseModel = await runBusyFuture(
+          repositoryImply.getReminderForTenantByUserIdAll(
+            userId: id,
+            limit: limit,
+            page: page,
+          ),
+          throwException: true,
+        );
+      } else {
+        _getReminderForTenantResponseModel = await runBusyFuture(
+          repositoryImply.getReminderForTenantByUserId(
+            userId: id,
+            limit: limit,
+            status: status,
+            page: page,
+          ),
+          throwException: true,
+        );
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -11813,6 +11870,155 @@ class PharmViewModel extends BaseViewModel {
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Future<void> unregisteredPatientsDialog({
+    BuildContext? context,
+    String? phone,
+  }) async {
+    return showDialog(
+      context: context!,
+      barrierDismissible: false, // Prevent dismiss when tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, PharmViewModel model, _) {
+            return Dialog(
+              backgroundColor: AppColors.white,
+              insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 28,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Top warning icon
+                    Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.yellow.withOpacity(.09),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(12.0.w),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.yellow,
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            AppImage.ex_error,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    TextView(
+                      text: "Unregistered Patient",
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.bblack,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    TextView(
+                      text:
+                          "We couldn’t find a patient with this phone number. Would you like to continue and create the reminder anyway?",
+                      textAlign: TextAlign.center,
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14.8.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.success,
+                      ),
+                    ),
+
+                    SizedBox(height: 24.h),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32.w,
+                              vertical: 12.w,
+                            ),
+                          ),
+                          child: TextView(
+                            text: "Cancel",
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 15.6.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16.w),
+
+                        // Continue Button
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              model.registerUserByTenant(context, phone: phone);
+                              model.notifyListeners();
+
+                              // Add your update logic here
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.w,
+                                vertical: 12.w,
+                              ),
+                              elevation: 0,
+                            ),
+                            child: model.isLoading
+                                ? SpinKitCircle(
+                                    size: 26.0.sp,
+                                    color: AppColors.white,
+                                  )
+                                : TextView(
+                                    text: "Yes, Continue",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.6.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );

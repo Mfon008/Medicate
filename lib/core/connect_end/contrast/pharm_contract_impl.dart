@@ -160,21 +160,30 @@ class PharmContractsImpl {
     String? status,
     String? page,
     String? limit,
-  }) async =>
-      await _api.getReminderForTenantAll(page: page, limit: limit);
-  
-  Future<GetReminderById> getReminderForTenantByUserIdAll({
+  }) async => await _api.getReminderForTenantAll(page: page, limit: limit);
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserIdAll({
     String? page,
     String? limit,
     String? userId,
-  }) async =>
-      await _api.getReminderForTenantByUserIdAll(page: page, limit: limit,userId: userId);
+  }) async => await _api.getReminderForTenantByUserIdAll(
+    page: page,
+    limit: limit,
+    userId: userId,
+  );
 
-  Future<GetReminderById> getReminderForTenantByUserId({
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserId({
     String? status,
     String? page,
     String? limit,
     String? userId,
-  }) async =>
-      await _api.getReminderForTenantByUserId(status: status, page: page, limit: limit,userId: userId);
+  }) async => await _api.getReminderForTenantByUserId(
+    status: status,
+    page: page,
+    limit: limit,
+    userId: userId,
+  );
+
+  Future<GetReminderById> getReminderByUserId({String? userId}) async =>
+      await _api.getReminderByUserId(userId: userId);
 }

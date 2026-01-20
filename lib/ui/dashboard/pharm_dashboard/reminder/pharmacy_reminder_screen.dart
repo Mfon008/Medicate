@@ -1539,7 +1539,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                               .data!
                                                               .meta!
                                                               .page ==
-                                                          '1'
+                                                          1
                                                       ? () {}
                                                       : () async {
                                                           if (model
@@ -1569,7 +1569,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                                 .data!
                                                                 .meta!
                                                                 .page ==
-                                                            '1'
+                                                            1
                                                         ? AppColors.primary1
                                                               .withOpacity(.4)
                                                         : AppColors.primary1,
@@ -1607,7 +1607,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                               .data!
                                                               .meta!
                                                               .totalPages
-                                                              .toString()
                                                       ? () {}
                                                       : () async {
                                                           if (model
@@ -1642,7 +1641,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                                 .data!
                                                                 .meta!
                                                                 .totalPages
-                                                                .toString()
                                                         ? AppColors.primary1
                                                               .withOpacity(.4)
                                                         : AppColors.primary1,

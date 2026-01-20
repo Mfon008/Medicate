@@ -27,7 +27,7 @@ Medication _$MedicationFromJson(Map<String, dynamic> json) => Medication(
       )
       .toList(),
   medicationStatus: json['medicationStatus'] as String?,
-   medicationImage: json['medicationImage'] == null
+  medicationImage: json['medicationImage'] == null
       ? null
       : MedicationImage.fromJson(
           json['medicationImage'] as Map<String, dynamic>,

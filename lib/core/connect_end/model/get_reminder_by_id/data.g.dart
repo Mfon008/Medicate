@@ -9,6 +9,7 @@ part of 'data.dart';
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
   id: json['_id'] as String?,
   userId: json['userId'] as String?,
+  tenantId: json['tenantId'] as String?,
   medication: json['medication'] == null
       ? null
       : Medication.fromJson(json['medication'] as Map<String, dynamic>),
@@ -36,6 +37,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   '_id': instance.id,
   'userId': instance.userId,
+  'tenantId': instance.tenantId,
   'medication': instance.medication,
   'timeZone': instance.timeZone,
   'isActive': instance.isActive,
