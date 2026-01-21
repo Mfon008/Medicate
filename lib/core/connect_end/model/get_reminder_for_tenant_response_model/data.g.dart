@@ -7,7 +7,7 @@ part of 'data.dart';
 // **************************************************************************
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-  data: (json['data'] as List<dynamic>?)
+  data: (json['reminders'] as List<dynamic>?)
       ?.map((e) => Reminder.fromJson(e as Map<String, dynamic>))
       .toList(),
   meta: json['meta'] == null
@@ -16,6 +16,6 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-  'data': instance.data,
+  'reminders': instance.data,
   'meta': instance.meta,
 };

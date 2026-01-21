@@ -50,7 +50,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           floatingActionButton:
-              model.getReminderResponseModel != null &&
+              model.getReminderResponseModel != null && 
                   model.getReminderResponseModel!.data!.data!.isEmpty
               ? SizedBox.shrink()
               : FloatingActionButton(

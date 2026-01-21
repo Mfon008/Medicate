@@ -3188,7 +3188,7 @@ class PharmViewModel extends BaseViewModel {
         description: descriptionController.text,
         medicationFile: model.imageDrug,
         dosage: model.getStringFrLabel(medDosageController.text),
-        imageData: _uploadImageReminderResponseModel?.data ?? phImg.Data(),
+        imageData: model.uploadImageReminderResponseModel?.data ?? phImg.Data(),
         dateAndTime: model.dateTimeController.text,
         duration: medDurationController.text,
         endDate: endDateController.text,
@@ -3203,6 +3203,7 @@ class PharmViewModel extends BaseViewModel {
     await Future.delayed(Duration(seconds: 1), () {});
 
     clearReminderMedsVaraibles(model);
+    print('everything hereeee:${medicationClassList[0].imageData!.url}');
     model.notifyListeners();
   }
 
@@ -5661,16 +5662,7 @@ class PharmViewModel extends BaseViewModel {
                                     linIndex++;
                                     model.notifyListeners();
                                   }
-                                  // for (
-                                  //   var day = 0;
-                                  //   day < model.doseControllers.length;
-                                  //   day++
-                                  // ) {
-                                  //   print("Day ${day + 1}:");
-                                  //   for (var dose in model.doseControllers[day]) {
-                                  //     print("  ${dose.text}");
-                                  //   }
-                                  // }
+                                  print(model.uploadImageReminderResponseModel!.data!.url);
                                 },
                               ),
                               SizedBox(height: 130.h),
@@ -7547,10 +7539,13 @@ class PharmViewModel extends BaseViewModel {
                                               color: AppColors.white,
                                               buttonBorderColor:
                                                   AppColors.transparent,
-                                              onPressed: () {
+                                              onPressed: () async {
                                                 if (secondFormReminderKey
                                                     .currentState!
                                                     .validate()) {
+                                                  await addReminderToList(
+                                                    model,
+                                                  );
                                                   linIndex++;
                                                   model.notifyListeners();
                                                 }
@@ -7985,6 +7980,7 @@ class PharmViewModel extends BaseViewModel {
                                 final v = entry.value; // {day: x, doses: [...]}
 
                                 return dosagePreviewWidgetContainer(
+                                  model: model,
                                   context: context,
                                   callback: i, // ✅ now an index (int)
                                   color: AppColors.grey,
@@ -8176,7 +8172,9 @@ class PharmViewModel extends BaseViewModel {
                   onPressed: () {
                     linIndex++;
                     model!.notifyListeners();
-                    print('medicationClassList$medicationClassList');
+                    print(
+                      'medicationClassList${medicationClassList[0].imageData!.url}',
+                    );
                   },
                 ),
               ),
@@ -9533,7 +9531,7 @@ class PharmViewModel extends BaseViewModel {
                                       )
                                       .toList(),
                                   note: m.note,
-                                  medicationImage: m.imageData != null
+                                  medicationImage: m.imageData == null
                                       ? null
                                       : MedicationImage.fromJson(
                                           m.imageData!.toJson(),
@@ -9790,7 +9788,7 @@ class PharmViewModel extends BaseViewModel {
                                           )
                                           .toList(),
                                       note: m.note,
-                                      medicationImage: m.imageData != null
+                                      medicationImage: m.imageData == null
                                           ? null
                                           : MedicationImage.fromJson(
                                               m.imageData!.toJson(),
@@ -10179,6 +10177,7 @@ class PharmViewModel extends BaseViewModel {
     required Color color,
     required List<int> listOfTimes,
     required List<Map<String, dynamic>> dosageMap,
+    required PharmViewModel? model,
   }) {
     return Container(
       width: double.infinity,
@@ -10221,7 +10220,7 @@ class PharmViewModel extends BaseViewModel {
                             IconButton(
                               onPressed: () {
                                 dosageAfterValue = null;
-                                notifyListeners();
+                                model!.notifyListeners();
                                 // locator<PharmViewModel>().notifyListeners();
                               },
                               icon: Icon(
@@ -10291,7 +10290,7 @@ class PharmViewModel extends BaseViewModel {
                 IconButton(
                   onPressed: () {
                     dosageAfterValue = callback;
-                    notifyListeners();
+                    model!.notifyListeners();
                     // locator<PharmViewModel>().notifyListeners();
                   },
                   icon: Icon(
@@ -11323,12 +11322,18 @@ class PharmViewModel extends BaseViewModel {
         );
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: true),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: true,
+            isUserType: 'pharmacy',
+          ),
         );
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'pharmacy',
+          ),
         );
       }
     } catch (e) {
@@ -11364,7 +11369,10 @@ class PharmViewModel extends BaseViewModel {
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'pharmacy',
+          ),
         );
       }
     } catch (e) {
@@ -11398,7 +11406,10 @@ class PharmViewModel extends BaseViewModel {
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'pharmacy',
+          ),
         );
       }
     } catch (e) {
@@ -11409,7 +11420,7 @@ class PharmViewModel extends BaseViewModel {
     locator<PharmViewModel>().notifyListeners();
   }
 
-  void getReminder(context, {String? status, String? page}) async {
+  Future<void> getReminder(context, {String? status, String? page}) async {
     try {
       _isLoading = true;
       if (status == 'all' || status == '' || status == null) {

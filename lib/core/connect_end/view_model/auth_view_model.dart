@@ -14702,7 +14702,7 @@ class AuthViewModel extends BaseViewModel {
                                   )
                                   .toList(),
                               note: m.note,
-                              medicationImage: m.imageData != null
+                              medicationImage: m.imageData == null
                                   ? null
                                   : MedicationImage.fromJson(
                                       m.imageData!.toJson(),
@@ -14957,7 +14957,7 @@ class AuthViewModel extends BaseViewModel {
                                           )
                                           .toList(),
                                       note: m.note,
-                                      medicationImage: m.imageData != null
+                                      medicationImage: m.imageData == null
                                           ? null
                                           : MedicationImage.fromJson(
                                               m.imageData!.toJson(),
@@ -18654,12 +18654,12 @@ class AuthViewModel extends BaseViewModel {
         );
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: true),
+          arguments: PaymentStatusScreenArguments(isSuccessful: true,isUserType: 'everyday_user'),
         );
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+          arguments: PaymentStatusScreenArguments(isSuccessful: false,isUserType: 'everyday_user'),
         );
       }
     } catch (e) {
@@ -18695,7 +18695,7 @@ class AuthViewModel extends BaseViewModel {
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+          arguments: PaymentStatusScreenArguments(isSuccessful: false,isUserType: 'everyday_user'),
         );
       }
     } catch (e) {
@@ -18729,7 +18729,7 @@ class AuthViewModel extends BaseViewModel {
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false),
+          arguments: PaymentStatusScreenArguments(isSuccessful: false,isUserType: 'everyday_user'),
         );
       }
     } catch (e) {
