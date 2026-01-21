@@ -366,6 +366,7 @@ class PharmViewModel extends BaseViewModel {
   List<Document> kycDocumentsList = [];
   int v = 1;
 
+  int pageAll = 1;
   int pageOngoing = 1;
   int pageCompleted = 1;
   int pageToday = 1;
@@ -3203,7 +3204,6 @@ class PharmViewModel extends BaseViewModel {
     await Future.delayed(Duration(seconds: 1), () {});
 
     clearReminderMedsVaraibles(model);
-    print('everything hereeee:${medicationClassList[0].imageData!.url}');
     model.notifyListeners();
   }
 
@@ -4008,7 +4008,7 @@ class PharmViewModel extends BaseViewModel {
               context,
               id: id,
               page: model.pageOngoing.toString(),
-              limit: 20.toString(),
+              limit: 10.toString(),
             );
           });
         },
@@ -4209,7 +4209,7 @@ class PharmViewModel extends BaseViewModel {
                         id: id,
                         status: model.isReminderStatus,
                         page: model.pageOngoing.toString(),
-                        limit: 20.toString(),
+                        limit: 10.toString(),
                       );
                       setModalState!(() {});
                       model.notifyListeners();
@@ -5662,7 +5662,12 @@ class PharmViewModel extends BaseViewModel {
                                     linIndex++;
                                     model.notifyListeners();
                                   }
-                                  print(model.uploadImageReminderResponseModel!.data!.url);
+                                  print(
+                                    model
+                                        .uploadImageReminderResponseModel!
+                                        .data!
+                                        .url,
+                                  );
                                 },
                               ),
                               SizedBox(height: 130.h),
@@ -11427,7 +11432,7 @@ class PharmViewModel extends BaseViewModel {
         _getReminderResponseModel = await runBusyFuture(
           repositoryImply.getReminderForTenantAll(
             page: page,
-            limit: 20.toString(),
+            limit: 10.toString(),
           ),
           throwException: true,
         );
@@ -11436,7 +11441,7 @@ class PharmViewModel extends BaseViewModel {
           repositoryImply.getReminderForTenant(
             status: status,
             page: page,
-            limit: 20.toString(),
+            limit: 10.toString(),
           ),
           throwException: true,
         );
@@ -11582,6 +11587,12 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  onAddAllLoading() async {
+    pageAll++;
+    onLoading(pageAll);
+    notifyListeners();
+  }
+
   onAddGoingLoading() async {
     pageOngoing++;
     onLoading(pageOngoing);
@@ -11597,6 +11608,12 @@ class PharmViewModel extends BaseViewModel {
   onAddTodayLoading() async {
     pageToday++;
     onLoading(pageToday);
+    notifyListeners();
+  }
+
+  onSubAllLoading() async {
+    pageAll--;
+    onLoading(pageAll);
     notifyListeners();
   }
 
@@ -11624,13 +11641,27 @@ class PharmViewModel extends BaseViewModel {
     if (_getReminderResponseModel!.data!.data!.isNotEmpty) {
       try {
         _isLoading = true;
-        _getReminderResponseModel = await runBusyFuture(
-          repositoryImply.getReminderForTenant(
-            status: isReminderStatus,
-            page: page.toString(),
-            limit: 20.toString(),
-          ),
-        );
+        if (isReminderStatus == 'all' ||
+            isReminderStatus == '' ||
+            isReminderStatus == null) {
+          _getReminderResponseModel = await runBusyFuture(
+            repositoryImply.getReminderForTenantAll(
+              page: page.toString(),
+              limit: 10.toString(),
+            ),
+            throwException: true,
+          );
+        } else {
+          _getReminderResponseModel = await runBusyFuture(
+            repositoryImply.getReminderForTenant(
+              status: isReminderStatus,
+              page: page.toString(),
+              limit: 10.toString(),
+            ),
+            throwException: true,
+          );
+        }
+
         _isLoading = false;
       } catch (e) {
         _isLoading = false;
@@ -15585,16 +15616,16 @@ class PharmViewModel extends BaseViewModel {
 
   getReminderUpdate(data) {
     logger.d(data.toJson());
-    medNameControllerUpdate.text = data!.medication!.medicationName!;
-    medDosageControllerUpdate.text = data.medication!.dosage!;
+    medNameControllerUpdate.text = data!.medication!.medicationName ?? '';
+    medDosageControllerUpdate.text = data.medication!.dosage ?? '';
     medDurationControllerUpdate.text = data.medication!.durationInDays!
         .toString();
     medDailyInTakenControllerUpdate.text = data.medication!.timesPerDay
         .toString();
-    drugNameControllerUpdate.text = data.medication!.drugName!;
-    medTypeControllerUpdate.text = data.medication!.medicationType!;
-    medTypeResultImageUpdate = data.medication!.medicationType!;
-    noteControllerUpdate.text = data.medication!.note!;
+    drugNameControllerUpdate.text = data.medication!.drugName ?? '';
+    medTypeControllerUpdate.text = data.medication!.medicationType ?? '';
+    medTypeResultImageUpdate = data.medication!.medicationType ?? '';
+    noteControllerUpdate.text = data.medication!.note ?? '';
     endDateControllerUpdate.text = data.medication!.endDateTime.toString();
     imageReminderUpdate = data.medication!.medicationImage?.url ?? "";
     startDateIso = data.medication!.startDateTime.toString();

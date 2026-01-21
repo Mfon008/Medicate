@@ -234,6 +234,7 @@ class AuthViewModel extends BaseViewModel {
   int? indexDaily;
   int linIndex = 1;
   int linIndexUpdate = 1;
+  int pageAll = 1;
   int pageOngoing = 1;
   int pageCompleted = 1;
   int pageToday = 1;
@@ -18654,12 +18655,18 @@ class AuthViewModel extends BaseViewModel {
         );
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: true,isUserType: 'everyday_user'),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: true,
+            isUserType: 'everyday_user',
+          ),
         );
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false,isUserType: 'everyday_user'),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'everyday_user',
+          ),
         );
       }
     } catch (e) {
@@ -18695,7 +18702,10 @@ class AuthViewModel extends BaseViewModel {
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false,isUserType: 'everyday_user'),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'everyday_user',
+          ),
         );
       }
     } catch (e) {
@@ -18729,7 +18739,10 @@ class AuthViewModel extends BaseViewModel {
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
-          arguments: PaymentStatusScreenArguments(isSuccessful: false,isUserType: 'everyday_user'),
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'everyday_user',
+          ),
         );
       }
     } catch (e) {
@@ -18743,14 +18756,22 @@ class AuthViewModel extends BaseViewModel {
   void getReminder(context, {String? status, String? page}) async {
     try {
       _isLoading = true;
-      _getReminderResponseModel = await runBusyFuture(
-        repositoryImply.getReminder(
-          status: status,
-          page: page,
-          limit: 20.toString(),
-        ),
-        throwException: true,
-      );
+      if (status == 'all' || status == '' || status == null) {
+        _getReminderResponseModel = await runBusyFuture(
+          repositoryImply.getReminderAll(page: page, limit: 10.toString()),
+          throwException: true,
+        );
+      } else {
+        _getReminderResponseModel = await runBusyFuture(
+          repositoryImply.getReminder(
+            status: status,
+            page: page,
+            limit: 10.toString(),
+          ),
+          throwException: true,
+        );
+      }
+
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -18852,6 +18873,12 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  onAddAllLoading() async {
+    pageAll++;
+    onLoading(pageAll);
+    notifyListeners();
+  }
+
   onAddGoingLoading() async {
     pageOngoing++;
     onLoading(pageOngoing);
@@ -18867,6 +18894,12 @@ class AuthViewModel extends BaseViewModel {
   onAddTodayLoading() async {
     pageToday++;
     onLoading(pageToday);
+    notifyListeners();
+  }
+
+  onSubAllLoading() async {
+    pageAll--;
+    onLoading(pageAll);
     notifyListeners();
   }
 
@@ -18894,13 +18927,23 @@ class AuthViewModel extends BaseViewModel {
     if (_getReminderResponseModel!.data!.reminders!.isNotEmpty) {
       try {
         _isLoading = true;
-        _getReminderResponseModel = await runBusyFuture(
-          repositoryImply.getReminder(
-            status: isReminderStatus,
-            page: page.toString(),
-            limit: 20.toString(),
-          ),
-        );
+        if (isReminderStatus == 'all' ||
+            isReminderStatus == '' ||
+            isReminderStatus == null) {
+          _getReminderResponseModel = await runBusyFuture(
+            repositoryImply.getReminderAll(page: page.toString(), limit: 10.toString()),
+            throwException: true,
+          );
+        } else {
+          _getReminderResponseModel = await runBusyFuture(
+            repositoryImply.getReminder(
+              status: isReminderStatus,
+              page: page.toString(),
+              limit: 10.toString(),
+            ),
+            throwException: true,
+          );
+        }
         _isLoading = false;
       } catch (e) {
         _isLoading = false;

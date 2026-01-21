@@ -399,6 +399,24 @@ class AuthApi {
     }
   }
 
+  Future<GetReminderResponseModel> getReminderAll({
+    String? page,
+    String? limit,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminder,
+        RequestMethod.get,
+        data: {'page': page, 'limit': limit},
+      );
+      logger.d(response.data);
+      return GetReminderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<UpdateDosesStatusModel> updateDoseStatus({
     String? reminerId,
     String? doseId,

@@ -4,8 +4,8 @@ part 'meta.g.dart';
 
 @JsonSerializable()
 class Meta {
-  String? page;
-  String? limit;
+  int? page;
+  int? limit;
   int? total;
   int? totalPages;
 

@@ -50,7 +50,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           floatingActionButton:
-              model.getReminderResponseModel != null && 
+              model.getReminderResponseModel != null &&
                   model.getReminderResponseModel!.data!.data!.isEmpty
               ? SizedBox.shrink()
               : FloatingActionButton(
@@ -346,7 +346,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                         borderTopRight: 32.0.r,
                         borderBottomLeft: 32.0.r,
                         borderBottomRight: 32.0.r,
-                        label: '',
+                        label: 'Search by medication name',
                         labelStyle: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontFamily: 'Arial',
@@ -455,7 +455,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                             borderTopRight: 32.0.r,
                                             borderBottomLeft: 32.0.r,
                                             borderBottomRight: 32.0.r,
-                                            label: '',
+                                            label: 'Search by medication type',
                                             labelStyle: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Arial',
@@ -661,8 +661,8 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                 .where(
                                                   (e) =>
                                                       e.value.medicationType
-                                                          ?.toLowerCase()==model.searchuserByPharm
-                                                          ?.toLowerCase()
+                                                          ?.toLowerCase().contains(model.searchuserByPharm
+                                                          !.toLowerCase())??false,
                                                 )
                                                 .map((entry) {
                                                   final index = entry.key;
@@ -1544,6 +1544,12 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                       : () async {
                                                           if (model
                                                                   .isReminderStatus ==
+                                                              'all') {
+                                                            model
+                                                                .onSubAllLoading();
+                                                          }
+                                                          if (model
+                                                                  .isReminderStatus ==
                                                               'ongoing') {
                                                             model
                                                                 .onSubGoingLoading();
@@ -1609,6 +1615,12 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                               .totalPages
                                                       ? () {}
                                                       : () async {
+                                                          if (model
+                                                                  .isReminderStatus ==
+                                                              'all') {
+                                                            model
+                                                                .onAddAllLoading();
+                                                          }
                                                           if (model
                                                                   .isReminderStatus ==
                                                               'ongoing') {

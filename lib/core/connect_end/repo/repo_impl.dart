@@ -174,6 +174,17 @@ class AuthRepoImpl {
     return response;
   }
 
+  Future<GetReminderResponseModel> getReminderAll({
+    String? page,
+    String? limit,
+  }) async {
+    final response = await _contract.getReminderAll(
+      page: page,
+      limit: limit,
+    );
+    return response;
+  }
+
   Future<GetReminderById> getReminderById(String? id) async {
     final response = await _contract.getReminderById(id);
     return response;

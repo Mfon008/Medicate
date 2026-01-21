@@ -90,6 +90,10 @@ class AuthContractsImpl {
     String? page,
     String? limit,
   }) async => await _api.getReminder(status: status, page: page, limit: limit);
+  Future<GetReminderResponseModel> getReminderAll({
+    String? page,
+    String? limit,
+  }) async => await _api.getReminderAll( page: page, limit: limit);
 
   Future<GetReminderById> getReminderById(String? id) async =>
       await _api.getReminderById(id!);
