@@ -966,6 +966,7 @@ class StackedRouter extends _i1.RouterBase {
         builder: (context) => _i30.PaymentStatusScreen(
           key: args.key,
           isSuccessful: args.isSuccessful,
+          isUserType: args.isUserType,
         ),
         settings: data,
       );
@@ -2271,26 +2272,34 @@ class FundWalletPayScreenArguments {
 }
 
 class PaymentStatusScreenArguments {
-  const PaymentStatusScreenArguments({this.key, required this.isSuccessful});
+  const PaymentStatusScreenArguments({
+    this.key,
+    required this.isSuccessful,
+    required this.isUserType,
+  });
 
   final _i95.Key? key;
 
   final bool isSuccessful;
 
+  final String? isUserType;
+
   @override
   String toString() {
-    return '{"key": "$key", "isSuccessful": "$isSuccessful"}';
+    return '{"key": "$key", "isSuccessful": "$isSuccessful", "isUserType": "$isUserType"}';
   }
 
   @override
   bool operator ==(covariant PaymentStatusScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key && other.isSuccessful == isSuccessful;
+    return other.key == key &&
+        other.isSuccessful == isSuccessful &&
+        other.isUserType == isUserType;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ isSuccessful.hashCode;
+    return key.hashCode ^ isSuccessful.hashCode ^ isUserType.hashCode;
   }
 }
 
@@ -4318,6 +4327,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   Future<dynamic> navigateToPaymentStatusScreen({
     _i95.Key? key,
     required bool isSuccessful,
+    required String? isUserType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4329,6 +4339,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
       arguments: PaymentStatusScreenArguments(
         key: key,
         isSuccessful: isSuccessful,
+        isUserType: isUserType,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -6065,6 +6076,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   Future<dynamic> replaceWithPaymentStatusScreen({
     _i95.Key? key,
     required bool isSuccessful,
+    required String? isUserType,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6076,6 +6088,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
       arguments: PaymentStatusScreenArguments(
         key: key,
         isSuccessful: isSuccessful,
+        isUserType: isUserType,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,

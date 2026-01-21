@@ -14,8 +14,13 @@ import '../../widget/button.dart';
 import '../../widget/text.dart';
 
 class PaymentStatusScreen extends StatelessWidget {
-  PaymentStatusScreen({super.key, required this.isSuccessful});
+  PaymentStatusScreen({
+    super.key,
+    required this.isSuccessful,
+    required this.isUserType,
+  });
   bool isSuccessful = false;
+  String? isUserType;
 
   @override
   Widget build(BuildContext context) {
@@ -125,10 +130,18 @@ class PaymentStatusScreen extends StatelessWidget {
                             medicationClassList.clear();
                             model.doseControllers.clear();
                             model.periodLabels.clear();
-                            navigate.clearStackAndShow(
-                              Routes.dashboard,
-                              arguments: DashboardArguments(index: 1),
-                            );
+                            if (isUserType == 'everyday_user') {
+                              navigate.clearStackAndShow(
+                                Routes.dashboard,
+                                arguments: DashboardArguments(index: 1),
+                              );
+                            }
+                            if (isUserType == 'pharmacy') {
+                              navigate.clearStackAndShow(
+                                Routes.pharmacyDashboard,
+                                arguments: PharmacyDashboardArguments(index: 1),
+                              );
+                            }
                           },
                         ),
                   SizedBox(height: 30.h),
