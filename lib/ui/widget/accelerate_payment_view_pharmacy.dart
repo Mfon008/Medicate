@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medicate_app/core/config/colors.dart';
@@ -19,9 +21,9 @@ class AcceleratePaymentViewPharmacy extends StatefulWidget {
 class _AcceleratePaymentViewPharmacyState extends State<AcceleratePaymentViewPharmacy> {
   WebViewController? _controller;
 
-  @override
-  void initState() {
-    _controller = WebViewController()
+  void setupWebViewWithPlatform(){
+    if(Platform.isAndroid){
+       _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
@@ -41,6 +43,16 @@ class _AcceleratePaymentViewPharmacyState extends State<AcceleratePaymentViewPha
         ),
       )
       ..loadRequest(Uri.parse(widget.url!));
+    }else{
+       _controller = WebViewController()
+      ..loadRequest(Uri.parse(widget.url!));
+    }
+    
+  }
+
+  @override
+  void initState() {
+    setupWebViewWithPlatform();
     super.initState();
   }
 
