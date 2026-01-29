@@ -363,6 +363,7 @@ class AuthViewModel extends BaseViewModel {
   bool isSubTapped = false;
   bool isPaidTapped = false;
   bool isCusSchedule = false;
+  bool isDosageOthers = false;
 
   String? formattedSelectedTimeAndPeriod;
   String? numberOfDurationsInDays;
@@ -7808,9 +7809,11 @@ class AuthViewModel extends BaseViewModel {
                 padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: medDosageController.text==e ? AppColors.skyBlue : AppColors.white,
+                  color: medDosageController.text == e
+                      ? AppColors.skyBlue
+                      : AppColors.white,
                   border: Border.all(
-                    color: medDosageController.text==e 
+                    color: medDosageController.text == e
                         ? AppColors.primary1
                         : Colors.transparent,
                   ),
@@ -7827,7 +7830,7 @@ class AuthViewModel extends BaseViewModel {
                       ),
                     ),
                     const Spacer(),
-                    if (medDosageController.text==e)
+                    if (medDosageController.text == e)
                       Icon(
                         Icons.check,
                         color: AppColors.primary1,
@@ -11384,20 +11387,23 @@ class AuthViewModel extends BaseViewModel {
                           // ),
                           fillColor: AppColors.white,
                           isFilled: true,
-                          readOnly: true,
+                          readOnly: medTypeController.text == 'Others'
+                              ? false
+                              : true,
                           suffixWidget: IconButton(
-                            onPressed: () async {
-                              final result = await showMedDosageMenu(
-                                context: context,
-                                type: medTypeController.text,
-                              );
-                              if (result != null) {
-                                setModalState!(() {
-                                  model.medDosageController.text = result;
-                                });
-                              }
-                             
-                            },
+                            onPressed: medTypeController.text == 'Others'
+                                ? () {}
+                                : () async {
+                                    final result = await showMedDosageMenu(
+                                      context: context,
+                                      type: medTypeController.text,
+                                    );
+                                    if (result != null) {
+                                      setModalState!(() {
+                                        model.medDosageController.text = result;
+                                      });
+                                    }
+                                  },
                             icon: Icon(
                               Icons.keyboard_arrow_down,
                               color: AppColors.faintedGrey,
@@ -14081,7 +14087,6 @@ class AuthViewModel extends BaseViewModel {
                                         // label: model.getStringFrLabel(
                                         //   medDosageController.text,
                                         // ),
-                                        
                                         fillColor: AppColors.grey,
                                         isFilled: true,
                                         readOnly: true,
