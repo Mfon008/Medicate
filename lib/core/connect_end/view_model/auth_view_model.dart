@@ -30,6 +30,7 @@ import 'package:medicate_app/core/connect_end/model/update_user_profile_entity/p
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/daily_dose_time.dart'
     as upReminder;
+import 'package:number_to_words_english/number_to_words_english.dart';
 import 'package:medicate_app/ui/dashboard/reminder/medication_class.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
@@ -178,12 +179,20 @@ class AuthViewModel extends BaseViewModel {
   TextEditingController dateTimeController = TextEditingController();
   TextEditingController dateTimeControllerUpdate = TextEditingController();
   String? pickedDate;
+  String? pickedEndDate;
   String endDateIso = '';
   String _dosageLabel = '';
 
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
   List<List<String>> periodAfterLabels = [];
+
+  DateTime? pickedDatedStart;
+  String? pickedDatedStartString;
+
+  int? returnNoDays;
+
+  List<String>? formattedSelectedTimeAndPeriodList = [];
 
   int? dosageValue;
   int? dosageAddedValue;
@@ -229,9 +238,10 @@ class AuthViewModel extends BaseViewModel {
   String medTypeResult = '';
   String medTypeResultImage = '';
   String medTypeResultImageUpdate = '';
-  int? index;
+  double? index;
   int? indexDuration;
   int? indexDaily;
+  List<int>? indexDailyList = [1, 2, 3, 4];
   int linIndex = 1;
   int linIndexUpdate = 1;
   int pageAll = 1;
@@ -252,7 +262,7 @@ class AuthViewModel extends BaseViewModel {
   List<List<upReminder.DailyDoseTime>> dailyDose = [];
 
   List<MedType> medTypeList = [
-    MedType(medType: 'Pill', medTypeImage: AppImage.pill),
+    MedType(medType: 'Tablet', medTypeImage: AppImage.tablet),
     MedType(medType: 'Syrup', medTypeImage: AppImage.syrup),
     MedType(medType: 'Injection', medTypeImage: AppImage.syringe),
     MedType(medType: 'Drip', medTypeImage: AppImage.drip),
@@ -314,6 +324,12 @@ class AuthViewModel extends BaseViewModel {
   int linCorpIndex = 1;
   bool isSubTapped = false;
   bool isPaidTapped = false;
+  bool isCusSchedule = false;
+
+  String? formattedSelectedTimeAndPeriod;
+  String? numberOfDurationsInDays;
+
+  DateTime now = DateTime.now();
 
   TextEditingController fullNameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
@@ -6933,9 +6949,12 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<String?> showDailyInTakeMenu(BuildContext context) async {
+  Future<String?> showDailyInTakeMenu({
+    BuildContext? context,
+    StateSetter? setModalState,
+  }) async {
     return await showModalBottomSheet<String>(
-      context: context,
+      context: context!,
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         return StatefulBuilder(
@@ -6954,7 +6973,7 @@ class AuthViewModel extends BaseViewModel {
                   children: [
                     SizedBox(height: 10.h),
                     TextView(
-                      text: 'No of Times to be taken daily',
+                      text: 'Frequency',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16.60.sp,
@@ -6963,11 +6982,11 @@ class AuthViewModel extends BaseViewModel {
                       ),
                     ),
                     SizedBox(height: 14.h),
-                    for (int i = 1; i < 6; i++)
-                      GestureDetector(
+                    ...indexDailyList!.map(
+                      (e) => GestureDetector(
                         onTap: () {
                           setMenuState(() {
-                            indexDaily = i;
+                            indexDaily = e;
                           });
 
                           Future.delayed(Duration(milliseconds: 200), () {
@@ -6982,11 +7001,11 @@ class AuthViewModel extends BaseViewModel {
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: indexDaily == i
+                            color: indexDaily == e
                                 ? AppColors.skyBlue
                                 : AppColors.white,
                             border: Border.all(
-                              color: indexDaily == i
+                              color: indexDaily == e
                                   ? AppColors.primary1
                                   : Colors.transparent,
                             ),
@@ -6994,7 +7013,7 @@ class AuthViewModel extends BaseViewModel {
                           child: Row(
                             children: [
                               TextView(
-                                text: i.toString(),
+                                text: showNoTimesMode(e),
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 16.60.sp,
@@ -7003,7 +7022,7 @@ class AuthViewModel extends BaseViewModel {
                                 ),
                               ),
                               const Spacer(),
-                              if (indexDaily == i)
+                              if (indexDaily == e)
                                 Icon(
                                   Icons.check,
                                   color: AppColors.primary1,
@@ -7013,6 +7032,117 @@ class AuthViewModel extends BaseViewModel {
                           ),
                         ),
                       ),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        setMenuState(() {
+                          isCusSchedule = true;
+                          indexDaily = null;
+                          medDailyInTakenController.text = 'Custom Schedule';
+                          setModalState!(() {});
+                        });
+
+                        Future.delayed(Duration(milliseconds: 200), () {
+                          Navigator.pop(ctx);
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 12.w),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: index == 0
+                              ? AppColors.skyBlue
+                              : AppColors.white,
+                          border: Border.all(
+                            color: index == 0
+                                ? AppColors.primary1
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: AppColors.lightBlue,
+                              size: 16.sp,
+                            ),
+                            SizedBox(width: 4.w),
+                            TextView(
+                              text: 'Custom Schedule',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.60.sp,
+                                color: AppColors.lightBlue,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const Spacer(),
+                            if (index == 0)
+                              Icon(
+                                Icons.check,
+                                color: AppColors.primary1,
+                                size: 15.60.sp,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // for (int i = 1; i < 6; i++)
+                    //   GestureDetector(
+                    //     onTap: () {
+                    //       setMenuState(() {
+                    //         indexDaily = i;
+                    //       });
+
+                    //       Future.delayed(Duration(milliseconds: 200), () {
+                    //         Navigator.pop(ctx, indexDaily.toString());
+                    //       });
+                    //     },
+                    //     child: Container(
+                    //       margin: EdgeInsets.only(bottom: 12.w),
+                    //       padding: EdgeInsets.symmetric(
+                    //         vertical: 12.w,
+                    //         horizontal: 12.w,
+                    //       ),
+                    //       decoration: BoxDecoration(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //         color: indexDaily == i
+                    //             ? AppColors.skyBlue
+                    //             : AppColors.white,
+                    //         border: Border.all(
+                    //           color: indexDaily == i
+                    //               ? AppColors.primary1
+                    //               : Colors.transparent,
+                    //         ),
+                    //       ),
+                    //       child: Row(
+                    //         children: [
+                    //           TextView(
+                    //             text: i.toString(),
+                    //             textStyle: TextStyle(
+                    //               fontFamily: 'Arial',
+                    //               fontSize: 16.60.sp,
+                    //               color: AppColors.black,
+                    //               fontWeight: FontWeight.w400,
+                    //             ),
+                    //           ),
+                    //           const Spacer(),
+                    //           if (indexDaily == i)
+                    //             Icon(
+                    //               Icons.check,
+                    //               color: AppColors.primary1,
+                    //               size: 15.60.sp,
+                    //             ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
                   ],
                 ),
               ),
@@ -7143,7 +7273,7 @@ class AuthViewModel extends BaseViewModel {
                       ),
                     ),
                     SizedBox(height: 14.h),
-                    for (int i = 1; i < 11; i++)
+                    for (double i = 1; i < 4; i++)
                       GestureDetector(
                         onTap: () {
                           setMenuState(() {
@@ -7174,7 +7304,9 @@ class AuthViewModel extends BaseViewModel {
                           child: Row(
                             children: [
                               TextView(
-                                text: i > 1 ? '$i tablets' : '$i tablet',
+                                text: i > 1
+                                    ? '${i.toString().replaceAll(RegExp(r'\.0$'), '')} tablets'
+                                    : '${i.toString().replaceAll(RegExp(r'\.0$'), '')} tablet',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 16.60.sp,
@@ -7193,6 +7325,162 @@ class AuthViewModel extends BaseViewModel {
                           ),
                         ),
                       ),
+                    GestureDetector(
+                      onTap: () {
+                        setMenuState(() {
+                          index = 0.5;
+                        });
+
+                        Future.delayed(Duration(milliseconds: 200), () {
+                          Navigator.pop(ctx, index.toString());
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 12.w),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: index == 0.5
+                              ? AppColors.skyBlue
+                              : AppColors.white,
+                          border: Border.all(
+                            color: index == 0.5
+                                ? AppColors.primary1
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            TextView(
+                              text: '½ tablet',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16.60.sp,
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const Spacer(),
+                            if (index == 0.5)
+                              Icon(
+                                Icons.check,
+                                color: AppColors.primary1,
+                                size: 15.60.sp,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        setMenuState(() {
+                          index = 1.5;
+                        });
+
+                        Future.delayed(Duration(milliseconds: 200), () {
+                          Navigator.pop(ctx, index.toString());
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 12.w),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: index == 1.5
+                              ? AppColors.skyBlue
+                              : AppColors.white,
+                          border: Border.all(
+                            color: index == 1.5
+                                ? AppColors.primary1
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            TextView(
+                              text: '1½ tablets',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16.60.sp,
+                                color: AppColors.black,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const Spacer(),
+                            if (index == 1.5)
+                              Icon(
+                                Icons.check,
+                                color: AppColors.primary1,
+                                size: 15.60.sp,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    GestureDetector(
+                      onTap: () {
+                        setMenuState(() {
+                          // index = 0;
+                        });
+
+                        Future.delayed(Duration(milliseconds: 200), () {
+                          Navigator.pop(ctx, index.toString());
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 12.w),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: index == 0
+                              ? AppColors.skyBlue
+                              : AppColors.white,
+                          border: Border.all(
+                            color: index == 0
+                                ? AppColors.primary1
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: AppColors.lightBlue,
+                              size: 16.sp,
+                            ),
+                            SizedBox(width: 4.w),
+
+                            TextView(
+                              text: 'Enter custom dosage',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.60.sp,
+                                color: AppColors.lightBlue,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const Spacer(),
+                            if (index == 0)
+                              Icon(
+                                Icons.check,
+                                color: AppColors.primary1,
+                                size: 15.60.sp,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -7344,7 +7632,11 @@ class AuthViewModel extends BaseViewModel {
             builder: (BuildContext context, ScrollController scrollController) {
               return ViewModelBuilder<AuthViewModel>.reactive(
                 viewModelBuilder: () => locator<AuthViewModel>(),
-                onViewModelReady: (model) {},
+                onViewModelReady: (model) {
+                  formattedSelectedTimeAndPeriod = DateFormat(
+                    'h:mm a',
+                  ).format(now);
+                },
                 disposeViewModel: false,
                 onDispose: (viewModel) {},
                 builder: (_, AuthViewModel model, _) {
@@ -8693,26 +8985,168 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? pickedDated = await showDatePicker(
-      context: context,
+  // DateTime? _startDate;
+  // DateTime? _endDate;
+  // int? numberOfDays;
+  // String numberOfDayss = '';
+
+  getTimeFreq() => formattedSelectedTimeAndPeriod ?? '';
+
+  Future<void> selectTimeFreq({
+    BuildContext? context,
+    StateSetter? setModalState,
+  }) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context!,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      formattedSelectedTimeAndPeriod = formatTimeFreq(pickedTime);
+    }
+    setModalState!(() {});
+    notifyListeners();
+  }
+
+  String formatTimeFreq(TimeOfDay time) {
+    final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
+    final minute = time.minute.toString().padLeft(2, '0');
+    final period = time.period == DayPeriod.am ? 'AM' : 'PM';
+    return '$hour:$minute $period';
+  }
+
+  String getReturnDurationNumberOfDays(returnNoDay) {
+    if (returnNoDay! > 1) {
+      return '$returnNoDay Days';
+    } else {
+      return '$returnNoDay Day';
+    }
+  }
+
+  //  void _setEndDateValues(DateTime date) {
+  //   _endDate = date;
+
+  //   pickedEndDate = DateFormat('dd MMM, yyyy').format(date);
+  //   endDateController.text = pickedEndDate!;
+
+  //   numberOfDays = date.difference(_startDate!).inDays+1;
+  //   numberOfDayss = getReturnDurationNumberOfDays(numberOfDays);
+  //   print('object::::numberOfDayss::$numberOfDayss');
+  //   notifyListeners();
+  // }
+
+  // /// ================= DATE PICKER =================
+
+  // Future<DateTime?> _pickDate({
+  //   required BuildContext context,
+  //   required DateTime firstDate,
+  //   DateTime? initialDate,
+  // }) {
+  //   return showDatePicker(
+  //     context: context,
+  //     initialDate: initialDate ?? firstDate,
+  //     firstDate: firstDate,
+  //     lastDate: DateTime(2101),
+  //   );
+  // }
+
+  // Future<void> selectEndDate(BuildContext context) async {
+  //   if (_startDate == null) return;
+
+  //   final DateTime firstSelectableDate = _startDate!;
+  //       // _startDate!.add(const Duration(days: 1));
+
+  //   final DateTime? selectedDate = await _pickDate(
+  //     context: context,
+  //     firstDate: firstSelectableDate,
+  //     initialDate: firstSelectableDate,
+  //   );
+
+  //   if (selectedDate == null) return;
+
+  //   _setEndDateValues(selectedDate);
+  //   notifyListeners();
+  // }
+
+  // Future<void> selectStartDate(BuildContext context) async {
+  //   final DateTime? selectedDate = await _pickDate(
+  //     context: context,
+  //     firstDate: DateTime.now(),
+  //   );
+
+  //   if (selectedDate == null) return;
+
+  //   _startDate = selectedDate;
+  //   _setStartDateValues(context: context, date:selectedDate);
+
+  //   notifyListeners();
+  // }
+
+  // Future<void> _setStartDateValues({BuildContext? context,DateTime? date}) async {
+  //   pickedDate = DateFormat('dd MMM, yyyy').format(date!);
+  //   await selectTime(context!);
+  //   startDateIso = DateTime.utc(
+  //     date.year,
+  //     date.month,
+  //     date.day,
+  //   ).toIso8601String();
+
+  //   selectTime; // call later if async is not required
+  // }
+
+  Future<void> selectDate({
+    BuildContext? context,
+    StateSetter? setModalState,
+  }) async {
+    pickedDatedStart = await showDatePicker(
+      context: context!,
       initialDate: DateTime.now(), // The date initially displayed
       firstDate: DateTime.now(), // The earliest selectable date
       lastDate: DateTime(2101), // The latest selectable date
     );
+    pickedDatedStartString = pickedDatedStart.toString();
 
-    if (pickedDated != null) {
-      pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
+    if (pickedDatedStart != null) {
+      pickedDate = DateFormat('dd MMM, yyyy').format(pickedDatedStart!);
 
       await selectTime(context);
       startDateIso = DateTime.utc(
-        pickedDated.year,
-        pickedDated.month,
-        pickedDated.day,
+        pickedDatedStart!.year,
+        pickedDatedStart!.month,
+        pickedDatedStart!.day,
       ).toIso8601String();
       print('After time select → startDateIso: $startDateIso');
       print('iso$startDateIso');
     }
+    setModalState!(() {});
+    notifyListeners();
+  }
+
+  Future<void> selectEndDate({
+    BuildContext? context,
+    StateSetter? setModalState,
+  }) async {
+    if (pickedDatedStart == null) return;
+
+    // 👉 End date must start from the next day
+    // final DateTime nextDay = pickedDatedStart!.add(const Duration(days: 1));
+    final DateTime nextDay = pickedDatedStart!;
+
+    final DateTime? pickedDated = await showDatePicker(
+      context: context!,
+      initialDate: nextDay,
+      firstDate: nextDay,
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDated != null) {
+      pickedEndDate = DateFormat('dd MMM, yyyy').format(pickedDated);
+      returnNoDays = pickedDated.difference(pickedDatedStart!).inDays + 1;
+      numberOfDurationsInDays = getReturnDurationNumberOfDays(returnNoDays);
+      endDateController.text = pickedEndDate!;
+    }
+    print('opopopop$numberOfDurationsInDays');
+    setModalState!(() {});
     notifyListeners();
   }
 
@@ -8893,10 +9327,10 @@ class AuthViewModel extends BaseViewModel {
     if (i == '') {
       return '';
     }
-    if (int.parse(i) > 1) {
-      return '$i tablets';
+    if (double.parse(i) > 1) {
+      return '${i.toString().replaceAll(RegExp(r'\.0$'), '')} tablets';
     }
-    return '$i tablet';
+    return '${i.toString().replaceAll(RegExp(r'\.0$'), '')} tablet';
   }
 
   String getStringFrDuration(String i) {
@@ -10210,15 +10644,30 @@ class AuthViewModel extends BaseViewModel {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        TextView(
+                          text: 'MEDICATION DETAILS',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 14.80.sp,
+                            color: AppColors.deep,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Divider(color: AppColors.grey),
+                        SizedBox(height: 12.h),
+
                         TextFormWidget(
                           hint: 'Medication Name',
-                          borderColor: AppColors.transparent,
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          borderColor: AppColors.infoGrey1,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 14.sp,
-                          fillColor: AppColors.grey,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          fillColor: AppColors.white,
                           isFilled: true,
                           controller: medNameController,
                           validator: AppValidator.validateString(),
@@ -10229,42 +10678,46 @@ class AuthViewModel extends BaseViewModel {
                           ),
                         ),
                         SizedBox(height: 16.h),
-                        TextFormWidget(
-                          hint: 'Drug Name',
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          hintSize: 13.62.sp,
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: drugNameController,
-                          validator: AppValidator.validateString(),
-                          style: TextStyle(
-                            fontSize: 16.20.sp,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'GoogleSans',
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
-                        TextView(
-                          text: 'Medication Type',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        // TextFormWidget(
+                        //   hint: 'Drug Name',
+                        //   borderColor: AppColors.infoGrey1,
+                        //   borderTopLeft: 10.r,
+                        //   borderTopRight: 10.r,
+                        //   borderBottomLeft: 10.r,
+                        //   borderBottomRight: 10.r,
+                        //   hintSize: Platform.isAndroid? 14.sp:11.6.sp,
+                        //   fillColor: AppColors.white,
+                        //   isFilled: true,
+                        //   controller: drugNameController,
+                        //   validator: AppValidator.validateString(),
+                        //   style: TextStyle(
+                        //     fontSize: 16.20.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     fontFamily: 'GoogleSans',
+                        //   ),
+                        // ),
+                        // SizedBox(height: 16.h),
+                        // TextView(
+                        //   text: 'Medication Type',
+                        //   textStyle: TextStyle(
+                        //     fontFamily: 'Arial',
+                        //     fontSize: 14.sp,
+                        //     fontWeight: FontWeight.w500,
+                        //   ),
+                        // ),
                         SizedBox(height: 12.h),
                         TextFormWidget(
-                          borderColor: AppColors.transparent,
+                          hint: 'Medication Type',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          borderColor: AppColors.infoGrey1,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
                           readOnly: true,
-                          fillColor: AppColors.grey,
+                          fillColor: AppColors.white,
                           isFilled: true,
                           prefixWidget: medTypeResultImage.isNotEmpty
                               ? Padding(
@@ -10275,7 +10728,7 @@ class AuthViewModel extends BaseViewModel {
                           suffixWidget: IconButton(
                             icon: Icon(
                               Icons.keyboard_arrow_down_outlined,
-                              color: AppColors.greyee,
+                              color: AppColors.faintedGrey,
                             ),
                             onPressed: () async {
                               final result = await showMedTypeMenu(context);
@@ -10297,38 +10750,39 @@ class AuthViewModel extends BaseViewModel {
                           ),
                         ),
                         SizedBox(height: 16.h),
-                        TextView(
-                          text: 'Description',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        TextFormWidget(
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: descriptionController,
-                          validator: AppValidator.validateString(),
-                          style: TextStyle(
-                            fontSize: 16.20.sp,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'GoogleSans',
-                          ),
-                        ),
-                        SizedBox(height: 16.h),
+                        // TextView(
+                        //   text: 'Description',
+                        //   textStyle: TextStyle(
+                        //     fontFamily: 'Arial',
+                        //     fontSize: 14.sp,
+                        //     fontWeight: FontWeight.w500,
+                        //   ),
+                        // ),
+                        // SizedBox(height: 10.h),
+                        // TextFormWidget(
+                        //   borderColor: AppColors.transparent,
+                        //   borderTopLeft: 10.r,
+                        //   borderTopRight: 10.r,
+                        //   borderBottomLeft: 10.r,
+                        //   borderBottomRight: 10.r,
+                        //   fillColor: AppColors.grey,
+                        //   isFilled: true,
+                        //   controller: descriptionController,
+                        //   validator: AppValidator.validateString(),
+                        //   style: TextStyle(
+                        //     fontSize: 16.20.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     fontFamily: 'GoogleSans',
+                        //   ),
+                        // ),
+                        // SizedBox(height: 16.h),
                         TextView(
                           text: 'Medication picture upload',
                           textStyle: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
+                            color: AppColors.reminder,
                           ),
                         ),
                         SizedBox(height: 10.h),
@@ -10435,37 +10889,19 @@ class AuthViewModel extends BaseViewModel {
                           textStyle: TextStyle(
                             fontFamily: 'GoogleSans',
                             fontSize: 14.80.sp,
-                            color: AppColors.grey1,
-                            fontWeight: FontWeight.w500,
+                            color: AppColors.deep,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         SizedBox(height: 12.h),
                         Divider(color: AppColors.grey),
                         SizedBox(height: 12.h),
-                        Row(
-                          children: [
-                            TextView(
-                              text: 'Dosage ',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            TextView(
-                              text: '(mg)',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.sp,
-                                color: AppColors.grey1,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 14.0.h),
                         TextFormWidget(
-                          borderColor: AppColors.transparent,
+                          hint: 'Dosage',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
@@ -10479,7 +10915,7 @@ class AuthViewModel extends BaseViewModel {
                             fontSize: 14.80.sp,
                             color: AppColors.infoGrey,
                           ),
-                          fillColor: AppColors.grey,
+                          fillColor: AppColors.white,
                           isFilled: true,
                           readOnly: true,
                           suffixWidget: IconButton(
@@ -10493,11 +10929,10 @@ class AuthViewModel extends BaseViewModel {
                             },
                             icon: Icon(
                               Icons.keyboard_arrow_down,
-                              color: AppColors.grey1,
+                              color: AppColors.faintedGrey,
                               size: 20.sp,
                             ),
                           ),
-
                           style: TextStyle(
                             fontSize: 15.0.sp,
                             fontWeight: FontWeight.w400,
@@ -10507,21 +10942,77 @@ class AuthViewModel extends BaseViewModel {
                         ),
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
+                          hint: 'Frequency',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.white,
+                          isFilled: true,
+                          readOnly: true,
+                          controller: TextEditingController(
+                            text: medDailyInTakenController.text == ''
+                                ? ''
+                                : medDailyInTakenController.text
+                                          .toLowerCase() ==
+                                      'custom schedule'
+                                ? medDailyInTakenController.text
+                                : showNoTimesMode(
+                                    int.parse(medDailyInTakenController.text),
+                                  ),
+                          ),
+                          suffixWidget: IconButton(
+                            onPressed: () async {
+                              final result = await showDailyInTakeMenu(
+                                context: context,
+                                setModalState: setModalState,
+                              );
+                              if (result != null) {
+                                setModalState!(() {
+                                  medDailyInTakenController.text = result;
+                                });
+                              }
+                            },
+                            icon: Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppColors.faintedGrey,
+                              size: 20.sp,
+                            ),
+                          ),
+                          validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
+                        ),
+                        SizedBox(height: 24.0.h),
+
+                        TextFormWidget(
                           hint: 'Start Date & Time',
-                          borderColor: AppColors.transparent,
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
                           readOnly: true,
-                          hintSize: 14.sp,
-                          fillColor: AppColors.grey,
+                          fillColor: AppColors.white,
                           isFilled: true,
                           controller: model.dateTimeController,
                           suffixWidget: Padding(
                             padding: EdgeInsets.all(8.w),
                             child: GestureDetector(
-                              onTap: () => model.selectDate(context),
+                              onTap: () => model.selectDate(
+                                context: context,
+                                setModalState: setModalState,
+                              ),
                               child: SvgPicture.asset(
                                 AppImage.calendar,
                                 fit: BoxFit.cover,
@@ -10536,153 +11027,435 @@ class AuthViewModel extends BaseViewModel {
                           ),
                         ),
                         SizedBox(height: 24.0.h),
+
                         TextFormWidget(
-                          hint: 'Duration',
-                          label: 'E.g 15',
-                          borderColor: AppColors.transparent,
-                          keyboardType: TextInputType.number,
-                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          hint: 'End Date',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 14.sp,
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          controller: medDurationController,
-                          onChange: (p0) {
-                            if (p0 != null && p0.trim().isNotEmpty) {
-                              final parsed = int.tryParse(p0.trim());
-                              if (parsed != null) {
-                                _duration = parsed;
-                                intList = List.generate(
-                                  _duration!,
-                                  (index) => index,
-                                );
-                                dateTimeObject = inputFormat.parse(
-                                  model.pickedDate!,
-                                );
-                                final localDate = dateTimeObject!;
-                                final utcStartDate = DateTime.utc(
-                                  localDate.year,
-                                  localDate.month,
-                                  localDate.day,
-                                );
-
-                                // Now safely add your duration
-                                final utcEndDate = utcStartDate.add(
-                                  Duration(days: _duration! - 1),
-                                );
-
-                                // Display or store
-                                endDateController.text = utcEndDate
-                                    .toIso8601String();
-                                endDateIso = utcEndDate.toIso8601String();
-                              } else {
-                                // Optional: handle invalid input (e.g., show error or clear output)
-                                print('⚠️ Invalid number input: $p0');
-                              }
-                            } else {
-                              // Optional: clear output when input is empty
-                              endDateController.clear();
-                            }
-                            model.notifyListeners();
-                          },
-                          style: TextStyle(
-                            fontSize: 16.20.sp,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'GoogleSans',
-                          ),
-                          labelStyle: TextStyle(
-                            fontSize: 16.20.sp,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'GoogleSans',
-                            color: AppColors.infoGrey,
-                          ),
-                        ),
-                        SizedBox(height: 24.0.h),
-                        Row(
-                          children: [
-                            TextView(
-                              text: 'End Date ',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Icon(
-                              Icons.info_outline,
-                              color: AppColors.yellow,
-                              size: 20.sp,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 14.0.h),
-                        TextFormWidget(
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          label: endDateController.text.isNotEmpty
-                              ? DateFormat(
-                                  'dd MMM, yyyy',
-                                ).format(DateTime.parse(endDateController.text))
-                              : '',
+                          controller: model.endDateController,
+                          // label: model.endDateController.text.isNotEmpty
+                          //     ? DateFormat('dd MMM, yyyy').format(
+                          //         DateTime.parse(model.endDateController.text),
+                          //       )
+                          //     : '',
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
                             fontSize: 16.2.sp,
                             color: AppColors.infoGrey,
                           ),
-                          fillColor: AppColors.grey,
+                          fillColor: AppColors.white,
                           isFilled: true,
                           readOnly: true,
-                          // validator: AppValidator.validateString(),
                           style: TextStyle(
                             fontSize: 16.20.sp,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'GoogleSans',
                           ),
-                          hintSize: 14.sp,
+                          suffixWidget: Padding(
+                            padding: EdgeInsets.all(8.w),
+                            child: GestureDetector(
+                              onTap: () => model.selectEndDate(
+                                context: context,
+                                setModalState: setModalState,
+                              ),
+                              child: SvgPicture.asset(
+                                AppImage.calendar,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                         ),
                         SizedBox(height: 24.0.h),
+                        TextView(
+                          text: 'Duration',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.reminder,
+                          ),
+                        ),
+                        SizedBox(height: 14.0.h),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(16.w, 0.w, 0.w, 0.w),
+                          width: double.infinity,
+                          height: 50.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                            color: AppColors.dashboard,
+                          ),
+                          child: Row(
+                            children: [
+                              TextView(
+                                text: model.numberOfDurationsInDays ?? '',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.primary1,
+                                ),
+                              ),
+                              TextView(
+                                text: model.endDateController.text != ''
+                                    ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
+                                    : '',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // TextFormWidget(
+                        //   hint: 'Duration',
+                        //   isShowHint: true,
+                        //   // label: 'E.g 15',
+                        //   hintWeight: FontWeight.w400,
+                        //   hintColor: AppColors.reminder,
+                        //   hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                        //   borderColor: AppColors.transparent,
+                        //   keyboardType: TextInputType.number,
+                        //   floatingLabelBehavior: FloatingLabelBehavior.never,
+                        //   borderTopLeft: 10.r,
+                        //   borderTopRight: 10.r,
+                        //   borderBottomLeft: 10.r,
+                        //   borderBottomRight: 10.r,
+                        //   fillColor: AppColors.grey,
+                        //   isFilled: true,
+                        //   readOnly: true,
+                        //   controller: medDurationController,
+                        //   onChange: (p0) {
+                        //     if (p0 != null && p0.trim().isNotEmpty) {
+                        //       final parsed = int.tryParse(p0.trim());
+                        //       if (parsed != null) {
+                        //         _duration = parsed;
+                        //         intList = List.generate(
+                        //           _duration!,
+                        //           (index) => index,
+                        //         );
+                        //         dateTimeObject = inputFormat.parse(
+                        //           model.pickedDate!,
+                        //         );
+                        //         final localDate = dateTimeObject!;
+                        //         final utcStartDate = DateTime.utc(
+                        //           localDate.year,
+                        //           localDate.month,
+                        //           localDate.day,
+                        //         );
+
+                        //         // Now safely add your duration
+                        //         final utcEndDate = utcStartDate.add(
+                        //           Duration(days: _duration! - 1),
+                        //         );
+
+                        //         // Display or store
+                        //         endDateController.text = utcEndDate
+                        //             .toIso8601String();
+                        //         endDateIso = utcEndDate.toIso8601String();
+                        //       } else {
+                        //         // Optional: handle invalid input (e.g., show error or clear output)
+                        //         print('⚠️ Invalid number input: $p0');
+                        //       }
+                        //     } else {
+                        //       // Optional: clear output when input is empty
+                        //       endDateController.clear();
+                        //     }
+                        //     model.notifyListeners();
+                        //   },
+                        //   style: TextStyle(
+                        //     fontSize: 16.20.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     fontFamily: 'GoogleSans',
+                        //   ),
+                        //   labelStyle: TextStyle(
+                        //     fontSize: 16.20.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     fontFamily: 'GoogleSans',
+                        //     color: AppColors.infoGrey,
+                        //   ),
+                        // ),
+                        SizedBox(height: 24.0.h),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                TextView(
+                                  text: 'Time',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                                Positioned(
+                                  right: -12.10,
+                                  child: TextView(
+                                    text: '*',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: 14.h),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                      16.w,
+                                      8.0.w,
+                                      16.0.w,
+                                      8.0.w,
+                                    ),
+                                    width: double.infinity,
+                                    height: 50.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      border: Border.all(
+                                        color: AppColors.infoGrey1,
+                                      ),
+                                      color: AppColors.white,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text: getTimeFreq(),
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            selectTimeFreq(
+                                              context: context,
+                                              setModalState: setModalState,
+                                            );
+                                            model.notifyListeners();
+                                          },
+                                          icon: Icon(
+                                            Icons.access_time_rounded,
+                                            color: AppColors.fineGrey,
+                                            size: 20.sp,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 4.0.w),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (formattedSelectedTimeAndPeriodList!
+                                        .contains(
+                                          formattedSelectedTimeAndPeriod,
+                                        )) {
+                                    } else {
+                                      formattedSelectedTimeAndPeriodList!.add(
+                                        formattedSelectedTimeAndPeriod!,
+                                      );
+                                    }
+                                    setModalState!(() {});
+                                    model.notifyListeners();
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(
+                                      16.w,
+                                      8.0.w,
+                                      16.0.w,
+                                      8.0.w,
+                                    ),
+                                    width: 62,
+                                    height: 50.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      border: Border.all(
+                                        color: AppColors.infoGrey1,
+                                      ),
+                                      color: AppColors.white,
+                                    ),
+                                    child: Icon(
+                                      Icons.add,
+                                      color: AppColors.fineGrey,
+                                      size: 20.sp,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 24.0.h),
+                            formattedSelectedTimeAndPeriodList!.isNotEmpty
+                                ? Wrap(
+                                    spacing: 10.0,
+                                    runSpacing: 10.0,
+                                    children: [
+                                      ...formattedSelectedTimeAndPeriodList!.map(
+                                        (e) => Container(
+                                          width: 104.w,
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 4.w,
+                                            horizontal: 10.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              22.r,
+                                            ),
+                                            border: Border.all(
+                                              color: AppColors.app_green,
+                                            ),
+                                            color: AppColors.app_green,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              TextView(
+                                                text: e,
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 13.2.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.white,
+                                                ),
+                                              ),
+                                              SizedBox(width: 6.w),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  formattedSelectedTimeAndPeriodList!
+                                                      .remove(e);
+                                                  setModalState!(() {});
+                                                  model.notifyListeners();
+                                                },
+                                                child: SvgPicture.asset(
+                                                  AppImage.x,
+                                                  color: AppColors.white,
+                                                  height: 16.20.h,
+                                                  width: 16.w,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : SizedBox.shrink(),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
                         TextFormWidget(
-                          hint: 'No of Times to be taken daily',
-                          borderColor: AppColors.transparent,
+                          hint: 'Notes & Instructions',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          label: 'e.g. Take with food, avoid grapefruit juice',
+                          labelStyle: TextStyle(
+                            fontSize: 14.0.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.infoGrey,
+                            fontFamily: 'Arial',
+                          ),
+                          isShowHint: true,
                           borderTopLeft: 10.r,
                           borderTopRight: 10.r,
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
-                          hintSize: 14.sp,
-                          fillColor: AppColors.grey,
-                          isFilled: true,
-                          readOnly: true,
-                          controller: medDailyInTakenController,
-                          suffixWidget: IconButton(
-                            onPressed: () async {
-                              final result = await showDailyInTakeMenu(context);
-                              if (result != null) {
-                                setModalState!(() {
-                                  medDailyInTakenController.text = result;
-                                });
-                              }
-                            },
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: AppColors.grey1,
-                              size: 20.sp,
-                            ),
-                          ),
+                          controller: noteController,
+                          fillColor: AppColors.white,
+                          isFilled: true, // Minimum number of lines visible
+                          maxline:
+                              3, // Maximum number of lines visible before scrolling
+                          keyboardType: TextInputType.multiline,
                           validator: AppValidator.validateString(),
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
                           style: TextStyle(
                             fontSize: 16.20.sp,
                             fontWeight: FontWeight.w400,
                             fontFamily: 'GoogleSans',
                           ),
                         ),
-                        SizedBox(height: 24.0.h),
+                        SizedBox(height: 10.h),
+                        TextView(
+                          text:
+                              'These notes will be included in notification messages',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 12.4.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.infoGrey,
+                          ),
+                        ),
+                        SizedBox(height: 20.h),
+
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (firstFormReminderKey.currentState!
+                                  .validate()) {
+                                addReminderToList(model);
+                              } else {
+                                AppUtils.snackbar(
+                                  context,
+                                  message: 'Kindly input all required fields.',
+                                  error: true,
+                                );
+                              }
+                            },
+                            child: TextView(
+                              text: 'Add Another Medication',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 17.2.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.primary,
+                                decoration: TextDecoration.underline,
+                                decorationColor: AppColors.primary,
+                                decorationStyle: TextDecorationStyle.solid,
+                                decorationThickness: 1.4,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30.h),
+                        ButtonWidget(
+                          border: 100.r,
+                          buttonColor: AppColors.primary,
+                          buttonText: 'Preview',
+                          color: AppColors.white,
+                          buttonBorderColor: AppColors.transparent,
+                          onPressed: () async {
+                            if (firstFormReminderKey.currentState!.validate()) {
+                              await addReminderToList(model);
+                              linIndex++;
+                              model.notifyListeners();
+                            }
+                          },
+                        ),
+                        SizedBox(height: 130.h),
+
                         if (intList.isNotEmpty &&
                             medDailyInTakenController.text.isNotEmpty)
                           Column(
@@ -11620,7 +12393,9 @@ class AuthViewModel extends BaseViewModel {
                                                 onPressed: () async {
                                                   final result =
                                                       await showDailyInTakeMenu(
-                                                        context,
+                                                        context: context,
+                                                        setModalState:
+                                                            setModalState,
                                                       );
                                                   if (result != null) {
                                                     setModalState!(() {
@@ -12021,26 +12796,26 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ),
                                       SizedBox(height: 16.h),
-                                      TextFormWidget(
-                                        hint: 'Drug Name',
-                                        borderColor: AppColors.transparent,
-                                        borderTopLeft: 10.r,
-                                        borderTopRight: 10.r,
-                                        borderBottomLeft: 10.r,
-                                        borderBottomRight: 10.r,
-                                        hintSize: 12.52.sp,
-                                        fillColor: AppColors.grey,
-                                        isFilled: true,
-                                        controller: drugNameController,
-                                        validator:
-                                            AppValidator.validateString(),
-                                        style: TextStyle(
-                                          fontSize: 16.20.sp,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'GoogleSans',
-                                        ),
-                                      ),
-                                      SizedBox(height: 16.h),
+                                      // TextFormWidget(
+                                      //   hint: 'Drug Name',
+                                      //   borderColor: AppColors.transparent,
+                                      //   borderTopLeft: 10.r,
+                                      //   borderTopRight: 10.r,
+                                      //   borderBottomLeft: 10.r,
+                                      //   borderBottomRight: 10.r,
+                                      //   hintSize: 12.52.sp,
+                                      //   fillColor: AppColors.grey,
+                                      //   isFilled: true,
+                                      //   controller: drugNameController,
+                                      //   validator:
+                                      //       AppValidator.validateString(),
+                                      //   style: TextStyle(
+                                      //     fontSize: 16.20.sp,
+                                      //     fontWeight: FontWeight.w400,
+                                      //     fontFamily: 'GoogleSans',
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 16.h),
                                       TextView(
                                         text: 'Medication Type',
                                         textStyle: TextStyle(
@@ -12097,33 +12872,33 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ),
                                       SizedBox(height: 16.h),
-                                      TextView(
-                                        text: 'Description',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      TextFormWidget(
-                                        borderColor: AppColors.transparent,
-                                        borderTopLeft: 10.r,
-                                        borderTopRight: 10.r,
-                                        borderBottomLeft: 10.r,
-                                        borderBottomRight: 10.r,
-                                        fillColor: AppColors.grey,
-                                        isFilled: true,
-                                        controller: descriptionController,
-                                        validator:
-                                            AppValidator.validateString(),
-                                        style: TextStyle(
-                                          fontSize: 16.20.sp,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'GoogleSans',
-                                        ),
-                                      ),
-                                      SizedBox(height: 16.h),
+                                      // TextView(
+                                      //   text: 'Description',
+                                      //   textStyle: TextStyle(
+                                      //     fontFamily: 'Arial',
+                                      //     fontSize: 14.sp,
+                                      //     fontWeight: FontWeight.w500,
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 10.h),
+                                      // TextFormWidget(
+                                      //   borderColor: AppColors.transparent,
+                                      //   borderTopLeft: 10.r,
+                                      //   borderTopRight: 10.r,
+                                      //   borderBottomLeft: 10.r,
+                                      //   borderBottomRight: 10.r,
+                                      //   fillColor: AppColors.grey,
+                                      //   isFilled: true,
+                                      //   controller: descriptionController,
+                                      //   validator:
+                                      //       AppValidator.validateString(),
+                                      //   style: TextStyle(
+                                      //     fontSize: 16.20.sp,
+                                      //     fontWeight: FontWeight.w400,
+                                      //     fontFamily: 'GoogleSans',
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 16.h),
                                       TextView(
                                         text: 'Medication picture upload',
                                         textStyle: TextStyle(
@@ -12363,8 +13138,8 @@ class AuthViewModel extends BaseViewModel {
                                         suffixWidget: Padding(
                                           padding: EdgeInsets.all(8.w),
                                           child: GestureDetector(
-                                            onTap: () =>
-                                                model.selectDate(context),
+                                            onTap: () {},
+                                            // model.selectDate(context),
                                             child: SvgPicture.asset(
                                               AppImage.calendar,
                                               fit: BoxFit.cover,
@@ -12468,6 +13243,18 @@ class AuthViewModel extends BaseViewModel {
                                                 ),
                                               )
                                             : '',
+                                        suffixWidget: Padding(
+                                          padding: EdgeInsets.all(8.w),
+                                          child: GestureDetector(
+                                            // onTap: () =>
+                                            //     model.selectEndDate(context: context,
+                                            // setModalState: setModalState,),
+                                            child: SvgPicture.asset(
+                                              AppImage.calendar,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
                                         labelStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Arial',
@@ -12500,7 +13287,8 @@ class AuthViewModel extends BaseViewModel {
                                           onPressed: () async {
                                             final result =
                                                 await showDailyInTakeMenu(
-                                                  context,
+                                                  context: context,
+                                                  setModalState: setModalState,
                                                 );
                                             if (result != null) {
                                               setModalState!(() {
@@ -15688,7 +16476,10 @@ class AuthViewModel extends BaseViewModel {
                     controller: medDailyInTakenControllerUpdate,
                     suffixWidget: IconButton(
                       onPressed: () async {
-                        final result = await showDailyInTakeMenu(context);
+                        final result = await showDailyInTakeMenu(
+                          context: context,
+                          setModalState: setModalState,
+                        );
                         if (result != null) {
                           setModalState!(() {
                             medDailyInTakenControllerUpdate.text = result;
@@ -17853,6 +18644,19 @@ class AuthViewModel extends BaseViewModel {
     return 'Five Daily';
   }
 
+  String showNoTimesMode(int number) {
+    if (number == 1) {
+      return 'Once Daily';
+    } else if (number == 2) {
+      return 'Twice Daily';
+    } else if (number == 3) {
+      return 'Thrice Daily';
+    } else if (number == 4) {
+      return 'Four Times Daily';
+    }
+    return '${number.toWords()} Times Daily';
+  }
+
   chooseNotChannelWidget(
     context, {
     required String text,
@@ -18931,7 +19735,10 @@ class AuthViewModel extends BaseViewModel {
             isReminderStatus == '' ||
             isReminderStatus == null) {
           _getReminderResponseModel = await runBusyFuture(
-            repositoryImply.getReminderAll(page: page.toString(), limit: 10.toString()),
+            repositoryImply.getReminderAll(
+              page: page.toString(),
+              limit: 10.toString(),
+            ),
             throwException: true,
           );
         } else {

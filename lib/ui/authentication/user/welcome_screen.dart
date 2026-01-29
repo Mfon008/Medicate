@@ -263,17 +263,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        model.signIn(
-                          context,
-                          signInEntity: LoginEntityModel(
-                            phone:
-                                widget.phone ??
-                                SharedPreferencesService
-                                    .instance
-                                    .usersData['user']['phone'],
-                            pin: pinInput,
-                          ),
-                        );
+                        model.showReminderModal(context);
+                        // model.signIn(
+                        //   context,
+                        //   signInEntity: LoginEntityModel(
+                        //     phone:
+                        //         widget.phone ??
+                        //         SharedPreferencesService
+                        //             .instance
+                        //             .usersData['user']['phone'],
+                        //     pin: pinInput,
+                        //   ),
+                        // );
                       }
                     },
                   ),

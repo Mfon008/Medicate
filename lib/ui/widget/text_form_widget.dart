@@ -53,6 +53,8 @@ class TextFormWidget extends StatelessWidget {
   final double? borderBottomLeft;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
+  final FontWeight? hintWeight;
+
   TextFormWidget({
     super.key,
     this.textCapitalization,
@@ -66,6 +68,7 @@ class TextFormWidget extends StatelessWidget {
     this.suffixWidget,
     this.prefixWidget,
     this.validator,
+    this.hintWeight = FontWeight.w500,
     this.onPasswordToggle,
     this.initialValue,
     this.inputFormatters,
@@ -118,7 +121,7 @@ class TextFormWidget extends StatelessWidget {
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: hintSize!.sp,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: hintWeight,
                       color: hintColor,
                     ),
                   ),

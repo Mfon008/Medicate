@@ -61,6 +61,7 @@ dependencies:
   webview_flutter: ^4.4.2
   webview_flutter_wkwebview: ^3.18.0
   webview_flutter_platform_interface: ^2.11.0
+  number_to_words_english: ^3.0.4
   
 
 dependency_overrides:
