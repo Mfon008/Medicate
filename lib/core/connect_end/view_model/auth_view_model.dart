@@ -6987,6 +6987,7 @@ class AuthViewModel extends BaseViewModel {
                         onTap: () {
                           setMenuState(() {
                             indexDaily = e;
+                            isCusSchedule = false;
                           });
 
                           Future.delayed(Duration(milliseconds: 200), () {
@@ -7055,11 +7056,11 @@ class AuthViewModel extends BaseViewModel {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: index == 0
+                          color: isCusSchedule
                               ? AppColors.skyBlue
                               : AppColors.white,
                           border: Border.all(
-                            color: index == 0
+                            color: isCusSchedule
                                 ? AppColors.primary1
                                 : Colors.transparent,
                           ),
@@ -7082,7 +7083,7 @@ class AuthViewModel extends BaseViewModel {
                               ),
                             ),
                             const Spacer(),
-                            if (index == 0)
+                            if (isCusSchedule)
                               Icon(
                                 Icons.check,
                                 color: AppColors.primary1,
