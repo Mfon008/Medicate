@@ -27,7 +27,6 @@ class DailyDoseTime {
         final parsed = DateFormat('HH:mm').parse(rawTime);
         return DateFormat('HH:mm').format(parsed);
       } catch (e) {
-        print('Time parse error: $e for "$rawTime"');
         return rawTime; // fallback to original
       }
     }

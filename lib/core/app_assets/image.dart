@@ -40,6 +40,8 @@ class AppImage {
   static const String nigeria = 'assets/svgs/nigeria.svg';
   static const String bio = 'assets/svgs/bio.svg';
   static const String bell = 'assets/svgs/bell.svg';
+  static const String sms = 'assets/svgs/sms.svg';
+  static const String channel_email = 'assets/svgs/channel_email.svg';
   static const String burger = 'assets/svgs/burger.svg';
   static const String success = 'assets/svgs/success.svg';
   static const String home = 'assets/svgs/home.svg';

@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously, deprecated_member_use
 import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -263,18 +263,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        model.showReminderModal(context);
-                        // model.signIn(
-                        //   context,
-                        //   signInEntity: LoginEntityModel(
-                        //     phone:
-                        //         widget.phone ??
-                        //         SharedPreferencesService
-                        //             .instance
-                        //             .usersData['user']['phone'],
-                        //     pin: pinInput,
-                        //   ),
-                        // );
+                        model.signIn(
+                          context,
+                          signInEntity: LoginEntityModel(
+                            phone:
+                                widget.phone ??
+                                SharedPreferencesService
+                                    .instance
+                                    .usersData['user']['phone'],
+                            pin: pinInput,
+                          ),
+                        );
                       }
                     },
                   ),

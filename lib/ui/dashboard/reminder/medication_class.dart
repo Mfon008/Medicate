@@ -17,9 +17,11 @@ class MedicationClass {
   String? duration;
   String? endDate;
   String? timesToTake;
+  List<String>? formattedSelectedTimeAndPeriodList;
   String? note;
   List<int>? listOfTimes;
   dynamic dosageMap;
+  bool? isCusSchedule;
 
   MedicationClass({
     this.medicationName,
@@ -31,6 +33,7 @@ class MedicationClass {
     this.dosage,
     this.dateAndTime,
     this.duration,
+    this.formattedSelectedTimeAndPeriodList,
     this.imageData,
     this.endDate,
     this.timesToTake,
@@ -39,6 +42,7 @@ class MedicationClass {
     this.endDateIso,
     this.listOfTimes,
     this.dosageMap,
+    this.isCusSchedule,
   });
 
   factory MedicationClass.fromJson(Map<String, dynamic> json) =>
@@ -46,7 +50,9 @@ class MedicationClass {
         medicationName: json['medicationName'] as String?,
         drugName: json['drugName'] as String?,
         medicationType: json['medicationType'] as String?,
+        medicationTypeIcon: json['medicationTypeIcon'] as String?,
         dosage: json['dosage'] as String?,
+        formattedSelectedTimeAndPeriodList:json['formattedSelectedTimeAndPeriodList'],
         startDateIso: json['startDateTime'] == null
             ? null
             : DateTime.parse(json['startDateTime'] as String),
@@ -54,7 +60,7 @@ class MedicationClass {
             ? null
             : DateTime.parse(json['endDateTime'] as String),
         duration: json['durationInDays'],
-        timesToTake: json['timesPerDay'],
+        timesToTake: json['timesPerDay'] as String,
         dosageMap: (json['dailyDoseTimes'] as List<dynamic>?)
             ?.map(
               (e) => (e as List<dynamic>)
@@ -63,23 +69,28 @@ class MedicationClass {
             )
             .toList(),
         note: json['note'] as String?,
+        isCusSchedule: json['isCusSchedule'] as bool?,
         imageData: json['medicationImage'] == null
             ? null
             : Data.fromJson(json['medicationImage'] as Map<String, dynamic>),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<dynamic, dynamic> toJson() => {
     'medicationName': medicationName,
     'drugName': drugName,
     'medicationType': medicationType,
+    'medicationTypeIcon': medicationTypeIcon,
     'dosage': dosage,
     'startDateTime': startDateIso,
     'endDateTime': endDateIso,
     'durationInDays': duration,
     'timesPerDay': timesToTake,
-    'dailyDoseTimes': dosageMap
-        ?.map((e) => e.map((e) => e.toJson()).toList())
-        .toList(),
+    'dailyDoseTimes': dosageMap,
+    'isCusSchedule': isCusSchedule,
+    'formattedSelectedTimeAndPeriodList':formattedSelectedTimeAndPeriodList,
+    // 'dailyDoseTimes': dosageMap
+    //     ?.map((e) => e.map((e) => e.toJson()).toList())
+    //     .toList(),
     'note': note,
     'medicationImage': imageData?.toJson(),
   };

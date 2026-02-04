@@ -4,3 +4,10 @@ class MedType {
 
   MedType({this.medType, this.medTypeImage});
 }
+
+class NotificationChannel {
+  String? notification;
+  String? notificationIcon;
+
+  NotificationChannel({this.notification, this.notificationIcon});
+}

@@ -127,7 +127,7 @@ class PaymentStatusScreen extends StatelessWidget {
                           color: AppColors.white,
                           buttonBorderColor: AppColors.transparent,
                           onPressed: () {
-                            medicationClassList.clear();
+                            model.medicationClassList.clear();
                             model.doseControllers.clear();
                             model.periodLabels.clear();
                             if (isUserType == 'everyday_user') {
