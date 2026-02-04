@@ -7024,7 +7024,7 @@ class AuthViewModel extends BaseViewModel {
         // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
       }
 
-      print('✅ medication list  ${model.medicationClassList}');
+      print('✅ medication list  ${model.medicationClassList[1].toJson()}');
 
       model.notifyListeners();
     });
@@ -10175,22 +10175,22 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> selectTimeFreqUpdate({
-    BuildContext? context,
-    StateSetter? setModalState,
-    AuthViewModel? model,
-  }) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context!,
-      initialTime: TimeOfDay.now(),
-    );
+  // Future<void> selectTimeFreqUpdate({
+  //   BuildContext? context,
+  //   StateSetter? setModalState,
+  //   AuthViewModel? model,
+  // }) async {
+  //   final TimeOfDay? pickedTime = await showTimePicker(
+  //     context: context!,
+  //     initialTime: TimeOfDay.now(),
+  //   );
 
-    if (pickedTime != null) {
-      model!.getTime = formatTimeFreq(pickedTime);
-    }
-    setModalState!(() {});
-    notifyListeners();
-  }
+  //   if (pickedTime != null) {
+  //     model!.getTime = formatTimeFreq(pickedTime);
+  //   }
+  //   setModalState!(() {});
+  //   notifyListeners();
+  // }
 
   Future<void> selectTimeFreqIndex({
     BuildContext? context,
@@ -11943,6 +11943,107 @@ class AuthViewModel extends BaseViewModel {
       setModalState: setModalState,
       scrollController: scrollController,
     );
+  }
+
+  List<String> selectedTimes = []; // ["09:30 AM", "10:30 AM"]
+  String? getTheTime; // last picked time
+
+  DateTime combineDateAndTime({
+    required DateTime date,
+    required String time, // e.g. "09:30 AM"
+  }) {
+    final timeFormat = DateFormat('hh:mm a');
+    final parsedTime = timeFormat.parse(time);
+
+    return DateTime(
+      date.year,
+      date.month,
+      date.day,
+      parsedTime.hour,
+      parsedTime.minute,
+    );
+  }
+
+  void buildDosageMap({AuthViewModel? model, int? index}) {
+    final duration = int.tryParse(medicationClassList[index!].duration ?? '');
+    if (duration == null || selectedTimes.isEmpty) return;
+
+    final startDate = DateFormat(
+      'dd MMM, yyyy hh:mm a',
+    ).parse(startDateUpdateControllers[index].text);
+
+    List<Map<String, dynamic>> dosageMap = [];
+
+    for (int day = 0; day < duration; day++) {
+      final currentDate = startDate.add(Duration(days: day));
+
+      List<Map<String, String>> doses = [];
+
+      for (final time in selectedTimes) {
+        final combined = combineDateAndTime(date: currentDate, time: time);
+
+        doses.add({
+          'time': time,
+          'date': DateFormat('yyyy-MM-dd').format(currentDate),
+          'isoDate': combined.toUtc().toIso8601String(),
+        });
+      }
+
+      dosageMap.add({'day': day + 1, 'doses': doses});
+    }
+
+    model!.medicationClassList[index].dosageMap = dosageMap;
+  }
+
+  void removeTimeAt({
+    required int medicationIndex,
+    required int timeIndex,
+    required AuthViewModel model,
+  }) {
+    for (final day in model.medicationClassList[medicationIndex].dosageMap) {
+      if (timeIndex < day['doses'].length) {
+        day['doses'].removeAt(timeIndex);
+      }
+    }
+
+    model.selectedTimes.removeAt(timeIndex);
+    model.notifyListeners();
+  }
+
+  Future<void> selectTimeFreqUpdate({
+    BuildContext? context,
+    StateSetter? setModalState,
+    AuthViewModel? model,
+    int? index,
+  }) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context!,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime == null) return;
+
+    final formattedTime = formatTimeFreq(pickedTime); // e.g. 09:30 AM
+
+    // Init list if needed
+    model!.selectedTimes ??= [];
+
+    // Prevent duplicates
+    if (model.selectedTimes.contains(formattedTime)) return;
+
+    // Enforce max timesToTake
+    final maxTimes = int.tryParse(
+      model.medicationClassList[index!].timesToTake ?? '',
+    );
+
+    if (maxTimes != null && model.selectedTimes.length >= maxTimes) return;
+
+    // Add next time
+    model.selectedTimes.add(formattedTime);
+    model.getTime = formattedTime;
+
+    setModalState?.call(() {});
+    notifyListeners();
   }
 
   firstModalFLow({
@@ -15024,153 +15125,6 @@ class AuthViewModel extends BaseViewModel {
                                                           result;
                                                     });
                                                     model.notifyListeners();
-
-                                                    // final timesCount =
-                                                    //     int.tryParse(
-                                                    //       result.toString(),
-                                                    //     ) ??
-                                                    //     0;
-                                                    // final durationCount =
-                                                    //     int.tryParse(
-                                                    //       medicationClassList[index]
-                                                    //               .duration
-                                                    //               ?.toString() ??
-                                                    //           '0',
-                                                    //     ) ??
-                                                    //     0;
-
-                                                    // // 🔹 Get the old data before rebuilding
-                                                    // final oldControllers =
-                                                    //     List<
-                                                    //       List<
-                                                    //         TextEditingController
-                                                    //       >
-                                                    //     >.from(
-                                                    //       model
-                                                    //           .doseAfterControllers,
-                                                    //     );
-                                                    // final oldPeriods =
-                                                    //     List<
-                                                    //       List<String>
-                                                    //     >.from(
-                                                    //       model
-                                                    //           .periodAfterLabels,
-                                                    //     );
-
-                                                    // // 🔹 Rebuild dosageMap safely (preserve where possible)
-                                                    // medicationClassList[index]
-                                                    //     .dosageMap = List.generate(durationCount, (
-                                                    //   day,
-                                                    // ) {
-                                                    //   final oldDay =
-                                                    //       (day <
-                                                    //           medicationClassList[index]
-                                                    //               .dosageMap
-                                                    //               .length)
-                                                    //       ? medicationClassList[index]
-                                                    //             .dosageMap[day]
-                                                    //       : null;
-
-                                                    //   final oldDoses =
-                                                    //       oldDay != null
-                                                    //       ? List<
-                                                    //           Map<
-                                                    //             String,
-                                                    //             dynamic
-                                                    //           >
-                                                    //         >.from(
-                                                    //           oldDay['doses'],
-                                                    //         )
-                                                    //       : [];
-
-                                                    //   return {
-                                                    //     "day": day + 1,
-                                                    //     "doses": List.generate(
-                                                    //       timesCount,
-                                                    //       (doseIndex) {
-                                                    //         if (doseIndex <
-                                                    //             oldDoses
-                                                    //                 .length) {
-                                                    //           // preserve previous time + period if available
-                                                    //           return {
-                                                    //             "time":
-                                                    //                 oldDoses[doseIndex]["time"] ??
-                                                    //                 "",
-                                                    //             "period":
-                                                    //                 oldDoses[doseIndex]["period"] ??
-                                                    //                 "",
-                                                    //             "date":
-                                                    //                 oldDoses[doseIndex]["date"] ??
-                                                    //                 "",
-                                                    //             "isoDate":
-                                                    //                 oldDoses[doseIndex]["isoDate"] ??
-                                                    //                 "",
-                                                    //           };
-                                                    //         }
-                                                    //         // otherwise new empty slot
-                                                    //         return {
-                                                    //           "time": "",
-                                                    //           "period": "",
-                                                    //           "date": "",
-                                                    //           "isoDate": "",
-                                                    //         };
-                                                    //       },
-                                                    //     ),
-                                                    //   };
-                                                    // });
-
-                                                    // // 🔹 Rebuild controllers but preserve existing values
-                                                    // model
-                                                    //     .doseAfterControllers = List.generate(durationCount, (
-                                                    //   dayIndex,
-                                                    // ) {
-                                                    //   return List.generate(timesCount, (
-                                                    //     doseIndex,
-                                                    //   ) {
-                                                    //     if (dayIndex <
-                                                    //             oldControllers
-                                                    //                 .length &&
-                                                    //         doseIndex <
-                                                    //             oldControllers[dayIndex]
-                                                    //                 .length) {
-                                                    //       return oldControllers[dayIndex][doseIndex];
-                                                    //     } else {
-                                                    //       return TextEditingController(
-                                                    //         text:
-                                                    //             medicationClassList[index]
-                                                    //                 .dosageMap[dayIndex]["doses"][doseIndex]["time"] ??
-                                                    //             "",
-                                                    //       );
-                                                    //     }
-                                                    //   });
-                                                    // });
-
-                                                    // 🔹 Rebuild period labels safely
-                                                    // model
-                                                    //     .periodAfterLabels = List.generate(
-                                                    //   durationCount,
-                                                    //   (dayIndex) {
-                                                    //     return List.generate(timesCount, (
-                                                    //       doseIndex,
-                                                    //     ) {
-                                                    //       if (dayIndex <
-                                                    //               oldPeriods
-                                                    //                   .length &&
-                                                    //           doseIndex <
-                                                    //               oldPeriods[dayIndex]
-                                                    //                   .length) {
-                                                    //         return oldPeriods[dayIndex][doseIndex];
-                                                    //       } else {
-                                                    //         return medicationClassList[index]
-                                                    //                 .dosageMap[dayIndex]["doses"][doseIndex]["period"] ??
-                                                    //             "";
-                                                    //       }
-                                                    //     });
-                                                    //   },
-                                                    // );
-                                                    // });
-
-                                                    //
                                                   }
                                                 },
                                                 icon: Icon(
@@ -16082,18 +16036,22 @@ class AuthViewModel extends BaseViewModel {
                                                                     ),
                                                                   ),
                                                                   IconButton(
-                                                                    onPressed: () {
-                                                                      selectTimeFreqUpdate(
-                                                                        context:
-                                                                            context,
-                                                                        setModalState:
-                                                                            setModalState,
-                                                                        model:
-                                                                            model,
-                                                                      );
-                                                                      model
-                                                                          .notifyListeners();
-                                                                    },
+                                                                    onPressed:
+                                                                        model.selectedTimes.length >=
+                                                                            int.parse(
+                                                                              model.medicationClassList[index].timesToTake!,
+                                                                            )
+                                                                        ? null
+                                                                        : () => selectTimeFreqUpdate(
+                                                                            context:
+                                                                                context,
+                                                                            setModalState:
+                                                                                setModalState!,
+                                                                            model:
+                                                                                model,
+                                                                            index:
+                                                                                index,
+                                                                          ),
                                                                     icon: Icon(
                                                                       Icons
                                                                           .access_time_rounded,
@@ -16112,45 +16070,30 @@ class AuthViewModel extends BaseViewModel {
                                                           ),
                                                           GestureDetector(
                                                             onTap: () {
-                                                              if (model
-                                                                          .medicationClassList[index]
-                                                                          .timesToTake !=
-                                                                      '' &&
-                                                                  e.dosageMap[index]['doses'].length <
-                                                                      int.parse(
-                                                                        model
-                                                                            .medicationClassList[index]
-                                                                            .timesToTake!,
-                                                                      )) {
-                                                                if (e
-                                                                    .dosageMap[index]['doses']
-                                                                    .contains(
-                                                                      model
-                                                                          .getTime,
-                                                                    )) {
-                                                                } else {
-                                                                  // dayDoses.add({
-                                                                  //     'time': formattedSelectedTimeAndPeriodList![i],
-                                                                  //     'date': startDateIsoWithin.substring(0, 10),
-                                                                  //     'isoDate': startDateIsoWithin,
-                                                                  //   });
-                                                                  // }
-                                                                  // startDateIsoWithin = DateTime.parse(
-                                                                  //   startDateIsoWithin,
-                                                                  // ).add(Duration(days: 0 + 1)).toString();
-                                                                  e.dosageMap[index]['doses'].add({
-                                                                    'time': model
-                                                                        .getTime!,
-                                                                    'date':
-                                                                        '2026-02-04',
-                                                                    'isoDate':
-                                                                        '2026-02-04T00:00:00.000Z',
-                                                                  });
-                                                                  print(
-                                                                    ' e.dosageMap[index]:: ${e.dosageMap[index]['doses']}',
+                                                              final maxTimes =
+                                                                  int.parse(
+                                                                    model
+                                                                        .medicationClassList[index]
+                                                                        .timesToTake!,
                                                                   );
-                                                                }
-                                                              } else {}
+                                                              print(
+                                                                'oooo ${model.selectedTimes.length}',
+                                                              );
+                                                              print(
+                                                                'ppppp ${model.medicationClassList[index].timesToTake!}',
+                                                              );
+                                                              if (model
+                                                                      .selectedTimes
+                                                                      .length <=
+                                                                  maxTimes) {
+                                                                model
+                                                                    .buildDosageMap(
+                                                                      index:
+                                                                          index,
+                                                                      model:
+                                                                          model,
+                                                                    );
+                                                              }
                                                               setModalState!(
                                                                 () {},
                                                               );
@@ -16197,10 +16140,15 @@ class AuthViewModel extends BaseViewModel {
                                                               spacing: 10.0,
                                                               runSpacing: 10.0,
                                                               children: [
-                                                                ...e.dosageMap[index]['doses']!.map(
-                                                                  (
-                                                                    time,
-                                                                  ) => GestureDetector(
+                                                                ...e.dosageMap[index]['doses'].asMap().entries.map((
+                                                                  entry,
+                                                                ) {
+                                                                  final timeIndex =
+                                                                      entry.key;
+                                                                  final time =
+                                                                      entry
+                                                                          .value;
+                                                                  return GestureDetector(
                                                                     onTap: () {
                                                                       model.getTime =
                                                                           time['time'];
@@ -16259,8 +16207,13 @@ class AuthViewModel extends BaseViewModel {
                                                                           ),
                                                                           GestureDetector(
                                                                             onTap: () {
-                                                                              e.dosageMap[index]['doses'].remove(
-                                                                                time['time'],
+                                                                              // e.dosageMap[index]['doses'].remove(
+                                                                              //   time,
+                                                                              // );
+                                                                              model.removeTimeAt(
+                                                                                model: model,
+                                                                                medicationIndex: index,
+                                                                                timeIndex: timeIndex,
                                                                               );
                                                                               setModalState!(
                                                                                 () {},
@@ -16281,8 +16234,8 @@ class AuthViewModel extends BaseViewModel {
                                                                         ],
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                ),
+                                                                  );
+                                                                }),
                                                               ],
                                                             )
                                                           : SizedBox.shrink(),
@@ -18559,37 +18512,6 @@ class AuthViewModel extends BaseViewModel {
                                                             : SizedBox.shrink(),
                                                       ),
                                                     ),
-                                                    // Transform.scale(
-                                                    //   scale:
-                                                    //       MediaQuery.of(
-                                                    //             context,
-                                                    //           ).size.shortestSide >=
-                                                    //           600
-                                                    //       ? 1.5
-                                                    //       : 1.1,
-                                                    //   child: Checkbox(
-                                                    //     value: addedEmailReminderList
-                                                    //         .contains(o),
-                                                    //     onChanged: (_) {
-                                                    //       if (addedEmailReminderList
-                                                    //           .contains(o)) {
-                                                    //         addedEmailReminderList.remove(
-                                                    //           o,
-                                                    //         );
-                                                    //       } else {
-                                                    //         addedEmailReminderList.add(o);
-                                                    //       }
-                                                    //       model!.notifyListeners();
-                                                    //     },
-                                                    //     activeColor: AppColors.primary,
-                                                    //     shape: RoundedRectangleBorder(
-                                                    //       borderRadius:
-                                                    //           BorderRadius.circular(4),
-                                                    //     ),
-                                                    //     visualDensity: VisualDensity
-                                                    //         .compact, // 👈 reduces internal padding
-                                                    //   ),
-                                                    // ),
                                                     SizedBox(width: 9.10.w),
                                                     SizedBox(
                                                       width: 220.w,
@@ -19194,9 +19116,9 @@ class AuthViewModel extends BaseViewModel {
                         color: AppColors.white,
                         buttonBorderColor: AppColors.transparent,
                         onPressed: () async {
-                           model.addCostTotal(model);
-                            linIndex++;
-                            model.notifyListeners();
+                          model.addCostTotal(model);
+                          linIndex++;
+                          model.notifyListeners();
                           // }
                         },
                       ),
@@ -20349,58 +20271,45 @@ class AuthViewModel extends BaseViewModel {
                         );
                       }
                       model.createReminderPaid(
-                            context,
-                            createReminderEntityModel:
-                                CreateReminderEntityModel(
-                                  medications: model.medicationClassList.map((
-                                    m,
-                                  ) {
-                                    return Medication(
-                                      medicationName: m.medicationName,
-                                      drugName: m.medicationName,
-                                      dosage: m.dosage,
-                                      medicationType: m.medicationType!
-                                          .toUpperCase(),
-                                      startDateTime: m.startDateIso,
-                                      endDateTime: m.endDateIso,
-                                      durationInDays: int.parse(m.duration!),
-                                      timesPerDay: int.parse(m.timesToTake!),
-                                      dailyDoseTimes: (m.dosageMap as List)
-                                          .map(
-                                            (
-                                              dayData,
-                                            ) => (dayData['doses'] as List)
-                                                .map(
-                                                  (
-                                                    dose,
-                                                  ) => DailyDoseTime.fromJson(
-                                                    dose
-                                                        as Map<String, dynamic>,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          )
-                                          .toList(),
-                                      note: m.note,
-                                      medicationImage: m.imageData == null
-                                          ? null
-                                          : MedicationImage.fromJson(
-                                              m.imageData!.toJson(),
-                                            ),
-                                    );
-                                  }).toList(),
-                                  timeZone: "Africa/Lagos",
-                                  notificationChannels: notificationChannel,
-                                  emails: emailReminderList,
-                                  phoneNumbers: phoneReminderList,
-                                  payment: Payment(
-                                    amount: costTotal,
-                                    currency: "NGN",
-                                  ),
-                                ),
-                          );
-                          model.notifyListeners();
-
+                        context,
+                        createReminderEntityModel: CreateReminderEntityModel(
+                          medications: model.medicationClassList.map((m) {
+                            return Medication(
+                              medicationName: m.medicationName,
+                              drugName: m.medicationName,
+                              dosage: m.dosage,
+                              medicationType: m.medicationType!.toUpperCase(),
+                              startDateTime: m.startDateIso,
+                              endDateTime: m.endDateIso,
+                              durationInDays: int.parse(m.duration!),
+                              timesPerDay: int.parse(m.timesToTake!),
+                              dailyDoseTimes: (m.dosageMap as List)
+                                  .map(
+                                    (dayData) => (dayData['doses'] as List)
+                                        .map(
+                                          (dose) => DailyDoseTime.fromJson(
+                                            dose as Map<String, dynamic>,
+                                          ),
+                                        )
+                                        .toList(),
+                                  )
+                                  .toList(),
+                              note: m.note,
+                              medicationImage: m.imageData == null
+                                  ? null
+                                  : MedicationImage.fromJson(
+                                      m.imageData!.toJson(),
+                                    ),
+                            );
+                          }).toList(),
+                          timeZone: "Africa/Lagos",
+                          notificationChannels: notificationChannel,
+                          emails: emailReminderList,
+                          phoneNumbers: phoneReminderList,
+                          payment: Payment(amount: costTotal, currency: "NGN"),
+                        ),
+                      );
+                      model.notifyListeners();
                     } else {
                       model.createReminder(
                         context,
@@ -20427,12 +20336,12 @@ class AuthViewModel extends BaseViewModel {
                                   )
                                   .toList(),
                               note: m.note,
-                              medicationImage:null
+                              medicationImage: null,
                               //  m.imageData == null
-                                  // ? null
-                                  // : MedicationImage.fromJson(
-                                  //     m.imageData!.toJson(),
-                                  //   ),
+                              // ? null
+                              // : MedicationImage.fromJson(
+                              //     m.imageData!.toJson(),
+                              //   ),
                             );
                           }).toList(),
                           timeZone: "Africa/Lagos",
@@ -25691,7 +25600,9 @@ class AuthViewModel extends BaseViewModel {
   }
 
   int returnNumberOfTimes(model) {
-    print('model.medicationClassList[0].timesToTake!${model.medicationClassList[0].timesToTake!}');
+    print(
+      'model.medicationClassList[0].timesToTake!${model.medicationClassList[0].timesToTake!}',
+    );
     numberOfTimes = int.parse(model.medicationClassList[0].timesToTake!);
     return numberOfTimes!;
   }
