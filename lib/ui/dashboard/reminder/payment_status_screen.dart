@@ -130,6 +130,7 @@ class PaymentStatusScreen extends StatelessWidget {
                             model.medicationClassList.clear();
                             model.doseControllers.clear();
                             model.periodLabels.clear();
+                            model.notifyListeners();
                             if (isUserType == 'everyday_user') {
                               navigate.clearStackAndShow(
                                 Routes.dashboard,

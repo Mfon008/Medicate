@@ -17,7 +17,7 @@ class MedicationClass {
   String? duration;
   String? endDate;
   String? timesToTake;
-  List<String>? formattedSelectedTimeAndPeriodList;
+  // List<String>? formattedSelectedTimeAndPeriodList;
   String? note;
   List<int>? listOfTimes;
   dynamic dosageMap;
@@ -33,7 +33,7 @@ class MedicationClass {
     this.dosage,
     this.dateAndTime,
     this.duration,
-    this.formattedSelectedTimeAndPeriodList,
+    // this.formattedSelectedTimeAndPeriodList,
     this.imageData,
     this.endDate,
     this.timesToTake,
@@ -52,7 +52,7 @@ class MedicationClass {
         medicationType: json['medicationType'] as String?,
         medicationTypeIcon: json['medicationTypeIcon'] as String?,
         dosage: json['dosage'] as String?,
-        formattedSelectedTimeAndPeriodList:json['formattedSelectedTimeAndPeriodList'],
+        // formattedSelectedTimeAndPeriodList:json['formattedSelectedTimeAndPeriodList'],
         startDateIso: json['startDateTime'] == null
             ? null
             : DateTime.parse(json['startDateTime'] as String),
@@ -87,7 +87,7 @@ class MedicationClass {
     'timesPerDay': timesToTake,
     'dailyDoseTimes': dosageMap,
     'isCusSchedule': isCusSchedule,
-    'formattedSelectedTimeAndPeriodList':formattedSelectedTimeAndPeriodList,
+    // 'formattedSelectedTimeAndPeriodList':formattedSelectedTimeAndPeriodList,
     // 'dailyDoseTimes': dosageMap
     //     ?.map((e) => e.map((e) => e.toJson()).toList())
     //     .toList(),
