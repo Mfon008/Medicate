@@ -17,7 +17,6 @@ class MedicationClass {
   String? duration;
   String? endDate;
   String? timesToTake;
-  // List<String>? formattedSelectedTimeAndPeriodList;
   String? note;
   List<int>? listOfTimes;
   dynamic dosageMap;
@@ -52,7 +51,6 @@ class MedicationClass {
         medicationType: json['medicationType'] as String?,
         medicationTypeIcon: json['medicationTypeIcon'] as String?,
         dosage: json['dosage'] as String?,
-        // formattedSelectedTimeAndPeriodList:json['formattedSelectedTimeAndPeriodList'],
         startDateIso: json['startDateTime'] == null
             ? null
             : DateTime.parse(json['startDateTime'] as String),

@@ -6916,13 +6916,13 @@ class AuthViewModel extends BaseViewModel {
 
   bool get updateControllersInitialized => _updateControllersInitialized;
 
-  void markUpdateControllersInitialized() {
+  void markUpdateControllersInitialized() =>
     _updateControllersInitialized = true;
-  }
+  
 
-  void markUpdateControllersInitializedFalse() {
+  void markUpdateControllersInitializedFalse() =>
     _updateControllersInitialized = false;
-  }
+  
 
   void initUpdateControllers({setModalState, model}) async {
     if (model.updateControllersInitialized ||
@@ -7013,7 +7013,6 @@ class AuthViewModel extends BaseViewModel {
           // Create controllers for each dose
           final doseControllers = doses.map<TextEditingController>((dose) {
             final timeValue = dose['time']?.toString() ?? '';
-            print('⏰ Time found: $timeValue');
             return TextEditingController(text: timeValue);
           }).toList();
 
@@ -9024,9 +9023,10 @@ class AuthViewModel extends BaseViewModel {
     },
   );
 
-  addReminderToList({AuthViewModel? model, StateSetter? setModalState}) async {
+  addReminderToList({AuthViewModel? model, StateSetter? setModalState, BuildContext? context}) async {
     List<Map<String, dynamic>> addTimePeriod = [];
     String startDateIsoWithin = startDateIso;
+    _isLoading = true;
 
     if (model!.isCusSchedule) {
       for (int day = 0; day < model.returnNoDays!; day++) {
@@ -9078,7 +9078,6 @@ class AuthViewModel extends BaseViewModel {
         medicationFile: model.imageDrug,
         dosage: medDosageController.text,
         isCusSchedule: model.isCusSchedule,
-        // formattedSelectedTimeAndPeriodList: formattedSelectedTimeAndPeriodList,
         imageData: model.uploadImageReminderResponseModel?.data ?? Data(),
         dateAndTime: model.dateTimeController.text,
         duration: returnNoDays.toString(),
@@ -9092,6 +9091,9 @@ class AuthViewModel extends BaseViewModel {
     );
     await Future.delayed(Duration(seconds: 1), () {});
     clearReminderMedsVaraibles(model);
+    model.markUpdateControllersInitializedFalse();
+    _isLoading = false;
+    AppUtils.snackbar(context,message: 'Medication has been added.',);
     setModalState!(() {});
     model.notifyListeners();
 
@@ -9157,6 +9159,12 @@ class AuthViewModel extends BaseViewModel {
     medDurationController.clear();
     endDateController.clear();
     medDailyInTakenController.clear();
+    returnNoDays = null;
+    model.intListCustom.clear();
+    model.formattedSelectedTimeAndPeriod = '--:--';
+    model.formatSelectedTimeAndPeriodList.clear();
+    formattedSelectedTimeAndPeriod = '--:--';
+    formatSelectedTimeAndPeriodList!.clear();
     noteController.clear();
   }
 
@@ -12227,11 +12235,10 @@ class AuthViewModel extends BaseViewModel {
     final currentDate = startDate.add(Duration(days: day! - 1));
 
     List<Map<String, String>> doses = [];
-    if (model.medicationClassList[index].dosageMap[day - 1]['day'] ==
-            day &&
-       model.medicationClassList[index].dosageMap[day - 1]['doses'].any((e) => e['time'] == model.selectedTimePerDay[day - 1],)
-         
-        ) {
+    if (model.medicationClassList[index].dosageMap[day - 1]['day'] == day &&
+        model.medicationClassList[index].dosageMap[day - 1]['doses'].any(
+          (e) => e['time'] == model.selectedTimePerDay[day - 1],
+        )) {
       return;
     } else {
       final combined = combineDateAndTime(
@@ -12243,16 +12250,20 @@ class AuthViewModel extends BaseViewModel {
         'date': DateFormat('yyyy-MM-dd').format(currentDate),
         'isoDate': combined.toUtc().toIso8601String(),
       });
-      
-      logger.d('index;;;;::$index and here ${model.selectedTimePerDay[day - 1]}');
-      logger.d('day 1;;;;::${model.medicationClassList[index].dosageMap[day - 1]['day'].runtimeType} and a day on ${day.runtimeType}');
+
+      logger.d(
+        'index;;;;::$index and here ${model.selectedTimePerDay[day - 1]}',
+      );
+      logger.d(
+        'day 1;;;;::${model.medicationClassList[index].dosageMap[day - 1]['day'].runtimeType} and a day on ${day.runtimeType}',
+      );
       logger.d('doseees;;;;::$doses');
       logger.d(
         "dddddd ${model.medicationClassList[index].dosageMap[day - 1]['doses']}",
       );
 
       model.medicationClassList[index].dosageMap[day - 1]['doses'].add(
-        doses[0]
+        doses[0],
       );
     }
     model.notifyListeners();
@@ -12299,23 +12310,6 @@ class AuthViewModel extends BaseViewModel {
       return {'day': day + 1, 'doses': <Map<String, dynamic>>[]};
     });
   }
-
-  // void removeCustomTimeAt({
-  //   required int medicationIndex,
-  //   required int timeIndex,
-  //   required AuthViewModel model,
-  // }) {
-  //   print(';;;;;; $timeIndex');
-  //   print('medicationIndex $medicationIndex');
-  //   for (final day in model.medicationClassList[medicationIndex].dosageMap) {
-  //     if (timeIndex < day['doses'].length) {
-  //       day['doses'].removeAt(timeIndex);
-  //     }
-  //   }
-
-  //   model.selectedCustomTimes.removeAt(timeIndex);
-  //   model.notifyListeners();
-  // }
 
   Future<void> selectTimeFreqUpdate({
     BuildContext? context,
@@ -13093,7 +13087,9 @@ class AuthViewModel extends BaseViewModel {
                                   SizedBox(
                                     height: model.intListCustom.isEmpty
                                         ? 0.h
-                                        : 200.h,
+                                        : model.intListCustom.length > 1
+                                        ? 200.h
+                                        : 90.h,
                                     child: SingleChildScrollView(
                                       child: Column(
                                         crossAxisAlignment:
@@ -13615,8 +13611,7 @@ class AuthViewModel extends BaseViewModel {
                                     ],
                                   ),
                                   SizedBox(height: 24.0.h),
-                                  model
-                                          .formattedSelectedTimeAndPeriodList!
+                                  model.formattedSelectedTimeAndPeriodList!
                                           .isNotEmpty
                                       ? Wrap(
                                           spacing: 10.0,
@@ -14753,8 +14748,8 @@ class AuthViewModel extends BaseViewModel {
                                 model.addReminderToList(
                                   model: model,
                                   setModalState: setModalState,
+                                  context:context
                                 );
-
                                 onTapToAddAnotherReminder = true;
                                 model.notifyListeners();
                               } else {
@@ -14789,10 +14784,11 @@ class AuthViewModel extends BaseViewModel {
                           buttonBorderColor: AppColors.transparent,
                           onPressed: () async {
                             if (firstFormReminderKey.currentState!.validate()) {
-                              // await addReminderToList(
-                              //   model: model,
-                              //   setModalState: setModalState,
-                              // );
+                              await addReminderToList(
+                                model: model,
+                                setModalState: setModalState,
+                                context:context
+                              );
                               linIndex++;
                               addCostTotal(model);
                               model.notifyListeners();
@@ -14915,16 +14911,7 @@ class AuthViewModel extends BaseViewModel {
                       SizedBox(height: 20.h),
                       ...model.medicationClassList.asMap().entries.map((entry) {
                         int index = entry.key;
-                        print('inex med::: $index');
-
-                        print(
-                          'kkkkkkkk::: ${model.medicationClassList[index].isCusSchedule!}',
-                        );
-                        print(
-                          'ppppppp::: ${model.medicationClassList[index].toJson()}',
-                        );
                         MedicationClass e = entry.value;
-                        // print('Greaterd::: ${e.dosageMap[index]['doses']}');
                         return Card(
                           color: AppColors.white,
                           elevation: .78,
@@ -15084,7 +15071,6 @@ class AuthViewModel extends BaseViewModel {
                                                           .medicationNameUpdateControllers[index];
                                                       final focusNode = model
                                                           .medNameUpdateFocusNodes[index];
-                                                      // Keep cursor at end
                                                       controller.selection =
                                                           TextSelection.fromPosition(
                                                             TextPosition(
@@ -15093,11 +15079,7 @@ class AuthViewModel extends BaseViewModel {
                                                                   .length,
                                                             ),
                                                           );
-
-                                                      // Re-request focus
                                                       focusNode.requestFocus();
-
-                                                      // ;
                                                     });
                                                 model.notifyListeners();
                                               },
@@ -15688,19 +15670,6 @@ class AuthViewModel extends BaseViewModel {
                                               borderBottomRight: 10.r,
                                               controller: model
                                                   .endDateUpdateController[index],
-                                              // label:
-                                              //     endDateUpdateController[index]
-                                              //         .text
-                                              //         .isNotEmpty
-                                              //     ? DateFormat(
-                                              //         'dd MMM, yyyy',
-                                              //       ).format(
-                                              //         DateTime.parse(
-                                              //           endDateUpdateController[index]
-                                              //               .text,
-                                              //         ),
-                                              //       )
-                                              //     : '',
                                               labelStyle: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontFamily: 'Arial',
@@ -15930,10 +15899,14 @@ class AuthViewModel extends BaseViewModel {
                                                       SizedBox(height: 14.h),
                                                       SizedBox(
                                                         height:
-                                                            List.generate(int.parse(model
-                                                            .medicationClassList[index]
-                                                            .duration!), (index)=>index)
-                                                                .isEmpty
+                                                            List.generate(
+                                                              int.parse(
+                                                                model
+                                                                    .medicationClassList[index]
+                                                                    .duration!,
+                                                              ),
+                                                              (index) => index,
+                                                            ).isEmpty
                                                             ? 0.h
                                                             : 200.h,
                                                         child: SingleChildScrollView(
@@ -15942,11 +15915,15 @@ class AuthViewModel extends BaseViewModel {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              ...List.generate(int.parse(model
-                                                            .medicationClassList[index]
-                                                            .duration!), (index)=>index).map((
-                                                                list,
-                                                              ) {
+                                                              ...List.generate(
+                                                                int.parse(
+                                                                  model
+                                                                      .medicationClassList[index]
+                                                                      .duration!,
+                                                                ),
+                                                                (index) =>
+                                                                    index,
+                                                              ).map((list) {
                                                                 if (list >=
                                                                     e
                                                                         .dosageMap
@@ -15962,12 +15939,6 @@ class AuthViewModel extends BaseViewModel {
                                                                   );
                                                                   return const SizedBox.shrink();
                                                                 }
-
-                                                                final dayData =
-                                                                    e.dosageMap[list];
-                                                                final doses =
-                                                                    dayData['doses']
-                                                                        as List;
                                                                 return Container(
                                                                   padding:
                                                                       EdgeInsets.all(
@@ -18524,7 +18495,6 @@ class AuthViewModel extends BaseViewModel {
                               }
                             } // ✅ update selection
                             buildChannelList(selectedIndexes);
-                            // addCostTotal(model);
                             model.notifyListeners();
                           },
                         );
@@ -19414,7 +19384,9 @@ class AuthViewModel extends BaseViewModel {
                               model.addReminderToList(
                                 model: model,
                                 setModalState: setModalState,
+                                context:context
                               );
+                              model.notifyListeners();
                               onTapToAddAnotherReminder = true;
                             } else {
                               AppUtils.snackbar(
@@ -19447,9 +19419,16 @@ class AuthViewModel extends BaseViewModel {
                         color: AppColors.white,
                         buttonBorderColor: AppColors.transparent,
                         onPressed: () async {
-                          addCostTotal(model);
-                          linIndex++;
-                          model.notifyListeners();
+                          if (secondFormReminderKey.currentState!.validate()) {
+                            await addReminderToList(
+                              model: model,
+                              setModalState: setModalState,
+                              context:context
+                            );
+                            addCostTotal(model);
+                            linIndex++;
+                            model.notifyListeners();
+                          }
                         },
                       ),
                       SizedBox(height: 50.h),
@@ -19715,32 +19694,6 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                // Divider(
-                //   color: AppColors.infoGrey.withOpacity(.2),
-                //   thickness: .7,
-                // ),
-                // SizedBox(height: 10.h),
-                // TextView(
-                //   text: 'Drug Name',
-                //   textStyle: TextStyle(
-                //     fontFamily: 'Arial',
-                //     fontSize: 12.8.sp,
-                //     fontWeight: FontWeight.w400,
-                //     color: AppColors.infoGrey,
-                //   ),
-                // ),
-                // SizedBox(height: 6.0.h),
-                // TextView(
-                //   text:
-                //       '${model.medicationClassList[indexOfMedicationClassList].drugName}',
-                //   textStyle: TextStyle(
-                //     fontFamily: 'Arial',
-                //     fontSize: 16.0.sp,
-                //     fontWeight: FontWeight.w400,
-                //     color: AppColors.black,
-                //   ),
-                // ),
-                // SizedBox(height: 6.0.h),
                 Container(
                   padding: EdgeInsets.symmetric(
                     vertical: 24.w,
@@ -19764,7 +19717,15 @@ class AuthViewModel extends BaseViewModel {
                           errorBuilder: (context, error, stackTrace) =>
                               SizedBox.shrink(),
                         )
-                      : SizedBox.shrink(),
+                      : Center(
+                          child: SvgPicture.asset(
+                            model
+                                .medicationClassList[indexOfMedicationClassList]
+                                .medicationTypeIcon!,
+                            height: 100.h,
+                            width: 94.60,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 10.h),
                 Divider(
@@ -19803,32 +19764,6 @@ class AuthViewModel extends BaseViewModel {
                     ),
                   ],
                 ),
-                // SizedBox(height: 10.h),
-                // Divider(
-                //   color: AppColors.infoGrey.withOpacity(.2),
-                //   thickness: .7,
-                // ),
-                // SizedBox(height: 10.h),
-                // TextView(
-                //   text: 'Description',
-                //   textStyle: TextStyle(
-                //     fontFamily: 'Arial',
-                //     fontSize: 12.8.sp,
-                //     fontWeight: FontWeight.w400,
-                //     color: AppColors.infoGrey,
-                //   ),
-                // ),
-                // SizedBox(height: 6.0.h),
-                // TextView(
-                //   text:
-                //       '${model.medicationClassList[indexOfMedicationClassList].description}',
-                //   textStyle: TextStyle(
-                //     fontFamily: 'Arial',
-                //     fontSize: 16.0.sp,
-                //     fontWeight: FontWeight.w400,
-                //     color: AppColors.black,
-                //   ),
-                // ),
                 SizedBox(height: 10.h),
               ],
             ),
@@ -19883,7 +19818,12 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 10.h),
                 TextView(
-                  text: 'Frequency',
+                  text:
+                      model
+                          .medicationClassList[indexOfMedicationClassList]
+                          .isCusSchedule!
+                      ? 'Per-day Schedule'
+                      : 'Frequency',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 12.8.sp,
@@ -19892,74 +19832,230 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 SizedBox(height: 6.0.h),
-                TextView(
-                  text: showNoTimes(
-                    int.parse(
-                      model
-                          .medicationClassList[indexOfMedicationClassList]
-                          .timesToTake!,
-                    ),
-                  ),
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Wrap(
-                  spacing: 4.10,
-                  runSpacing: 6,
-                  children: (() {
-                    final Set<String> uniqueTimes = {};
-
-                    for (final day
-                        in model
-                            .medicationClassList[indexOfMedicationClassList]
-                            .dosageMap!) {
-                      for (final dose in day['doses']) {
-                        uniqueTimes.add(dose['time']);
-                      }
-                    }
-
-                    return uniqueTimes.map((time) {
-                      return Container(
-                        width: 100.w,
-                        margin: EdgeInsets.only(right: 4.10.w),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 4.0.w,
-                          vertical: 6.w,
+                model
+                        .medicationClassList[indexOfMedicationClassList]
+                        .isCusSchedule!
+                    ? SizedBox(
+                        height:
+                            model
+                                    .medicationClassList[indexOfMedicationClassList]
+                                    .dosageMap
+                                    .length >
+                                1
+                            ? 160.h
+                            : 90.h,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...model.medicationClassList[indexOfMedicationClassList].dosageMap.map(
+                                (e) => Container(
+                                  padding: EdgeInsets.all(10.w),
+                                  margin: EdgeInsets.only(bottom: 12.w),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: AppColors.f1),
+                                    color: AppColors.white.withOpacity(.8),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  TextView(
+                                                    text: 'Day ${e['day']} ',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'GoogleSans',
+                                                      fontSize: 12.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text:
+                                                        '(${DateFormat('MMM dd').format(DateTime.parse(model.medicationClassList[indexOfMedicationClassList].startDateIso.toString()).add(Duration(days: e['day'] - 1)))})',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 12.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.fineGrey,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10.h),
+                                              SizedBox(
+                                                width: 301.h,
+                                                child: Wrap(
+                                                  spacing: 2.10,
+                                                  runSpacing: 6,
+                                                  children: (() {
+                                                    final Set<String>
+                                                    uniqueTimes = {};
+                                                    for (final dose
+                                                        in e['doses']) {
+                                                      uniqueTimes.add(
+                                                        dose['time'],
+                                                      );
+                                                    }
+                                                    return uniqueTimes.map((
+                                                      time,
+                                                    ) {
+                                                      return Container(
+                                                        width: 90.w,
+                                                        margin: EdgeInsets.only(
+                                                          right: 5.10.w,
+                                                        ),
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 6.0.w,
+                                                              vertical: 4.w,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .infoGrey1,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                22,
+                                                              ),
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              AppImage.timer,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                              width: 15.20.sp,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 4.10.w,
+                                                            ),
+                                                            TextView(
+                                                              text: time,
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'GoogleSans',
+                                                                fontSize:
+                                                                    12.8.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    }).toList();
+                                                  })(),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.infoGrey1),
-                          borderRadius: BorderRadius.circular(22),
-                          color: AppColors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              AppImage.timer,
-                              color: AppColors.reminder,
-                              width: 18.20.sp,
-                            ),
-                            SizedBox(width: 5.10.w),
-                            TextView(
-                              text: time,
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 12.8.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.reminder,
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextView(
+                            text: showNoTimes(
+                              int.parse(
+                                model
+                                    .medicationClassList[indexOfMedicationClassList]
+                                    .timesToTake!,
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    }).toList();
-                  })(),
-                ),
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.black,
+                            ),
+                          ),
+                          SizedBox(height: 6.0.h),
+                          Wrap(
+                            spacing: 4.10,
+                            runSpacing: 6,
+                            children: (() {
+                              final Set<String> uniqueTimes = {};
+
+                              for (final day
+                                  in model
+                                      .medicationClassList[indexOfMedicationClassList]
+                                      .dosageMap!) {
+                                for (final dose in day['doses']) {
+                                  uniqueTimes.add(dose['time']);
+                                }
+                              }
+
+                              return uniqueTimes.map((time) {
+                                return Container(
+                                  width: 100.w,
+                                  margin: EdgeInsets.only(right: 4.10.w),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 4.0.w,
+                                    vertical: 6.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: AppColors.infoGrey1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(22),
+                                    color: AppColors.white,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppImage.timer,
+                                        color: AppColors.reminder,
+                                        width: 18.20.sp,
+                                      ),
+                                      SizedBox(width: 5.10.w),
+                                      TextView(
+                                        text: time,
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 12.8.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList();
+                            })(),
+                          ),
+                        ],
+                      ),
 
                 SizedBox(height: 10.h),
 
@@ -20588,6 +20684,7 @@ class AuthViewModel extends BaseViewModel {
                   border: 100.r,
                   fontSize: 14.sp,
                   buttonColor: AppColors.primary,
+                  isLoading: model.isLoading,
                   buttonText: phoneReminderList.isEmpty
                       ? 'Set Up'
                       : 'Proceed to Pay',
@@ -20613,14 +20710,17 @@ class AuthViewModel extends BaseViewModel {
                           medications: model.medicationClassList.map((m) {
                             return Medication(
                               medicationName: m.medicationName,
-                              // drugName: m.medicationName,
-                              scheduleType: '',
+                              scheduleType: m.isCusSchedule!
+                                  ? 'CUSTOM'
+                                  : 'FIXED',
                               dosage: m.dosage,
                               medicationType: m.medicationType!.toUpperCase(),
                               startDateTime: m.startDateIso,
                               endDateTime: m.endDateIso,
                               durationInDays: int.parse(m.duration!),
-                              timesPerDay: int.parse(m.timesToTake!),
+                              timesPerDay: m.isCusSchedule!
+                                  ? ''
+                                  : int.parse(m.timesToTake!),
                               dailyDoseTimes: (m.dosageMap as List)
                                   .map(
                                     (dayData) => (dayData['doses'] as List)
@@ -20633,7 +20733,7 @@ class AuthViewModel extends BaseViewModel {
                                   )
                                   .toList(),
                               note: m.note,
-                              medicationImage: m.imageData == null
+                              medicationImage: m.imageData!.url == null
                                   ? null
                                   : MedicationImage.fromJson(
                                       m.imageData!.toJson(),
@@ -20642,8 +20742,8 @@ class AuthViewModel extends BaseViewModel {
                           }).toList(),
                           timeZone: "Africa/Lagos",
                           notificationChannels: notificationChannel,
-                          emails: emailReminderList,
-                          phoneNumbers: phoneReminderList,
+                          emails: addedEmailReminderList,
+                          phoneNumbers: addedPhoneReminderList,
                           payment: Payment(amount: costTotal, currency: "NGN"),
                         ),
                       );
@@ -20655,13 +20755,17 @@ class AuthViewModel extends BaseViewModel {
                           medications: model.medicationClassList.map((m) {
                             return Medication(
                               medicationName: m.medicationName,
-                              scheduleType: '',
+                              scheduleType: m.isCusSchedule!
+                                  ? 'CUSTOM'
+                                  : 'FIXED',
                               dosage: m.dosage,
                               medicationType: m.medicationType!.toUpperCase(),
                               startDateTime: m.startDateIso,
                               endDateTime: m.endDateIso,
                               durationInDays: int.parse(m.duration!),
-                              timesPerDay: int.parse(m.timesToTake!),
+                              timesPerDay: m.isCusSchedule!
+                                  ? ''
+                                  : int.parse(m.timesToTake!),
                               dailyDoseTimes: (m.dosageMap as List)
                                   .map(
                                     (dayData) => (dayData['doses'] as List)
@@ -20674,7 +20778,7 @@ class AuthViewModel extends BaseViewModel {
                                   )
                                   .toList(),
                               note: m.note,
-                              medicationImage: m.imageData == null
+                              medicationImage: m.imageData!.url == null
                                   ? null
                                   : MedicationImage.fromJson(
                                       m.imageData!.toJson(),
@@ -20683,7 +20787,7 @@ class AuthViewModel extends BaseViewModel {
                           }).toList(),
                           timeZone: "Africa/Lagos",
                           notificationChannels: notificationChannel,
-                          emails: emailReminderList,
+                          emails: addedEmailReminderList,
                         ),
                       );
                     }
@@ -25897,7 +26001,6 @@ class AuthViewModel extends BaseViewModel {
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }
-                              print('phoneReminderList:::$phoneReminderList');
                               locator<AuthViewModel>().notifyListeners();
                             },
                             style: ElevatedButton.styleFrom(

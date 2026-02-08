@@ -3,14 +3,13 @@ import 'medication_image.dart';
 
 class Medication {
   String? medicationName;
-  // String? drugName;
   String? medicationType;
   String? dosage;
   String? scheduleType;
   DateTime? startDateTime;
   DateTime? endDateTime;
   int? durationInDays;
-  int? timesPerDay;
+  dynamic timesPerDay;
   List<List<DailyDoseTime>>? dailyDoseTimes;
   String? note;
   MedicationImage? medicationImage;
@@ -32,7 +31,6 @@ class Medication {
   factory Medication.fromJson(Map<String, dynamic> json) => Medication(
     medicationName: json['medicationName'] as String?,
     scheduleType: json['scheduleType'] as String?,
-    // drugName: json['drugName'] as String?,
     medicationType: json['medicationType'] as String?,
     dosage: json['dosage'] as String?,
     startDateTime: json['startDateTime'] == null
@@ -42,7 +40,7 @@ class Medication {
         ? null
         : DateTime.parse(json['endDateTime'] as String),
     durationInDays: json['durationInDays'] as int?,
-    timesPerDay: json['timesPerDay'] as int?,
+    timesPerDay: json['timesPerDay'],
     dailyDoseTimes: (json['dailyDoseTimes'] as List<dynamic>?)
         ?.map(
           (e) => (e as List<dynamic>)
@@ -60,7 +58,6 @@ class Medication {
 
   Map<String, dynamic> toJson() => {
     'medicationName': medicationName,
-    // 'drugName': drugName,
     'scheduleType': scheduleType,
     'medicationType': medicationType,
     'dosage': dosage,
