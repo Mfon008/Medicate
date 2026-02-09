@@ -402,6 +402,22 @@ class AuthViewModel extends BaseViewModel {
   Map<int, String?> selectedTimePerDay = {};
   Map<int, List<String>> timesPerDay = {};
 
+  String returnPhoneNoStructure(String phoneNo) {
+    if (phoneNo.substring(0, 1).contains('0')) {
+      phoneNo = phoneNo.substring(1);
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
+  String returnPhoneNoStructureWith234(String phoneNo) {
+    if (phoneNo.substring(4, 5).contains('0')) {
+      phoneNo = '+234${phoneNo.substring(5)}';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
   setSubscriptionModalFlow({AuthViewModel? model, BuildContext? context}) {
     if (linSubIndex == 2) {
       return secondSubModalFlow(model: model, context: context);
@@ -6917,20 +6933,20 @@ class AuthViewModel extends BaseViewModel {
   bool get updateControllersInitialized => _updateControllersInitialized;
 
   void markUpdateControllersInitialized() =>
-    _updateControllersInitialized = true;
-  
+      _updateControllersInitialized = true;
 
   void markUpdateControllersInitializedFalse() =>
-    _updateControllersInitialized = false;
-  
+      _updateControllersInitialized = false;
 
   void initUpdateControllers({setModalState, model}) async {
+    print('oooooo');
     if (model.updateControllersInitialized ||
         model.medicationClassList.isEmpty) {
       return; // ✅ RUNS ONLY ONCE
     }
-
+    print('ppppppppp');
     model.markUpdateControllersInitialized();
+    print('qqqqqqqqqqqqq');
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setModalState(() {
         model.medNameUpdateFocusNodes.add(FocusNode());
@@ -7023,6 +7039,7 @@ class AuthViewModel extends BaseViewModel {
             controllersPerDay; // assign per medication if you're looping
         // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
       }
+      print('ooobbbbbooo');
 
       model.notifyListeners();
     });
@@ -8956,31 +8973,37 @@ class AuthViewModel extends BaseViewModel {
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (BuildContext context, StateSetter setModalState) {
-          return DraggableScrollableSheet(
-            initialChildSize: 0.88, // Initial height as percentage of screen
-            minChildSize: 0.7, // Minimum height
-            maxChildSize: 0.89, // Maximum height
-            expand: true, // Set to true for full height initially
-            builder: (BuildContext context, ScrollController scrollController) {
-              return ViewModelBuilder<AuthViewModel>.reactive(
-                viewModelBuilder: () => locator<AuthViewModel>(),
-                onViewModelReady: (model) {
-                  formattedSelectedTimeAndPeriod = DateFormat(
-                    'h:mm a',
-                  ).format(now);
-                },
-                disposeViewModel: false,
-                onDispose: (viewModel) {},
-                builder: (_, AuthViewModel model, _) {
-                  return setModalFlow(
-                    model: model,
-                    context: context,
-                    setModalState: setModalState,
-                    scrollController: scrollController,
-                  );
-                },
-              );
-            },
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.88, // Initial height as percentage of screen
+              minChildSize: 0.7, // Minimum height
+              maxChildSize: 0.89, // Maximum height
+              expand: false, // Set to true for full height initially
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                    return ViewModelBuilder<AuthViewModel>.reactive(
+                      viewModelBuilder: () => locator<AuthViewModel>(),
+                      onViewModelReady: (model) {
+                        formattedSelectedTimeAndPeriod = DateFormat(
+                          'h:mm a',
+                        ).format(now);
+                      },
+                      disposeViewModel: false,
+                      onDispose: (viewModel) {},
+                      builder: (_, AuthViewModel model, _) {
+                        return setModalFlow(
+                          model: model,
+                          context: context,
+                          setModalState: setModalState,
+                          scrollController: scrollController,
+                        );
+                      },
+                    );
+                  },
+            ),
           );
         },
       );
@@ -9023,7 +9046,11 @@ class AuthViewModel extends BaseViewModel {
     },
   );
 
-  addReminderToList({AuthViewModel? model, StateSetter? setModalState, BuildContext? context}) async {
+  addReminderToList({
+    AuthViewModel? model,
+    StateSetter? setModalState,
+    BuildContext? context,
+  }) async {
     List<Map<String, dynamic>> addTimePeriod = [];
     String startDateIsoWithin = startDateIso;
     _isLoading = true;
@@ -9057,6 +9084,7 @@ class AuthViewModel extends BaseViewModel {
             'isoDate': startDateIsoWithin,
           });
         }
+        logger.d('startDateIsoWithinstartDateIsoWithin::: $startDateIsoWithin');
         startDateIsoWithin = DateTime.parse(
           startDateIsoWithin,
         ).add(Duration(days: 0 + 1)).toString();
@@ -9089,11 +9117,13 @@ class AuthViewModel extends BaseViewModel {
         dosageMap: addTimePeriod,
       ),
     );
-    await Future.delayed(Duration(seconds: 1), () {});
-    clearReminderMedsVaraibles(model);
+
+    await Future.delayed(Duration(seconds: 2), () {});
     model.markUpdateControllersInitializedFalse();
+    clearReminderMedsVaraibles(model);
+
     _isLoading = false;
-    AppUtils.snackbar(context,message: 'Medication has been added.',);
+    AppUtils.snackbar(context, message: 'Medication has been added.');
     setModalState!(() {});
     model.notifyListeners();
 
@@ -9163,8 +9193,8 @@ class AuthViewModel extends BaseViewModel {
     model.intListCustom.clear();
     model.formattedSelectedTimeAndPeriod = '--:--';
     model.formatSelectedTimeAndPeriodList.clear();
-    formattedSelectedTimeAndPeriod = '--:--';
-    formatSelectedTimeAndPeriodList!.clear();
+    model.formattedSelectedTimeAndPeriodList!.clear();
+    model.numberOfDurationsInDays = '';
     noteController.clear();
   }
 
@@ -10400,10 +10430,7 @@ class AuthViewModel extends BaseViewModel {
 
   getTimeFreqCustom(int day) => selectedTimePerDay[day] ?? '--:--';
 
-  Future<void> selectTimeFreq({
-    BuildContext? context,
-    StateSetter? setModalState,
-  }) async {
+  Future<void> selectTimeFreq(BuildContext? context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context!,
       initialTime: TimeOfDay.now(),
@@ -10412,8 +10439,6 @@ class AuthViewModel extends BaseViewModel {
     if (pickedTime != null) {
       formattedSelectedTimeAndPeriod = formatTimeFreq(pickedTime);
     }
-    setModalState!(() {});
-    notifyListeners();
   }
 
   Future<void> selectTimeFreqIndex({
@@ -10684,18 +10709,17 @@ class AuthViewModel extends BaseViewModel {
     model.notifyListeners();
   }
 
-  void copyDayOneToAll(StateSetter setModalState) {
-    final dayOneTimes = timesPerDay[0];
+  void copyDayOneToAll({StateSetter? setModalState, AuthViewModel? viewModel}) {
+    final dayOneTimes = viewModel!.timesPerDay[0];
 
     if (dayOneTimes == null || dayOneTimes.isEmpty) return;
 
-    for (final day in timesPerDay.keys) {
+    for (final day in viewModel.timesPerDay.keys) {
       if (day != 0) {
-        timesPerDay[day] = List.from(dayOneTimes);
+        viewModel.timesPerDay[day] = List.from(dayOneTimes);
       }
     }
-    setModalState(() {});
-    notifyListeners();
+    setModalState!(() {});
   }
 
   void removeTimeForDay(int day, String time, StateSetter setModalState) {
@@ -12222,7 +12246,6 @@ class AuthViewModel extends BaseViewModel {
     int? index,
     int? day,
   }) async {
-    print('pop $day');
     final duration = int.tryParse(
       model!.medicationClassList[index!].duration ?? '',
     );
@@ -13051,6 +13074,12 @@ class AuthViewModel extends BaseViewModel {
                                             onTap: () {
                                               isTappedCopyall =
                                                   !isTappedCopyall;
+                                              if (isTappedCopyall) {
+                                                copyDayOneToAll(
+                                                  setModalState: setModalState!,
+                                                  viewModel: model,
+                                                );
+                                              }
                                               model.notifyListeners();
                                             },
                                             child: Container(
@@ -13088,8 +13117,8 @@ class AuthViewModel extends BaseViewModel {
                                     height: model.intListCustom.isEmpty
                                         ? 0.h
                                         : model.intListCustom.length > 1
-                                        ? 200.h
-                                        : 90.h,
+                                        ? 208.h
+                                        : 110.h,
                                     child: SingleChildScrollView(
                                       child: Column(
                                         crossAxisAlignment:
@@ -13535,12 +13564,10 @@ class AuthViewModel extends BaseViewModel {
                                               ),
                                               IconButton(
                                                 onPressed: () {
-                                                  selectTimeFreq(
-                                                    context: context,
-                                                    setModalState:
-                                                        setModalState,
-                                                  );
-                                                  model.notifyListeners();
+                                                  selectTimeFreq(context);
+
+                                                  setModalState!(() {});
+                                                  notifyListeners();
                                                 },
                                                 icon: Icon(
                                                   Icons.access_time_rounded,
@@ -13611,7 +13638,8 @@ class AuthViewModel extends BaseViewModel {
                                     ],
                                   ),
                                   SizedBox(height: 24.0.h),
-                                  model.formattedSelectedTimeAndPeriodList!
+                                  model
+                                          .formattedSelectedTimeAndPeriodList!
                                           .isNotEmpty
                                       ? Wrap(
                                           spacing: 10.0,
@@ -14748,7 +14776,7 @@ class AuthViewModel extends BaseViewModel {
                                 model.addReminderToList(
                                   model: model,
                                   setModalState: setModalState,
-                                  context:context
+                                  context: context,
                                 );
                                 onTapToAddAnotherReminder = true;
                                 model.notifyListeners();
@@ -14782,12 +14810,13 @@ class AuthViewModel extends BaseViewModel {
                           buttonText: 'Preview',
                           color: AppColors.white,
                           buttonBorderColor: AppColors.transparent,
+                          isLoading: model.isLoading,
                           onPressed: () async {
                             if (firstFormReminderKey.currentState!.validate()) {
-                              await addReminderToList(
+                              await model.addReminderToList(
                                 model: model,
                                 setModalState: setModalState,
-                                context:context
+                                context: context,
                               );
                               linIndex++;
                               addCostTotal(model);
@@ -14910,8 +14939,12 @@ class AuthViewModel extends BaseViewModel {
                     children: [
                       SizedBox(height: 20.h),
                       ...model.medicationClassList.asMap().entries.map((entry) {
-                        int index = entry.key;
                         MedicationClass e = entry.value;
+                        int index = entry.key;
+                        final doseItem = index < e.dosageMap.length
+                            ? e.dosageMap[index]
+                            : null;
+                        final doses = doseItem?['doses'];
                         return Card(
                           color: AppColors.white,
                           elevation: .78,
@@ -14985,7 +15018,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                           SizedBox(width: 12.30.w),
                                           GestureDetector(
-                                            onTap: () {
+                                            onTap: () async {
                                               if (medCard == e) {
                                                 medCard = null;
                                               } else {
@@ -15907,8 +15940,19 @@ class AuthViewModel extends BaseViewModel {
                                                               ),
                                                               (index) => index,
                                                             ).isEmpty
-                                                            ? 0.h
-                                                            : 200.h,
+                                                            ? 0
+                                                            : List.generate(
+                                                                    int.parse(
+                                                                      model
+                                                                          .medicationClassList[index]
+                                                                          .duration!,
+                                                                    ),
+                                                                    (index) =>
+                                                                        index,
+                                                                  ).length >
+                                                                  1
+                                                            ? 208.h
+                                                            : 110.h,
                                                         child: SingleChildScrollView(
                                                           child: Column(
                                                             crossAxisAlignment:
@@ -16192,12 +16236,6 @@ class AuthViewModel extends BaseViewModel {
                                                                                         ) {
                                                                                           final timeIndex = entry.key;
                                                                                           final time = entry.value;
-                                                                                          print(
-                                                                                            'key::: $timeIndex',
-                                                                                          );
-                                                                                          print(
-                                                                                            'keyVlaue::: $time',
-                                                                                          );
                                                                                           return GestureDetector(
                                                                                             onTap: () {
                                                                                               selectedTimePerDay[list] = time['time'];
@@ -16476,109 +16514,122 @@ class AuthViewModel extends BaseViewModel {
                                                         ],
                                                       ),
                                                       SizedBox(height: 24.0.h),
-                                                      e
-                                                              .dosageMap[index]['doses']
-                                                              .isNotEmpty
-                                                          ? Wrap(
-                                                              spacing: 10.0,
-                                                              runSpacing: 10.0,
-                                                              children: [
-                                                                ...e.dosageMap[index]['doses'].asMap().entries.map((
-                                                                  entry,
-                                                                ) {
-                                                                  final timeIndex =
-                                                                      entry.key;
-                                                                  final time =
-                                                                      entry
-                                                                          .value;
-                                                                  return GestureDetector(
-                                                                    onTap: () {
-                                                                      model.getTime =
-                                                                          time['time'];
-                                                                      setModalState!(
+
+                                                      if (doses != null &&
+                                                          doses.isNotEmpty)
+                                                        Wrap(
+                                                          spacing: 10.0,
+                                                          runSpacing: 10.0,
+                                                          children: [
+                                                            ...doses.asMap().entries.map((
+                                                              entry,
+                                                            ) {
+                                                              final timeIndex =
+                                                                  entry.key;
+                                                              final time =
+                                                                  entry.value;
+
+                                                              return GestureDetector(
+                                                                onTap: () {
+                                                                  model.getTime =
+                                                                      time['time'];
+                                                                  setModalState
+                                                                      ?.call(
                                                                         () {},
                                                                       );
-                                                                      model
-                                                                          .notifyListeners();
-                                                                    },
-                                                                    child: Container(
-                                                                      width:
-                                                                          110.w,
-                                                                      padding: EdgeInsets.symmetric(
-                                                                        vertical:
-                                                                            4.w,
-                                                                        horizontal:
-                                                                            10.w,
-                                                                      ),
-                                                                      decoration: BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                              22.r,
-                                                                            ),
-                                                                        border: Border.all(
+                                                                  model
+                                                                      .notifyListeners();
+                                                                },
+                                                                child: Container(
+                                                                  width: 110.w,
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    vertical:
+                                                                        4.w,
+                                                                    horizontal:
+                                                                        10.w,
+                                                                  ),
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          22.r,
+                                                                        ),
+                                                                    border: Border.all(
+                                                                      color:
+                                                                          model.getTime ==
+                                                                              time['time']
+                                                                          ? AppColors.transparent
+                                                                          : AppColors.app_green,
+                                                                    ),
+                                                                    color:
+                                                                        model.getTime ==
+                                                                            time['time']
+                                                                        ? AppColors
+                                                                              .app_green
+                                                                        : AppColors
+                                                                              .white,
+                                                                  ),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      TextView(
+                                                                        text:
+                                                                            time['time'],
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'GoogleSans',
+                                                                          fontSize:
+                                                                              13.2.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
                                                                           color:
                                                                               model.getTime ==
                                                                                   time['time']
-                                                                              ? AppColors.transparent
+                                                                              ? AppColors.white
                                                                               : AppColors.app_green,
                                                                         ),
-                                                                        color:
-                                                                            model.getTime ==
-                                                                                time['time']
-                                                                            ? AppColors.app_green
-                                                                            : AppColors.white,
                                                                       ),
-                                                                      child: Row(
-                                                                        children: [
-                                                                          TextView(
-                                                                            text:
-                                                                                time['time'],
-                                                                            textStyle: TextStyle(
-                                                                              fontFamily: 'GoogleSans',
-                                                                              fontSize: 13.2.sp,
-                                                                              fontWeight: FontWeight.w500,
-                                                                              color:
-                                                                                  model.getTime ==
-                                                                                      time['time']
-                                                                                  ? AppColors.white
-                                                                                  : AppColors.app_green,
-                                                                            ),
-                                                                          ),
-                                                                          SizedBox(
-                                                                            width:
-                                                                                6.w,
-                                                                          ),
-                                                                          GestureDetector(
-                                                                            onTap: () {
-                                                                              model.removeTimeAt(
-                                                                                model: model,
-                                                                                medicationIndex: index,
-                                                                                timeIndex: timeIndex,
-                                                                              );
-                                                                              setModalState!(
-                                                                                () {},
-                                                                              );
-                                                                              model.notifyListeners();
-                                                                            },
-                                                                            child: SvgPicture.asset(
-                                                                              AppImage.x,
-                                                                              color:
-                                                                                  model.getTime ==
-                                                                                      time['time']
-                                                                                  ? AppColors.white
-                                                                                  : AppColors.app_green,
-                                                                              height: 16.20.h,
-                                                                              width: 16.w,
-                                                                            ),
-                                                                          ),
-                                                                        ],
+                                                                      SizedBox(
+                                                                        width:
+                                                                            6.w,
                                                                       ),
-                                                                    ),
-                                                                  );
-                                                                }),
-                                                              ],
-                                                            )
-                                                          : SizedBox.shrink(),
+                                                                      GestureDetector(
+                                                                        onTap: () {
+                                                                          model.removeTimeAt(
+                                                                            model:
+                                                                                model,
+                                                                            medicationIndex:
+                                                                                index,
+                                                                            timeIndex:
+                                                                                timeIndex,
+                                                                          );
+                                                                          setModalState?.call(
+                                                                            () {},
+                                                                          );
+                                                                          model
+                                                                              .notifyListeners();
+                                                                        },
+                                                                        child: SvgPicture.asset(
+                                                                          AppImage
+                                                                              .x,
+                                                                          color:
+                                                                              model.getTime ==
+                                                                                  time['time']
+                                                                              ? AppColors.white
+                                                                              : AppColors.app_green,
+                                                                          height:
+                                                                              16.20.h,
+                                                                          width:
+                                                                              16.w,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }),
+                                                          ],
+                                                        )
+                                                      else
+                                                        SizedBox.shrink(),
                                                     ],
                                                   ),
 
@@ -17505,6 +17556,14 @@ class AuthViewModel extends BaseViewModel {
                                                           onTap: () {
                                                             isTappedCopyall =
                                                                 !isTappedCopyall;
+                                                            if (isTappedCopyall) {
+                                                              copyDayOneToAll(
+                                                                setModalState:
+                                                                    setModalState!,
+                                                                viewModel:
+                                                                    model,
+                                                              );
+                                                            }
                                                             model
                                                                 .notifyListeners();
                                                           },
@@ -17560,7 +17619,12 @@ class AuthViewModel extends BaseViewModel {
                                                           .intListCustom
                                                           .isEmpty
                                                       ? 0.h
-                                                      : 200.h,
+                                                      : model
+                                                                .intListCustom
+                                                                .length >
+                                                            1
+                                                      ? 208.h
+                                                      : 110.h,
                                                   child: SingleChildScrollView(
                                                     child: Column(
                                                       crossAxisAlignment:
@@ -18009,10 +18073,7 @@ class AuthViewModel extends BaseViewModel {
                                                             IconButton(
                                                               onPressed: () {
                                                                 selectTimeFreq(
-                                                                  context:
-                                                                      context,
-                                                                  setModalState:
-                                                                      setModalState,
+                                                                  context,
                                                                 );
                                                                 model
                                                                     .notifyListeners();
@@ -19381,13 +19442,14 @@ class AuthViewModel extends BaseViewModel {
                             model.notifyListeners();
                             if (secondFormReminderKey.currentState!
                                 .validate()) {
-                              model.addReminderToList(
+                              await model.addReminderToList(
                                 model: model,
                                 setModalState: setModalState,
-                                context:context
+                                context: context,
                               );
-                              model.notifyListeners();
+
                               onTapToAddAnotherReminder = true;
+                              model.notifyListeners();
                             } else {
                               AppUtils.snackbar(
                                 context,
@@ -19418,17 +19480,24 @@ class AuthViewModel extends BaseViewModel {
                         buttonText: 'Preview',
                         color: AppColors.white,
                         buttonBorderColor: AppColors.transparent,
+                        isLoading: model.isLoading,
                         onPressed: () async {
-                          if (secondFormReminderKey.currentState!.validate()) {
-                            await addReminderToList(
-                              model: model,
-                              setModalState: setModalState,
-                              context:context
-                            );
+                          if (secondFormReminderKey.currentState != null) {
+                            if (secondFormReminderKey.currentState!
+                                .validate()) {
+                              await model.addReminderToList(
+                                model: model,
+                                setModalState: setModalState,
+                                context: context,
+                              );
+                              addCostTotal(model);
+                              linIndex++;
+                            }
+                          } else {
                             addCostTotal(model);
                             linIndex++;
-                            model.notifyListeners();
                           }
+                          model.notifyListeners();
                         },
                       ),
                       SizedBox(height: 50.h),
@@ -19599,18 +19668,20 @@ class AuthViewModel extends BaseViewModel {
             children: [
               IconButton(
                 onPressed:
-                    model!.medicationClassList[indexOfMedicationClassList] ==
+                    model!.medicationClassList[model
+                            .indexOfMedicationClassList] ==
                         model.medicationClassList.first
                     ? () {}
                     : () {
-                        indexOfMedicationClassList -= 1;
+                        model.indexOfMedicationClassList -= 1;
                         model.notifyListeners();
                       },
                 icon: Icon(
                   Icons.arrow_back,
                   size: 22.sp,
                   color:
-                      model.medicationClassList[indexOfMedicationClassList] ==
+                      model.medicationClassList[model
+                              .indexOfMedicationClassList] ==
                           model.medicationClassList.first
                       ? AppColors.primaryLight.withOpacity(.7)
                       : AppColors.primary,
@@ -19619,7 +19690,7 @@ class AuthViewModel extends BaseViewModel {
               SizedBox(width: 10.w),
               TextView(
                 text:
-                    '${indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                    '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -19631,18 +19702,20 @@ class AuthViewModel extends BaseViewModel {
               SizedBox(width: 10.w),
               IconButton(
                 onPressed:
-                    model.medicationClassList[indexOfMedicationClassList] ==
+                    model.medicationClassList[model
+                            .indexOfMedicationClassList] ==
                         model.medicationClassList.last
                     ? () {}
                     : () {
-                        indexOfMedicationClassList += 1;
+                        model.indexOfMedicationClassList += 1;
                         model.notifyListeners();
                       },
                 icon: Icon(
                   Icons.arrow_forward,
                   size: 22.sp,
                   color:
-                      model.medicationClassList[indexOfMedicationClassList] ==
+                      model.medicationClassList[model
+                              .indexOfMedicationClassList] ==
                           model.medicationClassList.last
                       ? AppColors.primaryLight.withOpacity(.7)
                       : AppColors.primary1,
@@ -19685,7 +19758,7 @@ class AuthViewModel extends BaseViewModel {
                 SizedBox(height: 6.0.h),
                 TextView(
                   text:
-                      '${model.medicationClassList[indexOfMedicationClassList].medicationName}',
+                      '${model.medicationClassList[model.indexOfMedicationClassList].medicationName}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -19707,12 +19780,14 @@ class AuthViewModel extends BaseViewModel {
                   ),
                   child:
                       model
-                              .medicationClassList[indexOfMedicationClassList]
+                              .medicationClassList[model
+                                  .indexOfMedicationClassList]
                               .medicationFile !=
                           null
                       ? Image.file(
                           model
-                              .medicationClassList[indexOfMedicationClassList]
+                              .medicationClassList[model
+                                  .indexOfMedicationClassList]
                               .medicationFile!,
                           errorBuilder: (context, error, stackTrace) =>
                               SizedBox.shrink(),
@@ -19720,7 +19795,8 @@ class AuthViewModel extends BaseViewModel {
                       : Center(
                           child: SvgPicture.asset(
                             model
-                                .medicationClassList[indexOfMedicationClassList]
+                                .medicationClassList[model
+                                    .indexOfMedicationClassList]
                                 .medicationTypeIcon!,
                             height: 100.h,
                             width: 94.60,
@@ -19748,13 +19824,13 @@ class AuthViewModel extends BaseViewModel {
                   children: [
                     SvgPicture.asset(
                       model
-                          .medicationClassList[indexOfMedicationClassList]
+                          .medicationClassList[model.indexOfMedicationClassList]
                           .medicationTypeIcon!,
                     ),
                     SizedBox(width: 6.0.w),
                     TextView(
                       text:
-                          '${model.medicationClassList[indexOfMedicationClassList].medicationType}',
+                          '${model.medicationClassList[model.indexOfMedicationClassList].medicationType}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16.0.sp,
@@ -19803,7 +19879,7 @@ class AuthViewModel extends BaseViewModel {
                 SizedBox(height: 6.0.h),
                 TextView(
                   text:
-                      '${model.medicationClassList[indexOfMedicationClassList].dosage}',
+                      '${model.medicationClassList[model.indexOfMedicationClassList].dosage}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -19820,7 +19896,7 @@ class AuthViewModel extends BaseViewModel {
                 TextView(
                   text:
                       model
-                          .medicationClassList[indexOfMedicationClassList]
+                          .medicationClassList[model.indexOfMedicationClassList]
                           .isCusSchedule!
                       ? 'Per-day Schedule'
                       : 'Frequency',
@@ -19833,12 +19909,13 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 model
-                        .medicationClassList[indexOfMedicationClassList]
+                        .medicationClassList[model.indexOfMedicationClassList]
                         .isCusSchedule!
                     ? SizedBox(
                         height:
                             model
-                                    .medicationClassList[indexOfMedicationClassList]
+                                    .medicationClassList[model
+                                        .indexOfMedicationClassList]
                                     .dosageMap
                                     .length >
                                 1
@@ -19848,7 +19925,7 @@ class AuthViewModel extends BaseViewModel {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ...model.medicationClassList[indexOfMedicationClassList].dosageMap.map(
+                              ...model.medicationClassList[model.indexOfMedicationClassList].dosageMap.map(
                                 (e) => Container(
                                   padding: EdgeInsets.all(10.w),
                                   margin: EdgeInsets.only(bottom: 12.w),
@@ -19883,7 +19960,7 @@ class AuthViewModel extends BaseViewModel {
                                                   ),
                                                   TextView(
                                                     text:
-                                                        '(${DateFormat('MMM dd').format(DateTime.parse(model.medicationClassList[indexOfMedicationClassList].startDateIso.toString()).add(Duration(days: e['day'] - 1)))})',
+                                                        '(${DateFormat('MMM dd').format(DateTime.parse(model.medicationClassList[model.indexOfMedicationClassList].startDateIso.toString()).add(Duration(days: e['day'] - 1)))})',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
                                                       fontSize: 12.sp,
@@ -19896,7 +19973,7 @@ class AuthViewModel extends BaseViewModel {
                                               ),
                                               SizedBox(height: 10.h),
                                               SizedBox(
-                                                width: 301.h,
+                                                width: 304.h,
                                                 child: Wrap(
                                                   spacing: 2.10,
                                                   runSpacing: 6,
@@ -19988,7 +20065,8 @@ class AuthViewModel extends BaseViewModel {
                             text: showNoTimes(
                               int.parse(
                                 model
-                                    .medicationClassList[indexOfMedicationClassList]
+                                    .medicationClassList[model
+                                        .indexOfMedicationClassList]
                                     .timesToTake!,
                               ),
                             ),
@@ -20008,7 +20086,8 @@ class AuthViewModel extends BaseViewModel {
 
                               for (final day
                                   in model
-                                      .medicationClassList[indexOfMedicationClassList]
+                                      .medicationClassList[model
+                                          .indexOfMedicationClassList]
                                       .dosageMap!) {
                                 for (final dose in day['doses']) {
                                   uniqueTimes.add(dose['time']);
@@ -20076,7 +20155,7 @@ class AuthViewModel extends BaseViewModel {
                 SizedBox(height: 6.0.h),
                 TextView(
                   text:
-                      '${model.medicationClassList[indexOfMedicationClassList].dateAndTime}',
+                      '${model.medicationClassList[model.indexOfMedicationClassList].dateAndTime}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -20104,7 +20183,7 @@ class AuthViewModel extends BaseViewModel {
                   text: getReturnDurationNumberOfDays(
                     int.parse(
                       model
-                          .medicationClassList[indexOfMedicationClassList]
+                          .medicationClassList[model.indexOfMedicationClassList]
                           .duration!,
                     ),
                   ),
@@ -20206,7 +20285,7 @@ class AuthViewModel extends BaseViewModel {
                   //   ),
                   // ),
                   text: model
-                      .medicationClassList[indexOfMedicationClassList]
+                      .medicationClassList[model.indexOfMedicationClassList]
                       .endDate!,
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
@@ -20234,7 +20313,7 @@ class AuthViewModel extends BaseViewModel {
                 SizedBox(height: 6.0.h),
                 TextView(
                   text: model
-                      .medicationClassList[indexOfMedicationClassList]
+                      .medicationClassList[model.indexOfMedicationClassList]
                       .note!,
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
@@ -20609,18 +20688,20 @@ class AuthViewModel extends BaseViewModel {
             children: [
               IconButton(
                 onPressed:
-                    model.medicationClassList[indexOfMedicationClassList] ==
+                    model.medicationClassList[model
+                            .indexOfMedicationClassList] ==
                         model.medicationClassList.first
                     ? () {}
                     : () {
-                        indexOfMedicationClassList -= 1;
+                        model.indexOfMedicationClassList -= 1;
                         model.notifyListeners();
                       },
                 icon: Icon(
                   Icons.arrow_back,
                   size: 22.sp,
                   color:
-                      model.medicationClassList[indexOfMedicationClassList] ==
+                      model.medicationClassList[model
+                              .indexOfMedicationClassList] ==
                           model.medicationClassList.first
                       ? AppColors.primaryLight.withOpacity(.7)
                       : AppColors.primary,
@@ -20629,7 +20710,7 @@ class AuthViewModel extends BaseViewModel {
               SizedBox(width: 10.h),
               TextView(
                 text:
-                    '${indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                    '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -20640,18 +20721,20 @@ class AuthViewModel extends BaseViewModel {
               SizedBox(width: 10.h),
               IconButton(
                 onPressed:
-                    model.medicationClassList[indexOfMedicationClassList] ==
+                    model.medicationClassList[model
+                            .indexOfMedicationClassList] ==
                         model.medicationClassList.last
                     ? () {}
                     : () {
-                        indexOfMedicationClassList += 1;
+                        model.indexOfMedicationClassList += 1;
                         model.notifyListeners();
                       },
                 icon: Icon(
                   Icons.arrow_forward,
                   size: 22.sp,
                   color:
-                      model.medicationClassList[indexOfMedicationClassList] ==
+                      model.medicationClassList[model
+                              .indexOfMedicationClassList] ==
                           model.medicationClassList.last
                       ? AppColors.primaryLight.withOpacity(.7)
                       : AppColors.primary1,
@@ -20673,7 +20756,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     linIndex--;
-                    indexOfMedicationClassList = 0;
+                    model.indexOfMedicationClassList = 0;
                     model.notifyListeners();
                   },
                 ),
@@ -20706,6 +20789,7 @@ class AuthViewModel extends BaseViewModel {
                       }
                       model.createReminderPaid(
                         context,
+                        model: model,
                         createReminderEntityModel: CreateReminderEntityModel(
                           medications: model.medicationClassList.map((m) {
                             return Medication(
@@ -20751,6 +20835,7 @@ class AuthViewModel extends BaseViewModel {
                     } else {
                       model.createReminder(
                         context,
+                        model: model,
                         createReminderEntityModel: CreateReminderEntityModel(
                           medications: model.medicationClassList.map((m) {
                             return Medication(
@@ -25960,15 +26045,13 @@ class AuthViewModel extends BaseViewModel {
                                   onChange: (p0) {},
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    final result = AppValidator.validatePhone()(
-                                      value,
-                                    );
+                                    final result =
+                                        AppValidator.validatePhoneNew()(value);
                                     if (result != null) {
                                       isPhoneValid = true;
                                     } else {
                                       isPhoneValid = false;
                                     }
-                                    print(isPhoneValid);
                                     notifyListeners();
                                     return result;
                                   },
@@ -25987,16 +26070,16 @@ class AuthViewModel extends BaseViewModel {
                                   .validate()) {
                                 if (!isEdit) {
                                   if (phoneReminderList.contains(
-                                    '+234${phoneController.text.trim()}',
+                                    '+234${returnPhoneNoStructure(phoneController.text.trim())}',
                                   )) {
                                   } else {
                                     phoneReminderList.add(
-                                      '+234${phoneController.text.trim()}',
+                                      '+234${returnPhoneNoStructure(phoneController.text.trim())}',
                                     );
                                   }
                                 } else {
                                   phoneReminderList[index!] =
-                                      '+234${phoneController.text.trim()}';
+                                      '+234${returnPhoneNoStructure(phoneController.text.trim())}';
                                 }
                                 Navigator.pop(context);
                                 phoneController.clear();
@@ -26126,6 +26209,7 @@ class AuthViewModel extends BaseViewModel {
   void createReminder(
     context, {
     CreateReminderEntityModel? createReminderEntityModel,
+    AuthViewModel? model,
   }) async {
     try {
       _isLoading = true;
@@ -26139,6 +26223,7 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _createReminderResponseModel?.message ?? '',
         );
+        model!.medicationClassList.clear();
         navigate.navigateTo(
           Routes.paymentStatusScreen,
           arguments: PaymentStatusScreenArguments(
@@ -26205,6 +26290,7 @@ class AuthViewModel extends BaseViewModel {
   void createReminderPaid(
     context, {
     CreateReminderEntityModel? createReminderEntityModel,
+    AuthViewModel? model,
   }) async {
     try {
       _isLoading = true;
@@ -26218,10 +26304,12 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _createReminderResponseModel?.message ?? '',
         );
+
         initiatePayment(
           context,
           reference: _createReminderResponseModel?.data?.transactionReference,
         );
+        model!.medicationClassList.clear();
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,

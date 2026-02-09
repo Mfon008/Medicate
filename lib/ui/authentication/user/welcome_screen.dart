@@ -266,11 +266,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         model.signIn(
                           context,
                           signInEntity: LoginEntityModel(
-                            phone:
-                                widget.phone ??
+                            phone: model.returnPhoneNoStructureWith234(widget.phone ??
                                 SharedPreferencesService
                                     .instance
-                                    .usersData['user']['phone'],
+                                    .usersData['user']['phone'])
+                                ,
                             pin: pinInput,
                           ),
                         );

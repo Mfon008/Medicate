@@ -187,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(
+                              final result = AppValidator.validatePhoneNew()(
                                 value,
                               );
                               if (result != null) {
@@ -316,7 +316,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 context,
                                 signUpEntity: SignUpEntityModel(
                                   fullName: nameController.text.trim(),
-                                  phone: '+234${phoneController.text.trim()}',
+                                  phone: '+234${model.returnPhoneNoStructure(phoneController.text.trim())}',
                                 ),
                               );
                             }

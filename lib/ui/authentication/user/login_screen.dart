@@ -156,7 +156,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderBottomLeft: 0,
                         borderBottomRight: 10,
                         label: 'Enter your number',
-
                         labelStyle: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontFamily: 'Arial',
@@ -175,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           setState(() {});
                         },
                         validator: (value) {
-                          final result = AppValidator.validatePhone()(value);
+                          final result = AppValidator.validatePhoneNew()(value);
                           if (result != null) {
                             isPhoneValid = true;
                           } else {
