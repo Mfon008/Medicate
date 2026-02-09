@@ -19440,23 +19440,27 @@ class AuthViewModel extends BaseViewModel {
                           onTap: () async {
                             onTapToAddAnotherReminder = true;
                             model.notifyListeners();
-                            if (secondFormReminderKey.currentState!
-                                .validate()) {
-                              await model.addReminderToList(
-                                model: model,
-                                setModalState: setModalState,
-                                context: context,
-                              );
+                            if (secondFormReminderKey.currentState != null) {
+                              if (secondFormReminderKey.currentState!
+                                  .validate()) {
+                                await model.addReminderToList(
+                                  model: model,
+                                  setModalState: setModalState,
+                                  context: context,
+                                );
 
-                              onTapToAddAnotherReminder = true;
-                              model.notifyListeners();
+                                onTapToAddAnotherReminder = true;
+                              } else {
+                                AppUtils.snackbar(
+                                  context,
+                                  message: 'Kindly input all required fields..',
+                                  error: true,
+                                );
+                              }
                             } else {
-                              AppUtils.snackbar(
-                                context,
-                                message: 'Kindly input all required fields.',
-                                error: true,
-                              );
+                              onTapToAddAnotherReminder = true;
                             }
+                            model.notifyListeners();
                           },
                           child: TextView(
                             text: 'Add Another Medication',
