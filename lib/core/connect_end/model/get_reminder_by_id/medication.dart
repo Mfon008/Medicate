@@ -16,6 +16,7 @@ class Medication {
   DateTime? endDateTime;
   int? timesPerDay;
   String? note;
+  String? scheduleType;
   List<List<DailyDoseTime>>? dailyDoseTimes;
   String? medicationStatus;
   MedicationImage? medicationImage;
@@ -30,6 +31,7 @@ class Medication {
     this.startDateTime,
     this.durationInDays,
     this.endDateTime,
+    this.scheduleType,
     this.timesPerDay,
     this.note,
     this.dailyDoseTimes,

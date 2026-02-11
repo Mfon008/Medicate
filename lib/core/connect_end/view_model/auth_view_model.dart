@@ -362,6 +362,7 @@ class AuthViewModel extends BaseViewModel {
   List<FocusNode> durationUpdateFocusNodes = [];
   List<FocusNode> timesToTakeUpdateFocusNodes = [];
   List<FocusNode> noteUpdateFocusNodes = [];
+  List<dynamic> allNotificationChannels = [];
   String isReminderStatus = 'today';
   String timePeriod = 'morning';
   var totalCount;
@@ -379,6 +380,10 @@ class AuthViewModel extends BaseViewModel {
   bool isCusSchedule = false;
   List<bool> isCusScheduleUpdate = [];
   bool isDosageOthers = false;
+
+  bool _updateControllersInitialized = false;
+
+  bool get updateControllersInitialized => _updateControllersInitialized;
 
   List<dynamic>? formatSelectedTimeAndPeriodList = [];
   String? formattedSelectedTimeAndPeriod;
@@ -401,6 +406,86 @@ class AuthViewModel extends BaseViewModel {
 
   Map<int, String?> selectedTimePerDay = {};
   Map<int, List<String>> timesPerDay = {};
+
+  String notificationChannelFlowWidgetIcon(String notificationChannel){
+    if(notificationChannel.toLowerCase() == 'email'){
+      return AppImage.channel_email;
+    }
+    if(notificationChannel.toLowerCase() == 'sms'){
+      return AppImage.sms;
+    }
+    if(notificationChannel.toLowerCase() == 'whatsapp'){
+      return AppImage.whatsapp;
+    }
+    if(notificationChannel.toLowerCase() == 'phone_call'){
+      return AppImage.phone;
+    }
+    return AppImage.bell;
+  }
+  String notificationChannelFormatName(String notificationChannel){
+    if(notificationChannel.toLowerCase() == 'email'){
+      return 'Email';
+    }
+    if(notificationChannel.toLowerCase() == 'sms'){
+      return 'SMS';
+    }
+    if(notificationChannel.toLowerCase() == 'whatsapp'){
+      return 'Whatsapp';
+    }
+    if(notificationChannel.toLowerCase() == 'phone_call'){
+      return 'Phone Call';
+    }
+    return 'Push';
+  }
+
+  Widget notificationChannelFlowWidget({required String notificationType}) =>
+      Container(
+        width:notificationType.toLowerCase() == 'phone_call' || notificationType.toLowerCase() == 'whatsapp'?120.w: 90.w,
+        margin: EdgeInsets.only(right: 4.10.w),
+        padding: EdgeInsets.symmetric(vertical: 4.w),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.infoGrey1),
+          borderRadius: BorderRadius.circular(22),
+          color: AppColors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              notificationChannelFlowWidgetIcon(notificationType),
+              color: AppColors.infoGrey,
+              width: notificationType.toLowerCase()=='sms'?20: 14.20.sp,
+              height: notificationType.toLowerCase()=='sms'?20:12.0.sp,
+            ),
+            SizedBox(width: 7.10.w),
+            TextView(
+              text: notificationChannelFormatName(notificationType),
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.reminder,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  String? sanitizeImageUrl(String? url) {
+    if (url == null || url.trim().isEmpty) return null;
+
+    // Already valid
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+    // If backend returns domain only
+    if (url.startsWith('www.') || url.contains('.')) {
+      return 'https://$url';
+    }
+
+    // Otherwise invalid
+    return null;
+  }
 
   String returnPhoneNoStructure(String phoneNo) {
     if (phoneNo.substring(0, 1).contains('0')) {
@@ -6928,10 +7013,6 @@ class AuthViewModel extends BaseViewModel {
     return false;
   }
 
-  bool _updateControllersInitialized = false;
-
-  bool get updateControllersInitialized => _updateControllersInitialized;
-
   void markUpdateControllersInitialized() =>
       _updateControllersInitialized = true;
 
@@ -6939,14 +7020,11 @@ class AuthViewModel extends BaseViewModel {
       _updateControllersInitialized = false;
 
   void initUpdateControllers({setModalState, model}) async {
-    print('oooooo');
     if (model.updateControllersInitialized ||
         model.medicationClassList.isEmpty) {
       return; // ✅ RUNS ONLY ONCE
     }
-    print('ppppppppp');
     model.markUpdateControllersInitialized();
-    print('qqqqqqqqqqqqq');
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setModalState(() {
         model.medNameUpdateFocusNodes.add(FocusNode());
@@ -7039,7 +7117,6 @@ class AuthViewModel extends BaseViewModel {
             controllersPerDay; // assign per medication if you're looping
         // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
       }
-      print('ooobbbbbooo');
 
       model.notifyListeners();
     });
@@ -26331,6 +26408,20 @@ class AuthViewModel extends BaseViewModel {
     locator<AuthViewModel>().notifyListeners();
   }
 
+  Widget fallbackMedicationIcon(AuthViewModel model) {
+    return Padding(
+      padding: EdgeInsets.all(8.w),
+      child: SvgPicture.asset(
+        model.errorRemidnderImage(
+          model.getReminderByIdModel?.data?.medication?.medicationType,
+        ),
+        color: AppColors.primary,
+        height: 70.h,
+        width: 70.w,
+      ),
+    );
+  }
+
   void getReminder(context, {String? status, String? page}) async {
     try {
       _isLoading = true;
@@ -26359,7 +26450,7 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getReminderById(context, String? id) async {
+  Future<void> getReminderById(context, String? id) async {
     try {
       _isLoading = true;
       _getReminderByIdModel = await runBusyFuture(
