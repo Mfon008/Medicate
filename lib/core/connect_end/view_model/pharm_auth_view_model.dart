@@ -4596,7 +4596,7 @@ class PharmViewModel extends BaseViewModel {
                                                         width: 120.w,
                                                         child: TextView(
                                                           text:
-                                                              o.drugName ?? '',
+                                                              o.medicationName ?? '',
                                                           textOverflow:
                                                               TextOverflow
                                                                   .ellipsis,
@@ -12881,7 +12881,7 @@ class PharmViewModel extends BaseViewModel {
                           ),
                           SizedBox(height: 10.h),
                           TextView(
-                            text: o.drugName ?? '',
+                            text: o.medicationName ?? '',
                             textStyle: TextStyle(
                               fontFamily: 'GoogleSans',
                               fontSize: 14.2.sp,

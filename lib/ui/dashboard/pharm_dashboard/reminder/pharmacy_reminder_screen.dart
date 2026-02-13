@@ -738,7 +738,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                                         120.w,
                                                                     child: TextView(
                                                                       text:
-                                                                          o.drugName ??
+                                                                          o.medicationName ??
                                                                           '',
                                                                       textOverflow:
                                                                           TextOverflow
@@ -890,7 +890,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                                 width: 120.w,
                                                                 child: TextView(
                                                                   text:
-                                                                      o.drugName ??
+                                                                      o.medicationName ??
                                                                       '',
                                                                   textOverflow:
                                                                       TextOverflow
@@ -1438,7 +1438,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                                               width: 120.w,
                                                               child: TextView(
                                                                 text:
-                                                                    o.drugName ??
+                                                                    o.medicationName ??
                                                                     '',
                                                                 textOverflow:
                                                                     TextOverflow

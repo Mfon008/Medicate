@@ -7,7 +7,7 @@ class Datum {
   @JsonKey(name: '_id')
   String? id;
   String? medicationType;
-  String? drugName;
+  String? medicationName;
   String? time;
   String? date;
   String? status;
@@ -18,7 +18,7 @@ class Datum {
   Datum({
     this.id,
     this.medicationType,
-    this.drugName,
+    this.medicationName,
     this.time,
     this.date,
     this.status,

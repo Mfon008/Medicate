@@ -42,6 +42,7 @@ import '../../../ui/widget/text_form_dose_widget.dart';
 import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
+import '../../app_assets/constant.dart';
 import '../../app_assets/image.dart';
 import '../../app_assets/image_picker.dart';
 import '../../config/colors.dart';
@@ -49,6 +50,7 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
+import '../model/api_result_model.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/create_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_reminder_entity_model/medication.dart';
@@ -254,6 +256,8 @@ class AuthViewModel extends BaseViewModel {
   bool onTapViewSingleReminder = false;
   int v = 1;
 
+  dynamic timeSelected;
+
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
   DateTime? dateTimeObject;
   List listOfDosage = [];
@@ -263,6 +267,7 @@ class AuthViewModel extends BaseViewModel {
 
   List<MedType> medTypeList = [
     MedType(medType: 'Tablet', medTypeImage: AppImage.tablet),
+    MedType(medType: 'Capsule', medTypeImage: AppImage.pill),
     MedType(medType: 'Syrup', medTypeImage: AppImage.syrup),
     MedType(medType: 'Injection', medTypeImage: AppImage.syringe),
     MedType(medType: 'Ointment', medTypeImage: AppImage.ointment),
@@ -307,6 +312,12 @@ class AuthViewModel extends BaseViewModel {
     '2 inch strip',
   ];
   List<String>? inhalerDosageList = ['1 puff', '2 puffs', '3 puffs', '4 puffs'];
+  List<String>? capsuleDosageList = [
+    '1 capsule',
+    '2 capsules',
+    '3 capsules',
+    '4 capsules',
+  ];
 
   int? _duration;
   List<String> emailReminderList = [];
@@ -407,32 +418,33 @@ class AuthViewModel extends BaseViewModel {
   Map<int, String?> selectedTimePerDay = {};
   Map<int, List<String>> timesPerDay = {};
 
-  String notificationChannelFlowWidgetIcon(String notificationChannel){
-    if(notificationChannel.toLowerCase() == 'email'){
+  String notificationChannelFlowWidgetIcon(String notificationChannel) {
+    if (notificationChannel.toLowerCase() == 'email') {
       return AppImage.channel_email;
     }
-    if(notificationChannel.toLowerCase() == 'sms'){
+    if (notificationChannel.toLowerCase() == 'sms') {
       return AppImage.sms;
     }
-    if(notificationChannel.toLowerCase() == 'whatsapp'){
+    if (notificationChannel.toLowerCase() == 'whatsapp') {
       return AppImage.whatsapp;
     }
-    if(notificationChannel.toLowerCase() == 'phone_call'){
+    if (notificationChannel.toLowerCase() == 'phone_call') {
       return AppImage.phone;
     }
     return AppImage.bell;
   }
-  String notificationChannelFormatName(String notificationChannel){
-    if(notificationChannel.toLowerCase() == 'email'){
+
+  String notificationChannelFormatName(String notificationChannel) {
+    if (notificationChannel.toLowerCase() == 'email') {
       return 'Email';
     }
-    if(notificationChannel.toLowerCase() == 'sms'){
+    if (notificationChannel.toLowerCase() == 'sms') {
       return 'SMS';
     }
-    if(notificationChannel.toLowerCase() == 'whatsapp'){
+    if (notificationChannel.toLowerCase() == 'whatsapp') {
       return 'Whatsapp';
     }
-    if(notificationChannel.toLowerCase() == 'phone_call'){
+    if (notificationChannel.toLowerCase() == 'phone_call') {
       return 'Phone Call';
     }
     return 'Push';
@@ -440,7 +452,11 @@ class AuthViewModel extends BaseViewModel {
 
   Widget notificationChannelFlowWidget({required String notificationType}) =>
       Container(
-        width:notificationType.toLowerCase() == 'phone_call' || notificationType.toLowerCase() == 'whatsapp'?120.w: 90.w,
+        width:
+            notificationType.toLowerCase() == 'phone_call' ||
+                notificationType.toLowerCase() == 'whatsapp'
+            ? 120.w
+            : 90.w,
         margin: EdgeInsets.only(right: 4.10.w),
         padding: EdgeInsets.symmetric(vertical: 4.w),
         decoration: BoxDecoration(
@@ -455,8 +471,8 @@ class AuthViewModel extends BaseViewModel {
             SvgPicture.asset(
               notificationChannelFlowWidgetIcon(notificationType),
               color: AppColors.infoGrey,
-              width: notificationType.toLowerCase()=='sms'?20: 14.20.sp,
-              height: notificationType.toLowerCase()=='sms'?20:12.0.sp,
+              width: notificationType.toLowerCase() == 'sms' ? 20 : 14.20.sp,
+              height: notificationType.toLowerCase() == 'sms' ? 20 : 12.0.sp,
             ),
             SizedBox(width: 7.10.w),
             TextView(
@@ -8313,6 +8329,122 @@ class AuthViewModel extends BaseViewModel {
         ],
       );
     }
+    if (type == 'Capsule') {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10.h),
+          TextView(
+            text: 'Dosage',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.60.sp,
+              color: AppColors.greyee,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(height: 14.h),
+          ...capsuleDosageList!.map(
+            (e) => GestureDetector(
+              onTap: () {
+                setMenuState(() {
+                  model.medDosageController.text = e;
+                  model.notifyListeners();
+                });
+
+                Future.delayed(Duration(milliseconds: 200), () {
+                  Navigator.pop(ctx, index.toString());
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.only(bottom: 12.w),
+                padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: model.medDosageController.text == e
+                      ? AppColors.skyBlue
+                      : AppColors.white,
+                  border: Border.all(
+                    color: model.medDosageController.text == e
+                        ? AppColors.primary1
+                        : Colors.transparent,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    TextView(
+                      text: e,
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 16.60.sp,
+                        color: AppColors.black,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (model.medDosageController.text == e)
+                      Icon(
+                        Icons.check,
+                        color: AppColors.primary1,
+                        size: 15.60.sp,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setMenuState(() {
+                model.medDosageController.text = '';
+                notifyListeners();
+              });
+              Future.delayed(Duration(milliseconds: 200), () {
+                Navigator.pop(ctx, index.toString());
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 12.w),
+              padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: model.medDosageController.text == ''
+                    ? AppColors.skyBlue
+                    : AppColors.white,
+                border: Border.all(
+                  color: model.medDosageController.text == ''
+                      ? AppColors.primary1
+                      : Colors.transparent,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.add, color: AppColors.lightBlue, size: 16.sp),
+                  SizedBox(width: 4.w),
+                  TextView(
+                    text: 'Enter custom dosage',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14.60.sp,
+                      color: AppColors.lightBlue,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (model.medDosageController.text == '')
+                    Icon(
+                      Icons.check,
+                      color: AppColors.primary1,
+                      size: 15.60.sp,
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
   }
 
   dosageTypeListUpdate({type, setMenuState, ctx, model, index}) {
@@ -9064,9 +9196,17 @@ class AuthViewModel extends BaseViewModel {
                     return ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => locator<AuthViewModel>(),
                       onViewModelReady: (model) {
+                        final defaultTime = DateTime(
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                        ); // hour=0, minute=0
+
                         formattedSelectedTimeAndPeriod = DateFormat(
                           'h:mm a',
-                        ).format(now);
+                        ).format(defaultTime);
                       },
                       disposeViewModel: false,
                       onDispose: (viewModel) {},
@@ -9267,7 +9407,9 @@ class AuthViewModel extends BaseViewModel {
     endDateController.clear();
     medDailyInTakenController.clear();
     returnNoDays = null;
+    isTappedCopyall = false;
     model.intListCustom.clear();
+    model.timesPerDay!.clear();
     model.formattedSelectedTimeAndPeriod = '--:--';
     model.formatSelectedTimeAndPeriodList.clear();
     model.formattedSelectedTimeAndPeriodList!.clear();
@@ -10541,20 +10683,81 @@ class AuthViewModel extends BaseViewModel {
     StateSetter? setModalState,
     AuthViewModel? model,
   }) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context!,
+    if (context == null || dayIndex == null || model == null) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
       initialTime: TimeOfDay.now(),
     );
 
-    if (pickedTime != null) {
-      selectedTimePerDay[dayIndex!] = formatTimeFreq(pickedTime);
+    if (pickedTime == null) return;
 
-      // 🔥 THIS LINE IS NON-NEGOTIABLE
-      model!.setSelectedTimeForDay(dayIndex, formatTimeFreq(pickedTime));
-      print('fireeee:: $dayIndex:::${selectedTimePerDay[dayIndex]}');
-      setModalState!(() {});
-      notifyListeners();
+    final formatted = formatTimeFreq(pickedTime);
+
+    // Ensure list exists
+    model.timesPerDay[dayIndex] ??= [];
+
+    final times = model.timesPerDay[dayIndex]!;
+
+    // Safe previous selected time
+    final prevTime = selectedTimePerDay[dayIndex];
+
+    if (prevTime != null) {
+      final existingIndex = times.indexOf(prevTime);
+
+      if (existingIndex != -1) {
+        // ✅ UPDATE existing
+        times[existingIndex] = formatted;
+        print('Updated time at index $existingIndex');
+      } else {
+        // ✅ Add new
+        if (!times.contains(formatted)) times.add(formatted);
+      }
+    } else {
+      // First time adding
+      if (!times.contains(formatted)) times.add(formatted);
     }
+
+    // Update selected map
+    selectedTimePerDay[dayIndex] = formatted;
+
+    model.setSelectedTimeForDay(dayIndex, formatted);
+    model.notifyListeners();
+    setModalState?.call(() {});
+  }
+
+  Future<void> selectTimeFreqCustomUpdate({
+    BuildContext? context,
+    int? dayIndex,
+    StateSetter? setModalState,
+    AuthViewModel? model,
+    dynamic timesPerDay,
+    dynamic timeSelected,
+  }) async {
+    if (context == null || dayIndex == null || model == null) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime == null) return;
+
+    final formatted = formatTimeFreq(pickedTime);
+    logger.d(timesPerDay);
+    logger.d(dayIndex);
+    final index = timesPerDay.indexWhere(
+      (e) => e["time"] == timeSelected['time'],
+    );
+    if (index != -1) {
+      timesPerDay[index]["time"] = formatted;
+    }
+
+    selectedTimePerDay[dayIndex] = formatted;
+
+    model.setSelectedTimeForDay(dayIndex, formatted);
+    model.notifyListeners();
+    setModalState?.call(() {});
   }
 
   String formatTimeFreq(TimeOfDay time) {
@@ -10796,6 +10999,24 @@ class AuthViewModel extends BaseViewModel {
         viewModel.timesPerDay[day] = List.from(dayOneTimes);
       }
     }
+    setModalState!(() {});
+  }
+
+  void copyDayOneToAllUpdate({
+    StateSetter? setModalState,
+    AuthViewModel? viewModel,
+    dynamic timePerDay,
+    int? index,
+  }) {
+    final dayOneTimes = timePerDay;
+
+    if (dayOneTimes == null || dayOneTimes.isEmpty) return;
+    for (final d in viewModel!.medicationClassList[index!].dosageMap) {
+      if (d != null) {
+        d['doses'] = List.from(dayOneTimes);
+      }
+    }
+
     setModalState!(() {});
   }
 
@@ -12350,18 +12571,6 @@ class AuthViewModel extends BaseViewModel {
         'date': DateFormat('yyyy-MM-dd').format(currentDate),
         'isoDate': combined.toUtc().toIso8601String(),
       });
-
-      logger.d(
-        'index;;;;::$index and here ${model.selectedTimePerDay[day - 1]}',
-      );
-      logger.d(
-        'day 1;;;;::${model.medicationClassList[index].dosageMap[day - 1]['day'].runtimeType} and a day on ${day.runtimeType}',
-      );
-      logger.d('doseees;;;;::$doses');
-      logger.d(
-        "dddddd ${model.medicationClassList[index].dosageMap[day - 1]['doses']}",
-      );
-
       model.medicationClassList[index].dosageMap[day - 1]['doses'].add(
         doses[0],
       );
@@ -12907,6 +13116,7 @@ class AuthViewModel extends BaseViewModel {
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
                           hint: 'Start Date & Time',
+                          label: '13 Feb, 2025 10:30 AM',
                           hintWeight: FontWeight.w400,
                           hintColor: AppColors.reminder,
                           hintSize: Platform.isAndroid ? 14.sp : 12.sp,
@@ -12938,10 +13148,17 @@ class AuthViewModel extends BaseViewModel {
                             fontWeight: FontWeight.w400,
                             fontFamily: 'GoogleSans',
                           ),
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                            color: AppColors.faintedGrey,
+                          ),
                         ),
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
                           hint: 'End Date',
+                          label: '18 Feb, 2025',
                           hintWeight: FontWeight.w400,
                           hintColor: AppColors.reminder,
                           hintSize: Platform.isAndroid ? 14.sp : 12.sp,
@@ -13354,6 +13571,8 @@ class AuthViewModel extends BaseViewModel {
                                                       SizedBox(width: 4.0.w),
                                                       GestureDetector(
                                                         onTap: () {
+                                                          selectedTimePerDay[e] =
+                                                              null;
                                                           model.addTimeForDay(
                                                             e,
                                                             setModalState!,
@@ -13881,15 +14100,21 @@ class AuthViewModel extends BaseViewModel {
                                 // ✅ Show specific dialogs
                                 if (index == 0 || index == 1) {
                                   // Email
-                                  showEmailDialog(context);
+                                  isTappedEmailAdded = true;
+                                  model.notifyListeners();
                                 } else if ([2, 3, 4].contains(index)) {
                                   // Phone-related channels
 
-                                  showPhoneDialog(context);
+                                  isTappedPhoneAdded = true;
                                   isPhoneValid = false;
                                   model.notifyListeners();
+                                } else {
+                                  isTappedEmailAdded = false;
+                                  isTappedPhoneAdded = false;
+                                  model.notifyListeners();
                                 }
-                              } // ✅ update selection
+                              }
+                              // ✅ update selection
                               buildChannelList(selectedIndexes);
                               // addCostTotal(model);
                               model.notifyListeners();
@@ -13897,17 +14122,129 @@ class AuthViewModel extends BaseViewModel {
                           );
                         }),
                         SizedBox(height: 12.h),
-                        emailReminderList.isNotEmpty
-                            ? isTappedEmailAdded
-                                  ? Container(
+                        !isTappedEmailAdded && emailReminderList.isEmpty
+                            ? SizedBox.shrink()
+                            : isTappedEmailAdded && emailReminderList.isEmpty
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  color: AppColors.white,
+                                ),
+                                padding: EdgeInsets.all(12.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextView(
+                                          text: 'Add Email Address',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.deep,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            TextView(
+                                              text: 'Emails available',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.8.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.fineGrey,
+                                              ),
+                                            ),
+                                            SizedBox(width: 6.w),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 10.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  223,
+                                                  233,
+                                                  247,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                border: Border.all(
+                                                  color: AppColors.primary
+                                                      .withOpacity(.4),
+                                                ),
+                                              ),
+                                              child: TextView(
+                                                text:
+                                                    '${emailReminderList.length}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 11.8.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            isTappedEmailAdded =
+                                                !isTappedEmailAdded;
+                                            model.notifyListeners();
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppImage.drop_up,
+                                            height: 22.0.h,
+                                            width: 22.0.w,
+                                          ),
+                                        ),
+                                        SizedBox(width: 2.w),
+                                        IconButton(
+                                          onPressed: () =>
+                                              showEmailDialog(context),
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: AppColors.primary1,
+                                            size: 24.sp,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           color: AppColors.infoGrey1,
                                         ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12.r),
+                                          topRight: Radius.circular(12.r),
                                         ),
-                                        color: AppColors.white,
+                                        color: AppColors.dashboard,
                                       ),
                                       padding: EdgeInsets.all(12.w),
                                       child: Row(
@@ -14007,136 +14344,158 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ],
                                       ),
-                                    )
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
-                                        ),
-                                        border: Border.all(
-                                          color: AppColors.infoGrey1,
-                                        ),
-                                      ),
-                                      child: Column(
+                                    ),
+                                    SizedBox(height: 15.20.h),
+                                    ...emailReminderList.asMap().entries.map((
+                                      entry,
+                                    ) {
+                                      final index = entry.key;
+                                      final o = entry.value;
+                                      final isLast =
+                                          index == emailReminderList.length - 1;
+                                      return Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: AppColors.infoGrey1,
-                                              ),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(12.r),
-                                                topRight: Radius.circular(12.r),
-                                              ),
-                                              color: AppColors.dashboard,
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              left: 12.20.w,
+                                              right: 20.w,
+                                              bottom: 12.w,
                                             ),
-                                            padding: EdgeInsets.all(12.w),
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
                                               children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    TextView(
-                                                      text: 'Add Email Address',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16.2.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: AppColors.deep,
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    if (addedEmailReminderList
+                                                        .contains(o)) {
+                                                      addedEmailReminderList
+                                                          .remove(o);
+                                                    } else {
+                                                      addedEmailReminderList
+                                                          .add(o);
+                                                    }
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        addedEmailReminderList
+                                                            .contains(o)
+                                                        ? EdgeInsets.all(4.0.w)
+                                                        : EdgeInsets.all(10.w),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            6.r,
+                                                          ),
+                                                      color:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? AppColors.primary
+                                                          : AppColors
+                                                                .transparent,
+                                                      border: Border.all(
+                                                        color:
+                                                            addedEmailReminderList
+                                                                .contains(o)
+                                                            ? AppColors
+                                                                  .transparent
+                                                            : AppColors
+                                                                  .infoGrey,
+                                                        width: .78,
                                                       ),
                                                     ),
-                                                    Row(
-                                                      children: [
-                                                        TextView(
-                                                          text:
-                                                              'Emails available',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 14.8.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .fineGrey,
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 6.w),
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    10.w,
-                                                              ),
-                                                          decoration: BoxDecoration(
+                                                    child:
+                                                        addedEmailReminderList
+                                                            .contains(o)
+                                                        ? Icon(
+                                                            Icons.check,
+                                                            size: 12.sp,
                                                             color:
-                                                                const Color.fromARGB(
-                                                                  255,
-                                                                  223,
-                                                                  233,
-                                                                  247,
-                                                                ),
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  12.r,
-                                                                ),
-                                                            border: Border.all(
-                                                              color: AppColors
-                                                                  .primary
-                                                                  .withOpacity(
-                                                                    .4,
-                                                                  ),
-                                                            ),
-                                                          ),
-                                                          child: TextView(
-                                                            text:
-                                                                '${emailReminderList.length}',
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'Arial',
-                                                              fontSize: 11.8.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: AppColors
-                                                                  .primary,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                                AppColors.white,
+                                                          )
+                                                        : SizedBox.shrink(),
+                                                  ),
                                                 ),
+                                                // Transform.scale(
+                                                //   scale:
+                                                //       MediaQuery.of(
+                                                //             context,
+                                                //           ).size.shortestSide >=
+                                                //           600
+                                                //       ? 1.5
+                                                //       : 1.1,
+                                                //   child: Checkbox(
+                                                //     value: addedEmailReminderList
+                                                //         .contains(o),
+                                                //     onChanged: (_) {
+                                                //       if (addedEmailReminderList
+                                                //           .contains(o)) {
+                                                //         addedEmailReminderList.remove(
+                                                //           o,
+                                                //         );
+                                                //       } else {
+                                                //         addedEmailReminderList.add(o);
+                                                //       }
+                                                //       model!.notifyListeners();
+                                                //     },
+                                                //     activeColor: AppColors.primary,
+                                                //     shape: RoundedRectangleBorder(
+                                                //       borderRadius:
+                                                //           BorderRadius.circular(4),
+                                                //     ),
+                                                //     visualDensity: VisualDensity
+                                                //         .compact, // 👈 reduces internal padding
+                                                //   ),
+                                                // ),
+                                                SizedBox(width: 9.10.w),
+                                                SizedBox(
+                                                  width: 220.w,
+                                                  child: TextView(
+                                                    text: o,
+                                                    maxLines: 1,
+                                                    textOverflow:
+                                                        TextOverflow.ellipsis,
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 16.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Spacer(),
                                                 Row(
                                                   children: [
                                                     GestureDetector(
                                                       onTap: () {
-                                                        isTappedEmailAdded =
-                                                            !isTappedEmailAdded;
+                                                        showEmailDialog(
+                                                          context,
+                                                          isEdit: true,
+                                                          index: index,
+                                                          email:
+                                                              emailReminderList[index],
+                                                        );
                                                         model.notifyListeners();
                                                       },
                                                       child: SvgPicture.asset(
-                                                        AppImage.drop_up,
+                                                        AppImage.edit_pen,
                                                         height: 22.0.h,
                                                         width: 22.0.w,
                                                       ),
                                                     ),
-                                                    SizedBox(width: 2.w),
-                                                    IconButton(
-                                                      onPressed: () =>
-                                                          showEmailDialog(
-                                                            context,
-                                                          ),
-                                                      icon: Icon(
-                                                        Icons.add_circle,
-                                                        color:
-                                                            AppColors.primary1,
-                                                        size: 24.sp,
+                                                    SizedBox(width: 10.w),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        emailReminderList
+                                                            .removeAt(index);
+                                                        model.notifyListeners();
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        AppImage.delete,
+                                                        height: 22.0.h,
+                                                        width: 22.0.w,
                                                       ),
                                                     ),
                                                   ],
@@ -14144,213 +14503,146 @@ class AuthViewModel extends BaseViewModel {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(height: 15.20.h),
-                                          ...emailReminderList.asMap().entries.map((
-                                            entry,
-                                          ) {
-                                            final index = entry.key;
-                                            final o = entry.value;
-                                            final isLast =
-                                                index ==
-                                                emailReminderList.length - 1;
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                    left: 12.20.w,
-                                                    right: 20.w,
-                                                    bottom: 12.w,
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          if (addedEmailReminderList
-                                                              .contains(o)) {
-                                                            addedEmailReminderList
-                                                                .remove(o);
-                                                          } else {
-                                                            addedEmailReminderList
-                                                                .add(o);
-                                                          }
-                                                          model
-                                                              .notifyListeners();
-                                                        },
-                                                        child: Container(
-                                                          padding:
-                                                              addedEmailReminderList
-                                                                  .contains(o)
-                                                              ? EdgeInsets.all(
-                                                                  4.0.w,
-                                                                )
-                                                              : EdgeInsets.all(
-                                                                  10.w,
-                                                                ),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  6.r,
-                                                                ),
-                                                            color:
-                                                                addedEmailReminderList
-                                                                    .contains(o)
-                                                                ? AppColors
-                                                                      .primary
-                                                                : AppColors
-                                                                      .transparent,
-                                                            border: Border.all(
-                                                              color:
-                                                                  addedEmailReminderList
-                                                                      .contains(
-                                                                        o,
-                                                                      )
-                                                                  ? AppColors
-                                                                        .transparent
-                                                                  : AppColors
-                                                                        .infoGrey,
-                                                              width: .78,
-                                                            ),
-                                                          ),
-                                                          child:
-                                                              addedEmailReminderList
-                                                                  .contains(o)
-                                                              ? Icon(
-                                                                  Icons.check,
-                                                                  size: 12.sp,
-                                                                  color:
-                                                                      AppColors
-                                                                          .white,
-                                                                )
-                                                              : SizedBox.shrink(),
-                                                        ),
-                                                      ),
-                                                      // Transform.scale(
-                                                      //   scale:
-                                                      //       MediaQuery.of(
-                                                      //             context,
-                                                      //           ).size.shortestSide >=
-                                                      //           600
-                                                      //       ? 1.5
-                                                      //       : 1.1,
-                                                      //   child: Checkbox(
-                                                      //     value: addedEmailReminderList
-                                                      //         .contains(o),
-                                                      //     onChanged: (_) {
-                                                      //       if (addedEmailReminderList
-                                                      //           .contains(o)) {
-                                                      //         addedEmailReminderList.remove(
-                                                      //           o,
-                                                      //         );
-                                                      //       } else {
-                                                      //         addedEmailReminderList.add(o);
-                                                      //       }
-                                                      //       model!.notifyListeners();
-                                                      //     },
-                                                      //     activeColor: AppColors.primary,
-                                                      //     shape: RoundedRectangleBorder(
-                                                      //       borderRadius:
-                                                      //           BorderRadius.circular(4),
-                                                      //     ),
-                                                      //     visualDensity: VisualDensity
-                                                      //         .compact, // 👈 reduces internal padding
-                                                      //   ),
-                                                      // ),
-                                                      SizedBox(width: 9.10.w),
-                                                      SizedBox(
-                                                        width: 220.w,
-                                                        child: TextView(
-                                                          text: o,
-                                                          maxLines: 1,
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 16.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      Row(
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              showEmailDialog(
-                                                                context,
-                                                                isEdit: true,
-                                                                index: index,
-                                                                email:
-                                                                    emailReminderList[index],
-                                                              );
-                                                              model
-                                                                  .notifyListeners();
-                                                            },
-                                                            child:
-                                                                SvgPicture.asset(
-                                                                  AppImage
-                                                                      .edit_pen,
-                                                                  height:
-                                                                      22.0.h,
-                                                                  width: 22.0.w,
-                                                                ),
-                                                          ),
-                                                          SizedBox(width: 10.w),
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              emailReminderList
-                                                                  .removeAt(
-                                                                    index,
-                                                                  );
-                                                              model
-                                                                  .notifyListeners();
-                                                            },
-                                                            child:
-                                                                SvgPicture.asset(
-                                                                  AppImage
-                                                                      .delete,
-                                                                  height:
-                                                                      22.0.h,
-                                                                  width: 22.0.w,
-                                                                ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                if (!isLast)
-                                                  Divider(
-                                                    color: AppColors.infoGrey1,
-                                                  ),
-                                                SizedBox(height: 5.10.h),
-                                              ],
-                                            );
-                                          }),
+                                          if (!isLast)
+                                            Divider(color: AppColors.infoGrey1),
+                                          SizedBox(height: 5.10.h),
                                         ],
-                                      ),
-                                    )
-                            : SizedBox.shrink(),
-                        SizedBox(
-                          height: phoneReminderList.isNotEmpty ? 20.h : 0.h,
-                        ),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                              ),
+                        // : SizedBox.shrink(),
+                        SizedBox(height: 20.h),
 
-                        phoneReminderList.isNotEmpty
-                            ? isTappedPhoneAdded
-                                  ? Container(
+                        !isTappedPhoneAdded && phoneReminderList.isEmpty
+                            ? SizedBox.shrink()
+                            : isTappedPhoneAdded && phoneReminderList.isEmpty
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  color: AppColors.white,
+                                ),
+
+                                padding: EdgeInsets.all(12.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextView(
+                                          text: 'Add Phone Number',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.deep,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            TextView(
+                                              text: 'Numbers available',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.8.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.fineGrey,
+                                              ),
+                                            ),
+                                            SizedBox(width: 6.w),
+                                            Container(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 10.w,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                  255,
+                                                  223,
+                                                  233,
+                                                  247,
+                                                ),
+
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                                border: Border.all(
+                                                  color: AppColors.primary
+                                                      .withOpacity(.4),
+                                                ),
+                                              ),
+                                              child: TextView(
+                                                text:
+                                                    '${phoneReminderList.length}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 11.8.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.primary,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            isTappedPhoneAdded =
+                                                !isTappedPhoneAdded;
+                                            model.notifyListeners();
+                                          },
+                                          child: SvgPicture.asset(
+                                            AppImage.drop_up,
+                                            height: 22.0.h,
+                                            width: 22.0.w,
+                                          ),
+                                        ),
+                                        SizedBox(width: 2.w),
+                                        IconButton(
+                                          onPressed: () {
+                                            showPhoneDialog(context);
+                                            isPhoneValid = false;
+                                            model.notifyListeners();
+                                          },
+                                          icon: Icon(
+                                            Icons.add_circle,
+                                            color: AppColors.primary1,
+                                            size: 24.sp,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                           color: AppColors.infoGrey1,
                                         ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12.r),
+                                          topRight: Radius.circular(12.r),
                                         ),
-                                        color: AppColors.white,
+                                        color: AppColors.dashboard,
                                       ),
 
                                       padding: EdgeInsets.all(12.w),
@@ -14366,7 +14658,7 @@ class AuthViewModel extends BaseViewModel {
                                                 text: 'Add Phone Number',
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
-                                                  fontSize: 16.2.sp,
+                                                  fontSize: 15.8.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: AppColors.deep,
                                                 ),
@@ -14377,7 +14669,7 @@ class AuthViewModel extends BaseViewModel {
                                                     text: 'Numbers available',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
-                                                      fontSize: 14.8.sp,
+                                                      fontSize: 15.8.sp,
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color: AppColors.fineGrey,
@@ -14409,7 +14701,7 @@ class AuthViewModel extends BaseViewModel {
                                                     ),
                                                     child: TextView(
                                                       text:
-                                                          '${phoneReminderList.length}',
+                                                          '${phoneReminderList.length + 1}',
                                                       textStyle: TextStyle(
                                                         fontFamily: 'Arial',
                                                         fontSize: 11.8.sp,
@@ -14442,6 +14734,7 @@ class AuthViewModel extends BaseViewModel {
                                               IconButton(
                                                 onPressed: () {
                                                   showPhoneDialog(context);
+
                                                   isPhoneValid = false;
                                                   model.notifyListeners();
                                                 },
@@ -14455,189 +14748,156 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ],
                                       ),
-                                    )
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
-                                        ),
-                                        border: Border.all(
-                                          color: AppColors.infoGrey1,
-                                        ),
+                                    ),
+                                    SizedBox(height: 15.20.h),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 12.w,
+                                        right: 20.w,
                                       ),
-                                      child: Column(
+                                      child: Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {},
+                                            child: Container(
+                                              padding: EdgeInsets.all(4.0.w),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6.r),
+                                                color: AppColors.primary,
+                                                border: Border.all(
+                                                  color: AppColors.transparent,
+                                                  width: .78,
+                                                ),
+                                              ),
+                                              child: Icon(
+                                                Icons.check,
+                                                size: 12.sp,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 9.10.w),
+                                          TextView(
+                                            text: formatPhoneNumber(
+                                              SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['phone'],
+                                            ),
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                padding: EdgeInsets.all(1.2.w),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.app_green,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 13.4.sp,
+                                                  color: AppColors.white,
+                                                ),
+                                              ),
+                                              SizedBox(width: 10.w),
+                                              TextView(
+                                                text: 'Primary',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 13.72.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 2.0.h),
+                                    Divider(color: AppColors.infoGrey1),
+                                    ...phoneReminderList.asMap().entries.map((
+                                      entry,
+                                    ) {
+                                      final index = entry.key;
+                                      final o = entry.value;
+                                      final isLast =
+                                          index == phoneReminderList.length - 1;
+
+                                      return Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: AppColors.infoGrey1,
-                                              ),
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(12.r),
-                                                topRight: Radius.circular(12.r),
-                                              ),
-                                              color: AppColors.dashboard,
-                                            ),
-
-                                            padding: EdgeInsets.all(12.w),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    TextView(
-                                                      text: 'Add Phone Number',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 15.8.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: AppColors.deep,
-                                                      ),
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        TextView(
-                                                          text:
-                                                              'Numbers available',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 15.8.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .fineGrey,
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 6.w),
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    10.w,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            color:
-                                                                const Color.fromARGB(
-                                                                  255,
-                                                                  223,
-                                                                  233,
-                                                                  247,
-                                                                ),
-
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  12.r,
-                                                                ),
-                                                            border: Border.all(
-                                                              color: AppColors
-                                                                  .primary
-                                                                  .withOpacity(
-                                                                    .4,
-                                                                  ),
-                                                            ),
-                                                          ),
-                                                          child: TextView(
-                                                            text:
-                                                                '${phoneReminderList.length}',
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'Arial',
-                                                              fontSize: 11.8.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: AppColors
-                                                                  .primary,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        isTappedPhoneAdded =
-                                                            !isTappedPhoneAdded;
-                                                        model.notifyListeners();
-                                                      },
-                                                      child: SvgPicture.asset(
-                                                        AppImage.drop_up,
-                                                        height: 22.0.h,
-                                                        width: 22.0.w,
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 2.w),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        showPhoneDialog(
-                                                          context,
-                                                        );
-
-                                                        isPhoneValid = false;
-                                                        model.notifyListeners();
-                                                      },
-                                                      icon: Icon(
-                                                        Icons.add_circle,
-                                                        color:
-                                                            AppColors.primary1,
-                                                        size: 24.sp,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(height: 15.20.h),
                                           Padding(
                                             padding: EdgeInsets.only(
                                               left: 12.w,
                                               right: 20.w,
+                                              bottom: 12.w,
                                             ),
                                             child: Row(
                                               children: [
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    if (addedPhoneReminderList
+                                                        .contains(o)) {
+                                                      addedPhoneReminderList
+                                                          .remove(o);
+                                                    } else {
+                                                      addedPhoneReminderList
+                                                          .add(o);
+                                                    }
+                                                    model.notifyListeners();
+                                                  },
                                                   child: Container(
-                                                    padding: EdgeInsets.all(
-                                                      4.0.w,
-                                                    ),
+                                                    padding:
+                                                        addedPhoneReminderList
+                                                            .contains(o)
+                                                        ? EdgeInsets.all(4.0.w)
+                                                        : EdgeInsets.all(10.w),
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                             6.r,
                                                           ),
-                                                      color: AppColors.primary,
+                                                      color:
+                                                          addedPhoneReminderList
+                                                              .contains(o)
+                                                          ? AppColors.primary
+                                                          : AppColors
+                                                                .transparent,
                                                       border: Border.all(
-                                                        color: AppColors
-                                                            .transparent,
+                                                        color:
+                                                            addedPhoneReminderList
+                                                                .contains(o)
+                                                            ? AppColors
+                                                                  .transparent
+                                                            : AppColors
+                                                                  .infoGrey,
                                                         width: .78,
                                                       ),
                                                     ),
-                                                    child: Icon(
-                                                      Icons.check,
-                                                      size: 12.sp,
-                                                      color: AppColors.white,
-                                                    ),
+                                                    child:
+                                                        addedPhoneReminderList
+                                                            .contains(o)
+                                                        ? Icon(
+                                                            Icons.check,
+                                                            size: 12.sp,
+                                                            color:
+                                                                AppColors.white,
+                                                          )
+                                                        : SizedBox.shrink(),
                                                   ),
                                                 ),
                                                 SizedBox(width: 9.10.w),
                                                 TextView(
-                                                  text: formatPhoneNumber(
-                                                    SharedPreferencesService
-                                                        .instance
-                                                        .usersData['user']['phone'],
-                                                  ),
+                                                  text: formatPhoneNumber(o),
                                                   textStyle: TextStyle(
                                                     fontFamily: 'Arial',
                                                     fontSize: 16.2.sp,
@@ -14648,31 +14908,35 @@ class AuthViewModel extends BaseViewModel {
                                                 Spacer(),
                                                 Row(
                                                   children: [
-                                                    Container(
-                                                      padding: EdgeInsets.all(
-                                                        1.2.w,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            AppColors.app_green,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Icon(
-                                                        Icons.check,
-                                                        size: 13.4.sp,
-                                                        color: AppColors.white,
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        showPhoneDialog(
+                                                          context,
+                                                          isEdit: true,
+                                                          index: index,
+                                                          phoneNumber:
+                                                              phoneReminderList[index],
+                                                        );
+                                                        isPhoneValid = false;
+                                                        model.notifyListeners();
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        AppImage.edit_pen,
+                                                        height: 22.0.h,
+                                                        width: 22.0.w,
                                                       ),
                                                     ),
-                                                    SizedBox(width: 10.w),
-                                                    TextView(
-                                                      text: 'Primary',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 13.72.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.reminder,
+                                                    SizedBox(width: 16.10.w),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        phoneReminderList
+                                                            .removeAt(index);
+                                                        model.notifyListeners();
+                                                      },
+                                                      child: SvgPicture.asset(
+                                                        AppImage.delete,
+                                                        height: 22.0.h,
+                                                        width: 22.0.w,
                                                       ),
                                                     ),
                                                   ],
@@ -14680,170 +14944,17 @@ class AuthViewModel extends BaseViewModel {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(height: 2.0.h),
-                                          Divider(color: AppColors.infoGrey1),
-
-                                          ...phoneReminderList.asMap().entries.map((
-                                            entry,
-                                          ) {
-                                            final index = entry.key;
-                                            final o = entry.value;
-                                            final isLast =
-                                                index ==
-                                                phoneReminderList.length - 1;
-
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                    left: 12.w,
-                                                    right: 20.w,
-                                                    bottom: 12.w,
-                                                  ),
-                                                  child: Row(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          if (addedPhoneReminderList
-                                                              .contains(o)) {
-                                                            addedPhoneReminderList
-                                                                .remove(o);
-                                                          } else {
-                                                            addedPhoneReminderList
-                                                                .add(o);
-                                                          }
-                                                          model
-                                                              .notifyListeners();
-                                                        },
-                                                        child: Container(
-                                                          padding:
-                                                              addedPhoneReminderList
-                                                                  .contains(o)
-                                                              ? EdgeInsets.all(
-                                                                  4.0.w,
-                                                                )
-                                                              : EdgeInsets.all(
-                                                                  10.w,
-                                                                ),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  6.r,
-                                                                ),
-                                                            color:
-                                                                addedPhoneReminderList
-                                                                    .contains(o)
-                                                                ? AppColors
-                                                                      .primary
-                                                                : AppColors
-                                                                      .transparent,
-                                                            border: Border.all(
-                                                              color:
-                                                                  addedPhoneReminderList
-                                                                      .contains(
-                                                                        o,
-                                                                      )
-                                                                  ? AppColors
-                                                                        .transparent
-                                                                  : AppColors
-                                                                        .infoGrey,
-                                                              width: .78,
-                                                            ),
-                                                          ),
-                                                          child:
-                                                              addedPhoneReminderList
-                                                                  .contains(o)
-                                                              ? Icon(
-                                                                  Icons.check,
-                                                                  size: 12.sp,
-                                                                  color:
-                                                                      AppColors
-                                                                          .white,
-                                                                )
-                                                              : SizedBox.shrink(),
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 9.10.w),
-                                                      TextView(
-                                                        text: formatPhoneNumber(
-                                                          o,
-                                                        ),
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 16.2.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      Row(
-                                                        children: [
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              showPhoneDialog(
-                                                                context,
-                                                                isEdit: true,
-                                                                index: index,
-                                                                phoneNumber:
-                                                                    phoneReminderList[index],
-                                                              );
-                                                              isPhoneValid =
-                                                                  false;
-                                                              model
-                                                                  .notifyListeners();
-                                                            },
-                                                            child:
-                                                                SvgPicture.asset(
-                                                                  AppImage
-                                                                      .edit_pen,
-                                                                  height:
-                                                                      22.0.h,
-                                                                  width: 22.0.w,
-                                                                ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 16.10.w,
-                                                          ),
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              phoneReminderList
-                                                                  .removeAt(
-                                                                    index,
-                                                                  );
-                                                              model
-                                                                  .notifyListeners();
-                                                            },
-                                                            child:
-                                                                SvgPicture.asset(
-                                                                  AppImage
-                                                                      .delete,
-                                                                  height:
-                                                                      22.0.h,
-                                                                  width: 22.0.w,
-                                                                ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                if (!isLast)
-                                                  Divider(
-                                                    color: AppColors.infoGrey1,
-                                                  ),
-                                                SizedBox(height: 5.10.h),
-                                              ],
-                                            );
-                                          }),
+                                          if (!isLast)
+                                            Divider(color: AppColors.infoGrey1),
+                                          SizedBox(height: 5.10.h),
                                         ],
-                                      ),
-                                    )
-                            : SizedBox.shrink(),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                              ),
 
+                        // : SizedBox.shrink(),
                         SizedBox(height: 32.20.h),
                         Center(
                           child: GestureDetector(
@@ -15957,6 +16068,18 @@ class AuthViewModel extends BaseViewModel {
                                                                 onTap: () {
                                                                   isTappedCopyall =
                                                                       !isTappedCopyall;
+                                                                  if (isTappedCopyall) {
+                                                                    copyDayOneToAllUpdate(
+                                                                      setModalState:
+                                                                          setModalState,
+                                                                      viewModel:
+                                                                          model,
+                                                                      timePerDay:
+                                                                          e.dosageMap[0]['doses'],
+                                                                      index:
+                                                                          index,
+                                                                    );
+                                                                  }
                                                                   model
                                                                       .notifyListeners();
                                                                 },
@@ -16173,9 +16296,11 @@ class AuthViewModel extends BaseViewModel {
                                                                                   ),
                                                                                   IconButton(
                                                                                     onPressed: () {
-                                                                                      selectTimeFreqCustom(
+                                                                                      selectTimeFreqCustomUpdate(
                                                                                         context: context,
                                                                                         dayIndex: list,
+                                                                                        timeSelected: timeSelected,
+                                                                                        timesPerDay: e.dosageMap[list]['doses'],
                                                                                         setModalState: setModalState,
                                                                                         model: model,
                                                                                       );
@@ -16316,6 +16441,7 @@ class AuthViewModel extends BaseViewModel {
                                                                                           return GestureDetector(
                                                                                             onTap: () {
                                                                                               selectedTimePerDay[list] = time['time'];
+                                                                                              timeSelected = time;
                                                                                               setModalState!(
                                                                                                 () {},
                                                                                               );
@@ -16417,7 +16543,7 @@ class AuthViewModel extends BaseViewModel {
                                                         clipBehavior: Clip.none,
                                                         children: [
                                                           TextView(
-                                                            text: 'Timeo',
+                                                            text: 'Time',
                                                             textStyle: TextStyle(
                                                               fontFamily:
                                                                   'Arial',
@@ -17403,6 +17529,7 @@ class AuthViewModel extends BaseViewModel {
                                       SizedBox(height: 24.0.h),
                                       TextFormWidget(
                                         hint: 'Start Date & Time',
+                                        label: '13 Feb, 2025 10:30 AM',
                                         hintWeight: FontWeight.w400,
                                         hintColor: AppColors.reminder,
                                         hintSize: Platform.isAndroid
@@ -17437,6 +17564,12 @@ class AuthViewModel extends BaseViewModel {
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'GoogleSans',
                                         ),
+                                        labelStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.2.sp,
+                                          color: AppColors.infoGrey,
+                                        ),
                                       ),
                                       SizedBox(height: 24.0.h),
                                       // Row(
@@ -17459,6 +17592,7 @@ class AuthViewModel extends BaseViewModel {
                                       // SizedBox(height: 14.0.h),
                                       TextFormWidget(
                                         hint: 'End Date',
+                                        label: '18 Feb, 2025',
                                         hintWeight: FontWeight.w400,
                                         hintColor: AppColors.reminder,
                                         hintSize: Platform.isAndroid
@@ -17490,12 +17624,12 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                         ),
-                                        // labelStyle: TextStyle(
-                                        //   fontWeight: FontWeight.w400,
-                                        //   fontFamily: 'Arial',
-                                        //   fontSize: 14.2.sp,
-                                        //   color: AppColors.infoGrey,
-                                        // ),
+                                        labelStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.2.sp,
+                                          color: AppColors.infoGrey,
+                                        ),
                                         fillColor: AppColors.white,
                                         isFilled: true,
                                         readOnly: true,
@@ -17857,6 +17991,8 @@ class AuthViewModel extends BaseViewModel {
                                                                     ),
                                                                     GestureDetector(
                                                                       onTap: () {
+                                                                        selectedTimePerDay[e] =
+                                                                            null;
                                                                         model.addTimeForDay(
                                                                           e,
                                                                           setModalState!,
@@ -18187,6 +18323,7 @@ class AuthViewModel extends BaseViewModel {
                                                               .contains(
                                                                 formattedSelectedTimeAndPeriod,
                                                               )) {
+                                                            // print(formattedSelectedTimeAndPeriod);
                                                           } else {
                                                             model
                                                                 .formattedSelectedTimeAndPeriodList!
@@ -18623,12 +18760,19 @@ class AuthViewModel extends BaseViewModel {
                               // ✅ Show specific dialogs
                               if (index == 0 || index == 1) {
                                 // Email
-                                showEmailDialog(context);
+                                // showEmailDialog(context);
+                                isTappedEmailAdded = true;
+                                model.notifyListeners();
                               } else if ([2, 3, 4].contains(index)) {
                                 // Phone-related channels
 
-                                showPhoneDialog(context);
+                                // showPhoneDialog(context);
+                                isTappedPhoneAdded = true;
                                 isPhoneValid = false;
+                                model.notifyListeners();
+                              } else {
+                                isTappedEmailAdded = false;
+                                isTappedPhoneAdded = false;
                                 model.notifyListeners();
                               }
                             } // ✅ update selection
@@ -18638,15 +18782,125 @@ class AuthViewModel extends BaseViewModel {
                         );
                       }),
                       SizedBox(height: 12.h),
-                      emailReminderList.isNotEmpty
-                          ? isTappedEmailAdded
-                                ? Container(
+                      !isTappedEmailAdded && emailReminderList.isEmpty
+                          ? SizedBox.shrink()
+                          : isTappedEmailAdded && emailReminderList.isEmpty
+                          ? Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.infoGrey1),
+                                borderRadius: BorderRadius.circular(12.r),
+                                color: AppColors.white,
+                              ),
+                              padding: EdgeInsets.all(12.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextView(
+                                        text: 'Add Email Address',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 16.2.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.deep,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          TextView(
+                                            text: 'Emails available',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.8.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.fineGrey,
+                                            ),
+                                          ),
+                                          SizedBox(width: 6.w),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                223,
+                                                233,
+                                                247,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                              border: Border.all(
+                                                color: AppColors.primary
+                                                    .withOpacity(.4),
+                                              ),
+                                            ),
+                                            child: TextView(
+                                              text:
+                                                  '${emailReminderList.length}',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 11.8.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          isTappedEmailAdded =
+                                              !isTappedEmailAdded;
+                                          model.notifyListeners();
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppImage.drop_up,
+                                          height: 22.0.h,
+                                          width: 22.0.w,
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      IconButton(
+                                        onPressed: () =>
+                                            showEmailDialog(context),
+                                        icon: Icon(
+                                          Icons.add_circle,
+                                          color: AppColors.primary1,
+                                          size: 24.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.r),
+                                border: Border.all(color: AppColors.infoGrey1),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: AppColors.infoGrey1,
                                       ),
-                                      borderRadius: BorderRadius.circular(12.r),
-                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12.r),
+                                        topRight: Radius.circular(12.r),
+                                      ),
+                                      color: AppColors.dashboard,
                                     ),
                                     padding: EdgeInsets.all(12.w),
                                     child: Row(
@@ -18742,129 +18996,125 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ],
                                     ),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.r),
-                                      border: Border.all(
-                                        color: AppColors.infoGrey1,
-                                      ),
-                                    ),
-                                    child: Column(
+                                  ),
+                                  SizedBox(height: 15.20.h),
+                                  ...emailReminderList.asMap().entries.map((
+                                    entry,
+                                  ) {
+                                    final index = entry.key;
+                                    final o = entry.value;
+                                    final isLast =
+                                        index == emailReminderList.length - 1;
+                                    return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: AppColors.infoGrey1,
-                                            ),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(12.r),
-                                              topRight: Radius.circular(12.r),
-                                            ),
-                                            color: AppColors.dashboard,
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 12.20.w,
+                                            right: 20.w,
+                                            bottom: 12.w,
                                           ),
-                                          padding: EdgeInsets.all(12.w),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  TextView(
-                                                    text: 'Add Email Address',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 16.2.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.deep,
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (addedEmailReminderList
+                                                      .contains(o)) {
+                                                    addedEmailReminderList
+                                                        .remove(o);
+                                                  } else {
+                                                    addedEmailReminderList.add(
+                                                      o,
+                                                    );
+                                                  }
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      addedEmailReminderList
+                                                          .contains(o)
+                                                      ? EdgeInsets.all(4.0.w)
+                                                      : EdgeInsets.all(10.w),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          6.r,
+                                                        ),
+                                                    color:
+                                                        addedEmailReminderList
+                                                            .contains(o)
+                                                        ? AppColors.primary
+                                                        : AppColors.transparent,
+                                                    border: Border.all(
+                                                      color:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? AppColors
+                                                                .transparent
+                                                          : AppColors.infoGrey,
+                                                      width: .78,
                                                     ),
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      TextView(
-                                                        text:
-                                                            'Emails available',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 14.8.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .fineGrey,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 6.w),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal: 10.w,
-                                                            ),
-                                                        decoration: BoxDecoration(
+                                                  child:
+                                                      addedEmailReminderList
+                                                          .contains(o)
+                                                      ? Icon(
+                                                          Icons.check,
+                                                          size: 12.sp,
                                                           color:
-                                                              const Color.fromARGB(
-                                                                255,
-                                                                223,
-                                                                233,
-                                                                247,
-                                                              ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.r,
-                                                              ),
-                                                          border: Border.all(
-                                                            color: AppColors
-                                                                .primary
-                                                                .withOpacity(
-                                                                  .4,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        child: TextView(
-                                                          text:
-                                                              '${emailReminderList.length}',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 11.8.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                              AppColors.white,
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                ),
                                               ),
+                                              SizedBox(width: 9.10.w),
+                                              SizedBox(
+                                                width: 220.w,
+                                                child: TextView(
+                                                  text: o,
+                                                  maxLines: 1,
+                                                  textOverflow:
+                                                      TextOverflow.ellipsis,
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 16.2.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
+                                              ),
+                                              Spacer(),
                                               Row(
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      isTappedEmailAdded =
-                                                          !isTappedEmailAdded;
+                                                      showEmailDialog(
+                                                        context,
+                                                        isEdit: true,
+                                                        index: index,
+                                                        email:
+                                                            emailReminderList[index],
+                                                      );
                                                       model.notifyListeners();
                                                     },
                                                     child: SvgPicture.asset(
-                                                      AppImage.drop_up,
+                                                      AppImage.edit_pen,
                                                       height: 22.0.h,
                                                       width: 22.0.w,
                                                     ),
                                                   ),
-                                                  SizedBox(width: 2.w),
-                                                  IconButton(
-                                                    onPressed: () =>
-                                                        showEmailDialog(
-                                                          context,
-                                                        ),
-                                                    icon: Icon(
-                                                      Icons.add_circle,
-                                                      color: AppColors.primary1,
-                                                      size: 24.sp,
+                                                  SizedBox(width: 10.w),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      emailReminderList
+                                                          .removeAt(index);
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      AppImage.delete,
+                                                      height: 22.0.h,
+                                                      width: 22.0.w,
                                                     ),
                                                   ),
                                                 ],
@@ -18872,173 +19122,142 @@ class AuthViewModel extends BaseViewModel {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(height: 15.20.h),
-                                        ...emailReminderList.asMap().entries.map((
-                                          entry,
-                                        ) {
-                                          final index = entry.key;
-                                          final o = entry.value;
-                                          final isLast =
-                                              index ==
-                                              emailReminderList.length - 1;
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 12.20.w,
-                                                  right: 20.w,
-                                                  bottom: 12.w,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        if (addedEmailReminderList
-                                                            .contains(o)) {
-                                                          addedEmailReminderList
-                                                              .remove(o);
-                                                        } else {
-                                                          addedEmailReminderList
-                                                              .add(o);
-                                                        }
-                                                        model.notifyListeners();
-                                                      },
-                                                      child: Container(
-                                                        padding:
-                                                            addedEmailReminderList
-                                                                .contains(o)
-                                                            ? EdgeInsets.all(
-                                                                4.0.w,
-                                                              )
-                                                            : EdgeInsets.all(
-                                                                10.w,
-                                                              ),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                6.r,
-                                                              ),
-                                                          color:
-                                                              addedEmailReminderList
-                                                                  .contains(o)
-                                                              ? AppColors
-                                                                    .primary
-                                                              : AppColors
-                                                                    .transparent,
-                                                          border: Border.all(
-                                                            color:
-                                                                addedEmailReminderList
-                                                                    .contains(o)
-                                                                ? AppColors
-                                                                      .transparent
-                                                                : AppColors
-                                                                      .infoGrey,
-                                                            width: .78,
-                                                          ),
-                                                        ),
-                                                        child:
-                                                            addedEmailReminderList
-                                                                .contains(o)
-                                                            ? Icon(
-                                                                Icons.check,
-                                                                size: 12.sp,
-                                                                color: AppColors
-                                                                    .white,
-                                                              )
-                                                            : SizedBox.shrink(),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 9.10.w),
-                                                    SizedBox(
-                                                      width: 220.w,
-                                                      child: TextView(
-                                                        text: o,
-                                                        maxLines: 1,
-                                                        textOverflow:
-                                                            TextOverflow
-                                                                .ellipsis,
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 16.2.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Row(
-                                                      children: [
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            showEmailDialog(
-                                                              context,
-                                                              isEdit: true,
-                                                              index: index,
-                                                              email:
-                                                                  emailReminderList[index],
-                                                            );
-                                                            model
-                                                                .notifyListeners();
-                                                          },
-                                                          child:
-                                                              SvgPicture.asset(
-                                                                AppImage
-                                                                    .edit_pen,
-                                                                height: 22.0.h,
-                                                                width: 22.0.w,
-                                                              ),
-                                                        ),
-                                                        SizedBox(width: 10.w),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            emailReminderList
-                                                                .removeAt(
-                                                                  index,
-                                                                );
-                                                            model
-                                                                .notifyListeners();
-                                                          },
-                                                          child:
-                                                              SvgPicture.asset(
-                                                                AppImage.delete,
-                                                                height: 22.0.h,
-                                                                width: 22.0.w,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              if (!isLast)
-                                                Divider(
-                                                  color: AppColors.infoGrey1,
-                                                ),
-                                              SizedBox(height: 5.10.h),
-                                            ],
-                                          );
-                                        }),
+                                        if (!isLast)
+                                          Divider(color: AppColors.infoGrey1),
+                                        SizedBox(height: 5.10.h),
                                       ],
-                                    ),
-                                  )
-                          : SizedBox.shrink(),
-                      SizedBox(
-                        height: phoneReminderList.isNotEmpty ? 20.h : 0.h,
-                      ),
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
 
-                      phoneReminderList.isNotEmpty
-                          ? isTappedPhoneAdded
-                                ? Container(
+                      SizedBox(height: 20.h),
+
+                      !isTappedPhoneAdded && phoneReminderList.isEmpty
+                          ? SizedBox.shrink()
+                          : isTappedPhoneAdded && phoneReminderList.isEmpty
+                          ? Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: AppColors.infoGrey1),
+                                borderRadius: BorderRadius.circular(12.r),
+                                color: AppColors.white,
+                              ),
+
+                              padding: EdgeInsets.all(12.w),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextView(
+                                        text: 'Add Phone Number',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 16.2.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.deep,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          TextView(
+                                            text: 'Numbers available',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.8.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.fineGrey,
+                                            ),
+                                          ),
+                                          SizedBox(width: 6.w),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 10.w,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(
+                                                255,
+                                                223,
+                                                233,
+                                                247,
+                                              ),
+
+                                              borderRadius:
+                                                  BorderRadius.circular(12.r),
+                                              border: Border.all(
+                                                color: AppColors.primary
+                                                    .withOpacity(.4),
+                                              ),
+                                            ),
+                                            child: TextView(
+                                              text:
+                                                  '${phoneReminderList.length}',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 11.8.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          isTappedPhoneAdded =
+                                              !isTappedPhoneAdded;
+                                          model.notifyListeners();
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppImage.drop_up,
+                                          height: 22.0.h,
+                                          width: 22.0.w,
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      IconButton(
+                                        onPressed: () {
+                                          showPhoneDialog(context);
+                                          isPhoneValid = false;
+                                          model.notifyListeners();
+                                        },
+                                        icon: Icon(
+                                          Icons.add_circle,
+                                          color: AppColors.primary1,
+                                          size: 24.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.r),
+                                border: Border.all(color: AppColors.infoGrey1),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: AppColors.infoGrey1,
                                       ),
-                                      borderRadius: BorderRadius.circular(12.r),
-                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12.r),
+                                        topRight: Radius.circular(12.r),
+                                      ),
+                                      color: AppColors.dashboard,
                                     ),
 
                                     padding: EdgeInsets.all(12.w),
@@ -19054,7 +19273,7 @@ class AuthViewModel extends BaseViewModel {
                                               text: 'Add Phone Number',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
-                                                fontSize: 16.2.sp,
+                                                fontSize: 15.8.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.deep,
                                               ),
@@ -19065,7 +19284,7 @@ class AuthViewModel extends BaseViewModel {
                                                   text: 'Numbers available',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'Arial',
-                                                    fontSize: 14.8.sp,
+                                                    fontSize: 15.8.sp,
                                                     fontWeight: FontWeight.w400,
                                                     color: AppColors.fineGrey,
                                                   ),
@@ -19094,7 +19313,7 @@ class AuthViewModel extends BaseViewModel {
                                                   ),
                                                   child: TextView(
                                                     text:
-                                                        '${phoneReminderList.length}',
+                                                        '${phoneReminderList.length + 1}',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
                                                       fontSize: 11.8.sp,
@@ -19126,6 +19345,7 @@ class AuthViewModel extends BaseViewModel {
                                             IconButton(
                                               onPressed: () {
                                                 showPhoneDialog(context);
+
                                                 isPhoneValid = false;
                                                 model.notifyListeners();
                                               },
@@ -19139,180 +19359,156 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ],
                                     ),
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.r),
-                                      border: Border.all(
-                                        color: AppColors.infoGrey1,
-                                      ),
+                                  ),
+                                  SizedBox(height: 15.20.h),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 12.w,
+                                      right: 20.w,
                                     ),
-                                    child: Column(
+                                    child: Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {},
+                                          child: Container(
+                                            padding: EdgeInsets.all(4.0.w),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(6.r),
+                                              color: AppColors.primary,
+                                              border: Border.all(
+                                                color: AppColors.transparent,
+                                                width: .78,
+                                              ),
+                                            ),
+                                            child: Icon(
+                                              Icons.check,
+                                              size: 12.sp,
+                                              color: AppColors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 9.10.w),
+                                        TextView(
+                                          text: formatPhoneNumber(
+                                            SharedPreferencesService
+                                                .instance
+                                                .usersData['user']['phone'],
+                                          ),
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(1.2.w),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.app_green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.check,
+                                                size: 13.4.sp,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Primary',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 13.72.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 2.0.h),
+                                  Divider(color: AppColors.infoGrey1),
+
+                                  ...phoneReminderList.asMap().entries.map((
+                                    entry,
+                                  ) {
+                                    final index = entry.key;
+                                    final o = entry.value;
+                                    final isLast =
+                                        index == phoneReminderList.length - 1;
+
+                                    return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: AppColors.infoGrey1,
-                                            ),
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(12.r),
-                                              topRight: Radius.circular(12.r),
-                                            ),
-                                            color: AppColors.dashboard,
-                                          ),
-
-                                          padding: EdgeInsets.all(12.w),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  TextView(
-                                                    text: 'Add Phone Number',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 15.8.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.deep,
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      TextView(
-                                                        text:
-                                                            'Numbers available',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 15.8.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .fineGrey,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 6.w),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal: 10.w,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          color:
-                                                              const Color.fromARGB(
-                                                                255,
-                                                                223,
-                                                                233,
-                                                                247,
-                                                              ),
-
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12.r,
-                                                              ),
-                                                          border: Border.all(
-                                                            color: AppColors
-                                                                .primary
-                                                                .withOpacity(
-                                                                  .4,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        child: TextView(
-                                                          text:
-                                                              '${phoneReminderList.length}',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 11.8.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .primary,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      isTappedPhoneAdded =
-                                                          !isTappedPhoneAdded;
-                                                      model.notifyListeners();
-                                                    },
-                                                    child: SvgPicture.asset(
-                                                      AppImage.drop_up,
-                                                      height: 22.0.h,
-                                                      width: 22.0.w,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 2.w),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showPhoneDialog(context);
-
-                                                      isPhoneValid = false;
-                                                      model.notifyListeners();
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.add_circle,
-                                                      color: AppColors.primary1,
-                                                      size: 24.sp,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: 15.20.h),
                                         Padding(
                                           padding: EdgeInsets.only(
                                             left: 12.w,
                                             right: 20.w,
+                                            bottom: 12.w,
                                           ),
                                           child: Row(
                                             children: [
                                               GestureDetector(
-                                                onTap: () {},
+                                                onTap: () {
+                                                  if (addedPhoneReminderList
+                                                      .contains(o)) {
+                                                    addedPhoneReminderList
+                                                        .remove(o);
+                                                  } else {
+                                                    addedPhoneReminderList.add(
+                                                      o,
+                                                    );
+                                                  }
+                                                  model.notifyListeners();
+                                                },
                                                 child: Container(
-                                                  padding: EdgeInsets.all(
-                                                    4.0.w,
-                                                  ),
+                                                  padding:
+                                                      addedPhoneReminderList
+                                                          .contains(o)
+                                                      ? EdgeInsets.all(4.0.w)
+                                                      : EdgeInsets.all(10.w),
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           6.r,
                                                         ),
-                                                    color: AppColors.primary,
+                                                    color:
+                                                        addedPhoneReminderList
+                                                            .contains(o)
+                                                        ? AppColors.primary
+                                                        : AppColors.transparent,
                                                     border: Border.all(
                                                       color:
-                                                          AppColors.transparent,
+                                                          addedPhoneReminderList
+                                                              .contains(o)
+                                                          ? AppColors
+                                                                .transparent
+                                                          : AppColors.infoGrey,
                                                       width: .78,
                                                     ),
                                                   ),
-                                                  child: Icon(
-                                                    Icons.check,
-                                                    size: 12.sp,
-                                                    color: AppColors.white,
-                                                  ),
+                                                  child:
+                                                      addedPhoneReminderList
+                                                          .contains(o)
+                                                      ? Icon(
+                                                          Icons.check,
+                                                          size: 12.sp,
+                                                          color:
+                                                              AppColors.white,
+                                                        )
+                                                      : SizedBox.shrink(),
                                                 ),
                                               ),
                                               SizedBox(width: 9.10.w),
                                               TextView(
-                                                text: formatPhoneNumber(
-                                                  SharedPreferencesService
-                                                      .instance
-                                                      .usersData['user']['phone'],
-                                                ),
+                                                text: formatPhoneNumber(o),
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
                                                   fontSize: 16.2.sp,
@@ -19323,30 +19519,35 @@ class AuthViewModel extends BaseViewModel {
                                               Spacer(),
                                               Row(
                                                 children: [
-                                                  Container(
-                                                    padding: EdgeInsets.all(
-                                                      1.2.w,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          AppColors.app_green,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.check,
-                                                      size: 13.4.sp,
-                                                      color: AppColors.white,
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      showPhoneDialog(
+                                                        context,
+                                                        isEdit: true,
+                                                        index: index,
+                                                        phoneNumber:
+                                                            phoneReminderList[index],
+                                                      );
+                                                      isPhoneValid = false;
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      AppImage.edit_pen,
+                                                      height: 22.0.h,
+                                                      width: 22.0.w,
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10.w),
-                                                  TextView(
-                                                    text: 'Primary',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 13.72.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.reminder,
+                                                  SizedBox(width: 16.10.w),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      phoneReminderList
+                                                          .removeAt(index);
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      AppImage.delete,
+                                                      height: 22.0.h,
+                                                      width: 22.0.w,
                                                     ),
                                                   ),
                                                 ],
@@ -19354,162 +19555,15 @@ class AuthViewModel extends BaseViewModel {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(height: 2.0.h),
-                                        Divider(color: AppColors.infoGrey1),
-
-                                        ...phoneReminderList.asMap().entries.map((
-                                          entry,
-                                        ) {
-                                          final index = entry.key;
-                                          final o = entry.value;
-                                          final isLast =
-                                              index ==
-                                              phoneReminderList.length - 1;
-
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: 12.w,
-                                                  right: 20.w,
-                                                  bottom: 12.w,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        if (addedPhoneReminderList
-                                                            .contains(o)) {
-                                                          addedPhoneReminderList
-                                                              .remove(o);
-                                                        } else {
-                                                          addedPhoneReminderList
-                                                              .add(o);
-                                                        }
-                                                        model.notifyListeners();
-                                                      },
-                                                      child: Container(
-                                                        padding:
-                                                            addedPhoneReminderList
-                                                                .contains(o)
-                                                            ? EdgeInsets.all(
-                                                                4.0.w,
-                                                              )
-                                                            : EdgeInsets.all(
-                                                                10.w,
-                                                              ),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                6.r,
-                                                              ),
-                                                          color:
-                                                              addedPhoneReminderList
-                                                                  .contains(o)
-                                                              ? AppColors
-                                                                    .primary
-                                                              : AppColors
-                                                                    .transparent,
-                                                          border: Border.all(
-                                                            color:
-                                                                addedPhoneReminderList
-                                                                    .contains(o)
-                                                                ? AppColors
-                                                                      .transparent
-                                                                : AppColors
-                                                                      .infoGrey,
-                                                            width: .78,
-                                                          ),
-                                                        ),
-                                                        child:
-                                                            addedPhoneReminderList
-                                                                .contains(o)
-                                                            ? Icon(
-                                                                Icons.check,
-                                                                size: 12.sp,
-                                                                color: AppColors
-                                                                    .white,
-                                                              )
-                                                            : SizedBox.shrink(),
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 9.10.w),
-                                                    TextView(
-                                                      text: formatPhoneNumber(
-                                                        o,
-                                                      ),
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16.2.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.reminder,
-                                                      ),
-                                                    ),
-                                                    Spacer(),
-                                                    Row(
-                                                      children: [
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            showPhoneDialog(
-                                                              context,
-                                                              isEdit: true,
-                                                              index: index,
-                                                              phoneNumber:
-                                                                  phoneReminderList[index],
-                                                            );
-                                                            isPhoneValid =
-                                                                false;
-                                                            model
-                                                                .notifyListeners();
-                                                          },
-                                                          child:
-                                                              SvgPicture.asset(
-                                                                AppImage
-                                                                    .edit_pen,
-                                                                height: 22.0.h,
-                                                                width: 22.0.w,
-                                                              ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: 16.10.w,
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            phoneReminderList
-                                                                .removeAt(
-                                                                  index,
-                                                                );
-                                                            model
-                                                                .notifyListeners();
-                                                          },
-                                                          child:
-                                                              SvgPicture.asset(
-                                                                AppImage.delete,
-                                                                height: 22.0.h,
-                                                                width: 22.0.w,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              if (!isLast)
-                                                Divider(
-                                                  color: AppColors.infoGrey1,
-                                                ),
-                                              SizedBox(height: 5.10.h),
-                                            ],
-                                          );
-                                        }),
+                                        if (!isLast)
+                                          Divider(color: AppColors.infoGrey1),
+                                        SizedBox(height: 5.10.h),
                                       ],
-                                    ),
-                                  )
-                          : SizedBox.shrink(),
+                                    );
+                                  }),
+                                ],
+                              ),
+                            ),
 
                       SizedBox(height: 32.20.h),
                       Center(
@@ -25598,234 +25652,497 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
-  void showUpdateDoseDialog(BuildContext context, {Datum? o}) {
+  // void showUpdateDoseDialog(BuildContext context, {Datum? o}) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false, // prevent closing by tapping outside
+  //     builder: (BuildContext context) {
+  //       return ViewModelBuilder<AuthViewModel>.reactive(
+  //         viewModelBuilder: () => AuthViewModel(),
+  //         onViewModelReady: (model) {},
+  //         disposeViewModel: false,
+  //         onDispose: (viewModel) {},
+  //         builder: (_, AuthViewModel model, _) {
+  // return Container(
+  //   color: AppColors.transparent,
+  //   child: Column(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: [
+  //       Align(
+  //         alignment: Alignment.topCenter,
+  //         child: TextButton.icon(
+  //           onPressed: () => Navigator.pop(context),
+  //           icon: Icon(Icons.close, color: Colors.white, size: 18),
+  //           label: Text(
+  //             "Close",
+  //             style: TextStyle(color: Colors.white),
+  //           ),
+  //           style: TextButton.styleFrom(
+  //             backgroundColor: AppColors.primary,
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(30),
+  //             ),
+  //             padding: EdgeInsets.symmetric(
+  //               horizontal: 10.w,
+  //               vertical: 4.w,
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       SizedBox(height: 6.10.h),
+  //       Dialog(
+  //         insetPadding: EdgeInsets.all(16.20.w),
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         backgroundColor: AppColors.white,
+  //         child: Padding(
+  //           padding: EdgeInsets.all(21.4.w),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.center,
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               Container(
+  //                 padding: EdgeInsets.all(16.w),
+  //                 decoration: BoxDecoration(
+  //                   color: AppColors.skyBlue,
+  //                   shape: BoxShape.circle,
+  //                 ),
+  //                 child: SvgPicture.asset(
+  //                   isMedTypeView(o!.medicationType),
+  //                   color: AppColors.primary,
+  //                   height: 20.h,
+  //                   width: 20.w,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: o.medicationName!.capitalize(),
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'GoogleSans',
+  //                   fontSize: 14.2.sp,
+  //                   fontWeight: FontWeight.w500,
+  //                   color: AppColors.reminder,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: [
+  //                   TextView(
+  //                     text: 'Note: ',
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'GoogleSans',
+  //                       fontSize: 14.2.sp,
+  //                       fontWeight: FontWeight.w500,
+  //                       color: AppColors.reminder,
+  //                     ),
+  //                   ),
+  //                   TextView(
+  //                     text: o.note ?? 'No note',
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'GoogleSans',
+  //                       fontSize: 13.2.sp,
+  //                       fontWeight: FontWeight.w400,
+  //                       color: AppColors.reminder,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               SizedBox(height: 20.h),
+  //               Container(
+  //                 padding: EdgeInsets.symmetric(
+  //                   vertical: 10.w,
+  //                   horizontal: 20.w,
+  //                 ),
+  //                 decoration: BoxDecoration(
+  //                   color: AppColors.skyBlue,
+  //                   border: Border.all(
+  //                     color: AppColors.buttonGrey1,
+  //                     width: 1,
+  //                   ),
+  //                   borderRadius: BorderRadius.circular(10),
+  //                 ),
+  //                 child: Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                   children: [
+  //                     Column(
+  //                       children: [
+  //                         TextView(
+  //                           text: '2 Tablets',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 15.2.sp,
+  //                             fontWeight: FontWeight.w400,
+  //                             color: AppColors.reminder,
+  //                           ),
+  //                         ),
+  //                         SizedBox(height: 4.10.h),
+  //                         TextView(
+  //                           text: 'Dosage to be taken',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 13.8.sp,
+  //                             fontWeight: FontWeight.w400,
+  //                             color: AppColors.infoGrey,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     SizedBox(width: 5.10.h),
+  //                     Column(
+  //                       children: [
+  //                         TextView(
+  //                           text:
+  //                               '${o.time} ${checkTimePeriod(o.time)}',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'GoogleSans',
+  //                             fontSize: 15.2.sp,
+  //                             fontWeight: FontWeight.w700,
+  //                             color: AppColors.reminder,
+  //                           ),
+  //                         ),
+  //                         SizedBox(height: 4.10.h),
+  //                         TextView(
+  //                           text: 'Scheduled Time',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 13.8.sp,
+  //                             fontWeight: FontWeight.w400,
+  //                             color: AppColors.infoGrey,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+
+  //               SizedBox(height: model.isLoading ? 20.h : 0.h),
+  //               model.isLoading
+  //                   ? SpinKitWaveSpinner(
+  //                       color: AppColors.primary,
+  //                       size: 32.0.sp,
+  //                     )
+  //                   : SizedBox.shrink(),
+  //               SizedBox(height: 30.h),
+  //               Row(
+  //                 children: [
+  //                   Expanded(
+  //                     child: ButtonWidget(
+  //                       border: 100.r,
+  //                       buttonColor: AppColors.white,
+  //                       buttonText: 'Missed',
+  //                       color: AppColors.red,
+  //                       buttonBorderColor: AppColors.red,
+  //                       onPressed: () {
+  //                         model.updateDosesStatus(
+  //                           context,
+  //                           reminder: o.reminderId,
+  //                           dose: o.doseId,
+  //                           status: 'MISSED',
+  //                         );
+  //                         model.notifyListeners();
+  //                       },
+  //                     ),
+  //                   ),
+  //                   SizedBox(width: 30.w),
+
+  //                   Expanded(
+  //                     child: ButtonWidget(
+  //                       border: 100.r,
+  //                       buttonColor: AppColors.app_green,
+  //                       buttonText: 'Taken',
+  //                       color: AppColors.white,
+  //                       buttonBorderColor: AppColors.app_green,
+  //                       onPressed: () {
+  //                         model.updateDosesStatus(
+  //                           context,
+  //                           reminder: o.reminderId,
+  //                           dose: o.doseId,
+  //                           status: 'TAKEN',
+  //                         );
+  //                         model.notifyListeners();
+  //                       },
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   ),
+  // );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+
+  void showUpdateDoseDialog(
+    BuildContext context, {
+    Datum? o,
+    AuthViewModel? model, // 👈 PASS SAME MODEL
+  }) {
     showDialog(
       context: context,
-      barrierDismissible: false, // prevent closing by tapping outside
-      builder: (BuildContext context) {
-        return ViewModelBuilder<AuthViewModel>.reactive(
-          viewModelBuilder: () => AuthViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          onDispose: (viewModel) {},
-          builder: (_, AuthViewModel model, _) {
-            return Container(
-              color: AppColors.transparent,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close, color: Colors.white, size: 18),
-                      label: Text(
-                        "Close",
-                        style: TextStyle(color: Colors.white),
+      barrierDismissible: false,
+      builder: (context) {
+        return  StatefulBuilder(
+      builder: (context, setModalState) {
+        return Container(
+            color: AppColors.transparent,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: TextButton.icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.close, color: Colors.white, size: 18),
+                    label: Text("Close", style: TextStyle(color: Colors.white)),
+                    style: TextButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.w,
-                        ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.w,
                       ),
                     ),
                   ),
-                  SizedBox(height: 6.10.h),
-                  Dialog(
-                    insetPadding: EdgeInsets.all(16.20.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: AppColors.white,
-                    child: Padding(
-                      padding: EdgeInsets.all(21.4.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(16.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.skyBlue,
-                              shape: BoxShape.circle,
-                            ),
-                            child: SvgPicture.asset(
-                              isMedTypeView(o!.medicationType),
-                              color: AppColors.primary,
-                              height: 20.h,
-                              width: 20.w,
-                            ),
+                ),
+                SizedBox(height: 6.10.h),
+                Dialog(
+                  insetPadding: EdgeInsets.all(16.20.w),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  backgroundColor: AppColors.white,
+                  child: Padding(
+                    padding: EdgeInsets.all(21.4.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(16.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.skyBlue,
+                            shape: BoxShape.circle,
                           ),
-                          SizedBox(height: 10.h),
-                          TextView(
-                            text: o.drugName ?? '',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              fontSize: 14.2.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.reminder,
-                            ),
+                          child: SvgPicture.asset(
+                            isMedTypeView(o?.medicationType),
+                            color: AppColors.primary,
+                            height: 20.h,
+                            width: 20.w,
                           ),
-                          SizedBox(height: 10.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextView(
-                                text: 'Note: ',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 14.2.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.reminder,
-                                ),
+                        ),
+                        SizedBox(height: 10.h),
+                        TextView(
+                          text: o?.medicationName?.capitalize()??'',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 14.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.reminder,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TextView(
+                              text: 'Note: ',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
                               ),
-                              TextView(
-                                text: '${o.note}',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 13.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
+                            ),
+                            TextView(
+                              text: o?.note ?? 'No note',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 13.2.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.w,
+                            horizontal: 20.w,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.skyBlue,
+                            border: Border.all(
+                              color: AppColors.buttonGrey1,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  TextView(
+                                    text: '2 Tablets',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.reminder,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.10.h),
+                                  TextView(
+                                    text: 'Dosage to be taken',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 13.8.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 5.10.h),
+                              Column(
+                                children: [
+                                  TextView(
+                                    text: '${o?.time} ${checkTimePeriod(o?.time)}',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.reminder,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4.10.h),
+                                  TextView(
+                                    text: 'Scheduled Time',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 13.8.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          SizedBox(height: 20.h),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10.w,
-                              horizontal: 20.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.skyBlue,
-                              border: Border.all(
-                                color: AppColors.buttonGrey1,
-                                width: 1,
+                        ),
+          
+                        SizedBox(height: model!.isLoading ? 20.h : 0.h),
+                        model.isLoading
+                            ? SpinKitWaveSpinner(
+                                color: AppColors.primary,
+                                size: 32.0.sp,
+                              )
+                            : SizedBox.shrink(),
+                        SizedBox(height: 30.h),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.white,
+                                buttonText: 'Missed',
+                                color: AppColors.red,
+                                buttonBorderColor: AppColors.red,
+                                onPressed: ()  {
+                                  _updateDose(context, model, o!, "MISSED");
+                                  setModalState((){});
+                                  model.notifyListeners();
+                                },
                               ),
-                              borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  children: [
-                                    TextView(
-                                      text: '2 Tablets',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.10.h),
-                                    TextView(
-                                      text: 'Dosage to be taken',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.8.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.infoGrey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 5.10.h),
-                                Column(
-                                  children: [
-                                    TextView(
-                                      text:
-                                          '${o.time} ${checkTimePeriod(o.time)}',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.10.h),
-                                    TextView(
-                                      text: 'Scheduled Time',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.8.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.infoGrey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                            SizedBox(width: 30.w),
+                            Expanded(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.app_green,
+                                buttonText: 'Taken',
+                                color: AppColors.white,
+                                buttonBorderColor: AppColors.app_green,
+                                onPressed: ()  {
+                                   _updateDose(context, model, o!, "TAKEN");
+                                  setModalState((){});
+                                  model.notifyListeners();
+                                },
+                              ),
                             ),
-                          ),
-
-                          SizedBox(height: model.isLoading ? 20.h : 0.h),
-                          model.isLoading
-                              ? SpinKitWaveSpinner(
-                                  color: AppColors.primary,
-                                  size: 32.0.sp,
-                                )
-                              : SizedBox.shrink(),
-                          SizedBox(height: 30.h),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ButtonWidget(
-                                  border: 100.r,
-                                  buttonColor: AppColors.white,
-                                  buttonText: 'Missed',
-                                  color: AppColors.red,
-                                  buttonBorderColor: AppColors.red,
-                                  onPressed: () {
-                                    model.updateDosesStatus(
-                                      context,
-                                      reminder: o.reminderId,
-                                      dose: o.doseId,
-                                      status: 'MISSED',
-                                    );
-                                    model.notifyListeners();
-                                  },
-                                ),
-                              ),
-                              SizedBox(width: 30.w),
-
-                              Expanded(
-                                child: ButtonWidget(
-                                  border: 100.r,
-                                  buttonColor: AppColors.app_green,
-                                  buttonText: 'Taken',
-                                  color: AppColors.white,
-                                  buttonBorderColor: AppColors.app_green,
-                                  onPressed: () {
-                                    model.updateDosesStatus(
-                                      context,
-                                      reminder: o.reminderId,
-                                      dose: o.doseId,
-                                      status: 'TAKEN',
-                                    );
-                                    model.notifyListeners();
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            );
-          },
-        );
+                ),
+              ],
+            ),
+          );
+      });
       },
     );
+  }
+
+  Future<void> _updateDose(
+    BuildContext context,
+    AuthViewModel model,
+    Datum o,
+    String status,
+  ) async {
+    if (o.status == 'PENDING') {
+      final result = await model.updateDosesStatus(
+        context,
+        reminder: o.reminderId,
+        dose: o.doseId,
+        status: status,
+      );
+
+      if (!context.mounted) return;
+
+      // Close dialog
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+
+      // Show message
+      AppUtils.snackbar(
+        context,
+        message: result.message,
+        error: !result.success,
+      );
+
+      // Refresh only on success
+      if (result.success) {
+        await model.getTodaysReminder(
+          context,
+          period: model.timePeriod,
+          date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        );
+      }
+    } else {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+
+      AppUtils.snackbar(context, message: "Dose already updated", error: true);
+    }
+
+    model.notifyListeners();
   }
 
   void showEmailDialog(
@@ -26486,30 +26803,41 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateDosesStatus(
-    context, {
+  Future<ApiResult> updateDosesStatus(
+    BuildContext context, {
     String? reminder,
     String? dose,
     String? status,
   }) async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
-      _isLoading = true;
-      _updateDosesStatusModel = await runBusyFuture(
+      final res = await runBusyFuture(
         repositoryImply.updateDosesStatusModel(
           status: status,
           doseId: dose,
           reminderId: reminder,
         ),
-        throwException: true,
+        throwException: true, // 👈 DO NOT THROW ON 400
       );
-      AppUtils.snackbar(context, message: _updateDosesStatusModel?.message);
+
       _isLoading = false;
+      notifyListeners();
+
+      return ApiResult(
+        success: res.success ?? false,
+        message: res.message ?? "Unknown error from server",
+      );
     } catch (e) {
       _isLoading = false;
-      logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      notifyListeners();
+
+      return ApiResult(
+        success: false,
+        message: e.toString(), // 👈 real exception message
+      );
     }
-    notifyListeners();
   }
 
   void updateReminder(
@@ -26679,8 +27007,11 @@ class AuthViewModel extends BaseViewModel {
   }
 
   String isMedTypeView(medType) {
-    if (medType == 'PILL') {
+    if (medType == 'CAPSULE') {
       return AppImage.pills;
+    }
+    if (medType == 'TABLET') {
+      return AppImage.tablet;
     }
     if (medType == 'SYRUP') {
       return AppImage.syrup;

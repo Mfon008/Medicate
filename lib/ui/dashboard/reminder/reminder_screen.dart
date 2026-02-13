@@ -123,7 +123,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         ),
                       ];
                     },
-                    child: Icon(Icons.add, color: AppColors.white, size: 25.sp)
+                    child: Icon(Icons.add, color: AppColors.white, size: 25.sp),
                     // !model.isTapped
                     //     ? Icon(Icons.add, color: AppColors.white, size: 25.sp)
                     //     : SvgPicture.asset(
@@ -670,11 +670,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                             return Column(
                                               children: [
                                                 GestureDetector(
-                                                  onTap: () => model
-                                                      .showUpdateDoseDialog(
-                                                        context,
-                                                        o: o,
-                                                      ),
+                                                  onTap: o.status != 'PENDING'
+                                                      ? () {}
+                                                      : () => model
+                                                            .showUpdateDoseDialog(
+                                                              context,
+                                                              o: o,
+                                                              model: model,
+                                                            ),
                                                   child: Container(
                                                     color:
                                                         AppColors.transparent,
@@ -729,7 +732,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                               width: 120.w,
                                                               child: TextView(
                                                                 text:
-                                                                    o.drugName ??
+                                                                    o.medicationName
+                                                                        ?.capitalize() ??
                                                                     '',
                                                                 textOverflow:
                                                                     TextOverflow
@@ -1194,9 +1198,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                             SizedBox(
                                                               width: 120.w,
                                                               child: TextView(
-                                                                text:
-                                                                    o.drugName ??
-                                                                    '',
+                                                                text: o
+                                                                    .medicationName!
+                                                                    .capitalize(),
                                                                 textOverflow:
                                                                     TextOverflow
                                                                         .ellipsis,

@@ -9,7 +9,7 @@ part of 'datum.dart';
 Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
   id: json['_id'] as String?,
   medicationType: json['medicationType'] as String?,
-  drugName: json['drugName'] as String?,
+  medicationName: json['medicationName'] as String?,
   time: json['time'] as String?,
   date: json['date'] as String?,
   status: json['status'] as String?,
@@ -21,7 +21,7 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
   '_id': instance.id,
   'medicationType': instance.medicationType,
-  'drugName': instance.drugName,
+  'medicationName': instance.medicationName,
   'time': instance.time,
   'date': instance.date,
   'status': instance.status,

@@ -60,6 +60,7 @@ class _AcceleratePaymentViewPharmacyState extends State<AcceleratePaymentViewPha
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: TextView(
           text: 'Payment Screen',
           textStyle: TextStyle(
