@@ -26062,7 +26062,7 @@ class AuthViewModel extends BaseViewModel {
                                 buttonText: 'Missed',
                                 color: AppColors.red,
                                 buttonBorderColor: AppColors.red,
-                                onPressed: ()  {
+                                onPressed: () {
                                   _updateDose(context, model, o!, "MISSED");
                                   setModalState((){});
                                   model.notifyListeners();
@@ -26077,7 +26077,7 @@ class AuthViewModel extends BaseViewModel {
                                 buttonText: 'Taken',
                                 color: AppColors.white,
                                 buttonBorderColor: AppColors.app_green,
-                                onPressed: ()  {
+                                onPressed: () {
                                    _updateDose(context, model, o!, "TAKEN");
                                   setModalState((){});
                                   model.notifyListeners();
