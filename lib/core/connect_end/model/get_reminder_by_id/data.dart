@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'medication.dart';
 import 'payment.dart';
+import 'user.dart';
 
 part 'data.g.dart';
 
@@ -21,6 +22,7 @@ class Data {
   String? reminderGroupId;
   DateTime? createdAt;
   DateTime? updatedAt;
+  User? user;
 
   Data({
     this.id,
@@ -36,6 +38,7 @@ class Data {
     this.reminderGroupId,
     this.createdAt,
     this.updatedAt,
+    this.user
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

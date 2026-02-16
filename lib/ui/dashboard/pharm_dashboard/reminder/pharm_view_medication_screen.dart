@@ -1,11 +1,10 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:stacked/stacked.dart';
+import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../widget/button.dart';
@@ -15,6 +14,8 @@ import '../../../widget/text.dart';
 class PharmViewMedicationScreen extends StatelessWidget {
   PharmViewMedicationScreen({super.key, required this.id});
   String? id;
+  var medication;
+  var imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,21 @@ class PharmViewMedicationScreen extends StatelessWidget {
       viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-           model.getReminderById(context, id:id);
+          model.getReminderById(context, id: id);
+          medication = model.getReminderByIdModel?.data?.medication;
+          imageUrl = model.sanitizeImageUrl(medication?.medicationImage?.url);
+          model.allNotificationChannels.addAll(
+            model.getReminderByIdModel!.data!.notificationChannels!,
+          );
+          if (model.getReminderByIdModel!.data!.payments!.isNotEmpty) {
+            model.allNotificationChannels.addAll(
+              model
+                  .getReminderByIdModel!
+                  .data!
+                  .payments![0]
+                  .notificationChannelsPaidFor!,
+            );
+          }
         });
       },
       disposeViewModel: false,
@@ -72,51 +87,206 @@ class PharmViewMedicationScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(4.w),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.yellow,
-                                    shape: BoxShape.circle,
+                        model
+                                    .getReminderByIdModel!
+                                    .data
+                                    ?.medication
+                                    ?.medicationStatus ==
+                                'ONGOING'
+                            ? Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(4.w),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              model
+                                                      .getReminderByIdModel!
+                                                      .data
+                                                      ?.medication
+                                                      ?.medicationStatus ==
+                                                  'ONGOING'
+                                              ? AppColors.yellow
+                                              : model
+                                                        .getReminderByIdModel!
+                                                        .data
+                                                        ?.medication
+                                                        ?.medicationStatus ==
+                                                    'FAILED'
+                                              ? AppColors.red
+                                              : AppColors.app_green,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      TextView(
+                                        text:
+                                            model
+                                                .getReminderByIdModel
+                                                ?.data
+                                                ?.medication
+                                                ?.medicationStatus
+                                                ?.capitalize() ??
+                                            '',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.deep,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(width: 8.w),
-                                TextView(
-                                  text:
-                                      model
-                                          .getReminderByIdModel
-                                          ?.data
-                                          ?.medication
-                                          ?.medicationStatus
-                                          ?.capitalize() ??
-                                      '',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.deep,
+                                  SizedBox(width: 56.w),
+                                  TextView(
+                                    text:
+                                        '${model.calculateDaysLeft()}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days left',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                      letterSpacing: 1,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(width: 56.w),
-                            TextView(
-                              text:
-                                  '${model.calculateDaysLeft()}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days left',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.infoGrey,
-                                letterSpacing: 1,
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(4.w),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          model
+                                                  .getReminderByIdModel!
+                                                  .data
+                                                  ?.medication
+                                                  ?.medicationStatus ==
+                                              'FAILED'
+                                          ? AppColors.red
+                                          : AppColors.app_green,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.w),
+                                  TextView(
+                                    text:
+                                        model
+                                            .getReminderByIdModel
+                                            ?.data
+                                            ?.medication
+                                            ?.medicationStatus
+                                            ?.capitalize() ??
+                                        '',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.deep,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+
+                        SizedBox(height: 20.h),
+                        TextView(
+                          text: 'PATIENTS DETAILS',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.deep,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 16.20.w,
+                            horizontal: 16.w,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.dashboard,
+                            borderRadius: BorderRadius.circular(8.2),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextView(
+                                text: 'Patient Name',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                              SizedBox(height: 4.10.h),
+                              TextView(
+                                text:
+                                    model
+                                        .getReminderByIdModel!
+                                        .data!
+                                        .user
+                                        ?.fullName ??
+                                    '',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              SizedBox(height: 5.10.h),
+                              Divider(
+                                color: AppColors.infoGrey,
+                                thickness: .14,
+                              ),
+                              SizedBox(height: 5.10.h),
+                              TextView(
+                                text: 'Phone Number',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                              SizedBox(height: 4.10.h),
+                              TextView(
+                                text:
+                                    model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .user
+                                            ?.phoneNumber ==
+                                        ''
+                                    ? ''
+                                    : '0${model.getReminderByIdModel!.data!.user?.phoneNumber?.substring(4)}',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              SizedBox(height: 10.h),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20.h),
+                        TextView(
+                          text: 'MEDICATION DETAILS',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.deep,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
                         Container(
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(
@@ -150,32 +320,6 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                   color: AppColors.reminder,
                                 ),
                               ),
-                              SizedBox(height: 5.10.h),
-                              Divider(
-                                color: AppColors.infoGrey,
-                                thickness: .14,
-                              ),
-                              SizedBox(height: 5.10.h),
-                              TextView(
-                                text: 'Drug Name',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12.8.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.infoGrey,
-                                ),
-                              ),
-                              SizedBox(height: 4.10.h),
-                              TextView(
-                                text:
-                                    '${model.getReminderByIdModel!.data!.medication!.drugName}',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.8.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
                               SizedBox(height: 10.h),
                               Container(
                                 width: double.infinity,
@@ -187,54 +331,14 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                   color: AppColors.white,
                                   borderRadius: BorderRadius.circular(12),
                                 ),
-                                child:
-                                    model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .medication!
-                                            .medicationImage ==
-                                        null
-                                    ? Padding(
-                                        padding: EdgeInsets.all(8.w),
-                                        child: SvgPicture.asset(
-                                          color: AppColors.primary,
-                                          model.errorRemidnderImage(
-                                            model
-                                                .getReminderByIdModel!
-                                                .data!
-                                                .medication!
-                                                .medicationType,
-                                          ),
-                                          height: 70.h,
-                                          width: 70.w,
-                                        ),
-                                      )
+                                child: (imageUrl == null || imageUrl.isEmpty)
+                                    ? model.fallbackMedicationIcon(model)
                                     : Image.network(
-                                        model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .medication!
-                                            .medicationImage!
-                                            .url!,
+                                        imageUrl,
                                         height: 70.h,
                                         width: 70.w,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Padding(
-                                                  padding: EdgeInsets.all(8.w),
-                                                  child: SvgPicture.asset(
-                                                    color: AppColors.primary,
-                                                    model.errorRemidnderImage(
-                                                      model
-                                                          .getReminderByIdModel!
-                                                          .data!
-                                                          .medication!
-                                                          .medicationType,
-                                                    ),
-                                                    height: 70.h,
-                                                    width: 70.w,
-                                                  ),
-                                                ),
+                                        errorBuilder: (_, _, _) =>
+                                            model.fallbackMedicationIcon(model),
                                       ),
                               ),
                               SizedBox(height: 5.10.h),
@@ -282,6 +386,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
+
                               SizedBox(height: 10.h),
                             ],
                           ),
@@ -291,9 +396,9 @@ class PharmViewMedicationScreen extends StatelessWidget {
                           text: 'SET SCHEDULE AND DOSAGE',
                           textStyle: TextStyle(
                             fontFamily: 'GoogleSans',
-                            fontSize: 13.6.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.grey1,
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.deep,
                           ),
                         ),
                         SizedBox(height: 10.h),
@@ -370,7 +475,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 5.10.h),
                               TextView(
-                                text: 'Duration',
+                                text: 'Frequency',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 12.8.sp,
@@ -379,88 +484,221 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 4.10.h),
-                              Row(
-                                children: [
-                                  TextView(
-                                    text:
-                                        '${model.calculateDaysLeft()}/${model.getReminderByIdModel!.data!.medication!.durationInDays} days',
-                                    letterSpacing: 1,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14.8.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                  SizedBox(width: 6.10.h),
-                                  GestureDetector(
-                                    onTap: () {
-                                      model.onTapViewSingleReminder =
-                                          !model.onTapViewSingleReminder;
-                                      model.notifyListeners();
-                                    },
-                                    child: TextView(
-                                      text: !model.onTapViewSingleReminder
-                                          ? 'Show more'
-                                          : 'Hide details',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 12.8.sp,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: AppColors.primary,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.primary,
+                              model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .medication!
+                                          .scheduleType ==
+                                      'CUSTOM'
+                                  ? SizedBox(
+                                      height:
+                                          model
+                                                  .getReminderByIdModel!
+                                                  .data!
+                                                  .medication!
+                                                  .dailyDoseTimes!
+                                                  .length >
+                                              1
+                                          ? 160.h
+                                          : 90.h,
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ...model.getReminderByIdModel!.data!.medication!.dailyDoseTimes!.map(
+                                              (e) => Container(
+                                                padding: EdgeInsets.all(10.w),
+                                                margin: EdgeInsets.only(
+                                                  bottom: 12.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: AppColors.f1,
+                                                  ),
+                                                  color: AppColors.white
+                                                      .withOpacity(.8),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 304.h,
+                                                              child: Wrap(
+                                                                spacing: 2.10,
+                                                                runSpacing: 6,
+                                                                children: (() {
+                                                                  final Set<
+                                                                    String
+                                                                  >
+                                                                  uniqueTimes =
+                                                                      {};
+                                                                  for (final dose
+                                                                      in e) {
+                                                                    uniqueTimes.add(
+                                                                      dose.time!,
+                                                                    );
+                                                                  }
+                                                                  return uniqueTimes.map((
+                                                                    time,
+                                                                  ) {
+                                                                    return Container(
+                                                                      width:
+                                                                          90.w,
+                                                                      margin: EdgeInsets.only(
+                                                                        right:
+                                                                            5.10.w,
+                                                                      ),
+                                                                      padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            6.0.w,
+                                                                        vertical:
+                                                                            4.w,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        border: Border.all(
+                                                                          color:
+                                                                              AppColors.infoGrey1,
+                                                                        ),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              22,
+                                                                            ),
+                                                                        color: AppColors
+                                                                            .white,
+                                                                      ),
+                                                                      child: Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          SvgPicture.asset(
+                                                                            AppImage.timer,
+                                                                            color:
+                                                                                AppColors.reminder,
+                                                                            width:
+                                                                                15.20.sp,
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                4.10.w,
+                                                                          ),
+                                                                          TextView(
+                                                                            text:
+                                                                                time,
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'GoogleSans',
+                                                                              fontSize: 12.8.sp,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              color: AppColors.reminder,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    );
+                                                                  }).toList();
+                                                                })(),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
+                                    )
+                                  : Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Wrap(
+                                          spacing: 4.10,
+                                          runSpacing: 6,
+                                          children: (() {
+                                            final Set<String> uniqueTimes = {};
+
+                                            for (final day
+                                                in model
+                                                    .getReminderByIdModel!
+                                                    .data!
+                                                    .medication!
+                                                    .dailyDoseTimes!) {
+                                              for (final dose in day) {
+                                                uniqueTimes.add(dose.time!);
+                                              }
+                                            }
+
+                                            return uniqueTimes.map((time) {
+                                              return Container(
+                                                width: 100.w,
+                                                margin: EdgeInsets.only(
+                                                  right: 4.10.w,
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 4.0.w,
+                                                  vertical: 6.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: AppColors.infoGrey1,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(22),
+                                                  color: AppColors.white,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      AppImage.timer,
+                                                      color: AppColors.reminder,
+                                                      width: 18.20.sp,
+                                                    ),
+                                                    SizedBox(width: 5.10.w),
+                                                    TextView(
+                                                      text: time,
+                                                      textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'GoogleSans',
+                                                        fontSize: 12.8.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }).toList();
+                                          })(),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
                               SizedBox(height: 5.10.h),
                               Divider(
                                 color: AppColors.infoGrey,
                                 thickness: .14,
                               ),
-                              SizedBox(
-                                height: !model.onTapViewSingleReminder
-                                    ? 0.h
-                                    : 5.10.h,
-                              ),
-                              !model.onTapViewSingleReminder
-                                  ? SizedBox.shrink()
-                                  : Column(
-                                      children: [
-                                        ...model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .medication!
-                                            .dailyDoseTimes!
-                                            .asMap()
-                                            .entries
-                                            .map((entry) {
-                                              final i = entry.key; // 0, 1, 2
-                                              final v = entry
-                                                  .value; // {day: x, doses: [...]}
-                                              return model.viewPreviewWidgetContainer(
-                                                context: context,
-                                                callback:
-                                                    i, // ✅ now an index (int)
-                                                color: AppColors.grey,
-                                                listOfTimes: List.generate(
-                                                  model
-                                                      .getReminderByIdModel!
-                                                      .data!
-                                                      .medication!
-                                                      .timesPerDay!,
-                                                  (index) => index,
-                                                ),
-                                                dosageMap:
-                                                    v, // ✅ wrap v in a list so widget only sees one day
-                                              );
-                                            }),
-                                      ],
-                                    ),
-
-                              SizedBox(height: 10.h),
+                              SizedBox(height: 5.10.h),
                               TextView(
                                 text: 'End Date',
                                 textStyle: TextStyle(
@@ -493,7 +731,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 5.10.h),
                               TextView(
-                                text: 'No of times to be taken',
+                                text: 'Duration',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 12.8.sp,
@@ -503,13 +741,8 @@ class PharmViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: model.getNumberOfTimes(
-                                  model
-                                      .getReminderByIdModel!
-                                      .data!
-                                      .medication!
-                                      .timesPerDay!,
-                                ),
+                                text:
+                                    '${model.getReminderByIdModel!.data!.medication!.durationInDays} ${model.returnNumberOfDays(model.getReminderByIdModel!.data!.medication!.durationInDays).toString().capitalize()}',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -524,7 +757,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 5.10.h),
                               TextView(
-                                text: 'Add Note',
+                                text: 'Notes & Instructionse',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 12.8.sp,
@@ -535,7 +768,12 @@ class PharmViewMedicationScreen extends StatelessWidget {
                               SizedBox(height: 4.10.h),
                               TextView(
                                 text:
-                                    '${model.getReminderByIdModel!.data!.medication!.note}',
+                                    model
+                                        .getReminderByIdModel!
+                                        .data!
+                                        .medication!
+                                        .note ??
+                                    'No note',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,
@@ -547,11 +785,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 20.h),
-                        model
-                                .getReminderByIdModel!
-                                .data!
-                                .notificationChannels!
-                                .isEmpty
+                        model.allNotificationChannels.isEmpty
                             ? SizedBox.shrink()
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -560,9 +794,9 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                     text: 'NOTIFICATION CHANNEL',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
-                                      fontSize: 13.6.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.grey1,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.deep,
                                     ),
                                   ),
                                   SizedBox(height: 5.10.h),
@@ -575,7 +809,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                     width: double.infinity,
                                     padding: EdgeInsets.symmetric(
                                       vertical: 10.w,
-                                      horizontal: 22.0.w,
+                                      horizontal: 14.0.w,
                                     ),
                                     decoration: BoxDecoration(
                                       color: AppColors.dashboard,
@@ -585,42 +819,29 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        SizedBox(height: 10.h),
-                                        ...model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .notificationChannels!
-                                            .map(
-                                              (e) => Padding(
-                                                padding: EdgeInsets.only(
-                                                  bottom: 20.w,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    Container(
-                                                      padding: EdgeInsets.all(
-                                                        2.w,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors.black,
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 12.w),
-                                                    TextView(
-                                                      text: e,
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: AppColors.black,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
+                                        SizedBox(height: 5.0.h),
+                                        TextView(
+                                          text: 'Selected Channels',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 13.4.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.infoGrey,
+                                          ),
+                                        ),
+                                        SizedBox(height: 5.0.h),
+                                        Wrap(
+                                          spacing: 4.10,
+                                          runSpacing: 6,
+                                          children: [
+                                            ...model.allNotificationChannels.map(
+                                              (e) => model
+                                                  .notificationChannelFlowWidget(
+                                                    notificationType: e,
+                                                  ),
                                             ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -630,13 +851,14 @@ class PharmViewMedicationScreen extends StatelessWidget {
                         ButtonWidget(
                           border: 100.r,
                           buttonColor: AppColors.primary,
-                          buttonText: 'Edit Medication',
+                          buttonText: 'Repeat Medication',
                           color: AppColors.white,
                           buttonBorderColor: AppColors.transparent,
-                          onPressed: () => model.showUpdateMedicationDialog(
-                            context: context,
-                            data: model.getReminderByIdModel!.data,
-                          ),
+                          onPressed: () {},
+                          // model.showUpdateMedicationDialog(
+                          //   context: context,
+                          //   data: model.getReminderByIdModel!.data,
+                          // ),
                           fontSize: 14.sp,
                         ),
                       ],

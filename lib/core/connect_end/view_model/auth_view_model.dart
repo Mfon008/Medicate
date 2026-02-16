@@ -77,8 +77,8 @@ import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dar
 import '../model/verify_phone_entity_model.dart';
 import '../repo/repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart';
-import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/payment.dart'
-    as update;
+// import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/payment.dart'
+//     as update;
 
 class AuthViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -192,7 +192,6 @@ class AuthViewModel extends BaseViewModel {
   int? returnNoDays;
 
   List<String>? formattedSelectedTimeAndPeriodList = [];
-  List<String>? formattedSelectedTimeAndPeriodListCustom = [];
 
   int? dosageValue;
   int? dosageAddedValue;
@@ -255,7 +254,6 @@ class AuthViewModel extends BaseViewModel {
   bool onTapToAddAnotherReminder = false;
   bool onTapViewSingleReminder = false;
   int v = 1;
-
   dynamic timeSelected;
 
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
@@ -405,7 +403,7 @@ class AuthViewModel extends BaseViewModel {
   DateTime now = DateTime.now();
   List<String> selectedTimes = []; // ["09:30 AM", "10:30 AM"]
   List<String> selectedCustomTimes = []; // ["09:30 AM", "10:30 AM"]
-  String? getTheTime; // last picked time
+  // String? getTheTime; // last picked time
 
   TextEditingController fullNameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
@@ -9229,41 +9227,41 @@ class AuthViewModel extends BaseViewModel {
     },
   );
 
-  void showUpdateReminderModal({context, data}) => showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: AppColors.transparent,
-    constraints: BoxConstraints(maxWidth: double.infinity),
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setModalState) {
-          return DraggableScrollableSheet(
-            initialChildSize: 0.88, // Initial height as percentage of screen
-            minChildSize: 0.7, // Minimum height
-            maxChildSize: 0.89, // Maximum height
-            expand: true, // Set to true for full height initially
-            builder: (BuildContext context, ScrollController scrollController) {
-              return ViewModelBuilder<AuthViewModel>.reactive(
-                viewModelBuilder: () => locator<AuthViewModel>(),
-                onViewModelReady: (model) {},
-                disposeViewModel: false,
-                onDispose: (viewModel) {},
-                builder: (_, AuthViewModel model, _) {
-                  return setModalFlowUpdate(
-                    model: model,
-                    data: data,
-                    context: context,
-                    setModalState: setModalState,
-                    scrollController: scrollController,
-                  );
-                },
-              );
-            },
-          );
-        },
-      );
-    },
-  );
+  // void showUpdateReminderModal({context, data}) => showModalBottomSheet(
+  //   context: context,
+  //   isScrollControlled: true,
+  //   backgroundColor: AppColors.transparent,
+  //   constraints: BoxConstraints(maxWidth: double.infinity),
+  //   builder: (BuildContext context) {
+  //     return StatefulBuilder(
+  //       builder: (BuildContext context, StateSetter setModalState) {
+  //         return DraggableScrollableSheet(
+  //           initialChildSize: 0.88, // Initial height as percentage of screen
+  //           minChildSize: 0.7, // Minimum height
+  //           maxChildSize: 0.89, // Maximum height
+  //           expand: true, // Set to true for full height initially
+  //           builder: (BuildContext context, ScrollController scrollController) {
+  //             return ViewModelBuilder<AuthViewModel>.reactive(
+  //               viewModelBuilder: () => locator<AuthViewModel>(),
+  //               onViewModelReady: (model) {},
+  //               disposeViewModel: false,
+  //               onDispose: (viewModel) {},
+  //               builder: (_, AuthViewModel model, _) {
+  //                 return setModalFlowUpdate(
+  //                   model: model,
+  //                   data: data,
+  //                   context: context,
+  //                   setModalState: setModalState,
+  //                   scrollController: scrollController,
+  //                 );
+  //               },
+  //             );
+  //           },
+  //         );
+  //       },
+  //     );
+  //   },
+  // );
 
   addReminderToList({
     AuthViewModel? model,
@@ -9320,7 +9318,6 @@ class AuthViewModel extends BaseViewModel {
     model.medicationClassList.add(
       MedicationClass(
         medicationName: model.medNameController.text,
-        drugName: drugNameController.text,
         medicationType: model.medTypeController.text,
         medicationTypeIcon: model.medTypeResultImage,
         medicationFile: model.imageDrug,
@@ -9342,7 +9339,7 @@ class AuthViewModel extends BaseViewModel {
     model.markUpdateControllersInitializedFalse();
     clearReminderMedsVaraibles(model);
 
-   _isLoading = false;
+    _isLoading = false;
     model.notifyListeners();
     AppUtils.snackbar(context, message: 'Medication has been added.');
     setModalState!(() {});
@@ -10957,8 +10954,6 @@ class AuthViewModel extends BaseViewModel {
         'dd MMM, yyyy hh:mm a',
       ).parse(model!.startDateUpdateControllers[index!].text);
       final parsedEnd = DateFormat('dd MMM, yyyy').parse(pickedEndDate!);
-      print('oooooo:: $parsed');
-      print('o end date:: $pickedEndDate');
 
       // Create midnight UTC using only the date
       final utcDateStart = DateTime.utc(parsed.year, parsed.month, parsed.day);
@@ -10967,7 +10962,6 @@ class AuthViewModel extends BaseViewModel {
         parsedEnd.month,
         parsedEnd.day,
       );
-      print('oooooo9:: $utcDateStart');
       returnNoDays =
           DateTime.parse(
             utcDateEnd.toIso8601String(),
@@ -10981,8 +10975,6 @@ class AuthViewModel extends BaseViewModel {
 
       model.endDateUpdateController[index].text = pickedEndDate!;
       model.medicationClassList[index].endDate = pickedEndDate!;
-
-      print('returnNoDays new :::::$returnNoDays');
       final localDate = DateFormat('dd MMM, yyyy').parse(pickedEndDate!);
 
       final utcDate = DateTime.utc(
@@ -10994,14 +10986,8 @@ class AuthViewModel extends BaseViewModel {
       await Future.delayed(Duration(seconds: 1));
       intListCustom = List.generate(returnNoDays!, (index) => index);
     }
-    print('road:::::${model!.endDateUpdateController[index!].text}');
-    print('returnNoDays:::::$returnNoDays');
-    print('intListCustom:::::$intListCustom');
-    print(
-      'model.numberOfDurationsInDaysList![index]:::::${model.numberOfDurationsInDaysList![index]}',
-    );
     setModalState!(() {});
-    model.notifyListeners();
+    model!.notifyListeners();
   }
 
   void copyDayOneToAll({StateSetter? setModalState, AuthViewModel? viewModel}) {
@@ -11354,7 +11340,11 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      AppUtils.snackbar(
+        context,
+        message: 'Unable to login please try again.',
+        error: true,
+      );
     }
     notifyListeners();
   }
@@ -11582,13 +11572,14 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getUserDetails({context, phoneNo}) async {
+  Future<void> getUserDetails({context, phoneNo}) async {
     try {
       _isLoading = true;
       _getUserDetailsResponseModel = await runBusyFuture(
         repositoryImply.getUserDetails(phoneNo),
         throwException: true,
       );
+      print('logogogoogo:${_getUserDetailsResponseModel?.data?.toJson()}');
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -13028,15 +13019,6 @@ class AuthViewModel extends BaseViewModel {
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
                           controller: model.medDosageController,
-                          // label: model.getStringFrLabel(
-                          //   medDosageController.text,
-                          // ),
-                          // labelStyle: TextStyle(
-                          //   fontWeight: FontWeight.w400,
-                          //   fontFamily: 'Arial',
-                          //   fontSize: 14.80.sp,
-                          //   color: AppColors.infoGrey,
-                          // ),
                           fillColor: AppColors.white,
                           isFilled: true,
                           readOnly:
@@ -13055,13 +13037,6 @@ class AuthViewModel extends BaseViewModel {
                                       type: model.medTypeController.text,
                                       model: model,
                                     );
-                                    // if (result != null) {
-                                    //   print('result:::::$result');
-                                    //   setModalState!(() {
-                                    //     model.medDosageController.text = result;
-                                    //     model.notifyListeners();
-                                    //   });
-                                    // }
                                   },
                             icon: Icon(
                               Icons.keyboard_arrow_down,
@@ -13184,11 +13159,6 @@ class AuthViewModel extends BaseViewModel {
                           borderBottomLeft: 10.r,
                           borderBottomRight: 10.r,
                           controller: model.endDateController,
-                          // label: model.endDateController.text.isNotEmpty
-                          //     ? DateFormat('dd MMM, yyyy').format(
-                          //         DateTime.parse(model.endDateController.text),
-                          //       )
-                          //     : '',
                           labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Arial',
@@ -17150,35 +17120,6 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ),
                                       SizedBox(height: 16.h),
-                                      // TextFormWidget(
-                                      //   hint: 'Drug Name',
-                                      //   borderColor: AppColors.transparent,
-                                      //   borderTopLeft: 10.r,
-                                      //   borderTopRight: 10.r,
-                                      //   borderBottomLeft: 10.r,
-                                      //   borderBottomRight: 10.r,
-                                      //   hintSize: 12.52.sp,
-                                      //   fillColor: AppColors.grey,
-                                      //   isFilled: true,
-                                      //   controller: drugNameController,
-                                      //   validator:
-                                      //       AppValidator.validateString(),
-                                      //   style: TextStyle(
-                                      //     fontSize: 16.20.sp,
-                                      //     fontWeight: FontWeight.w400,
-                                      //     fontFamily: 'GoogleSans',
-                                      //   ),
-                                      // ),
-                                      // SizedBox(height: 16.h),
-                                      // TextView(
-                                      //   text: 'Medication Type',
-                                      //   textStyle: TextStyle(
-                                      //     fontFamily: 'Arial',
-                                      //     fontSize: 14.sp,
-                                      //     fontWeight: FontWeight.w500,
-                                      //   ),
-                                      // ),
-                                      // SizedBox(height: 12.h),
                                       TextFormWidget(
                                         hint: 'Medication Type',
                                         hintWeight: FontWeight.w400,
@@ -17658,13 +17599,6 @@ class AuthViewModel extends BaseViewModel {
                                         borderBottomLeft: 10.r,
                                         borderBottomRight: 10.r,
                                         controller: model.endDateController,
-                                        // label: endDateController.text.isNotEmpty
-                                        //     ? DateFormat('dd MMM, yyyy').format(
-                                        //         DateTime.parse(
-                                        //           endDateController.text,
-                                        //         ),
-                                        //       )
-                                        //     : '',
                                         suffixWidget: Padding(
                                           padding: EdgeInsets.all(8.w),
                                           child: GestureDetector(
@@ -20371,7 +20305,6 @@ class AuthViewModel extends BaseViewModel {
                       ),
 
                 SizedBox(height: 10.h),
-
                 Divider(
                   color: AppColors.infoGrey.withOpacity(.2),
                   thickness: .7,
@@ -21009,18 +20942,6 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     if (addedPhoneReminderList.isNotEmpty) {
-                      // if (phoneReminderList.contains(
-                      //   SharedPreferencesService
-                      //       .instance
-                      //       .usersData['user']['phone'],
-                      // )) {
-                      // } else {
-                      //   phoneReminderList.add(
-                      //     SharedPreferencesService
-                      //         .instance
-                      //         .usersData['user']['phone'],
-                      //   );
-                      // }
                       model.createReminderPaid(
                         context,
                         model: model,
@@ -22737,59 +22658,59 @@ class AuthViewModel extends BaseViewModel {
   //   ),
   // );
 
-  setModalFlowUpdate({
-    AuthViewModel? model,
-    getReminderId.Data? data,
-    BuildContext? context,
-    StateSetter? setModalState,
-    ScrollController? scrollController,
-  }) {
-    if (linIndexUpdate == 2) {
-      return secondModalFlowUpdate(
-        model: model,
-        context: context,
-        setModalState: setModalState,
-        scrollController: scrollController,
-        updateReminderEntityModel: UpdateReminderEntityModel(
-          startDateTime: DateFormat(
-            'dd MMM, yyyy',
-          ).parse(dateTimeControllerUpdate.text),
-          endDateTime: DateTime.parse(endDateControllerUpdate.text),
-          durationInDays: int.parse(medDurationControllerUpdate.text),
-          timesPerDay: int.parse(medDailyInTakenControllerUpdate.text),
-          dailyDoseTimes: dailyDose,
-          dosage: _dosageLabel,
-          medicationImage: null,
-          emails: emailReminderList,
-          phoneNumbers: phoneReminderList,
-          notificationChannels: notificationChannel,
-        ),
-      );
-    } else if (linIndexUpdate == 3) {
-      return thirdModalFlowUpdate(
-        model: model,
-        context: context,
-        data: data,
-        setModalState: setModalState,
-        scrollController: scrollController,
-      );
-    } else if (linIndexUpdate == 4) {
-      return fourthModalFlowUpdate(
-        model: model,
-        context: context,
-        data: data,
-        setModalState: setModalState,
-        scrollController: scrollController,
-      );
-    }
-    return firstModalFLowUpdate(
-      model: model,
-      data: data,
-      context: context,
-      setModalState: setModalState,
-      scrollController: scrollController,
-    );
-  }
+  // setModalFlowUpdate({
+  //   AuthViewModel? model,
+  //   getReminderId.Data? data,
+  //   BuildContext? context,
+  //   StateSetter? setModalState,
+  //   ScrollController? scrollController,
+  // }) {
+  //   if (linIndexUpdate == 2) {
+  //     return secondModalFlowUpdate(
+  //       model: model,
+  //       context: context,
+  //       setModalState: setModalState,
+  //       scrollController: scrollController,
+  //       updateReminderEntityModel: UpdateReminderEntityModel(
+  //         startDateTime: DateFormat(
+  //           'dd MMM, yyyy',
+  //         ).parse(dateTimeControllerUpdate.text),
+  //         endDateTime: DateTime.parse(endDateControllerUpdate.text),
+  //         durationInDays: int.parse(medDurationControllerUpdate.text),
+  //         timesPerDay: int.parse(medDailyInTakenControllerUpdate.text),
+  //         dailyDoseTimes: dailyDose,
+  //         dosage: _dosageLabel,
+  //         medicationImage: null,
+  //         emails: emailReminderList,
+  //         phoneNumbers: phoneReminderList,
+  //         notificationChannels: notificationChannel,
+  //       ),
+  //     );
+  //   } else if (linIndexUpdate == 3) {
+  //     return thirdModalFlowUpdate(
+  //       model: model,
+  //       context: context,
+  //       data: data,
+  //       setModalState: setModalState,
+  //       scrollController: scrollController,
+  //     );
+  //   } else if (linIndexUpdate == 4) {
+  //     return fourthModalFlowUpdate(
+  //       model: model,
+  //       context: context,
+  //       data: data,
+  //       setModalState: setModalState,
+  //       scrollController: scrollController,
+  //     );
+  //   }
+  //   return firstModalFLowUpdate(
+  //     model: model,
+  //     data: data,
+  //     context: context,
+  //     setModalState: setModalState,
+  //     scrollController: scrollController,
+  //   );
+  // }
 
   TimeOfDay getTimeOfDay(String time) {
     try {
@@ -22905,2697 +22826,2697 @@ class AuthViewModel extends BaseViewModel {
     });
   }
 
-  firstModalFLowUpdate({
-    AuthViewModel? model,
-    getReminderId.Data? data,
-    BuildContext? context,
-    StateSetter? setModalState,
-    ScrollController? scrollController,
-  }) {
-    if (!_initializedUpdate) {
-      getReminderUpdate(data);
-      _initializedUpdate = true;
-    }
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(22.r),
-        color: AppColors.white,
-      ),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-        controller: scrollController,
-        child: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(height: 20, width: 20),
-                TextView(
-                  text: modalNameUpdate(),
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 16.70.sp,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.deep,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4.w),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context!);
-                    },
-                    child: SvgPicture.asset(
-                      AppImage.cancel,
-                      height: 14.20,
-                      width: 14.20,
-                      color: AppColors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 13.60.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context!).size.width * .82,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(5.0),
-                    ), // Adjust radius as needed
-                    child: LinearProgressIndicator(
-                      minHeight: 4.0, // Adjust height as needed
-                      value: linIndexUpdate / 3,
-                      color: AppColors.primary, // Progress bar color
-                      backgroundColor:
-                          Colors.grey[300], // Background track color
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                TextView(
-                  text: '$linIndexUpdate/3',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20.h),
-            Form(
-              key: firstFormReminderUpdateKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormWidget(
-                    hint: 'Medication Name',
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    hintSize: 12.42.sp,
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    controller: medNameControllerUpdate,
-                    validator: AppValidator.validateString(),
-                    readOnly: true,
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  TextFormWidget(
-                    hint: 'Drug Name',
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    hintSize: 12.42.sp,
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    readOnly: true,
-                    controller: drugNameControllerUpdate,
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  TextView(
-                    text: 'Medication Type',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  TextFormWidget(
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    readOnly: true,
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    prefixWidget: medTypeResultImageUpdate.isNotEmpty
-                        ? Padding(
-                            padding: EdgeInsets.all(10.w),
-                            child: SvgPicture.asset(
-                              isMedTypeView(medTypeResultImageUpdate),
-                              color: AppColors.primary,
-                            ),
-                          )
-                        : SizedBox.shrink(),
-                    controller: medTypeControllerUpdate,
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  // SizedBox(height: 16.h),
-                  // TextView(
-                  //   text: 'Description',
-                  //   textStyle: TextStyle(
-                  //     fontFamily: 'Arial',
-                  //     fontSize: 14.sp,
-                  //     fontWeight: FontWeight.w500,
-                  //   ),
-                  // ),
-                  // SizedBox(height: 10.h),
-                  // TextFormWidget(
-                  //   borderColor: AppColors.transparent,
-                  //   borderTopLeft: 10.r,
-                  //   borderTopRight: 10.r,
-                  //   borderBottomLeft: 10.r,
-                  //   borderBottomRight: 10.r,
-                  //   fillColor: AppColors.grey,
-                  //   isFilled: true,
-                  //   controller: descriptionControllerUpdate,
-                  //   validator: AppValidator.validateString(),
-                  //   style: TextStyle(
-                  //     fontSize: 16.20.sp,
-                  //     fontWeight: FontWeight.w400,
-                  //     fontFamily: 'GoogleSans',
-                  //   ),
-                  // ),
-                  SizedBox(height: 16.h),
-                  TextView(
-                    text: 'Medication picture upload',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: DottedBorder(
-                      options: RoundedRectDottedBorderOptions(
-                        dashPattern: [3, 3],
-                        strokeWidth: .94,
-                        radius: Radius.circular(10),
-                        color: AppColors.infoGrey1,
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 16.20.w,
-                          horizontal: 16.0.w,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          color: AppColors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 140.w,
-                              height: 84.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: model!.imageDrug != null
-                                    ? Image.file(
-                                        model.imageDrug!,
-                                        height: 75.80.h,
-                                        width: 70.80.w,
-                                      )
-                                    : SvgPicture.asset(AppImage.image_icon),
-                              ),
-                            ),
-                            model.imageDrug != null
-                                ? Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          model.imageDrug = null;
-                                          model.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.delete,
-                                          height: 16.68.h,
-                                          width: 15.2.w,
-                                        ),
-                                      ),
-                                      SizedBox(width: 18.30.w),
-                                      GestureDetector(
-                                        onTap: () => model.pickDrugImageUpdate(
-                                          context: context,
-                                          id: data!.medication!.id,
-                                        ),
-                                        child: SvgPicture.asset(
-                                          AppImage.upload,
-                                          height: 17.0.h,
-                                          width: 16.68.w,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : GestureDetector(
-                                    onTap: () => model.pickDrugImageUpdate(
-                                      context: context,
-                                      id: data!.medication!.id,
-                                    ),
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 22.w,
-                                        vertical: 10.10.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(32),
-                                        color: AppColors.grey,
-                                      ),
-                                      child: TextView(
-                                        text: 'Upload',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.40.sp,
-                                          color: AppColors.deep,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextView(
-                    text: 'SET SCHEDULE AND DOSAGE',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 14.80.sp,
-                      color: AppColors.grey1,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Divider(color: AppColors.grey),
-                  SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      TextView(
-                        text: 'Dosage ',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.6.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      TextView(
-                        text: '(mg)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.60.sp,
-                          color: AppColors.grey1,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 14.0.h),
-                  TextFormWidget(
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    controller: medDosageControllerUpdate,
-                    // label: _dosageLabel,
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 14.80.sp,
-                      color: AppColors.infoGrey,
-                    ),
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    readOnly: true,
-                    suffixWidget: IconButton(
-                      onPressed: () async {
-                        final result = await showMedDosageMenu(
-                          context: context,
-                          type: medTypeController.text,
-                        );
-                        if (result != null) {
-                          setModalState!(() {
-                            // medDosageControllerUpdate.text = model
-                            //     .getStringFrLabel(result);
-                            _dosageLabel = medDosageControllerUpdate.text;
-                          });
-                        }
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.grey1,
-                        size: 20.sp,
-                      ),
-                    ),
-                    style: TextStyle(
-                      fontSize: 15.0.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      color: AppColors.infoGrey.withOpacity(.90),
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextFormWidget(
-                    hint: 'Start Date & Time',
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    readOnly: true,
-                    hintSize: 12.42.sp,
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    controller: dateTimeControllerUpdate,
-                    suffixWidget: Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: GestureDetector(
-                        onTap: () => selectDateUpdate(context),
-                        child: SvgPicture.asset(
-                          AppImage.calendar,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  // TextFormWidget(
-                  //   hint: 'Duration',
-                  //   label: 'E.g 15',
-                  //   borderColor: AppColors.transparent,
-                  //   keyboardType: TextInputType.number,
-                  //   floatingLabelBehavior: FloatingLabelBehavior.never,
-                  //   borderTopLeft: 10.r,
-                  //   borderTopRight: 10.r,
-                  //   borderBottomLeft: 10.r,
-                  //   borderBottomRight: 10.r,
-                  //   hintSize: 12.42.sp,
-                  //   fillColor: AppColors.grey,
-                  //   isFilled: true,
-                  //   controller: medDurationControllerUpdate,
-                  //   onChange: (p0) {
-                  //     if (p0 != null && p0.trim().isNotEmpty) {
-                  //       final parsed = int.tryParse(p0.trim());
-                  //       if (parsed != null) {
-                  //         _duration = parsed;
-                  //         intList = List.generate(_duration!, (index) => index);
-                  //         dateTimeObject = inputFormat.parse(
-                  //           model.pickedDate ?? dateTimeControllerUpdate.text,
-                  //         );
-                  //         final localDate = dateTimeObject!;
-                  //         final utcStartDate = DateTime.utc(
-                  //           localDate.year,
-                  //           localDate.month,
-                  //           localDate.day,
-                  //         );
+  // firstModalFLowUpdate({
+  //   AuthViewModel? model,
+  //   getReminderId.Data? data,
+  //   BuildContext? context,
+  //   StateSetter? setModalState,
+  //   ScrollController? scrollController,
+  // }) {
+  //   if (!_initializedUpdate) {
+  //     getReminderUpdate(data);
+  //     _initializedUpdate = true;
+  //   }
+  //   return Container(
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(22.r),
+  //       color: AppColors.white,
+  //     ),
+  //     child: SingleChildScrollView(
+  //       padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+  //       controller: scrollController,
+  //       child: Column(
+  //         children: [
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               SizedBox(height: 20, width: 20),
+  //               TextView(
+  //                 text: modalNameUpdate(),
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'GoogleSans',
+  //                   fontSize: 16.70.sp,
+  //                   fontWeight: FontWeight.w700,
+  //                   color: AppColors.deep,
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: EdgeInsets.only(top: 4.w),
+  //                 child: GestureDetector(
+  //                   onTap: () {
+  //                     Navigator.pop(context!);
+  //                   },
+  //                   child: SvgPicture.asset(
+  //                     AppImage.cancel,
+  //                     height: 14.20,
+  //                     width: 14.20,
+  //                     color: AppColors.black,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           SizedBox(height: 13.60.h),
+  //           Row(
+  //             mainAxisAlignment: MainAxisAlignment.end,
+  //             children: [
+  //               SizedBox(
+  //                 width: MediaQuery.of(context!).size.width * .82,
+  //                 child: ClipRRect(
+  //                   borderRadius: const BorderRadius.all(
+  //                     Radius.circular(5.0),
+  //                   ), // Adjust radius as needed
+  //                   child: LinearProgressIndicator(
+  //                     minHeight: 4.0, // Adjust height as needed
+  //                     value: linIndexUpdate / 3,
+  //                     color: AppColors.primary, // Progress bar color
+  //                     backgroundColor:
+  //                         Colors.grey[300], // Background track color
+  //                   ),
+  //                 ),
+  //               ),
+  //               SizedBox(width: 10.w),
+  //               TextView(
+  //                 text: '$linIndexUpdate/3',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 13.2.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.reminder,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           SizedBox(height: 20.h),
+  //           Form(
+  //             key: firstFormReminderUpdateKey,
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 TextFormWidget(
+  //                   hint: 'Medication Name',
+  //                   borderColor: AppColors.transparent,
+  //                   borderTopLeft: 10.r,
+  //                   borderTopRight: 10.r,
+  //                   borderBottomLeft: 10.r,
+  //                   borderBottomRight: 10.r,
+  //                   hintSize: 12.42.sp,
+  //                   fillColor: AppColors.grey,
+  //                   isFilled: true,
+  //                   controller: medNameControllerUpdate,
+  //                   validator: AppValidator.validateString(),
+  //                   readOnly: true,
+  //                   style: TextStyle(
+  //                     fontSize: 16.20.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'GoogleSans',
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 16.h),
+  //                 TextFormWidget(
+  //                   hint: 'Drug Name',
+  //                   borderColor: AppColors.transparent,
+  //                   borderTopLeft: 10.r,
+  //                   borderTopRight: 10.r,
+  //                   borderBottomLeft: 10.r,
+  //                   borderBottomRight: 10.r,
+  //                   hintSize: 12.42.sp,
+  //                   fillColor: AppColors.grey,
+  //                   isFilled: true,
+  //                   readOnly: true,
+  //                   controller: drugNameControllerUpdate,
+  //                   validator: AppValidator.validateString(),
+  //                   style: TextStyle(
+  //                     fontSize: 16.20.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'GoogleSans',
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 16.h),
+  //                 TextView(
+  //                   text: 'Medication Type',
+  //                   textStyle: TextStyle(
+  //                     fontFamily: 'Arial',
+  //                     fontSize: 14.sp,
+  //                     fontWeight: FontWeight.w500,
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 12.h),
+  //                 TextFormWidget(
+  //                   borderColor: AppColors.transparent,
+  //                   borderTopLeft: 10.r,
+  //                   borderTopRight: 10.r,
+  //                   borderBottomLeft: 10.r,
+  //                   borderBottomRight: 10.r,
+  //                   readOnly: true,
+  //                   fillColor: AppColors.grey,
+  //                   isFilled: true,
+  //                   prefixWidget: medTypeResultImageUpdate.isNotEmpty
+  //                       ? Padding(
+  //                           padding: EdgeInsets.all(10.w),
+  //                           child: SvgPicture.asset(
+  //                             isMedTypeView(medTypeResultImageUpdate),
+  //                             color: AppColors.primary,
+  //                           ),
+  //                         )
+  //                       : SizedBox.shrink(),
+  //                   controller: medTypeControllerUpdate,
+  //                   validator: AppValidator.validateString(),
+  //                   style: TextStyle(
+  //                     fontSize: 16.20.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'GoogleSans',
+  //                   ),
+  //                 ),
+  //                 // SizedBox(height: 16.h),
+  //                 // TextView(
+  //                 //   text: 'Description',
+  //                 //   textStyle: TextStyle(
+  //                 //     fontFamily: 'Arial',
+  //                 //     fontSize: 14.sp,
+  //                 //     fontWeight: FontWeight.w500,
+  //                 //   ),
+  //                 // ),
+  //                 // SizedBox(height: 10.h),
+  //                 // TextFormWidget(
+  //                 //   borderColor: AppColors.transparent,
+  //                 //   borderTopLeft: 10.r,
+  //                 //   borderTopRight: 10.r,
+  //                 //   borderBottomLeft: 10.r,
+  //                 //   borderBottomRight: 10.r,
+  //                 //   fillColor: AppColors.grey,
+  //                 //   isFilled: true,
+  //                 //   controller: descriptionControllerUpdate,
+  //                 //   validator: AppValidator.validateString(),
+  //                 //   style: TextStyle(
+  //                 //     fontSize: 16.20.sp,
+  //                 //     fontWeight: FontWeight.w400,
+  //                 //     fontFamily: 'GoogleSans',
+  //                 //   ),
+  //                 // ),
+  //                 SizedBox(height: 16.h),
+  //                 TextView(
+  //                   text: 'Medication picture upload',
+  //                   textStyle: TextStyle(
+  //                     fontFamily: 'Arial',
+  //                     fontSize: 14.sp,
+  //                     fontWeight: FontWeight.w500,
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 10.h),
+  //                 SizedBox(
+  //                   width: double.infinity,
+  //                   child: DottedBorder(
+  //                     options: RoundedRectDottedBorderOptions(
+  //                       dashPattern: [3, 3],
+  //                       strokeWidth: .94,
+  //                       radius: Radius.circular(10),
+  //                       color: AppColors.infoGrey1,
+  //                     ),
+  //                     child: Container(
+  //                       width: double.infinity,
+  //                       padding: EdgeInsets.symmetric(
+  //                         vertical: 16.20.w,
+  //                         horizontal: 16.0.w,
+  //                       ),
+  //                       decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(10.r),
+  //                         color: AppColors.white,
+  //                       ),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           Container(
+  //                             width: 140.w,
+  //                             height: 84.h,
+  //                             decoration: BoxDecoration(
+  //                               color: AppColors.grey,
+  //                               borderRadius: BorderRadius.circular(10),
+  //                             ),
+  //                             child: Center(
+  //                               child: model!.imageDrug != null
+  //                                   ? Image.file(
+  //                                       model.imageDrug!,
+  //                                       height: 75.80.h,
+  //                                       width: 70.80.w,
+  //                                     )
+  //                                   : SvgPicture.asset(AppImage.image_icon),
+  //                             ),
+  //                           ),
+  //                           model.imageDrug != null
+  //                               ? Row(
+  //                                   children: [
+  //                                     GestureDetector(
+  //                                       onTap: () {
+  //                                         model.imageDrug = null;
+  //                                         model.notifyListeners();
+  //                                       },
+  //                                       child: SvgPicture.asset(
+  //                                         AppImage.delete,
+  //                                         height: 16.68.h,
+  //                                         width: 15.2.w,
+  //                                       ),
+  //                                     ),
+  //                                     SizedBox(width: 18.30.w),
+  //                                     GestureDetector(
+  //                                       onTap: () => model.pickDrugImageUpdate(
+  //                                         context: context,
+  //                                         id: data!.medication!.id,
+  //                                       ),
+  //                                       child: SvgPicture.asset(
+  //                                         AppImage.upload,
+  //                                         height: 17.0.h,
+  //                                         width: 16.68.w,
+  //                                       ),
+  //                                     ),
+  //                                   ],
+  //                                 )
+  //                               : GestureDetector(
+  //                                   onTap: () => model.pickDrugImageUpdate(
+  //                                     context: context,
+  //                                     id: data!.medication!.id,
+  //                                   ),
+  //                                   child: Container(
+  //                                     padding: EdgeInsets.symmetric(
+  //                                       horizontal: 22.w,
+  //                                       vertical: 10.10.w,
+  //                                     ),
+  //                                     decoration: BoxDecoration(
+  //                                       borderRadius: BorderRadius.circular(32),
+  //                                       color: AppColors.grey,
+  //                                     ),
+  //                                     child: TextView(
+  //                                       text: 'Upload',
+  //                                       textStyle: TextStyle(
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 14.40.sp,
+  //                                         color: AppColors.deep,
+  //                                         fontWeight: FontWeight.w400,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 24.0.h),
+  //                 TextView(
+  //                   text: 'SET SCHEDULE AND DOSAGE',
+  //                   textStyle: TextStyle(
+  //                     fontFamily: 'GoogleSans',
+  //                     fontSize: 14.80.sp,
+  //                     color: AppColors.grey1,
+  //                     fontWeight: FontWeight.w500,
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 12.h),
+  //                 Divider(color: AppColors.grey),
+  //                 SizedBox(height: 12.h),
+  //                 Row(
+  //                   children: [
+  //                     TextView(
+  //                       text: 'Dosage ',
+  //                       textStyle: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         fontSize: 14.6.sp,
+  //                         fontWeight: FontWeight.w500,
+  //                       ),
+  //                     ),
+  //                     TextView(
+  //                       text: '(mg)',
+  //                       textStyle: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         fontSize: 14.60.sp,
+  //                         color: AppColors.grey1,
+  //                         fontWeight: FontWeight.w500,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 SizedBox(height: 14.0.h),
+  //                 TextFormWidget(
+  //                   borderColor: AppColors.transparent,
+  //                   borderTopLeft: 10.r,
+  //                   borderTopRight: 10.r,
+  //                   borderBottomLeft: 10.r,
+  //                   borderBottomRight: 10.r,
+  //                   controller: medDosageControllerUpdate,
+  //                   // label: _dosageLabel,
+  //                   labelStyle: TextStyle(
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'Arial',
+  //                     fontSize: 14.80.sp,
+  //                     color: AppColors.infoGrey,
+  //                   ),
+  //                   fillColor: AppColors.grey,
+  //                   isFilled: true,
+  //                   readOnly: true,
+  //                   suffixWidget: IconButton(
+  //                     onPressed: () async {
+  //                       final result = await showMedDosageMenu(
+  //                         context: context,
+  //                         type: medTypeController.text,
+  //                       );
+  //                       if (result != null) {
+  //                         setModalState!(() {
+  //                           // medDosageControllerUpdate.text = model
+  //                           //     .getStringFrLabel(result);
+  //                           _dosageLabel = medDosageControllerUpdate.text;
+  //                         });
+  //                       }
+  //                     },
+  //                     icon: Icon(
+  //                       Icons.keyboard_arrow_down,
+  //                       color: AppColors.grey1,
+  //                       size: 20.sp,
+  //                     ),
+  //                   ),
+  //                   style: TextStyle(
+  //                     fontSize: 15.0.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'Arial',
+  //                     color: AppColors.infoGrey.withOpacity(.90),
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 24.0.h),
+  //                 TextFormWidget(
+  //                   hint: 'Start Date & Time',
+  //                   borderColor: AppColors.transparent,
+  //                   borderTopLeft: 10.r,
+  //                   borderTopRight: 10.r,
+  //                   borderBottomLeft: 10.r,
+  //                   borderBottomRight: 10.r,
+  //                   readOnly: true,
+  //                   hintSize: 12.42.sp,
+  //                   fillColor: AppColors.grey,
+  //                   isFilled: true,
+  //                   controller: dateTimeControllerUpdate,
+  //                   suffixWidget: Padding(
+  //                     padding: EdgeInsets.all(8.w),
+  //                     child: GestureDetector(
+  //                       onTap: () => selectDateUpdate(context),
+  //                       child: SvgPicture.asset(
+  //                         AppImage.calendar,
+  //                         fit: BoxFit.cover,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   validator: AppValidator.validateString(),
+  //                   style: TextStyle(
+  //                     fontSize: 16.20.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'GoogleSans',
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 24.0.h),
+  //                 // TextFormWidget(
+  //                 //   hint: 'Duration',
+  //                 //   label: 'E.g 15',
+  //                 //   borderColor: AppColors.transparent,
+  //                 //   keyboardType: TextInputType.number,
+  //                 //   floatingLabelBehavior: FloatingLabelBehavior.never,
+  //                 //   borderTopLeft: 10.r,
+  //                 //   borderTopRight: 10.r,
+  //                 //   borderBottomLeft: 10.r,
+  //                 //   borderBottomRight: 10.r,
+  //                 //   hintSize: 12.42.sp,
+  //                 //   fillColor: AppColors.grey,
+  //                 //   isFilled: true,
+  //                 //   controller: medDurationControllerUpdate,
+  //                 //   onChange: (p0) {
+  //                 //     if (p0 != null && p0.trim().isNotEmpty) {
+  //                 //       final parsed = int.tryParse(p0.trim());
+  //                 //       if (parsed != null) {
+  //                 //         _duration = parsed;
+  //                 //         intList = List.generate(_duration!, (index) => index);
+  //                 //         dateTimeObject = inputFormat.parse(
+  //                 //           model.pickedDate ?? dateTimeControllerUpdate.text,
+  //                 //         );
+  //                 //         final localDate = dateTimeObject!;
+  //                 //         final utcStartDate = DateTime.utc(
+  //                 //           localDate.year,
+  //                 //           localDate.month,
+  //                 //           localDate.day,
+  //                 //         );
 
-                  //         // Now safely add your duration
-                  //         final utcEndDate = utcStartDate.add(
-                  //           Duration(
-                  //             days: _duration != null
-                  //                 ? _duration! - 1
-                  //                 : int.parse(
-                  //                         medDurationControllerUpdate.text,
-                  //                       ) -
-                  //                       1,
-                  //           ),
-                  //         );
+  //                 //         // Now safely add your duration
+  //                 //         final utcEndDate = utcStartDate.add(
+  //                 //           Duration(
+  //                 //             days: _duration != null
+  //                 //                 ? _duration! - 1
+  //                 //                 : int.parse(
+  //                 //                         medDurationControllerUpdate.text,
+  //                 //                       ) -
+  //                 //                       1,
+  //                 //           ),
+  //                 //         );
 
-                  //         // Display or store
-                  //         endDateControllerUpdate.text = utcEndDate
-                  //             .toIso8601String();
-                  //         endDateIso = utcEndDate.toIso8601String();
-                  //       } else {
-                  //         // Optional: handle invalid input (e.g., show error or clear output)
-                  //         print('⚠️ Invalid number input: $p0');
-                  //       }
-                  //     } else {
-                  //       // Optional: clear output when input is empty
-                  //       endDateControllerUpdate.clear();
-                  //     }
-                  //     model.notifyListeners();
-                  //   },
-                  //   style: TextStyle(
-                  //     fontSize: 16.20.sp,
-                  //     fontWeight: FontWeight.w400,
-                  //     fontFamily: 'GoogleSans',
-                  //   ),
-                  //   labelStyle: TextStyle(
-                  //     fontSize: 16.20.sp,
-                  //     fontWeight: FontWeight.w400,
-                  //     fontFamily: 'GoogleSans',
-                  //     color: AppColors.infoGrey,
-                  //   ),
-                  // ),
-                  SizedBox(height: 24.0.h),
-                  Row(
-                    children: [
-                      TextView(
-                        text: 'End Date ',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Icon(
-                        Icons.info_outline,
-                        color: AppColors.yellow,
-                        size: 20.sp,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 14.0.h),
-                  TextFormWidget(
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    label: endDateControllerUpdate.text.isNotEmpty
-                        ? DateFormat(
-                            'dd MMM, yyyy',
-                          ).format(DateTime.parse(endDateControllerUpdate.text))
-                        : '',
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 16.2.sp,
-                      color: AppColors.infoGrey,
-                    ),
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    readOnly: true,
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                    hintSize: 14.sp,
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextFormWidget(
-                    hint: 'No of Times to be taken daily',
-                    borderColor: AppColors.transparent,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    hintSize: 12.52.sp,
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    readOnly: true,
-                    controller: medDailyInTakenControllerUpdate,
-                    suffixWidget: IconButton(
-                      onPressed: () async {
-                        final result = await showDailyInTakeMenu(
-                          context: context,
-                          setModalState: setModalState,
-                          model: model,
-                        );
-                        if (result != null) {
-                          setModalState!(() {
-                            medDailyInTakenControllerUpdate.text = result;
-                            model.notifyListeners();
-                          });
-                        }
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.grey1,
-                        size: 20.sp,
-                      ),
-                    ),
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  if (intList.isNotEmpty &&
-                      medDailyInTakenControllerUpdate.text.isNotEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...intList.map(
-                          (e) => updateDosageWidgetContainer(
-                            context: context,
-                            callback: e,
-                            listOfTimes: List.generate(
-                              int.parse(medDailyInTakenControllerUpdate.text),
-                              (index) => index,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 14.0.h),
-                        TextView(
-                          text: 'Add Note',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        TextFormWidget(
-                          borderColor: AppColors.transparent,
-                          borderTopLeft: 10.r,
-                          borderTopRight: 10.r,
-                          borderBottomLeft: 10.r,
-                          borderBottomRight: 10.r,
-                          controller: noteControllerUpdate,
-                          fillColor: AppColors.grey,
-                          isFilled: true, // Minimum number of lines visible
-                          maxline:
-                              3, // Maximum number of lines visible before scrolling
-                          keyboardType: TextInputType.multiline,
-                          validator: AppValidator.validateString(),
-                          style: TextStyle(
-                            fontSize: 16.20.sp,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'GoogleSans',
-                          ),
-                        ),
-                        SizedBox(height: 30.h),
-                        ButtonWidget(
-                          border: 100.r,
-                          buttonColor: AppColors.primary,
-                          buttonText: 'Next',
-                          color: AppColors.white,
-                          buttonBorderColor: AppColors.transparent,
-                          onPressed: () async {
-                            if (firstFormReminderUpdateKey.currentState!
-                                .validate()) {
-                              await loopDoseMethod();
-                              linIndexUpdate++;
-                              logger.d(doseControllersUpdate);
-                              model.notifyListeners();
-                            }
-                          },
-                        ),
-                        SizedBox(height: 130.h),
-                      ],
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  //                 //         // Display or store
+  //                 //         endDateControllerUpdate.text = utcEndDate
+  //                 //             .toIso8601String();
+  //                 //         endDateIso = utcEndDate.toIso8601String();
+  //                 //       } else {
+  //                 //         // Optional: handle invalid input (e.g., show error or clear output)
+  //                 //         print('⚠️ Invalid number input: $p0');
+  //                 //       }
+  //                 //     } else {
+  //                 //       // Optional: clear output when input is empty
+  //                 //       endDateControllerUpdate.clear();
+  //                 //     }
+  //                 //     model.notifyListeners();
+  //                 //   },
+  //                 //   style: TextStyle(
+  //                 //     fontSize: 16.20.sp,
+  //                 //     fontWeight: FontWeight.w400,
+  //                 //     fontFamily: 'GoogleSans',
+  //                 //   ),
+  //                 //   labelStyle: TextStyle(
+  //                 //     fontSize: 16.20.sp,
+  //                 //     fontWeight: FontWeight.w400,
+  //                 //     fontFamily: 'GoogleSans',
+  //                 //     color: AppColors.infoGrey,
+  //                 //   ),
+  //                 // ),
+  //                 SizedBox(height: 24.0.h),
+  //                 Row(
+  //                   children: [
+  //                     TextView(
+  //                       text: 'End Date ',
+  //                       textStyle: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         fontSize: 14.sp,
+  //                         fontWeight: FontWeight.w500,
+  //                       ),
+  //                     ),
+  //                     Icon(
+  //                       Icons.info_outline,
+  //                       color: AppColors.yellow,
+  //                       size: 20.sp,
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 SizedBox(height: 14.0.h),
+  //                 TextFormWidget(
+  //                   borderColor: AppColors.transparent,
+  //                   borderTopLeft: 10.r,
+  //                   borderTopRight: 10.r,
+  //                   borderBottomLeft: 10.r,
+  //                   borderBottomRight: 10.r,
+  //                   label: endDateControllerUpdate.text.isNotEmpty
+  //                       ? DateFormat(
+  //                           'dd MMM, yyyy',
+  //                         ).format(DateTime.parse(endDateControllerUpdate.text))
+  //                       : '',
+  //                   labelStyle: TextStyle(
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'Arial',
+  //                     fontSize: 16.2.sp,
+  //                     color: AppColors.infoGrey,
+  //                   ),
+  //                   fillColor: AppColors.grey,
+  //                   isFilled: true,
+  //                   readOnly: true,
+  //                   style: TextStyle(
+  //                     fontSize: 16.20.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'GoogleSans',
+  //                   ),
+  //                   hintSize: 14.sp,
+  //                 ),
+  //                 SizedBox(height: 24.0.h),
+  //                 TextFormWidget(
+  //                   hint: 'No of Times to be taken daily',
+  //                   borderColor: AppColors.transparent,
+  //                   borderTopLeft: 10.r,
+  //                   borderTopRight: 10.r,
+  //                   borderBottomLeft: 10.r,
+  //                   borderBottomRight: 10.r,
+  //                   hintSize: 12.52.sp,
+  //                   fillColor: AppColors.grey,
+  //                   isFilled: true,
+  //                   readOnly: true,
+  //                   controller: medDailyInTakenControllerUpdate,
+  //                   suffixWidget: IconButton(
+  //                     onPressed: () async {
+  //                       final result = await showDailyInTakeMenu(
+  //                         context: context,
+  //                         setModalState: setModalState,
+  //                         model: model,
+  //                       );
+  //                       if (result != null) {
+  //                         setModalState!(() {
+  //                           medDailyInTakenControllerUpdate.text = result;
+  //                           model.notifyListeners();
+  //                         });
+  //                       }
+  //                     },
+  //                     icon: Icon(
+  //                       Icons.keyboard_arrow_down,
+  //                       color: AppColors.grey1,
+  //                       size: 20.sp,
+  //                     ),
+  //                   ),
+  //                   validator: AppValidator.validateString(),
+  //                   style: TextStyle(
+  //                     fontSize: 16.20.sp,
+  //                     fontWeight: FontWeight.w400,
+  //                     fontFamily: 'GoogleSans',
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 24.0.h),
+  //                 if (intList.isNotEmpty &&
+  //                     medDailyInTakenControllerUpdate.text.isNotEmpty)
+  //                   Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       ...intList.map(
+  //                         (e) => updateDosageWidgetContainer(
+  //                           context: context,
+  //                           callback: e,
+  //                           listOfTimes: List.generate(
+  //                             int.parse(medDailyInTakenControllerUpdate.text),
+  //                             (index) => index,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 14.0.h),
+  //                       TextView(
+  //                         text: 'Add Note',
+  //                         textStyle: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 14.sp,
+  //                           fontWeight: FontWeight.w500,
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 10.h),
+  //                       TextFormWidget(
+  //                         borderColor: AppColors.transparent,
+  //                         borderTopLeft: 10.r,
+  //                         borderTopRight: 10.r,
+  //                         borderBottomLeft: 10.r,
+  //                         borderBottomRight: 10.r,
+  //                         controller: noteControllerUpdate,
+  //                         fillColor: AppColors.grey,
+  //                         isFilled: true, // Minimum number of lines visible
+  //                         maxline:
+  //                             3, // Maximum number of lines visible before scrolling
+  //                         keyboardType: TextInputType.multiline,
+  //                         validator: AppValidator.validateString(),
+  //                         style: TextStyle(
+  //                           fontSize: 16.20.sp,
+  //                           fontWeight: FontWeight.w400,
+  //                           fontFamily: 'GoogleSans',
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 30.h),
+  //                       ButtonWidget(
+  //                         border: 100.r,
+  //                         buttonColor: AppColors.primary,
+  //                         buttonText: 'Next',
+  //                         color: AppColors.white,
+  //                         buttonBorderColor: AppColors.transparent,
+  //                         onPressed: () async {
+  //                           if (firstFormReminderUpdateKey.currentState!
+  //                               .validate()) {
+  //                             await loopDoseMethod();
+  //                             linIndexUpdate++;
+  //                             logger.d(doseControllersUpdate);
+  //                             model.notifyListeners();
+  //                           }
+  //                         },
+  //                       ),
+  //                       SizedBox(height: 130.h),
+  //                     ],
+  //                   ),
+  //               ],
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  secondModalFlowUpdate({
-    AuthViewModel? model,
-    StateSetter? setModalState,
-    ScrollController? scrollController,
-    BuildContext? context,
-    UpdateReminderEntityModel? updateReminderEntityModel,
-  }) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(22.r),
-      color: AppColors.white,
-    ),
-    child: SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-      controller: scrollController,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: 20, width: 20),
-              TextView(
-                text: modalNameUpdate(),
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 16.70.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.deep,
-                ),
-              ),
+  // secondModalFlowUpdate({
+  //   AuthViewModel? model,
+  //   StateSetter? setModalState,
+  //   ScrollController? scrollController,
+  //   BuildContext? context,
+  //   UpdateReminderEntityModel? updateReminderEntityModel,
+  // }) => Container(
+  //   decoration: BoxDecoration(
+  //     borderRadius: BorderRadius.circular(22.r),
+  //     color: AppColors.white,
+  //   ),
+  //   child: SingleChildScrollView(
+  //     padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+  //     controller: scrollController,
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             SizedBox(height: 20, width: 20),
+  //             TextView(
+  //               text: modalNameUpdate(),
+  //               textStyle: TextStyle(
+  //                 fontFamily: 'GoogleSans',
+  //                 fontSize: 16.70.sp,
+  //                 fontWeight: FontWeight.w700,
+  //                 color: AppColors.deep,
+  //               ),
+  //             ),
 
-              Padding(
-                padding: EdgeInsets.only(top: 4.w),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context!);
-                  },
-                  child: SvgPicture.asset(
-                    AppImage.cancel,
-                    height: 14.20,
-                    width: 14.20,
-                    color: AppColors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 13.60.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context!).size.width * .82,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(5.0),
-                  ), // Adjust radius as needed
-                  child: LinearProgressIndicator(
-                    minHeight: 4.0, // Adjust height as needed
-                    value: linIndexUpdate / 3,
-                    color: AppColors.primary, // Progress bar color
-                    backgroundColor: Colors.grey[300], // Background track color
-                  ),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              TextView(
-                text: '$linIndexUpdate/3',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          SizedBox(height: 16.20.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
-            decoration: BoxDecoration(
-              color: AppColors.grey,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'Medication Name',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: medNameControllerUpdate.text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Drug Name',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: drugNameControllerUpdate.text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 24.w,
-                    horizontal: 108.0.w,
-                  ),
-                  width: double.infinity,
-                  height: 140.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: imageReminderUpdate == ''
-                      ? Padding(
-                          padding: EdgeInsets.all(8.w),
-                          child: SvgPicture.asset(
-                            color: AppColors.primary,
-                            model!.errorRemidnderImage(
-                              medTypeControllerUpdate.text,
-                            ),
-                            height: 70.h,
-                            width: 70.w,
-                          ),
-                        )
-                      : Image.network(
-                          imageReminderUpdate!,
-                          errorBuilder: (context, error, stackTrace) => Padding(
-                            padding: EdgeInsets.all(8.w),
-                            child: SvgPicture.asset(
-                              color: AppColors.primary,
-                              model!.errorRemidnderImage(
-                                medTypeControllerUpdate.text,
-                              ),
-                              height: 70.h,
-                              width: 70.w,
-                            ),
-                          ),
-                        ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Medication Type',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      isMedTypeView(medTypeControllerUpdate.text),
-                    ),
-                    SizedBox(width: 6.0.w),
-                    TextView(
-                      text: medTypeControllerUpdate.text,
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.black,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-          SizedBox(height: 24.h),
-          TextView(
-            text: 'SET SCHEDULE AND DOSAGE',
-            textStyle: TextStyle(
-              fontFamily: 'GoogleSans',
-              fontSize: 14.80.sp,
-              color: AppColors.grey1,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Divider(color: AppColors.grey),
-          SizedBox(height: 12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
-            decoration: BoxDecoration(
-              color: AppColors.grey,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'Dosage',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: _dosageLabel,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Start Date & Time',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: DateFormat(
-                    'dd MMM, yyyy',
-                  ).format(updateReminderEntityModel!.startDateTime!),
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Duration',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    TextView(
-                      text:
-                          '${updateReminderEntityModel.durationInDays.toString()} ${returnNumberOfDays(updateReminderEntityModel.durationInDays)}',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.black,
-                      ),
-                    ),
-                    SizedBox(width: 6.0.w),
-                    GestureDetector(
-                      onTap: () {
-                        isShowMoreSecondModalFlow = !isShowMoreSecondModalFlow;
-                        model!.notifyListeners();
-                      },
-                      child: TextView(
-                        text: isShowMoreSecondModalFlow
-                            ? 'Hide details'
-                            : 'Show more',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.primary,
-                          decoration: TextDecoration.underline,
-                          decorationColor: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-                SizedBox(height: isShowMoreSecondModalFlow ? 10.w : 0.h),
-                isShowMoreSecondModalFlow
-                    ? Column(
-                        children: [
-                          ...updateReminderEntityModel.dailyDoseTimes!
-                              .asMap()
-                              .entries
-                              .map((entry) {
-                                final i = entry.key; // 0, 1, 2
-                                final v = entry.value; // {day: x, doses: [...]}
+  //             Padding(
+  //               padding: EdgeInsets.only(top: 4.w),
+  //               child: GestureDetector(
+  //                 onTap: () {
+  //                   Navigator.pop(context!);
+  //                 },
+  //                 child: SvgPicture.asset(
+  //                   AppImage.cancel,
+  //                   height: 14.20,
+  //                   width: 14.20,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 13.60.h),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             SizedBox(
+  //               width: MediaQuery.of(context!).size.width * .82,
+  //               child: ClipRRect(
+  //                 borderRadius: const BorderRadius.all(
+  //                   Radius.circular(5.0),
+  //                 ), // Adjust radius as needed
+  //                 child: LinearProgressIndicator(
+  //                   minHeight: 4.0, // Adjust height as needed
+  //                   value: linIndexUpdate / 3,
+  //                   color: AppColors.primary, // Progress bar color
+  //                   backgroundColor: Colors.grey[300], // Background track color
+  //                 ),
+  //               ),
+  //             ),
+  //             SizedBox(width: 10.w),
+  //             TextView(
+  //               text: '$linIndexUpdate/3',
+  //               textStyle: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 13.2.sp,
+  //                 fontWeight: FontWeight.w400,
+  //                 color: AppColors.reminder,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 20.h),
+  //         SizedBox(height: 16.20.h),
+  //         Container(
+  //           width: double.infinity,
+  //           padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+  //           decoration: BoxDecoration(
+  //             color: AppColors.grey,
+  //             borderRadius: BorderRadius.circular(10.r),
+  //           ),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               TextView(
+  //                 text: 'Medication Name',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               TextView(
+  //                 text: medNameControllerUpdate.text,
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 16.0.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: 'Drug Name',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               TextView(
+  //                 text: drugNameControllerUpdate.text,
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 16.0.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               Container(
+  //                 padding: EdgeInsets.symmetric(
+  //                   vertical: 24.w,
+  //                   horizontal: 108.0.w,
+  //                 ),
+  //                 width: double.infinity,
+  //                 height: 140.h,
+  //                 decoration: BoxDecoration(
+  //                   color: AppColors.white,
+  //                   borderRadius: BorderRadius.circular(10.r),
+  //                 ),
+  //                 child: imageReminderUpdate == ''
+  //                     ? Padding(
+  //                         padding: EdgeInsets.all(8.w),
+  //                         child: SvgPicture.asset(
+  //                           color: AppColors.primary,
+  //                           model!.errorRemidnderImage(
+  //                             medTypeControllerUpdate.text,
+  //                           ),
+  //                           height: 70.h,
+  //                           width: 70.w,
+  //                         ),
+  //                       )
+  //                     : Image.network(
+  //                         imageReminderUpdate!,
+  //                         errorBuilder: (context, error, stackTrace) => Padding(
+  //                           padding: EdgeInsets.all(8.w),
+  //                           child: SvgPicture.asset(
+  //                             color: AppColors.primary,
+  //                             model!.errorRemidnderImage(
+  //                               medTypeControllerUpdate.text,
+  //                             ),
+  //                             height: 70.h,
+  //                             width: 70.w,
+  //                           ),
+  //                         ),
+  //                       ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: 'Medication Type',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 children: [
+  //                   SvgPicture.asset(
+  //                     isMedTypeView(medTypeControllerUpdate.text),
+  //                   ),
+  //                   SizedBox(width: 6.0.w),
+  //                   TextView(
+  //                     text: medTypeControllerUpdate.text,
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'Arial',
+  //                       fontSize: 16.0.sp,
+  //                       fontWeight: FontWeight.w400,
+  //                       color: AppColors.black,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //             ],
+  //           ),
+  //         ),
+  //         SizedBox(height: 24.h),
+  //         TextView(
+  //           text: 'SET SCHEDULE AND DOSAGE',
+  //           textStyle: TextStyle(
+  //             fontFamily: 'GoogleSans',
+  //             fontSize: 14.80.sp,
+  //             color: AppColors.grey1,
+  //             fontWeight: FontWeight.w500,
+  //           ),
+  //         ),
+  //         SizedBox(height: 8.h),
+  //         Divider(color: AppColors.grey),
+  //         SizedBox(height: 12.h),
+  //         Container(
+  //           width: double.infinity,
+  //           padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+  //           decoration: BoxDecoration(
+  //             color: AppColors.grey,
+  //             borderRadius: BorderRadius.circular(10.r),
+  //           ),
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               TextView(
+  //                 text: 'Dosage',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               TextView(
+  //                 text: _dosageLabel,
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 16.0.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: 'Start Date & Time',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               TextView(
+  //                 text: DateFormat(
+  //                   'dd MMM, yyyy',
+  //                 ).format(updateReminderEntityModel!.startDateTime!),
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 16.0.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: 'Duration',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.start,
+  //                 children: [
+  //                   TextView(
+  //                     text:
+  //                         '${updateReminderEntityModel.durationInDays.toString()} ${returnNumberOfDays(updateReminderEntityModel.durationInDays)}',
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'Arial',
+  //                       fontSize: 16.0.sp,
+  //                       fontWeight: FontWeight.w400,
+  //                       color: AppColors.black,
+  //                     ),
+  //                   ),
+  //                   SizedBox(width: 6.0.w),
+  //                   GestureDetector(
+  //                     onTap: () {
+  //                       isShowMoreSecondModalFlow = !isShowMoreSecondModalFlow;
+  //                       model!.notifyListeners();
+  //                     },
+  //                     child: TextView(
+  //                       text: isShowMoreSecondModalFlow
+  //                           ? 'Hide details'
+  //                           : 'Show more',
+  //                       textStyle: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         fontSize: 14.2.sp,
+  //                         fontWeight: FontWeight.w400,
+  //                         color: AppColors.primary,
+  //                         decoration: TextDecoration.underline,
+  //                         decorationColor: AppColors.primary,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               SizedBox(height: isShowMoreSecondModalFlow ? 10.w : 0.h),
+  //               isShowMoreSecondModalFlow
+  //                   ? Column(
+  //                       children: [
+  //                         ...updateReminderEntityModel.dailyDoseTimes!
+  //                             .asMap()
+  //                             .entries
+  //                             .map((entry) {
+  //                               final i = entry.key; // 0, 1, 2
+  //                               final v = entry.value; // {day: x, doses: [...]}
 
-                                return dosagePreviewUpdateWidgetContainer(
-                                  context: context,
-                                  callback: i, // ✅ now an index (int)
-                                  color: AppColors.grey,
-                                  listOfTimes: List.generate(
-                                    int.parse(
-                                      medDailyInTakenControllerUpdate.text,
-                                    ),
-                                    (index) => index,
-                                  ),
-                                  dosageMap: v,
-                                  // ✅ wrap v in a list so widget only sees one day
-                                );
-                              }),
-                        ],
-                      )
-                    : SizedBox.shrink(),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'End Date',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: DateFormat("dd MMM, y").format(
-                    DateTime.parse(
-                      updateReminderEntityModel.endDateTime.toString(),
-                    ),
-                  ),
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'No of Times to be taken',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: showNoTimes(updateReminderEntityModel.timesPerDay),
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Note',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: noteControllerUpdate.text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-          SizedBox(height: 26.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  buttonColor: AppColors.dashboard,
-                  buttonText: 'Make Updates',
-                  color: AppColors.deep,
-                  fontSize: 14.sp,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    linIndexUpdate--;
-                    model!.notifyListeners();
-                  },
-                ),
-              ),
-              SizedBox(width: 20.w),
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  fontSize: 14.sp,
-                  buttonColor: AppColors.primary,
-                  buttonText: 'Continue',
-                  color: AppColors.white,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    linIndexUpdate++;
-                    model!.notifyListeners();
-                  },
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 26.h),
-        ],
-      ),
-    ),
-  );
+  //                               return dosagePreviewUpdateWidgetContainer(
+  //                                 context: context,
+  //                                 callback: i, // ✅ now an index (int)
+  //                                 color: AppColors.grey,
+  //                                 listOfTimes: List.generate(
+  //                                   int.parse(
+  //                                     medDailyInTakenControllerUpdate.text,
+  //                                   ),
+  //                                   (index) => index,
+  //                                 ),
+  //                                 dosageMap: v,
+  //                                 // ✅ wrap v in a list so widget only sees one day
+  //                               );
+  //                             }),
+  //                       ],
+  //                     )
+  //                   : SizedBox.shrink(),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: 'End Date',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               TextView(
+  //                 text: DateFormat("dd MMM, y").format(
+  //                   DateTime.parse(
+  //                     updateReminderEntityModel.endDateTime.toString(),
+  //                   ),
+  //                 ),
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 16.0.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: 'No of Times to be taken',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               TextView(
+  //                 text: showNoTimes(updateReminderEntityModel.timesPerDay),
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 16.0.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               Divider(
+  //                 color: AppColors.infoGrey.withOpacity(.2),
+  //                 thickness: .7,
+  //               ),
+  //               SizedBox(height: 10.h),
+  //               TextView(
+  //                 text: 'Note',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 12.8.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.infoGrey,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 6.0.h),
+  //               TextView(
+  //                 text: noteControllerUpdate.text,
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'Arial',
+  //                   fontSize: 16.0.sp,
+  //                   fontWeight: FontWeight.w400,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //               SizedBox(height: 10.h),
+  //             ],
+  //           ),
+  //         ),
+  //         SizedBox(height: 26.h),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Flexible(
+  //               child: ButtonWidget(
+  //                 border: 100.r,
+  //                 buttonColor: AppColors.dashboard,
+  //                 buttonText: 'Make Updates',
+  //                 color: AppColors.deep,
+  //                 fontSize: 14.sp,
+  //                 buttonBorderColor: AppColors.transparent,
+  //                 onPressed: () {
+  //                   linIndexUpdate--;
+  //                   model!.notifyListeners();
+  //                 },
+  //               ),
+  //             ),
+  //             SizedBox(width: 20.w),
+  //             Flexible(
+  //               child: ButtonWidget(
+  //                 border: 100.r,
+  //                 fontSize: 14.sp,
+  //                 buttonColor: AppColors.primary,
+  //                 buttonText: 'Continue',
+  //                 color: AppColors.white,
+  //                 buttonBorderColor: AppColors.transparent,
+  //                 onPressed: () {
+  //                   linIndexUpdate++;
+  //                   model!.notifyListeners();
+  //                 },
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 26.h),
+  //       ],
+  //     ),
+  //   ),
+  // );
 
-  thirdModalFlowUpdate({
-    AuthViewModel? model,
-    StateSetter? setModalState,
-    ScrollController? scrollController,
-    BuildContext? context,
-    getReminderId.Data? data,
-  }) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(22.r),
-      color: AppColors.white,
-    ),
-    child: SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-      controller: scrollController,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: 20, width: 20),
-              TextView(
-                text: modalNameUpdate(),
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 16.70.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.deep,
-                ),
-              ),
+  // thirdModalFlowUpdate({
+  //   AuthViewModel? model,
+  //   StateSetter? setModalState,
+  //   ScrollController? scrollController,
+  //   BuildContext? context,
+  //   getReminderId.Data? data,
+  // }) => Container(
+  //   decoration: BoxDecoration(
+  //     borderRadius: BorderRadius.circular(22.r),
+  //     color: AppColors.white,
+  //   ),
+  //   child: SingleChildScrollView(
+  //     padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+  //     controller: scrollController,
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             SizedBox(height: 20, width: 20),
+  //             TextView(
+  //               text: modalNameUpdate(),
+  //               textStyle: TextStyle(
+  //                 fontFamily: 'GoogleSans',
+  //                 fontSize: 16.70.sp,
+  //                 fontWeight: FontWeight.w700,
+  //                 color: AppColors.deep,
+  //               ),
+  //             ),
 
-              Padding(
-                padding: EdgeInsets.only(top: 4.w),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context!);
-                  },
-                  child: SvgPicture.asset(
-                    AppImage.cancel,
-                    height: 14.20,
-                    width: 14.20,
-                    color: AppColors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 13.60.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context!).size.width * .82,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(5.0),
-                  ), // Adjust radius as needed
-                  child: LinearProgressIndicator(
-                    minHeight: 4.0, // Adjust height as needed
-                    value: linIndexUpdate / 3,
-                    color: AppColors.primary, // Progress bar color
-                    backgroundColor: Colors.grey[300], // Background track color
-                  ),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              TextView(
-                text: '$linIndexUpdate/3',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 32.h),
-          ...List.generate(channels.length, (index) {
-            return chooseUpdateNotChannelWidget(
-              context,
-              svgIcon: channels[index].notificationIcon!,
-              text: channels[index].notification!,
-              isTapped: selectedIndexes.contains(index), // ✅ reflect state
-              onTap: () {
-                if (selectedIndexes.contains(index)) {
-                  // unselect
-                  // selectedIndexes.remove(index);
-                } else {
-                  // select
-                  selectedIndexes.add(index);
-                  // ✅ Show specific dialogs
-                  if (index == 0) {
-                    // Email
-                    showEmailDialog(context);
-                  } else if ([2, 3, 4].contains(index)) {
-                    // Phone-related channels
-                    showPhoneDialog(context);
-                    isPhoneValid = false;
-                    model!.notifyListeners();
-                  }
-                } // ✅ update selection
-                buildChannelList(selectedIndexes);
-                // addCostTotal(model);
-                model!.notifyListeners();
-              },
-            );
-          }),
-          SizedBox(height: emailReminderList.isNotEmpty ? 20.h : 0.h),
+  //             Padding(
+  //               padding: EdgeInsets.only(top: 4.w),
+  //               child: GestureDetector(
+  //                 onTap: () {
+  //                   Navigator.pop(context!);
+  //                 },
+  //                 child: SvgPicture.asset(
+  //                   AppImage.cancel,
+  //                   height: 14.20,
+  //                   width: 14.20,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 13.60.h),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             SizedBox(
+  //               width: MediaQuery.of(context!).size.width * .82,
+  //               child: ClipRRect(
+  //                 borderRadius: const BorderRadius.all(
+  //                   Radius.circular(5.0),
+  //                 ), // Adjust radius as needed
+  //                 child: LinearProgressIndicator(
+  //                   minHeight: 4.0, // Adjust height as needed
+  //                   value: linIndexUpdate / 3,
+  //                   color: AppColors.primary, // Progress bar color
+  //                   backgroundColor: Colors.grey[300], // Background track color
+  //                 ),
+  //               ),
+  //             ),
+  //             SizedBox(width: 10.w),
+  //             TextView(
+  //               text: '$linIndexUpdate/3',
+  //               textStyle: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 13.2.sp,
+  //                 fontWeight: FontWeight.w400,
+  //                 color: AppColors.reminder,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 32.h),
+  //         ...List.generate(channels.length, (index) {
+  //           return chooseUpdateNotChannelWidget(
+  //             context,
+  //             svgIcon: channels[index].notificationIcon!,
+  //             text: channels[index].notification!,
+  //             isTapped: selectedIndexes.contains(index), // ✅ reflect state
+  //             onTap: () {
+  //               if (selectedIndexes.contains(index)) {
+  //                 // unselect
+  //                 // selectedIndexes.remove(index);
+  //               } else {
+  //                 // select
+  //                 selectedIndexes.add(index);
+  //                 // ✅ Show specific dialogs
+  //                 if (index == 0) {
+  //                   // Email
+  //                   showEmailDialog(context);
+  //                 } else if ([2, 3, 4].contains(index)) {
+  //                   // Phone-related channels
+  //                   showPhoneDialog(context);
+  //                   isPhoneValid = false;
+  //                   model!.notifyListeners();
+  //                 }
+  //               } // ✅ update selection
+  //               buildChannelList(selectedIndexes);
+  //               // addCostTotal(model);
+  //               model!.notifyListeners();
+  //             },
+  //           );
+  //         }),
+  //         SizedBox(height: emailReminderList.isNotEmpty ? 20.h : 0.h),
 
-          emailReminderList.isNotEmpty
-              ? isTappedEmailAdded
-                    ? Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.infoGrey1),
-                          borderRadius: BorderRadius.circular(12.r),
-                          color: AppColors.white,
-                        ),
-                        padding: EdgeInsets.all(12.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextView(
-                                  text: 'Add Email Address',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.deep,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    TextView(
-                                      text: 'Emails available',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.8.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.fineGrey,
-                                      ),
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          223,
-                                          233,
-                                          247,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
-                                        ),
-                                        border: Border.all(
-                                          color: AppColors.primary.withOpacity(
-                                            .4,
-                                          ),
-                                        ),
-                                      ),
-                                      child: TextView(
-                                        text: '${emailReminderList.length}',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 11.8.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    isTappedEmailAdded = !isTappedEmailAdded;
-                                    model!.notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImage.drop_up,
-                                    height: 22.0.h,
-                                    width: 22.0.w,
-                                  ),
-                                ),
-                                SizedBox(width: 2.w),
-                                IconButton(
-                                  onPressed: () => showEmailDialog(context),
-                                  icon: Icon(
-                                    Icons.add_circle,
-                                    color: AppColors.primary1,
-                                    size: 24.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: AppColors.infoGrey1),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.infoGrey1),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12.r),
-                                  topRight: Radius.circular(12.r),
-                                ),
-                                color: AppColors.dashboard,
-                              ),
-                              padding: EdgeInsets.all(12.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Add Email Address',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 16.2.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.deep,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          TextView(
-                                            text: 'Emails available',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14.8.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                223,
-                                                233,
-                                                247,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              border: Border.all(
-                                                color: AppColors.primary
-                                                    .withOpacity(.4),
-                                              ),
-                                            ),
-                                            child: TextView(
-                                              text:
-                                                  '${emailReminderList.length}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 11.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          isTappedEmailAdded =
-                                              !isTappedEmailAdded;
-                                          model!.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.drop_up,
-                                          height: 22.0.h,
-                                          width: 22.0.w,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2.w),
-                                      IconButton(
-                                        onPressed: () =>
-                                            showEmailDialog(context),
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: AppColors.primary1,
-                                          size: 24.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 15.20.h),
-                            ...emailReminderList.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final o = entry.value;
-                              final isLast =
-                                  index == emailReminderList.length - 1;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 12.20.w,
-                                      right: 20.w,
-                                      bottom: 12.w,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (addedEmailReminderList.contains(
-                                              o,
-                                            )) {
-                                              addedEmailReminderList.remove(o);
-                                            } else {
-                                              addedEmailReminderList.add(o);
-                                            }
-                                            model!.notifyListeners();
-                                          },
-                                          child: Container(
-                                            padding:
-                                                addedEmailReminderList.contains(
-                                                  o,
-                                                )
-                                                ? EdgeInsets.all(4.0.w)
-                                                : EdgeInsets.all(10.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(6.r),
-                                              color:
-                                                  addedEmailReminderList
-                                                      .contains(o)
-                                                  ? AppColors.primary
-                                                  : AppColors.transparent,
-                                              border: Border.all(
-                                                color:
-                                                    addedEmailReminderList
-                                                        .contains(o)
-                                                    ? AppColors.transparent
-                                                    : AppColors.infoGrey,
-                                                width: .78,
-                                              ),
-                                            ),
-                                            child:
-                                                addedEmailReminderList.contains(
-                                                  o,
-                                                )
-                                                ? Icon(
-                                                    Icons.check,
-                                                    size: 12.sp,
-                                                    color: AppColors.white,
-                                                  )
-                                                : SizedBox.shrink(),
-                                          ),
-                                        ),
-                                        // Transform.scale(
-                                        //   scale:
-                                        //       MediaQuery.of(
-                                        //             context,
-                                        //           ).size.shortestSide >=
-                                        //           600
-                                        //       ? 1.5
-                                        //       : 1.1,
-                                        //   child: Checkbox(
-                                        //     value: addedEmailReminderList
-                                        //         .contains(o),
-                                        //     onChanged: (_) {
-                                        //       if (addedEmailReminderList
-                                        //           .contains(o)) {
-                                        //         addedEmailReminderList.remove(
-                                        //           o,
-                                        //         );
-                                        //       } else {
-                                        //         addedEmailReminderList.add(o);
-                                        //       }
-                                        //       model!.notifyListeners();
-                                        //     },
-                                        //     activeColor: AppColors.primary,
-                                        //     shape: RoundedRectangleBorder(
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(4),
-                                        //     ),
-                                        //     visualDensity: VisualDensity
-                                        //         .compact, // 👈 reduces internal padding
-                                        //   ),
-                                        // ),
-                                        SizedBox(width: 9.10.w),
-                                        SizedBox(
-                                          width: 220.w,
-                                          child: TextView(
-                                            text: o,
-                                            maxLines: 1,
-                                            textOverflow: TextOverflow.ellipsis,
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.2.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                showEmailDialog(
-                                                  context,
-                                                  isEdit: true,
-                                                  index: index,
-                                                  email:
-                                                      emailReminderList[index],
-                                                );
-                                                model!.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.edit_pen,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                            SizedBox(width: 10.w),
-                                            GestureDetector(
-                                              onTap: () {
-                                                emailReminderList.removeAt(
-                                                  index,
-                                                );
-                                                model!.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.delete,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  if (!isLast)
-                                    Divider(color: AppColors.infoGrey1),
-                                  SizedBox(height: 5.10.h),
-                                ],
-                              );
-                            }),
-                          ],
-                        ),
-                      )
-              : SizedBox.shrink(),
-          SizedBox(height: phoneReminderList.isNotEmpty ? 20.h : 0.h),
+  //         emailReminderList.isNotEmpty
+  //             ? isTappedEmailAdded
+  //                   ? Container(
+  //                       decoration: BoxDecoration(
+  //                         border: Border.all(color: AppColors.infoGrey1),
+  //                         borderRadius: BorderRadius.circular(12.r),
+  //                         color: AppColors.white,
+  //                       ),
+  //                       padding: EdgeInsets.all(12.w),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               TextView(
+  //                                 text: 'Add Email Address',
+  //                                 textStyle: TextStyle(
+  //                                   fontFamily: 'Arial',
+  //                                   fontSize: 16.2.sp,
+  //                                   fontWeight: FontWeight.w400,
+  //                                   color: AppColors.deep,
+  //                                 ),
+  //                               ),
+  //                               Row(
+  //                                 children: [
+  //                                   TextView(
+  //                                     text: 'Emails available',
+  //                                     textStyle: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 14.8.sp,
+  //                                       fontWeight: FontWeight.w400,
+  //                                       color: AppColors.fineGrey,
+  //                                     ),
+  //                                   ),
+  //                                   SizedBox(width: 6.w),
+  //                                   Container(
+  //                                     padding: EdgeInsets.symmetric(
+  //                                       horizontal: 10.w,
+  //                                     ),
+  //                                     decoration: BoxDecoration(
+  //                                       color: const Color.fromARGB(
+  //                                         255,
+  //                                         223,
+  //                                         233,
+  //                                         247,
+  //                                       ),
+  //                                       borderRadius: BorderRadius.circular(
+  //                                         12.r,
+  //                                       ),
+  //                                       border: Border.all(
+  //                                         color: AppColors.primary.withOpacity(
+  //                                           .4,
+  //                                         ),
+  //                                       ),
+  //                                     ),
+  //                                     child: TextView(
+  //                                       text: '${emailReminderList.length}',
+  //                                       textStyle: TextStyle(
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 11.8.sp,
+  //                                         fontWeight: FontWeight.w400,
+  //                                         color: AppColors.primary,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           Row(
+  //                             children: [
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   isTappedEmailAdded = !isTappedEmailAdded;
+  //                                   model!.notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   AppImage.drop_up,
+  //                                   height: 22.0.h,
+  //                                   width: 22.0.w,
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: 2.w),
+  //                               IconButton(
+  //                                 onPressed: () => showEmailDialog(context),
+  //                                 icon: Icon(
+  //                                   Icons.add_circle,
+  //                                   color: AppColors.primary1,
+  //                                   size: 24.sp,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     )
+  //                   : Container(
+  //                       decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(12.r),
+  //                         border: Border.all(color: AppColors.infoGrey1),
+  //                       ),
+  //                       child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Container(
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.infoGrey1),
+  //                               borderRadius: BorderRadius.only(
+  //                                 topLeft: Radius.circular(12.r),
+  //                                 topRight: Radius.circular(12.r),
+  //                               ),
+  //                               color: AppColors.dashboard,
+  //                             ),
+  //                             padding: EdgeInsets.all(12.w),
+  //                             child: Row(
+  //                               mainAxisAlignment:
+  //                                   MainAxisAlignment.spaceBetween,
+  //                               children: [
+  //                                 Column(
+  //                                   crossAxisAlignment:
+  //                                       CrossAxisAlignment.start,
+  //                                   children: [
+  //                                     TextView(
+  //                                       text: 'Add Email Address',
+  //                                       textStyle: TextStyle(
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 16.2.sp,
+  //                                         fontWeight: FontWeight.w400,
+  //                                         color: AppColors.deep,
+  //                                       ),
+  //                                     ),
+  //                                     Row(
+  //                                       children: [
+  //                                         TextView(
+  //                                           text: 'Emails available',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 14.8.sp,
+  //                                             fontWeight: FontWeight.w400,
+  //                                             color: AppColors.fineGrey,
+  //                                           ),
+  //                                         ),
+  //                                         SizedBox(width: 6.w),
+  //                                         Container(
+  //                                           padding: EdgeInsets.symmetric(
+  //                                             horizontal: 10.w,
+  //                                           ),
+  //                                           decoration: BoxDecoration(
+  //                                             color: const Color.fromARGB(
+  //                                               255,
+  //                                               223,
+  //                                               233,
+  //                                               247,
+  //                                             ),
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(12.r),
+  //                                             border: Border.all(
+  //                                               color: AppColors.primary
+  //                                                   .withOpacity(.4),
+  //                                             ),
+  //                                           ),
+  //                                           child: TextView(
+  //                                             text:
+  //                                                 '${emailReminderList.length}',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'Arial',
+  //                                               fontSize: 11.8.sp,
+  //                                               fontWeight: FontWeight.w400,
+  //                                               color: AppColors.primary,
+  //                                             ),
+  //                                           ),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                                 Row(
+  //                                   children: [
+  //                                     GestureDetector(
+  //                                       onTap: () {
+  //                                         isTappedEmailAdded =
+  //                                             !isTappedEmailAdded;
+  //                                         model!.notifyListeners();
+  //                                       },
+  //                                       child: SvgPicture.asset(
+  //                                         AppImage.drop_up,
+  //                                         height: 22.0.h,
+  //                                         width: 22.0.w,
+  //                                       ),
+  //                                     ),
+  //                                     SizedBox(width: 2.w),
+  //                                     IconButton(
+  //                                       onPressed: () =>
+  //                                           showEmailDialog(context),
+  //                                       icon: Icon(
+  //                                         Icons.add_circle,
+  //                                         color: AppColors.primary1,
+  //                                         size: 24.sp,
+  //                                       ),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                           SizedBox(height: 15.20.h),
+  //                           ...emailReminderList.asMap().entries.map((entry) {
+  //                             final index = entry.key;
+  //                             final o = entry.value;
+  //                             final isLast =
+  //                                 index == emailReminderList.length - 1;
+  //                             return Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 Padding(
+  //                                   padding: EdgeInsets.only(
+  //                                     left: 12.20.w,
+  //                                     right: 20.w,
+  //                                     bottom: 12.w,
+  //                                   ),
+  //                                   child: Row(
+  //                                     children: [
+  //                                       GestureDetector(
+  //                                         onTap: () {
+  //                                           if (addedEmailReminderList.contains(
+  //                                             o,
+  //                                           )) {
+  //                                             addedEmailReminderList.remove(o);
+  //                                           } else {
+  //                                             addedEmailReminderList.add(o);
+  //                                           }
+  //                                           model!.notifyListeners();
+  //                                         },
+  //                                         child: Container(
+  //                                           padding:
+  //                                               addedEmailReminderList.contains(
+  //                                                 o,
+  //                                               )
+  //                                               ? EdgeInsets.all(4.0.w)
+  //                                               : EdgeInsets.all(10.w),
+  //                                           decoration: BoxDecoration(
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(6.r),
+  //                                             color:
+  //                                                 addedEmailReminderList
+  //                                                     .contains(o)
+  //                                                 ? AppColors.primary
+  //                                                 : AppColors.transparent,
+  //                                             border: Border.all(
+  //                                               color:
+  //                                                   addedEmailReminderList
+  //                                                       .contains(o)
+  //                                                   ? AppColors.transparent
+  //                                                   : AppColors.infoGrey,
+  //                                               width: .78,
+  //                                             ),
+  //                                           ),
+  //                                           child:
+  //                                               addedEmailReminderList.contains(
+  //                                                 o,
+  //                                               )
+  //                                               ? Icon(
+  //                                                   Icons.check,
+  //                                                   size: 12.sp,
+  //                                                   color: AppColors.white,
+  //                                                 )
+  //                                               : SizedBox.shrink(),
+  //                                         ),
+  //                                       ),
+  //                                       // Transform.scale(
+  //                                       //   scale:
+  //                                       //       MediaQuery.of(
+  //                                       //             context,
+  //                                       //           ).size.shortestSide >=
+  //                                       //           600
+  //                                       //       ? 1.5
+  //                                       //       : 1.1,
+  //                                       //   child: Checkbox(
+  //                                       //     value: addedEmailReminderList
+  //                                       //         .contains(o),
+  //                                       //     onChanged: (_) {
+  //                                       //       if (addedEmailReminderList
+  //                                       //           .contains(o)) {
+  //                                       //         addedEmailReminderList.remove(
+  //                                       //           o,
+  //                                       //         );
+  //                                       //       } else {
+  //                                       //         addedEmailReminderList.add(o);
+  //                                       //       }
+  //                                       //       model!.notifyListeners();
+  //                                       //     },
+  //                                       //     activeColor: AppColors.primary,
+  //                                       //     shape: RoundedRectangleBorder(
+  //                                       //       borderRadius:
+  //                                       //           BorderRadius.circular(4),
+  //                                       //     ),
+  //                                       //     visualDensity: VisualDensity
+  //                                       //         .compact, // 👈 reduces internal padding
+  //                                       //   ),
+  //                                       // ),
+  //                                       SizedBox(width: 9.10.w),
+  //                                       SizedBox(
+  //                                         width: 220.w,
+  //                                         child: TextView(
+  //                                           text: o,
+  //                                           maxLines: 1,
+  //                                           textOverflow: TextOverflow.ellipsis,
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 16.2.sp,
+  //                                             fontWeight: FontWeight.w400,
+  //                                             color: AppColors.reminder,
+  //                                           ),
+  //                                         ),
+  //                                       ),
+  //                                       Spacer(),
+  //                                       Row(
+  //                                         children: [
+  //                                           GestureDetector(
+  //                                             onTap: () {
+  //                                               showEmailDialog(
+  //                                                 context,
+  //                                                 isEdit: true,
+  //                                                 index: index,
+  //                                                 email:
+  //                                                     emailReminderList[index],
+  //                                               );
+  //                                               model!.notifyListeners();
+  //                                             },
+  //                                             child: SvgPicture.asset(
+  //                                               AppImage.edit_pen,
+  //                                               height: 22.0.h,
+  //                                               width: 22.0.w,
+  //                                             ),
+  //                                           ),
+  //                                           SizedBox(width: 10.w),
+  //                                           GestureDetector(
+  //                                             onTap: () {
+  //                                               emailReminderList.removeAt(
+  //                                                 index,
+  //                                               );
+  //                                               model!.notifyListeners();
+  //                                             },
+  //                                             child: SvgPicture.asset(
+  //                                               AppImage.delete,
+  //                                               height: 22.0.h,
+  //                                               width: 22.0.w,
+  //                                             ),
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                                 if (!isLast)
+  //                                   Divider(color: AppColors.infoGrey1),
+  //                                 SizedBox(height: 5.10.h),
+  //                               ],
+  //                             );
+  //                           }),
+  //                         ],
+  //                       ),
+  //                     )
+  //             : SizedBox.shrink(),
+  //         SizedBox(height: phoneReminderList.isNotEmpty ? 20.h : 0.h),
 
-          phoneReminderList.isNotEmpty
-              ? isTappedPhoneAdded
-                    ? Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.infoGrey1),
-                          borderRadius: BorderRadius.circular(12.r),
-                          color: AppColors.white,
-                        ),
+  //         phoneReminderList.isNotEmpty
+  //             ? isTappedPhoneAdded
+  //                   ? Container(
+  //                       decoration: BoxDecoration(
+  //                         border: Border.all(color: AppColors.infoGrey1),
+  //                         borderRadius: BorderRadius.circular(12.r),
+  //                         color: AppColors.white,
+  //                       ),
 
-                        padding: EdgeInsets.all(12.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextView(
-                                  text: 'Add Phone Number',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 16.2.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.deep,
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    TextView(
-                                      text: 'Numbers available',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.8.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.fineGrey,
-                                      ),
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 10.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromARGB(
-                                          255,
-                                          223,
-                                          233,
-                                          247,
-                                        ),
+  //                       padding: EdgeInsets.all(12.w),
+  //                       child: Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               TextView(
+  //                                 text: 'Add Phone Number',
+  //                                 textStyle: TextStyle(
+  //                                   fontFamily: 'Arial',
+  //                                   fontSize: 16.2.sp,
+  //                                   fontWeight: FontWeight.w400,
+  //                                   color: AppColors.deep,
+  //                                 ),
+  //                               ),
+  //                               Row(
+  //                                 children: [
+  //                                   TextView(
+  //                                     text: 'Numbers available',
+  //                                     textStyle: TextStyle(
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 14.8.sp,
+  //                                       fontWeight: FontWeight.w400,
+  //                                       color: AppColors.fineGrey,
+  //                                     ),
+  //                                   ),
+  //                                   SizedBox(width: 6.w),
+  //                                   Container(
+  //                                     padding: EdgeInsets.symmetric(
+  //                                       horizontal: 10.w,
+  //                                     ),
+  //                                     decoration: BoxDecoration(
+  //                                       color: const Color.fromARGB(
+  //                                         255,
+  //                                         223,
+  //                                         233,
+  //                                         247,
+  //                                       ),
 
-                                        borderRadius: BorderRadius.circular(
-                                          12.r,
-                                        ),
-                                        border: Border.all(
-                                          color: AppColors.primary.withOpacity(
-                                            .4,
-                                          ),
-                                        ),
-                                      ),
-                                      child: TextView(
-                                        text: '${phoneReminderList.length}',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 11.8.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.primary,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    isTappedPhoneAdded = !isTappedPhoneAdded;
-                                    model!.notifyListeners();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImage.drop_up,
-                                    height: 22.0.h,
-                                    width: 22.0.w,
-                                  ),
-                                ),
-                                SizedBox(width: 2.w),
-                                IconButton(
-                                  onPressed: () {
-                                    showPhoneDialog(context);
-                                    isPhoneValid = false;
-                                    model!.notifyListeners();
-                                  },
-                                  icon: Icon(
-                                    Icons.add_circle,
-                                    color: AppColors.primary1,
-                                    size: 24.sp,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: AppColors.infoGrey1),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.infoGrey1),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12.r),
-                                  topRight: Radius.circular(12.r),
-                                ),
-                                color: AppColors.dashboard,
-                              ),
+  //                                       borderRadius: BorderRadius.circular(
+  //                                         12.r,
+  //                                       ),
+  //                                       border: Border.all(
+  //                                         color: AppColors.primary.withOpacity(
+  //                                           .4,
+  //                                         ),
+  //                                       ),
+  //                                     ),
+  //                                     child: TextView(
+  //                                       text: '${phoneReminderList.length}',
+  //                                       textStyle: TextStyle(
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 11.8.sp,
+  //                                         fontWeight: FontWeight.w400,
+  //                                         color: AppColors.primary,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           Row(
+  //                             children: [
+  //                               GestureDetector(
+  //                                 onTap: () {
+  //                                   isTappedPhoneAdded = !isTappedPhoneAdded;
+  //                                   model!.notifyListeners();
+  //                                 },
+  //                                 child: SvgPicture.asset(
+  //                                   AppImage.drop_up,
+  //                                   height: 22.0.h,
+  //                                   width: 22.0.w,
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: 2.w),
+  //                               IconButton(
+  //                                 onPressed: () {
+  //                                   showPhoneDialog(context);
+  //                                   isPhoneValid = false;
+  //                                   model!.notifyListeners();
+  //                                 },
+  //                                 icon: Icon(
+  //                                   Icons.add_circle,
+  //                                   color: AppColors.primary1,
+  //                                   size: 24.sp,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     )
+  //                   : Container(
+  //                       decoration: BoxDecoration(
+  //                         borderRadius: BorderRadius.circular(12.r),
+  //                         border: Border.all(color: AppColors.infoGrey1),
+  //                       ),
+  //                       child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Container(
+  //                             decoration: BoxDecoration(
+  //                               border: Border.all(color: AppColors.infoGrey1),
+  //                               borderRadius: BorderRadius.only(
+  //                                 topLeft: Radius.circular(12.r),
+  //                                 topRight: Radius.circular(12.r),
+  //                               ),
+  //                               color: AppColors.dashboard,
+  //                             ),
 
-                              padding: EdgeInsets.all(12.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Add Phone Number',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 15.8.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.deep,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          TextView(
-                                            text: 'Numbers available',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 15.8.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                223,
-                                                233,
-                                                247,
-                                              ),
+  //                             padding: EdgeInsets.all(12.w),
+  //                             child: Row(
+  //                               mainAxisAlignment:
+  //                                   MainAxisAlignment.spaceBetween,
+  //                               children: [
+  //                                 Column(
+  //                                   crossAxisAlignment:
+  //                                       CrossAxisAlignment.start,
+  //                                   children: [
+  //                                     TextView(
+  //                                       text: 'Add Phone Number',
+  //                                       textStyle: TextStyle(
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 15.8.sp,
+  //                                         fontWeight: FontWeight.w400,
+  //                                         color: AppColors.deep,
+  //                                       ),
+  //                                     ),
+  //                                     Row(
+  //                                       children: [
+  //                                         TextView(
+  //                                           text: 'Numbers available',
+  //                                           textStyle: TextStyle(
+  //                                             fontFamily: 'Arial',
+  //                                             fontSize: 15.8.sp,
+  //                                             fontWeight: FontWeight.w400,
+  //                                             color: AppColors.fineGrey,
+  //                                           ),
+  //                                         ),
+  //                                         SizedBox(width: 6.w),
+  //                                         Container(
+  //                                           padding: EdgeInsets.symmetric(
+  //                                             horizontal: 10.w,
+  //                                           ),
+  //                                           decoration: BoxDecoration(
+  //                                             color: const Color.fromARGB(
+  //                                               255,
+  //                                               223,
+  //                                               233,
+  //                                               247,
+  //                                             ),
 
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              border: Border.all(
-                                                color: AppColors.primary
-                                                    .withOpacity(.4),
-                                              ),
-                                            ),
-                                            child: TextView(
-                                              text:
-                                                  '${phoneReminderList.length}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 11.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          isTappedPhoneAdded =
-                                              !isTappedPhoneAdded;
-                                          model!.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.drop_up,
-                                          height: 22.0.h,
-                                          width: 22.0.w,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2.w),
-                                      IconButton(
-                                        onPressed: () {
-                                          showPhoneDialog(context);
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(12.r),
+  //                                             border: Border.all(
+  //                                               color: AppColors.primary
+  //                                                   .withOpacity(.4),
+  //                                             ),
+  //                                           ),
+  //                                           child: TextView(
+  //                                             text:
+  //                                                 '${phoneReminderList.length}',
+  //                                             textStyle: TextStyle(
+  //                                               fontFamily: 'Arial',
+  //                                               fontSize: 11.8.sp,
+  //                                               fontWeight: FontWeight.w400,
+  //                                               color: AppColors.primary,
+  //                                             ),
+  //                                           ),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                                 Row(
+  //                                   children: [
+  //                                     GestureDetector(
+  //                                       onTap: () {
+  //                                         isTappedPhoneAdded =
+  //                                             !isTappedPhoneAdded;
+  //                                         model!.notifyListeners();
+  //                                       },
+  //                                       child: SvgPicture.asset(
+  //                                         AppImage.drop_up,
+  //                                         height: 22.0.h,
+  //                                         width: 22.0.w,
+  //                                       ),
+  //                                     ),
+  //                                     SizedBox(width: 2.w),
+  //                                     IconButton(
+  //                                       onPressed: () {
+  //                                         showPhoneDialog(context);
 
-                                          isPhoneValid = false;
-                                          model!.notifyListeners();
-                                        },
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: AppColors.primary1,
-                                          size: 24.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 15.20.h),
-                            Padding(
-                              padding: EdgeInsets.only(left: 12.w, right: 20.w),
-                              child: Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      padding: EdgeInsets.all(4.0.w),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          6.r,
-                                        ),
-                                        color: AppColors.primary,
-                                        border: Border.all(
-                                          color: AppColors.transparent,
-                                          width: .78,
-                                        ),
-                                      ),
-                                      child: Icon(
-                                        Icons.check,
-                                        size: 12.sp,
-                                        color: AppColors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 9.10.w),
-                                  TextView(
-                                    text: formatPhoneNumber(
-                                      SharedPreferencesService
-                                          .instance
-                                          .usersData['user']['phone'],
-                                    ),
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(1.2.w),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.app_green,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.check,
-                                          size: 13.4.sp,
-                                          color: AppColors.white,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10.w),
-                                      TextView(
-                                        text: 'Primary',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 13.72.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.reminder,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 2.0.h),
-                            Divider(color: AppColors.infoGrey1),
+  //                                         isPhoneValid = false;
+  //                                         model!.notifyListeners();
+  //                                       },
+  //                                       icon: Icon(
+  //                                         Icons.add_circle,
+  //                                         color: AppColors.primary1,
+  //                                         size: 24.sp,
+  //                                       ),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                           SizedBox(height: 15.20.h),
+  //                           Padding(
+  //                             padding: EdgeInsets.only(left: 12.w, right: 20.w),
+  //                             child: Row(
+  //                               children: [
+  //                                 GestureDetector(
+  //                                   onTap: () {},
+  //                                   child: Container(
+  //                                     padding: EdgeInsets.all(4.0.w),
+  //                                     decoration: BoxDecoration(
+  //                                       borderRadius: BorderRadius.circular(
+  //                                         6.r,
+  //                                       ),
+  //                                       color: AppColors.primary,
+  //                                       border: Border.all(
+  //                                         color: AppColors.transparent,
+  //                                         width: .78,
+  //                                       ),
+  //                                     ),
+  //                                     child: Icon(
+  //                                       Icons.check,
+  //                                       size: 12.sp,
+  //                                       color: AppColors.white,
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                                 SizedBox(width: 9.10.w),
+  //                                 TextView(
+  //                                   text: formatPhoneNumber(
+  //                                     SharedPreferencesService
+  //                                         .instance
+  //                                         .usersData['user']['phone'],
+  //                                   ),
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 16.2.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.reminder,
+  //                                   ),
+  //                                 ),
+  //                                 Spacer(),
+  //                                 Row(
+  //                                   children: [
+  //                                     Container(
+  //                                       padding: EdgeInsets.all(1.2.w),
+  //                                       decoration: BoxDecoration(
+  //                                         color: AppColors.app_green,
+  //                                         shape: BoxShape.circle,
+  //                                       ),
+  //                                       child: Icon(
+  //                                         Icons.check,
+  //                                         size: 13.4.sp,
+  //                                         color: AppColors.white,
+  //                                       ),
+  //                                     ),
+  //                                     SizedBox(width: 10.w),
+  //                                     TextView(
+  //                                       text: 'Primary',
+  //                                       textStyle: TextStyle(
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 13.72.sp,
+  //                                         fontWeight: FontWeight.w400,
+  //                                         color: AppColors.reminder,
+  //                                       ),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ),
+  //                           SizedBox(height: 2.0.h),
+  //                           Divider(color: AppColors.infoGrey1),
 
-                            ...phoneReminderList.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final o = entry.value;
-                              final isLast =
-                                  index == phoneReminderList.length - 1;
+  //                           ...phoneReminderList.asMap().entries.map((entry) {
+  //                             final index = entry.key;
+  //                             final o = entry.value;
+  //                             final isLast =
+  //                                 index == phoneReminderList.length - 1;
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 12.w,
-                                      right: 20.w,
-                                      bottom: 12.w,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (addedPhoneReminderList.contains(
-                                              o,
-                                            )) {
-                                              addedPhoneReminderList.remove(o);
-                                            } else {
-                                              addedPhoneReminderList.add(o);
-                                            }
-                                            model!.notifyListeners();
-                                          },
-                                          child: Container(
-                                            padding:
-                                                addedPhoneReminderList.contains(
-                                                  o,
-                                                )
-                                                ? EdgeInsets.all(4.0.w)
-                                                : EdgeInsets.all(10.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(6.r),
-                                              color:
-                                                  addedPhoneReminderList
-                                                      .contains(o)
-                                                  ? AppColors.primary
-                                                  : AppColors.transparent,
-                                              border: Border.all(
-                                                color:
-                                                    addedPhoneReminderList
-                                                        .contains(o)
-                                                    ? AppColors.transparent
-                                                    : AppColors.infoGrey,
-                                                width: .78,
-                                              ),
-                                            ),
-                                            child:
-                                                addedPhoneReminderList.contains(
-                                                  o,
-                                                )
-                                                ? Icon(
-                                                    Icons.check,
-                                                    size: 12.sp,
-                                                    color: AppColors.white,
-                                                  )
-                                                : SizedBox.shrink(),
-                                          ),
-                                        ),
-                                        SizedBox(width: 9.10.w),
-                                        TextView(
-                                          text: formatPhoneNumber(o),
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.2.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                showPhoneDialog(
-                                                  context,
-                                                  isEdit: true,
-                                                  index: index,
-                                                  phoneNumber:
-                                                      phoneReminderList[index],
-                                                );
-                                                isPhoneValid = false;
-                                                model!.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.edit_pen,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                            SizedBox(width: 16.10.w),
-                                            GestureDetector(
-                                              onTap: () {
-                                                phoneReminderList.removeAt(
-                                                  index,
-                                                );
-                                                model!.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.delete,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  if (!isLast)
-                                    Divider(color: AppColors.infoGrey1),
-                                  SizedBox(height: 5.10.h),
-                                ],
-                              );
-                            }),
-                          ],
-                        ),
-                      )
-              : SizedBox.shrink(),
-          phoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 24.0.h),
-                    TextView(
-                      text: 'COST SUMMARY',
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 14.80.sp,
-                        color: AppColors.grey1,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(height: 4.2.h),
-                    Divider(color: AppColors.infoGrey1),
-                    SizedBox(height: 10.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: DottedBorder(
-                        options: RoundedRectDottedBorderOptions(
-                          dashPattern: [3, 3],
-                          strokeWidth: .99,
-                          radius: Radius.circular(10),
-                          color: AppColors.infoGrey1,
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 16.20.w,
-                            horizontal: 16.0.w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            color: AppColors.dashboard,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total Days',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '${returnTotalDays(model)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Reminders per day',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '${returnNumberOfTimes(model)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total Reminders',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text:
-                                        '${selectedIndexes.length * returnNumberOfTimes(model)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
+  //                             return Column(
+  //                               crossAxisAlignment: CrossAxisAlignment.start,
+  //                               children: [
+  //                                 Padding(
+  //                                   padding: EdgeInsets.only(
+  //                                     left: 12.w,
+  //                                     right: 20.w,
+  //                                     bottom: 12.w,
+  //                                   ),
+  //                                   child: Row(
+  //                                     children: [
+  //                                       GestureDetector(
+  //                                         onTap: () {
+  //                                           if (addedPhoneReminderList.contains(
+  //                                             o,
+  //                                           )) {
+  //                                             addedPhoneReminderList.remove(o);
+  //                                           } else {
+  //                                             addedPhoneReminderList.add(o);
+  //                                           }
+  //                                           model!.notifyListeners();
+  //                                         },
+  //                                         child: Container(
+  //                                           padding:
+  //                                               addedPhoneReminderList.contains(
+  //                                                 o,
+  //                                               )
+  //                                               ? EdgeInsets.all(4.0.w)
+  //                                               : EdgeInsets.all(10.w),
+  //                                           decoration: BoxDecoration(
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(6.r),
+  //                                             color:
+  //                                                 addedPhoneReminderList
+  //                                                     .contains(o)
+  //                                                 ? AppColors.primary
+  //                                                 : AppColors.transparent,
+  //                                             border: Border.all(
+  //                                               color:
+  //                                                   addedPhoneReminderList
+  //                                                       .contains(o)
+  //                                                   ? AppColors.transparent
+  //                                                   : AppColors.infoGrey,
+  //                                               width: .78,
+  //                                             ),
+  //                                           ),
+  //                                           child:
+  //                                               addedPhoneReminderList.contains(
+  //                                                 o,
+  //                                               )
+  //                                               ? Icon(
+  //                                                   Icons.check,
+  //                                                   size: 12.sp,
+  //                                                   color: AppColors.white,
+  //                                                 )
+  //                                               : SizedBox.shrink(),
+  //                                         ),
+  //                                       ),
+  //                                       SizedBox(width: 9.10.w),
+  //                                       TextView(
+  //                                         text: formatPhoneNumber(o),
+  //                                         textStyle: TextStyle(
+  //                                           fontFamily: 'Arial',
+  //                                           fontSize: 16.2.sp,
+  //                                           fontWeight: FontWeight.w400,
+  //                                           color: AppColors.reminder,
+  //                                         ),
+  //                                       ),
+  //                                       Spacer(),
+  //                                       Row(
+  //                                         children: [
+  //                                           GestureDetector(
+  //                                             onTap: () {
+  //                                               showPhoneDialog(
+  //                                                 context,
+  //                                                 isEdit: true,
+  //                                                 index: index,
+  //                                                 phoneNumber:
+  //                                                     phoneReminderList[index],
+  //                                               );
+  //                                               isPhoneValid = false;
+  //                                               model!.notifyListeners();
+  //                                             },
+  //                                             child: SvgPicture.asset(
+  //                                               AppImage.edit_pen,
+  //                                               height: 22.0.h,
+  //                                               width: 22.0.w,
+  //                                             ),
+  //                                           ),
+  //                                           SizedBox(width: 16.10.w),
+  //                                           GestureDetector(
+  //                                             onTap: () {
+  //                                               phoneReminderList.removeAt(
+  //                                                 index,
+  //                                               );
+  //                                               model!.notifyListeners();
+  //                                             },
+  //                                             child: SvgPicture.asset(
+  //                                               AppImage.delete,
+  //                                               height: 22.0.h,
+  //                                               width: 22.0.w,
+  //                                             ),
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                                 if (!isLast)
+  //                                   Divider(color: AppColors.infoGrey1),
+  //                                 SizedBox(height: 5.10.h),
+  //                               ],
+  //                             );
+  //                           }),
+  //                         ],
+  //                       ),
+  //                     )
+  //             : SizedBox.shrink(),
+  //         phoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
+  //             ? Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   SizedBox(height: 24.0.h),
+  //                   TextView(
+  //                     text: 'COST SUMMARY',
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'GoogleSans',
+  //                       fontSize: 14.80.sp,
+  //                       color: AppColors.grey1,
+  //                       fontWeight: FontWeight.w500,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 4.2.h),
+  //                   Divider(color: AppColors.infoGrey1),
+  //                   SizedBox(height: 10.h),
+  //                   SizedBox(
+  //                     width: double.infinity,
+  //                     child: DottedBorder(
+  //                       options: RoundedRectDottedBorderOptions(
+  //                         dashPattern: [3, 3],
+  //                         strokeWidth: .99,
+  //                         radius: Radius.circular(10),
+  //                         color: AppColors.infoGrey1,
+  //                       ),
+  //                       child: Container(
+  //                         width: double.infinity,
+  //                         padding: EdgeInsets.symmetric(
+  //                           vertical: 16.20.w,
+  //                           horizontal: 16.0.w,
+  //                         ),
+  //                         decoration: BoxDecoration(
+  //                           borderRadius: BorderRadius.circular(10.r),
+  //                           color: AppColors.dashboard,
+  //                         ),
+  //                         child: Column(
+  //                           children: [
+  //                             Row(
+  //                               mainAxisAlignment:
+  //                                   MainAxisAlignment.spaceBetween,
+  //                               children: [
+  //                                 TextView(
+  //                                   text: 'Total Days',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w400,
+  //                                   ),
+  //                                 ),
+  //                                 TextView(
+  //                                   text: '${returnTotalDays(model)}',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'GoogleSans',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w500,
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                             SizedBox(height: 6.10.h),
+  //                             Divider(color: AppColors.infoGrey1),
+  //                             SizedBox(height: 6.10.h),
+  //                             Row(
+  //                               mainAxisAlignment:
+  //                                   MainAxisAlignment.spaceBetween,
+  //                               children: [
+  //                                 TextView(
+  //                                   text: 'Reminders per day',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w400,
+  //                                   ),
+  //                                 ),
+  //                                 TextView(
+  //                                   text: '${returnNumberOfTimes(model)}',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'GoogleSans',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w500,
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                             SizedBox(height: 6.10.h),
+  //                             Divider(color: AppColors.infoGrey1),
+  //                             SizedBox(height: 6.10.h),
+  //                             Row(
+  //                               mainAxisAlignment:
+  //                                   MainAxisAlignment.spaceBetween,
+  //                               children: [
+  //                                 TextView(
+  //                                   text: 'Total Reminders',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w400,
+  //                                   ),
+  //                                 ),
+  //                                 TextView(
+  //                                   text:
+  //                                       '${selectedIndexes.length * returnNumberOfTimes(model)}',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'GoogleSans',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w500,
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
 
-                              SizedBox(
-                                height: selectedIndexes.contains(0)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(0)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(0)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(0)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Email  (x${returnNumberOfTimes(model)} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '₦0',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(1)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(1)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(1)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(1)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Push  (x${returnNumberOfTimes(model)} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '₦0',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'WhatsApp  (x${returnNumberOfTimes(model)} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${20 * returnNumberOfTimes(model)}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(2)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(2)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(2)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(2)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'SMS  (x${returnNumberOfTimes(model)} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${10 * returnNumberOfTimes(model)}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(4)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(4)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(4)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(4)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Phone Calls  (x${returnNumberOfTimes(model)} calls)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${50 * returnNumberOfTimes(model)}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '₦$costTotal.00',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : SizedBox.shrink(),
-          SizedBox(height: _isLoading ? 20.h : 0.h),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(0)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(0)
+  //                                 ? Divider(color: AppColors.infoGrey1)
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(0)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(0)
+  //                                 ? Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.spaceBetween,
+  //                                     children: [
+  //                                       TextView(
+  //                                         text:
+  //                                             'Email  (x${returnNumberOfTimes(model)} msgs)',
+  //                                         textStyle: TextStyle(
+  //                                           fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w400,
+  //                                         ),
+  //                                       ),
+  //                                       TextView(
+  //                                         text: '₦0',
+  //                                         textStyle: TextStyle(
+  //                                           // fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w500,
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   )
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(1)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(1)
+  //                                 ? Divider(color: AppColors.infoGrey1)
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(1)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(1)
+  //                                 ? Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.spaceBetween,
+  //                                     children: [
+  //                                       TextView(
+  //                                         text:
+  //                                             'Push  (x${returnNumberOfTimes(model)} msgs)',
+  //                                         textStyle: TextStyle(
+  //                                           fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w400,
+  //                                         ),
+  //                                       ),
+  //                                       TextView(
+  //                                         text: '₦0',
+  //                                         textStyle: TextStyle(
+  //                                           // fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w500,
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   )
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(3)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(3)
+  //                                 ? Divider(color: AppColors.infoGrey1)
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(3)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(3)
+  //                                 ? Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.spaceBetween,
+  //                                     children: [
+  //                                       TextView(
+  //                                         text:
+  //                                             'WhatsApp  (x${returnNumberOfTimes(model)} msgs)',
+  //                                         textStyle: TextStyle(
+  //                                           fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w400,
+  //                                         ),
+  //                                       ),
+  //                                       TextView(
+  //                                         text:
+  //                                             '₦${20 * returnNumberOfTimes(model)}',
+  //                                         textStyle: TextStyle(
+  //                                           // fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w500,
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   )
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(2)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(2)
+  //                                 ? Divider(color: AppColors.infoGrey1)
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(2)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(2)
+  //                                 ? Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.spaceBetween,
+  //                                     children: [
+  //                                       TextView(
+  //                                         text:
+  //                                             'SMS  (x${returnNumberOfTimes(model)} msgs)',
+  //                                         textStyle: TextStyle(
+  //                                           fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w400,
+  //                                         ),
+  //                                       ),
+  //                                       TextView(
+  //                                         text:
+  //                                             '₦${10 * returnNumberOfTimes(model)}',
+  //                                         textStyle: TextStyle(
+  //                                           // fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w500,
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   )
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(4)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(4)
+  //                                 ? Divider(color: AppColors.infoGrey1)
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(
+  //                               height: selectedIndexes.contains(4)
+  //                                   ? 6.10.h
+  //                                   : 0.h,
+  //                             ),
+  //                             selectedIndexes.contains(4)
+  //                                 ? Row(
+  //                                     mainAxisAlignment:
+  //                                         MainAxisAlignment.spaceBetween,
+  //                                     children: [
+  //                                       TextView(
+  //                                         text:
+  //                                             'Phone Calls  (x${returnNumberOfTimes(model)} calls)',
+  //                                         textStyle: TextStyle(
+  //                                           fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w400,
+  //                                         ),
+  //                                       ),
+  //                                       TextView(
+  //                                         text:
+  //                                             '₦${50 * returnNumberOfTimes(model)}',
+  //                                         textStyle: TextStyle(
+  //                                           // fontFamily: 'Arial',
+  //                                           fontSize: 16.80.sp,
+  //                                           color: AppColors.black,
+  //                                           fontWeight: FontWeight.w500,
+  //                                         ),
+  //                                       ),
+  //                                     ],
+  //                                   )
+  //                                 : SizedBox.shrink(),
+  //                             SizedBox(height: 6.10.h),
+  //                             Divider(color: AppColors.infoGrey1),
+  //                             SizedBox(height: 6.10.h),
+  //                             Row(
+  //                               mainAxisAlignment:
+  //                                   MainAxisAlignment.spaceBetween,
+  //                               children: [
+  //                                 TextView(
+  //                                   text: 'Total',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'GoogleSans',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w700,
+  //                                   ),
+  //                                 ),
+  //                                 TextView(
+  //                                   text: '₦$costTotal.00',
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 16.80.sp,
+  //                                     color: AppColors.black,
+  //                                     fontWeight: FontWeight.w700,
+  //                                   ),
+  //                                 ),
+  //                               ],
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               )
+  //             : SizedBox.shrink(),
+  //         SizedBox(height: _isLoading ? 20.h : 0.h),
 
-          _isLoading
-              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
-              : SizedBox.shrink(),
-          SizedBox(
-            height: phoneReminderList.isNotEmpty
-                ? 40.h
-                : _isLoading
-                ? 106.h
-                : 206.h,
-          ),
+  //         _isLoading
+  //             ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+  //             : SizedBox.shrink(),
+  //         SizedBox(
+  //           height: phoneReminderList.isNotEmpty
+  //               ? 40.h
+  //               : _isLoading
+  //               ? 106.h
+  //               : 206.h,
+  //         ),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  buttonColor: AppColors.dashboard,
-                  buttonText: 'Previous',
-                  color: AppColors.deep,
-                  fontSize: 14.sp,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    linIndexUpdate--;
-                    model!.notifyListeners();
-                  },
-                ),
-              ),
-              SizedBox(width: 20.w),
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  fontSize: 14.sp,
-                  buttonColor: AppColors.primary,
-                  buttonText: 'Make Payment',
-                  color: AppColors.white,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    // if (notificationChannel.contains('SMS') ||
-                    //     notificationChannel.contains('PHONE_CALL') ||
-                    //     notificationChannel.contains('WHATSAPP')) {
-                    //   linIndexUpdate++;
-                    // } else {
-                    updateReminder(
-                      context,
-                      reminderId: data!.id!,
-                      updateReminder: UpdateReminderEntityModel(
-                        startDateTime: DateFormat(
-                          'dd MMM, yyyy',
-                        ).parse(dateTimeControllerUpdate.text),
-                        endDateTime: DateTime.parse(
-                          endDateControllerUpdate.text,
-                        ),
-                        durationInDays: int.parse(
-                          medDurationControllerUpdate.text,
-                        ),
-                        timesPerDay: int.parse(
-                          medDailyInTakenControllerUpdate.text,
-                        ),
-                        dailyDoseTimes: dailyDose,
-                        dosage: _dosageLabel,
-                        medicationImage: null,
-                        emails: emailReminderList,
-                        notificationChannels: notificationChannel,
-                      ),
-                    );
-                    // }
-                    model!.notifyListeners();
-                  },
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 26.h),
-        ],
-      ),
-    ),
-  );
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Flexible(
+  //               child: ButtonWidget(
+  //                 border: 100.r,
+  //                 buttonColor: AppColors.dashboard,
+  //                 buttonText: 'Previous',
+  //                 color: AppColors.deep,
+  //                 fontSize: 14.sp,
+  //                 buttonBorderColor: AppColors.transparent,
+  //                 onPressed: () {
+  //                   linIndexUpdate--;
+  //                   model!.notifyListeners();
+  //                 },
+  //               ),
+  //             ),
+  //             SizedBox(width: 20.w),
+  //             Flexible(
+  //               child: ButtonWidget(
+  //                 border: 100.r,
+  //                 fontSize: 14.sp,
+  //                 buttonColor: AppColors.primary,
+  //                 buttonText: 'Make Payment',
+  //                 color: AppColors.white,
+  //                 buttonBorderColor: AppColors.transparent,
+  //                 onPressed: () {
+  //                   // if (notificationChannel.contains('SMS') ||
+  //                   //     notificationChannel.contains('PHONE_CALL') ||
+  //                   //     notificationChannel.contains('WHATSAPP')) {
+  //                   //   linIndexUpdate++;
+  //                   // } else {
+  //                   updateReminder(
+  //                     context,
+  //                     reminderId: data!.id!,
+  //                     updateReminder: UpdateReminderEntityModel(
+  //                       startDateTime: DateFormat(
+  //                         'dd MMM, yyyy',
+  //                       ).parse(dateTimeControllerUpdate.text),
+  //                       endDateTime: DateTime.parse(
+  //                         endDateControllerUpdate.text,
+  //                       ),
+  //                       durationInDays: int.parse(
+  //                         medDurationControllerUpdate.text,
+  //                       ),
+  //                       timesPerDay: int.parse(
+  //                         medDailyInTakenControllerUpdate.text,
+  //                       ),
+  //                       dailyDoseTimes: dailyDose,
+  //                       dosage: _dosageLabel,
+  //                       medicationImage: null,
+  //                       emails: emailReminderList,
+  //                       notificationChannels: notificationChannel,
+  //                     ),
+  //                   );
+  //                   // }
+  //                   model!.notifyListeners();
+  //                 },
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 26.h),
+  //       ],
+  //     ),
+  //   ),
+  // );
 
-  fourthModalFlowUpdate({
-    AuthViewModel? model,
-    BuildContext? context,
-    StateSetter? setModalState,
-    getReminderId.Data? data,
-    ScrollController? scrollController,
-  }) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(22.r),
-      color: AppColors.white,
-    ),
-    child: SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-      controller: scrollController,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: 20, width: 20),
-              TextView(
-                text: modalNameUpdate(),
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 16.70.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.deep,
-                ),
-              ),
+  // fourthModalFlowUpdate({
+  //   AuthViewModel? model,
+  //   BuildContext? context,
+  //   StateSetter? setModalState,
+  //   getReminderId.Data? data,
+  //   ScrollController? scrollController,
+  // }) => Container(
+  //   decoration: BoxDecoration(
+  //     borderRadius: BorderRadius.circular(22.r),
+  //     color: AppColors.white,
+  //   ),
+  //   child: SingleChildScrollView(
+  //     padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+  //     controller: scrollController,
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             SizedBox(height: 20, width: 20),
+  //             TextView(
+  //               text: modalNameUpdate(),
+  //               textStyle: TextStyle(
+  //                 fontFamily: 'GoogleSans',
+  //                 fontSize: 16.70.sp,
+  //                 fontWeight: FontWeight.w700,
+  //                 color: AppColors.deep,
+  //               ),
+  //             ),
 
-              Padding(
-                padding: EdgeInsets.only(top: 4.w),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context!);
-                  },
-                  child: SvgPicture.asset(
-                    AppImage.cancel,
-                    height: 14.20,
-                    width: 14.20,
-                    color: AppColors.black,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 13.60.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context!).size.width * .82,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(5.0),
-                  ), // Adjust radius as needed
-                  child: LinearProgressIndicator(
-                    minHeight: 4.0, // Adjust height as needed
-                    value: linIndexUpdate / 4,
-                    color: AppColors.primary, // Progress bar color
-                    backgroundColor: Colors.grey[300], // Background track color
-                  ),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              TextView(
-                text: '$linIndexUpdate/4',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 32.h),
-          TextView(
-            text: 'Amount',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 15.90.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.black,
-            ),
-          ),
-          SizedBox(height: 14.2.h),
-          Container(
-            height: 70.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.skyBlue,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Center(
-              child: TextView(
-                text: '₦$costTotal.00',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 20.90.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.reminder,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 22.h),
-          TextView(
-            text: 'Select Payment Method',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 16.90.sp,
-              fontWeight: FontWeight.w500,
-              color: AppColors.deep,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          paymentWidget(
-            isWallet: true,
-            text: 'Pay with Wallet',
-            icon: AppImage.wallet_pay,
-            onTap: () {
-              onTapPaymentMeth = 'Pay with Wallet';
-              model!.notifyListeners();
-            },
-          ),
-          paymentWidget(
-            isWallet: false,
-            text: 'Pay with Card',
-            icon: AppImage.card_pay,
-            onTap: () {
-              onTapPaymentMeth = 'Pay with Card';
-              model!.notifyListeners();
-            },
-          ),
-          paymentWidget(
-            isWallet: false,
-            text: 'Pay with Bank Transfer',
-            icon: AppImage.bank_transfer,
-            onTap: () {
-              onTapPaymentMeth = 'Pay with Bank Transfer';
-              model!.notifyListeners();
-            },
-          ),
-          paymentWidget(
-            isWallet: false,
-            text: 'Pay with Mobile Money',
-            icon: AppImage.online_mobile,
-            onTap: () {
-              onTapPaymentMeth = 'Pay with Mobile Money';
-              model!.notifyListeners();
-            },
-          ),
-          paymentWidget(
-            isWallet: false,
-            text: 'Pay with USSD',
-            icon: AppImage.ussd_pay,
-            onTap: () {
-              onTapPaymentMeth = 'Pay with USSD';
-              model!.notifyListeners();
-            },
-          ),
-          SizedBox(height: _isLoading ? 20.h : 0.h),
-          _isLoading
-              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
-              : SizedBox.shrink(),
-          SizedBox(height: 120.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  buttonColor: AppColors.dashboard,
-                  buttonText: 'Previous',
-                  color: AppColors.deep,
-                  fontSize: 14.sp,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    linIndexUpdate--;
-                    model!.notifyListeners();
-                  },
-                ),
-              ),
-              SizedBox(width: 20.w),
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  fontSize: 14.sp,
-                  buttonColor: onTapPaymentMeth != ''
-                      ? AppColors.primary
-                      : AppColors.infoGrey,
-                  buttonText: 'Continue',
-                  color: AppColors.white,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: onTapPaymentMeth != ''
-                      ? () {
-                          updateReminder(
-                            context,
-                            reminderId: data!.id!,
-                            updateReminder: UpdateReminderEntityModel(
-                              startDateTime: DateFormat(
-                                'dd MMM, yyyy',
-                              ).parse(dateTimeControllerUpdate.text),
-                              endDateTime: DateTime.parse(
-                                endDateControllerUpdate.text,
-                              ),
-                              durationInDays: int.parse(
-                                medDurationControllerUpdate.text,
-                              ),
-                              timesPerDay: int.parse(
-                                medDailyInTakenControllerUpdate.text,
-                              ),
-                              dailyDoseTimes: dailyDose,
-                              dosage: _dosageLabel,
-                              medicationImage: null,
-                              emails: emailReminderList,
-                              phoneNumbers: phoneReminderList,
-                              notificationChannels: notificationChannel,
-                              payment: update.Payment(
-                                amount: costTotal,
-                                currency: 'NGN',
-                              ),
-                            ),
-                          );
-                          model!.notifyListeners();
-                        }
-                      : () {},
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 26.h),
-        ],
-      ),
-    ),
-  );
+  //             Padding(
+  //               padding: EdgeInsets.only(top: 4.w),
+  //               child: GestureDetector(
+  //                 onTap: () {
+  //                   Navigator.pop(context!);
+  //                 },
+  //                 child: SvgPicture.asset(
+  //                   AppImage.cancel,
+  //                   height: 14.20,
+  //                   width: 14.20,
+  //                   color: AppColors.black,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 13.60.h),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.end,
+  //           children: [
+  //             SizedBox(
+  //               width: MediaQuery.of(context!).size.width * .82,
+  //               child: ClipRRect(
+  //                 borderRadius: const BorderRadius.all(
+  //                   Radius.circular(5.0),
+  //                 ), // Adjust radius as needed
+  //                 child: LinearProgressIndicator(
+  //                   minHeight: 4.0, // Adjust height as needed
+  //                   value: linIndexUpdate / 4,
+  //                   color: AppColors.primary, // Progress bar color
+  //                   backgroundColor: Colors.grey[300], // Background track color
+  //                 ),
+  //               ),
+  //             ),
+  //             SizedBox(width: 10.w),
+  //             TextView(
+  //               text: '$linIndexUpdate/4',
+  //               textStyle: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 13.2.sp,
+  //                 fontWeight: FontWeight.w400,
+  //                 color: AppColors.reminder,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 32.h),
+  //         TextView(
+  //           text: 'Amount',
+  //           textStyle: TextStyle(
+  //             fontFamily: 'Arial',
+  //             fontSize: 15.90.sp,
+  //             fontWeight: FontWeight.w400,
+  //             color: AppColors.black,
+  //           ),
+  //         ),
+  //         SizedBox(height: 14.2.h),
+  //         Container(
+  //           height: 70.h,
+  //           width: double.infinity,
+  //           decoration: BoxDecoration(
+  //             color: AppColors.skyBlue,
+  //             borderRadius: BorderRadius.circular(10.r),
+  //           ),
+  //           child: Center(
+  //             child: TextView(
+  //               text: '₦$costTotal.00',
+  //               textStyle: TextStyle(
+  //                 fontFamily: 'Arial',
+  //                 fontSize: 20.90.sp,
+  //                 fontWeight: FontWeight.w700,
+  //                 color: AppColors.reminder,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //         SizedBox(height: 22.h),
+  //         TextView(
+  //           text: 'Select Payment Method',
+  //           textStyle: TextStyle(
+  //             fontFamily: 'Arial',
+  //             fontSize: 16.90.sp,
+  //             fontWeight: FontWeight.w500,
+  //             color: AppColors.deep,
+  //           ),
+  //         ),
+  //         SizedBox(height: 12.h),
+  //         paymentWidget(
+  //           isWallet: true,
+  //           text: 'Pay with Wallet',
+  //           icon: AppImage.wallet_pay,
+  //           onTap: () {
+  //             onTapPaymentMeth = 'Pay with Wallet';
+  //             model!.notifyListeners();
+  //           },
+  //         ),
+  //         paymentWidget(
+  //           isWallet: false,
+  //           text: 'Pay with Card',
+  //           icon: AppImage.card_pay,
+  //           onTap: () {
+  //             onTapPaymentMeth = 'Pay with Card';
+  //             model!.notifyListeners();
+  //           },
+  //         ),
+  //         paymentWidget(
+  //           isWallet: false,
+  //           text: 'Pay with Bank Transfer',
+  //           icon: AppImage.bank_transfer,
+  //           onTap: () {
+  //             onTapPaymentMeth = 'Pay with Bank Transfer';
+  //             model!.notifyListeners();
+  //           },
+  //         ),
+  //         paymentWidget(
+  //           isWallet: false,
+  //           text: 'Pay with Mobile Money',
+  //           icon: AppImage.online_mobile,
+  //           onTap: () {
+  //             onTapPaymentMeth = 'Pay with Mobile Money';
+  //             model!.notifyListeners();
+  //           },
+  //         ),
+  //         paymentWidget(
+  //           isWallet: false,
+  //           text: 'Pay with USSD',
+  //           icon: AppImage.ussd_pay,
+  //           onTap: () {
+  //             onTapPaymentMeth = 'Pay with USSD';
+  //             model!.notifyListeners();
+  //           },
+  //         ),
+  //         SizedBox(height: _isLoading ? 20.h : 0.h),
+  //         _isLoading
+  //             ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+  //             : SizedBox.shrink(),
+  //         SizedBox(height: 120.h),
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Flexible(
+  //               child: ButtonWidget(
+  //                 border: 100.r,
+  //                 buttonColor: AppColors.dashboard,
+  //                 buttonText: 'Previous',
+  //                 color: AppColors.deep,
+  //                 fontSize: 14.sp,
+  //                 buttonBorderColor: AppColors.transparent,
+  //                 onPressed: () {
+  //                   linIndexUpdate--;
+  //                   model!.notifyListeners();
+  //                 },
+  //               ),
+  //             ),
+  //             SizedBox(width: 20.w),
+  //             Flexible(
+  //               child: ButtonWidget(
+  //                 border: 100.r,
+  //                 fontSize: 14.sp,
+  //                 buttonColor: onTapPaymentMeth != ''
+  //                     ? AppColors.primary
+  //                     : AppColors.infoGrey,
+  //                 buttonText: 'Continue',
+  //                 color: AppColors.white,
+  //                 buttonBorderColor: AppColors.transparent,
+  //                 onPressed: onTapPaymentMeth != ''
+  //                     ? () {
+  //                         updateReminder(
+  //                           context,
+  //                           reminderId: data!.id!,
+  //                           updateReminder: UpdateReminderEntityModel(
+  //                             startDateTime: DateFormat(
+  //                               'dd MMM, yyyy',
+  //                             ).parse(dateTimeControllerUpdate.text),
+  //                             endDateTime: DateTime.parse(
+  //                               endDateControllerUpdate.text,
+  //                             ),
+  //                             durationInDays: int.parse(
+  //                               medDurationControllerUpdate.text,
+  //                             ),
+  //                             timesPerDay: int.parse(
+  //                               medDailyInTakenControllerUpdate.text,
+  //                             ),
+  //                             dailyDoseTimes: dailyDose,
+  //                             dosage: _dosageLabel,
+  //                             medicationImage: null,
+  //                             emails: emailReminderList,
+  //                             phoneNumbers: phoneReminderList,
+  //                             notificationChannels: notificationChannel,
+  //                             payment: update.Payment(
+  //                               amount: costTotal,
+  //                               currency: 'NGN',
+  //                             ),
+  //                           ),
+  //                         );
+  //                         model!.notifyListeners();
+  //                       }
+  //                     : () {},
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         SizedBox(height: 26.h),
+  //       ],
+  //     ),
+  //   ),
+  // );
 
   String showNoTimes(number) {
     if (number == 1) {
@@ -26772,7 +26693,6 @@ class AuthViewModel extends BaseViewModel {
             url: _initiatePaymentResponseModel?.data?.redirectUrl,
           ),
         );
-       
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
@@ -27288,7 +27208,7 @@ class AuthViewModel extends BaseViewModel {
                         onPressed: () async {
                           Navigator.pop(context);
                           await Future.delayed(Duration(milliseconds: 100));
-                          showUpdateReminderModal(context: context, data: data);
+                          // showUpdateReminderModal(context: context, data: data);
                           // Add your update logic here
                         },
                         style: ElevatedButton.styleFrom(

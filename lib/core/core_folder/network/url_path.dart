@@ -54,7 +54,8 @@ class UrlConfig {
   static const String get_kyc = 'auth/get-kyc';
   static const String update_pharm_kyc = 'auth/upload-kyc';
 
-  static const String get_user_details_by_tenant = 'auth/get-user-details-by-tenant';
+  static const String get_user_details_by_tenant =
+      'auth/get-user-details-by-tenant';
   static const String register_user_by_tenant = 'auth/register-user-by-tenant';
   static const String reminders_tenant = 'reminders/tenant/';
   // static const String get_user_details_by_tenant = 'auth/get-user-details-by-tenant';

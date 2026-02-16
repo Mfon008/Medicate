@@ -7,38 +7,38 @@ part 'medication.g.dart';
 
 @JsonSerializable()
 class Medication {
-	String? medicationName;
-	String? drugName;
-	String? medicationType;
-	String? dosage;
-	DateTime? startDateTime;
-	int? durationInDays;
-	DateTime? endDateTime;
-	int? timesPerDay;
-	List<List<DailyDoseTime>>? dailyDoseTimes;
-	String? medicationStatus;
-	MedicationImage? medicationImage;
-	@JsonKey(name: '_id') 
-	String? id;
+  String? medicationName;
+  String? drugName;
+  String? medicationType;
+  String? dosage;
+  DateTime? startDateTime;
+  int? durationInDays;
+  DateTime? endDateTime;
+  int? timesPerDay;
+  List<List<DailyDoseTime>>? dailyDoseTimes;
+  String? medicationStatus;
+  MedicationImage? medicationImage;
+  @JsonKey(name: '_id')
+  String? id;
 
-	Medication({
-		this.medicationName, 
-		this.drugName, 
-		this.medicationType, 
-		this.dosage, 
-		this.startDateTime, 
-		this.durationInDays, 
-		this.endDateTime, 
-		this.timesPerDay, 
-		this.dailyDoseTimes, 
-		this.medicationStatus, 
-		this.medicationImage, 
-		this.id, 
-	});
+  Medication({
+    this.medicationName,
+    this.drugName,
+    this.medicationType,
+    this.dosage,
+    this.startDateTime,
+    this.durationInDays,
+    this.endDateTime,
+    this.timesPerDay,
+    this.dailyDoseTimes,
+    this.medicationStatus,
+    this.medicationImage,
+    this.id,
+  });
 
-	factory Medication.fromJson(Map<String, dynamic> json) {
-		return _$MedicationFromJson(json);
-	}
+  factory Medication.fromJson(Map<String, dynamic> json) {
+    return _$MedicationFromJson(json);
+  }
 
-	Map<String, dynamic> toJson() => _$MedicationToJson(this);
+  Map<String, dynamic> toJson() => _$MedicationToJson(this);
 }

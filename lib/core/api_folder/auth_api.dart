@@ -470,5 +470,4 @@ class AuthApi {
       rethrow;
     }
   }
-
 }

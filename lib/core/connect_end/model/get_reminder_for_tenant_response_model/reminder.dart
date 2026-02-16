@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'medication.dart';
 import 'payment.dart';
+import 'user.dart';
 
 part 'reminder.g.dart';
 
@@ -21,6 +22,7 @@ class Reminder {
   String? reminderGroupId;
   DateTime? createdAt;
   DateTime? updatedAt;
+  User? user;
 
   Reminder({
     this.id,
@@ -36,6 +38,7 @@ class Reminder {
     this.reminderGroupId,
     this.createdAt,
     this.updatedAt,
+    this.user
   });
 
   factory Reminder.fromJson(Map<String, dynamic> json) {

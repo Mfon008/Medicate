@@ -103,7 +103,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -113,12 +112,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         body: ViewModelBuilder<AuthViewModel>.reactive(
           viewModelBuilder: () => AuthViewModel(),
           onViewModelReady: (model) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              model.getUserDetails(
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              await model.getUserDetails(
                 context: context,
-                phoneNo:
-                    widget.phone ??
-                    SharedPreferencesService.instance.usersData['user']['phone'],
+                phoneNo: model.returnPhoneNoStructureWith234(
+                  widget.phone ??
+                      SharedPreferencesService
+                          .instance
+                          .usersData['user']['phone'],
+                ),
               );
             });
           },
@@ -168,14 +170,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     SizedBox(height: 26.0.h),
                     model.getUserDetailsResponseModel != null &&
-                            model
-                                    .getUserDetailsResponseModel!
-                                    .data!
-                                    .displayName !=
+                            model.getUserDetailsResponseModel!.data!.fullName !=
                                 null
                         ? TextView(
                             text:
-                                'Welcome back, ${model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
+                                'Welcome back, ${model.getUserDetailsResponseModel?.data?.fullName ?? ''}',
                             textStyle: TextStyle(
                               fontFamily: 'GoogleSans',
                               fontSize: 20.sp,
@@ -209,7 +208,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                     ),
                     SizedBox(height: 24.10.h),
-      
+
                     Center(
                       child: Pinput(
                         length: 4,
@@ -239,7 +238,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         },
                       ),
                     ),
-      
+
                     SizedBox(height: 20.0.h),
                     GestureDetector(
                       onTap: () => navigate.navigateTo(Routes.forgotPinScreen),
@@ -256,7 +255,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     SizedBox(height: 20.0.h),
                     model.getUserDetailsResponseModel != null &&
-                                model.getUserDetailsResponseModel?.data?.pinSet ==
+                                model
+                                        .getUserDetailsResponseModel
+                                        ?.data
+                                        ?.pinSet ==
                                     true ||
                             SharedPreferencesService
                                     .instance
@@ -272,11 +274,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     model.signIn(
                                       context,
                                       signInEntity: LoginEntityModel(
-                                        phone:
-                                            widget.phone ??
-                                            SharedPreferencesService
-                                                .instance
-                                                .usersData['user']['phone'],
+                                        phone: model
+                                            .returnPhoneNoStructureWith234(
+                                              widget.phone ??
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['phone'],
+                                            ),
                                         pin: SharedPreferencesService
                                             .instance
                                             .pinSet,
@@ -307,7 +311,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             ],
                           )
                         : SizedBox.shrink(),
-      
+
                     SizedBox(height: 260.h),
                     ButtonWidget(
                       border: 100.r,
@@ -321,11 +325,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           model.signIn(
                             context,
                             signInEntity: LoginEntityModel(
-                              phone: model.returnPhoneNoStructureWith234(widget.phone ??
-                                  SharedPreferencesService
-                                      .instance
-                                      .usersData['user']['phone'])
-                                  ,
+                              phone: model.returnPhoneNoStructureWith234(
+                                widget.phone ??
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['phone'],
+                              ),
                               pin: pinInput,
                             ),
                           );

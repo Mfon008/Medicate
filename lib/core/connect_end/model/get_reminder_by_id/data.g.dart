@@ -32,6 +32,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
+  user: json['user'] == null ? null : User.fromJson(json['user'] as Map<String, dynamic>)
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -48,4 +49,5 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'reminderGroupId': instance.reminderGroupId,
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
+  'user':instance.user
 };

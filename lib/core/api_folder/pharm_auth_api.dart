@@ -44,7 +44,6 @@ import '../core_folder/network/url_path.dart';
 
 @lazySingleton
 class PharmApi {
-  
   final _service = locator<NetworkService>();
   final logger = getLogger('Pharm Api');
   final session = locator<SharedPreferencesService>();
@@ -564,7 +563,6 @@ class PharmApi {
     }
   }
 
-
   Future<GetTodayReminderModel> getTodaysReminder({
     String? period,
     String? date,
@@ -637,9 +635,7 @@ class PharmApi {
     }
   }
 
-  Future<dynamic> getUserDetailsByTenant({
-    String? phone,
-  }) async {
+  Future<dynamic> getUserDetailsByTenant({String? phone}) async {
     try {
       final response = await _service.call(
         UrlConfig.get_user_details_by_tenant,
@@ -654,9 +650,7 @@ class PharmApi {
     }
   }
 
-  Future<dynamic> registerUserByTenant({
-    String? phone,
-  }) async {
+  Future<dynamic> registerUserByTenant({String? phone}) async {
     try {
       final response = await _service.call(
         UrlConfig.register_user_by_tenant,
@@ -689,6 +683,7 @@ class PharmApi {
       rethrow;
     }
   }
+
   Future<GetReminderForTenantResponseModel> getReminderForTenantAll({
     String? page,
     String? limit,
@@ -746,9 +741,7 @@ class PharmApi {
     }
   }
 
-  Future<GetReminderById> getReminderByUserId({
-    String? userId,
-  }) async {
+  Future<GetReminderById> getReminderByUserId({String? userId}) async {
     try {
       final response = await _service.call(
         '${UrlConfig.reminder}/$userId',

@@ -10,7 +10,7 @@ Meta _$MetaFromJson(Map<String, dynamic> json) => Meta(
   page: json['page'] as dynamic,
   limit: json['limit'] as dynamic,
   total: json['total'] as dynamic,
-  totalPages: json['totalPages'] as dynamic
+  totalPages: json['totalPages'] as dynamic,
 );
 
 Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{

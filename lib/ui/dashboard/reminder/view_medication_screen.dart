@@ -596,15 +596,8 @@ class ViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 4.10.h),
                               TextView(
-                                text: '${model
-                                      .getReminderByIdModel!
-                                      .data!
-                                      .medication!.durationInDays} ${model.returnNumberOfDays(
-                                  model
-                                      .getReminderByIdModel!
-                                      .data!
-                                      .medication!.durationInDays,
-                                ).toString().capitalize()}',
+                                text:
+                                    '${model.getReminderByIdModel!.data!.medication!.durationInDays} ${model.returnNumberOfDays(model.getReminderByIdModel!.data!.medication!.durationInDays).toString().capitalize()}',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 14.8.sp,

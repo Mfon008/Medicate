@@ -85,10 +85,6 @@ class MedicationClass {
     'timesPerDay': timesToTake,
     'dailyDoseTimes': dosageMap,
     'isCusSchedule': isCusSchedule,
-    // 'formattedSelectedTimeAndPeriodList':formattedSelectedTimeAndPeriodList,
-    // 'dailyDoseTimes': dosageMap
-    //     ?.map((e) => e.map((e) => e.toJson()).toList())
-    //     .toList(),
     'note': note,
     'medicationImage': imageData?.toJson(),
   };

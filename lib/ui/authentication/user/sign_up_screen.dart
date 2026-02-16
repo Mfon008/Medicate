@@ -316,7 +316,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 context,
                                 signUpEntity: SignUpEntityModel(
                                   fullName: nameController.text.trim(),
-                                  phone: '+234${model.returnPhoneNoStructure(phoneController.text.trim())}',
+                                  phone:
+                                      '+234${model.returnPhoneNoStructure(phoneController.text.trim())}',
                                 ),
                               );
                             }

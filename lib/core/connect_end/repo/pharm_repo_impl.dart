@@ -353,10 +353,9 @@ class PharmRepoImpl {
     return response;
   }
 
-
   Future<GetReminderById> getReminderByUserId({String? userId}) async {
-    final response = await _contract.getReminderByUserId(userId:userId);
-  
+    final response = await _contract.getReminderByUserId(userId: userId);
+
     return response;
   }
 

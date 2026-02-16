@@ -53,11 +53,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   model.getReminderResponseModel!.data!.reminders!.isEmpty
               ? SizedBox.shrink()
               : FloatingActionButton(
-                  onPressed: () {
-                    // setState(() {
-                    //   model.isTapped = !model.isTapped;
-                    // });
-                  },
+                  onPressed: () {},
                   backgroundColor: AppColors.primary1,
                   shape: const CircleBorder(),
                   child: PopupMenuButton(
@@ -124,14 +120,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       ];
                     },
                     child: Icon(Icons.add, color: AppColors.white, size: 25.sp),
-                    // !model.isTapped
-                    //     ? Icon(Icons.add, color: AppColors.white, size: 25.sp)
-                    //     : SvgPicture.asset(
-                    //         AppImage.x,
-                    //         color: AppColors.white,
-                    //         height: 20.h,
-                    //         width: 20.w,
-                    //       ),
                   ),
                 ),
           appBar: AppBar(
@@ -354,7 +342,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                           ),
 
                           onSelected: (String result) async {
-                            // genderController.text = result;
                             model.isReminderStatus = result;
                             await Future.delayed(Duration(milliseconds: 400));
                             model.getReminder(

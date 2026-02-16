@@ -3,20 +3,20 @@ import 'medication_image.dart';
 
 class Medication {
   String? medicationName;
-  String? drugName;
+  String? scheduleType;
   String? medicationType;
   String? dosage;
   DateTime? startDateTime;
   DateTime? endDateTime;
   int? durationInDays;
-  int? timesPerDay;
+  dynamic timesPerDay;
   List<List<DailyDoseTime>>? dailyDoseTimes;
   String? note;
   MedicationImage? medicationImage;
 
   Medication({
     this.medicationName,
-    this.drugName,
+    this.scheduleType,
     this.medicationType,
     this.dosage,
     this.startDateTime,
@@ -30,7 +30,7 @@ class Medication {
 
   factory Medication.fromJson(Map<String, dynamic> json) => Medication(
     medicationName: json['medicationName'] as String?,
-    drugName: json['drugName'] as String?,
+    scheduleType: json['scheduleType'] as String?,
     medicationType: json['medicationType'] as String?,
     dosage: json['dosage'] as String?,
     startDateTime: json['startDateTime'] == null
@@ -40,7 +40,7 @@ class Medication {
         ? null
         : DateTime.parse(json['endDateTime'] as String),
     durationInDays: json['durationInDays'] as int?,
-    timesPerDay: json['timesPerDay'] as int?,
+    timesPerDay: json['timesPerDay'],
     dailyDoseTimes: (json['dailyDoseTimes'] as List<dynamic>?)
         ?.map(
           (e) => (e as List<dynamic>)
@@ -58,7 +58,7 @@ class Medication {
 
   Map<String, dynamic> toJson() => {
     'medicationName': medicationName,
-    'drugName': drugName,
+    'scheduleType': scheduleType,
     'medicationType': medicationType,
     'dosage': dosage,
     'startDateTime': startDateTime?.toIso8601String(),

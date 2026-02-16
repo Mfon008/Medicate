@@ -178,10 +178,7 @@ class AuthRepoImpl {
     String? page,
     String? limit,
   }) async {
-    final response = await _contract.getReminderAll(
-      page: page,
-      limit: limit,
-    );
+    final response = await _contract.getReminderAll(page: page, limit: limit);
     return response;
   }
 

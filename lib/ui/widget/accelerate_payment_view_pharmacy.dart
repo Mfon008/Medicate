@@ -82,6 +82,7 @@ class _AcceleratePaymentViewPharmacyState
             actions: [
               GestureDetector(
                 onTap: () {
+                  model.medicationClassList.clear();
                   navigate.clearStackAndShow(
                     Routes.pharmacyDashboard,
                     arguments: PharmacyDashboardArguments(index: 1),

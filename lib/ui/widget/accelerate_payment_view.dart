@@ -26,7 +26,7 @@ class AcceleratePaymentView extends StatefulWidget {
 class _AcceleratePaymentViewState extends State<AcceleratePaymentView> {
   WebViewController? _controller;
 
-   void setupWebViewWithPlatform() {
+  void setupWebViewWithPlatform() {
     if (Platform.isAndroid) {
       _controller = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -85,11 +85,12 @@ class _AcceleratePaymentViewState extends State<AcceleratePaymentView> {
               actions: [
                 GestureDetector(
                   onTap: () {
-                     model.medicationClassList.clear();
-                  navigate.clearStackAndShow(
-                    Routes.dashboard,
-                    arguments: DashboardArguments(index: 1),
-                  );},
+                    model.medicationClassList.clear();
+                    navigate.clearStackAndShow(
+                      Routes.dashboard,
+                      arguments: DashboardArguments(index: 1),
+                    );
+                  },
                   child: Padding(
                     padding: EdgeInsets.only(right: 10.0.w),
                     child: TextView(
@@ -107,12 +108,11 @@ class _AcceleratePaymentViewState extends State<AcceleratePaymentView> {
             ),
             body: WebViewWidget(controller: _controller!),
           );
-        }
+        },
       ),
     );
   }
 
-   
   Future<bool> willPopControl() async {
     return (await showDialog(
           context: context,

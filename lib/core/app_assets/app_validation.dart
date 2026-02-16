@@ -107,7 +107,7 @@ class AppValidator {
           (value.startsWith(RegExp("0[789]")) && value.length != 11)) {
         return error ?? 'Noti a valid phone number.';
       }
-      if(!value.startsWith(RegExp("0[789]")) && value.length != 10) {
+      if (!value.startsWith(RegExp("0[789]")) && value.length != 10) {
         return error ?? 'Notp a valid phone number.';
       }
       return null;
