@@ -596,120 +596,136 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
       borderRadius: BorderRadius.circular(12),
       border: Border.all(color: AppColors.infoGrey1),
     ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextView(
-              text: '2023-12-10',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 12.50.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.infoGrey,
-              ),
-            ),
-            SizedBox(height: 4.20.h),
-            TextView(
-              text: 'Bob Smith',
-              textStyle: TextStyle(
-                fontFamily: 'GoogleSans',
-                fontSize: 14.50.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.reminder,
-              ),
-            ),
-            SizedBox(height: 4.20.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 11.4.w,
-                    vertical: 4.2.w,
-                  ),
-                  margin: EdgeInsets.only(right: 10.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: AppColors.infoGrey1)
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(AppImage.sms,height: 18.h,width: 19.2.w,),
-                      SizedBox(width: 6.8.w,),
-                      TextView(
-                        text: 'SMS',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 12.50.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                    ],
+                TextView(
+                  text: '2023-12-10',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 12.50.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 11.4.w,
-                    vertical: 4.2.w,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: AppColors.infoGrey1)
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(AppImage.phone,height: 16.h,width: 16.w,color: AppColors.infoGrey,),
-                      SizedBox(width: 6.8.w,),
-                      TextView(
-                        text: 'Phone Call',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 12.50.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                    ],
+                SizedBox(height: 4.20.h),
+                TextView(
+                  text: 'Bob Smith',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 14.50.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
                   ),
                 ),
               ],
             ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'Ongoing',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 12.50.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.yellow,
+                  ),
+                ),
+                SizedBox(height: 4.20.h),
+                TextView(
+                  text: '₦125,000',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 16.50.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.thickGrey,
+                  ),
+                ),
+                // SizedBox(height: 40.h),
+              ],
+            ),
           ],
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.start,
+
+        SizedBox(height: 14.20.h),
+        Wrap(
+          runSpacing: 4,
+          alignment:
+              WrapAlignment.start, // 👈 this makes it start from the beginning
           children: [
-            TextView(
-              text: 'Ongoing',
-              textStyle: TextStyle(
-                fontFamily: 'GoogleSans',
-                fontSize: 12.50.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.yellow,
+            Container(
+              width: 80.w,
+              padding: EdgeInsets.symmetric(
+                horizontal: 11.4.w,
+                vertical: 4.2.w,
+              ),
+              margin: EdgeInsets.only(right: 10.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: AppColors.infoGrey1),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(AppImage.sms, height: 18.h, width: 19.2.w),
+                  SizedBox(width: 6.8.w),
+                  TextView(
+                    text: 'SMS',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 12.50.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 4.20.h),
-            TextView(
-              text: '₦125,000',
-              textStyle: TextStyle(
-                fontFamily: 'GoogleSans',
-                fontSize: 16.50.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.thickGrey,
+            Container(
+              width: 120.w,
+              padding: EdgeInsets.symmetric(
+                horizontal: 11.4.w,
+                vertical: 4.2.w,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: AppColors.infoGrey1),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    AppImage.phone,
+                    height: 16.h,
+                    width: 16.w,
+                    color: AppColors.infoGrey,
+                  ),
+                  SizedBox(width: 6.8.w),
+                  TextView(
+                    text: 'Phone Call',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 12.50.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 40.h),
           ],
         ),
       ],
     ),
   );
-  
 
   Widget monthOrderWidget() => Container(
     padding: EdgeInsets.all(12.w),
@@ -819,7 +835,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
       ],
     ),
   );
-  
+
   Widget activePatientWidget() => Container(
     padding: EdgeInsets.all(12.w),
     margin: EdgeInsets.only(bottom: 12.w),

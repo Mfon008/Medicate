@@ -418,6 +418,8 @@ class AuthViewModel extends BaseViewModel {
   Map<int, String?> selectedTimePerDay = {};
   Map<int, List<String>> timesPerDay = {};
 
+  int? globalTimeIndex;
+
   String notificationChannelFlowWidgetIcon(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
       return AppImage.channel_email;
@@ -9271,8 +9273,9 @@ class AuthViewModel extends BaseViewModel {
     List<Map<String, dynamic>> addTimePeriod = [];
     String startDateIsoWithin = startDateIso;
     _isLoading = true;
+    model!.notifyListeners();
 
-    if (model!.isCusSchedule) {
+    if (model.isCusSchedule) {
       for (int day = 0; day < model.returnNoDays!; day++) {
         List<Map<String, String>> dayDoses = [];
         for (int i = 0; i < model.timesPerDay[day]!.length; i++) {
@@ -9339,7 +9342,8 @@ class AuthViewModel extends BaseViewModel {
     model.markUpdateControllersInitializedFalse();
     clearReminderMedsVaraibles(model);
 
-    _isLoading = false;
+   _isLoading = false;
+    model.notifyListeners();
     AppUtils.snackbar(context, message: 'Medication has been added.');
     setModalState!(() {});
     model.notifyListeners();
@@ -10649,15 +10653,26 @@ class AuthViewModel extends BaseViewModel {
 
   getTimeFreqCustom(int day) => selectedTimePerDay[day] ?? '--:--';
 
-  Future<void> selectTimeFreq(BuildContext? context) async {
+  Future<void> selectTimeFreq({
+    BuildContext? context,
+    AuthViewModel? model,
+  }) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context!,
       initialTime: TimeOfDay.now(),
     );
 
-    if (pickedTime != null) {
+    if (model!.globalTimeIndex != null) {
+      model.formattedSelectedTimeAndPeriodList![model.globalTimeIndex!] =
+          formatTimeFreq(pickedTime!);
       formattedSelectedTimeAndPeriod = formatTimeFreq(pickedTime);
+    } else {
+      if (pickedTime != null) {
+        formattedSelectedTimeAndPeriod = formatTimeFreq(pickedTime);
+      }
     }
+    globalTimeIndex = null;
+    model.notifyListeners();
   }
 
   Future<void> selectTimeFreqIndex({
@@ -12691,7 +12706,8 @@ class AuthViewModel extends BaseViewModel {
                 Padding(
                   padding: EdgeInsets.only(top: 4.w, right: 10.w),
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      await model.clearReminderMedsVaraibles(model);
                       Navigator.pop(context!);
                     },
                     child: SvgPicture.asset(
@@ -13827,51 +13843,60 @@ class AuthViewModel extends BaseViewModel {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.fromLTRB(
-                                            16.w,
-                                            8.0.w,
-                                            16.0.w,
-                                            8.0.w,
-                                          ),
-                                          width: double.infinity,
-                                          height: 50.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              10.r,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            formattedSelectedTimeAndPeriod =
+                                                '--:--';
+                                            model.globalTimeIndex = null;
+                                            model.notifyListeners();
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                              16.w,
+                                              8.0.w,
+                                              16.0.w,
+                                              8.0.w,
                                             ),
-                                            border: Border.all(
-                                              color: AppColors.infoGrey1,
+                                            width: double.infinity,
+                                            height: 50.h,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.r),
+                                              border: Border.all(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                              color: AppColors.white,
                                             ),
-                                            color: AppColors.white,
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TextView(
-                                                text: getTimeFreq(),
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                TextView(
+                                                  text: getTimeFreq(),
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder,
+                                                  ),
                                                 ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {
-                                                  selectTimeFreq(context);
-
-                                                  setModalState!(() {});
-                                                  notifyListeners();
-                                                },
-                                                icon: Icon(
-                                                  Icons.access_time_rounded,
-                                                  color: AppColors.fineGrey,
-                                                  size: 20.sp,
+                                                IconButton(
+                                                  onPressed: () {
+                                                    selectTimeFreq(
+                                                      context: context,
+                                                      model: model,
+                                                    );
+                                                    setModalState!(() {});
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.access_time_rounded,
+                                                    color: AppColors.fineGrey,
+                                                    size: 20.sp,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -13941,11 +13966,21 @@ class AuthViewModel extends BaseViewModel {
                                           spacing: 10.0,
                                           runSpacing: 10.0,
                                           children: [
-                                            ...model.formattedSelectedTimeAndPeriodList!.map(
-                                              (e) => GestureDetector(
+                                            ...model.formattedSelectedTimeAndPeriodList!.asMap().entries.map((
+                                              entry,
+                                            ) {
+                                              final index =
+                                                  entry.key; // ✅ index
+                                              final value =
+                                                  entry.value; // ✅ time string
+
+                                              return GestureDetector(
                                                 onTap: () {
                                                   formattedSelectedTimeAndPeriod =
-                                                      e;
+                                                      value;
+                                                  model.formattedSelectedTimeAndPeriod =
+                                                      value;
+                                                  model.globalTimeIndex = index;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -13963,21 +13998,21 @@ class AuthViewModel extends BaseViewModel {
                                                     border: Border.all(
                                                       color:
                                                           formattedSelectedTimeAndPeriod ==
-                                                              e
+                                                              value
                                                           ? AppColors
                                                                 .transparent
                                                           : AppColors.app_green,
                                                     ),
                                                     color:
                                                         formattedSelectedTimeAndPeriod ==
-                                                            e
+                                                            value
                                                         ? AppColors.app_green
                                                         : AppColors.white,
                                                   ),
                                                   child: Row(
                                                     children: [
                                                       TextView(
-                                                        text: e,
+                                                        text: value,
                                                         textStyle: TextStyle(
                                                           fontFamily:
                                                               'GoogleSans',
@@ -13986,7 +14021,7 @@ class AuthViewModel extends BaseViewModel {
                                                               FontWeight.w500,
                                                           color:
                                                               formattedSelectedTimeAndPeriod ==
-                                                                  e
+                                                                  value
                                                               ? AppColors.white
                                                               : AppColors
                                                                     .app_green,
@@ -13997,7 +14032,7 @@ class AuthViewModel extends BaseViewModel {
                                                         onTap: () {
                                                           model
                                                               .formattedSelectedTimeAndPeriodList!
-                                                              .remove(e);
+                                                              .remove(value);
                                                           setModalState!(() {});
                                                           model
                                                               .notifyListeners();
@@ -14006,7 +14041,7 @@ class AuthViewModel extends BaseViewModel {
                                                           AppImage.x,
                                                           color:
                                                               formattedSelectedTimeAndPeriod ==
-                                                                  e
+                                                                  value
                                                               ? AppColors.white
                                                               : AppColors
                                                                     .app_green,
@@ -14017,8 +14052,8 @@ class AuthViewModel extends BaseViewModel {
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            ),
+                                              );
+                                            }),
                                           ],
                                         )
                                       : SizedBox.shrink(),
@@ -14517,113 +14552,113 @@ class AuthViewModel extends BaseViewModel {
 
                         !isTappedPhoneAdded && phoneReminderList.isEmpty
                             ? SizedBox.shrink()
-                            : isTappedPhoneAdded && phoneReminderList.isEmpty
-                            ? Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.infoGrey1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  color: AppColors.white,
-                                ),
-
-                                padding: EdgeInsets.all(12.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextView(
-                                          text: 'Add Phone Number',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.2.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.deep,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            TextView(
-                                              text: 'Numbers available',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.fineGrey,
-                                              ),
-                                            ),
-                                            SizedBox(width: 6.w),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                  255,
-                                                  223,
-                                                  233,
-                                                  247,
-                                                ),
-
-                                                borderRadius:
-                                                    BorderRadius.circular(12.r),
-                                                border: Border.all(
-                                                  color: AppColors.primary
-                                                      .withOpacity(.4),
-                                                ),
-                                              ),
-                                              child: TextView(
-                                                text:
-                                                    '${phoneReminderList.length}',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 11.8.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.primary,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            isTappedPhoneAdded =
-                                                !isTappedPhoneAdded;
-                                            model.notifyListeners();
-                                          },
-                                          child: SvgPicture.asset(
-                                            AppImage.drop_up,
-                                            height: 22.0.h,
-                                            width: 22.0.w,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2.w),
-                                        IconButton(
-                                          onPressed: () {
-                                            showPhoneDialog(context);
-                                            isPhoneValid = false;
-                                            model.notifyListeners();
-                                          },
-                                          icon: Icon(
-                                            Icons.add_circle,
-                                            color: AppColors.primary1,
-                                            size: 24.sp,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(
+                            : isTappedPhoneAdded
+                            ?
+                              //  Container(
+                              //     decoration: BoxDecoration(
+                              //       border: Border.all(
+                              //         color: AppColors.infoGrey1,
+                              //       ),
+                              //       borderRadius: BorderRadius.circular(12.r),
+                              //       color: AppColors.white,
+                              //     ),
+                              //     padding: EdgeInsets.all(12.w),
+                              //     child: Row(
+                              //       mainAxisAlignment:
+                              //           MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         Column(
+                              //           crossAxisAlignment:
+                              //               CrossAxisAlignment.start,
+                              //           children: [
+                              //             TextView(
+                              //               text: 'Add Phone Number',
+                              //               textStyle: TextStyle(
+                              //                 fontFamily: 'Arial',
+                              //                 fontSize: 16.2.sp,
+                              //                 fontWeight: FontWeight.w400,
+                              //                 color: AppColors.deep,
+                              //               ),
+                              //             ),
+                              //             Row(
+                              //               children: [
+                              //                 TextView(
+                              //                   text: 'Numbers available',
+                              //                   textStyle: TextStyle(
+                              //                     fontFamily: 'Arial',
+                              //                     fontSize: 14.8.sp,
+                              //                     fontWeight: FontWeight.w400,
+                              //                     color: AppColors.fineGrey,
+                              //                   ),
+                              //                 ),
+                              //                 SizedBox(width: 6.w),
+                              //                 Container(
+                              //                   padding: EdgeInsets.symmetric(
+                              //                     horizontal: 10.w,
+                              //                   ),
+                              //                   decoration: BoxDecoration(
+                              //                     color: const Color.fromARGB(
+                              //                       255,
+                              //                       223,
+                              //                       233,
+                              //                       247,
+                              //                     ),
+                              //                     borderRadius:
+                              //                         BorderRadius.circular(12.r),
+                              //                     border: Border.all(
+                              //                       color: AppColors.primary
+                              //                           .withOpacity(.4),
+                              //                     ),
+                              //                   ),
+                              //                   child: TextView(
+                              //                     text:
+                              //                         '${phoneReminderList.length}',
+                              //                     textStyle: TextStyle(
+                              //                       fontFamily: 'Arial',
+                              //                       fontSize: 11.8.sp,
+                              //                       fontWeight: FontWeight.w400,
+                              //                       color: AppColors.primary,
+                              //                     ),
+                              //                   ),
+                              //                 ),
+                              //               ],
+                              //             ),
+                              //           ],
+                              //         ),
+                              //         Row(
+                              //           children: [
+                              //             GestureDetector(
+                              //               onTap: () {
+                              //                 isTappedPhoneAdded =
+                              //                     !isTappedPhoneAdded;
+                              //                 model.notifyListeners();
+                              //               },
+                              //               child: SvgPicture.asset(
+                              //                 AppImage.drop_up,
+                              //                 height: 22.0.h,
+                              //                 width: 22.0.w,
+                              //               ),
+                              //             ),
+                              //             SizedBox(width: 2.w),
+                              //             IconButton(
+                              //               onPressed: () {
+                              //                 showPhoneDialog(context);
+                              //                 isPhoneValid = false;
+                              //                 model.notifyListeners();
+                              //               },
+                              //               icon: Icon(
+                              //                 Icons.add_circle,
+                              //                 color: AppColors.primary1,
+                              //                 size: 24.sp,
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   )
+                              // :
+                              Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12.r),
                                   border: Border.all(
@@ -14952,7 +14987,8 @@ class AuthViewModel extends BaseViewModel {
                                     }),
                                   ],
                                 ),
-                              ),
+                              )
+                            : SizedBox.shrink(),
 
                         // : SizedBox.shrink(),
                         SizedBox(height: 32.20.h),
@@ -15008,6 +15044,22 @@ class AuthViewModel extends BaseViewModel {
                               );
                               linIndex++;
                               addCostTotal(model);
+                              if (isTappedPhoneAdded &&
+                                  !addedPhoneReminderList.contains(
+                                    formatPhoneNumber(
+                                      SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['phone'],
+                                    ),
+                                  )) {
+                                addedPhoneReminderList.add(
+                                  formatPhoneNumber(
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['phone'],
+                                  ),
+                                );
+                              }
                               model.notifyListeners();
                             }
                           },
@@ -16736,6 +16788,8 @@ class AuthViewModel extends BaseViewModel {
                                                                 onTap: () {
                                                                   model.getTime =
                                                                       time['time'];
+                                                                  model.globalTimeIndex =
+                                                                      timeIndex;
                                                                   setModalState
                                                                       ?.call(
                                                                         () {},
@@ -18242,64 +18296,82 @@ class AuthViewModel extends BaseViewModel {
                                                 Row(
                                                   children: [
                                                     Expanded(
-                                                      child: Container(
-                                                        padding:
-                                                            EdgeInsets.fromLTRB(
-                                                              16.w,
-                                                              8.0.w,
-                                                              16.0.w,
-                                                              8.0.w,
-                                                            ),
-                                                        width: double.infinity,
-                                                        height: 50.h,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                10.r,
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          formattedSelectedTimeAndPeriod =
+                                                              '--:--';
+                                                          model.globalTimeIndex =
+                                                              null;
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.fromLTRB(
+                                                                16.w,
+                                                                8.0.w,
+                                                                16.0.w,
+                                                                8.0.w,
                                                               ),
-                                                          border: Border.all(
-                                                            color: AppColors
-                                                                .infoGrey1,
+                                                          width:
+                                                              double.infinity,
+                                                          height: 50.h,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  10.r,
+                                                                ),
+                                                            border: Border.all(
+                                                              color: AppColors
+                                                                  .infoGrey1,
+                                                            ),
+                                                            color:
+                                                                AppColors.white,
                                                           ),
-                                                          color:
-                                                              AppColors.white,
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            TextView(
-                                                              text:
-                                                                  getTimeFreq(),
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'Arial',
-                                                                fontSize: 14.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: AppColors
-                                                                    .reminder,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              TextView(
+                                                                text:
+                                                                    getTimeFreq(),
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      14.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            IconButton(
-                                                              onPressed: () {
-                                                                selectTimeFreq(
-                                                                  context,
-                                                                );
-                                                                model
-                                                                    .notifyListeners();
-                                                              },
-                                                              icon: Icon(
-                                                                Icons
-                                                                    .access_time_rounded,
-                                                                color: AppColors
-                                                                    .fineGrey,
-                                                                size: 20.sp,
+                                                              IconButton(
+                                                                onPressed: () {
+                                                                  selectTimeFreq(
+                                                                    context:
+                                                                        context,
+                                                                    model:
+                                                                        model,
+                                                                  );
+                                                                  setModalState!(
+                                                                    () {},
+                                                                  );
+                                                                  model
+                                                                      .notifyListeners();
+                                                                },
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .access_time_rounded,
+                                                                  color: AppColors
+                                                                      .fineGrey,
+                                                                  size: 20.sp,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -18323,7 +18395,6 @@ class AuthViewModel extends BaseViewModel {
                                                               .contains(
                                                                 formattedSelectedTimeAndPeriod,
                                                               )) {
-                                                            // print(formattedSelectedTimeAndPeriod);
                                                           } else {
                                                             model
                                                                 .formattedSelectedTimeAndPeriodList!
@@ -18375,13 +18446,21 @@ class AuthViewModel extends BaseViewModel {
                                                         spacing: 10.0,
                                                         runSpacing: 10.0,
                                                         children: [
-                                                          ...model.formattedSelectedTimeAndPeriodList!.map(
-                                                            (
-                                                              e,
-                                                            ) => GestureDetector(
+                                                          ...model.formattedSelectedTimeAndPeriodList!.asMap().entries.map((
+                                                            entry,
+                                                          ) {
+                                                            final index = entry
+                                                                .key; // ✅ index
+                                                            final value =
+                                                                entry.value;
+                                                            return GestureDetector(
                                                               onTap: () {
                                                                 formattedSelectedTimeAndPeriod =
-                                                                    e;
+                                                                    value;
+                                                                model.formattedSelectedTimeAndPeriod =
+                                                                    value;
+                                                                model.globalTimeIndex =
+                                                                    index;
                                                                 setModalState!(
                                                                   () {},
                                                                 );
@@ -18405,7 +18484,7 @@ class AuthViewModel extends BaseViewModel {
                                                                   border: Border.all(
                                                                     color:
                                                                         formattedSelectedTimeAndPeriod ==
-                                                                            e
+                                                                            value
                                                                         ? AppColors
                                                                               .transparent
                                                                         : AppColors
@@ -18413,7 +18492,7 @@ class AuthViewModel extends BaseViewModel {
                                                                   ),
                                                                   color:
                                                                       formattedSelectedTimeAndPeriod ==
-                                                                          e
+                                                                          value
                                                                       ? AppColors
                                                                             .app_green
                                                                       : AppColors
@@ -18422,7 +18501,8 @@ class AuthViewModel extends BaseViewModel {
                                                                 child: Row(
                                                                   children: [
                                                                     TextView(
-                                                                      text: e,
+                                                                      text:
+                                                                          value,
                                                                       textStyle: TextStyle(
                                                                         fontFamily:
                                                                             'GoogleSans',
@@ -18432,7 +18512,7 @@ class AuthViewModel extends BaseViewModel {
                                                                             FontWeight.w500,
                                                                         color:
                                                                             formattedSelectedTimeAndPeriod ==
-                                                                                e
+                                                                                value
                                                                             ? AppColors.white
                                                                             : AppColors.app_green,
                                                                       ),
@@ -18446,7 +18526,7 @@ class AuthViewModel extends BaseViewModel {
                                                                         model
                                                                             .formattedSelectedTimeAndPeriodList!
                                                                             .remove(
-                                                                              e,
+                                                                              value,
                                                                             );
                                                                         setModalState!(
                                                                           () {},
@@ -18459,7 +18539,7 @@ class AuthViewModel extends BaseViewModel {
                                                                             .x,
                                                                         color:
                                                                             formattedSelectedTimeAndPeriod ==
-                                                                                e
+                                                                                value
                                                                             ? AppColors.white
                                                                             : AppColors.app_green,
                                                                         height:
@@ -18471,8 +18551,8 @@ class AuthViewModel extends BaseViewModel {
                                                                   ],
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ),
+                                                            );
+                                                          }),
                                                         ],
                                                       )
                                                     : SizedBox.shrink(),
@@ -19136,111 +19216,111 @@ class AuthViewModel extends BaseViewModel {
 
                       !isTappedPhoneAdded && phoneReminderList.isEmpty
                           ? SizedBox.shrink()
-                          : isTappedPhoneAdded && phoneReminderList.isEmpty
-                          ? Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.infoGrey1),
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: AppColors.white,
-                              ),
-
-                              padding: EdgeInsets.all(12.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Add Phone Number',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 16.2.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.deep,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          TextView(
-                                            text: 'Numbers available',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14.8.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                223,
-                                                233,
-                                                247,
-                                              ),
-
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              border: Border.all(
-                                                color: AppColors.primary
-                                                    .withOpacity(.4),
-                                              ),
-                                            ),
-                                            child: TextView(
-                                              text:
-                                                  '${phoneReminderList.length}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 11.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          isTappedPhoneAdded =
-                                              !isTappedPhoneAdded;
-                                          model.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.drop_up,
-                                          height: 22.0.h,
-                                          width: 22.0.w,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2.w),
-                                      IconButton(
-                                        onPressed: () {
-                                          showPhoneDialog(context);
-                                          isPhoneValid = false;
-                                          model.notifyListeners();
-                                        },
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: AppColors.primary1,
-                                          size: 24.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Container(
+                          : isTappedPhoneAdded
+                          ?
+                            // Container(
+                            //     decoration: BoxDecoration(
+                            //       border: Border.all(color: AppColors.infoGrey1),
+                            //       borderRadius: BorderRadius.circular(12.r),
+                            //       color: AppColors.white,
+                            //     ),
+                            //     padding: EdgeInsets.all(12.w),
+                            //     child: Row(
+                            //       mainAxisAlignment:
+                            //           MainAxisAlignment.spaceBetween,
+                            //       children: [
+                            //         Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             TextView(
+                            //               text: 'Add Phone Number',
+                            //               textStyle: TextStyle(
+                            //                 fontFamily: 'Arial',
+                            //                 fontSize: 16.2.sp,
+                            //                 fontWeight: FontWeight.w400,
+                            //                 color: AppColors.deep,
+                            //               ),
+                            //             ),
+                            //             Row(
+                            //               children: [
+                            //                 TextView(
+                            //                   text: 'Numbers available',
+                            //                   textStyle: TextStyle(
+                            //                     fontFamily: 'Arial',
+                            //                     fontSize: 14.8.sp,
+                            //                     fontWeight: FontWeight.w400,
+                            //                     color: AppColors.fineGrey,
+                            //                   ),
+                            //                 ),
+                            //                 SizedBox(width: 6.w),
+                            //                 Container(
+                            //                   padding: EdgeInsets.symmetric(
+                            //                     horizontal: 10.w,
+                            //                   ),
+                            //                   decoration: BoxDecoration(
+                            //                     color: const Color.fromARGB(
+                            //                       255,
+                            //                       223,
+                            //                       233,
+                            //                       247,
+                            //                     ),
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(12.r),
+                            //                     border: Border.all(
+                            //                       color: AppColors.primary
+                            //                           .withOpacity(.4),
+                            //                     ),
+                            //                   ),
+                            //                   child: TextView(
+                            //                     text:
+                            //                         '${phoneReminderList.length}',
+                            //                     textStyle: TextStyle(
+                            //                       fontFamily: 'Arial',
+                            //                       fontSize: 11.8.sp,
+                            //                       fontWeight: FontWeight.w400,
+                            //                       color: AppColors.primary,
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //               ],
+                            //             ),
+                            //           ],
+                            //         ),
+                            //         Row(
+                            //           children: [
+                            //             GestureDetector(
+                            //               onTap: () {
+                            //                 isTappedPhoneAdded =
+                            //                     !isTappedPhoneAdded;
+                            //                 model.notifyListeners();
+                            //               },
+                            //               child: SvgPicture.asset(
+                            //                 AppImage.drop_up,
+                            //                 height: 22.0.h,
+                            //                 width: 22.0.w,
+                            //               ),
+                            //             ),
+                            //             SizedBox(width: 2.w),
+                            //             IconButton(
+                            //               onPressed: () {
+                            //                 showPhoneDialog(context);
+                            //                 isPhoneValid = false;
+                            //                 model.notifyListeners();
+                            //               },
+                            //               icon: Icon(
+                            //                 Icons.add_circle,
+                            //                 color: AppColors.primary1,
+                            //                 size: 24.sp,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   )
+                            // :
+                            Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(color: AppColors.infoGrey1),
@@ -19563,7 +19643,8 @@ class AuthViewModel extends BaseViewModel {
                                   }),
                                 ],
                               ),
-                            ),
+                            )
+                          : SizedBox.shrink(),
 
                       SizedBox(height: 32.20.h),
                       Center(
@@ -19629,8 +19710,26 @@ class AuthViewModel extends BaseViewModel {
                               linIndex++;
                             }
                           } else {
+                            _isLoading = true;
                             addCostTotal(model);
                             linIndex++;
+                            _isLoading = false;
+                          }
+                          if (isTappedPhoneAdded &&
+                              !addedPhoneReminderList.contains(
+                                formatPhoneNumber(
+                                  SharedPreferencesService
+                                      .instance
+                                      .usersData['user']['phone'],
+                                ),
+                              )) {
+                            addedPhoneReminderList.add(
+                              formatPhoneNumber(
+                                SharedPreferencesService
+                                    .instance
+                                    .usersData['user']['phone'],
+                              ),
+                            );
                           }
                           model.notifyListeners();
                         },
@@ -20108,9 +20207,9 @@ class AuthViewModel extends BaseViewModel {
                                               ),
                                               SizedBox(height: 10.h),
                                               SizedBox(
-                                                width: 304.h,
+                                                width: 300.h,
                                                 child: Wrap(
-                                                  spacing: 2.10,
+                                                  spacing: 4.10,
                                                   runSpacing: 6,
                                                   children: (() {
                                                     final Set<String>
@@ -20903,25 +21002,25 @@ class AuthViewModel extends BaseViewModel {
                   fontSize: 14.sp,
                   buttonColor: AppColors.primary,
                   isLoading: model.isLoading,
-                  buttonText: phoneReminderList.isEmpty
+                  buttonText: addedPhoneReminderList.isEmpty
                       ? 'Set Up'
                       : 'Proceed to Pay',
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
-                    if (phoneReminderList.isNotEmpty) {
-                      if (phoneReminderList.contains(
-                        SharedPreferencesService
-                            .instance
-                            .usersData['user']['phone'],
-                      )) {
-                      } else {
-                        phoneReminderList.add(
-                          SharedPreferencesService
-                              .instance
-                              .usersData['user']['phone'],
-                        );
-                      }
+                    if (addedPhoneReminderList.isNotEmpty) {
+                      // if (phoneReminderList.contains(
+                      //   SharedPreferencesService
+                      //       .instance
+                      //       .usersData['user']['phone'],
+                      // )) {
+                      // } else {
+                      //   phoneReminderList.add(
+                      //     SharedPreferencesService
+                      //         .instance
+                      //         .usersData['user']['phone'],
+                      //   );
+                      // }
                       model.createReminderPaid(
                         context,
                         model: model,
@@ -25891,209 +25990,214 @@ class AuthViewModel extends BaseViewModel {
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return  StatefulBuilder(
-      builder: (context, setModalState) {
-        return Container(
-            color: AppColors.transparent,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: TextButton.icon(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close, color: Colors.white, size: 18),
-                    label: Text("Close", style: TextStyle(color: Colors.white)),
-                    style: TextButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
                       ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 4.w,
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 6.10.h),
-                Dialog(
-                  insetPadding: EdgeInsets.all(16.20.w),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  backgroundColor: AppColors.white,
-                  child: Padding(
-                    padding: EdgeInsets.all(21.4.w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(16.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.skyBlue,
-                            shape: BoxShape.circle,
-                          ),
-                          child: SvgPicture.asset(
-                            isMedTypeView(o?.medicationType),
-                            color: AppColors.primary,
-                            height: 20.h,
-                            width: 20.w,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        TextView(
-                          text: o?.medicationName?.capitalize()??'',
-                          textStyle: TextStyle(
-                            fontFamily: 'GoogleSans',
-                            fontSize: 14.2.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.reminder,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextView(
-                              text: 'Note: ',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.reminder,
-                              ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(21.4.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.skyBlue,
+                              shape: BoxShape.circle,
                             ),
-                            TextView(
-                              text: o?.note ?? 'No note',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 13.2.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.reminder,
-                              ),
+                            child: SvgPicture.asset(
+                              isMedTypeView(o?.medicationType),
+                              color: AppColors.primary,
+                              height: 20.h,
+                              width: 20.w,
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 10.w,
-                            horizontal: 20.w,
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColors.skyBlue,
-                            border: Border.all(
-                              color: AppColors.buttonGrey1,
-                              width: 1,
+                          SizedBox(height: 10.h),
+                          TextView(
+                            text: o?.medicationName?.capitalize() ?? '',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
                             ),
-                            borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          SizedBox(height: 10.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Column(
-                                children: [
-                                  TextView(
-                                    text: '2 Tablets',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.10.h),
-                                  TextView(
-                                    text: 'Dosage to be taken',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.8.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.infoGrey,
-                                    ),
-                                  ),
-                                ],
+                              TextView(
+                                text: 'Note: ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 14.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.reminder,
+                                ),
                               ),
-                              SizedBox(width: 5.10.h),
-                              Column(
-                                children: [
-                                  TextView(
-                                    text: '${o?.time} ${checkTimePeriod(o?.time)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                  SizedBox(height: 4.10.h),
-                                  TextView(
-                                    text: 'Scheduled Time',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 13.8.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.infoGrey,
-                                    ),
-                                  ),
-                                ],
+                              TextView(
+                                text: o?.note ?? 'No note',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 13.2.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
                               ),
                             ],
                           ),
-                        ),
-          
-                        SizedBox(height: model!.isLoading ? 20.h : 0.h),
-                        model.isLoading
-                            ? SpinKitWaveSpinner(
-                                color: AppColors.primary,
-                                size: 32.0.sp,
-                              )
-                            : SizedBox.shrink(),
-                        SizedBox(height: 30.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.white,
-                                buttonText: 'Missed',
-                                color: AppColors.red,
-                                buttonBorderColor: AppColors.red,
-                                onPressed: () {
-                                  _updateDose(context, model, o!, "MISSED");
-                                  setModalState((){});
-                                  model.notifyListeners();
-                                },
-                              ),
+                          SizedBox(height: 20.h),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.w,
+                              horizontal: 20.w,
                             ),
-                            SizedBox(width: 30.w),
-                            Expanded(
-                              child: ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.app_green,
-                                buttonText: 'Taken',
-                                color: AppColors.white,
-                                buttonBorderColor: AppColors.app_green,
-                                onPressed: () {
-                                   _updateDose(context, model, o!, "TAKEN");
-                                  setModalState((){});
-                                  model.notifyListeners();
-                                },
+                            decoration: BoxDecoration(
+                              color: AppColors.skyBlue,
+                              border: Border.all(
+                                color: AppColors.buttonGrey1,
+                                width: 1,
                               ),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ],
-                        ),
-                      ],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  children: [
+                                    TextView(
+                                      text: '2 Tablets',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.10.h),
+                                    TextView(
+                                      text: 'Dosage to be taken',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.8.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.infoGrey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 5.10.h),
+                                Column(
+                                  children: [
+                                    TextView(
+                                      text:
+                                          '${o?.time} ${checkTimePeriod(o?.time)}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4.10.h),
+                                    TextView(
+                                      text: 'Scheduled Time',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 13.8.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.infoGrey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: model!.isLoading ? 20.h : 0.h),
+                          model.isLoading
+                              ? SpinKitWaveSpinner(
+                                  color: AppColors.primary,
+                                  size: 32.0.sp,
+                                )
+                              : SizedBox.shrink(),
+                          SizedBox(height: 30.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.white,
+                                  buttonText: 'Missed',
+                                  color: AppColors.red,
+                                  buttonBorderColor: AppColors.red,
+                                  onPressed: () {
+                                    _updateDose(context, model, o!, "MISSED");
+                                    setModalState(() {});
+                                    model.notifyListeners();
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 30.w),
+                              Expanded(
+                                child: ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.app_green,
+                                  buttonText: 'Taken',
+                                  color: AppColors.white,
+                                  buttonBorderColor: AppColors.app_green,
+                                  onPressed: () {
+                                    _updateDose(context, model, o!, "TAKEN");
+                                    setModalState(() {});
+                                    model.notifyListeners();
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-      });
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }
@@ -26621,7 +26725,6 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _createReminderResponseModel?.message ?? '',
         );
-        model!.medicationClassList.clear();
         navigate.navigateTo(
           Routes.paymentStatusScreen,
           arguments: PaymentStatusScreenArguments(
@@ -26646,7 +26749,11 @@ class AuthViewModel extends BaseViewModel {
     locator<AuthViewModel>().notifyListeners();
   }
 
-  void initiatePayment(context, {String? reference}) async {
+  void initiatePayment(
+    context, {
+    String? reference,
+    AuthViewModel? model,
+  }) async {
     try {
       _isLoading = true;
       _initiatePaymentResponseModel = await runBusyFuture(
@@ -26659,15 +26766,13 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _initiatePaymentResponseModel?.message ?? '',
         );
-        medicationClassList.clear();
-        doseControllers.clear();
-        periodLabels.clear();
         navigate.navigateTo(
           Routes.acceleratePaymentView,
           arguments: AcceleratePaymentViewArguments(
             url: _initiatePaymentResponseModel?.data?.redirectUrl,
           ),
         );
+       
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
@@ -26706,8 +26811,8 @@ class AuthViewModel extends BaseViewModel {
         initiatePayment(
           context,
           reference: _createReminderResponseModel?.data?.transactionReference,
+          model: model,
         );
-        model!.medicationClassList.clear();
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
