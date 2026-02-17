@@ -361,8 +361,6 @@ class AuthViewModel extends BaseViewModel {
   List<TextEditingController> noteUpdateController = [];
   List<dynamic> medicationFileUpdate = [];
   List<int> listOfTimesUpdate = [];
-
-  List<File> medicationUpdateFile = [];
   List<dynamic> medTypeUpdateIcon = [];
 
   List<FocusNode> medNameUpdateFocusNodes = [];

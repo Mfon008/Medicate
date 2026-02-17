@@ -224,7 +224,6 @@ class PharmViewModel extends BaseViewModel {
   int linIndex = 1;
   int linIndexUpdate = 1;
   int indexOfMedicationClassList = 0;
-  // int? _duration;
   String onTapPaymentMeth = '';
   int? indexDaily;
   bool isChecked = false;
@@ -251,12 +250,10 @@ class PharmViewModel extends BaseViewModel {
   List<TextEditingController> endDateUpdateController = [];
   List<TextEditingController> timesToTakeUpdateController = [];
   List<TextEditingController> noteUpdateController = [];
-  List<File> medicationFileUpdate = [];
+  List<dynamic> medicationFileUpdate = [];
   List<int> listOfTimesUpdate = [];
   List<dynamic> allNotificationChannels = [];
-
-  List<File> medicationUpdateFile = [];
-  List<String> meyTypeUpdateIcon = [];
+  List<dynamic> meyTypeUpdateIcon = [];
   List<dynamic>? formatSelectedTimeAndPeriodList = [];
   String? formattedSelectedTimeAndPeriod;
   String? numberOfDurationsInDays;
@@ -3976,8 +3973,8 @@ class PharmViewModel extends BaseViewModel {
               (e) => TextEditingController(text: e.medicationType),
             )
             .toList();
-        model.meyTypeUpdateIcon = model.medicationClassList
-            .map<String>((e) => e.medicationTypeIcon!)
+        model.medTypeUpdateIcon = model.medicationClassList
+            .map((e) => e.medicationTypeIcon!)
             .toList();
         model.dosageUpdateControllers = model.medicationClassList
             .map<TextEditingController>(
@@ -11586,7 +11583,6 @@ class PharmViewModel extends BaseViewModel {
                                           ],
                                         ),
                                       ),
-
                                       SizedBox(height: 24.0.h),
                                       model.isCusSchedule
                                           ? Column(
