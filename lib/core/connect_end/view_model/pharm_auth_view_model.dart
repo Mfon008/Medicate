@@ -2956,21 +2956,22 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     StateSetter? setModalState,
   }) async {
-    final DateTime? pickedDated = await showDatePicker(
+    pickedDatedStart = await showDatePicker(
       context: context!,
       initialDate: DateTime.now(), // The date initially displayed
       firstDate: DateTime.now(), // The earliest selectable date
       lastDate: DateTime(2101), // The latest selectable date
     );
+    pickedDatedStartString = pickedDatedStart.toString();
 
-    if (pickedDated != null) {
-      pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
+    if (pickedDatedStart != null) {
+      pickedDate = DateFormat('dd MMM, yyyy').format(pickedDatedStart!);
 
       await selectTime(context);
       startDateIso = DateTime.utc(
-        pickedDated.year,
-        pickedDated.month,
-        pickedDated.day,
+        pickedDatedStart!.year,
+        pickedDatedStart!.month,
+        pickedDatedStart!.day,
       ).toIso8601String();
       print('After time select → startDateIso: $startDateIso');
       print('iso$startDateIso');
@@ -3392,11 +3393,11 @@ class PharmViewModel extends BaseViewModel {
 
   String modalName() {
     if (linIndex == 2) {
+      return 'Add Medication';
+    } else if (linIndex == 3) {
       return 'Preview Medication';
     }
-    //  else if (linIndex == 3) {
-    //   return 'Choose Notification Channel';
-    // } else if (linIndex == 4) {
+    // else if (linIndex == 4) {
     //   return 'Make Payment';
     // }
     return 'Add Medication';
@@ -3863,6 +3864,7 @@ class PharmViewModel extends BaseViewModel {
         dateAndTime: model.dateTimeController.text,
         duration: returnNoDays.toString(),
         endDate: endDateController.text,
+        isCusSchedule: model.isCusSchedule,
         startDateIso: DateTime.parse(startDateIso),
         endDateIso: DateTime.parse(endDateIso),
         timesToTake: medDailyInTakenController.text,
@@ -3951,7 +3953,9 @@ class PharmViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setModalState(() {
         model.medicationNameUpdateControllers = model.medicationClassList
-            .map((e) => TextEditingController(text: e.medicationName))
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.medicationName),
+            )
             .toList();
         model.medNameUpdateFocusNodes.add(FocusNode());
         model.numberOfDurationsInDaysList = model.medicationClassList
@@ -3968,22 +3972,32 @@ class PharmViewModel extends BaseViewModel {
             .toList();
         model.timesToTakeUpdateFocusNodes.add(FocusNode());
         model.medTypeUpdateControllers = model.medicationClassList
-            .map((e) => TextEditingController(text: e.medicationType))
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.medicationType),
+            )
             .toList();
         model.meyTypeUpdateIcon = model.medicationClassList
-            .map((e) => e.medicationTypeIcon!)
+            .map<String>((e) => e.medicationTypeIcon!)
             .toList();
         model.dosageUpdateControllers = model.medicationClassList
-            .map((e) => TextEditingController(text: e.dosage))
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.dosage),
+            )
             .toList();
         model.startDateUpdateControllers = model.medicationClassList
-            .map((e) => TextEditingController(text: e.dateAndTime))
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.dateAndTime),
+            )
             .toList();
         model.endDateUpdateController = model.medicationClassList
-            .map((e) => TextEditingController(text: e.endDate))
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.endDate),
+            )
             .toList();
         model.noteUpdateController = model.medicationClassList
-            .map((e) => TextEditingController(text: e.note))
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.note),
+            )
             .toList();
         model.noteUpdateFocusNodes.add(FocusNode());
         model.medicationFileUpdate = model.medicationClassList
@@ -3999,29 +4013,29 @@ class PharmViewModel extends BaseViewModel {
           return false;
         }).toList();
       });
-      for (var med in medicationClassList) {
-        final dosageMap = med.dosageMap ?? [];
+      // for (var med in medicationClassList) {
+      //   final dosageMap = med.dosageMap ?? [];
 
-        // Map through the day-level list
-        final controllersPerDay = dosageMap.map<List<TextEditingController>>((
-          dayItem,
-        ) {
-          final doses = (dayItem['doses'] ?? []) as List;
+      //   // Map through the day-level list
+      //   final controllersPerDay = dosageMap.map<List<TextEditingController>>((
+      //     dayItem,
+      //   ) {
+      //     final doses = (dayItem['doses'] ?? []) as List;
 
-          // Create controllers for each dose
-          final doseControllers = doses.map<TextEditingController>((dose) {
-            final timeValue = dose['time']?.toString() ?? '';
-            print('⏰ Time found: $timeValue');
-            return TextEditingController(text: timeValue);
-          }).toList();
+      //     // Create controllers for each dose
+      //     final doseControllers = doses.map<TextEditingController>((dose) {
+      //       final timeValue = dose['time']?.toString() ?? '';
+      //       print('⏰ Time found: $timeValue');
+      //       return TextEditingController(text: timeValue);
+      //     }).toList();
 
-          return doseControllers;
-        }).toList();
+      //     return doseControllers;
+      //   }).toList();
 
-        doseAfterControllers =
-            controllersPerDay; // assign per medication if you're looping
-        // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
-      }
+      //   doseAfterControllers =
+      //       controllersPerDay; // assign per medication if you're looping
+      //   // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
+      // }
 
       print('✅ doseAfterControllers created: ${doseAfterControllers.length}');
       model.notifyListeners();
@@ -4099,7 +4113,7 @@ class PharmViewModel extends BaseViewModel {
           GestureDetector(
             onTap: () {
               setMenuState(() {
-                model.medDosageController.text = '';
+                model.medDosageController.text = 'custom';
                 index = 0;
                 notifyListeners();
               });
@@ -4113,11 +4127,11 @@ class PharmViewModel extends BaseViewModel {
               padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: model.medDosageController.text == ''
+                color: model.medDosageController.text == 'custom'
                     ? AppColors.skyBlue
                     : AppColors.white,
                 border: Border.all(
-                  color: model.medDosageController.text == ''
+                  color: model.medDosageController.text == 'custom'
                       ? AppColors.primary1
                       : Colors.transparent,
                 ),
@@ -4137,7 +4151,7 @@ class PharmViewModel extends BaseViewModel {
                     ),
                   ),
                   const Spacer(),
-                  if (model.medDosageController.text == '')
+                  if (model.medDosageController.text == 'custom')
                     Icon(
                       Icons.check,
                       color: AppColors.primary1,
@@ -6275,7 +6289,7 @@ class PharmViewModel extends BaseViewModel {
                         ), // Adjust radius as needed
                         child: LinearProgressIndicator(
                           minHeight: 4.0, // Adjust height as needed
-                          value: linIndex / 4,
+                          value: linIndex / 2,
                           color: AppColors.primary, // Progress bar color
                           backgroundColor:
                               Colors.grey[300], // Background track color
@@ -6284,7 +6298,7 @@ class PharmViewModel extends BaseViewModel {
                     ),
                     SizedBox(width: 10.w),
                     TextView(
-                      text: '$linIndex/4',
+                      text: '$linIndex/2',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 13.2.sp,
@@ -6343,7 +6357,14 @@ class PharmViewModel extends BaseViewModel {
                       SizedBox(height: 10.h),
                       TextView(
                         text:
-                            '0${userDetailData['data']['phone'].toString().substring(4)}',
+                            userDetailData['data']['phone']
+                                .toString()
+                                .substring(4)
+                                .startsWith('0')
+                            ? userDetailData['data']['phone']
+                                  .toString()
+                                  .substring(4)
+                            : '0${userDetailData['data']['phone'].toString().substring(4)}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 16.2.sp,
@@ -7051,7 +7072,6 @@ class PharmViewModel extends BaseViewModel {
                                                 linIndex++;
                                                 setModalState!(() {});
                                                 model.notifyListeners();
-                                                print('objectmeeesssssss');
                                               },
                                               child: Row(
                                                 mainAxisAlignment:
@@ -7264,6 +7284,7 @@ class PharmViewModel extends BaseViewModel {
                   child: GestureDetector(
                     onTap: () async {
                       await model.clearReminderMedsVaraibles(model);
+                      model.medicationClassList.clear();
                       Navigator.pop(context!);
                     },
                     child: SvgPicture.asset(
@@ -7288,7 +7309,7 @@ class PharmViewModel extends BaseViewModel {
                     ), // Adjust radius as needed
                     child: LinearProgressIndicator(
                       minHeight: 5.0, // Adjust height as needed
-                      value: linIndex / 2,
+                      value: linIndex / 3,
                       color: AppColors.primary, // Progress bar color
                       backgroundColor:
                           Colors.grey[300], // Background track color
@@ -7297,7 +7318,7 @@ class PharmViewModel extends BaseViewModel {
                 ),
                 SizedBox(width: 10.w),
                 TextView(
-                  text: '$linIndex/2',
+                  text: '$linIndex/3',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 13.2.sp,
@@ -7557,13 +7578,13 @@ class PharmViewModel extends BaseViewModel {
                           isFilled: true,
                           readOnly:
                               model.medTypeController.text == 'Others' ||
-                                  model.medDosageController.text == ''
+                                  model.medDosageController.text == 'custom'
                               ? false
                               : true,
                           suffixWidget: IconButton(
                             onPressed:
                                 model.medTypeController.text == 'Others' ||
-                                    model.medTypeController.text == ''
+                                    model.medTypeController.text == 'custom'
                                 ? () {}
                                 : () async {
                                     showMedDosageMenu(
@@ -8633,6 +8654,17 @@ class PharmViewModel extends BaseViewModel {
                               if (selectedIndexes.contains(index)) {
                                 // unselect
                                 selectedIndexes.remove(index);
+                                if (!selectedIndexes.contains(0) &&
+                                    !selectedIndexes.contains(1)) {
+                                  isTappedEmailAdded = false;
+                                  model.notifyListeners();
+                                }
+                                if (!selectedIndexes.contains(2) &&
+                                    !selectedIndexes.contains(3) &&
+                                    !selectedIndexes.contains(4)) {
+                                  isTappedPhoneAdded = false;
+                                  model.notifyListeners();
+                                }
                               } else {
                                 // select
                                 selectedIndexes.add(index);
@@ -8643,128 +8675,20 @@ class PharmViewModel extends BaseViewModel {
                                   model.notifyListeners();
                                 } else if ([2, 3, 4].contains(index)) {
                                   // Phone-related channels
-
                                   isTappedPhoneAdded = true;
                                   isPhoneValid = false;
-                                  model.notifyListeners();
-                                } else {
-                                  isTappedEmailAdded = false;
-                                  isTappedPhoneAdded = false;
                                   model.notifyListeners();
                                 }
                               }
                               // ✅ update selection
                               buildChannelList(selectedIndexes);
-                              // addCostTotal(model);
                               model.notifyListeners();
                             },
                           );
                         }),
                         SizedBox(height: 12.h),
-                        !isTappedEmailAdded && emailReminderList.isEmpty
-                            ? SizedBox.shrink()
-                            : isTappedEmailAdded && emailReminderList.isEmpty
+                        isTappedEmailAdded
                             ? Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: AppColors.infoGrey1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  color: AppColors.white,
-                                ),
-                                padding: EdgeInsets.all(12.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        TextView(
-                                          text: 'Add Email Address',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.2.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.deep,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            TextView(
-                                              text: 'Emails available',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.fineGrey,
-                                              ),
-                                            ),
-                                            SizedBox(width: 6.w),
-                                            Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 10.w,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                  255,
-                                                  223,
-                                                  233,
-                                                  247,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12.r),
-                                                border: Border.all(
-                                                  color: AppColors.primary
-                                                      .withOpacity(.4),
-                                                ),
-                                              ),
-                                              child: TextView(
-                                                text:
-                                                    '${emailReminderList.length}',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 11.8.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.primary,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            isTappedEmailAdded =
-                                                !isTappedEmailAdded;
-                                            model.notifyListeners();
-                                          },
-                                          child: SvgPicture.asset(
-                                            AppImage.drop_up,
-                                            height: 22.0.h,
-                                            width: 22.0.w,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2.w),
-                                        IconButton(
-                                          onPressed: () =>
-                                              showEmailDialog(context),
-                                          icon: Icon(
-                                            Icons.add_circle,
-                                            color: AppColors.primary1,
-                                            size: 24.sp,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12.r),
                                   border: Border.all(
@@ -8872,7 +8796,10 @@ class PharmViewModel extends BaseViewModel {
                                               SizedBox(width: 2.w),
                                               IconButton(
                                                 onPressed: () =>
-                                                    showEmailDialog(context),
+                                                    showEmailDialog(
+                                                      context,
+                                                      model: model,
+                                                    ),
                                                 icon: Icon(
                                                   Icons.add_circle,
                                                   color: AppColors.primary1,
@@ -9015,6 +8942,7 @@ class PharmViewModel extends BaseViewModel {
                                                           index: index,
                                                           email:
                                                               emailReminderList[index],
+                                                          model: model,
                                                         );
                                                         model.notifyListeners();
                                                       },
@@ -9050,13 +8978,10 @@ class PharmViewModel extends BaseViewModel {
                                     }),
                                   ],
                                 ),
-                              ),
-                        // : SizedBox.shrink(),
+                              )
+                            : SizedBox.shrink(),
                         SizedBox(height: 20.h),
-
-                        !isTappedPhoneAdded && phoneReminderList.isEmpty
-                            ? SizedBox.shrink()
-                            : isTappedPhoneAdded
+                        isTappedPhoneAdded
                             ? Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12.r),
@@ -9167,7 +9092,10 @@ class PharmViewModel extends BaseViewModel {
                                               SizedBox(width: 2.w),
                                               IconButton(
                                                 onPressed: () {
-                                                  showPhoneDialog(context);
+                                                  showPhoneDialog(
+                                                    context,
+                                                    model: model,
+                                                  );
 
                                                   isPhoneValid = false;
                                                   model.notifyListeners();
@@ -9350,6 +9278,7 @@ class PharmViewModel extends BaseViewModel {
                                                           index: index,
                                                           phoneNumber:
                                                               phoneReminderList[index],
+                                                          model: model,
                                                         );
                                                         isPhoneValid = false;
                                                         model.notifyListeners();
@@ -9899,7 +9828,7 @@ class PharmViewModel extends BaseViewModel {
                                                       model
                                                               .medicationClassList[index]
                                                               .medicationType ==
-                                                          ''
+                                                          'custom'
                                                   ? false
                                                   : true,
                                               suffixWidget: IconButton(
@@ -9911,7 +9840,7 @@ class PharmViewModel extends BaseViewModel {
                                                         model
                                                                 .medicationClassList[index]
                                                                 .medicationType ==
-                                                            ''
+                                                            'custom'
                                                     ? () {}
                                                     : () async {
                                                         model.showMedDosageMenuUpdate(
@@ -11418,7 +11347,7 @@ class PharmViewModel extends BaseViewModel {
                                                 model
                                                         .medDosageController
                                                         .text ==
-                                                    ''
+                                                    'custom'
                                             ? false
                                             : true,
                                         suffixWidget: IconButton(
@@ -11428,7 +11357,7 @@ class PharmViewModel extends BaseViewModel {
                                                   model
                                                           .medTypeController
                                                           .text ==
-                                                      ''
+                                                      'custom'
                                               ? () {}
                                               : () async {
                                                   showMedDosageMenu(
@@ -12545,6 +12474,17 @@ class PharmViewModel extends BaseViewModel {
                             if (selectedIndexes.contains(index)) {
                               // unselect
                               selectedIndexes.remove(index);
+                              if (!selectedIndexes.contains(0) &&
+                                  !selectedIndexes.contains(1)) {
+                                isTappedEmailAdded = false;
+                                model.notifyListeners();
+                              }
+                              if (!selectedIndexes.contains(2) &&
+                                  !selectedIndexes.contains(3) &&
+                                  !selectedIndexes.contains(4)) {
+                                isTappedPhoneAdded = false;
+                                model.notifyListeners();
+                              }
                             } else {
                               // select
                               selectedIndexes.add(index);
@@ -12573,108 +12513,113 @@ class PharmViewModel extends BaseViewModel {
                         );
                       }),
                       SizedBox(height: 12.h),
-                      !isTappedEmailAdded && emailReminderList.isEmpty
-                          ? SizedBox.shrink()
-                          : isTappedEmailAdded && emailReminderList.isEmpty
-                          ? Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.infoGrey1),
-                                borderRadius: BorderRadius.circular(12.r),
-                                color: AppColors.white,
-                              ),
-                              padding: EdgeInsets.all(12.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Add Email Address',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 16.2.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.deep,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          TextView(
-                                            text: 'Emails available',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14.8.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                223,
-                                                233,
-                                                247,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              border: Border.all(
-                                                color: AppColors.primary
-                                                    .withOpacity(.4),
-                                              ),
-                                            ),
-                                            child: TextView(
-                                              text:
-                                                  '${emailReminderList.length}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 11.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          isTappedEmailAdded =
-                                              !isTappedEmailAdded;
-                                          model.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.drop_up,
-                                          height: 22.0.h,
-                                          width: 22.0.w,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2.w),
-                                      IconButton(
-                                        onPressed: () =>
-                                            showEmailDialog(context),
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: AppColors.primary1,
-                                          size: 24.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )
-                          : Container(
+                      // !isTappedEmailAdded && emailReminderList.isEmpty
+                      //     ? SizedBox.shrink()
+                      //     :
+                      isTappedEmailAdded
+                          ?
+                            //  Container(
+                            //     decoration: BoxDecoration(
+                            //       border: Border.all(color: AppColors.infoGrey1),
+                            //       borderRadius: BorderRadius.circular(12.r),
+                            //       color: AppColors.white,
+                            //     ),
+                            //     padding: EdgeInsets.all(12.w),
+                            //     child: Row(
+                            //       mainAxisAlignment:
+                            //           MainAxisAlignment.spaceBetween,
+                            //       children: [
+                            //         Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             TextView(
+                            //               text: 'Add Email Address',
+                            //               textStyle: TextStyle(
+                            //                 fontFamily: 'Arial',
+                            //                 fontSize: 16.2.sp,
+                            //                 fontWeight: FontWeight.w400,
+                            //                 color: AppColors.deep,
+                            //               ),
+                            //             ),
+                            //             Row(
+                            //               children: [
+                            //                 TextView(
+                            //                   text: 'Emails available',
+                            //                   textStyle: TextStyle(
+                            //                     fontFamily: 'Arial',
+                            //                     fontSize: 14.8.sp,
+                            //                     fontWeight: FontWeight.w400,
+                            //                     color: AppColors.fineGrey,
+                            //                   ),
+                            //                 ),
+                            //                 SizedBox(width: 6.w),
+                            //                 Container(
+                            //                   padding: EdgeInsets.symmetric(
+                            //                     horizontal: 10.w,
+                            //                   ),
+                            //                   decoration: BoxDecoration(
+                            //                     color: const Color.fromARGB(
+                            //                       255,
+                            //                       223,
+                            //                       233,
+                            //                       247,
+                            //                     ),
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(12.r),
+                            //                     border: Border.all(
+                            //                       color: AppColors.primary
+                            //                           .withOpacity(.4),
+                            //                     ),
+                            //                   ),
+                            //                   child: TextView(
+                            //                     text:
+                            //                         '${emailReminderList.length}',
+                            //                     textStyle: TextStyle(
+                            //                       fontFamily: 'Arial',
+                            //                       fontSize: 11.8.sp,
+                            //                       fontWeight: FontWeight.w400,
+                            //                       color: AppColors.primary,
+                            //                     ),
+                            //                   ),
+                            //                 ),
+                            //               ],
+                            //             ),
+                            //           ],
+                            //         ),
+                            //         Row(
+                            //           children: [
+                            //             GestureDetector(
+                            //               onTap: () {
+                            //                 isTappedEmailAdded =
+                            //                     !isTappedEmailAdded;
+                            //                 model.notifyListeners();
+                            //               },
+                            //               child: SvgPicture.asset(
+                            //                 AppImage.drop_up,
+                            //                 height: 22.0.h,
+                            //                 width: 22.0.w,
+                            //               ),
+                            //             ),
+                            //             SizedBox(width: 2.w),
+                            //             IconButton(
+                            //               onPressed: () => showEmailDialog(
+                            //                 context,
+                            //                 model: model,
+                            //               ),
+                            //               icon: Icon(
+                            //                 Icons.add_circle,
+                            //                 color: AppColors.primary1,
+                            //                 size: 24.sp,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   )
+                            // :
+                            Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.r),
                                 border: Border.all(color: AppColors.infoGrey1),
@@ -12775,8 +12720,10 @@ class PharmViewModel extends BaseViewModel {
                                             ),
                                             SizedBox(width: 2.w),
                                             IconButton(
-                                              onPressed: () =>
-                                                  showEmailDialog(context),
+                                              onPressed: () => showEmailDialog(
+                                                context,
+                                                model: model,
+                                              ),
                                               icon: Icon(
                                                 Icons.add_circle,
                                                 color: AppColors.primary1,
@@ -12886,6 +12833,7 @@ class PharmViewModel extends BaseViewModel {
                                                         index: index,
                                                         email:
                                                             emailReminderList[index],
+                                                        model: model,
                                                       );
                                                       model.notifyListeners();
                                                     },
@@ -12921,12 +12869,13 @@ class PharmViewModel extends BaseViewModel {
                                   }),
                                 ],
                               ),
-                            ),
-
+                            )
+                          : SizedBox.shrink(),
                       SizedBox(height: 20.h),
-                      !isTappedPhoneAdded && phoneReminderList.isEmpty
-                          ? SizedBox.shrink()
-                          : isTappedPhoneAdded
+                      // !isTappedPhoneAdded && phoneReminderList.isEmpty
+                      //     ? SizedBox.shrink()
+                      //     :
+                      isTappedPhoneAdded
                           ? Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12.r),
@@ -13031,7 +12980,10 @@ class PharmViewModel extends BaseViewModel {
                                             SizedBox(width: 2.w),
                                             IconButton(
                                               onPressed: () {
-                                                showPhoneDialog(context);
+                                                showPhoneDialog(
+                                                  context,
+                                                  model: model,
+                                                );
 
                                                 isPhoneValid = false;
                                                 model.notifyListeners();
@@ -13214,6 +13166,7 @@ class PharmViewModel extends BaseViewModel {
                                                         index: index,
                                                         phoneNumber:
                                                             phoneReminderList[index],
+                                                        model: model,
                                                       );
                                                       isPhoneValid = false;
                                                       model.notifyListeners();
@@ -13409,7 +13362,7 @@ class PharmViewModel extends BaseViewModel {
                   ), // Adjust radius as needed
                   child: LinearProgressIndicator(
                     minHeight: 4.0, // Adjust height as needed
-                    value: linIndex / 2,
+                    value: linIndex / 3,
                     color: AppColors.primary, // Progress bar color
                     backgroundColor: Colors.grey[300], // Background track color
                   ),
@@ -13417,7 +13370,7 @@ class PharmViewModel extends BaseViewModel {
               ),
               SizedBox(width: 10.w),
               TextView(
-                text: '$linIndex/2',
+                text: '$linIndex/3',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -13429,7 +13382,7 @@ class PharmViewModel extends BaseViewModel {
           ),
           SizedBox(height: 20.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
                 onPressed:
@@ -13452,6 +13405,7 @@ class PharmViewModel extends BaseViewModel {
                       : AppColors.primary,
                 ),
               ),
+              SizedBox(width: 20.h),
               TextView(
                 text:
                     '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
@@ -13462,6 +13416,7 @@ class PharmViewModel extends BaseViewModel {
                   color: AppColors.infoGrey,
                 ),
               ),
+              SizedBox(width: 20.h),
               IconButton(
                 onPressed:
                     model.medicationClassList[model
@@ -13485,7 +13440,75 @@ class PharmViewModel extends BaseViewModel {
               ),
             ],
           ),
-          SizedBox(height: 16.20.h),
+          SizedBox(height: 20.h),
+          TextView(
+            text: 'PATIENTS DETAILS',
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 14.80.sp,
+              color: AppColors.deep,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Divider(color: AppColors.grey),
+          SizedBox(height: 12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 16.20.w, horizontal: 16.w),
+            decoration: BoxDecoration(
+              color: AppColors.dashboard,
+              borderRadius: BorderRadius.circular(8.2),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'Patient Name',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 12.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 4.10.h),
+                TextView(
+                  text: 'Ben Oji',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                SizedBox(height: 5.10.h),
+                Divider(color: AppColors.infoGrey, thickness: .14),
+                SizedBox(height: 5.10.h),
+                TextView(
+                  text: 'Phone Number',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 12.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 4.10.h),
+                TextView(
+                  text: '09098765423',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+            ),
+          ),
+          SizedBox(height: 20.h),
           TextView(
             text: 'MEDICATION DETAILS',
             textStyle: TextStyle(
@@ -13548,12 +13571,22 @@ class PharmViewModel extends BaseViewModel {
                           null
                       ? Image.file(
                           model
-                              .medicationClassList[indexOfMedicationClassList]
+                              .medicationClassList[model
+                                  .indexOfMedicationClassList]
                               .medicationFile!,
                           errorBuilder: (context, error, stackTrace) =>
                               SizedBox.shrink(),
                         )
-                      : SizedBox.shrink(),
+                      : Center(
+                          child: SvgPicture.asset(
+                            model
+                                .medicationClassList[model
+                                    .indexOfMedicationClassList]
+                                .medicationTypeIcon!,
+                            height: 100.h,
+                            width: 94.60,
+                          ),
+                        ),
                 ),
                 SizedBox(height: 10.h),
                 Divider(
@@ -14485,7 +14518,7 @@ class PharmViewModel extends BaseViewModel {
                                       )
                                       .toList(),
                                   note: m.note,
-                                  medicationImage: m.imageData == null
+                                  medicationImage: m.imageData!.url == null
                                       ? null
                                       : MedicationImage.fromJson(
                                           m.imageData!.toJson(),
@@ -14536,7 +14569,7 @@ class PharmViewModel extends BaseViewModel {
                                       )
                                       .toList(),
                                   note: m.note,
-                                  medicationImage: m.imageData == null
+                                  medicationImage: m.imageData!.url == null
                                       ? null
                                       : MedicationImage.fromJson(
                                           m.imageData!.toJson(),
@@ -16858,6 +16891,7 @@ class PharmViewModel extends BaseViewModel {
     bool isEdit = false,
     int? index,
     String? email,
+    PharmViewModel? model,
   }) {
     TextEditingController emailController = TextEditingController();
     if (isEdit) {
@@ -16984,7 +17018,7 @@ class PharmViewModel extends BaseViewModel {
                               Navigator.pop(context);
                               emailController.clear();
                             }
-                            locator<PharmViewModel>().notifyListeners();
+                            model!.notifyListeners();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,
@@ -17357,6 +17391,7 @@ class PharmViewModel extends BaseViewModel {
     bool isEdit = false,
     int? index,
     String? phoneNumber,
+    PharmViewModel? model,
   }) {
     TextEditingController phoneController = TextEditingController();
     if (isEdit) {
@@ -17489,9 +17524,8 @@ class PharmViewModel extends BaseViewModel {
                                   onChange: (p0) {},
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    final result = AppValidator.validatePhone()(
-                                      value,
-                                    );
+                                    final result =
+                                        AppValidator.validatePhoneNew()(value);
                                     if (result != null) {
                                       isPhoneValid = true;
                                     } else {
@@ -17516,22 +17550,27 @@ class PharmViewModel extends BaseViewModel {
                                   .validate()) {
                                 if (!isEdit) {
                                   if (phoneReminderList.contains(
-                                    '+234${phoneController.text.trim()}',
+                                    returnAddingPhoneNoStructureWith234(
+                                      phoneController.text.trim(),
+                                    ),
                                   )) {
                                   } else {
                                     phoneReminderList.add(
-                                      '+234${phoneController.text.trim()}',
+                                      returnAddingPhoneNoStructureWith234(
+                                        phoneController.text.trim(),
+                                      ),
                                     );
                                   }
                                 } else {
                                   phoneReminderList[index!] =
-                                      '+234${phoneController.text.trim()}';
+                                      returnAddingPhoneNoStructureWith234(
+                                        phoneController.text.trim(),
+                                      );
                                 }
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }
-                              print('phoneReminderList:::$phoneReminderList');
-                              locator<PharmViewModel>().notifyListeners();
+                              model!.notifyListeners();
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
@@ -17768,6 +17807,24 @@ class PharmViewModel extends BaseViewModel {
   String returnPhoneNoStructureWith234(String phoneNo) {
     if (phoneNo.substring(4, 5).contains('0')) {
       phoneNo = '+234${phoneNo.substring(5)}';
+    }
+    notifyListeners();
+    return '+234$phoneNo';
+  }
+
+  String returnAddingPhoneNoStructureWith234(String phoneNo) {
+    if (phoneNo.substring(0).startsWith('0')) {
+      phoneNo = '+234${phoneNo.substring(1)}';
+    } else {
+      phoneNo = '+234$phoneNo';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
+  String returnPhoneNoStructure(String phoneNo) {
+    if (phoneNo.substring(4, 5).contains('0')) {
+      phoneNo = phoneNo.substring(5);
     }
     notifyListeners();
     return '+234$phoneNo';
@@ -18539,7 +18596,12 @@ class PharmViewModel extends BaseViewModel {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () async {
-                              model.registerUserByTenant(context, phone: phone);
+                              model.registerUserByTenant(
+                                context,
+                                phone: model.returnPhoneNoStructure(
+                                  phone.toString(),
+                                ),
+                              );
                               model.notifyListeners();
 
                               // Add your update logic here

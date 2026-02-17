@@ -32,7 +32,6 @@ class MedicationClass {
     this.dosage,
     this.dateAndTime,
     this.duration,
-    // this.formattedSelectedTimeAndPeriodList,
     this.imageData,
     this.endDate,
     this.timesToTake,
