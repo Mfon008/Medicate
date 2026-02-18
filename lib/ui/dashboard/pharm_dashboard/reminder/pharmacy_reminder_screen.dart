@@ -76,7 +76,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                             horizontal: 18.22.w,
                             vertical: 12.w,
                           ),
-                          onTap: () => model.showCreateAddPhoneDialog(context),
+                          onTap: () => model.showReminderModal(context),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -1123,21 +1123,18 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                           PopupMenuButton<String>(
                                             color: AppColors.white,
                                             child: Container(
-                                                padding: EdgeInsets.all(18.r),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        10.r,
-                                                      ),
-                                                  border: Border.all(
-                                                    color: AppColors.infoGrey1,
-                                                  ),
-                                                ),
-                                                child: SvgPicture.asset(
-                                                  AppImage.earth,
+                                              padding: EdgeInsets.all(18.r),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                                border: Border.all(
+                                                  color: AppColors.infoGrey1,
                                                 ),
                                               ),
-                                            
+                                              child: SvgPicture.asset(
+                                                AppImage.earth,
+                                              ),
+                                            ),
 
                                             onSelected: (String result) async {
                                               model.isReminderStatus = result;
@@ -1250,8 +1247,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               .data!
                                               .reversed
                                               .where(
-                                                (e) =>
-                                                    e.user!.fullName!
+                                                (e) => e.user!.fullName!
                                                     .toLowerCase()
                                                     .contains(
                                                       model
@@ -2039,10 +2035,72 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                               ),
                             ),
                             SizedBox(height: 20.h),
-                            GestureDetector(
-                              onTap: () => setState(() {
-                                model.isTapped = !model.isTapped;
-                              }),
+                            PopupMenuButton(
+                              color: AppColors.white,
+                              offset: const Offset(-78, 60),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 18.22.w,
+                                vertical: 18.20.w,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.w),
+                              ),
+                              onSelected: (String value) {},
+                              itemBuilder: (BuildContext context) {
+                                return [
+                                  PopupMenuItem(
+                                    value: 'setup yourself',
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 18.22.w,
+                                      vertical: 12.w,
+                                    ),
+                                    onTap: () =>
+                                        model.showReminderModal(context),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(AppImage.person_plus),
+                                        SizedBox(width: 6.10.w),
+                                        TextView(
+                                          text: 'Set up Yourself',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 13.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'ai setup',
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 18.22.w,
+                                      vertical: 12.w,
+                                    ),
+                                    onTap: () {},
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(AppImage.ai_star),
+                                        SizedBox(width: 6.10.w),
+                                        TextView(
+                                          text: 'AI Setup',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 13.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ];
+                              },
                               child: Container(
                                 padding: EdgeInsets.all(12.w),
                                 decoration: BoxDecoration(
@@ -2063,6 +2121,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                       ),
                               ),
                             ),
+
                             SizedBox(height: 30.h),
                           ],
                         ),

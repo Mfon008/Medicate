@@ -381,6 +381,9 @@ class PharmViewModel extends BaseViewModel {
   GlobalKey<FormState> secondFormReminderKey = GlobalKey<FormState>();
   GlobalKey<FormState> secondFormReminderUpdateKey = GlobalKey<FormState>();
 
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController medNameController = TextEditingController();
   TextEditingController medDosageController = TextEditingController();
   TextEditingController medDurationController = TextEditingController();
@@ -3390,10 +3393,11 @@ class PharmViewModel extends BaseViewModel {
 
   String modalName() {
     if (linIndex == 2) {
-      return 'Add Medication';
-    } else if (linIndex == 3) {
       return 'Preview Medication';
     }
+    // else if (linIndex == 3) {
+    //   return 'Preview Medication';
+    // }
     // else if (linIndex == 4) {
     //   return 'Make Payment';
     // }
@@ -5420,7 +5424,7 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  void showReminderModal(context, {String? userId}) => showModalBottomSheet(
+  void showReminderModal(context) => showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: AppColors.transparent,
@@ -5462,7 +5466,6 @@ class PharmViewModel extends BaseViewModel {
                           context: context,
                           setModalState: setModalState,
                           scrollController: scrollController,
-                          id: userId,
                         );
                       },
                     );
@@ -5794,24 +5797,25 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     StateSetter? setModalState,
     ScrollController? scrollController,
-    String? id,
+    // String? id,
   }) {
     if (linIndex == 2) {
-      return firstModalFLow(
-        model: model,
-        context: context,
-        setModalState: setModalState,
-        scrollController: scrollController,
-      );
-    } else if (linIndex == 3) {
       return secondModalFlow(
         model: model,
         context: context,
         setModalState: setModalState,
         scrollController: scrollController,
-        id: id,
       );
     }
+    // else if (linIndex == 2) {
+    //   return secondModalFlow(
+    //     model: model,
+    //     context: context,
+    //     setModalState: setModalState,
+    //     scrollController: scrollController,
+    //     // id: id,
+    //   );
+    // }
     // else if (linIndex == 4) {
     //   return thirdModalFlow(
     //     model: model,
@@ -5829,13 +5833,19 @@ class PharmViewModel extends BaseViewModel {
     //     id: id,
     //   );
     // }
-    return firstUserReminderModalFLow(
+    return firstModalFLow(
       model: model,
       context: context,
       setModalState: setModalState,
       scrollController: scrollController,
-      id: id,
     );
+    // firstUserReminderModalFLow(
+    //   model: model,
+    //   context: context,
+    //   setModalState: setModalState,
+    //   scrollController: scrollController,
+    //   id: id,
+    // );
   }
 
   DateTime combineDateAndTime({
@@ -7261,6 +7271,7 @@ class PharmViewModel extends BaseViewModel {
         padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
         controller: scrollController,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -7306,7 +7317,7 @@ class PharmViewModel extends BaseViewModel {
                     ), // Adjust radius as needed
                     child: LinearProgressIndicator(
                       minHeight: 5.0, // Adjust height as needed
-                      value: linIndex / 3,
+                      value: linIndex / 2,
                       color: AppColors.primary, // Progress bar color
                       backgroundColor:
                           Colors.grey[300], // Background track color
@@ -7315,7 +7326,7 @@ class PharmViewModel extends BaseViewModel {
                 ),
                 SizedBox(width: 10.w),
                 TextView(
-                  text: '$linIndex/3',
+                  text: '$linIndex/2',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 13.2.sp,
@@ -7326,12 +7337,120 @@ class PharmViewModel extends BaseViewModel {
               ],
             ),
             SizedBox(height: 20.h),
+            TextView(
+              text: 'PATIENTS DETAILS',
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 14.80.sp,
+                color: AppColors.deep,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Divider(color: AppColors.grey),
+            SizedBox(height: 12.h),
+            TextFormWidget(
+              hint: 'Patient Name',
+              hintWeight: FontWeight.w400,
+              hintColor: AppColors.reminder,
+              borderColor: AppColors.infoGrey1,
+              borderTopLeft: 10.r,
+              borderTopRight: 10.r,
+              borderBottomLeft: 10.r,
+              borderBottomRight: 10.r,
+              label: 'Enter patients full name',
+              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+              fillColor: AppColors.white,
+              isFilled: true,
+              controller: model.fullNameController,
+              validator: AppValidator.validateString(),
+              style: TextStyle(
+                fontSize: 16.20.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'GoogleSans',
+              ),
+              labelStyle: TextStyle(
+                fontSize: 14.20.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.fineGrey,
+                fontFamily: 'Arial',
+              ),
+            ),
+            SizedBox(height: 16.h),
+            TextFormWidget(
+              hint: 'Phone Number',
+              hintWeight: FontWeight.w400,
+              hintColor: AppColors.reminder,
+              borderColor: AppColors.infoGrey1,
+              borderTopLeft: 10.r,
+              borderTopRight: 10.r,
+              borderBottomLeft: 10.r,
+              borderBottomRight: 10.r,
+              label: 'e.g. +234 7058932586',
+              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+              fillColor: AppColors.white,
+              isFilled: true,
+              controller: model.phoneNumberController,
+              validator: AppValidator.validatePhoneNew(),
+              style: TextStyle(
+                fontSize: 16.20.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'GoogleSans',
+              ),
+              labelStyle: TextStyle(
+                fontSize: 14.20.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.fineGrey,
+                fontFamily: 'Arial',
+              ),
+            ),
+            SizedBox(height: 16.h),
+            TextFormWidget(
+              hint: 'Email Address',
+              isShowHint: true,
+              hintWeight: FontWeight.w400,
+              hintColor: AppColors.reminder,
+              borderColor: AppColors.infoGrey1,
+              borderTopLeft: 10.r,
+              borderTopRight: 10.r,
+              borderBottomLeft: 10.r,
+              borderBottomRight: 10.r,
+              label: 'patient@example.com',
+              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+              fillColor: AppColors.white,
+              isFilled: true,
+              controller: model.emailController,
+              validator: AppValidator.validateEmail(),
+              style: TextStyle(
+                fontSize: 16.20.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'GoogleSans',
+              ),
+              labelStyle: TextStyle(
+                fontSize: 14.20.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.fineGrey,
+                fontFamily: 'Arial',
+              ),
+            ),
+            SizedBox(height: 8.h),
+            TextView(
+              text: 'Required if email notifications are selected',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 12.80.sp,
+                color: AppColors.infoGrey,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+
             model.medicationClassList.isEmpty
                 ? Form(
                     key: firstFormReminderKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 32.0.h),
                         TextView(
                           text: 'MEDICATION DETAILS',
                           textStyle: TextStyle(
@@ -13303,7 +13422,6 @@ class PharmViewModel extends BaseViewModel {
     StateSetter? setModalState,
     ScrollController? scrollController,
     BuildContext? context,
-    String? id,
   }) => Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(22.r),
@@ -13358,7 +13476,7 @@ class PharmViewModel extends BaseViewModel {
                   ), // Adjust radius as needed
                   child: LinearProgressIndicator(
                     minHeight: 4.0, // Adjust height as needed
-                    value: linIndex / 3,
+                    value: linIndex / 2,
                     color: AppColors.primary, // Progress bar color
                     backgroundColor: Colors.grey[300], // Background track color
                   ),
@@ -13366,7 +13484,7 @@ class PharmViewModel extends BaseViewModel {
               ),
               SizedBox(width: 10.w),
               TextView(
-                text: '$linIndex/3',
+                text: '$linIndex/2',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
                   fontSize: 13.2.sp,
@@ -13470,7 +13588,7 @@ class PharmViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 4.10.h),
                 TextView(
-                  text: 'Ben Oji',
+                  text: '${model.fullNameController.text}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14.8.sp,
@@ -13492,7 +13610,7 @@ class PharmViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 4.10.h),
                 TextView(
-                  text: '09098765423',
+                  text: '${model.phoneNumberController.text}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 14.8.sp,
@@ -14486,7 +14604,9 @@ class PharmViewModel extends BaseViewModel {
                         context,
                         createReminderEntityModel:
                             CreateTenantReminderEntityModel(
-                              patientId: id,
+                              fullName: model.fullNameController.text,
+                              phoneNumber: model.phoneNumberController.text,
+                              email: model.emailController.text,
                               medications: model.medicationClassList.map((m) {
                                 return Medication(
                                   medicationName: m.medicationName,
@@ -14537,7 +14657,9 @@ class PharmViewModel extends BaseViewModel {
                         context,
                         createReminderEntityModel:
                             CreateTenantReminderEntityModel(
-                              patientId: id,
+                              fullName: model.fullNameController.text,
+                              phoneNumber: model.phoneNumberController.text,
+                              email: model.emailController.text,
                               medications: model.medicationClassList.map((m) {
                                 return Medication(
                                   medicationName: m.medicationName,
@@ -17597,208 +17719,208 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  void showCreateAddPhoneDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // prevent closing by tapping outside
-      builder: (BuildContext context) {
-        return ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => locator<PharmViewModel>(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          onDispose: (viewModel) {},
-          builder: (_, PharmViewModel model, _) {
-            return Container(
-              color: AppColors.transparent,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: TextButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: Icon(Icons.close, color: Colors.white, size: 18),
-                      label: Text(
-                        "Close",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.w,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6.10.h),
-                  Dialog(
-                    insetPadding: EdgeInsets.all(16.20.w),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: AppColors.white,
-                    child: Padding(
-                      padding: EdgeInsets.all(34.w),
-                      child: Form(
-                        key: formKeyCreateAddPhoneReminder,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextView(
-                              text: 'What’s the patients phone number?',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                color: AppColors.black,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: 12.h),
-                            TextView(
-                              text: 'Phone Number',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                color: AppColors.black,
-                                fontSize: 12.20.sp,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(13.8.w),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.grey,
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10.r),
-                                      topRight: Radius.circular(0.r),
-                                      bottomLeft: Radius.circular(10.r),
-                                      bottomRight: Radius.circular(0.r),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppImage.nigeria,
-                                        width: 22.w,
-                                        height: 22.h,
-                                      ),
-                                      SizedBox(width: 4.w),
-                                      TextView(
-                                        text: '+234',
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.2.sp,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 2.w),
-                                Expanded(
-                                  child: Container(
-                                    margin: isPhoneValid
-                                        ? EdgeInsets.only(top: 20.w)
-                                        : EdgeInsets.zero,
-                                    child: TextFormWidget(
-                                      hint: null,
-                                      borderColor: AppColors.transparent,
-                                      borderTopLeft: 0,
-                                      borderTopRight: 10,
-                                      borderBottomLeft: 0,
-                                      borderBottomRight: 10,
-                                      label: '',
+  // void showCreateAddPhoneDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false, // prevent closing by tapping outside
+  //     builder: (BuildContext context) {
+  //       return ViewModelBuilder<PharmViewModel>.reactive(
+  //         viewModelBuilder: () => locator<PharmViewModel>(),
+  //         onViewModelReady: (model) {},
+  //         disposeViewModel: false,
+  //         onDispose: (viewModel) {},
+  //         builder: (_, PharmViewModel model, _) {
+  //           return Container(
+  //             color: AppColors.transparent,
+  //             child: Column(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 Align(
+  //                   alignment: Alignment.topCenter,
+  //                   child: TextButton.icon(
+  //                     onPressed: () => Navigator.pop(context),
+  //                     icon: Icon(Icons.close, color: Colors.white, size: 18),
+  //                     label: Text(
+  //                       "Close",
+  //                       style: TextStyle(color: Colors.white),
+  //                     ),
+  //                     style: TextButton.styleFrom(
+  //                       backgroundColor: AppColors.primary,
+  //                       shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(20),
+  //                       ),
+  //                       padding: EdgeInsets.symmetric(
+  //                         horizontal: 10.w,
+  //                         vertical: 4.w,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 SizedBox(height: 6.10.h),
+  //                 Dialog(
+  //                   insetPadding: EdgeInsets.all(16.20.w),
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(12),
+  //                   ),
+  //                   backgroundColor: AppColors.white,
+  //                   child: Padding(
+  //                     padding: EdgeInsets.all(34.w),
+  //                     child: Form(
+  //                       key: formKeyCreateAddPhoneReminder,
+  //                       child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         mainAxisSize: MainAxisSize.min,
+  //                         children: [
+  //                           TextView(
+  //                             text: 'What’s the patients phone number?',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'GoogleSans',
+  //                               color: AppColors.black,
+  //                               fontSize: 20.sp,
+  //                               fontWeight: FontWeight.w700,
+  //                             ),
+  //                           ),
+  //                           SizedBox(height: 12.h),
+  //                           TextView(
+  //                             text: 'Phone Number',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               color: AppColors.black,
+  //                               fontSize: 12.20.sp,
+  //                               fontWeight: FontWeight.w400,
+  //                             ),
+  //                           ),
+  //                           SizedBox(height: 10.h),
+  //                           Row(
+  //                             mainAxisAlignment: MainAxisAlignment.start,
+  //                             children: [
+  //                               Container(
+  //                                 padding: EdgeInsets.all(13.8.w),
+  //                                 decoration: BoxDecoration(
+  //                                   color: AppColors.grey,
+  //                                   borderRadius: BorderRadius.only(
+  //                                     topLeft: Radius.circular(10.r),
+  //                                     topRight: Radius.circular(0.r),
+  //                                     bottomLeft: Radius.circular(10.r),
+  //                                     bottomRight: Radius.circular(0.r),
+  //                                   ),
+  //                                 ),
+  //                                 child: Row(
+  //                                   children: [
+  //                                     SvgPicture.asset(
+  //                                       AppImage.nigeria,
+  //                                       width: 22.w,
+  //                                       height: 22.h,
+  //                                     ),
+  //                                     SizedBox(width: 4.w),
+  //                                     TextView(
+  //                                       text: '+234',
+  //                                       textStyle: TextStyle(
+  //                                         fontWeight: FontWeight.w400,
+  //                                         fontFamily: 'Arial',
+  //                                         fontSize: 14.2.sp,
+  //                                         color: AppColors.black,
+  //                                       ),
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                               ),
+  //                               SizedBox(width: 2.w),
+  //                               Expanded(
+  //                                 child: Container(
+  //                                   margin: isPhoneValid
+  //                                       ? EdgeInsets.only(top: 20.w)
+  //                                       : EdgeInsets.zero,
+  //                                   child: TextFormWidget(
+  //                                     hint: null,
+  //                                     borderColor: AppColors.transparent,
+  //                                     borderTopLeft: 0,
+  //                                     borderTopRight: 10,
+  //                                     borderBottomLeft: 0,
+  //                                     borderBottomRight: 10,
+  //                                     label: '',
 
-                                      labelStyle: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.2.sp,
-                                        color: AppColors.infoGrey,
-                                      ),
-                                      fillColor: AppColors.grey,
-                                      isFilled: true,
-                                      controller: createAddPhoneController,
-                                      onChange: (p0) {},
-                                      keyboardType: TextInputType.number,
-                                      validator: (value) {
-                                        final result =
-                                            AppValidator.validatePhoneNew()(
-                                              value,
-                                            );
-                                        if (result != null) {
-                                          isPhoneValid = true;
-                                        } else {
-                                          isPhoneValid = false;
-                                        }
-                                        notifyListeners();
-                                        return result;
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 35.h),
-                            // 🔹 Save button
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  if (formKeyCreateAddPhoneReminder
-                                      .currentState!
-                                      .validate()) {
-                                    model.getUserDetailsByTenant(
-                                      context,
-                                      phone:
-                                          '+234${createAddPhoneController.text.trim()}',
-                                    );
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primary,
-                                  padding: EdgeInsets.symmetric(vertical: 16),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                                child: model.isLoading
-                                    ? SpinKitCircle(
-                                        size: 26.0.sp,
-                                        color: AppColors.white,
-                                      )
-                                    : Text(
-                                        "Save",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: AppColors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  //                                     labelStyle: TextStyle(
+  //                                       fontWeight: FontWeight.w400,
+  //                                       fontFamily: 'Arial',
+  //                                       fontSize: 14.2.sp,
+  //                                       color: AppColors.infoGrey,
+  //                                     ),
+  //                                     fillColor: AppColors.grey,
+  //                                     isFilled: true,
+  //                                     controller: createAddPhoneController,
+  //                                     onChange: (p0) {},
+  //                                     keyboardType: TextInputType.number,
+  //                                     validator: (value) {
+  //                                       final result =
+  //                                           AppValidator.validatePhoneNew()(
+  //                                             value,
+  //                                           );
+  //                                       if (result != null) {
+  //                                         isPhoneValid = true;
+  //                                       } else {
+  //                                         isPhoneValid = false;
+  //                                       }
+  //                                       notifyListeners();
+  //                                       return result;
+  //                                     },
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                           SizedBox(height: 35.h),
+  //                           // 🔹 Save button
+  //                           SizedBox(
+  //                             width: double.infinity,
+  //                             child: ElevatedButton(
+  //                               onPressed: () async {
+  //                                 if (formKeyCreateAddPhoneReminder
+  //                                     .currentState!
+  //                                     .validate()) {
+  //                                   model.getUserDetailsByTenant(
+  //                                     context,
+  //                                     phone:
+  //                                         '+234${createAddPhoneController.text.trim()}',
+  //                                   );
+  //                                 }
+  //                               },
+  //                               style: ElevatedButton.styleFrom(
+  //                                 backgroundColor: AppColors.primary,
+  //                                 padding: EdgeInsets.symmetric(vertical: 16),
+  //                                 shape: RoundedRectangleBorder(
+  //                                   borderRadius: BorderRadius.circular(30),
+  //                                 ),
+  //                               ),
+  //                               child: model.isLoading
+  //                                   ? SpinKitCircle(
+  //                                       size: 26.0.sp,
+  //                                       color: AppColors.white,
+  //                                     )
+  //                                   : Text(
+  //                                       "Save",
+  //                                       style: TextStyle(
+  //                                         fontSize: 16,
+  //                                         color: AppColors.white,
+  //                                         fontWeight: FontWeight.bold,
+  //                                       ),
+  //                                     ),
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   String returnPhoneNoStructureWith234(String phoneNo) {
     if (phoneNo.substring(4, 5).contains('0')) {
@@ -17826,60 +17948,60 @@ class PharmViewModel extends BaseViewModel {
     return '+234$phoneNo';
   }
 
-  void getUserDetailsByTenant(context, {String? phone}) async {
-    try {
-      _isLoading = true;
-      userDetailData = await runBusyFuture(
-        repositoryImply.getUserDetailsByTenant(phone: phone),
-        throwException: true,
-      );
-      _isLoading = false;
+  // void getUserDetailsByTenant(context, {String? phone}) async {
+  //   try {
+  //     _isLoading = true;
+  //     userDetailData = await runBusyFuture(
+  //       repositoryImply.getUserDetailsByTenant(phone: phone),
+  //       throwException: true,
+  //     );
+  //     _isLoading = false;
 
-      createAddPhoneController.clear();
-      await Future.delayed(Duration(seconds: 2));
+  //     createAddPhoneController.clear();
+  //     await Future.delayed(Duration(seconds: 2));
 
-      Navigator.pop(context);
+  //     Navigator.pop(context);
 
-      if (userDetailData['statusCode'] == 201) {
-        showReminderModal(context, userId: userDetailData['data']['userId']);
-      }
-    } catch (e) {
-      _isLoading = false;
-      createAddPhoneController.clear();
-      await Future.delayed(Duration(seconds: 2));
+  //     if (userDetailData['statusCode'] == 201) {
+  //       showReminderModal(context, userId: userDetailData['data']['userId']);
+  //     }
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     createAddPhoneController.clear();
+  //     await Future.delayed(Duration(seconds: 2));
 
-      Navigator.pop(context);
-      unregisteredPatientsDialog(context: context, phone: phone);
-    }
-    notifyListeners();
-  }
+  //     Navigator.pop(context);
+  //     unregisteredPatientsDialog(context: context, phone: phone);
+  //   }
+  //   notifyListeners();
+  // }
 
-  void registerUserByTenant(context, {String? phone}) async {
-    try {
-      _isLoading = true;
-      userDetailData = await runBusyFuture(
-        repositoryImply.registerUserByTenant(phone: phone),
-        throwException: true,
-      );
-      _isLoading = false;
-      if (userDetailData['statusCode'] == 201) {
-        Navigator.pop(context);
-        await Future.delayed(Duration(milliseconds: 100));
-        showReminderModal(context, userId: userDetailData['data']['userId']);
-      } else {
-        AppUtils.snackbar(
-          context,
-          message: userDetailData['message'].toString(),
-          error: true,
-        );
-      }
-    } catch (e) {
-      _isLoading = false;
-      logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
-    }
-    notifyListeners();
-  }
+  // void registerUserByTenant(context, {String? phone}) async {
+  //   try {
+  //     _isLoading = true;
+  //     userDetailData = await runBusyFuture(
+  //       repositoryImply.registerUserByTenant(phone: phone),
+  //       throwException: true,
+  //     );
+  //     _isLoading = false;
+  //     if (userDetailData['statusCode'] == 201) {
+  //       Navigator.pop(context);
+  //       await Future.delayed(Duration(milliseconds: 100));
+  //       showReminderModal(context, userId: userDetailData['data']['userId']);
+  //     } else {
+  //       AppUtils.snackbar(
+  //         context,
+  //         message: userDetailData['message'].toString(),
+  //         error: true,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     logger.d(e);
+  //     AppUtils.snackbar(context, message: e.toString(), error: true);
+  //   }
+  //   notifyListeners();
+  // }
 
   void createReminder(
     context, {
@@ -18487,159 +18609,159 @@ class PharmViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> unregisteredPatientsDialog({
-    BuildContext? context,
-    String? phone,
-  }) async {
-    return showDialog(
-      context: context!,
-      barrierDismissible: false, // Prevent dismiss when tapping outside
-      builder: (BuildContext context) {
-        return ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => PharmViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          onDispose: (viewModel) {},
-          builder: (_, PharmViewModel model, _) {
-            return Dialog(
-              backgroundColor: AppColors.white,
-              insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 28,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Top warning icon
-                    Container(
-                      padding: EdgeInsets.all(10.w),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.yellow.withOpacity(.09),
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.all(12.0.w),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.yellow,
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                            AppImage.ex_error,
-                            color: AppColors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    TextView(
-                      text: "Unregistered Patient",
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.bblack,
-                      ),
-                    ),
-                    SizedBox(height: 10.h),
-                    TextView(
-                      text:
-                          "We couldn’t find a patient with this phone number. Would you like to continue and create the reminder anyway?",
-                      textAlign: TextAlign.center,
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.8.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.success,
-                      ),
-                    ),
+  // Future<void> unregisteredPatientsDialog({
+  //   BuildContext? context,
+  //   String? phone,
+  // }) async {
+  //   return showDialog(
+  //     context: context!,
+  //     barrierDismissible: false, // Prevent dismiss when tapping outside
+  //     builder: (BuildContext context) {
+  //       return ViewModelBuilder<PharmViewModel>.reactive(
+  //         viewModelBuilder: () => PharmViewModel(),
+  //         onViewModelReady: (model) {},
+  //         disposeViewModel: false,
+  //         onDispose: (viewModel) {},
+  //         builder: (_, PharmViewModel model, _) {
+  //           return Dialog(
+  //             backgroundColor: AppColors.white,
+  //             insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(16),
+  //             ),
+  //             child: Padding(
+  //               padding: const EdgeInsets.symmetric(
+  //                 horizontal: 24,
+  //                 vertical: 28,
+  //               ),
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   // Top warning icon
+  //                   Container(
+  //                     padding: EdgeInsets.all(10.w),
+  //                     decoration: BoxDecoration(
+  //                       shape: BoxShape.circle,
+  //                       color: AppColors.yellow.withOpacity(.09),
+  //                     ),
+  //                     child: Container(
+  //                       padding: EdgeInsets.all(12.0.w),
+  //                       decoration: BoxDecoration(
+  //                         shape: BoxShape.circle,
+  //                         color: AppColors.yellow,
+  //                       ),
+  //                       child: Center(
+  //                         child: SvgPicture.asset(
+  //                           AppImage.ex_error,
+  //                           color: AppColors.white,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 20.h),
+  //                   TextView(
+  //                     text: "Unregistered Patient",
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'GoogleSans',
+  //                       fontSize: 18.sp,
+  //                       fontWeight: FontWeight.w500,
+  //                       color: AppColors.bblack,
+  //                     ),
+  //                   ),
+  //                   SizedBox(height: 10.h),
+  //                   TextView(
+  //                     text:
+  //                         "We couldn’t find a patient with this phone number. Would you like to continue and create the reminder anyway?",
+  //                     textAlign: TextAlign.center,
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'Arial',
+  //                       fontSize: 14.8.sp,
+  //                       fontWeight: FontWeight.w400,
+  //                       color: AppColors.success,
+  //                     ),
+  //                   ),
 
-                    SizedBox(height: 24.h),
+  //                   SizedBox(height: 24.h),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: AppColors.primary),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 32.w,
-                              vertical: 12.w,
-                            ),
-                          ),
-                          child: TextView(
-                            text: "Cancel",
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 15.6.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 16.w),
+  //                   Row(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     children: [
+  //                       OutlinedButton(
+  //                         onPressed: () => Navigator.pop(context),
+  //                         style: OutlinedButton.styleFrom(
+  //                           side: BorderSide(color: AppColors.primary),
+  //                           shape: RoundedRectangleBorder(
+  //                             borderRadius: BorderRadius.circular(30),
+  //                           ),
+  //                           padding: EdgeInsets.symmetric(
+  //                             horizontal: 32.w,
+  //                             vertical: 12.w,
+  //                           ),
+  //                         ),
+  //                         child: TextView(
+  //                           text: "Cancel",
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'Arial',
+  //                             fontSize: 15.6.sp,
+  //                             fontWeight: FontWeight.w400,
+  //                             color: AppColors.primary,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       SizedBox(width: 16.w),
 
-                        // Continue Button
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              model.registerUserByTenant(
-                                context,
-                                phone: model.returnPhoneNoStructure(
-                                  phone.toString(),
-                                ),
-                              );
-                              model.notifyListeners();
+  //                       // Continue Button
+  //                       Expanded(
+  //                         child: ElevatedButton(
+  //                           onPressed: () async {
+  //                             model.registerUserByTenant(
+  //                               context,
+  //                               phone: model.returnPhoneNoStructure(
+  //                                 phone.toString(),
+  //                               ),
+  //                             );
+  //                             model.notifyListeners();
 
-                              // Add your update logic here
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 12.w,
-                              ),
-                              elevation: 0,
-                            ),
-                            child: model.isLoading
-                                ? SpinKitCircle(
-                                    size: 26.0.sp,
-                                    color: AppColors.white,
-                                  )
-                                : TextView(
-                                    text: "Yes, Continue",
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.6.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  //                             // Add your update logic here
+  //                           },
+  //                           style: ElevatedButton.styleFrom(
+  //                             backgroundColor: AppColors.primary,
+  //                             shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.circular(30),
+  //                             ),
+  //                             padding: EdgeInsets.symmetric(
+  //                               horizontal: 20.w,
+  //                               vertical: 12.w,
+  //                             ),
+  //                             elevation: 0,
+  //                           ),
+  //                           child: model.isLoading
+  //                               ? SpinKitCircle(
+  //                                   size: 26.0.sp,
+  //                                   color: AppColors.white,
+  //                                 )
+  //                               : TextView(
+  //                                   text: "Yes, Continue",
+  //                                   textStyle: TextStyle(
+  //                                     fontFamily: 'Arial',
+  //                                     fontSize: 15.6.sp,
+  //                                     fontWeight: FontWeight.w400,
+  //                                     color: AppColors.white,
+  //                                   ),
+  //                                 ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   void pickDrugImageUpdate({BuildContext? context, String? id}) {
     try {

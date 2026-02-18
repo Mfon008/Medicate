@@ -6,13 +6,17 @@ class CreateTenantReminderEntityModel {
   String? timeZone;
   List<String>? notificationChannels;
   List<String>? emails;
-  String? patientId;
+  String? fullName;
+  String? phoneNumber;
+  String? email;
   List<String>? phoneNumbers;
   Payment? payment;
 
   CreateTenantReminderEntityModel({
     this.medications,
-    this.patientId,
+    this.phoneNumber,
+    this.fullName,
+    this.email,
     this.timeZone,
     this.notificationChannels,
     this.emails,
@@ -28,7 +32,9 @@ class CreateTenantReminderEntityModel {
       timeZone: json['timeZone'] as String?,
       notificationChannels: json['notificationChannels'] as List<String>?,
       emails: json['emails'] as List<String>?,
-      patientId: json['patientId'] as String?,
+      phoneNumber: json['phoneNumber'] as String?,
+      fullName: json['fullName'] as String?,
+      email: json['email'] as String?,
       phoneNumbers: json['phoneNumbers'] as List<String>?,
       payment: json['payment'] == null
           ? null
@@ -38,7 +44,9 @@ class CreateTenantReminderEntityModel {
 
   Map<String, dynamic> toJson() => {
     'medications': medications?.map((e) => e.toJson()).toList(),
-    'patientId': patientId,
+    'phoneNumber': phoneNumber,
+    'fullName': fullName,
+    'email': email,
     'timeZone': timeZone,
     'notificationChannels': notificationChannels,
     'emails': emails,
