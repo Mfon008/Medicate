@@ -223,7 +223,7 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
                       ),
                       Spacer(),
                       TextView(
-                        text: '10',
+                        text: '0',
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
                           fontSize: 20.2.sp,

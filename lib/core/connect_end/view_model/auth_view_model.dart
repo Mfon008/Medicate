@@ -203,6 +203,7 @@ class AuthViewModel extends BaseViewModel {
   bool isChecked = false;
   bool isCheckedUp = false;
   int? totalDuration;
+  int totalDayDuration = 0;
   int? numberOfTimes;
   bool isPhoneValid = false;
   bool _initializedUpdate = false;
@@ -391,6 +392,11 @@ class AuthViewModel extends BaseViewModel {
   bool _updateControllersInitialized = false;
 
   bool get updateControllersInitialized => _updateControllersInitialized;
+
+  bool _isEmailFlagged = false;
+  bool get isEmailFlagged => _isEmailFlagged;
+  bool _isPhoneFlagged = false;
+  bool get isPhoneFlagged => _isPhoneFlagged;
 
   List<dynamic>? formatSelectedTimeAndPeriodList = [];
   String? formattedSelectedTimeAndPeriod;
@@ -14133,302 +14139,346 @@ class AuthViewModel extends BaseViewModel {
                         }),
                         SizedBox(height: 12.h),
                         isTappedEmailAdded
-                            ? Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(
-                                    color: AppColors.infoGrey1,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: AppColors.infoGrey1,
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(12.r),
-                                          topRight: Radius.circular(12.r),
-                                        ),
-                                        color: AppColors.dashboard,
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      border: Border.all(
+                                        color: model.isEmailFlagged
+                                            ? AppColors.red
+                                            : AppColors.infoGrey1,
                                       ),
-                                      padding: EdgeInsets.all(12.w),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: AppColors.infoGrey1,
+                                            ),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(12.r),
+                                              topRight: Radius.circular(12.r),
+                                            ),
+                                            color: AppColors.dashboard,
+                                          ),
+                                          padding: EdgeInsets.all(12.w),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              TextView(
-                                                text: 'Add Email Address',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 16.2.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.deep,
-                                                ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextView(
+                                                    text: 'Add Email Address',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 16.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          model.isEmailFlagged
+                                                          ? AppColors.red
+                                                          : AppColors.deep,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      TextView(
+                                                        text:
+                                                            'Emails available',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 14.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .fineGrey,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 6.w),
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 10.w,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color:
+                                                              const Color.fromARGB(
+                                                                255,
+                                                                223,
+                                                                233,
+                                                                247,
+                                                              ),
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12.r,
+                                                              ),
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .primary
+                                                                .withOpacity(
+                                                                  .4,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        child: TextView(
+                                                          text:
+                                                              '${emailReminderList.length}',
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 11.8.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: AppColors
+                                                                .primary,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
                                               Row(
                                                 children: [
-                                                  TextView(
-                                                    text: 'Emails available',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 14.8.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.fineGrey,
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      isTappedEmailAdded =
+                                                          !isTappedEmailAdded;
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      AppImage.drop_up,
+                                                      height: 22.0.h,
+                                                      width: 22.0.w,
                                                     ),
                                                   ),
-                                                  SizedBox(width: 6.w),
-                                                  Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 10.w,
+                                                  SizedBox(width: 2.w),
+                                                  IconButton(
+                                                    onPressed: () =>
+                                                        showEmailDialog(
+                                                          context,
+                                                          model: model,
                                                         ),
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                            255,
-                                                            223,
-                                                            233,
-                                                            247,
-                                                          ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12.r,
-                                                          ),
-                                                      border: Border.all(
-                                                        color: AppColors.primary
-                                                            .withOpacity(.4),
-                                                      ),
-                                                    ),
-                                                    child: TextView(
-                                                      text:
-                                                          '${emailReminderList.length}',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 11.8.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.primary,
-                                                      ),
+                                                    icon: Icon(
+                                                      Icons.add_circle,
+                                                      color: AppColors.primary1,
+                                                      size: 24.sp,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                          Row(
+                                        ),
+                                        SizedBox(height: 15.20.h),
+                                        ...emailReminderList.asMap().entries.map((
+                                          entry,
+                                        ) {
+                                          final index = entry.key;
+                                          final o = entry.value;
+                                          final isLast =
+                                              index ==
+                                              emailReminderList.length - 1;
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  isTappedEmailAdded =
-                                                      !isTappedEmailAdded;
-                                                  model.notifyListeners();
-                                                },
-                                                child: SvgPicture.asset(
-                                                  AppImage.drop_up,
-                                                  height: 22.0.h,
-                                                  width: 22.0.w,
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 12.20.w,
+                                                  right: 20.w,
+                                                  bottom: 12.w,
                                                 ),
-                                              ),
-                                              SizedBox(width: 2.w),
-                                              IconButton(
-                                                onPressed: () =>
-                                                    showEmailDialog(
-                                                      context,
-                                                      model: model,
-                                                    ),
-                                                icon: Icon(
-                                                  Icons.add_circle,
-                                                  color: AppColors.primary1,
-                                                  size: 24.sp,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 15.20.h),
-                                    ...emailReminderList.asMap().entries.map((
-                                      entry,
-                                    ) {
-                                      final index = entry.key;
-                                      final o = entry.value;
-                                      final isLast =
-                                          index == emailReminderList.length - 1;
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              left: 12.20.w,
-                                              right: 20.w,
-                                              bottom: 12.w,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (addedEmailReminderList
-                                                        .contains(o)) {
-                                                      addedEmailReminderList
-                                                          .remove(o);
-                                                    } else {
-                                                      addedEmailReminderList
-                                                          .add(o);
-                                                    }
-                                                    model.notifyListeners();
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        addedEmailReminderList
-                                                            .contains(o)
-                                                        ? EdgeInsets.all(4.0.w)
-                                                        : EdgeInsets.all(10.w),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            6.r,
-                                                          ),
-                                                      color:
-                                                          addedEmailReminderList
-                                                              .contains(o)
-                                                          ? AppColors.primary
-                                                          : AppColors
-                                                                .transparent,
-                                                      border: Border.all(
-                                                        color:
-                                                            addedEmailReminderList
-                                                                .contains(o)
-                                                            ? AppColors
-                                                                  .transparent
-                                                            : AppColors
-                                                                  .infoGrey,
-                                                        width: .78,
-                                                      ),
-                                                    ),
-                                                    child:
-                                                        addedEmailReminderList
-                                                            .contains(o)
-                                                        ? Icon(
-                                                            Icons.check,
-                                                            size: 12.sp,
-                                                            color:
-                                                                AppColors.white,
-                                                          )
-                                                        : SizedBox.shrink(),
-                                                  ),
-                                                ),
-                                                // Transform.scale(
-                                                //   scale:
-                                                //       MediaQuery.of(
-                                                //             context,
-                                                //           ).size.shortestSide >=
-                                                //           600
-                                                //       ? 1.5
-                                                //       : 1.1,
-                                                //   child: Checkbox(
-                                                //     value: addedEmailReminderList
-                                                //         .contains(o),
-                                                //     onChanged: (_) {
-                                                //       if (addedEmailReminderList
-                                                //           .contains(o)) {
-                                                //         addedEmailReminderList.remove(
-                                                //           o,
-                                                //         );
-                                                //       } else {
-                                                //         addedEmailReminderList.add(o);
-                                                //       }
-                                                //       model!.notifyListeners();
-                                                //     },
-                                                //     activeColor: AppColors.primary,
-                                                //     shape: RoundedRectangleBorder(
-                                                //       borderRadius:
-                                                //           BorderRadius.circular(4),
-                                                //     ),
-                                                //     visualDensity: VisualDensity
-                                                //         .compact, // 👈 reduces internal padding
-                                                //   ),
-                                                // ),
-                                                SizedBox(width: 9.10.w),
-                                                SizedBox(
-                                                  width: 220.w,
-                                                  child: TextView(
-                                                    text: o,
-                                                    maxLines: 1,
-                                                    textOverflow:
-                                                        TextOverflow.ellipsis,
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 16.2.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.reminder,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Row(
+                                                child: Row(
                                                   children: [
                                                     GestureDetector(
                                                       onTap: () {
-                                                        showEmailDialog(
-                                                          context,
-                                                          isEdit: true,
-                                                          index: index,
-                                                          email:
-                                                              emailReminderList[index],
-                                                        );
+                                                        if (addedEmailReminderList
+                                                            .contains(o)) {
+                                                          addedEmailReminderList
+                                                              .remove(o);
+                                                        } else {
+                                                          addedEmailReminderList
+                                                              .add(o);
+                                                        }
                                                         model.notifyListeners();
                                                       },
-                                                      child: SvgPicture.asset(
-                                                        AppImage.edit_pen,
-                                                        height: 22.0.h,
-                                                        width: 22.0.w,
+                                                      child: Container(
+                                                        padding:
+                                                            addedEmailReminderList
+                                                                .contains(o)
+                                                            ? EdgeInsets.all(
+                                                                4.0.w,
+                                                              )
+                                                            : EdgeInsets.all(
+                                                                10.w,
+                                                              ),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                6.r,
+                                                              ),
+                                                          color:
+                                                              addedEmailReminderList
+                                                                  .contains(o)
+                                                              ? AppColors
+                                                                    .primary
+                                                              : AppColors
+                                                                    .transparent,
+                                                          border: Border.all(
+                                                            color:
+                                                                addedEmailReminderList
+                                                                    .contains(o)
+                                                                ? AppColors
+                                                                      .transparent
+                                                                : AppColors
+                                                                      .infoGrey,
+                                                            width: .78,
+                                                          ),
+                                                        ),
+                                                        child:
+                                                            addedEmailReminderList
+                                                                .contains(o)
+                                                            ? Icon(
+                                                                Icons.check,
+                                                                size: 12.sp,
+                                                                color: AppColors
+                                                                    .white,
+                                                              )
+                                                            : SizedBox.shrink(),
                                                       ),
                                                     ),
-                                                    SizedBox(width: 10.w),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        emailReminderList
-                                                            .removeAt(index);
-                                                        model.notifyListeners();
-                                                      },
-                                                      child: SvgPicture.asset(
-                                                        AppImage.delete,
-                                                        height: 22.0.h,
-                                                        width: 22.0.w,
+                                                    // Transform.scale(
+                                                    //   scale:
+                                                    //       MediaQuery.of(
+                                                    //             context,
+                                                    //           ).size.shortestSide >=
+                                                    //           600
+                                                    //       ? 1.5
+                                                    //       : 1.1,
+                                                    //   child: Checkbox(
+                                                    //     value: addedEmailReminderList
+                                                    //         .contains(o),
+                                                    //     onChanged: (_) {
+                                                    //       if (addedEmailReminderList
+                                                    //           .contains(o)) {
+                                                    //         addedEmailReminderList.remove(
+                                                    //           o,
+                                                    //         );
+                                                    //       } else {
+                                                    //         addedEmailReminderList.add(o);
+                                                    //       }
+                                                    //       model!.notifyListeners();
+                                                    //     },
+                                                    //     activeColor: AppColors.primary,
+                                                    //     shape: RoundedRectangleBorder(
+                                                    //       borderRadius:
+                                                    //           BorderRadius.circular(4),
+                                                    //     ),
+                                                    //     visualDensity: VisualDensity
+                                                    //         .compact, // 👈 reduces internal padding
+                                                    //   ),
+                                                    // ),
+                                                    SizedBox(width: 9.10.w),
+                                                    SizedBox(
+                                                      width: 220.w,
+                                                      child: TextView(
+                                                        text: o,
+                                                        maxLines: 1,
+                                                        textOverflow:
+                                                            TextOverflow
+                                                                .ellipsis,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 16.2.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
                                                       ),
+                                                    ),
+                                                    Spacer(),
+                                                    Row(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            showEmailDialog(
+                                                              context,
+                                                              isEdit: true,
+                                                              index: index,
+                                                              email:
+                                                                  emailReminderList[index],
+                                                            );
+                                                            model
+                                                                .notifyListeners();
+                                                          },
+                                                          child:
+                                                              SvgPicture.asset(
+                                                                AppImage
+                                                                    .edit_pen,
+                                                                height: 22.0.h,
+                                                                width: 22.0.w,
+                                                              ),
+                                                        ),
+                                                        SizedBox(width: 10.w),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            emailReminderList
+                                                                .removeAt(
+                                                                  index,
+                                                                );
+                                                            model
+                                                                .notifyListeners();
+                                                          },
+                                                          child:
+                                                              SvgPicture.asset(
+                                                                AppImage.delete,
+                                                                height: 22.0.h,
+                                                                width: 22.0.w,
+                                                              ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                              if (!isLast)
+                                                Divider(
+                                                  color: AppColors.infoGrey1,
+                                                ),
+                                              SizedBox(height: 5.10.h),
+                                            ],
+                                          );
+                                        }),
+                                      ],
+                                    ),
+                                  ),
+                                  !model.isEmailFlagged
+                                      ? TextView(
+                                          text: 'Atleast one email is required',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 12.80.sp,
+                                            color: AppColors.red,
+                                            fontWeight: FontWeight.w400,
                                           ),
-                                          if (!isLast)
-                                            Divider(color: AppColors.infoGrey1),
-                                          SizedBox(height: 5.10.h),
-                                        ],
-                                      );
-                                    }),
-                                  ],
-                                ),
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
                               )
                             : SizedBox.shrink(),
                         SizedBox(height: 20.h),
 
                         isTappedPhoneAdded
-                            ?
-                              //  Container(
+                            ? //  Container(
                               //     decoration: BoxDecoration(
                               //       border: Border.all(
                               //         color: AppColors.infoGrey1,
@@ -14670,23 +14720,70 @@ class AuthViewModel extends BaseViewModel {
                                       child: Row(
                                         children: [
                                           GestureDetector(
-                                            onTap: () {},
+                                            onTap: () {
+                                              if (addedPhoneReminderList.contains(
+                                                SharedPreferencesService
+                                                    .instance
+                                                    .usersData['user']['phone'],
+                                              )) {
+                                                addedPhoneReminderList.remove(
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['phone'],
+                                                );
+                                              } else {
+                                                addedPhoneReminderList.add(
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['phone'],
+                                                );
+                                              }
+                                              model.notifyListeners();
+                                            },
                                             child: Container(
-                                              padding: EdgeInsets.all(4.0.w),
+                                              padding:
+                                                  addedPhoneReminderList.contains(
+                                                    SharedPreferencesService
+                                                        .instance
+                                                        .usersData['user']['phone'],
+                                                  )
+                                                  ? EdgeInsets.all(4.0.w)
+                                                  : EdgeInsets.all(10.w),
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(6.r),
-                                                color: AppColors.primary,
+                                                color:
+                                                    addedPhoneReminderList.contains(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['phone'],
+                                                    )
+                                                    ? AppColors.primary
+                                                    : AppColors.transparent,
                                                 border: Border.all(
-                                                  color: AppColors.transparent,
+                                                  color:
+                                                      addedPhoneReminderList.contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['phone'],
+                                                      )
+                                                      ? AppColors.transparent
+                                                      : AppColors.infoGrey,
                                                   width: .78,
                                                 ),
                                               ),
-                                              child: Icon(
-                                                Icons.check,
-                                                size: 12.sp,
-                                                color: AppColors.white,
-                                              ),
+                                              child:
+                                                  addedPhoneReminderList.contains(
+                                                    SharedPreferencesService
+                                                        .instance
+                                                        .usersData['user']['phone'],
+                                                  )
+                                                  ? Icon(
+                                                      Icons.check,
+                                                      size: 12.sp,
+                                                      color: AppColors.white,
+                                                    )
+                                                  : SizedBox.shrink(),
                                             ),
                                           ),
                                           SizedBox(width: 9.10.w),
@@ -14765,6 +14862,7 @@ class AuthViewModel extends BaseViewModel {
                                                       addedPhoneReminderList
                                                           .add(o);
                                                     }
+
                                                     model.notifyListeners();
                                                   },
                                                   child: Container(
@@ -14867,8 +14965,6 @@ class AuthViewModel extends BaseViewModel {
                                 ),
                               )
                             : SizedBox.shrink(),
-
-                        // : SizedBox.shrink(),
                         SizedBox(height: 32.20.h),
                         Center(
                           child: GestureDetector(
@@ -14909,7 +15005,7 @@ class AuthViewModel extends BaseViewModel {
                         ButtonWidget(
                           border: 100.r,
                           buttonColor: AppColors.primary,
-                          buttonText: 'Preview',
+                          buttonText: 'Continue',
                           color: AppColors.white,
                           buttonBorderColor: AppColors.transparent,
                           isLoading: model.isLoading,
@@ -14920,24 +15016,41 @@ class AuthViewModel extends BaseViewModel {
                                 setModalState: setModalState,
                                 context: context,
                               );
-                              linIndex++;
-                              addCostTotal(model);
-                              if (isTappedPhoneAdded &&
-                                  !addedPhoneReminderList.contains(
-                                    formatPhoneNumber(
-                                      SharedPreferencesService
-                                          .instance
-                                          .usersData['user']['phone'],
-                                    ),
-                                  )) {
-                                addedPhoneReminderList.add(
-                                  formatPhoneNumber(
-                                    SharedPreferencesService
-                                        .instance
-                                        .usersData['user']['phone'],
-                                  ),
-                                );
+                              if (isTappedEmailAdded &&
+                                      addedEmailReminderList.isEmpty ||
+                                  isTappedPhoneAdded &&
+                                      addedPhoneReminderList.isEmpty) {
+                                if (isTappedEmailAdded &&
+                                    addedEmailReminderList.isEmpty) {
+                                  _isEmailFlagged = true;
+                                }
+                                if (isTappedPhoneAdded &&
+                                    addedPhoneReminderList.isEmpty) {
+                                  _isPhoneFlagged = true;
+                                }
+                              } else {
+                                linIndex++;
+                                addCostTotal(model);
+                                // if (isTappedPhoneAdded &&
+                                //     !addedPhoneReminderList.contains(
+                                //       formatPhoneNumber(
+                                //         SharedPreferencesService
+                                //             .instance
+                                //             .usersData['user']['phone'],
+                                //       ),
+                                //     )) {
+                                //   addedPhoneReminderList.add(
+                                //     formatPhoneNumber(
+                                //       SharedPreferencesService
+                                //           .instance
+                                //           .usersData['user']['phone'],
+                                //     ),
+                                //   );
+                                // }
+                                _isEmailFlagged = false;
+                                _isPhoneFlagged = false;
                               }
+                              setModalState!(() {});
                               model.notifyListeners();
                             }
                           },
@@ -18697,8 +18810,6 @@ class AuthViewModel extends BaseViewModel {
                                 model.notifyListeners();
                               } else if ([2, 3, 4].contains(index)) {
                                 // Phone-related channels
-
-                                // showPhoneDialog(context);
                                 isTappedPhoneAdded = true;
                                 isPhoneValid = false;
                                 model.notifyListeners();
@@ -18820,255 +18931,298 @@ class AuthViewModel extends BaseViewModel {
                             //     ),
                             //   )
                             // :
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                border: Border.all(color: AppColors.infoGrey1),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: AppColors.infoGrey1,
-                                      ),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(12.r),
-                                        topRight: Radius.circular(12.r),
-                                      ),
-                                      color: AppColors.dashboard,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: !model.isEmailFlagged
+                                          ? AppColors.red
+                                          : AppColors.infoGrey1,
                                     ),
-                                    padding: EdgeInsets.all(12.w),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.r),
+                                            topRight: Radius.circular(12.r),
+                                          ),
+                                          color: AppColors.dashboard,
+                                        ),
+                                        padding: EdgeInsets.all(12.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            TextView(
-                                              text: 'Add Email Address',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 16.2.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.deep,
-                                              ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Add Email Address',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 16.2.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: !model.isEmailFlagged
+                                                        ? AppColors.red
+                                                        : AppColors.deep,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Emails available',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 14.8.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 6.w),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 10.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              223,
+                                                              233,
+                                                              247,
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12.r,
+                                                            ),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .primary
+                                                              .withOpacity(.4),
+                                                        ),
+                                                      ),
+                                                      child: TextView(
+                                                        text:
+                                                            '${emailReminderList.length}',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 11.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
                                             Row(
                                               children: [
-                                                TextView(
-                                                  text: 'Emails available',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 14.8.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.fineGrey,
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    isTappedEmailAdded =
+                                                        !isTappedEmailAdded;
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.drop_up,
+                                                    height: 22.0.h,
+                                                    width: 22.0.w,
                                                   ),
                                                 ),
-                                                SizedBox(width: 6.w),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 10.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      223,
-                                                      233,
-                                                      247,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12.r,
-                                                        ),
-                                                    border: Border.all(
-                                                      color: AppColors.primary
-                                                          .withOpacity(.4),
-                                                    ),
-                                                  ),
-                                                  child: TextView(
-                                                    text:
-                                                        '${emailReminderList.length}',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 11.8.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.primary,
-                                                    ),
+                                                SizedBox(width: 2.w),
+                                                IconButton(
+                                                  onPressed: () =>
+                                                      showEmailDialog(
+                                                        context,
+                                                        model: model,
+                                                      ),
+                                                  icon: Icon(
+                                                    Icons.add_circle,
+                                                    color: AppColors.primary1,
+                                                    size: 24.sp,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ],
                                         ),
-                                        Row(
+                                      ),
+                                      SizedBox(height: 15.20.h),
+                                      ...emailReminderList.asMap().entries.map((
+                                        entry,
+                                      ) {
+                                        final index = entry.key;
+                                        final o = entry.value;
+                                        final isLast =
+                                            index ==
+                                            emailReminderList.length - 1;
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                isTappedEmailAdded =
-                                                    !isTappedEmailAdded;
-                                                model.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.drop_up,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 12.20.w,
+                                                right: 20.w,
+                                                bottom: 12.w,
                                               ),
-                                            ),
-                                            SizedBox(width: 2.w),
-                                            IconButton(
-                                              onPressed: () => showEmailDialog(
-                                                context,
-                                                model: model,
-                                              ),
-                                              icon: Icon(
-                                                Icons.add_circle,
-                                                color: AppColors.primary1,
-                                                size: 24.sp,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15.20.h),
-                                  ...emailReminderList.asMap().entries.map((
-                                    entry,
-                                  ) {
-                                    final index = entry.key;
-                                    final o = entry.value;
-                                    final isLast =
-                                        index == emailReminderList.length - 1;
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 12.20.w,
-                                            right: 20.w,
-                                            bottom: 12.w,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  if (addedEmailReminderList
-                                                      .contains(o)) {
-                                                    addedEmailReminderList
-                                                        .remove(o);
-                                                  } else {
-                                                    addedEmailReminderList.add(
-                                                      o,
-                                                    );
-                                                  }
-                                                  model.notifyListeners();
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      addedEmailReminderList
-                                                          .contains(o)
-                                                      ? EdgeInsets.all(4.0.w)
-                                                      : EdgeInsets.all(10.w),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          6.r,
-                                                        ),
-                                                    color:
-                                                        addedEmailReminderList
-                                                            .contains(o)
-                                                        ? AppColors.primary
-                                                        : AppColors.transparent,
-                                                    border: Border.all(
-                                                      color:
-                                                          addedEmailReminderList
-                                                              .contains(o)
-                                                          ? AppColors
-                                                                .transparent
-                                                          : AppColors.infoGrey,
-                                                      width: .78,
-                                                    ),
-                                                  ),
-                                                  child:
-                                                      addedEmailReminderList
-                                                          .contains(o)
-                                                      ? Icon(
-                                                          Icons.check,
-                                                          size: 12.sp,
-                                                          color:
-                                                              AppColors.white,
-                                                        )
-                                                      : SizedBox.shrink(),
-                                                ),
-                                              ),
-                                              SizedBox(width: 9.10.w),
-                                              SizedBox(
-                                                width: 220.w,
-                                                child: TextView(
-                                                  text: o,
-                                                  maxLines: 1,
-                                                  textOverflow:
-                                                      TextOverflow.ellipsis,
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 16.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              Row(
+                                              child: Row(
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      showEmailDialog(
-                                                        context,
-                                                        isEdit: true,
-                                                        index: index,
-                                                        email:
-                                                            emailReminderList[index],
-                                                      );
+                                                      if (addedEmailReminderList
+                                                          .contains(o)) {
+                                                        addedEmailReminderList
+                                                            .remove(o);
+                                                      } else {
+                                                        addedEmailReminderList
+                                                            .add(o);
+                                                      }
                                                       model.notifyListeners();
                                                     },
-                                                    child: SvgPicture.asset(
-                                                      AppImage.edit_pen,
-                                                      height: 22.0.h,
-                                                      width: 22.0.w,
+                                                    child: Container(
+                                                      padding:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? EdgeInsets.all(
+                                                              4.0.w,
+                                                            )
+                                                          : EdgeInsets.all(
+                                                              10.w,
+                                                            ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              6.r,
+                                                            ),
+                                                        color:
+                                                            addedEmailReminderList
+                                                                .contains(o)
+                                                            ? AppColors.primary
+                                                            : AppColors
+                                                                  .transparent,
+                                                        border: Border.all(
+                                                          color:
+                                                              addedEmailReminderList
+                                                                  .contains(o)
+                                                              ? AppColors
+                                                                    .transparent
+                                                              : AppColors
+                                                                    .infoGrey,
+                                                          width: .78,
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 12.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            )
+                                                          : SizedBox.shrink(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 10.w),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      emailReminderList
-                                                          .removeAt(index);
-                                                      model.notifyListeners();
-                                                    },
-                                                    child: SvgPicture.asset(
-                                                      AppImage.delete,
-                                                      height: 22.0.h,
-                                                      width: 22.0.w,
+                                                  SizedBox(width: 9.10.w),
+                                                  SizedBox(
+                                                    width: 220.w,
+                                                    child: TextView(
+                                                      text: o,
+                                                      maxLines: 1,
+                                                      textOverflow:
+                                                          TextOverflow.ellipsis,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 16.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
                                                     ),
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showEmailDialog(
+                                                            context,
+                                                            isEdit: true,
+                                                            index: index,
+                                                            email:
+                                                                emailReminderList[index],
+                                                          );
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.edit_pen,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10.w),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          emailReminderList
+                                                              .removeAt(index);
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.delete,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                            if (!isLast)
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                            SizedBox(height: 5.10.h),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 4.0.h),
+                                !model.isEmailFlagged
+                                    ? TextView(
+                                        text: 'Atleast one email is required',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 12.80.sp,
+                                          color: AppColors.red,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                        if (!isLast)
-                                          Divider(color: AppColors.infoGrey1),
-                                        SizedBox(height: 5.10.h),
-                                      ],
-                                    );
-                                  }),
-                                ],
-                              ),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
                             )
                           : SizedBox.shrink(),
                       SizedBox(height: 20.h),
@@ -19178,333 +19332,419 @@ class AuthViewModel extends BaseViewModel {
                             //     ),
                             //   )
                             // :
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                border: Border.all(color: AppColors.infoGrey1),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: AppColors.infoGrey1,
-                                      ),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(12.r),
-                                        topRight: Radius.circular(12.r),
-                                      ),
-                                      color: AppColors.dashboard,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: !model.isPhoneFlagged
+                                          ? AppColors.red
+                                          : AppColors.infoGrey1,
                                     ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.r),
+                                            topRight: Radius.circular(12.r),
+                                          ),
+                                          color: AppColors.dashboard,
+                                        ),
 
-                                    padding: EdgeInsets.all(12.w),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                        padding: EdgeInsets.all(12.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            TextView(
-                                              text: 'Add Phone Number',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 15.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.deep,
-                                              ),
-                                            ),
-                                            Row(
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 TextView(
-                                                  text: 'Numbers available',
+                                                  text: 'Add Phone Number',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'Arial',
                                                     fontSize: 15.8.sp,
                                                     fontWeight: FontWeight.w400,
-                                                    color: AppColors.fineGrey,
+                                                    color: !model.isPhoneFlagged
+                                                        ? AppColors.red
+                                                        : AppColors.deep,
                                                   ),
                                                 ),
-                                                SizedBox(width: 6.w),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                    horizontal: 10.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                      255,
-                                                      223,
-                                                      233,
-                                                      247,
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Numbers available',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 15.8.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                      ),
                                                     ),
+                                                    SizedBox(width: 6.w),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 10.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              223,
+                                                              233,
+                                                              247,
+                                                            ),
 
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          12.r,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12.r,
+                                                            ),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .primary
+                                                              .withOpacity(.4),
                                                         ),
-                                                    border: Border.all(
-                                                      color: AppColors.primary
-                                                          .withOpacity(.4),
+                                                      ),
+                                                      child: TextView(
+                                                        text:
+                                                            '${phoneReminderList.length + 1}',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 11.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
                                                     ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    isTappedPhoneAdded =
+                                                        !isTappedPhoneAdded;
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.drop_up,
+                                                    height: 22.0.h,
+                                                    width: 22.0.w,
                                                   ),
-                                                  child: TextView(
-                                                    text:
-                                                        '${phoneReminderList.length + 1}',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 11.8.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.primary,
-                                                    ),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    showPhoneDialog(
+                                                      context,
+                                                      model: model,
+                                                    );
+
+                                                    isPhoneValid = false;
+                                                    model.notifyListeners();
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.add_circle,
+                                                    color: AppColors.primary1,
+                                                    size: 24.sp,
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ],
                                         ),
-                                        Row(
+                                      ),
+                                      SizedBox(height: 15.20.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 12.w,
+                                          right: 20.w,
+                                        ),
+                                        child: Row(
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                isTappedPhoneAdded =
-                                                    !isTappedPhoneAdded;
+                                                if (addedPhoneReminderList.contains(
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['phone'],
+                                                )) {
+                                                  addedPhoneReminderList.remove(
+                                                    SharedPreferencesService
+                                                        .instance
+                                                        .usersData['user']['phone'],
+                                                  );
+                                                } else {
+                                                  addedPhoneReminderList.add(
+                                                    SharedPreferencesService
+                                                        .instance
+                                                        .usersData['user']['phone'],
+                                                  );
+                                                }
                                                 model.notifyListeners();
                                               },
-                                              child: SvgPicture.asset(
-                                                AppImage.drop_up,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
+                                              child: Container(
+                                                padding:
+                                                    addedPhoneReminderList.contains(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['phone'],
+                                                    )
+                                                    ? EdgeInsets.all(4.0.w)
+                                                    : EdgeInsets.all(4.w),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        6.r,
+                                                      ),
+                                                  color:
+                                                      addedPhoneReminderList.contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['phone'],
+                                                      )
+                                                      ? AppColors.primary
+                                                      : AppColors.transparent,
+                                                  border: Border.all(
+                                                    color:
+                                                        addedPhoneReminderList.contains(
+                                                          SharedPreferencesService
+                                                              .instance
+                                                              .usersData['user']['phone'],
+                                                        )
+                                                        ? AppColors.transparent
+                                                        : AppColors.infoGrey,
+                                                    width: .78,
+                                                  ),
+                                                ),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 12.sp,
+                                                  color: AppColors.white,
+                                                ),
                                               ),
                                             ),
-                                            SizedBox(width: 2.w),
-                                            IconButton(
-                                              onPressed: () {
-                                                showPhoneDialog(
-                                                  context,
-                                                  model: model,
-                                                );
-
-                                                isPhoneValid = false;
-                                                model.notifyListeners();
-                                              },
-                                              icon: Icon(
-                                                Icons.add_circle,
-                                                color: AppColors.primary1,
-                                                size: 24.sp,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 15.20.h),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 12.w,
-                                      right: 20.w,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
-                                            padding: EdgeInsets.all(4.0.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(6.r),
-                                              color: AppColors.primary,
-                                              border: Border.all(
-                                                color: AppColors.transparent,
-                                                width: .78,
-                                              ),
-                                            ),
-                                            child: Icon(
-                                              Icons.check,
-                                              size: 12.sp,
-                                              color: AppColors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 9.10.w),
-                                        TextView(
-                                          text: formatPhoneNumber(
-                                            SharedPreferencesService
-                                                .instance
-                                                .usersData['user']['phone'],
-                                          ),
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.2.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Row(
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(1.2.w),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.app_green,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Icon(
-                                                Icons.check,
-                                                size: 13.4.sp,
-                                                color: AppColors.white,
-                                              ),
-                                            ),
-                                            SizedBox(width: 10.w),
+                                            SizedBox(width: 9.10.w),
                                             TextView(
-                                              text: 'Primary',
+                                              text: formatPhoneNumber(
+                                                SharedPreferencesService
+                                                    .instance
+                                                    .usersData['user']['phone'],
+                                              ),
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
-                                                fontSize: 13.72.sp,
+                                                fontSize: 16.2.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.reminder,
                                               ),
                                             ),
+                                            Spacer(),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.all(
+                                                    1.2.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.app_green,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 13.4.sp,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                TextView(
+                                                  text: 'Primary',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 13.72.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 2.0.h),
-                                  Divider(color: AppColors.infoGrey1),
+                                      ),
+                                      SizedBox(height: 2.0.h),
+                                      Divider(color: AppColors.infoGrey1),
 
-                                  ...phoneReminderList.asMap().entries.map((
-                                    entry,
-                                  ) {
-                                    final index = entry.key;
-                                    final o = entry.value;
-                                    final isLast =
-                                        index == phoneReminderList.length - 1;
+                                      ...phoneReminderList.asMap().entries.map((
+                                        entry,
+                                      ) {
+                                        final index = entry.key;
+                                        final o = entry.value;
+                                        final isLast =
+                                            index ==
+                                            phoneReminderList.length - 1;
 
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 12.w,
-                                            right: 20.w,
-                                            bottom: 12.w,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  if (addedPhoneReminderList
-                                                      .contains(o)) {
-                                                    addedPhoneReminderList
-                                                        .remove(o);
-                                                  } else {
-                                                    addedPhoneReminderList.add(
-                                                      o,
-                                                    );
-                                                  }
-                                                  model.notifyListeners();
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      addedPhoneReminderList
-                                                          .contains(o)
-                                                      ? EdgeInsets.all(4.0.w)
-                                                      : EdgeInsets.all(10.w),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          6.r,
-                                                        ),
-                                                    color:
-                                                        addedPhoneReminderList
-                                                            .contains(o)
-                                                        ? AppColors.primary
-                                                        : AppColors.transparent,
-                                                    border: Border.all(
-                                                      color:
-                                                          addedPhoneReminderList
-                                                              .contains(o)
-                                                          ? AppColors
-                                                                .transparent
-                                                          : AppColors.infoGrey,
-                                                      width: .78,
-                                                    ),
-                                                  ),
-                                                  child:
-                                                      addedPhoneReminderList
-                                                          .contains(o)
-                                                      ? Icon(
-                                                          Icons.check,
-                                                          size: 12.sp,
-                                                          color:
-                                                              AppColors.white,
-                                                        )
-                                                      : SizedBox.shrink(),
-                                                ),
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 12.w,
+                                                right: 20.w,
+                                                bottom: 12.w,
                                               ),
-                                              SizedBox(width: 9.10.w),
-                                              TextView(
-                                                text: formatPhoneNumber(o),
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 16.2.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                              Spacer(),
-                                              Row(
+                                              child: Row(
                                                 children: [
                                                   GestureDetector(
                                                     onTap: () {
-                                                      showPhoneDialog(
-                                                        context,
-                                                        isEdit: true,
-                                                        index: index,
-                                                        phoneNumber:
-                                                            phoneReminderList[index],
-                                                        model: model,
-                                                      );
-                                                      isPhoneValid = false;
+                                                      if (addedPhoneReminderList
+                                                          .contains(o)) {
+                                                        addedPhoneReminderList
+                                                            .remove(o);
+                                                      } else {
+                                                        addedPhoneReminderList
+                                                            .add(o);
+                                                      }
                                                       model.notifyListeners();
                                                     },
-                                                    child: SvgPicture.asset(
-                                                      AppImage.edit_pen,
-                                                      height: 22.0.h,
-                                                      width: 22.0.w,
+                                                    child: Container(
+                                                      padding:
+                                                          addedPhoneReminderList
+                                                              .contains(o)
+                                                          ? EdgeInsets.all(
+                                                              4.0.w,
+                                                            )
+                                                          : EdgeInsets.all(
+                                                              10.w,
+                                                            ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              6.r,
+                                                            ),
+                                                        color:
+                                                            addedPhoneReminderList
+                                                                .contains(o)
+                                                            ? AppColors.primary
+                                                            : AppColors
+                                                                  .transparent,
+                                                        border: Border.all(
+                                                          color:
+                                                              addedPhoneReminderList
+                                                                  .contains(o)
+                                                              ? AppColors
+                                                                    .transparent
+                                                              : AppColors
+                                                                    .infoGrey,
+                                                          width: .78,
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          addedPhoneReminderList
+                                                              .contains(o)
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 12.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            )
+                                                          : SizedBox.shrink(),
                                                     ),
                                                   ),
-                                                  SizedBox(width: 16.10.w),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      phoneReminderList
-                                                          .removeAt(index);
-                                                      model.notifyListeners();
-                                                    },
-                                                    child: SvgPicture.asset(
-                                                      AppImage.delete,
-                                                      height: 22.0.h,
-                                                      width: 22.0.w,
+                                                  SizedBox(width: 9.10.w),
+                                                  TextView(
+                                                    text: formatPhoneNumber(o),
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 16.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.reminder,
                                                     ),
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showPhoneDialog(
+                                                            context,
+                                                            isEdit: true,
+                                                            index: index,
+                                                            phoneNumber:
+                                                                phoneReminderList[index],
+                                                            model: model,
+                                                          );
+                                                          isPhoneValid = false;
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.edit_pen,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 16.10.w),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          phoneReminderList
+                                                              .removeAt(index);
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.delete,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                            if (!isLast)
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                            SizedBox(height: 5.10.h),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 4.0.h),
+                                !model.isPhoneFlagged
+                                    ? TextView(
+                                        text:
+                                            'Atleast one phone number is required',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 12.80.sp,
+                                          color: AppColors.red,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                        if (!isLast)
-                                          Divider(color: AppColors.infoGrey1),
-                                        SizedBox(height: 5.10.h),
-                                      ],
-                                    );
-                                  }),
-                                ],
-                              ),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
                             )
                           : SizedBox.shrink(),
 
@@ -19555,7 +19795,7 @@ class AuthViewModel extends BaseViewModel {
                       ButtonWidget(
                         border: 100.r,
                         buttonColor: AppColors.primary,
-                        buttonText: 'Preview',
+                        buttonText: 'Continue',
                         color: AppColors.white,
                         buttonBorderColor: AppColors.transparent,
                         isLoading: model.isLoading,
@@ -19568,31 +19808,104 @@ class AuthViewModel extends BaseViewModel {
                                 setModalState: setModalState,
                                 context: context,
                               );
-                              addCostTotal(model);
-                              linIndex++;
+
+                              if (isTappedEmailAdded &&
+                                      addedEmailReminderList.isEmpty ||
+                                  isTappedPhoneAdded &&
+                                      addedPhoneReminderList.isEmpty) {
+                                if (isTappedEmailAdded &&
+                                    addedEmailReminderList.isEmpty) {
+                                  _isEmailFlagged = true;
+                                }
+                                if (isTappedPhoneAdded &&
+                                    addedPhoneReminderList.isEmpty) {
+                                  _isPhoneFlagged = true;
+                                }
+                              } else {
+                                linIndex++;
+                                addCostTotal(model);
+                                // if (isTappedPhoneAdded &&
+                                //     !addedPhoneReminderList.contains(
+                                //       formatPhoneNumber(
+                                //         SharedPreferencesService
+                                //             .instance
+                                //             .usersData['user']['phone'],
+                                //       ),
+                                //     )) {
+                                //   addedPhoneReminderList.add(
+                                //     formatPhoneNumber(
+                                //       SharedPreferencesService
+                                //           .instance
+                                //           .usersData['user']['phone'],
+                                //     ),
+                                //   );
+                                // }
+                                _isEmailFlagged = false;
+                                _isPhoneFlagged = false;
+                              }
+
+                              // addCostTotal(model);
+                              // linIndex++;
                             }
                           } else {
                             _isLoading = true;
-                            addCostTotal(model);
-                            linIndex++;
+
+                            if (isTappedEmailAdded &&
+                                    addedEmailReminderList.isEmpty ||
+                                isTappedPhoneAdded &&
+                                    addedPhoneReminderList.isEmpty) {
+                              if (isTappedEmailAdded &&
+                                  addedEmailReminderList.isEmpty) {
+                                _isEmailFlagged = true;
+                              }
+                              if (isTappedPhoneAdded &&
+                                  addedPhoneReminderList.isEmpty) {
+                                _isPhoneFlagged = true;
+                              }
+                            } else {
+                              linIndex++;
+                              addCostTotal(model);
+                              // if (isTappedPhoneAdded &&
+                              //     !addedPhoneReminderList.contains(
+                              //       formatPhoneNumber(
+                              //         SharedPreferencesService
+                              //             .instance
+                              //             .usersData['user']['phone'],
+                              //       ),
+                              //     )) {
+                              //   addedPhoneReminderList.add(
+                              //     formatPhoneNumber(
+                              //       SharedPreferencesService
+                              //           .instance
+                              //           .usersData['user']['phone'],
+                              //     ),
+                              //   );
+                              // }
+                              _isEmailFlagged = false;
+                              _isPhoneFlagged = false;
+                            }
+                            // addCostTotal(model);
+                            // linIndex++;
                             _isLoading = false;
                           }
-                          if (isTappedPhoneAdded &&
-                              !addedPhoneReminderList.contains(
-                                formatPhoneNumber(
-                                  SharedPreferencesService
-                                      .instance
-                                      .usersData['user']['phone'],
-                                ),
-                              )) {
-                            addedPhoneReminderList.add(
-                              formatPhoneNumber(
-                                SharedPreferencesService
-                                    .instance
-                                    .usersData['user']['phone'],
-                              ),
-                            );
-                          }
+                          // if (isTappedPhoneAdded &&
+                          //     !addedPhoneReminderList.contains(
+                          //       formatPhoneNumber(
+                          //         SharedPreferencesService
+                          //             .instance
+                          //             .usersData['user']['phone'],
+                          //       ),
+                          //     )) {
+                          //   addedPhoneReminderList.add(
+                          //     formatPhoneNumber(
+                          //       SharedPreferencesService
+                          //           .instance
+                          //           .usersData['user']['phone'],
+                          //     ),
+                          //   );
+                          // }
+
+                          setModalState!(() {});
                           model.notifyListeners();
                         },
                       ),
@@ -20649,7 +20962,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${20 * returnNumberOfTimes(model)}',
+                                              '₦${20 * returnNumberOfTimes(model) * returnNumberOfDay(model)}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20690,7 +21003,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${15 * returnNumberOfTimes(model)}',
+                                              '₦${15 * returnNumberOfTimes(model) * returnNumberOfDay(model)}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20731,7 +21044,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${50 * returnNumberOfTimes(model)}',
+                                              '₦${50 * returnNumberOfTimes(model) * returnNumberOfDay(model)}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -26481,17 +26794,28 @@ class AuthViewModel extends BaseViewModel {
     return numberOfTimes!;
   }
 
+  int returnNumberOfDay(model) {
+    totalDayDuration = int.parse(model.medicationClassList[0].duration!);
+    return totalDayDuration;
+  }
+
   void addCostTotal(model) {
     costTotal = 0;
     if (selectedIndexes.contains(2)) {
-      costTotal += 15 * returnNumberOfTimes(model);
+      costTotal += 15 * returnNumberOfDay(model) * returnNumberOfTimes(model);
     }
     if (selectedIndexes.contains(3)) {
-      costTotal = costTotal + 20 * returnNumberOfTimes(model);
+      costTotal += 20 * returnNumberOfDay(model) * returnNumberOfTimes(model);
     }
     if (selectedIndexes.contains(4)) {
-      costTotal = costTotal + 50 * returnNumberOfTimes(model);
+      costTotal += 50 * returnNumberOfDay(model) * returnNumberOfTimes(model);
     }
+    if (selectedIndexes.contains(2) ||
+        selectedIndexes.contains(3) ||
+        selectedIndexes.contains(4)) {
+      costTotal = costTotal * addedPhoneReminderList.length;
+    }
+
     notifyListeners();
   }
 

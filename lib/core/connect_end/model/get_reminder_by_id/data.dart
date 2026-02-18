@@ -38,7 +38,7 @@ class Data {
     this.reminderGroupId,
     this.createdAt,
     this.updatedAt,
-    this.user
+    this.user,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);

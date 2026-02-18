@@ -32,7 +32,9 @@ Reminder _$ReminderFromJson(Map<String, dynamic> json) => Reminder(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
-  user: json['user']==null?null:User.fromJson(json['user']as Map<String, dynamic>)
+  user: json['user'] == null
+      ? null
+      : User.fromJson(json['user'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ReminderToJson(Reminder instance) => <String, dynamic>{

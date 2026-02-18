@@ -38,7 +38,7 @@ class Reminder {
     this.reminderGroupId,
     this.createdAt,
     this.updatedAt,
-    this.user
+    this.user,
   });
 
   factory Reminder.fromJson(Map<String, dynamic> json) {

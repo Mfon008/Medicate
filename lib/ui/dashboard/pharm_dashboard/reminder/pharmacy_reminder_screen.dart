@@ -49,80 +49,76 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
       builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
-          floatingActionButton:
-              model.getReminderResponseModel != null &&
-                  model.getReminderResponseModel!.data!.data!.isEmpty
-              ? SizedBox.shrink()
-              : FloatingActionButton(
-                  onPressed: () {},
-                  backgroundColor: AppColors.primary1,
-                  shape: const CircleBorder(),
-                  child: PopupMenuButton(
-                    color: AppColors.white,
-                    offset: const Offset(-50, -70),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {},
+            backgroundColor: AppColors.primary1,
+            shape: const CircleBorder(),
+            child: PopupMenuButton(
+              color: AppColors.white,
+              offset: const Offset(-50, -70),
+              padding: EdgeInsets.symmetric(
+                horizontal: 18.22.w,
+                vertical: 18.20.w,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.w),
+              ),
+              onSelected: (String value) {},
+              itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(
+                    value: 'setup yourself',
                     padding: EdgeInsets.symmetric(
                       horizontal: 18.22.w,
-                      vertical: 18.20.w,
+                      vertical: 12.w,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.w),
-                    ),
-                    onSelected: (String value) {},
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        PopupMenuItem(
-                          value: 'setup yourself',
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 18.22.w,
-                            vertical: 12.w,
-                          ),
-                          onTap: () => model.showReminderModal(context),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(AppImage.person_plus),
-                              SizedBox(width: 6.10.w),
-                              TextView(
-                                text: 'Set up Yourself',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 13.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
-                            ],
+                    onTap: () => model.showReminderModal(context),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.person_plus),
+                        SizedBox(width: 6.10.w),
+                        TextView(
+                          text: 'Set up Yourself',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 13.2.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.reminder,
                           ),
                         ),
-                        PopupMenuItem(
-                          value: 'ai setup',
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 18.22.w,
-                            vertical: 12.w,
-                          ),
-                          onTap: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset(AppImage.ai_star),
-                              SizedBox(width: 6.10.w),
-                              TextView(
-                                text: 'AI Setup',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 13.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ];
-                    },
-                    child: Icon(Icons.add, color: AppColors.white, size: 25.sp),
+                      ],
+                    ),
                   ),
-                ),
+                  PopupMenuItem(
+                    value: 'ai setup',
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 18.22.w,
+                      vertical: 12.w,
+                    ),
+                    onTap: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.ai_star),
+                        SizedBox(width: 6.10.w),
+                        TextView(
+                          text: 'AI Setup',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 13.2.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.reminder,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ];
+              },
+              child: Icon(Icons.add, color: AppColors.white, size: 25.sp),
+            ),
+          ),
           appBar: AppBar(
             automaticallyImplyLeading: false,
             backgroundColor: AppColors.white,

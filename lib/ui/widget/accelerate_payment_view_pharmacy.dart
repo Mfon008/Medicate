@@ -87,6 +87,8 @@ class _AcceleratePaymentViewPharmacyState
                     Routes.pharmacyDashboard,
                     arguments: PharmacyDashboardArguments(index: 1),
                   );
+                  setState(() {});
+                  model.notifyListeners();
                 },
                 child: Padding(
                   padding: EdgeInsets.only(right: 10.0.w),

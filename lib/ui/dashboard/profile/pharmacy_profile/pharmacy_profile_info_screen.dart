@@ -548,7 +548,6 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                                 model.selectService.remove(
                                   model.services[index],
                                 );
-                                
                               } else {
                                 // select
                                 model.selectService.add(model.services[index]);

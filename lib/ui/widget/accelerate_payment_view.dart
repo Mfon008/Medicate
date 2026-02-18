@@ -90,6 +90,8 @@ class _AcceleratePaymentViewState extends State<AcceleratePaymentView> {
                       Routes.dashboard,
                       arguments: DashboardArguments(index: 1),
                     );
+                    setState(() {});
+                    model.notifyListeners();
                   },
                   child: Padding(
                     padding: EdgeInsets.only(right: 10.0.w),
