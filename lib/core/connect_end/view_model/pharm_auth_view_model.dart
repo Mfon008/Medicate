@@ -320,6 +320,7 @@ class PharmViewModel extends BaseViewModel {
 
   int? _getTotalTimesForReminder;
   int? _getTotalNoForDaysForReminder;
+  int _getTotalNumberOfReminders = 0;
 
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
@@ -14387,7 +14388,7 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '$_getTotalNoForDaysForReminder',
+                                              '$_getTotalTimesForReminder',
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
                                             fontSize: 16.80.sp,
@@ -14415,7 +14416,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   TextView(
                                     text:
-                                        '${addedPhoneReminderList.length * _getTotalNoForDaysForReminder!}',
+                                        '$_getTotalNumberOfReminders',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -14445,7 +14446,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Email  (x$_getTotalTimesForReminder msgs)',
+                                              'Email  (x${_getTotalTimesForReminder!*_getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14485,7 +14486,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Push  (x$_getTotalTimesForReminder msgs)',
+                                              'Push  (x${_getTotalTimesForReminder!*_getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14525,7 +14526,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'WhatsApp  (x$_getTotalTimesForReminder msgs)',
+                                              'WhatsApp  (x${_getTotalTimesForReminder!*_getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14535,7 +14536,7 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${20 * _getTotalTimesForReminder!}',
+                                              '₦${20 * _getTotalTimesForReminder!*_getTotalNoForDaysForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14566,7 +14567,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'SMS  (x$_getTotalTimesForReminder msgs)',
+                                              'SMS  (x${_getTotalTimesForReminder!*_getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14576,7 +14577,7 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${15 * _getTotalTimesForReminder!}',
+                                              '₦${15 * _getTotalTimesForReminder!*_getTotalNoForDaysForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14607,7 +14608,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Phone Calls  (x$_getTotalTimesForReminder calls)',
+                                              'Phone Calls  (x${_getTotalTimesForReminder!*_getTotalNoForDaysForReminder!} calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14617,7 +14618,7 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${50 * _getTotalTimesForReminder!}',
+                                              '₦${50 * _getTotalTimesForReminder!*_getTotalNoForDaysForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -17158,7 +17159,43 @@ class PharmViewModel extends BaseViewModel {
         selectedIndexes.contains(4)) {
       costTotal = costTotal * addedPhoneReminderList.length;
     }
+    totalReminder();
     notifyListeners();
+  }
+
+  void totalReminder() {
+
+  _getTotalNumberOfReminders = 0;
+    if (selectedIndexes.contains(0)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(1)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(2)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(3)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(4)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
   }
 
   void showEmailDialog(

@@ -424,6 +424,7 @@ class AuthViewModel extends BaseViewModel {
 
   int? _getTotalTimesForReminder;
   int? _getTotalNoForDaysForReminder;
+  int _getTotalNumberOfReminders = 0;
 
   String notificationChannelFlowWidgetIcon(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
@@ -12478,8 +12479,7 @@ class AuthViewModel extends BaseViewModel {
         setModalState: setModalState,
         scrollController: scrollController,
       );
-    }
-    else if (linIndex == 3) {
+    } else if (linIndex == 3) {
       return fourthModalFlow(
         model: model,
         context: context,
@@ -14487,17 +14487,20 @@ class AuthViewModel extends BaseViewModel {
 
                         isTappedPhoneAdded
                             ? Column(
-                              crossAxisAlignment:CrossAxisAlignment.start,
-                              children: [
-                                Container(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isPhoneFlagged?AppColors.red: AppColors.infoGrey1,
+                                        color: !model.isPhoneFlagged
+                                            ? AppColors.red
+                                            : AppColors.infoGrey1,
                                       ),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Container(
                                           decoration: BoxDecoration(
@@ -14510,7 +14513,7 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                             color: AppColors.dashboard,
                                           ),
-                                
+
                                           padding: EdgeInsets.all(12.w),
                                           child: Row(
                                             mainAxisAlignment:
@@ -14525,20 +14528,26 @@ class AuthViewModel extends BaseViewModel {
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
                                                       fontSize: 15.8.sp,
-                                                      fontWeight: FontWeight.w400,
-                                                      color: !model.isPhoneFlagged ?AppColors.red: AppColors.deep,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color:
+                                                          !model.isPhoneFlagged
+                                                          ? AppColors.red
+                                                          : AppColors.deep,
                                                     ),
                                                   ),
                                                   Row(
                                                     children: [
                                                       TextView(
-                                                        text: 'Numbers available',
+                                                        text:
+                                                            'Numbers available',
                                                         textStyle: TextStyle(
                                                           fontFamily: 'Arial',
                                                           fontSize: 15.8.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
-                                                          color: AppColors.fineGrey,
+                                                          color: AppColors
+                                                              .fineGrey,
                                                         ),
                                                       ),
                                                       SizedBox(width: 6.w),
@@ -14555,14 +14564,17 @@ class AuthViewModel extends BaseViewModel {
                                                                 233,
                                                                 247,
                                                               ),
-                                
+
                                                           borderRadius:
                                                               BorderRadius.circular(
                                                                 12.r,
                                                               ),
                                                           border: Border.all(
-                                                            color: AppColors.primary
-                                                                .withOpacity(.4),
+                                                            color: AppColors
+                                                                .primary
+                                                                .withOpacity(
+                                                                  .4,
+                                                                ),
                                                           ),
                                                         ),
                                                         child: TextView(
@@ -14573,8 +14585,8 @@ class AuthViewModel extends BaseViewModel {
                                                             fontSize: 11.8.sp,
                                                             fontWeight:
                                                                 FontWeight.w400,
-                                                            color:
-                                                                AppColors.primary,
+                                                            color: AppColors
+                                                                .primary,
                                                           ),
                                                         ),
                                                       ),
@@ -14603,7 +14615,7 @@ class AuthViewModel extends BaseViewModel {
                                                         context,
                                                         model: model,
                                                       );
-                                
+
                                                       isPhoneValid = false;
                                                       model.notifyListeners();
                                                     },
@@ -14628,11 +14640,12 @@ class AuthViewModel extends BaseViewModel {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  if (addedPhoneReminderList.contains(
-                                                    SharedPreferencesService
-                                                        .instance
-                                                        .usersData['user']['phone'],
-                                                  )) {
+                                                  if (addedPhoneReminderList
+                                                      .contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['phone'],
+                                                      )) {
                                                     addedPhoneReminderList.remove(
                                                       SharedPreferencesService
                                                           .instance
@@ -14660,7 +14673,9 @@ class AuthViewModel extends BaseViewModel {
                                                       : EdgeInsets.all(10.w),
                                                   decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.circular(6.r),
+                                                        BorderRadius.circular(
+                                                          6.r,
+                                                        ),
                                                     color:
                                                         addedPhoneReminderList.contains(
                                                           SharedPreferencesService
@@ -14671,12 +14686,14 @@ class AuthViewModel extends BaseViewModel {
                                                         : AppColors.transparent,
                                                     border: Border.all(
                                                       color:
-                                                          addedPhoneReminderList.contains(
-                                                            SharedPreferencesService
-                                                                .instance
-                                                                .usersData['user']['phone'],
-                                                          )
-                                                          ? AppColors.transparent
+                                                          addedPhoneReminderList
+                                                              .contains(
+                                                                SharedPreferencesService
+                                                                    .instance
+                                                                    .usersData['user']['phone'],
+                                                              )
+                                                          ? AppColors
+                                                                .transparent
                                                           : AppColors.infoGrey,
                                                       width: .78,
                                                     ),
@@ -14690,7 +14707,8 @@ class AuthViewModel extends BaseViewModel {
                                                       ? Icon(
                                                           Icons.check,
                                                           size: 12.sp,
-                                                          color: AppColors.white,
+                                                          color:
+                                                              AppColors.white,
                                                         )
                                                       : SizedBox.shrink(),
                                                 ),
@@ -14713,9 +14731,12 @@ class AuthViewModel extends BaseViewModel {
                                               Row(
                                                 children: [
                                                   Container(
-                                                    padding: EdgeInsets.all(1.2.w),
+                                                    padding: EdgeInsets.all(
+                                                      1.2.w,
+                                                    ),
                                                     decoration: BoxDecoration(
-                                                      color: AppColors.app_green,
+                                                      color:
+                                                          AppColors.app_green,
                                                       shape: BoxShape.circle,
                                                     ),
                                                     child: Icon(
@@ -14730,7 +14751,8 @@ class AuthViewModel extends BaseViewModel {
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
                                                       fontSize: 13.72.sp,
-                                                      fontWeight: FontWeight.w400,
+                                                      fontWeight:
+                                                          FontWeight.w400,
                                                       color: AppColors.reminder,
                                                     ),
                                                   ),
@@ -14747,8 +14769,9 @@ class AuthViewModel extends BaseViewModel {
                                           final index = entry.key;
                                           final o = entry.value;
                                           final isLast =
-                                              index == phoneReminderList.length - 1;
-                                
+                                              index ==
+                                              phoneReminderList.length - 1;
+
                                           return Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -14771,7 +14794,7 @@ class AuthViewModel extends BaseViewModel {
                                                           addedPhoneReminderList
                                                               .add(o);
                                                         }
-                                
+
                                                         model._isPhoneFlagged =
                                                             true;
                                                         setModalState!(() {});
@@ -14781,8 +14804,12 @@ class AuthViewModel extends BaseViewModel {
                                                         padding:
                                                             addedPhoneReminderList
                                                                 .contains(o)
-                                                            ? EdgeInsets.all(4.0.w)
-                                                            : EdgeInsets.all(10.w),
+                                                            ? EdgeInsets.all(
+                                                                4.0.w,
+                                                              )
+                                                            : EdgeInsets.all(
+                                                                10.w,
+                                                              ),
                                                         decoration: BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius.circular(
@@ -14791,7 +14818,8 @@ class AuthViewModel extends BaseViewModel {
                                                           color:
                                                               addedPhoneReminderList
                                                                   .contains(o)
-                                                              ? AppColors.primary
+                                                              ? AppColors
+                                                                    .primary
                                                               : AppColors
                                                                     .transparent,
                                                           border: Border.all(
@@ -14811,20 +14839,24 @@ class AuthViewModel extends BaseViewModel {
                                                             ? Icon(
                                                                 Icons.check,
                                                                 size: 12.sp,
-                                                                color:
-                                                                    AppColors.white,
+                                                                color: AppColors
+                                                                    .white,
                                                               )
                                                             : SizedBox.shrink(),
                                                       ),
                                                     ),
                                                     SizedBox(width: 9.10.w),
                                                     TextView(
-                                                      text: formatPhoneNumber(o),
+                                                      text: formatPhoneNumber(
+                                                        o,
+                                                      ),
                                                       textStyle: TextStyle(
                                                         fontFamily: 'Arial',
                                                         fontSize: 16.2.sp,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: AppColors.reminder,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
                                                       ),
                                                     ),
                                                     Spacer(),
@@ -14840,29 +14872,41 @@ class AuthViewModel extends BaseViewModel {
                                                                   phoneReminderList[index],
                                                               model: model,
                                                             );
-                                                            isPhoneValid = false;
-                                                            model.notifyListeners();
+                                                            isPhoneValid =
+                                                                false;
+                                                            model
+                                                                .notifyListeners();
                                                           },
-                                                          child: SvgPicture.asset(
-                                                            AppImage.edit_pen,
-                                                            height: 22.0.h,
-                                                            width: 22.0.w,
-                                                          ),
+                                                          child:
+                                                              SvgPicture.asset(
+                                                                AppImage
+                                                                    .edit_pen,
+                                                                height: 22.0.h,
+                                                                width: 22.0.w,
+                                                              ),
                                                         ),
-                                                        SizedBox(width: 16.10.w),
+                                                        SizedBox(
+                                                          width: 16.10.w,
+                                                        ),
                                                         GestureDetector(
                                                           onTap: () {
                                                             phoneReminderList
-                                                                .removeAt(index);
+                                                                .removeAt(
+                                                                  index,
+                                                                );
                                                             addedPhoneReminderList
-                                                                .removeAt(index);
-                                                            model.notifyListeners();
+                                                                .removeAt(
+                                                                  index,
+                                                                );
+                                                            model
+                                                                .notifyListeners();
                                                           },
-                                                          child: SvgPicture.asset(
-                                                            AppImage.delete,
-                                                            height: 22.0.h,
-                                                            width: 22.0.w,
-                                                          ),
+                                                          child:
+                                                              SvgPicture.asset(
+                                                                AppImage.delete,
+                                                                height: 22.0.h,
+                                                                width: 22.0.w,
+                                                              ),
                                                         ),
                                                       ],
                                                     ),
@@ -14870,7 +14914,9 @@ class AuthViewModel extends BaseViewModel {
                                                 ),
                                               ),
                                               if (!isLast)
-                                                Divider(color: AppColors.infoGrey1),
+                                                Divider(
+                                                  color: AppColors.infoGrey1,
+                                                ),
                                               SizedBox(height: 5.10.h),
                                             ],
                                           );
@@ -14878,10 +14924,11 @@ class AuthViewModel extends BaseViewModel {
                                       ],
                                     ),
                                   ),
-                              
-                                 !model.isPhoneFlagged
+
+                                  !model.isPhoneFlagged
                                       ? TextView(
-                                          text: 'Atleast one phone number is required',
+                                          text:
+                                              'Atleast one phone number is required',
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
                                             fontSize: 12.80.sp,
@@ -14890,8 +14937,8 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         )
                                       : SizedBox.shrink(),
-                              ],
-                            )
+                                ],
+                              )
                             : SizedBox.shrink(),
                         SizedBox(height: 32.20.h),
                         Center(
@@ -20350,8 +20397,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         TextView(
-                                          text:
-                                              '$_getTotalNoForDaysForReminder',
+                                          text: '$_getTotalTimesForReminder',
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
                                             fontSize: 16.80.sp,
@@ -20379,7 +20425,7 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                   TextView(
                                     text:
-                                        '${addedPhoneReminderList.length * _getTotalNoForDaysForReminder!}',
+                                        '$_getTotalNumberOfReminders',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -20409,7 +20455,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Email  (x$_getTotalTimesForReminder msgs)',
+                                              'Email  (x${_getTotalTimesForReminder! * _getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20449,7 +20495,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Push  (x$_getTotalTimesForReminder msgs)',
+                                              'Push  (x${_getTotalTimesForReminder! * _getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20489,7 +20535,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'WhatsApp  (x$_getTotalTimesForReminder msgs)',
+                                              'WhatsApp  (x${_getTotalTimesForReminder! * _getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20499,7 +20545,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${20 * _getTotalTimesForReminder!}',
+                                              '₦${20 * _getTotalTimesForReminder! * _getTotalNoForDaysForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20530,7 +20576,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'SMS  (x$_getTotalTimesForReminder msgs)',
+                                              'SMS  (x${_getTotalTimesForReminder! * _getTotalNoForDaysForReminder!} msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20540,7 +20586,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${15 * _getTotalTimesForReminder!}',
+                                              '₦${15 * _getTotalTimesForReminder! * _getTotalNoForDaysForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20571,7 +20617,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Phone Calls  (x$_getTotalTimesForReminder calls)',
+                                              'Phone Calls  (x${_getTotalTimesForReminder! * _getTotalNoForDaysForReminder!} calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20581,7 +20627,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${50 * _getTotalTimesForReminder!}',
+                                              '₦${50 * _getTotalTimesForReminder! * _getTotalNoForDaysForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20765,7 +20811,7 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       );
                     }
-                     setModalState!(() {});
+                    setModalState!(() {});
                     model.notifyListeners();
                   },
                 ),
@@ -22330,52 +22376,64 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth != ''
                       ? () {
-                         model.createReminderPaid(
-                        context,
-                        model: model,
-                        createReminderEntityModel: CreateReminderEntityModel(
-                          medications: model.medicationClassList.map((m) {
-                            return Medication(
-                              medicationName: m.medicationName,
-                              scheduleType: m.isCusSchedule!
-                                  ? 'CUSTOM'
-                                  : 'FIXED',
-                              dosage: m.dosage,
-                              medicationType: m.medicationType!.toUpperCase(),
-                              startDateTime: m.startDateIso,
-                              endDateTime: m.endDateIso,
-                              durationInDays: int.parse(m.duration!),
-                              timesPerDay: m.isCusSchedule!
-                                  ? ''
-                                  : int.parse(m.timesToTake!),
-                              dailyDoseTimes: (m.dosageMap as List)
-                                  .map(
-                                    (dayData) => (dayData['doses'] as List)
-                                        .map(
-                                          (dose) => DailyDoseTime.fromJson(
-                                            dose as Map<String, dynamic>,
-                                          ),
-                                        )
-                                        .toList(),
-                                  )
-                                  .toList(),
-                              note: m.note,
-                              medicationImage: m.imageData!.url == null
-                                  ? null
-                                  : MedicationImage.fromJson(
-                                      m.imageData!.toJson(),
-                                    ),
-                            );
-                          }).toList(),
-                          timeZone: "Africa/Lagos",
-                          notificationChannels: notificationChannel,
-                          emails: addedEmailReminderList,
-                          phoneNumbers: addedPhoneReminderList,
-                          payment: Payment(amount: costTotal, currency: "NGN"),
-                        ),
-                      );
-                      model.notifyListeners();
-                      }
+                          model.createReminderPaid(
+                            context,
+                            model: model,
+                            createReminderEntityModel:
+                                CreateReminderEntityModel(
+                                  medications: model.medicationClassList.map((
+                                    m,
+                                  ) {
+                                    return Medication(
+                                      medicationName: m.medicationName,
+                                      scheduleType: m.isCusSchedule!
+                                          ? 'CUSTOM'
+                                          : 'FIXED',
+                                      dosage: m.dosage,
+                                      medicationType: m.medicationType!
+                                          .toUpperCase(),
+                                      startDateTime: m.startDateIso,
+                                      endDateTime: m.endDateIso,
+                                      durationInDays: int.parse(m.duration!),
+                                      timesPerDay: m.isCusSchedule!
+                                          ? ''
+                                          : int.parse(m.timesToTake!),
+                                      dailyDoseTimes: (m.dosageMap as List)
+                                          .map(
+                                            (
+                                              dayData,
+                                            ) => (dayData['doses'] as List)
+                                                .map(
+                                                  (
+                                                    dose,
+                                                  ) => DailyDoseTime.fromJson(
+                                                    dose
+                                                        as Map<String, dynamic>,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          )
+                                          .toList(),
+                                      note: m.note,
+                                      medicationImage: m.imageData!.url == null
+                                          ? null
+                                          : MedicationImage.fromJson(
+                                              m.imageData!.toJson(),
+                                            ),
+                                    );
+                                  }).toList(),
+                                  timeZone: "Africa/Lagos",
+                                  notificationChannels: notificationChannel,
+                                  emails: addedEmailReminderList,
+                                  phoneNumbers: addedPhoneReminderList,
+                                  payment: Payment(
+                                    amount: costTotal,
+                                    currency: "NGN",
+                                  ),
+                                ),
+                          );
+                          model.notifyListeners();
+                        }
                       : () {},
                 ),
               ),
@@ -26092,7 +26150,42 @@ class AuthViewModel extends BaseViewModel {
         selectedIndexes.contains(4)) {
       costTotal = costTotal * addedPhoneReminderList.length;
     }
+    totalReminder();
     notifyListeners();
+  }
+
+  void totalReminder() {
+ _getTotalNumberOfReminders = 0;
+    if (selectedIndexes.contains(0)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(1)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(2)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(3)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
+    if (selectedIndexes.contains(4)) {
+      _getTotalNumberOfReminders +=
+          (_getTotalTimesForReminder! *
+          _getTotalNoForDaysForReminder! *
+          addedPhoneReminderList.length);
+    }
   }
 
   paymentWidget({
