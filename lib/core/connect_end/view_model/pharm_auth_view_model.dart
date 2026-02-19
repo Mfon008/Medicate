@@ -318,6 +318,9 @@ class PharmViewModel extends BaseViewModel {
   dynamic userDetailData;
   dynamic timeSelected;
 
+  int? _getTotalTimesForReminder;
+  int? _getTotalNoForDaysForReminder;
+
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
   List<List<String>> periodAfterLabels = [];
@@ -2973,8 +2976,8 @@ class PharmViewModel extends BaseViewModel {
 
     if (pickedDatedStart != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDatedStart!);
-
-      await selectTime(context);
+      dateTimeController.text = pickedDate!;
+      // await selectTime(context);
       startDateIso = DateTime.utc(
         pickedDatedStart!.year,
         pickedDatedStart!.month,
@@ -3045,7 +3048,7 @@ class PharmViewModel extends BaseViewModel {
     if (pickedDated != null) {
       pickedEndDate = DateFormat('dd MMM, yyyy').format(pickedDated);
       final parsed = DateFormat(
-        'dd MMM, yyyy hh:mm a',
+        'dd MMM, yyyy',
       ).parse(model!.startDateUpdateControllers[index!].text);
       final parsedEnd = DateFormat('dd MMM, yyyy').parse(pickedEndDate!);
 
@@ -3401,10 +3404,9 @@ class PharmViewModel extends BaseViewModel {
   String modalName() {
     if (linIndex == 2) {
       return 'Preview Medication';
+    } else if (linIndex == 3) {
+      return 'Make Payment';
     }
-    // else if (linIndex == 3) {
-    //   return 'Preview Medication';
-    // }
     // else if (linIndex == 4) {
     //   return 'Make Payment';
     // }
@@ -5672,19 +5674,19 @@ class PharmViewModel extends BaseViewModel {
     return totalDuration;
   }
 
-  int returnNumberOfTimes(model) {
-    if (model.medicationClassList.isEmpty) {
-      numberOfTimes = _getReminderByIdModel!.data!.medication!.timesPerDay!;
-    } else {
-      numberOfTimes = int.parse(model.medicationClassList[0].timesToTake!);
-    }
-    return numberOfTimes!;
-  }
+  // int returnNumberOfTimes(model) {
+  //   if (model.medicationClassList.isEmpty) {
+  //     numberOfTimes = _getReminderByIdModel!.data!.medication!.timesPerDay!;
+  //   } else {
+  //     numberOfTimes = int.parse(model.medicationClassList[0].timesToTake!);
+  //   }
+  //   return numberOfTimes!;
+  // }
 
-  int returnNumberOfDay(model) {
-    totalDayDuration = int.parse(model.medicationClassList[0].duration!);
-    return totalDayDuration;
-  }
+  // int returnNumberOfDay(model) {
+  //   totalDayDuration = int.parse(model.medicationClassList[0].duration!);
+  //   return totalDayDuration;
+  // }
 
   setNoOfTimesWithDurationUpdate(index) {
     if (medicationClassList[index].timesToTake!.isNotEmpty) {
@@ -5809,7 +5811,6 @@ class PharmViewModel extends BaseViewModel {
     BuildContext? context,
     StateSetter? setModalState,
     ScrollController? scrollController,
-    // String? id,
   }) {
     if (linIndex == 2) {
       return secondModalFlow(
@@ -5836,15 +5837,15 @@ class PharmViewModel extends BaseViewModel {
     //     scrollController: scrollController,
     //     id: id,
     //   );
-    // } else if (linIndex == 5) {
-    //   return fourthModalFlow(
-    //     model: model,
-    //     context: context,
-    //     setModalState: setModalState,
-    //     scrollController: scrollController,
-    //     id: id,
-    //   );
     // }
+    else if (linIndex == 3) {
+      return fourthModalFlow(
+        model: model,
+        context: context,
+        setModalState: setModalState,
+        scrollController: scrollController,
+      );
+    }
     return firstModalFLow(
       model: model,
       context: context,
@@ -7914,75 +7915,6 @@ class PharmViewModel extends BaseViewModel {
                             ],
                           ),
                         ),
-
-                        // TextFormWidget(
-                        //   hint: 'Duration',
-                        //   isShowHint: true,
-                        //   // label: 'E.g 15',
-                        //   hintWeight: FontWeight.w400,
-                        //   hintColor: AppColors.reminder,
-                        //   hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        //   borderColor: AppColors.transparent,
-                        //   keyboardType: TextInputType.number,
-                        //   floatingLabelBehavior: FloatingLabelBehavior.never,
-                        //   borderTopLeft: 10.r,
-                        //   borderTopRight: 10.r,
-                        //   borderBottomLeft: 10.r,
-                        //   borderBottomRight: 10.r,
-                        //   fillColor: AppColors.grey,
-                        //   isFilled: true,
-                        //   readOnly: true,
-                        //   controller: medDurationController,
-                        //   onChange: (p0) {
-                        //     if (p0 != null && p0.trim().isNotEmpty) {
-                        //       final parsed = int.tryParse(p0.trim());
-                        //       if (parsed != null) {
-                        //         _duration = parsed;
-                        //         intList = List.generate(
-                        //           _duration!,
-                        //           (index) => index,
-                        //         );
-                        //         dateTimeObject = inputFormat.parse(
-                        //           model.pickedDate!,
-                        //         );
-                        //         final localDate = dateTimeObject!;
-                        //         final utcStartDate = DateTime.utc(
-                        //           localDate.year,
-                        //           localDate.month,
-                        //           localDate.day,
-                        //         );
-
-                        //         // Now safely add your duration
-                        //         final utcEndDate = utcStartDate.add(
-                        //           Duration(days: _duration! - 1),
-                        //         );
-
-                        //         // Display or store
-                        //         endDateController.text = utcEndDate
-                        //             .toIso8601String();
-                        //         endDateIso = utcEndDate.toIso8601String();
-                        //       } else {
-                        //         // Optional: handle invalid input (e.g., show error or clear output)
-                        //         print('⚠️ Invalid number input: $p0');
-                        //       }
-                        //     } else {
-                        //       // Optional: clear output when input is empty
-                        //       endDateController.clear();
-                        //     }
-                        //     model.notifyListeners();
-                        //   },
-                        //   style: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'GoogleSans',
-                        //   ),
-                        //   labelStyle: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'GoogleSans',
-                        //     color: AppColors.infoGrey,
-                        //   ),
-                        // ),
                         SizedBox(height: 24.0.h),
                         model.isCusSchedule
                             ? Column(
@@ -8985,6 +8917,9 @@ class PharmViewModel extends BaseViewModel {
                                                           addedEmailReminderList
                                                               .add(o);
                                                         }
+                                                        model._isEmailFlagged =
+                                                            true;
+                                                        setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
                                                       child: Container(
@@ -9312,31 +9247,34 @@ class PharmViewModel extends BaseViewModel {
                                                 onTap: () {
                                                   if (addedPhoneReminderList
                                                       .contains(
-                                                        SharedPreferencesService
-                                                            .instance
-                                                            .usersData['user']['phone'],
+                                                        model
+                                                            .phoneNumberController
+                                                            .text,
                                                       )) {
                                                     addedPhoneReminderList.remove(
-                                                      SharedPreferencesService
-                                                          .instance
-                                                          .usersData['user']['phone'],
+                                                      model
+                                                          .phoneNumberController
+                                                          .text,
                                                     );
                                                   } else {
                                                     addedPhoneReminderList.add(
-                                                      SharedPreferencesService
-                                                          .instance
-                                                          .usersData['user']['phone'],
+                                                      model
+                                                          .phoneNumberController
+                                                          .text,
                                                     );
                                                   }
+                                                  model._isPhoneFlagged = true;
+                                                  setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
                                                 child: Container(
                                                   padding:
-                                                      addedPhoneReminderList.contains(
-                                                        SharedPreferencesService
-                                                            .instance
-                                                            .usersData['user']['phone'],
-                                                      )
+                                                      addedPhoneReminderList
+                                                          .contains(
+                                                            model
+                                                                .phoneNumberController
+                                                                .text,
+                                                          )
                                                       ? EdgeInsets.all(4.0.w)
                                                       : EdgeInsets.all(4.0.w),
                                                   decoration: BoxDecoration(
@@ -9345,20 +9283,21 @@ class PharmViewModel extends BaseViewModel {
                                                           6.r,
                                                         ),
                                                     color:
-                                                        addedPhoneReminderList.contains(
-                                                          SharedPreferencesService
-                                                              .instance
-                                                              .usersData['user']['phone'],
-                                                        )
+                                                        addedPhoneReminderList
+                                                            .contains(
+                                                              model
+                                                                  .phoneNumberController
+                                                                  .text,
+                                                            )
                                                         ? AppColors.primary
                                                         : AppColors.transparent,
                                                     border: Border.all(
                                                       color:
                                                           addedPhoneReminderList
                                                               .contains(
-                                                                SharedPreferencesService
-                                                                    .instance
-                                                                    .usersData['user']['phone'],
+                                                                model
+                                                                    .phoneNumberController
+                                                                    .text,
                                                               )
                                                           ? AppColors
                                                                 .transparent
@@ -9375,11 +9314,9 @@ class PharmViewModel extends BaseViewModel {
                                               ),
                                               SizedBox(width: 9.10.w),
                                               TextView(
-                                                text: formatPhoneNumber(
-                                                  SharedPreferencesService
-                                                      .instance
-                                                      .usersData['user']['phone'],
-                                                ),
+                                                text: model
+                                                    .phoneNumberController
+                                                    .text,
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
                                                   fontSize: 16.2.sp,
@@ -9454,6 +9391,10 @@ class PharmViewModel extends BaseViewModel {
                                                           addedPhoneReminderList
                                                               .add(o);
                                                         }
+
+                                                        model._isPhoneFlagged =
+                                                            true;
+                                                        setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
                                                       child: Container(
@@ -9649,33 +9590,17 @@ class PharmViewModel extends BaseViewModel {
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
                                     addedEmailReminderList.isEmpty) {
-                                  _isEmailFlagged = true;
+                                  model._isEmailFlagged = false;
                                 }
                                 if (isTappedPhoneAdded &&
                                     addedPhoneReminderList.isEmpty) {
-                                  _isPhoneFlagged = true;
+                                  model._isPhoneFlagged = false;
                                 }
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                // if (isTappedPhoneAdded &&
-                                //     !addedPhoneReminderList.contains(
-                                //       formatPhoneNumber(
-                                //         SharedPreferencesService
-                                //             .instance
-                                //             .usersData['user']['phone'],
-                                //       ),
-                                //     )) {
-                                //   addedPhoneReminderList.add(
-                                //     formatPhoneNumber(
-                                //       SharedPreferencesService
-                                //           .instance
-                                //           .usersData['user']['phone'],
-                                //     ),
-                                //   );
-                                // }
-                                _isEmailFlagged = false;
-                                _isPhoneFlagged = false;
+                                model._isEmailFlagged = true;
+                                model._isPhoneFlagged = true;
                               }
                               setModalState!(() {});
                               model.notifyListeners();
@@ -12804,113 +12729,9 @@ class PharmViewModel extends BaseViewModel {
                         );
                       }),
                       SizedBox(height: 12.h),
-                      // !isTappedEmailAdded && emailReminderList.isEmpty
-                      //     ? SizedBox.shrink()
-                      //     :
+
                       isTappedEmailAdded
-                          ?
-                            //  Container(
-                            //     decoration: BoxDecoration(
-                            //       border: Border.all(color: AppColors.infoGrey1),
-                            //       borderRadius: BorderRadius.circular(12.r),
-                            //       color: AppColors.white,
-                            //     ),
-                            //     padding: EdgeInsets.all(12.w),
-                            //     child: Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceBetween,
-                            //       children: [
-                            //         Column(
-                            //           crossAxisAlignment:
-                            //               CrossAxisAlignment.start,
-                            //           children: [
-                            //             TextView(
-                            //               text: 'Add Email Address',
-                            //               textStyle: TextStyle(
-                            //                 fontFamily: 'Arial',
-                            //                 fontSize: 16.2.sp,
-                            //                 fontWeight: FontWeight.w400,
-                            //                 color: AppColors.deep,
-                            //               ),
-                            //             ),
-                            //             Row(
-                            //               children: [
-                            //                 TextView(
-                            //                   text: 'Emails available',
-                            //                   textStyle: TextStyle(
-                            //                     fontFamily: 'Arial',
-                            //                     fontSize: 14.8.sp,
-                            //                     fontWeight: FontWeight.w400,
-                            //                     color: AppColors.fineGrey,
-                            //                   ),
-                            //                 ),
-                            //                 SizedBox(width: 6.w),
-                            //                 Container(
-                            //                   padding: EdgeInsets.symmetric(
-                            //                     horizontal: 10.w,
-                            //                   ),
-                            //                   decoration: BoxDecoration(
-                            //                     color: const Color.fromARGB(
-                            //                       255,
-                            //                       223,
-                            //                       233,
-                            //                       247,
-                            //                     ),
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(12.r),
-                            //                     border: Border.all(
-                            //                       color: AppColors.primary
-                            //                           .withOpacity(.4),
-                            //                     ),
-                            //                   ),
-                            //                   child: TextView(
-                            //                     text:
-                            //                         '${emailReminderList.length}',
-                            //                     textStyle: TextStyle(
-                            //                       fontFamily: 'Arial',
-                            //                       fontSize: 11.8.sp,
-                            //                       fontWeight: FontWeight.w400,
-                            //                       color: AppColors.primary,
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ],
-                            //         ),
-                            //         Row(
-                            //           children: [
-                            //             GestureDetector(
-                            //               onTap: () {
-                            //                 isTappedEmailAdded =
-                            //                     !isTappedEmailAdded;
-                            //                 model.notifyListeners();
-                            //               },
-                            //               child: SvgPicture.asset(
-                            //                 AppImage.drop_up,
-                            //                 height: 22.0.h,
-                            //                 width: 22.0.w,
-                            //               ),
-                            //             ),
-                            //             SizedBox(width: 2.w),
-                            //             IconButton(
-                            //               onPressed: () => showEmailDialog(
-                            //                 context,
-                            //                 model: model,
-                            //               ),
-                            //               icon: Icon(
-                            //                 Icons.add_circle,
-                            //                 color: AppColors.primary1,
-                            //                 size: 24.sp,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   )
-                            // :
-                            Column(
+                          ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
@@ -13074,6 +12895,9 @@ class PharmViewModel extends BaseViewModel {
                                                         addedEmailReminderList
                                                             .add(o);
                                                       }
+                                                      model._isEmailFlagged =
+                                                          true;
+                                                      setModalState!(() {});
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
@@ -13206,9 +13030,6 @@ class PharmViewModel extends BaseViewModel {
                             )
                           : SizedBox.shrink(),
                       SizedBox(height: 20.h),
-                      // !isTappedPhoneAdded && phoneReminderList.isEmpty
-                      //     ? SizedBox.shrink()
-                      //     :
                       isTappedPhoneAdded
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -13359,23 +13180,27 @@ class PharmViewModel extends BaseViewModel {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                if (addedPhoneReminderList.contains(
-                                                  SharedPreferencesService
-                                                      .instance
-                                                      .usersData['user']['phone'],
-                                                )) {
+                                                if (addedPhoneReminderList
+                                                    .contains(
+                                                      model
+                                                          .phoneNumberController
+                                                          .text,
+                                                    )) {
                                                   addedPhoneReminderList.remove(
-                                                    SharedPreferencesService
-                                                        .instance
-                                                        .usersData['user']['phone'],
+                                                    model
+                                                        .phoneNumberController
+                                                        .text,
                                                   );
                                                 } else {
                                                   addedPhoneReminderList.add(
-                                                    SharedPreferencesService
-                                                        .instance
-                                                        .usersData['user']['phone'],
+                                                    model
+                                                        .phoneNumberController
+                                                        .text,
                                                   );
                                                 }
+
+                                                model._isPhoneFlagged = true;
+                                                setModalState!(() {});
                                                 model.notifyListeners();
                                               },
                                               child: Container(
@@ -13499,6 +13324,9 @@ class PharmViewModel extends BaseViewModel {
                                                         addedPhoneReminderList
                                                             .add(o);
                                                       }
+                                                      model._isPhoneFlagged =
+                                                          true;
+                                                      setModalState!(() {});
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
@@ -13684,11 +13512,6 @@ class PharmViewModel extends BaseViewModel {
                                 setModalState: setModalState,
                                 context: context,
                               );
-                              await model.addReminderToList(
-                                model: model,
-                                setModalState: setModalState,
-                                context: context,
-                              );
 
                               if (isTappedEmailAdded &&
                                       addedEmailReminderList.isEmpty ||
@@ -13696,37 +13519,18 @@ class PharmViewModel extends BaseViewModel {
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
                                     addedEmailReminderList.isEmpty) {
-                                  _isEmailFlagged = true;
+                                  model._isEmailFlagged = false;
                                 }
                                 if (isTappedPhoneAdded &&
                                     addedPhoneReminderList.isEmpty) {
-                                  _isPhoneFlagged = true;
+                                  model._isPhoneFlagged = false;
                                 }
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                // if (isTappedPhoneAdded &&
-                                //     !addedPhoneReminderList.contains(
-                                //       formatPhoneNumber(
-                                //         SharedPreferencesService
-                                //             .instance
-                                //             .usersData['user']['phone'],
-                                //       ),
-                                //     )) {
-                                //   addedPhoneReminderList.add(
-                                //     formatPhoneNumber(
-                                //       SharedPreferencesService
-                                //           .instance
-                                //           .usersData['user']['phone'],
-                                //     ),
-                                //   );
-                                // }
-                                _isEmailFlagged = false;
-                                _isPhoneFlagged = false;
+                                model._isEmailFlagged = true;
+                                model._isPhoneFlagged = true;
                               }
-
-                              // addCostTotal(model);
-                              // linIndex++;
                             }
                           } else {
                             _isLoading = true;
@@ -13737,54 +13541,20 @@ class PharmViewModel extends BaseViewModel {
                                     addedPhoneReminderList.isEmpty) {
                               if (isTappedEmailAdded &&
                                   addedEmailReminderList.isEmpty) {
-                                _isEmailFlagged = true;
+                                model._isEmailFlagged = false;
                               }
                               if (isTappedPhoneAdded &&
                                   addedPhoneReminderList.isEmpty) {
-                                _isPhoneFlagged = true;
+                                model._isPhoneFlagged = false;
                               }
                             } else {
                               linIndex++;
                               addCostTotal(model);
-                              // if (isTappedPhoneAdded &&
-                              //     !addedPhoneReminderList.contains(
-                              //       formatPhoneNumber(
-                              //         SharedPreferencesService
-                              //             .instance
-                              //             .usersData['user']['phone'],
-                              //       ),
-                              //     )) {
-                              //   addedPhoneReminderList.add(
-                              //     formatPhoneNumber(
-                              //       SharedPreferencesService
-                              //           .instance
-                              //           .usersData['user']['phone'],
-                              //     ),
-                              //   );
-                              // }
-                              _isEmailFlagged = false;
-                              _isPhoneFlagged = false;
+                              model._isEmailFlagged = true;
+                              model._isPhoneFlagged = true;
                             }
-                            // addCostTotal(model);
-                            // linIndex++;
                             _isLoading = false;
                           }
-                          // if (isTappedPhoneAdded &&
-                          //     !addedPhoneReminderList.contains(
-                          //       formatPhoneNumber(
-                          //         SharedPreferencesService
-                          //             .instance
-                          //             .usersData['user']['phone'],
-                          //       ),
-                          //     )) {
-                          //   addedPhoneReminderList.add(
-                          //     formatPhoneNumber(
-                          //       SharedPreferencesService
-                          //           .instance
-                          //           .usersData['user']['phone'],
-                          //     ),
-                          //   );
-                          // }
 
                           setModalState!(() {});
                           model.notifyListeners();
@@ -14208,7 +13978,7 @@ class PharmViewModel extends BaseViewModel {
                             children: [
                               ...model.medicationClassList[model.indexOfMedicationClassList].dosageMap.map(
                                 (e) => Container(
-                                  padding: EdgeInsets.all(10.w),
+                                  padding: EdgeInsets.all(7.10.w),
                                   margin: EdgeInsets.only(bottom: 12.w),
                                   decoration: BoxDecoration(
                                     border: Border.all(color: AppColors.f1),
@@ -14256,7 +14026,7 @@ class PharmViewModel extends BaseViewModel {
                                               SizedBox(
                                                 width: 300.h,
                                                 child: Wrap(
-                                                  spacing: 4.10,
+                                                  spacing: 3.70,
                                                   runSpacing: 6,
                                                   children: (() {
                                                     final Set<String>
@@ -14273,11 +14043,12 @@ class PharmViewModel extends BaseViewModel {
                                                       return Container(
                                                         width: 90.w,
                                                         margin: EdgeInsets.only(
-                                                          right: 5.10.w,
+                                                          right: 3.10.w,
                                                         ),
                                                         padding:
                                                             EdgeInsets.symmetric(
-                                                              horizontal: 6.0.w,
+                                                              horizontal:
+                                                                  3.20.w,
                                                               vertical: 4.w,
                                                             ),
                                                         decoration: BoxDecoration(
@@ -14534,7 +14305,7 @@ class PharmViewModel extends BaseViewModel {
             ),
           ),
           SizedBox(height: 16.20.h),
-          phoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
+          addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -14599,30 +14370,33 @@ class PharmViewModel extends BaseViewModel {
                               SizedBox(height: 6.10.h),
                               Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Reminders per day',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
+                              model.medicationClassList[0].isCusSchedule!
+                                  ? SizedBox.shrink()
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text: 'Reminders per day',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text:
+                                              '$_getTotalNoForDaysForReminder',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  TextView(
-                                    text: '${returnNumberOfTimes(model)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
                               SizedBox(height: 6.10.h),
                               Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
@@ -14641,7 +14415,7 @@ class PharmViewModel extends BaseViewModel {
                                   ),
                                   TextView(
                                     text:
-                                        '${selectedIndexes.length * returnNumberOfTimes(model)}',
+                                        '${addedPhoneReminderList.length * _getTotalNoForDaysForReminder!}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -14671,7 +14445,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Email  (x${returnNumberOfTimes(model)} msgs)',
+                                              'Email  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14711,7 +14485,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Push  (x${returnNumberOfTimes(model)} msgs)',
+                                              'Push  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14751,7 +14525,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'WhatsApp  (x${returnNumberOfTimes(model)} msgs)',
+                                              'WhatsApp  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14761,7 +14535,7 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${20 * returnNumberOfTimes(model) * returnNumberOfTimes(model)}',
+                                              '₦${20 * _getTotalTimesForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14792,7 +14566,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'SMS  (x${returnNumberOfTimes(model)} msgs)',
+                                              'SMS  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14802,7 +14576,7 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${15 * returnNumberOfTimes(model) * returnNumberOfTimes(model)}',
+                                              '₦${15 * _getTotalTimesForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14833,7 +14607,7 @@ class PharmViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Phone Calls  (x${returnNumberOfTimes(model)} calls)',
+                                              'Phone Calls  (x$_getTotalTimesForReminder calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14843,7 +14617,7 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${50 * returnNumberOfTimes(model) * returnNumberOfTimes(model)}',
+                                              '₦${50 * _getTotalTimesForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -14982,63 +14756,7 @@ class PharmViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     if (addedPhoneReminderList.isNotEmpty) {
-                      model.createReminderPaid(
-                        context,
-                        createReminderEntityModel:
-                            CreateTenantReminderEntityModel(
-                              patientDetails: PatientDetails(
-                                fullName: model.fullNameController.text,
-                                phoneNumber:
-                                    returnReminderPhoneStructureWith234(
-                                      model.phoneNumberController.text,
-                                    ),
-                                email: model.emailController.text,
-                              ),
-                              medications: model.medicationClassList.map((m) {
-                                return Medication(
-                                  medicationName: m.medicationName,
-                                  scheduleType: m.isCusSchedule!
-                                      ? 'CUSTOM'
-                                      : 'FIXED',
-                                  dosage: m.dosage,
-                                  medicationType: m.medicationType!
-                                      .toUpperCase(),
-                                  startDateTime: m.startDateIso,
-                                  endDateTime: m.endDateIso,
-                                  durationInDays: int.parse(m.duration!),
-                                  timesPerDay: m.isCusSchedule!
-                                      ? ''
-                                      : int.parse(m.timesToTake!),
-                                  dailyDoseTimes: (m.dosageMap as List)
-                                      .map(
-                                        (dayData) => (dayData['doses'] as List)
-                                            .map(
-                                              (dose) => DailyDoseTime.fromJson(
-                                                dose as Map<String, dynamic>,
-                                              ),
-                                            )
-                                            .toList(),
-                                      )
-                                      .toList(),
-                                  note: m.note,
-                                  medicationImage: m.imageData!.url == null
-                                      ? null
-                                      : MedicationImage.fromJson(
-                                          m.imageData!.toJson(),
-                                        ),
-                                );
-                              }).toList(),
-                              timeZone: "Africa/Lagos",
-                              notificationChannels: notificationChannel,
-                              emails: emailReminderList,
-                              phoneNumbers: phoneReminderList,
-                              payment: Payment(
-                                amount: costTotal,
-                                currency: "NGN",
-                              ),
-                            ),
-                      );
-                      model.notifyListeners();
+                      linIndex++;
                     } else {
                       model.createReminder(
                         context,
@@ -16601,267 +16319,281 @@ class PharmViewModel extends BaseViewModel {
   //   ),
   // );
 
-  // fourthModalFlow({
-  //   PharmViewModel? model,
-  //   BuildContext? context,
-  //   StateSetter? setModalState,
-  //   ScrollController? scrollController,
-  //   String? id,
-  // }) => Container(
-  //   decoration: BoxDecoration(
-  //     borderRadius: BorderRadius.circular(22.r),
-  //     color: AppColors.white,
-  //   ),
-  //   child: SingleChildScrollView(
-  //     padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-  //     controller: scrollController,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             SizedBox(height: 20, width: 20),
-  //             TextView(
-  //               text: modalName(),
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'GoogleSans',
-  //                 fontSize: 16.70.sp,
-  //                 fontWeight: FontWeight.w700,
-  //                 color: AppColors.deep,
-  //               ),
-  //             ),
+  fourthModalFlow({
+    PharmViewModel? model,
+    BuildContext? context,
+    StateSetter? setModalState,
+    ScrollController? scrollController,
+    String? id,
+  }) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22.r),
+      color: AppColors.white,
+    ),
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20, width: 20),
+              TextView(
+                text: modalName(),
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.70.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
+                ),
+              ),
 
-  //             Padding(
-  //               padding: EdgeInsets.only(top: 4.w),
-  //               child: GestureDetector(
-  //                 onTap: () {
-  //                   Navigator.pop(context!);
-  //                 },
-  //                 child: SvgPicture.asset(
-  //                   AppImage.cancel,
-  //                   height: 14.20,
-  //                   width: 14.20,
-  //                   color: AppColors.black,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 13.60.h),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.end,
-  //           children: [
-  //             SizedBox(
-  //               width: MediaQuery.of(context!).size.width * .82,
-  //               child: ClipRRect(
-  //                 borderRadius: const BorderRadius.all(
-  //                   Radius.circular(5.0),
-  //                 ), // Adjust radius as needed
-  //                 child: LinearProgressIndicator(
-  //                   minHeight: 4.0, // Adjust height as needed
-  //                   value: linIndex / 5,
-  //                   color: AppColors.primary, // Progress bar color
-  //                   backgroundColor: Colors.grey[300], // Background track color
-  //                 ),
-  //               ),
-  //             ),
-  //             SizedBox(width: 10.w),
-  //             TextView(
-  //               text: '$linIndex/5',
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 13.2.sp,
-  //                 fontWeight: FontWeight.w400,
-  //                 color: AppColors.reminder,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 32.h),
-  //         TextView(
-  //           text: 'Amount',
-  //           textStyle: TextStyle(
-  //             fontFamily: 'Arial',
-  //             fontSize: 15.90.sp,
-  //             fontWeight: FontWeight.w400,
-  //             color: AppColors.black,
-  //           ),
-  //         ),
-  //         SizedBox(height: 14.2.h),
-  //         Container(
-  //           height: 70.h,
-  //           width: double.infinity,
-  //           decoration: BoxDecoration(
-  //             color: AppColors.skyBlue,
-  //             borderRadius: BorderRadius.circular(10.r),
-  //           ),
-  //           child: Center(
-  //             child: TextView(
-  //               text: '₦$costTotal.00',
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 20.90.sp,
-  //                 fontWeight: FontWeight.w700,
-  //                 color: AppColors.reminder,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         SizedBox(height: 22.h),
-  //         TextView(
-  //           text: 'Select Payment Method',
-  //           textStyle: TextStyle(
-  //             fontFamily: 'Arial',
-  //             fontSize: 16.90.sp,
-  //             fontWeight: FontWeight.w500,
-  //             color: AppColors.deep,
-  //           ),
-  //         ),
-  //         SizedBox(height: 12.h),
-  //         paymentWidget(
-  //           isWallet: true,
-  //           text: 'Pay with Wallet',
-  //           icon: AppImage.wallet_pay,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Wallet';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with Card',
-  //           icon: AppImage.card_pay,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Card';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with Bank Transfer',
-  //           icon: AppImage.bank_transfer,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Bank Transfer';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with Mobile Money',
-  //           icon: AppImage.online_mobile,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Mobile Money';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with USSD',
-  //           icon: AppImage.ussd_pay,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with USSD';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         SizedBox(height: _isLoading ? 20.h : 0.h),
-  //         _isLoading
-  //             ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
-  //             : SizedBox.shrink(),
-  //         SizedBox(height: 120.h),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Flexible(
-  //               child: ButtonWidget(
-  //                 border: 100.r,
-  //                 buttonColor: AppColors.dashboard,
-  //                 buttonText: 'Previous',
-  //                 color: AppColors.deep,
-  //                 fontSize: 14.sp,
-  //                 buttonBorderColor: AppColors.transparent,
-  //                 onPressed: () {
-  //                   linIndex--;
-  //                   model!.notifyListeners();
-  //                 },
-  //               ),
-  //             ),
-  //             SizedBox(width: 20.w),
-  //             Flexible(
-  //               child: ButtonWidget(
-  //                 border: 100.r,
-  //                 fontSize: 14.sp,
-  //                 buttonColor: onTapPaymentMeth != ''
-  //                     ? AppColors.primary
-  //                     : AppColors.infoGrey,
-  //                 buttonText: 'Continue',
-  //                 color: AppColors.white,
-  //                 buttonBorderColor: AppColors.transparent,
-  //                 onPressed: onTapPaymentMeth != ''
-  //                     ? () {
-  // createReminderPaid(
-  //   context,
-  //   createReminderEntityModel:
-  //       CreateTenantReminderEntityModel(
-  //         patientId: id,
-  //         medications: medicationClassList.map((m) {
-  //           return Medication(
-  //             medicationName: m.medicationName,
-  //             drugName: m.drugName,
-  //             dosage: m.dosage,
-  //             medicationType: m.medicationType!
-  //                 .toUpperCase(),
-  //             startDateTime: m.startDateIso,
-  //             endDateTime: m.endDateIso,
-  //             durationInDays: int.parse(m.duration!),
-  //             timesPerDay: int.parse(m.timesToTake!),
-  //             dailyDoseTimes: (m.dosageMap as List)
-  //                 .map(
-  //                   (
-  //                     dayData,
-  //                   ) => (dayData['doses'] as List)
-  //                       .map(
-  //                         (
-  //                           dose,
-  //                         ) => DailyDoseTime.fromJson(
-  //                           dose
-  //                               as Map<String, dynamic>,
-  //                         ),
-  //                       )
-  //                       .toList(),
-  //                 )
-  //                 .toList(),
-  //             note: m.note,
-  //             medicationImage: m.imageData == null
-  //                 ? null
-  //                 : MedicationImage.fromJson(
-  //                     m.imageData!.toJson(),
-  //                   ),
-  //           );
-  //         }).toList(),
-  //         timeZone: "Africa/Lagos",
-  //         notificationChannels: notificationChannel,
-  //         emails: emailReminderList,
-  //         phoneNumbers: phoneReminderList,
-  //         payment: Payment(
-  //           amount: costTotal,
-  //           currency: "NGN",
-  //         ),
-  //       ),
-  // );
-  //                         model!.notifyListeners();
-  //                       }
-  //                     : () {},
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 26.h),
-  //       ],
-  //     ),
-  //   ),
-  // );
+              Padding(
+                padding: EdgeInsets.only(top: 4.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context!);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.cancel,
+                    height: 14.20,
+                    width: 14.20,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 13.60.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context!).size.width * .82,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: linIndex / 3,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              TextView(
+                text: '$linIndex/3',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          TextView(
+            text: 'Amount',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.90.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 14.2.h),
+          Container(
+            height: 70.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.skyBlue,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Center(
+              child: TextView(
+                text: '₦$costTotal.00',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 20.90.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 22.h),
+          TextView(
+            text: 'Select Payment Method',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.90.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.deep,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          paymentWidget(
+            isWallet: true,
+            text: 'Pay with Wallet',
+            icon: AppImage.wallet_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Wallet';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Card',
+            icon: AppImage.card_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Card';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Bank Transfer',
+            icon: AppImage.bank_transfer,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Bank Transfer';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Mobile Money',
+            icon: AppImage.online_mobile,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Mobile Money';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with USSD',
+            icon: AppImage.ussd_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with USSD';
+              model!.notifyListeners();
+            },
+          ),
+          SizedBox(height: _isLoading ? 20.h : 0.h),
+          _isLoading
+              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+              : SizedBox.shrink(),
+          SizedBox(height: 120.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  buttonColor: AppColors.dashboard,
+                  buttonText: 'Previous',
+                  color: AppColors.deep,
+                  fontSize: 14.sp,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndex--;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  fontSize: 14.sp,
+                  buttonColor: onTapPaymentMeth != ''
+                      ? AppColors.primary
+                      : AppColors.infoGrey,
+                  buttonText: 'Continue',
+                  color: AppColors.white,
+                  buttonBorderColor: AppColors.transparent,
+                  isLoading: model!.isLoading,
+                  onPressed: onTapPaymentMeth != ''
+                      ? () {
+                          model.createReminderPaid(
+                            context,
+                            createReminderEntityModel:
+                                CreateTenantReminderEntityModel(
+                                  patientDetails: PatientDetails(
+                                    fullName: model.fullNameController.text,
+                                    phoneNumber:
+                                        returnReminderPhoneStructureWith234(
+                                          model.phoneNumberController.text,
+                                        ),
+                                    email: model.emailController.text,
+                                  ),
+                                  medications: model.medicationClassList.map((
+                                    m,
+                                  ) {
+                                    return Medication(
+                                      medicationName: m.medicationName,
+                                      scheduleType: m.isCusSchedule!
+                                          ? 'CUSTOM'
+                                          : 'FIXED',
+                                      dosage: m.dosage,
+                                      medicationType: m.medicationType!
+                                          .toUpperCase(),
+                                      startDateTime: m.startDateIso,
+                                      endDateTime: m.endDateIso,
+                                      durationInDays: int.parse(m.duration!),
+                                      timesPerDay: m.isCusSchedule!
+                                          ? ''
+                                          : int.parse(m.timesToTake!),
+                                      dailyDoseTimes: (m.dosageMap as List)
+                                          .map(
+                                            (
+                                              dayData,
+                                            ) => (dayData['doses'] as List)
+                                                .map(
+                                                  (
+                                                    dose,
+                                                  ) => DailyDoseTime.fromJson(
+                                                    dose
+                                                        as Map<String, dynamic>,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          )
+                                          .toList(),
+                                      note: m.note,
+                                      medicationImage: m.imageData!.url == null
+                                          ? null
+                                          : MedicationImage.fromJson(
+                                              m.imageData!.toJson(),
+                                            ),
+                                    );
+                                  }).toList(),
+                                  timeZone: "Africa/Lagos",
+                                  notificationChannels: notificationChannel,
+                                  emails: emailReminderList,
+                                  phoneNumbers: phoneReminderList,
+                                  payment: Payment(
+                                    amount: costTotal,
+                                    currency: "NGN",
+                                  ),
+                                ),
+                          );
+                          model.notifyListeners();
+                        }
+                      : () {},
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
+        ],
+      ),
+    ),
+  );
 
   String getPeriodLabel(TimeOfDay time) {
     if (time.hour >= 5 && time.hour < 12) {
@@ -17381,16 +17113,45 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  int getTotalCustomDoses(List<dynamic> dosageMap) {
+    final allDoses = <dynamic>[];
+
+    for (final dayMap in dosageMap) {
+      if (dayMap['doses'] != null) {
+        allDoses.addAll(dayMap['doses']);
+      }
+    }
+
+    return allDoses.length;
+  }
+
+  int getTotalTimesForReminder(item) {
+    if (item.isCusSchedule) {
+      _getTotalTimesForReminder = getTotalCustomDoses(item.dosageMap ?? []);
+      return _getTotalTimesForReminder!;
+    } else {
+      _getTotalTimesForReminder = int.tryParse(item.timesToTake ?? '0') ?? 0;
+      return _getTotalTimesForReminder!;
+    }
+  }
+
   void addCostTotal(model) {
     costTotal = 0;
-    if (selectedIndexes.contains(2)) {
-      costTotal += 15 * returnNumberOfDay(model) * returnNumberOfTimes(model);
-    }
-    if (selectedIndexes.contains(3)) {
-      costTotal += 20 * returnNumberOfDay(model) * returnNumberOfTimes(model);
-    }
-    if (selectedIndexes.contains(4)) {
-      costTotal += 50 * returnNumberOfDay(model) * returnNumberOfTimes(model);
+    for (final item in model.medicationClassList) {
+      _getTotalNoForDaysForReminder = int.tryParse(item.duration ?? '0') ?? 0;
+      final days = int.tryParse(item.duration ?? '0') ?? 0;
+      final times = getTotalTimesForReminder(item);
+
+      int basePrice = 0;
+      if (selectedIndexes.contains(2)) basePrice += 15;
+      if (selectedIndexes.contains(3)) basePrice += 20;
+      if (selectedIndexes.contains(4)) basePrice += 50;
+
+      if (item.isCusSchedule) {
+        costTotal += basePrice * times;
+      } else {
+        costTotal += basePrice * times * days;
+      }
     }
     if (selectedIndexes.contains(2) ||
         selectedIndexes.contains(3) ||
@@ -18411,6 +18172,7 @@ class PharmViewModel extends BaseViewModel {
   void createReminder(
     context, {
     CreateTenantReminderEntityModel? createReminderEntityModel,
+    PharmViewModel? model,
   }) async {
     try {
       _isLoading = true;
@@ -18431,6 +18193,7 @@ class PharmViewModel extends BaseViewModel {
             isUserType: 'pharmacy',
           ),
         );
+        model?.medicationClassList.clear();
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
@@ -18445,10 +18208,14 @@ class PharmViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
-    locator<PharmViewModel>().notifyListeners();
+    notifyListeners();
   }
 
-  void initiatePayment(context, {String? reference}) async {
+  void initiatePayment(
+    context, {
+    String? reference,
+    PharmViewModel? model,
+  }) async {
     try {
       _isLoading = true;
       _initiatePaymentResponseModel = await runBusyFuture(
@@ -18467,6 +18234,7 @@ class PharmViewModel extends BaseViewModel {
             url: _initiatePaymentResponseModel?.data?.redirectUrl,
           ),
         );
+        model?.medicationClassList.clear();
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
@@ -18481,7 +18249,7 @@ class PharmViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
-    locator<PharmViewModel>().notifyListeners();
+    notifyListeners();
   }
 
   void createReminderPaid(
@@ -18519,7 +18287,7 @@ class PharmViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
-    locator<PharmViewModel>().notifyListeners();
+    model?.notifyListeners();
   }
 
   Future<void> getReminder(context, {String? status, String? page}) async {

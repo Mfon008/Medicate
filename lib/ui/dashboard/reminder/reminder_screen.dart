@@ -177,7 +177,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
             ),
           ),
           body: SingleChildScrollView(
-            // physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(
               vertical: model.checkReminderEmpty() ? 20.w : 50.w,
               horizontal: 16.w,
@@ -1283,9 +1282,15 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                               .data!
                                                               .meta!
                                                               .page ==
-                                                          '1'
+                                                          1
                                                       ? () {}
                                                       : () async {
+                                                          if (model
+                                                                  .isReminderStatus ==
+                                                              'all') {
+                                                            model
+                                                                .onSubAllLoading();
+                                                          }
                                                           if (model
                                                                   .isReminderStatus ==
                                                               'ongoing') {
@@ -1313,7 +1318,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                                 .data!
                                                                 .meta!
                                                                 .page ==
-                                                            '1'
+                                                            1
                                                         ? AppColors.primary1
                                                               .withOpacity(.4)
                                                         : AppColors.primary1,
@@ -1351,7 +1356,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                               .data!
                                                               .meta!
                                                               .totalPages
-                                                              .toString()
                                                       ? () {}
                                                       : () async {
                                                           if (model
@@ -1359,6 +1363,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                               'ongoing') {
                                                             model
                                                                 .onAddGoingLoading();
+                                                          }
+                                                          if (model
+                                                                  .isReminderStatus ==
+                                                              'all') {
+                                                            model
+                                                                .onAddAllLoading();
                                                           }
                                                           if (model
                                                                   .isReminderStatus ==
@@ -1386,7 +1396,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                                 .data!
                                                                 .meta!
                                                                 .totalPages
-                                                                .toString()
                                                         ? AppColors.primary1
                                                               .withOpacity(.4)
                                                         : AppColors.primary1,
@@ -1499,31 +1508,31 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 20.h),
-                                  GestureDetector(
-                                    onTap: () => setState(() {
-                                      model.isTapped = !model.isTapped;
-                                    }),
-                                    child: Container(
-                                      padding: EdgeInsets.all(12.w),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: AppColors.primary,
-                                      ),
-                                      child: !model.isTapped
-                                          ? Icon(
-                                              Icons.add,
-                                              color: AppColors.white,
-                                              size: 20.sp,
-                                            )
-                                          : SvgPicture.asset(
-                                              AppImage.x,
-                                              color: AppColors.white,
-                                              height: 20.h,
-                                              width: 20.w,
-                                            ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 30.h),
+                                  // GestureDetector(
+                                  //   onTap: () => setState(() {
+                                  //     model.isTapped = !model.isTapped;
+                                  //   }),
+                                  //   child: Container(
+                                  //     padding: EdgeInsets.all(12.w),
+                                  //     decoration: BoxDecoration(
+                                  //       shape: BoxShape.circle,
+                                  //       color: AppColors.primary,
+                                  //     ),
+                                  //     child: !model.isTapped
+                                  //         ? Icon(
+                                  //             Icons.add,
+                                  //             color: AppColors.white,
+                                  //             size: 20.sp,
+                                  //           )
+                                  //         : SvgPicture.asset(
+                                  //             AppImage.x,
+                                  //             color: AppColors.white,
+                                  //             height: 20.h,
+                                  //             width: 20.w,
+                                  //           ),
+                                  //   ),
+                                  // ),
+                                  // SizedBox(height: 30.h),
                                   // !model.isTapped
                                   //     ? SizedBox.shrink()
                                   //     : Container(

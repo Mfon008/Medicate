@@ -422,6 +422,9 @@ class AuthViewModel extends BaseViewModel {
 
   int? globalTimeIndex;
 
+  int? _getTotalTimesForReminder;
+  int? _getTotalNoForDaysForReminder;
+
   String notificationChannelFlowWidgetIcon(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
       return AppImage.channel_email;
@@ -9161,9 +9164,10 @@ class AuthViewModel extends BaseViewModel {
     }
     // else if (linIndex == 3) {
     //   return 'Choose Notification Channel';
-    // } else if (linIndex == 4) {
-    //   return 'Make Payment';
     // }
+    else if (linIndex == 3) {
+      return 'Make Payment';
+    }
     return 'Add Medication';
   }
 
@@ -10882,8 +10886,8 @@ class AuthViewModel extends BaseViewModel {
 
     if (pickedDatedStart != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDatedStart!);
-
-      await selectTime(context);
+      dateTimeController.text = pickedDate!;
+      // await selectTime(context);
       startDateIso = DateTime.utc(
         pickedDatedStart!.year,
         pickedDatedStart!.month,
@@ -10954,7 +10958,7 @@ class AuthViewModel extends BaseViewModel {
     if (pickedDated != null) {
       pickedEndDate = DateFormat('dd MMM, yyyy').format(pickedDated);
       final parsed = DateFormat(
-        'dd MMM, yyyy hh:mm a',
+        'dd MMM, yyyy',
       ).parse(model!.startDateUpdateControllers[index!].text);
       final parsedEnd = DateFormat('dd MMM, yyyy').parse(pickedEndDate!);
 
@@ -12475,14 +12479,14 @@ class AuthViewModel extends BaseViewModel {
         scrollController: scrollController,
       );
     }
-    // else if (linIndex == 3) {
-    //   return thirdModalFlow(
-    //     model: model,
-    //     context: context,
-    //     setModalState: setModalState,
-    //     scrollController: scrollController,
-    //   );
-    // }
+    else if (linIndex == 3) {
+      return fourthModalFlow(
+        model: model,
+        context: context,
+        setModalState: setModalState,
+        scrollController: scrollController,
+      );
+    }
     // else if (linIndex == 3) {
     //   return fourthModalFlow(
     //     model: model,
@@ -12522,7 +12526,7 @@ class AuthViewModel extends BaseViewModel {
     if (duration == null || model.selectedTimes.isEmpty) return;
 
     final startDate = DateFormat(
-      'dd MMM, yyyy hh:mm a',
+      'dd MMM, yyyy',
     ).parse(model.startDateUpdateControllers[index].text);
 
     List<Map<String, dynamic>> dosageMap = [];
@@ -13110,8 +13114,8 @@ class AuthViewModel extends BaseViewModel {
                         ),
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
-                          hint: 'Start Date & Time',
-                          label: '13 Feb, 2025 10:30 AM',
+                          hint: 'Start Date',
+                          label: '13 Feb, 2026',
                           hintWeight: FontWeight.w400,
                           hintColor: AppColors.reminder,
                           hintSize: Platform.isAndroid ? 14.sp : 12.sp,
@@ -14146,7 +14150,7 @@ class AuthViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: model.isEmailFlagged
+                                        color: !model.isEmailFlagged
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -14183,7 +14187,7 @@ class AuthViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          model.isEmailFlagged
+                                                          !model.isEmailFlagged
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -14308,6 +14312,10 @@ class AuthViewModel extends BaseViewModel {
                                                           addedEmailReminderList
                                                               .add(o);
                                                         }
+
+                                                        model._isEmailFlagged =
+                                                            true;
+                                                        setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
                                                       child: Container(
@@ -14478,492 +14486,412 @@ class AuthViewModel extends BaseViewModel {
                         SizedBox(height: 20.h),
 
                         isTappedPhoneAdded
-                            ? //  Container(
-                              //     decoration: BoxDecoration(
-                              //       border: Border.all(
-                              //         color: AppColors.infoGrey1,
-                              //       ),
-                              //       borderRadius: BorderRadius.circular(12.r),
-                              //       color: AppColors.white,
-                              //     ),
-                              //     padding: EdgeInsets.all(12.w),
-                              //     child: Row(
-                              //       mainAxisAlignment:
-                              //           MainAxisAlignment.spaceBetween,
-                              //       children: [
-                              //         Column(
-                              //           crossAxisAlignment:
-                              //               CrossAxisAlignment.start,
-                              //           children: [
-                              //             TextView(
-                              //               text: 'Add Phone Number',
-                              //               textStyle: TextStyle(
-                              //                 fontFamily: 'Arial',
-                              //                 fontSize: 16.2.sp,
-                              //                 fontWeight: FontWeight.w400,
-                              //                 color: AppColors.deep,
-                              //               ),
-                              //             ),
-                              //             Row(
-                              //               children: [
-                              //                 TextView(
-                              //                   text: 'Numbers available',
-                              //                   textStyle: TextStyle(
-                              //                     fontFamily: 'Arial',
-                              //                     fontSize: 14.8.sp,
-                              //                     fontWeight: FontWeight.w400,
-                              //                     color: AppColors.fineGrey,
-                              //                   ),
-                              //                 ),
-                              //                 SizedBox(width: 6.w),
-                              //                 Container(
-                              //                   padding: EdgeInsets.symmetric(
-                              //                     horizontal: 10.w,
-                              //                   ),
-                              //                   decoration: BoxDecoration(
-                              //                     color: const Color.fromARGB(
-                              //                       255,
-                              //                       223,
-                              //                       233,
-                              //                       247,
-                              //                     ),
-                              //                     borderRadius:
-                              //                         BorderRadius.circular(12.r),
-                              //                     border: Border.all(
-                              //                       color: AppColors.primary
-                              //                           .withOpacity(.4),
-                              //                     ),
-                              //                   ),
-                              //                   child: TextView(
-                              //                     text:
-                              //                         '${phoneReminderList.length}',
-                              //                     textStyle: TextStyle(
-                              //                       fontFamily: 'Arial',
-                              //                       fontSize: 11.8.sp,
-                              //                       fontWeight: FontWeight.w400,
-                              //                       color: AppColors.primary,
-                              //                     ),
-                              //                   ),
-                              //                 ),
-                              //               ],
-                              //             ),
-                              //           ],
-                              //         ),
-                              //         Row(
-                              //           children: [
-                              //             GestureDetector(
-                              //               onTap: () {
-                              //                 isTappedPhoneAdded =
-                              //                     !isTappedPhoneAdded;
-                              //                 model.notifyListeners();
-                              //               },
-                              //               child: SvgPicture.asset(
-                              //                 AppImage.drop_up,
-                              //                 height: 22.0.h,
-                              //                 width: 22.0.w,
-                              //               ),
-                              //             ),
-                              //             SizedBox(width: 2.w),
-                              //             IconButton(
-                              //               onPressed: () {
-                              //                 showPhoneDialog(context);
-                              //                 isPhoneValid = false;
-                              //                 model.notifyListeners();
-                              //               },
-                              //               icon: Icon(
-                              //                 Icons.add_circle,
-                              //                 color: AppColors.primary1,
-                              //                 size: 24.sp,
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   )
-                              // :
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.r),
-                                  border: Border.all(
-                                    color: AppColors.infoGrey1,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: AppColors.infoGrey1,
-                                        ),
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(12.r),
-                                          topRight: Radius.circular(12.r),
-                                        ),
-                                        color: AppColors.dashboard,
+                            ? Column(
+                              crossAxisAlignment:CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      border: Border.all(
+                                        color: !model.isPhoneFlagged?AppColors.red: AppColors.infoGrey1,
                                       ),
-
-                                      padding: EdgeInsets.all(12.w),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: AppColors.infoGrey1,
+                                            ),
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(12.r),
+                                              topRight: Radius.circular(12.r),
+                                            ),
+                                            color: AppColors.dashboard,
+                                          ),
+                                
+                                          padding: EdgeInsets.all(12.w),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              TextView(
-                                                text: 'Add Phone Number',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 15.8.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.deep,
-                                                ),
-                                              ),
-                                              Row(
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   TextView(
-                                                    text: 'Numbers available',
+                                                    text: 'Add Phone Number',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
                                                       fontSize: 15.8.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.fineGrey,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: !model.isPhoneFlagged ?AppColors.red: AppColors.deep,
                                                     ),
                                                   ),
-                                                  SizedBox(width: 6.w),
-                                                  Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                          horizontal: 10.w,
+                                                  Row(
+                                                    children: [
+                                                      TextView(
+                                                        text: 'Numbers available',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 15.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors.fineGrey,
                                                         ),
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                            255,
-                                                            223,
-                                                            233,
-                                                            247,
-                                                          ),
-
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            12.r,
-                                                          ),
-                                                      border: Border.all(
-                                                        color: AppColors.primary
-                                                            .withOpacity(.4),
                                                       ),
+                                                      SizedBox(width: 6.w),
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              horizontal: 10.w,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          color:
+                                                              const Color.fromARGB(
+                                                                255,
+                                                                223,
+                                                                233,
+                                                                247,
+                                                              ),
+                                
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12.r,
+                                                              ),
+                                                          border: Border.all(
+                                                            color: AppColors.primary
+                                                                .withOpacity(.4),
+                                                          ),
+                                                        ),
+                                                        child: TextView(
+                                                          text:
+                                                              '${phoneReminderList.length + 1}',
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 11.8.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color:
+                                                                AppColors.primary,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      isTappedPhoneAdded =
+                                                          !isTappedPhoneAdded;
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: SvgPicture.asset(
+                                                      AppImage.drop_up,
+                                                      height: 22.0.h,
+                                                      width: 22.0.w,
                                                     ),
-                                                    child: TextView(
-                                                      text:
-                                                          '${phoneReminderList.length + 1}',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 11.8.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.primary,
-                                                      ),
+                                                  ),
+                                                  SizedBox(width: 2.w),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      showPhoneDialog(
+                                                        context,
+                                                        model: model,
+                                                      );
+                                
+                                                      isPhoneValid = false;
+                                                      model.notifyListeners();
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.add_circle,
+                                                      color: AppColors.primary1,
+                                                      size: 24.sp,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                          Row(
+                                        ),
+                                        SizedBox(height: 15.20.h),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 12.w,
+                                            right: 20.w,
+                                          ),
+                                          child: Row(
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  isTappedPhoneAdded =
-                                                      !isTappedPhoneAdded;
-                                                  model.notifyListeners();
-                                                },
-                                                child: SvgPicture.asset(
-                                                  AppImage.drop_up,
-                                                  height: 22.0.h,
-                                                  width: 22.0.w,
-                                                ),
-                                              ),
-                                              SizedBox(width: 2.w),
-                                              IconButton(
-                                                onPressed: () {
-                                                  showPhoneDialog(
-                                                    context,
-                                                    model: model,
-                                                  );
-
-                                                  isPhoneValid = false;
-                                                  model.notifyListeners();
-                                                },
-                                                icon: Icon(
-                                                  Icons.add_circle,
-                                                  color: AppColors.primary1,
-                                                  size: 24.sp,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 15.20.h),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 12.w,
-                                        right: 20.w,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (addedPhoneReminderList.contains(
-                                                SharedPreferencesService
-                                                    .instance
-                                                    .usersData['user']['phone'],
-                                              )) {
-                                                addedPhoneReminderList.remove(
-                                                  SharedPreferencesService
-                                                      .instance
-                                                      .usersData['user']['phone'],
-                                                );
-                                              } else {
-                                                addedPhoneReminderList.add(
-                                                  SharedPreferencesService
-                                                      .instance
-                                                      .usersData['user']['phone'],
-                                                );
-                                              }
-                                              model.notifyListeners();
-                                            },
-                                            child: Container(
-                                              padding:
-                                                  addedPhoneReminderList.contains(
+                                                  if (addedPhoneReminderList.contains(
                                                     SharedPreferencesService
                                                         .instance
                                                         .usersData['user']['phone'],
-                                                  )
-                                                  ? EdgeInsets.all(4.0.w)
-                                                  : EdgeInsets.all(10.w),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(6.r),
-                                                color:
-                                                    addedPhoneReminderList.contains(
+                                                  )) {
+                                                    addedPhoneReminderList.remove(
                                                       SharedPreferencesService
                                                           .instance
                                                           .usersData['user']['phone'],
-                                                    )
-                                                    ? AppColors.primary
-                                                    : AppColors.transparent,
-                                                border: Border.all(
-                                                  color:
+                                                    );
+                                                  } else {
+                                                    addedPhoneReminderList.add(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['phone'],
+                                                    );
+                                                  }
+                                                  model._isPhoneFlagged = true;
+                                                  setModalState!(() {});
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding:
                                                       addedPhoneReminderList.contains(
                                                         SharedPreferencesService
                                                             .instance
                                                             .usersData['user']['phone'],
                                                       )
-                                                      ? AppColors.transparent
-                                                      : AppColors.infoGrey,
-                                                  width: .78,
+                                                      ? EdgeInsets.all(4.0.w)
+                                                      : EdgeInsets.all(10.w),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(6.r),
+                                                    color:
+                                                        addedPhoneReminderList.contains(
+                                                          SharedPreferencesService
+                                                              .instance
+                                                              .usersData['user']['phone'],
+                                                        )
+                                                        ? AppColors.primary
+                                                        : AppColors.transparent,
+                                                    border: Border.all(
+                                                      color:
+                                                          addedPhoneReminderList.contains(
+                                                            SharedPreferencesService
+                                                                .instance
+                                                                .usersData['user']['phone'],
+                                                          )
+                                                          ? AppColors.transparent
+                                                          : AppColors.infoGrey,
+                                                      width: .78,
+                                                    ),
+                                                  ),
+                                                  child:
+                                                      addedPhoneReminderList.contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['phone'],
+                                                      )
+                                                      ? Icon(
+                                                          Icons.check,
+                                                          size: 12.sp,
+                                                          color: AppColors.white,
+                                                        )
+                                                      : SizedBox.shrink(),
                                                 ),
                                               ),
-                                              child:
-                                                  addedPhoneReminderList.contains(
-                                                    SharedPreferencesService
-                                                        .instance
-                                                        .usersData['user']['phone'],
-                                                  )
-                                                  ? Icon(
-                                                      Icons.check,
-                                                      size: 12.sp,
-                                                      color: AppColors.white,
-                                                    )
-                                                  : SizedBox.shrink(),
-                                            ),
-                                          ),
-                                          SizedBox(width: 9.10.w),
-                                          TextView(
-                                            text: formatPhoneNumber(
-                                              SharedPreferencesService
-                                                  .instance
-                                                  .usersData['user']['phone'],
-                                            ),
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.2.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Row(
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.all(1.2.w),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.app_green,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Icon(
-                                                  Icons.check,
-                                                  size: 13.4.sp,
-                                                  color: AppColors.white,
-                                                ),
-                                              ),
-                                              SizedBox(width: 10.w),
+                                              SizedBox(width: 9.10.w),
                                               TextView(
-                                                text: 'Primary',
+                                                text: formatPhoneNumber(
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['phone'],
+                                                ),
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
-                                                  fontSize: 13.72.sp,
+                                                  fontSize: 16.2.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: AppColors.reminder,
                                                 ),
                                               ),
+                                              Spacer(),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.all(1.2.w),
+                                                    decoration: BoxDecoration(
+                                                      color: AppColors.app_green,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      size: 13.4.sp,
+                                                      color: AppColors.white,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10.w),
+                                                  TextView(
+                                                    text: 'Primary',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 13.72.sp,
+                                                      fontWeight: FontWeight.w400,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 2.0.h),
-                                    Divider(color: AppColors.infoGrey1),
-                                    ...phoneReminderList.asMap().entries.map((
-                                      entry,
-                                    ) {
-                                      final index = entry.key;
-                                      final o = entry.value;
-                                      final isLast =
-                                          index == phoneReminderList.length - 1;
-
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              left: 12.w,
-                                              right: 20.w,
-                                              bottom: 12.w,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    if (addedPhoneReminderList
-                                                        .contains(o)) {
-                                                      addedPhoneReminderList
-                                                          .remove(o);
-                                                    } else {
-                                                      addedPhoneReminderList
-                                                          .add(o);
-                                                    }
-
-                                                    model.notifyListeners();
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        addedPhoneReminderList
-                                                            .contains(o)
-                                                        ? EdgeInsets.all(4.0.w)
-                                                        : EdgeInsets.all(10.w),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            6.r,
-                                                          ),
-                                                      color:
-                                                          addedPhoneReminderList
-                                                              .contains(o)
-                                                          ? AppColors.primary
-                                                          : AppColors
-                                                                .transparent,
-                                                      border: Border.all(
-                                                        color:
-                                                            addedPhoneReminderList
-                                                                .contains(o)
-                                                            ? AppColors
-                                                                  .transparent
-                                                            : AppColors
-                                                                  .infoGrey,
-                                                        width: .78,
-                                                      ),
-                                                    ),
-                                                    child:
-                                                        addedPhoneReminderList
-                                                            .contains(o)
-                                                        ? Icon(
-                                                            Icons.check,
-                                                            size: 12.sp,
-                                                            color:
-                                                                AppColors.white,
-                                                          )
-                                                        : SizedBox.shrink(),
-                                                  ),
+                                        ),
+                                        SizedBox(height: 2.0.h),
+                                        Divider(color: AppColors.infoGrey1),
+                                        ...phoneReminderList.asMap().entries.map((
+                                          entry,
+                                        ) {
+                                          final index = entry.key;
+                                          final o = entry.value;
+                                          final isLast =
+                                              index == phoneReminderList.length - 1;
+                                
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: 12.w,
+                                                  right: 20.w,
+                                                  bottom: 12.w,
                                                 ),
-                                                SizedBox(width: 9.10.w),
-                                                TextView(
-                                                  text: formatPhoneNumber(o),
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 16.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Row(
+                                                child: Row(
                                                   children: [
                                                     GestureDetector(
                                                       onTap: () {
-                                                        showPhoneDialog(
-                                                          context,
-                                                          isEdit: true,
-                                                          index: index,
-                                                          phoneNumber:
-                                                              phoneReminderList[index],
-                                                          model: model,
-                                                        );
-                                                        isPhoneValid = false;
+                                                        if (addedPhoneReminderList
+                                                            .contains(o)) {
+                                                          addedPhoneReminderList
+                                                              .remove(o);
+                                                        } else {
+                                                          addedPhoneReminderList
+                                                              .add(o);
+                                                        }
+                                
+                                                        model._isPhoneFlagged =
+                                                            true;
+                                                        setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
-                                                      child: SvgPicture.asset(
-                                                        AppImage.edit_pen,
-                                                        height: 22.0.h,
-                                                        width: 22.0.w,
+                                                      child: Container(
+                                                        padding:
+                                                            addedPhoneReminderList
+                                                                .contains(o)
+                                                            ? EdgeInsets.all(4.0.w)
+                                                            : EdgeInsets.all(10.w),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                6.r,
+                                                              ),
+                                                          color:
+                                                              addedPhoneReminderList
+                                                                  .contains(o)
+                                                              ? AppColors.primary
+                                                              : AppColors
+                                                                    .transparent,
+                                                          border: Border.all(
+                                                            color:
+                                                                addedPhoneReminderList
+                                                                    .contains(o)
+                                                                ? AppColors
+                                                                      .transparent
+                                                                : AppColors
+                                                                      .infoGrey,
+                                                            width: .78,
+                                                          ),
+                                                        ),
+                                                        child:
+                                                            addedPhoneReminderList
+                                                                .contains(o)
+                                                            ? Icon(
+                                                                Icons.check,
+                                                                size: 12.sp,
+                                                                color:
+                                                                    AppColors.white,
+                                                              )
+                                                            : SizedBox.shrink(),
                                                       ),
                                                     ),
-                                                    SizedBox(width: 16.10.w),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        phoneReminderList
-                                                            .removeAt(index);
-                                                        model.notifyListeners();
-                                                      },
-                                                      child: SvgPicture.asset(
-                                                        AppImage.delete,
-                                                        height: 22.0.h,
-                                                        width: 22.0.w,
+                                                    SizedBox(width: 9.10.w),
+                                                    TextView(
+                                                      text: formatPhoneNumber(o),
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 16.2.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: AppColors.reminder,
                                                       ),
+                                                    ),
+                                                    Spacer(),
+                                                    Row(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            showPhoneDialog(
+                                                              context,
+                                                              isEdit: true,
+                                                              index: index,
+                                                              phoneNumber:
+                                                                  phoneReminderList[index],
+                                                              model: model,
+                                                            );
+                                                            isPhoneValid = false;
+                                                            model.notifyListeners();
+                                                          },
+                                                          child: SvgPicture.asset(
+                                                            AppImage.edit_pen,
+                                                            height: 22.0.h,
+                                                            width: 22.0.w,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 16.10.w),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            phoneReminderList
+                                                                .removeAt(index);
+                                                            addedPhoneReminderList
+                                                                .removeAt(index);
+                                                            model.notifyListeners();
+                                                          },
+                                                          child: SvgPicture.asset(
+                                                            AppImage.delete,
+                                                            height: 22.0.h,
+                                                            width: 22.0.w,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                              if (!isLast)
+                                                Divider(color: AppColors.infoGrey1),
+                                              SizedBox(height: 5.10.h),
+                                            ],
+                                          );
+                                        }),
+                                      ],
+                                    ),
+                                  ),
+                              
+                                 !model.isPhoneFlagged
+                                      ? TextView(
+                                          text: 'Atleast one phone number is required',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 12.80.sp,
+                                            color: AppColors.red,
+                                            fontWeight: FontWeight.w400,
                                           ),
-                                          if (!isLast)
-                                            Divider(color: AppColors.infoGrey1),
-                                          SizedBox(height: 5.10.h),
-                                        ],
-                                      );
-                                    }),
-                                  ],
-                                ),
-                              )
+                                        )
+                                      : SizedBox.shrink(),
+                              ],
+                            )
                             : SizedBox.shrink(),
                         SizedBox(height: 32.20.h),
                         Center(
@@ -15022,33 +14950,17 @@ class AuthViewModel extends BaseViewModel {
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
                                     addedEmailReminderList.isEmpty) {
-                                  _isEmailFlagged = true;
+                                  model._isEmailFlagged = false;
                                 }
                                 if (isTappedPhoneAdded &&
                                     addedPhoneReminderList.isEmpty) {
-                                  _isPhoneFlagged = true;
+                                  model._isPhoneFlagged = false;
                                 }
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                // if (isTappedPhoneAdded &&
-                                //     !addedPhoneReminderList.contains(
-                                //       formatPhoneNumber(
-                                //         SharedPreferencesService
-                                //             .instance
-                                //             .usersData['user']['phone'],
-                                //       ),
-                                //     )) {
-                                //   addedPhoneReminderList.add(
-                                //     formatPhoneNumber(
-                                //       SharedPreferencesService
-                                //           .instance
-                                //           .usersData['user']['phone'],
-                                //     ),
-                                //   );
-                                // }
-                                _isEmailFlagged = false;
-                                _isPhoneFlagged = false;
+                                model._isEmailFlagged = true;
+                                model._isPhoneFlagged = true;
                               }
                               setModalState!(() {});
                               model.notifyListeners();
@@ -15056,112 +14968,6 @@ class AuthViewModel extends BaseViewModel {
                           },
                         ),
                         SizedBox(height: 50.h),
-                        // if (intList.isNotEmpty &&
-                        //     medDailyInTakenController.text.isNotEmpty)
-                        //   Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //       ...intList.map(
-                        //         (e) => model.dosageWidgetContainer(
-                        //           context: context,
-                        //           callback: e,
-                        //           listOfTimes: List.generate(
-                        //             int.parse(medDailyInTakenController.text),
-                        //             (index) => index,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       SizedBox(height: 14.0.h),
-                        //       TextView(
-                        //         text: 'Add Note',
-                        //         textStyle: TextStyle(
-                        //           fontFamily: 'Arial',
-                        //           fontSize: 14.sp,
-                        //           fontWeight: FontWeight.w500,
-                        //         ),
-                        //       ),
-                        //       SizedBox(height: 10.h),
-                        //       TextFormWidget(
-                        //         borderColor: AppColors.transparent,
-                        //         borderTopLeft: 10.r,
-                        //         borderTopRight: 10.r,
-                        //         borderBottomLeft: 10.r,
-                        //         borderBottomRight: 10.r,
-                        //         controller: noteController,
-                        //         fillColor: AppColors.grey,
-                        //         isFilled:
-                        //             true, // Minimum number of lines visible
-                        //         maxline:
-                        //             3, // Maximum number of lines visible before scrolling
-                        //         keyboardType: TextInputType.multiline,
-                        //         validator: AppValidator.validateString(),
-                        //         style: TextStyle(
-                        //           fontSize: 16.20.sp,
-                        //           fontWeight: FontWeight.w400,
-                        //           fontFamily: 'GoogleSans',
-                        //         ),
-                        //       ),
-                        //       SizedBox(height: 32.20.h),
-                        //       Center(
-                        //         child: GestureDetector(
-                        //           onTap: () {
-                        //             if (firstFormReminderKey.currentState!
-                        //                 .validate()) {
-                        //               addReminderToList(model);
-                        //             } else {
-                        //               AppUtils.snackbar(
-                        //                 context,
-                        //                 message:
-                        //                     'Kindly input all required fields.',
-                        //                 error: true,
-                        //               );
-                        //             }
-                        //           },
-                        //           child: TextView(
-                        //             text: 'Add Another Medication',
-                        //             textStyle: TextStyle(
-                        //               fontFamily: 'Arial',
-                        //               fontSize: 17.2.sp,
-                        //               fontWeight: FontWeight.w600,
-                        //               color: AppColors.primary,
-                        //               decoration: TextDecoration.underline,
-                        //               decorationColor: AppColors.primary,
-                        //               decorationStyle:
-                        //                   TextDecorationStyle.solid,
-                        //               decorationThickness: 1.4,
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       SizedBox(height: 30.h),
-                        //       ButtonWidget(
-                        //         border: 100.r,
-                        //         buttonColor: AppColors.primary,
-                        //         buttonText: 'Preview',
-                        //         color: AppColors.white,
-                        //         buttonBorderColor: AppColors.transparent,
-                        //         onPressed: () async {
-                        //           if (firstFormReminderKey.currentState!
-                        //               .validate()) {
-                        //             await addReminderToList(model);
-                        //             linIndex++;
-                        //             model.notifyListeners();
-                        //           }
-                        //           // for (
-                        //           //   var day = 0;
-                        //           //   day < model.doseControllers.length;
-                        //           //   day++
-                        //           // ) {
-                        //           //   print("Day ${day + 1}:");
-                        //           //   for (var dose in model.doseControllers[day]) {
-                        //           //     print("  ${dose.text}");
-                        //           //   }
-                        //           // }
-                        //         },
-                        //       ),
-                        //       SizedBox(height: 130.h),
-                        //     ],
-                        //   ),
                       ],
                     ),
                   )
@@ -17544,8 +17350,8 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                       SizedBox(height: 24.0.h),
                                       TextFormWidget(
-                                        hint: 'Start Date & Time',
-                                        label: '13 Feb, 2025 10:30 AM',
+                                        hint: 'Start Date',
+                                        label: '13 Feb, 2025',
                                         hintWeight: FontWeight.w400,
                                         hintColor: AppColors.reminder,
                                         hintSize: Platform.isAndroid
@@ -17588,27 +17394,10 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ),
                                       SizedBox(height: 24.0.h),
-                                      // Row(
-                                      //   children: [
-                                      //     TextView(
-                                      //       text: 'End Date ',
-                                      //       textStyle: TextStyle(
-                                      //         fontFamily: 'Arial',
-                                      //         fontSize: 14.sp,
-                                      //         fontWeight: FontWeight.w500,
-                                      //       ),
-                                      //     ),
-                                      //     Icon(
-                                      //       Icons.info_outline,
-                                      //       color: AppColors.yellow,
-                                      //       size: 20.sp,
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      // SizedBox(height: 14.0.h),
+
                                       TextFormWidget(
                                         hint: 'End Date',
-                                        label: '18 Feb, 2025',
+                                        label: '18 Feb, 2026',
                                         hintWeight: FontWeight.w400,
                                         hintColor: AppColors.reminder,
                                         hintSize: Platform.isAndroid
@@ -18825,113 +18614,8 @@ class AuthViewModel extends BaseViewModel {
                         );
                       }),
                       SizedBox(height: 12.h),
-                      // !isTappedEmailAdded && emailReminderList.isEmpty
-                      //     ? SizedBox.shrink()
-                      //     :
                       isTappedEmailAdded
-                          ?
-                            // Container(
-                            //     decoration: BoxDecoration(
-                            //       border: Border.all(color: AppColors.infoGrey1),
-                            //       borderRadius: BorderRadius.circular(12.r),
-                            //       color: AppColors.white,
-                            //     ),
-                            //     padding: EdgeInsets.all(12.w),
-                            //     child: Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceBetween,
-                            //       children: [
-                            //         Column(
-                            //           crossAxisAlignment:
-                            //               CrossAxisAlignment.start,
-                            //           children: [
-                            //             TextView(
-                            //               text: 'Add Email Address',
-                            //               textStyle: TextStyle(
-                            //                 fontFamily: 'Arial',
-                            //                 fontSize: 16.2.sp,
-                            //                 fontWeight: FontWeight.w400,
-                            //                 color: AppColors.deep,
-                            //               ),
-                            //             ),
-                            //             Row(
-                            //               children: [
-                            //                 TextView(
-                            //                   text: 'Emails available',
-                            //                   textStyle: TextStyle(
-                            //                     fontFamily: 'Arial',
-                            //                     fontSize: 14.8.sp,
-                            //                     fontWeight: FontWeight.w400,
-                            //                     color: AppColors.fineGrey,
-                            //                   ),
-                            //                 ),
-                            //                 SizedBox(width: 6.w),
-                            //                 Container(
-                            //                   padding: EdgeInsets.symmetric(
-                            //                     horizontal: 10.w,
-                            //                   ),
-                            //                   decoration: BoxDecoration(
-                            //                     color: const Color.fromARGB(
-                            //                       255,
-                            //                       223,
-                            //                       233,
-                            //                       247,
-                            //                     ),
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(12.r),
-                            //                     border: Border.all(
-                            //                       color: AppColors.primary
-                            //                           .withOpacity(.4),
-                            //                     ),
-                            //                   ),
-                            //                   child: TextView(
-                            //                     text:
-                            //                         '${emailReminderList.length}',
-                            //                     textStyle: TextStyle(
-                            //                       fontFamily: 'Arial',
-                            //                       fontSize: 11.8.sp,
-                            //                       fontWeight: FontWeight.w400,
-                            //                       color: AppColors.primary,
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ],
-                            //         ),
-                            //         Row(
-                            //           children: [
-                            //             GestureDetector(
-                            //               onTap: () {
-                            //                 isTappedEmailAdded =
-                            //                     !isTappedEmailAdded;
-                            //                 model.notifyListeners();
-                            //               },
-                            //               child: SvgPicture.asset(
-                            //                 AppImage.drop_up,
-                            //                 height: 22.0.h,
-                            //                 width: 22.0.w,
-                            //               ),
-                            //             ),
-                            //             SizedBox(width: 2.w),
-                            //             IconButton(
-                            //               onPressed: () => showEmailDialog(
-                            //                 context,
-                            //                 model: model,
-                            //               ),
-                            //               icon: Icon(
-                            //                 Icons.add_circle,
-                            //                 color: AppColors.primary1,
-                            //                 size: 24.sp,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   )
-                            // :
-                            Column(
+                          ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
@@ -19095,6 +18779,9 @@ class AuthViewModel extends BaseViewModel {
                                                         addedEmailReminderList
                                                             .add(o);
                                                       }
+                                                      model._isEmailFlagged =
+                                                          true;
+                                                      setModalState!(() {});
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
@@ -19229,110 +18916,7 @@ class AuthViewModel extends BaseViewModel {
                       !isTappedPhoneAdded && phoneReminderList.isEmpty
                           ? SizedBox.shrink()
                           : isTappedPhoneAdded
-                          ?
-                            // Container(
-                            //     decoration: BoxDecoration(
-                            //       border: Border.all(color: AppColors.infoGrey1),
-                            //       borderRadius: BorderRadius.circular(12.r),
-                            //       color: AppColors.white,
-                            //     ),
-                            //     padding: EdgeInsets.all(12.w),
-                            //     child: Row(
-                            //       mainAxisAlignment:
-                            //           MainAxisAlignment.spaceBetween,
-                            //       children: [
-                            //         Column(
-                            //           crossAxisAlignment:
-                            //               CrossAxisAlignment.start,
-                            //           children: [
-                            //             TextView(
-                            //               text: 'Add Phone Number',
-                            //               textStyle: TextStyle(
-                            //                 fontFamily: 'Arial',
-                            //                 fontSize: 16.2.sp,
-                            //                 fontWeight: FontWeight.w400,
-                            //                 color: AppColors.deep,
-                            //               ),
-                            //             ),
-                            //             Row(
-                            //               children: [
-                            //                 TextView(
-                            //                   text: 'Numbers available',
-                            //                   textStyle: TextStyle(
-                            //                     fontFamily: 'Arial',
-                            //                     fontSize: 14.8.sp,
-                            //                     fontWeight: FontWeight.w400,
-                            //                     color: AppColors.fineGrey,
-                            //                   ),
-                            //                 ),
-                            //                 SizedBox(width: 6.w),
-                            //                 Container(
-                            //                   padding: EdgeInsets.symmetric(
-                            //                     horizontal: 10.w,
-                            //                   ),
-                            //                   decoration: BoxDecoration(
-                            //                     color: const Color.fromARGB(
-                            //                       255,
-                            //                       223,
-                            //                       233,
-                            //                       247,
-                            //                     ),
-                            //                     borderRadius:
-                            //                         BorderRadius.circular(12.r),
-                            //                     border: Border.all(
-                            //                       color: AppColors.primary
-                            //                           .withOpacity(.4),
-                            //                     ),
-                            //                   ),
-                            //                   child: TextView(
-                            //                     text:
-                            //                         '${phoneReminderList.length}',
-                            //                     textStyle: TextStyle(
-                            //                       fontFamily: 'Arial',
-                            //                       fontSize: 11.8.sp,
-                            //                       fontWeight: FontWeight.w400,
-                            //                       color: AppColors.primary,
-                            //                     ),
-                            //                   ),
-                            //                 ),
-                            //               ],
-                            //             ),
-                            //           ],
-                            //         ),
-                            //         Row(
-                            //           children: [
-                            //             GestureDetector(
-                            //               onTap: () {
-                            //                 isTappedPhoneAdded =
-                            //                     !isTappedPhoneAdded;
-                            //                 model.notifyListeners();
-                            //               },
-                            //               child: SvgPicture.asset(
-                            //                 AppImage.drop_up,
-                            //                 height: 22.0.h,
-                            //                 width: 22.0.w,
-                            //               ),
-                            //             ),
-                            //             SizedBox(width: 2.w),
-                            //             IconButton(
-                            //               onPressed: () {
-                            //                 showPhoneDialog(context);
-                            //                 isPhoneValid = false;
-                            //                 model.notifyListeners();
-                            //               },
-                            //               icon: Icon(
-                            //                 Icons.add_circle,
-                            //                 color: AppColors.primary1,
-                            //                 size: 24.sp,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   )
-                            // :
-                            Column(
+                          ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
@@ -19498,6 +19082,8 @@ class AuthViewModel extends BaseViewModel {
                                                         .usersData['user']['phone'],
                                                   );
                                                 }
+                                                model._isPhoneFlagged = true;
+                                                setModalState!(() {});
                                                 model.notifyListeners();
                                               },
                                               child: Container(
@@ -19598,7 +19184,6 @@ class AuthViewModel extends BaseViewModel {
                                         final isLast =
                                             index ==
                                             phoneReminderList.length - 1;
-
                                         return Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -19621,6 +19206,9 @@ class AuthViewModel extends BaseViewModel {
                                                         addedPhoneReminderList
                                                             .add(o);
                                                       }
+                                                      model._isPhoneFlagged =
+                                                          true;
+                                                      setModalState!(() {});
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
@@ -19808,103 +19396,47 @@ class AuthViewModel extends BaseViewModel {
                                 setModalState: setModalState,
                                 context: context,
                               );
-
                               if (isTappedEmailAdded &&
                                       addedEmailReminderList.isEmpty ||
                                   isTappedPhoneAdded &&
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
                                     addedEmailReminderList.isEmpty) {
-                                  _isEmailFlagged = true;
+                                  model._isEmailFlagged = false;
                                 }
                                 if (isTappedPhoneAdded &&
                                     addedPhoneReminderList.isEmpty) {
-                                  _isPhoneFlagged = true;
+                                  model._isPhoneFlagged = false;
                                 }
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                // if (isTappedPhoneAdded &&
-                                //     !addedPhoneReminderList.contains(
-                                //       formatPhoneNumber(
-                                //         SharedPreferencesService
-                                //             .instance
-                                //             .usersData['user']['phone'],
-                                //       ),
-                                //     )) {
-                                //   addedPhoneReminderList.add(
-                                //     formatPhoneNumber(
-                                //       SharedPreferencesService
-                                //           .instance
-                                //           .usersData['user']['phone'],
-                                //     ),
-                                //   );
-                                // }
-                                _isEmailFlagged = false;
-                                _isPhoneFlagged = false;
+                                model._isEmailFlagged = true;
+                                model._isPhoneFlagged = true;
                               }
-
-                              // addCostTotal(model);
-                              // linIndex++;
                             }
                           } else {
                             _isLoading = true;
-
                             if (isTappedEmailAdded &&
                                     addedEmailReminderList.isEmpty ||
                                 isTappedPhoneAdded &&
                                     addedPhoneReminderList.isEmpty) {
                               if (isTappedEmailAdded &&
                                   addedEmailReminderList.isEmpty) {
-                                _isEmailFlagged = true;
+                                model._isEmailFlagged = false;
                               }
                               if (isTappedPhoneAdded &&
                                   addedPhoneReminderList.isEmpty) {
-                                _isPhoneFlagged = true;
+                                model._isPhoneFlagged = false;
                               }
                             } else {
                               linIndex++;
                               addCostTotal(model);
-                              // if (isTappedPhoneAdded &&
-                              //     !addedPhoneReminderList.contains(
-                              //       formatPhoneNumber(
-                              //         SharedPreferencesService
-                              //             .instance
-                              //             .usersData['user']['phone'],
-                              //       ),
-                              //     )) {
-                              //   addedPhoneReminderList.add(
-                              //     formatPhoneNumber(
-                              //       SharedPreferencesService
-                              //           .instance
-                              //           .usersData['user']['phone'],
-                              //     ),
-                              //   );
-                              // }
-                              _isEmailFlagged = false;
-                              _isPhoneFlagged = false;
+                              model._isEmailFlagged = true;
+                              model._isPhoneFlagged = true;
                             }
-                            // addCostTotal(model);
-                            // linIndex++;
                             _isLoading = false;
                           }
-                          // if (isTappedPhoneAdded &&
-                          //     !addedPhoneReminderList.contains(
-                          //       formatPhoneNumber(
-                          //         SharedPreferencesService
-                          //             .instance
-                          //             .usersData['user']['phone'],
-                          //       ),
-                          //     )) {
-                          //   addedPhoneReminderList.add(
-                          //     formatPhoneNumber(
-                          //       SharedPreferencesService
-                          //           .instance
-                          //           .usersData['user']['phone'],
-                          //     ),
-                          //   );
-                          // }
-
                           setModalState!(() {});
                           model.notifyListeners();
                         },
@@ -20336,7 +19868,7 @@ class AuthViewModel extends BaseViewModel {
                             children: [
                               ...model.medicationClassList[model.indexOfMedicationClassList].dosageMap.map(
                                 (e) => Container(
-                                  padding: EdgeInsets.all(10.w),
+                                  padding: EdgeInsets.all(7.10.w),
                                   margin: EdgeInsets.only(bottom: 12.w),
                                   decoration: BoxDecoration(
                                     border: Border.all(color: AppColors.f1),
@@ -20384,7 +19916,7 @@ class AuthViewModel extends BaseViewModel {
                                               SizedBox(
                                                 width: 300.h,
                                                 child: Wrap(
-                                                  spacing: 4.10,
+                                                  spacing: 3.70,
                                                   runSpacing: 6,
                                                   children: (() {
                                                     final Set<String>
@@ -20401,11 +19933,12 @@ class AuthViewModel extends BaseViewModel {
                                                       return Container(
                                                         width: 90.w,
                                                         margin: EdgeInsets.only(
-                                                          right: 5.10.w,
+                                                          right: 3.10.w,
                                                         ),
                                                         padding:
                                                             EdgeInsets.symmetric(
-                                                              horizontal: 6.0.w,
+                                                              horizontal:
+                                                                  3.20.w,
                                                               vertical: 4.w,
                                                             ),
                                                         decoration: BoxDecoration(
@@ -20735,7 +20268,8 @@ class AuthViewModel extends BaseViewModel {
             ),
           ),
           SizedBox(height: 16.20.h),
-          phoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
+
+          addedPhoneReminderList.isNotEmpty || addedEmailReminderList.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -20800,30 +20334,33 @@ class AuthViewModel extends BaseViewModel {
                               SizedBox(height: 6.10.h),
                               Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Reminders per day',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
+                              model.medicationClassList[0].isCusSchedule!
+                                  ? SizedBox.shrink()
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text: 'Reminders per day',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text:
+                                              '$_getTotalNoForDaysForReminder',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  TextView(
-                                    text: '${returnNumberOfTimes(model)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
                               SizedBox(height: 6.10.h),
                               Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
@@ -20842,7 +20379,7 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                   TextView(
                                     text:
-                                        '${selectedIndexes.length * returnNumberOfTimes(model)}',
+                                        '${addedPhoneReminderList.length * _getTotalNoForDaysForReminder!}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -20872,7 +20409,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Email  (x${returnNumberOfTimes(model)} msgs)',
+                                              'Email  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20912,7 +20449,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Push  (x${returnNumberOfTimes(model)} msgs)',
+                                              'Push  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20952,7 +20489,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'WhatsApp  (x${returnNumberOfTimes(model)} msgs)',
+                                              'WhatsApp  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20962,7 +20499,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${20 * returnNumberOfTimes(model) * returnNumberOfDay(model)}',
+                                              '₦${20 * _getTotalTimesForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -20993,7 +20530,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'SMS  (x${returnNumberOfTimes(model)} msgs)',
+                                              'SMS  (x$_getTotalTimesForReminder msgs)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -21003,7 +20540,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${15 * returnNumberOfTimes(model) * returnNumberOfDay(model)}',
+                                              '₦${15 * _getTotalTimesForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -21034,7 +20571,7 @@ class AuthViewModel extends BaseViewModel {
                                       children: [
                                         TextView(
                                           text:
-                                              'Phone Calls  (x${returnNumberOfTimes(model)} calls)',
+                                              'Phone Calls  (x$_getTotalTimesForReminder calls)',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -21044,7 +20581,7 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                         TextView(
                                           text:
-                                              '₦${50 * returnNumberOfTimes(model) * returnNumberOfDay(model)}',
+                                              '₦${50 * _getTotalTimesForReminder!}',
                                           textStyle: TextStyle(
                                             // fontFamily: 'Arial',
                                             fontSize: 16.80.sp,
@@ -21183,51 +20720,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     if (addedPhoneReminderList.isNotEmpty) {
-                      model.createReminderPaid(
-                        context,
-                        model: model,
-                        createReminderEntityModel: CreateReminderEntityModel(
-                          medications: model.medicationClassList.map((m) {
-                            return Medication(
-                              medicationName: m.medicationName,
-                              scheduleType: m.isCusSchedule!
-                                  ? 'CUSTOM'
-                                  : 'FIXED',
-                              dosage: m.dosage,
-                              medicationType: m.medicationType!.toUpperCase(),
-                              startDateTime: m.startDateIso,
-                              endDateTime: m.endDateIso,
-                              durationInDays: int.parse(m.duration!),
-                              timesPerDay: m.isCusSchedule!
-                                  ? ''
-                                  : int.parse(m.timesToTake!),
-                              dailyDoseTimes: (m.dosageMap as List)
-                                  .map(
-                                    (dayData) => (dayData['doses'] as List)
-                                        .map(
-                                          (dose) => DailyDoseTime.fromJson(
-                                            dose as Map<String, dynamic>,
-                                          ),
-                                        )
-                                        .toList(),
-                                  )
-                                  .toList(),
-                              note: m.note,
-                              medicationImage: m.imageData!.url == null
-                                  ? null
-                                  : MedicationImage.fromJson(
-                                      m.imageData!.toJson(),
-                                    ),
-                            );
-                          }).toList(),
-                          timeZone: "Africa/Lagos",
-                          notificationChannels: notificationChannel,
-                          emails: addedEmailReminderList,
-                          phoneNumbers: addedPhoneReminderList,
-                          payment: Payment(amount: costTotal, currency: "NGN"),
-                        ),
-                      );
-                      model.notifyListeners();
+                      linIndex++;
                     } else {
                       model.createReminder(
                         context,
@@ -21272,6 +20765,7 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       );
                     }
+                     setModalState!(() {});
                     model.notifyListeners();
                   },
                 ),
@@ -22637,267 +22131,261 @@ class AuthViewModel extends BaseViewModel {
   //   ),
   // );
 
-  // fourthModalFlow({
-  //   AuthViewModel? model,
-  //   BuildContext? context,
-  //   StateSetter? setModalState,
-  //   ScrollController? scrollController,
-  // }) => Container(
-  //   decoration: BoxDecoration(
-  //     borderRadius: BorderRadius.circular(22.r),
-  //     color: AppColors.white,
-  //   ),
-  //   child: SingleChildScrollView(
-  //     padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-  //     controller: scrollController,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             SizedBox(height: 20, width: 20),
-  //             TextView(
-  //               text: modalName(),
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'GoogleSans',
-  //                 fontSize: 16.70.sp,
-  //                 fontWeight: FontWeight.w700,
-  //                 color: AppColors.deep,
-  //               ),
-  //             ),
+  fourthModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    StateSetter? setModalState,
+    ScrollController? scrollController,
+  }) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22.r),
+      color: AppColors.white,
+    ),
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20, width: 20),
+              TextView(
+                text: modalName(),
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.70.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
+                ),
+              ),
 
-  //             Padding(
-  //               padding: EdgeInsets.only(top: 4.w),
-  //               child: GestureDetector(
-  //                 onTap: () {
-  //                   Navigator.pop(context!);
-  //                 },
-  //                 child: SvgPicture.asset(
-  //                   AppImage.cancel,
-  //                   height: 14.20,
-  //                   width: 14.20,
-  //                   color: AppColors.black,
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 13.60.h),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.end,
-  //           children: [
-  //             SizedBox(
-  //               width: MediaQuery.of(context!).size.width * .82,
-  //               child: ClipRRect(
-  //                 borderRadius: const BorderRadius.all(
-  //                   Radius.circular(5.0),
-  //                 ), // Adjust radius as needed
-  //                 child: LinearProgressIndicator(
-  //                   minHeight: 4.0, // Adjust height as needed
-  //                   value: linIndex / 4,
-  //                   color: AppColors.primary, // Progress bar color
-  //                   backgroundColor: Colors.grey[300], // Background track color
-  //                 ),
-  //               ),
-  //             ),
-  //             SizedBox(width: 10.w),
-  //             TextView(
-  //               text: '$linIndex/4',
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 13.2.sp,
-  //                 fontWeight: FontWeight.w400,
-  //                 color: AppColors.reminder,
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 32.h),
-  //         TextView(
-  //           text: 'Amount',
-  //           textStyle: TextStyle(
-  //             fontFamily: 'Arial',
-  //             fontSize: 15.90.sp,
-  //             fontWeight: FontWeight.w400,
-  //             color: AppColors.black,
-  //           ),
-  //         ),
-  //         SizedBox(height: 14.2.h),
-  //         Container(
-  //           height: 70.h,
-  //           width: double.infinity,
-  //           decoration: BoxDecoration(
-  //             color: AppColors.skyBlue,
-  //             borderRadius: BorderRadius.circular(10.r),
-  //           ),
-  //           child: Center(
-  //             child: TextView(
-  //               text: '₦$costTotal.00',
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 20.90.sp,
-  //                 fontWeight: FontWeight.w700,
-  //                 color: AppColors.reminder,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         SizedBox(height: 22.h),
-  //         TextView(
-  //           text: 'Select Payment Method',
-  //           textStyle: TextStyle(
-  //             fontFamily: 'Arial',
-  //             fontSize: 16.90.sp,
-  //             fontWeight: FontWeight.w500,
-  //             color: AppColors.deep,
-  //           ),
-  //         ),
-  //         SizedBox(height: 12.h),
-  //         paymentWidget(
-  //           isWallet: true,
-  //           text: 'Pay with Wallet',
-  //           icon: AppImage.wallet_pay,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Wallet';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with Card',
-  //           icon: AppImage.card_pay,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Card';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with Bank Transfer',
-  //           icon: AppImage.bank_transfer,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Bank Transfer';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with Mobile Money',
-  //           icon: AppImage.online_mobile,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with Mobile Money';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         paymentWidget(
-  //           isWallet: false,
-  //           text: 'Pay with USSD',
-  //           icon: AppImage.ussd_pay,
-  //           onTap: () {
-  //             onTapPaymentMeth = 'Pay with USSD';
-  //             model!.notifyListeners();
-  //           },
-  //         ),
-  //         SizedBox(height: _isLoading ? 20.h : 0.h),
-  //         _isLoading
-  //             ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
-  //             : SizedBox.shrink(),
-  //         SizedBox(height: 120.h),
-  //         Row(
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Flexible(
-  //               child: ButtonWidget(
-  //                 border: 100.r,
-  //                 buttonColor: AppColors.dashboard,
-  //                 buttonText: 'Previous',
-  //                 color: AppColors.deep,
-  //                 fontSize: 14.sp,
-  //                 buttonBorderColor: AppColors.transparent,
-  //                 onPressed: () {
-  //                   linIndex--;
-  //                   model!.notifyListeners();
-  //                 },
-  //               ),
-  //             ),
-  //             SizedBox(width: 20.w),
-  //             Flexible(
-  //               child: ButtonWidget(
-  //                 border: 100.r,
-  //                 fontSize: 14.sp,
-  //                 buttonColor: onTapPaymentMeth != ''
-  //                     ? AppColors.primary
-  //                     : AppColors.infoGrey,
-  //                 buttonText: 'Continue',
-  //                 color: AppColors.white,
-  //                 buttonBorderColor: AppColors.transparent,
-  //                 onPressed: onTapPaymentMeth != ''
-  //                     ? () {
-  //                         createReminderPaid(
-  //                           context,
-  //                           createReminderEntityModel:
-  //                               CreateReminderEntityModel(
-  //                                 medications: model!.medicationClassList.map((
-  //                                   m,
-  //                                 ) {
-  //                                   return Medication(
-  //                                     medicationName: m.medicationName,
-  //                                     drugName: m.drugName,
-  //                                     dosage: m.dosage,
-  //                                     medicationType: m.medicationType!
-  //                                         .toUpperCase(),
-  //                                     startDateTime: m.startDateIso,
-  //                                     endDateTime: m.endDateIso,
-  //                                     durationInDays: int.parse(m.duration!),
-  //                                     timesPerDay: int.parse(m.timesToTake!),
-  //                                     dailyDoseTimes: (m.dosageMap as List)
-  //                                         .map(
-  //                                           (
-  //                                             dayData,
-  //                                           ) => (dayData['doses'] as List)
-  //                                               .map(
-  //                                                 (
-  //                                                   dose,
-  //                                                 ) => DailyDoseTime.fromJson(
-  //                                                   dose
-  //                                                       as Map<String, dynamic>,
-  //                                                 ),
-  //                                               )
-  //                                               .toList(),
-  //                                         )
-  //                                         .toList(),
-  //                                     note: m.note,
-  //                                     medicationImage: m.imageData == null
-  //                                         ? null
-  //                                         : MedicationImage.fromJson(
-  //                                             m.imageData!.toJson(),
-  //                                           ),
-  //                                   );
-  //                                 }).toList(),
-  //                                 timeZone: "Africa/Lagos",
-  //                                 notificationChannels: notificationChannel,
-  //                                 emails: emailReminderList,
-  //                                 phoneNumbers: phoneReminderList,
-  //                                 payment: Payment(
-  //                                   amount: costTotal,
-  //                                   currency: "NGN",
-  //                                 ),
-  //                               ),
-  //                         );
-  //                         model.notifyListeners();
-  //                       }
-  //                     : () {},
-  //               ),
-  //             ),
-  //           ],
-  //         ),
-  //         SizedBox(height: 26.h),
-  //       ],
-  //     ),
-  //   ),
-  // );
+              Padding(
+                padding: EdgeInsets.only(top: 4.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context!);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.cancel,
+                    height: 14.20,
+                    width: 14.20,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 13.60.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context!).size.width * .82,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: linIndex / 3,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              TextView(
+                text: '$linIndex/3',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          TextView(
+            text: 'Amount',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.90.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 14.2.h),
+          Container(
+            height: 70.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.skyBlue,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Center(
+              child: TextView(
+                text: '₦$costTotal.00',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 20.90.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 22.h),
+          TextView(
+            text: 'Select Payment Method',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.90.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.deep,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          paymentWidget(
+            isWallet: true,
+            text: 'Pay with Wallet',
+            icon: AppImage.wallet_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Wallet';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Card',
+            icon: AppImage.card_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Card';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Bank Transfer',
+            icon: AppImage.bank_transfer,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Bank Transfer';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Mobile Money',
+            icon: AppImage.online_mobile,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Mobile Money';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with USSD',
+            icon: AppImage.ussd_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with USSD';
+              model!.notifyListeners();
+            },
+          ),
+          SizedBox(height: _isLoading ? 20.h : 0.h),
+          _isLoading
+              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+              : SizedBox.shrink(),
+          SizedBox(height: 120.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  buttonColor: AppColors.dashboard,
+                  buttonText: 'Previous',
+                  color: AppColors.deep,
+                  fontSize: 14.sp,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndex--;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  fontSize: 14.sp,
+                  buttonColor: onTapPaymentMeth != ''
+                      ? AppColors.primary
+                      : AppColors.infoGrey,
+                  buttonText: 'Continue',
+                  color: AppColors.white,
+                  isLoading: model!.isLoading,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: onTapPaymentMeth != ''
+                      ? () {
+                         model.createReminderPaid(
+                        context,
+                        model: model,
+                        createReminderEntityModel: CreateReminderEntityModel(
+                          medications: model.medicationClassList.map((m) {
+                            return Medication(
+                              medicationName: m.medicationName,
+                              scheduleType: m.isCusSchedule!
+                                  ? 'CUSTOM'
+                                  : 'FIXED',
+                              dosage: m.dosage,
+                              medicationType: m.medicationType!.toUpperCase(),
+                              startDateTime: m.startDateIso,
+                              endDateTime: m.endDateIso,
+                              durationInDays: int.parse(m.duration!),
+                              timesPerDay: m.isCusSchedule!
+                                  ? ''
+                                  : int.parse(m.timesToTake!),
+                              dailyDoseTimes: (m.dosageMap as List)
+                                  .map(
+                                    (dayData) => (dayData['doses'] as List)
+                                        .map(
+                                          (dose) => DailyDoseTime.fromJson(
+                                            dose as Map<String, dynamic>,
+                                          ),
+                                        )
+                                        .toList(),
+                                  )
+                                  .toList(),
+                              note: m.note,
+                              medicationImage: m.imageData!.url == null
+                                  ? null
+                                  : MedicationImage.fromJson(
+                                      m.imageData!.toJson(),
+                                    ),
+                            );
+                          }).toList(),
+                          timeZone: "Africa/Lagos",
+                          notificationChannels: notificationChannel,
+                          emails: addedEmailReminderList,
+                          phoneNumbers: addedPhoneReminderList,
+                          payment: Payment(amount: costTotal, currency: "NGN"),
+                        ),
+                      );
+                      model.notifyListeners();
+                      }
+                      : () {},
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
+        ],
+      ),
+    ),
+  );
 
   // setModalFlowUpdate({
   //   AuthViewModel? model,
@@ -25913,236 +25401,6 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
-  // void showUpdateDoseDialog(BuildContext context, {Datum? o}) {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false, // prevent closing by tapping outside
-  //     builder: (BuildContext context) {
-  //       return ViewModelBuilder<AuthViewModel>.reactive(
-  //         viewModelBuilder: () => AuthViewModel(),
-  //         onViewModelReady: (model) {},
-  //         disposeViewModel: false,
-  //         onDispose: (viewModel) {},
-  //         builder: (_, AuthViewModel model, _) {
-  // return Container(
-  //   color: AppColors.transparent,
-  //   child: Column(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     crossAxisAlignment: CrossAxisAlignment.center,
-  //     children: [
-  //       Align(
-  //         alignment: Alignment.topCenter,
-  //         child: TextButton.icon(
-  //           onPressed: () => Navigator.pop(context),
-  //           icon: Icon(Icons.close, color: Colors.white, size: 18),
-  //           label: Text(
-  //             "Close",
-  //             style: TextStyle(color: Colors.white),
-  //           ),
-  //           style: TextButton.styleFrom(
-  //             backgroundColor: AppColors.primary,
-  //             shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(30),
-  //             ),
-  //             padding: EdgeInsets.symmetric(
-  //               horizontal: 10.w,
-  //               vertical: 4.w,
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //       SizedBox(height: 6.10.h),
-  //       Dialog(
-  //         insetPadding: EdgeInsets.all(16.20.w),
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(12),
-  //         ),
-  //         backgroundColor: AppColors.white,
-  //         child: Padding(
-  //           padding: EdgeInsets.all(21.4.w),
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.center,
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               Container(
-  //                 padding: EdgeInsets.all(16.w),
-  //                 decoration: BoxDecoration(
-  //                   color: AppColors.skyBlue,
-  //                   shape: BoxShape.circle,
-  //                 ),
-  //                 child: SvgPicture.asset(
-  //                   isMedTypeView(o!.medicationType),
-  //                   color: AppColors.primary,
-  //                   height: 20.h,
-  //                   width: 20.w,
-  //                 ),
-  //               ),
-  //               SizedBox(height: 10.h),
-  //               TextView(
-  //                 text: o.medicationName!.capitalize(),
-  //                 textStyle: TextStyle(
-  //                   fontFamily: 'GoogleSans',
-  //                   fontSize: 14.2.sp,
-  //                   fontWeight: FontWeight.w500,
-  //                   color: AppColors.reminder,
-  //                 ),
-  //               ),
-  //               SizedBox(height: 10.h),
-  //               Row(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: [
-  //                   TextView(
-  //                     text: 'Note: ',
-  //                     textStyle: TextStyle(
-  //                       fontFamily: 'GoogleSans',
-  //                       fontSize: 14.2.sp,
-  //                       fontWeight: FontWeight.w500,
-  //                       color: AppColors.reminder,
-  //                     ),
-  //                   ),
-  //                   TextView(
-  //                     text: o.note ?? 'No note',
-  //                     textStyle: TextStyle(
-  //                       fontFamily: 'GoogleSans',
-  //                       fontSize: 13.2.sp,
-  //                       fontWeight: FontWeight.w400,
-  //                       color: AppColors.reminder,
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //               SizedBox(height: 20.h),
-  //               Container(
-  //                 padding: EdgeInsets.symmetric(
-  //                   vertical: 10.w,
-  //                   horizontal: 20.w,
-  //                 ),
-  //                 decoration: BoxDecoration(
-  //                   color: AppColors.skyBlue,
-  //                   border: Border.all(
-  //                     color: AppColors.buttonGrey1,
-  //                     width: 1,
-  //                   ),
-  //                   borderRadius: BorderRadius.circular(10),
-  //                 ),
-  //                 child: Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //                   children: [
-  //                     Column(
-  //                       children: [
-  //                         TextView(
-  //                           text: '2 Tablets',
-  //                           textStyle: TextStyle(
-  //                             fontFamily: 'Arial',
-  //                             fontSize: 15.2.sp,
-  //                             fontWeight: FontWeight.w400,
-  //                             color: AppColors.reminder,
-  //                           ),
-  //                         ),
-  //                         SizedBox(height: 4.10.h),
-  //                         TextView(
-  //                           text: 'Dosage to be taken',
-  //                           textStyle: TextStyle(
-  //                             fontFamily: 'Arial',
-  //                             fontSize: 13.8.sp,
-  //                             fontWeight: FontWeight.w400,
-  //                             color: AppColors.infoGrey,
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     SizedBox(width: 5.10.h),
-  //                     Column(
-  //                       children: [
-  //                         TextView(
-  //                           text:
-  //                               '${o.time} ${checkTimePeriod(o.time)}',
-  //                           textStyle: TextStyle(
-  //                             fontFamily: 'GoogleSans',
-  //                             fontSize: 15.2.sp,
-  //                             fontWeight: FontWeight.w700,
-  //                             color: AppColors.reminder,
-  //                           ),
-  //                         ),
-  //                         SizedBox(height: 4.10.h),
-  //                         TextView(
-  //                           text: 'Scheduled Time',
-  //                           textStyle: TextStyle(
-  //                             fontFamily: 'Arial',
-  //                             fontSize: 13.8.sp,
-  //                             fontWeight: FontWeight.w400,
-  //                             color: AppColors.infoGrey,
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-
-  //               SizedBox(height: model.isLoading ? 20.h : 0.h),
-  //               model.isLoading
-  //                   ? SpinKitWaveSpinner(
-  //                       color: AppColors.primary,
-  //                       size: 32.0.sp,
-  //                     )
-  //                   : SizedBox.shrink(),
-  //               SizedBox(height: 30.h),
-  //               Row(
-  //                 children: [
-  //                   Expanded(
-  //                     child: ButtonWidget(
-  //                       border: 100.r,
-  //                       buttonColor: AppColors.white,
-  //                       buttonText: 'Missed',
-  //                       color: AppColors.red,
-  //                       buttonBorderColor: AppColors.red,
-  //                       onPressed: () {
-  //                         model.updateDosesStatus(
-  //                           context,
-  //                           reminder: o.reminderId,
-  //                           dose: o.doseId,
-  //                           status: 'MISSED',
-  //                         );
-  //                         model.notifyListeners();
-  //                       },
-  //                     ),
-  //                   ),
-  //                   SizedBox(width: 30.w),
-
-  //                   Expanded(
-  //                     child: ButtonWidget(
-  //                       border: 100.r,
-  //                       buttonColor: AppColors.app_green,
-  //                       buttonText: 'Taken',
-  //                       color: AppColors.white,
-  //                       buttonBorderColor: AppColors.app_green,
-  //                       onPressed: () {
-  //                         model.updateDosesStatus(
-  //                           context,
-  //                           reminder: o.reminderId,
-  //                           dose: o.doseId,
-  //                           status: 'TAKEN',
-  //                         );
-  //                         model.notifyListeners();
-  //                       },
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   ),
-  // );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
   void showUpdateDoseDialog(
     BuildContext context, {
     Datum? o,
@@ -26789,33 +26047,51 @@ class AuthViewModel extends BaseViewModel {
     return totalDuration;
   }
 
-  int returnNumberOfTimes(model) {
-    numberOfTimes = int.parse(model.medicationClassList[0].timesToTake!);
-    return numberOfTimes!;
+  int getTotalCustomDoses(List<dynamic> dosageMap) {
+    final allDoses = <dynamic>[];
+
+    for (final dayMap in dosageMap) {
+      if (dayMap['doses'] != null) {
+        allDoses.addAll(dayMap['doses']);
+      }
+    }
+
+    return allDoses.length;
   }
 
-  int returnNumberOfDay(model) {
-    totalDayDuration = int.parse(model.medicationClassList[0].duration!);
-    return totalDayDuration;
+  int getTotalTimesForReminder(item) {
+    if (item.isCusSchedule) {
+      _getTotalTimesForReminder = getTotalCustomDoses(item.dosageMap ?? []);
+      return _getTotalTimesForReminder!;
+    } else {
+      _getTotalTimesForReminder = int.tryParse(item.timesToTake ?? '0') ?? 0;
+      return _getTotalTimesForReminder!;
+    }
   }
 
   void addCostTotal(model) {
     costTotal = 0;
-    if (selectedIndexes.contains(2)) {
-      costTotal += 15 * returnNumberOfDay(model) * returnNumberOfTimes(model);
-    }
-    if (selectedIndexes.contains(3)) {
-      costTotal += 20 * returnNumberOfDay(model) * returnNumberOfTimes(model);
-    }
-    if (selectedIndexes.contains(4)) {
-      costTotal += 50 * returnNumberOfDay(model) * returnNumberOfTimes(model);
+    for (final item in model.medicationClassList) {
+      _getTotalNoForDaysForReminder = int.tryParse(item.duration ?? '0') ?? 0;
+      final days = int.tryParse(item.duration ?? '0') ?? 0;
+      final times = getTotalTimesForReminder(item);
+
+      int basePrice = 0;
+      if (selectedIndexes.contains(2)) basePrice += 15;
+      if (selectedIndexes.contains(3)) basePrice += 20;
+      if (selectedIndexes.contains(4)) basePrice += 50;
+
+      if (item.isCusSchedule) {
+        costTotal += basePrice * times;
+      } else {
+        costTotal += basePrice * times * days;
+      }
     }
     if (selectedIndexes.contains(2) ||
         selectedIndexes.contains(3) ||
         selectedIndexes.contains(4)) {
       costTotal = costTotal * addedPhoneReminderList.length;
     }
-
     notifyListeners();
   }
 
@@ -26907,6 +26183,7 @@ class AuthViewModel extends BaseViewModel {
             isUserType: 'everyday_user',
           ),
         );
+        model?.medicationClassList.clear();
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
@@ -26921,7 +26198,7 @@ class AuthViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
-    locator<AuthViewModel>().notifyListeners();
+    model?.notifyListeners();
   }
 
   void initiatePayment(
@@ -26947,6 +26224,7 @@ class AuthViewModel extends BaseViewModel {
             url: _initiatePaymentResponseModel?.data?.redirectUrl,
           ),
         );
+        model?.medicationClassList.clear();
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
@@ -26961,7 +26239,7 @@ class AuthViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
-    locator<AuthViewModel>().notifyListeners();
+    model?.notifyListeners();
   }
 
   void createReminderPaid(
@@ -27001,7 +26279,7 @@ class AuthViewModel extends BaseViewModel {
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
-    locator<AuthViewModel>().notifyListeners();
+    model?.notifyListeners();
   }
 
   Widget fallbackMedicationIcon(AuthViewModel model) {

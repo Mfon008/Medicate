@@ -313,11 +313,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Expanded(
                               child: conContainer(
-                                icon: AppImage.today_pills,
-                                text: 'Tomorrow’s Med',
+                                icon: AppImage.cart,
+                                text: 'Shop Now',
                                 ontap: () {
                                   isTappToChat = !isTappToChat;
-                                  chatText = 'Tomorrow’s Med';
+                                  chatText = 'Shop Now';
                                   isTapHMOPlan = false;
                                   setState(() {});
                                 },

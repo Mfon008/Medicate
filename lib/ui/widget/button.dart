@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -76,7 +78,9 @@ class GlobalNavigator extends StatelessWidget {
     return GestureDetector(
       onTap: () => navigate.back(),
       child: Container(
-        padding: EdgeInsets.all(4.10.w),
+        padding: Platform.isAndroid
+            ? EdgeInsets.all(5.10.w)
+            : EdgeInsets.only(right: 8.w, left: 2.w, top: 3.0.w, bottom: 2.40.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.10.r),
           border: Border.all(color: AppColors.black),
