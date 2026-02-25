@@ -22401,7 +22401,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth == 'Pay with Wallet'
                       ? () {
-                          model.createReminderPaidWallet(
+                        model.createReminderPaidWallet(
                             context,
                             model: model,
                             createReminderEntityModel:
@@ -26512,8 +26512,8 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _createReminderResponseModel?.message ?? '',
         );
-        await payWithWalletAPI(context: context,reference: _createReminderResponseModel?.data?.transactionReference);
-         model?.medicationClassList.clear();
+        await payWithWalletAPI(context: context,reference: _createReminderResponseModel?.data?.transactionReference,model:model);
+        
 
        
       } else {
@@ -27192,7 +27192,7 @@ class AuthViewModel extends BaseViewModel {
                                       .validate()) {
                                     model.createPayment(
                                       context,
-                                      amount: fundAmountController.text.trim(),
+                                      amount: fundAmountController.text.trim().replaceAll(',', ''),
                                     );
                                   }
                                   model.notifyListeners();
@@ -27382,7 +27382,7 @@ class AuthViewModel extends BaseViewModel {
 
   Future<void> payWithWalletAPI({
     String? reference,
-    required BuildContext context,
+    required BuildContext context, AuthViewModel? model,
   }) async {
     try {
       _isLoading = true;
@@ -27409,6 +27409,7 @@ class AuthViewModel extends BaseViewModel {
             isUserType: 'everyday_user',
           ),
         );
+         model?.medicationClassList.clear();
       } else {
         AppUtils.snackbar(
           context,
