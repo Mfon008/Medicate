@@ -1030,6 +1030,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                 Center(
                   child:
                       model.getReminderResponseModel != null &&
+                          model.getReminderResponseModel!.data!.data != null &&
                           model.getReminderResponseModel!.data!.data!.isNotEmpty
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

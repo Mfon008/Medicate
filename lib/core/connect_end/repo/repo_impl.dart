@@ -1,12 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:medicate_app/core/connect_end/model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/contract_impl.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/create_payment_wallet_entity_model.dart';
+import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
@@ -15,7 +19,10 @@ import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/initiate_payment_wallet_entity_model.dart';
+import '../model/pay_with_wallet_entity_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -237,6 +244,43 @@ class AuthRepoImpl {
   Future<GetUserDetailsNoPhoneModel> getUserDetailsNoPhone() async {
     final response = await _contract.getUserDetailsNoPhone();
     _chacheUser(response);
+    return response;
+  }
+
+  Future<CreatePaymentWalletModel> createWalletPayment({
+    CreatePaymentWalletEntityModel? createPaymentWalletEntityModel,
+  }) async {
+    final response = await _contract.createWalletPayment(
+      createPaymentWalletEntityModel: createPaymentWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<InitiatePaymentResponseModel> initiateWalletPayment({
+    InitiatePaymentWalletEntityModel? initiatePaymentWalletEntityModel,
+  }) async {
+    final response = await _contract.initiateWalletPayment(
+      initiatePaymentWalletEntityModel: initiatePaymentWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<PayWithWalletResponseModel> payWithWallet({
+    PayWithWalletEntityModel? payWithWalletEntityModel,
+  }) async {
+    final response = await _contract.payWithWallet(
+      payWithWalletEntityModel: payWithWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<GetTransactionWalletResponseModel> getTransactionWallet() async {
+    final response = await _contract.getTransactionWallet();
+    return response;
+  }
+
+  Future<GetWalletResponseModel> getWalletBalance() async {
+    final response = await _contract.getWalletBalance();
     return response;
   }
 

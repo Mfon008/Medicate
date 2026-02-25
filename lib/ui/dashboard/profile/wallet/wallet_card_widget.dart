@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
-import 'package:medicate_app/core/core_folder/app/app.router.dart';
-import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 
+import '../../../../core/app_assets/constant.dart';
+import '../../../../core/connect_end/view_model/auth_view_model.dart';
+
+// ignore: must_be_immutable
 class WalletCard extends StatefulWidget {
-  const WalletCard({super.key});
+  WalletCard({super.key, this.model});
+  AuthViewModel? model;
 
   @override
   State<WalletCard> createState() => _WalletCardState();
@@ -17,6 +20,7 @@ class WalletCard extends StatefulWidget {
 
 class _WalletCardState extends State<WalletCard> {
   bool onTap = false;
+
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -49,9 +53,20 @@ class _WalletCardState extends State<WalletCard> {
             ),
             SizedBox(height: 8.0.h),
             TextView(
-              text: !onTap ? "₦*.**" : "₦150,000.00",
+              text: !onTap
+                  ? "₦*.**"
+                  : formatNaira(
+                      int.parse(
+                        widget
+                                .model
+                                ?.getWalletBalanceResponseModel
+                                ?.data
+                                ?.balance ??
+                            "0",
+                      ),
+                    ),
               textStyle: TextStyle(
-                // fontFamily: 'GoogleSans',
+                fontFamily: 'GoogleSans',
                 color: Colors.white,
                 fontSize: 32.sp,
                 fontWeight: FontWeight.bold,
@@ -83,7 +98,7 @@ class _WalletCardState extends State<WalletCard> {
             ),
             SizedBox(height: 14.h),
             GestureDetector(
-              onTap: () => navigate.navigateTo(Routes.fundScreen),
+              onTap: () => widget.model?.fundPaymentWallet(context),
               child: Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(left: 23.0.w, right: 23.0.w),

@@ -80,7 +80,12 @@ class GlobalNavigator extends StatelessWidget {
       child: Container(
         padding: Platform.isAndroid
             ? EdgeInsets.all(5.10.w)
-            : EdgeInsets.only(right: 8.w, left: 2.w, top: 3.0.w, bottom: 2.40.w),
+            : EdgeInsets.only(
+                right: 8.w,
+                left: 2.w,
+                top: 3.0.w,
+                bottom: 2.40.w,
+              ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.10.r),
           border: Border.all(color: AppColors.black),

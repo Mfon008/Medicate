@@ -18,7 +18,7 @@ class CreateTenantReminderEntityModel {
     this.emails,
     this.phoneNumbers,
     this.payment,
-    this.patientDetails
+    this.patientDetails,
   });
 
   factory CreateTenantReminderEntityModel.fromJson(Map<String, dynamic> json) {
@@ -30,7 +30,11 @@ class CreateTenantReminderEntityModel {
       notificationChannels: json['notificationChannels'] as List<String>?,
       emails: json['emails'] as List<String>?,
       phoneNumbers: json['phoneNumbers'] as List<String>?,
-      patientDetails: json['patientDetails']==null ?null: PatientDetails.fromJson(json['patientDetails']as Map<String, dynamic>),
+      patientDetails: json['patientDetails'] == null
+          ? null
+          : PatientDetails.fromJson(
+              json['patientDetails'] as Map<String, dynamic>,
+            ),
       payment: json['payment'] == null
           ? null
           : Payment.fromJson(json['payment'] as Map<String, dynamic>),
@@ -44,6 +48,6 @@ class CreateTenantReminderEntityModel {
     'emails': emails,
     'phoneNumbers': phoneNumbers,
     'payment': payment?.toJson(),
-    'patientDetails':patientDetails?.toJson(),
+    'patientDetails': patientDetails?.toJson(),
   };
 }

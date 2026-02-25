@@ -7,15 +7,11 @@ part of 'data.dart';
 // **************************************************************************
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-  displayName: json['displayName'] as String?,
-  fullName: json['fullName'] as String?,
-  phone: json['phone'] as String?,
-  pinSet: json['pinSet'] as bool?,
+  transactions: (json['transactions'] as List<dynamic>?)
+      ?.map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-  'displayName': instance.displayName,
-  'fullName': instance.fullName,
-  'phone': instance.phone,
-  'pinSet': instance.pinSet,
+  'transactions': instance.transactions,
 };

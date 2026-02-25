@@ -34,6 +34,7 @@ import 'package:medicate_app/ui/dashboard/reminder/medication_class.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
+import '../../../ui/dashboard/profile/wallet/fund_screen.dart';
 import '../../../ui/dashboard/reminder/med_type.dart';
 import '../../../ui/widget/bullet_text_widget.dart';
 import '../../../ui/widget/button.dart';
@@ -52,16 +53,24 @@ import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/api_result_model.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/create_payment_wallet_entity_model.dart';
+import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_reminder_entity_model/medication.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/datum.dart';
+import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
+import '../model/get_transaction_wallet_response_model/transaction.dart';
 import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/login_entity_model.dart';
+import '../model/pay_with_wallet_entity_model.dart';
+import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -108,6 +117,21 @@ class AuthViewModel extends BaseViewModel {
   InitiatePaymentResponseModel? _initiatePaymentResponseModel;
   InitiatePaymentResponseModel? get initiatePaymentResponseModel =>
       _initiatePaymentResponseModel;
+  CreatePaymentWalletModel? _createPaymentWalletModel;
+  CreatePaymentWalletModel? get createPaymentWalletModel =>
+      _createPaymentWalletModel;
+  GetWalletResponseModel? _getWalletBalanceResponseModel;
+  GetWalletResponseModel? get getWalletBalanceResponseModel =>
+      _getWalletBalanceResponseModel;
+  GetTransactionWalletResponseModel? _getWalletTransactionHistoryResponseModel;
+  GetTransactionWalletResponseModel?
+  get getWalletTransactionHistoryResponseModel =>
+      _getWalletTransactionHistoryResponseModel;
+  PayWithWalletResponseModel? _payWithWalletResponseModel;
+  PayWithWalletResponseModel?
+  get payWithWalletResponseModel =>
+      _payWithWalletResponseModel;
+
   GetUserDetailsNoPhoneModel? _getUserDetailsNoPhoneModel;
   GetUserDetailsNoPhoneModel? get getUserDetailsNoPhoneModel =>
       _getUserDetailsNoPhoneModel;
@@ -156,6 +180,7 @@ class AuthViewModel extends BaseViewModel {
 
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPhoneReminder = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyFundWallet = GlobalKey<FormState>();
   GlobalKey<FormState> firstFormReminderKey = GlobalKey<FormState>();
   GlobalKey<FormState> firstFormReminderUpdateKey = GlobalKey<FormState>();
   GlobalKey<FormState> secondFormReminderKey = GlobalKey<FormState>();
@@ -165,6 +190,8 @@ class AuthViewModel extends BaseViewModel {
   String startDateIso = '';
 
   AuthViewModel({this.context});
+  dynamic groupedTransactions;
+  dynamic transactions;
 
   Timer? _timer;
   int _start = 60;
@@ -519,11 +546,30 @@ class AuthViewModel extends BaseViewModel {
     return phoneNo;
   }
 
+  String returnPhoneNoStructureAdd234After(String phoneNo) {
+    if (phoneNo.startsWith('0')) {
+      phoneNo = '+234${phoneNo.substring(1)}';
+    } else {
+      phoneNo = '+234${phoneNo.substring(0)}';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
+  String formatPhoneNumber(String phoneNumber) {
+    if (phoneNumber.startsWith('+234')) {
+      return phoneNumber.replaceFirst('+234', '0');
+    }
+    return phoneNumber; // return unchanged if it doesn't start with +234
+  }
+
   String returnPhoneNoStructureWith234(String phoneNo) {
     if (phoneNo.substring(4, 5).contains('0')) {
       phoneNo = '+234${phoneNo.substring(5)}';
     }
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
     return phoneNo;
   }
 
@@ -6989,13 +7035,6 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
-  String formatPhoneNumber(String phoneNumber) {
-    if (phoneNumber.startsWith('+234')) {
-      return phoneNumber.replaceFirst('+234', '0');
-    }
-    return phoneNumber; // return unchanged if it doesn't start with +234
-  }
-
   errorRemidnderImage(medType) {
     if (medType == 'PILL') {
       return AppImage.pills;
@@ -11082,79 +11121,35 @@ class AuthViewModel extends BaseViewModel {
     if (pickedDated != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
 
-      await selectTimeUPDATE(
-        context: context,
-        index: index,
-        model: model,
-        setModalState: setModalState,
-      );
+      model!.startDateUpdateControllers[index!].text = pickedDate;
       startDateIso = DateTime.utc(
         pickedDated.year,
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
-
-      // if (medicationClassList[index].duration!.isNotEmpty) {
-      //   final parsed = int.tryParse(medicationClassList[index].duration!);
-      //   if (parsed != null) {
-      //     _duration = parsed;
-      //     medicationClassList[index].listOfTimes = List.generate(
-      //       _duration!,
-      //       (i) => i,
-      //     );
-      //     dateTimeObject = inputFormat.parse(pickedDate!);
-
-      //     final localDate = dateTimeObject!;
-      //     final utcStartDate = DateTime.utc(
-      //       localDate.year,
-      //       localDate.month,
-      //       localDate.day,
-      //     );
-
-      //     // Now safely add your duration
-      //     final utcEndDate = utcStartDate.add(Duration(days: _duration! - 1));
-      //     medicationClassList[index].endDate = utcEndDate.toIso8601String();
-      //     medicationClassList[index].endDateIso = DateTime.parse(
-      //       utcEndDate.toIso8601String(),
-      //     );
-
-      //     // ✅ Ensure controller lists match new duration
-      //     // while (doseAfterControllers.length < _duration!) {
-      //     //   doseAfterControllers.add([]);
-      //     // }
-      //     // while (periodAfterLabels.length < _duration!) {
-      //     //   periodAfterLabels.add([]);
-      //     // }
-
-      //     // // ✅ Trim extra ones if user reduces duration
-      //     // if (doseAfterControllers.length > _duration!) {
-      //     //   doseAfterControllers.removeRange(
-      //     //     _duration!,
-      //     //     doseAfterControllers.length,
-      //     //   );
-      //     // }
-      //     // if (periodAfterLabels.length > _duration!) {
-      //     //   periodAfterLabels.removeRange(_duration!, periodAfterLabels.length);
-      //     // }
-      //   }
-      // }
+      // await selectTimeUPDATE(
+      //   context: context,
+      //   index: index,
+      //   model: model,
+      //   setModalState: setModalState,
+      // );
     }
     setModalState!(() {});
     model.notifyListeners();
   }
 
-  Future<void> selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(), // The time initially displayed
-    );
+  // Future<void> selectTime(BuildContext context) async {
+  //   final TimeOfDay? pickedTime = await showTimePicker(
+  //     context: context,
+  //     initialTime: TimeOfDay.now(), // The time initially displayed
+  //   );
 
-    if (pickedTime != null) {
-      dateTimeController.text =
-          '${pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
-    }
-    notifyListeners();
-  }
+  //   if (pickedTime != null) {
+  //     dateTimeController.text =
+  //         '${pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<void> selectTimeUPDATE({
     BuildContext? context,
@@ -11308,6 +11303,8 @@ class AuthViewModel extends BaseViewModel {
       borderRadius: BorderRadius.circular(10),
     ),
   );
+
+  TextEditingController fundAmountController = TextEditingController();
 
   void signIn(context, {LoginEntityModel? signInEntity}) async {
     try {
@@ -14787,12 +14784,24 @@ class AuthViewModel extends BaseViewModel {
                                                     GestureDetector(
                                                       onTap: () {
                                                         if (addedPhoneReminderList
-                                                            .contains(o)) {
+                                                            .contains(
+                                                              returnPhoneNoStructureWith234(
+                                                                '+234$o',
+                                                              ),
+                                                            )) {
                                                           addedPhoneReminderList
-                                                              .remove(o);
+                                                              .remove(
+                                                                returnPhoneNoStructureWith234(
+                                                                  '+234$o',
+                                                                ),
+                                                              );
                                                         } else {
                                                           addedPhoneReminderList
-                                                              .add(o);
+                                                              .add(
+                                                                returnPhoneNoStructureWith234(
+                                                                  '+234$o',
+                                                                ),
+                                                              );
                                                         }
 
                                                         model._isPhoneFlagged =
@@ -14803,7 +14812,11 @@ class AuthViewModel extends BaseViewModel {
                                                       child: Container(
                                                         padding:
                                                             addedPhoneReminderList
-                                                                .contains(o)
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    '+234$o',
+                                                                  ),
+                                                                )
                                                             ? EdgeInsets.all(
                                                                 4.0.w,
                                                               )
@@ -14817,7 +14830,11 @@ class AuthViewModel extends BaseViewModel {
                                                               ),
                                                           color:
                                                               addedPhoneReminderList
-                                                                  .contains(o)
+                                                                  .contains(
+                                                                    returnPhoneNoStructureWith234(
+                                                                      '+234$o',
+                                                                    ),
+                                                                  )
                                                               ? AppColors
                                                                     .primary
                                                               : AppColors
@@ -14825,7 +14842,11 @@ class AuthViewModel extends BaseViewModel {
                                                           border: Border.all(
                                                             color:
                                                                 addedPhoneReminderList
-                                                                    .contains(o)
+                                                                    .contains(
+                                                                      returnPhoneNoStructureWith234(
+                                                                        '+234$o',
+                                                                      ),
+                                                                    )
                                                                 ? AppColors
                                                                       .transparent
                                                                 : AppColors
@@ -14835,7 +14856,11 @@ class AuthViewModel extends BaseViewModel {
                                                         ),
                                                         child:
                                                             addedPhoneReminderList
-                                                                .contains(o)
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    '+234$o',
+                                                                  ),
+                                                                )
                                                             ? Icon(
                                                                 Icons.check,
                                                                 size: 12.sp,
@@ -15570,7 +15595,7 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                             SizedBox(height: 24.0.h),
                                             TextFormWidget(
-                                              hint: 'Start Date & Time',
+                                              hint: 'Start Date',
                                               hintWeight: FontWeight.w400,
                                               hintColor: AppColors.reminder,
                                               hintSize: Platform.isAndroid
@@ -20132,7 +20157,7 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 10.h),
                 TextView(
-                  text: 'Start Date & Time',
+                  text: 'Start Date',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 12.8.sp,
@@ -20381,34 +20406,34 @@ class AuthViewModel extends BaseViewModel {
                               SizedBox(height: 6.10.h),
                               Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
-                              model.medicationClassList[0].isCusSchedule!
-                                  ? SizedBox.shrink()
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text: 'Reminders per day',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '$_getTotalTimesForReminder',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
+                              // model.medicationClassList[0].isCusSchedule!
+                              //     ? SizedBox.shrink()
+                              //     : Row(
+                              //         mainAxisAlignment:
+                              //             MainAxisAlignment.spaceBetween,
+                              //         children: [
+                              //           TextView(
+                              //             text: 'Reminders per day',
+                              //             textStyle: TextStyle(
+                              //               fontFamily: 'Arial',
+                              //               fontSize: 16.80.sp,
+                              //               color: AppColors.black,
+                              //               fontWeight: FontWeight.w400,
+                              //             ),
+                              //           ),
+                              //           TextView(
+                              //             text: '$_getTotalTimesForReminder',
+                              //             textStyle: TextStyle(
+                              //               fontFamily: 'GoogleSans',
+                              //               fontSize: 16.80.sp,
+                              //               color: AppColors.black,
+                              //               fontWeight: FontWeight.w500,
+                              //             ),
+                              //           ),
+                              //         ],
+                              //       ),
+                              // SizedBox(height: 6.10.h),
+                              // Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
                               Row(
                                 mainAxisAlignment:
@@ -20424,8 +20449,7 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   TextView(
-                                    text:
-                                        '$_getTotalNumberOfReminders',
+                                    text: '$_getTotalNumberOfReminders',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.80.sp,
@@ -22296,6 +22320,7 @@ class AuthViewModel extends BaseViewModel {
           ),
           SizedBox(height: 12.h),
           paymentWidget(
+            context: context,
             isWallet: true,
             text: 'Pay with Wallet',
             icon: AppImage.wallet_pay,
@@ -22374,7 +22399,67 @@ class AuthViewModel extends BaseViewModel {
                   color: AppColors.white,
                   isLoading: model!.isLoading,
                   buttonBorderColor: AppColors.transparent,
-                  onPressed: onTapPaymentMeth != ''
+                  onPressed: onTapPaymentMeth == 'Pay with Wallet'
+                      ? () {
+                          model.createReminderPaidWallet(
+                            context,
+                            model: model,
+                            createReminderEntityModel:
+                                CreateReminderEntityModel(
+                                  medications: model.medicationClassList.map((
+                                    m,
+                                  ) {
+                                    return Medication(
+                                      medicationName: m.medicationName,
+                                      scheduleType: m.isCusSchedule!
+                                          ? 'CUSTOM'
+                                          : 'FIXED',
+                                      dosage: m.dosage,
+                                      medicationType: m.medicationType!
+                                          .toUpperCase(),
+                                      startDateTime: m.startDateIso,
+                                      endDateTime: m.endDateIso,
+                                      durationInDays: int.parse(m.duration!),
+                                      timesPerDay: m.isCusSchedule!
+                                          ? ''
+                                          : int.parse(m.timesToTake!),
+                                      dailyDoseTimes: (m.dosageMap as List)
+                                          .map(
+                                            (
+                                              dayData,
+                                            ) => (dayData['doses'] as List)
+                                                .map(
+                                                  (
+                                                    dose,
+                                                  ) => DailyDoseTime.fromJson(
+                                                    dose
+                                                        as Map<String, dynamic>,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          )
+                                          .toList(),
+                                      note: m.note,
+                                      medicationImage: m.imageData!.url == null
+                                          ? null
+                                          : MedicationImage.fromJson(
+                                              m.imageData!.toJson(),
+                                            ),
+                                    );
+                                  }).toList(),
+                                  timeZone: "Africa/Lagos",
+                                  notificationChannels: notificationChannel,
+                                  emails: addedEmailReminderList,
+                                  phoneNumbers: addedPhoneReminderList,
+                                  payment: Payment(
+                                    amount: costTotal,
+                                    currency: "NGN",
+                                  ),
+                                ),
+                          );
+                          model.notifyListeners();
+                        }
+                      : onTapPaymentMeth != ''
                       ? () {
                           model.createReminderPaid(
                             context,
@@ -25900,7 +25985,6 @@ class AuthViewModel extends BaseViewModel {
     if (isEdit) {
       phoneController.text = phoneNumber!.substring(4);
     }
-
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
@@ -26052,17 +26136,27 @@ class AuthViewModel extends BaseViewModel {
                                   .validate()) {
                                 if (!isEdit) {
                                   if (phoneReminderList.contains(
-                                    '+234${returnPhoneNoStructure(phoneController.text.trim())}',
+                                    returnPhoneNoStructureAdd234After(
+                                      phoneController.text.trim(),
+                                    ),
                                   )) {
                                   } else {
                                     phoneReminderList.add(
-                                      '+234${returnPhoneNoStructure(phoneController.text.trim())}',
+                                      returnPhoneNoStructureAdd234After(
+                                        phoneController.text.trim(),
+                                      ),
                                     );
                                   }
                                 } else {
                                   phoneReminderList[index!] =
-                                      '+234${returnPhoneNoStructure(phoneController.text.trim())}';
+                                      returnPhoneNoStructureAdd234After(
+                                        phoneController.text.trim(),
+                                      );
                                 }
+                                print(
+                                  '.........${returnPhoneNoStructureAdd234After(phoneController.text.trim())}',
+                                );
+                                print('.bbbbbbbb..${phoneController.text}');
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }
@@ -26155,7 +26249,7 @@ class AuthViewModel extends BaseViewModel {
   }
 
   void totalReminder() {
- _getTotalNumberOfReminders = 0;
+    _getTotalNumberOfReminders = 0;
     if (selectedIndexes.contains(0)) {
       _getTotalNumberOfReminders +=
           (_getTotalTimesForReminder! *
@@ -26189,6 +26283,7 @@ class AuthViewModel extends BaseViewModel {
   }
 
   paymentWidget({
+    context,
     bool isWallet = false,
     String? text,
     String? icon,
@@ -26223,26 +26318,51 @@ class AuthViewModel extends BaseViewModel {
           !isWallet
               ? SizedBox.shrink()
               : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextView(
-                      text: '₦0.00',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.infoGrey,
-                      ),
+                    SizedBox(width: 10.w),
+                    ViewModelBuilder<AuthViewModel>.reactive(
+                      viewModelBuilder: () => AuthViewModel(),
+                      onViewModelReady: (model) {
+                        model.getWalletBalance(context);
+                      },
+                      disposeViewModel: false,
+                      builder: (_, AuthViewModel model, __) {
+                        return SizedBox(
+                          width: 90.w,
+                          child: TextView(
+                            text: formatNaira(
+                              int.parse(
+                                model
+                                        .getWalletBalanceResponseModel
+                                        ?.data
+                                        ?.balance ??
+                                    "0",
+                              ),
+                            ),
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.infoGrey,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(width: 12.w),
-                    TextView(
-                      text: 'Fund',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0.sp,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w400,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.primary,
+                    GestureDetector(
+                      onTap: () => fundPaymentWallet(context),
+                      child: TextView(
+                        text: 'Fund',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.0.sp,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w400,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primary,
+                        ),
                       ),
                     ),
                   ],
@@ -26358,6 +26478,44 @@ class AuthViewModel extends BaseViewModel {
           reference: _createReminderResponseModel?.data?.transactionReference,
           model: model,
         );
+      } else {
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'everyday_user',
+          ),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    model?.notifyListeners();
+  }
+
+  void createReminderPaidWallet(
+    context, {
+    CreateReminderEntityModel? createReminderEntityModel,
+    AuthViewModel? model,
+  }) async {
+    try {
+      _isLoading = true;
+      _createReminderResponseModel = await runBusyFuture(
+        repositoryImply.createReminder(createReminderEntityModel!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createReminderResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createReminderResponseModel?.message ?? '',
+        );
+        await payWithWalletAPI(context: context,reference: _createReminderResponseModel?.data?.transactionReference);
+         model?.medicationClassList.clear();
+
+       
       } else {
         navigate.navigateTo(
           Routes.paymentStatusScreen,
@@ -26922,5 +27080,347 @@ class AuthViewModel extends BaseViewModel {
     // Return ratio as double (e.g. 0.8 for 4/5)
     if (totalCount == 0) return 0.0; // prevent divide-by-zero error
     return takenCount / totalCount;
+  }
+
+  void fundPaymentWallet(context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<AuthViewModel>.reactive(
+          viewModelBuilder: () => AuthViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          builder: (_, AuthViewModel model, __) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(34.w),
+                      child: Form(
+                        key: formKeyFundWallet,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextView(
+                              text: 'Fund Wallet',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                color: AppColors.black,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            TextView(
+                              text: 'Enter Amount',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                color: AppColors.black,
+                                fontSize: 13.20.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            TextFormWidget(
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+
+                              label: '',
+                              hintSize: 16.60.sp,
+                              controller: fundAmountController,
+                              inputFormatters: [AmountFormatter()],
+                              keyboardType: TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              validator: AppValidator.validateAmount(
+                                minAmount: 100.00,
+                                maxAmount: 1000000000,
+                              ),
+                              labelStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                color: AppColors.infoGrey,
+                              ),
+                              fillColor: AppColors.transparent,
+                              isFilled: true,
+                            ),
+
+                            SizedBox(height: 35.h),
+                            // 🔹 Save button
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (formKeyFundWallet.currentState!
+                                      .validate()) {
+                                    model.createPayment(
+                                      context,
+                                      amount: fundAmountController.text.trim(),
+                                    );
+                                  }
+                                  model.notifyListeners();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  padding: EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: model.isLoading
+                                    ? SpinKitCircle(
+                                        color: AppColors.white,
+                                        size: 22.sp,
+                                      )
+                                    : Text(
+                                        "Proceed",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> createPayment(
+    BuildContext context, {
+    required String amount,
+    String? description,
+    String? paymentType,
+  }) async {
+    try {
+      _isLoading = true;
+      _createPaymentWalletModel = await runBusyFuture(
+        repositoryImply.createWalletPayment(
+          createPaymentWalletEntityModel: CreatePaymentWalletEntityModel(
+            amount: double.parse(amount).toInt(),
+            currency: "NGN",
+            description: description ?? "Wallet top-up payment",
+            paymentForType: paymentType ?? "WALLET_TOPUP",
+            paymentForId: "wallet-topup-001",
+            callbackUrl: "https://wallet.medicate.health/payments/return",
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createPaymentWalletModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createPaymentWalletModel?.message ?? '',
+        );
+          initiateWalletPayment(
+            reference: _createPaymentWalletModel?.data?.transactionReference,
+            context: context,
+          );
+        
+      } else {
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'everyday_user',
+          ),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> initiateWalletPayment({
+    String? reference,
+    required BuildContext context,
+  }) async {
+    try {
+      _isLoading = true;
+      _initiatePaymentResponseModel = await runBusyFuture(
+        repositoryImply.initiateWalletPayment(
+          initiatePaymentWalletEntityModel: InitiatePaymentWalletEntityModel(
+            reference: reference,
+            callbackUrl: "https://wallet.medicate.health/payments/return",
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createPaymentWalletModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _initiatePaymentResponseModel?.message ?? '',
+        );
+        final result = await navigate.navigateTo(
+          Routes.acceleratePaymentViewWallet,
+          arguments: AcceleratePaymentViewWalletArguments(
+            url: _initiatePaymentResponseModel?.data?.redirectUrl,
+          ),
+        );
+        if (result == true) {
+          await getWalletBalance(context);
+          await getWalletTransactionHistory(context);
+        }
+      } else {
+        AppUtils.snackbar(
+          context,
+          message: 'Unable to make transaction.',
+          error: true,
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWalletBalance(context) async {
+    print('Fetching wallet balance...');
+    try {
+      _isLoading = true;
+      _getWalletBalanceResponseModel = await runBusyFuture(
+        repositoryImply.getWalletBalance(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWalletTransactionHistory(context) async {
+    print(
+      'Fetching getWalletTransactionHistory getWalletTransactionHistory...',
+    );
+    try {
+      _isLoading = true;
+      _getWalletTransactionHistoryResponseModel = await runBusyFuture(
+        repositoryImply.getTransactionWallet(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+  }
+
+  Map<String, List<Transaction>> groupTransactionsByDate(
+    List<Transaction> transactions,
+  ) {
+    final Map<String, List<Transaction>> grouped = {};
+
+    for (final tx in transactions) {
+      final dateKey = DateFormat(
+        'yyyy-MM-dd',
+      ).format(DateTime.parse(tx.createdAt!)); // normalize date
+
+      grouped.putIfAbsent(dateKey, () => []);
+      grouped[dateKey]!.add(tx);
+    }
+
+    return grouped;
+  }
+
+  Future<void> payWithWalletAPI({
+    String? reference,
+    required BuildContext context,
+  }) async {
+    try {
+      _isLoading = true;
+      _payWithWalletResponseModel = await runBusyFuture(
+        repositoryImply.payWithWallet(
+          payWithWalletEntityModel: PayWithWalletEntityModel(
+            transactionReference: reference,
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_payWithWalletResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _payWithWalletResponseModel?.message ?? '',
+        );
+        medicationClassList.clear();
+        await getWalletBalance(context);
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: true,
+            isUserType: 'everyday_user',
+          ),
+        );
+      } else {
+        AppUtils.snackbar(
+          context,
+          message: 'Unable to make transaction.',
+          error: true,
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
   }
 }

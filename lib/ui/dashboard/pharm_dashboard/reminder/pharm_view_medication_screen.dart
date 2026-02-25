@@ -444,7 +444,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 5.10.h),
                               TextView(
-                                text: 'Start Date & Time',
+                                text: 'Start Date',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
                                   fontSize: 12.8.sp,

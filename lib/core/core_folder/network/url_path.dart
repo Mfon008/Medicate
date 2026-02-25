@@ -58,5 +58,9 @@ class UrlConfig {
       'auth/get-user-details-by-tenant';
   static const String register_user_by_tenant = 'auth/register-user-by-tenant';
   static const String reminders_tenant = 'reminders/tenant/';
+  static const String get_transaction = '/wallet/transactions';
+  static const String get_wallet = '/wallet/balance';
+  static const String create_payment = '/payment/create';
+  static const String pay_with_wallet = '/payment/pay-with-wallet';
   // static const String get_user_details_by_tenant = 'auth/get-user-details-by-tenant';
 }

@@ -6,7 +6,7 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i95;
+import 'package:flutter/material.dart' as _i96;
 import 'package:flutter/material.dart';
 import 'package:medicate_app/ui/authentication/health_care/health_care_change_no_screen.dart'
     as _i52;
@@ -27,21 +27,21 @@ import 'package:medicate_app/ui/authentication/health_care/health_care_setup_pin
 import 'package:medicate_app/ui/authentication/health_care/health_care_welcome_screen.dart'
     as _i57;
 import 'package:medicate_app/ui/authentication/hmo/hmo_change_no_screen.dart'
-    as _i78;
+    as _i79;
 import 'package:medicate_app/ui/authentication/hmo/hmo_forgot_pin_screen.dart'
-    as _i77;
+    as _i78;
 import 'package:medicate_app/ui/authentication/hmo/hmo_login_screen.dart'
-    as _i76;
+    as _i77;
 import 'package:medicate_app/ui/authentication/hmo/hmo_reset_pin_screen.dart'
-    as _i75;
+    as _i76;
 import 'package:medicate_app/ui/authentication/hmo/hmo_reset_success_screen.dart'
-    as _i74;
+    as _i75;
 import 'package:medicate_app/ui/authentication/hmo/hmo_setup_pin_screen.dart'
-    as _i73;
+    as _i74;
 import 'package:medicate_app/ui/authentication/hmo/hmo_signup_screen.dart'
-    as _i72;
+    as _i73;
 import 'package:medicate_app/ui/authentication/hmo/hmo_welcome_screen.dart'
-    as _i71;
+    as _i72;
 import 'package:medicate_app/ui/authentication/pharmacy/pharm_change_no_screen.dart'
     as _i36;
 import 'package:medicate_app/ui/authentication/pharmacy/pharm_forgot_pin_screen.dart'
@@ -79,32 +79,32 @@ import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/business
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_home_screen.dart'
     as _i59;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart'
-    as _i92;
+    as _i93;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart'
     as _i60;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart'
     as _i61;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_more_screen.dart'
-    as _i93;
+    as _i94;
 import 'package:medicate_app/ui/dashboard/hmo/hmo_dashboard.dart' as _i62;
 import 'package:medicate_app/ui/dashboard/hmo/hmo_home_screen.dart' as _i63;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_more_screen.dart' as _i94;
-import 'package:medicate_app/ui/dashboard/more_screen.dart' as _i90;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_more_screen.dart' as _i95;
+import 'package:medicate_app/ui/dashboard/more_screen.dart' as _i91;
 import 'package:medicate_app/ui/dashboard/notification/empty_notification.dart'
     as _i23;
 import 'package:medicate_app/ui/dashboard/pharm_dashboard/pharm_dashboard.dart'
     as _i3;
 import 'package:medicate_app/ui/dashboard/pharm_dashboard/pharm_more_screen.dart'
-    as _i91;
+    as _i92;
 import 'package:medicate_app/ui/dashboard/pharm_dashboard/reminder/pharm_view_medication_screen.dart'
     as _i32;
 import 'package:medicate_app/ui/dashboard/profile/faq_screen.dart' as _i24;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/doctors_screen.dart'
     as _i46;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_info_screen.dart'
-    as _i69;
-import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_screen.dart'
     as _i70;
+import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_screen.dart'
+    as _i71;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_profile_info_screen.dart'
     as _i64;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_profile_screen.dart'
@@ -118,19 +118,19 @@ import 'package:medicate_app/ui/dashboard/profile/health_care_profile/kyc/kyc_sc
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/roles_and_permission_screen.dart'
     as _i48;
 import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_profile_info_screen.dart'
-    as _i79;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_profile_screen.dart'
     as _i80;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_reset_pin_pad_screen.dart'
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_profile_screen.dart'
     as _i81;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_setting_screen.dart'
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_reset_pin_pad_screen.dart'
     as _i82;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_setting_screen.dart'
+    as _i83;
 import 'package:medicate_app/ui/dashboard/profile/hmo/kyc/hmo_kyc_screen.dart'
     as _i41;
 import 'package:medicate_app/ui/dashboard/profile/hmo/roles_and_permission_screen.dart'
-    as _i83;
-import 'package:medicate_app/ui/dashboard/profile/hmo/users_screen.dart'
     as _i84;
+import 'package:medicate_app/ui/dashboard/profile/hmo/users_screen.dart'
+    as _i85;
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart'
     as _i40;
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart'
@@ -164,15 +164,15 @@ import 'package:medicate_app/ui/dashboard/reminder/payment_status_screen.dart'
 import 'package:medicate_app/ui/dashboard/reminder/view_medication_screen.dart'
     as _i31;
 import 'package:medicate_app/ui/dashboard/subscribers/application_form/application_form_screen.dart'
-    as _i86;
-import 'package:medicate_app/ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart'
-    as _i89;
-import 'package:medicate_app/ui/dashboard/subscribers/family_form/family_form_screen.dart'
-    as _i88;
-import 'package:medicate_app/ui/dashboard/subscribers/pro_health_sub_screen.dart'
-    as _i85;
-import 'package:medicate_app/ui/dashboard/subscribers/subsribers_screen.dart'
     as _i87;
+import 'package:medicate_app/ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart'
+    as _i90;
+import 'package:medicate_app/ui/dashboard/subscribers/family_form/family_form_screen.dart'
+    as _i89;
+import 'package:medicate_app/ui/dashboard/subscribers/pro_health_sub_screen.dart'
+    as _i86;
+import 'package:medicate_app/ui/dashboard/subscribers/subsribers_screen.dart'
+    as _i88;
 import 'package:medicate_app/ui/dashboard/support/support_screen.dart' as _i18;
 import 'package:medicate_app/ui/onboarding/get_started_onboarding.dart' as _i5;
 import 'package:medicate_app/ui/onboarding/role_onboarding.dart' as _i4;
@@ -180,8 +180,10 @@ import 'package:medicate_app/ui/onboarding/splash_screen.dart' as _i25;
 import 'package:medicate_app/ui/widget/accelerate_payment_view.dart' as _i67;
 import 'package:medicate_app/ui/widget/accelerate_payment_view_pharmacy.dart'
     as _i68;
+import 'package:medicate_app/ui/widget/accelerate_payment_view_wallet.dart'
+    as _i69;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i96;
+import 'package:stacked_services/stacked_services.dart' as _i97;
 
 class Routes {
   static const dashboard = '/';
@@ -325,6 +327,8 @@ class Routes {
   static const acceleratePaymentViewPharmacy =
       '/accelerate-payment-view-pharmacy';
 
+  static const acceleratePaymentViewWallet = '/accelerate-payment-view-wallet';
+
   static const healthCarePractitionerProfileInfoScreen =
       '/health-care-practitioner-profile-info-screen';
 
@@ -449,6 +453,7 @@ class Routes {
     healthCareSettingScreen,
     acceleratePaymentView,
     acceleratePaymentViewPharmacy,
+    acceleratePaymentViewWallet,
     healthCarePractitionerProfileInfoScreen,
     healthCarePractitionerProfileScreen,
     hMOWelcomeScreen,
@@ -644,52 +649,56 @@ class StackedRouter extends _i1.RouterBase {
       page: _i68.AcceleratePaymentViewPharmacy,
     ),
     _i1.RouteDef(
+      Routes.acceleratePaymentViewWallet,
+      page: _i69.AcceleratePaymentViewWallet,
+    ),
+    _i1.RouteDef(
       Routes.healthCarePractitionerProfileInfoScreen,
-      page: _i69.HealthCarePractitionerProfileInfoScreen,
+      page: _i70.HealthCarePractitionerProfileInfoScreen,
     ),
     _i1.RouteDef(
       Routes.healthCarePractitionerProfileScreen,
-      page: _i70.HealthCarePractitionerProfileScreen,
+      page: _i71.HealthCarePractitionerProfileScreen,
     ),
-    _i1.RouteDef(Routes.hMOWelcomeScreen, page: _i71.HMOWelcomeScreen),
-    _i1.RouteDef(Routes.hMOSignUpScreen, page: _i72.HMOSignUpScreen),
-    _i1.RouteDef(Routes.hMOSetupPinScreen, page: _i73.HMOSetupPinScreen),
+    _i1.RouteDef(Routes.hMOWelcomeScreen, page: _i72.HMOWelcomeScreen),
+    _i1.RouteDef(Routes.hMOSignUpScreen, page: _i73.HMOSignUpScreen),
+    _i1.RouteDef(Routes.hMOSetupPinScreen, page: _i74.HMOSetupPinScreen),
     _i1.RouteDef(
       Routes.hMOResetSuccessScreen,
-      page: _i74.HMOResetSuccessScreen,
+      page: _i75.HMOResetSuccessScreen,
     ),
-    _i1.RouteDef(Routes.hMOResetPinScreen, page: _i75.HMOResetPinScreen),
-    _i1.RouteDef(Routes.hMOLoginScreen, page: _i76.HMOLoginScreen),
-    _i1.RouteDef(Routes.hMOForgotPinScreen, page: _i77.HMOForgotPinScreen),
-    _i1.RouteDef(Routes.hMOChangePhoneNumber, page: _i78.HMOChangePhoneNumber),
-    _i1.RouteDef(Routes.hMOProfileInfoScreen, page: _i79.HMOProfileInfoScreen),
-    _i1.RouteDef(Routes.hMOProfileScreen, page: _i80.HMOProfileScreen),
-    _i1.RouteDef(Routes.hMOResetPinPadScreen, page: _i81.HMOResetPinPadScreen),
-    _i1.RouteDef(Routes.hMOSettingScreen, page: _i82.HMOSettingScreen),
+    _i1.RouteDef(Routes.hMOResetPinScreen, page: _i76.HMOResetPinScreen),
+    _i1.RouteDef(Routes.hMOLoginScreen, page: _i77.HMOLoginScreen),
+    _i1.RouteDef(Routes.hMOForgotPinScreen, page: _i78.HMOForgotPinScreen),
+    _i1.RouteDef(Routes.hMOChangePhoneNumber, page: _i79.HMOChangePhoneNumber),
+    _i1.RouteDef(Routes.hMOProfileInfoScreen, page: _i80.HMOProfileInfoScreen),
+    _i1.RouteDef(Routes.hMOProfileScreen, page: _i81.HMOProfileScreen),
+    _i1.RouteDef(Routes.hMOResetPinPadScreen, page: _i82.HMOResetPinPadScreen),
+    _i1.RouteDef(Routes.hMOSettingScreen, page: _i83.HMOSettingScreen),
     _i1.RouteDef(
       Routes.hMORolesAndPermissionScreen,
-      page: _i83.HMORolesAndPermissionScreen,
+      page: _i84.HMORolesAndPermissionScreen,
     ),
-    _i1.RouteDef(Routes.hMOUsersScreen, page: _i84.HMOUsersScreen),
-    _i1.RouteDef(Routes.proHealthSubScreen, page: _i85.ProHealthSubScreen),
+    _i1.RouteDef(Routes.hMOUsersScreen, page: _i85.HMOUsersScreen),
+    _i1.RouteDef(Routes.proHealthSubScreen, page: _i86.ProHealthSubScreen),
     _i1.RouteDef(
       Routes.applicationFormScreen,
-      page: _i86.ApplicationFormScreen,
+      page: _i87.ApplicationFormScreen,
     ),
-    _i1.RouteDef(Routes.subsribersScreen, page: _i87.SubsribersScreen),
-    _i1.RouteDef(Routes.familyFormScreen, page: _i88.FamilyFormScreen),
-    _i1.RouteDef(Routes.coorporateFormScreen, page: _i89.CoorporateFormScreen),
-    _i1.RouteDef(Routes.moreScreen, page: _i90.MoreScreen),
-    _i1.RouteDef(Routes.pharmMoreScreen, page: _i91.PharmMoreScreen),
+    _i1.RouteDef(Routes.subsribersScreen, page: _i88.SubsribersScreen),
+    _i1.RouteDef(Routes.familyFormScreen, page: _i89.FamilyFormScreen),
+    _i1.RouteDef(Routes.coorporateFormScreen, page: _i90.CoorporateFormScreen),
+    _i1.RouteDef(Routes.moreScreen, page: _i91.MoreScreen),
+    _i1.RouteDef(Routes.pharmMoreScreen, page: _i92.PharmMoreScreen),
     _i1.RouteDef(
       Routes.businessProvidersMoreScreen,
-      page: _i92.BusinessProvidersMoreScreen,
+      page: _i93.BusinessProvidersMoreScreen,
     ),
     _i1.RouteDef(
       Routes.specialistsProvidersMoreScreen,
-      page: _i93.SpecialistsProvidersMoreScreen,
+      page: _i94.SpecialistsProvidersMoreScreen,
     ),
-    _i1.RouteDef(Routes.hMOMoreScreen, page: _i94.HMOMoreScreen),
+    _i1.RouteDef(Routes.hMOMoreScreen, page: _i95.HMOMoreScreen),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
@@ -697,7 +706,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<DashboardArguments>(
         orElse: () => const DashboardArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i2.Dashboard(
           key: args.key,
           index: args.index,
@@ -712,7 +721,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyDashboardArguments>(
         orElse: () => const PharmacyDashboardArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i3.PharmacyDashboard(key: args.key, index: args.index),
         settings: data,
@@ -722,7 +731,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<RoleOnboardingArguments>(
         orElse: () => const RoleOnboardingArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i4.RoleOnboarding(key: args.key),
         settings: data,
       );
@@ -731,7 +740,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<GetStartedOnboardingArguments>(
         orElse: () => const GetStartedOnboardingArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i5.GetStartedOnboarding(key: args.key),
         settings: data,
       );
@@ -740,14 +749,14 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SignUpScreenArguments>(
         orElse: () => const SignUpScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i6.SignUpScreen(key: args.key),
         settings: data,
       );
     },
     _i7.ChangePhoneNumber: (data) {
       final args = data.getArgs<ChangePhoneNumberArguments>(nullOk: false);
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i7.ChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
       );
@@ -756,7 +765,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SetupPinScreenArguments>(
         orElse: () => const SetupPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i8.SetupPinScreen(key: args.key),
         settings: data,
       );
@@ -765,7 +774,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<LoginScreenArguments>(
         orElse: () => const LoginScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i9.LoginScreen(key: args.key),
         settings: data,
       );
@@ -774,7 +783,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<WelcomeScreenArguments>(
         orElse: () => const WelcomeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i10.WelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
@@ -784,7 +793,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ForgotPinScreenArguments>(
         orElse: () => const ForgotPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i11.ForgotPinScreen(key: args.key),
         settings: data,
       );
@@ -793,7 +802,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ResetPinScreenArguments>(
         orElse: () => const ResetPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i12.ResetPinScreen(key: args.key, phone: args.phone),
         settings: data,
@@ -803,7 +812,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SuccessScreenArguments>(
         orElse: () => const SuccessScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i13.SuccessScreen(key: args.key),
         settings: data,
       );
@@ -812,7 +821,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ProfileScreenArguments>(
         orElse: () => const ProfileScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i14.ProfileScreen(key: args.key),
         settings: data,
       );
@@ -821,7 +830,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyProfileScreenArguments>(
         orElse: () => const PharmacyProfileScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i15.PharmacyProfileScreen(key: args.key),
         settings: data,
       );
@@ -830,7 +839,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ProfileInfoScreenArguments>(
         orElse: () => const ProfileInfoScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i16.ProfileInfoScreen(key: args.key),
         settings: data,
       );
@@ -839,7 +848,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyProfileInfoScreenArguments>(
         orElse: () => const PharmacyProfileInfoScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i17.PharmacyProfileInfoScreen(key: args.key),
         settings: data,
       );
@@ -848,7 +857,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SupportScreenArguments>(
         orElse: () => const SupportScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i18.SupportScreen(key: args.key),
         settings: data,
       );
@@ -857,7 +866,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<ResetPinPadScreenArguments>(
         orElse: () => const ResetPinPadScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i19.ResetPinPadScreen(key: args.key),
         settings: data,
       );
@@ -866,7 +875,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareResetPinPadScreenArguments>(
         orElse: () => const HealthCareResetPinPadScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i20.HealthCareResetPinPadScreen(key: args.key),
         settings: data,
       );
@@ -875,7 +884,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyResetPinPadScreenArguments>(
         orElse: () => const PharmacyResetPinPadScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i21.PharmacyResetPinPadScreen(key: args.key),
         settings: data,
       );
@@ -884,7 +893,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<AskMeScreenArguments>(
         orElse: () => const AskMeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i22.AskMeScreen(
           key: args.key,
           inText: args.inText,
@@ -897,7 +906,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<EmptyNotificationArguments>(
         orElse: () => const EmptyNotificationArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i23.EmptyNotification(key: args.key),
         settings: data,
       );
@@ -906,7 +915,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<FaqScreenArguments>(
         orElse: () => const FaqScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i24.FaqScreen(key: args.key),
         settings: data,
       );
@@ -915,7 +924,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SplashScreenArguments>(
         orElse: () => const SplashScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i25.SplashScreen(key: args.key),
         settings: data,
       );
@@ -924,7 +933,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<WalletScreenArguments>(
         orElse: () => const WalletScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i26.WalletScreen(key: args.key),
         settings: data,
       );
@@ -933,7 +942,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<TransactionScreenArguments>(
         orElse: () => const TransactionScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i27.TransactionScreen(key: args.key),
         settings: data,
       );
@@ -942,7 +951,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<FundScreenArguments>(
         orElse: () => const FundScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i28.FundScreen(key: args.key),
         settings: data,
       );
@@ -951,7 +960,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<FundWalletPayScreenArguments>(
         orElse: () => const FundWalletPayScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i29.FundWalletPayScreen(
           key: args.key,
           screenName: args.screenName,
@@ -962,7 +971,7 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i30.PaymentStatusScreen: (data) {
       final args = data.getArgs<PaymentStatusScreenArguments>(nullOk: false);
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i30.PaymentStatusScreen(
           key: args.key,
           isSuccessful: args.isSuccessful,
@@ -973,7 +982,7 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i31.ViewMedicationScreen: (data) {
       final args = data.getArgs<ViewMedicationScreenArguments>(nullOk: false);
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i31.ViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
@@ -983,7 +992,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmViewMedicationScreenArguments>(
         nullOk: false,
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i32.PharmViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
@@ -993,7 +1002,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacySignUpScreenArguments>(
         orElse: () => const PharmacySignUpScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i33.PharmacySignUpScreen(key: args.key),
         settings: data,
       );
@@ -1002,7 +1011,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacySetupPinScreenArguments>(
         orElse: () => const PharmacySetupPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i34.PharmacySetupPinScreen(key: args.key),
         settings: data,
       );
@@ -1011,7 +1020,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyLoginScreenArguments>(
         orElse: () => const PharmacyLoginScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i35.PharmacyLoginScreen(key: args.key),
         settings: data,
       );
@@ -1020,7 +1029,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyChangePhoneNumberArguments>(
         nullOk: false,
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i36.PharmacyChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
@@ -1030,7 +1039,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyForgotPinScreenArguments>(
         orElse: () => const PharmacyForgotPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i37.PharmacyForgotPinScreen(key: args.key),
         settings: data,
       );
@@ -1039,7 +1048,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyResetPinScreenArguments>(
         orElse: () => const PharmacyResetPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i38.PharmacyResetPinScreen(
           key: args.key,
           phone: args.phone,
@@ -1052,7 +1061,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacyWelcomeScreenArguments>(
         orElse: () => const PharmacyWelcomeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i39.PharmacyWelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
@@ -1062,7 +1071,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<KycScreenArguments>(
         orElse: () => const KycScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i40.KycScreen(key: args.key),
         settings: data,
       );
@@ -1071,7 +1080,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HMOKycScreenArguments>(
         orElse: () => const HMOKycScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i41.HMOKycScreen(key: args.key),
         settings: data,
       );
@@ -1080,7 +1089,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareKycScreenArguments>(
         orElse: () => const HealthCareKycScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i42.HealthCareKycScreen(key: args.key),
         settings: data,
       );
@@ -1089,7 +1098,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmacySettingScreenArguments>(
         orElse: () => const PharmacySettingScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i43.PharmacySettingScreen(key: args.key),
         settings: data,
       );
@@ -1098,7 +1107,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<PharmResetSuccessScreenArguments>(
         orElse: () => const PharmResetSuccessScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i44.PharmResetSuccessScreen(key: args.key),
         settings: data,
       );
@@ -1107,7 +1116,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<UsersScreenArguments>(
         orElse: () => const UsersScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i45.UsersScreen(key: args.key),
         settings: data,
       );
@@ -1116,7 +1125,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<DoctorScreenArguments>(
         orElse: () => const DoctorScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i46.DoctorScreen(key: args.key),
         settings: data,
       );
@@ -1125,7 +1134,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<RolesAndPermissionScreenArguments>(
         orElse: () => const RolesAndPermissionScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i47.RolesAndPermissionScreen(key: args.key),
         settings: data,
       );
@@ -1134,7 +1143,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareRolesAndPermissionScreenArguments>(
         orElse: () => const HealthCareRolesAndPermissionScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i48.HealthCareRolesAndPermissionScreen(key: args.key),
         settings: data,
@@ -1146,7 +1155,7 @@ class StackedRouter extends _i1.RouterBase {
             orElse: () =>
                 const HealthCareHospitalAndClinicSignUpScreenArguments(),
           );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i49.HealthCareHospitalAndClinicSignUpScreen(key: args.key),
         settings: data,
@@ -1157,7 +1166,7 @@ class StackedRouter extends _i1.RouterBase {
           .getArgs<HealthCareDoctorSpecialistSignUpScreenArguments>(
             nullOk: false,
           );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i50.HealthCareDoctorSpecialistSignUpScreen(
           key: args.key,
           healthCareType: args.healthCareType,
@@ -1170,7 +1179,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareLoginScreenArguments>(
         orElse: () => const HealthCareLoginScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i51.HealthCareLoginScreen(key: args.key),
         settings: data,
       );
@@ -1179,7 +1188,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareChangePhoneNumberArguments>(
         nullOk: false,
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i52.HealthCareChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
@@ -1189,7 +1198,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareForgotPinScreenArguments>(
         orElse: () => const HealthCareForgotPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i53.HealthCareForgotPinScreen(key: args.key),
         settings: data,
       );
@@ -1198,7 +1207,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareResetPinScreenArguments>(
         orElse: () => const HealthCareResetPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i54.HealthCareResetPinScreen(
           key: args.key,
           phone: args.phone,
@@ -1211,7 +1220,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareResetSuccessScreenArguments>(
         orElse: () => const HealthCareResetSuccessScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i55.HealthCareResetSuccessScreen(key: args.key),
         settings: data,
       );
@@ -1220,7 +1229,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareSetupPinScreenArguments>(
         orElse: () => const HealthCareSetupPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i56.HealthCareSetupPinScreen(key: args.key),
         settings: data,
       );
@@ -1229,7 +1238,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareWelcomeScreenArguments>(
         orElse: () => const HealthCareWelcomeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i57.HealthCareWelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
@@ -1239,7 +1248,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<BusinessProviderDashboardArguments>(
         orElse: () => const BusinessProviderDashboardArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i58.BusinessProviderDashboard(key: args.key, index: args.index),
         settings: data,
@@ -1249,7 +1258,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<BusinessProvidersHomeScreenArguments>(
         orElse: () => const BusinessProvidersHomeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i59.BusinessProvidersHomeScreen(key: args.key),
         settings: data,
       );
@@ -1258,7 +1267,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SpecialistsProviderDashboardArguments>(
         orElse: () => const SpecialistsProviderDashboardArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i60.SpecialistsProviderDashboard(key: args.key, index: args.index),
         settings: data,
@@ -1268,7 +1277,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<SpecialistsProvidersHomeScreenArguments>(
         orElse: () => const SpecialistsProvidersHomeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i61.SpecialistsProvidersHomeScreen(key: args.key),
         settings: data,
@@ -1278,7 +1287,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HMODashboardArguments>(
         orElse: () => const HMODashboardArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i62.HMODashboard(key: args.key, index: args.index),
         settings: data,
@@ -1288,7 +1297,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HMOHomeScreenArguments>(
         orElse: () => const HMOHomeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i63.HMOHomeScreen(key: args.key),
         settings: data,
       );
@@ -1297,7 +1306,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareProfileInfoScreenArguments>(
         orElse: () => const HealthCareProfileInfoScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i64.HealthCareProfileInfoScreen(key: args.key),
         settings: data,
       );
@@ -1306,7 +1315,7 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareProfileScreenArguments>(
         orElse: () => const HealthCareProfileScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i65.HealthCareProfileScreen(key: args.key),
         settings: data,
       );
@@ -1315,14 +1324,14 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<HealthCareSettingScreenArguments>(
         orElse: () => const HealthCareSettingScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) => _i66.HealthCareSettingScreen(key: args.key),
         settings: data,
       );
     },
     _i67.AcceleratePaymentView: (data) {
       final args = data.getArgs<AcceleratePaymentViewArguments>(nullOk: false);
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i67.AcceleratePaymentView(key: args.key, url: args.url),
         settings: data,
@@ -1332,77 +1341,87 @@ class StackedRouter extends _i1.RouterBase {
       final args = data.getArgs<AcceleratePaymentViewPharmacyArguments>(
         nullOk: false,
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
             _i68.AcceleratePaymentViewPharmacy(key: args.key, url: args.url),
         settings: data,
       );
     },
-    _i69.HealthCarePractitionerProfileInfoScreen: (data) {
+    _i69.AcceleratePaymentViewWallet: (data) {
+      final args = data.getArgs<AcceleratePaymentViewWalletArguments>(
+        nullOk: false,
+      );
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) =>
+            _i69.AcceleratePaymentViewWallet(key: args.key, url: args.url),
+        settings: data,
+      );
+    },
+    _i70.HealthCarePractitionerProfileInfoScreen: (data) {
       final args = data
           .getArgs<HealthCarePractitionerProfileInfoScreenArguments>(
             orElse: () =>
                 const HealthCarePractitionerProfileInfoScreenArguments(),
           );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i69.HealthCarePractitionerProfileInfoScreen(key: args.key),
+            _i70.HealthCarePractitionerProfileInfoScreen(key: args.key),
         settings: data,
       );
     },
-    _i70.HealthCarePractitionerProfileScreen: (data) {
+    _i71.HealthCarePractitionerProfileScreen: (data) {
       final args = data.getArgs<HealthCarePractitionerProfileScreenArguments>(
         orElse: () => const HealthCarePractitionerProfileScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i70.HealthCarePractitionerProfileScreen(key: args.key),
+            _i71.HealthCarePractitionerProfileScreen(key: args.key),
         settings: data,
       );
     },
-    _i71.HMOWelcomeScreen: (data) {
+    _i72.HMOWelcomeScreen: (data) {
       final args = data.getArgs<HMOWelcomeScreenArguments>(
         orElse: () => const HMOWelcomeScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i71.HMOWelcomeScreen(key: args.key, phone: args.phone),
+            _i72.HMOWelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
       );
     },
-    _i72.HMOSignUpScreen: (data) {
+    _i73.HMOSignUpScreen: (data) {
       final args = data.getArgs<HMOSignUpScreenArguments>(
         orElse: () => const HMOSignUpScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i72.HMOSignUpScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i73.HMOSignUpScreen(key: args.key),
         settings: data,
       );
     },
-    _i73.HMOSetupPinScreen: (data) {
+    _i74.HMOSetupPinScreen: (data) {
       final args = data.getArgs<HMOSetupPinScreenArguments>(
         orElse: () => const HMOSetupPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i73.HMOSetupPinScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i74.HMOSetupPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i74.HMOResetSuccessScreen: (data) {
+    _i75.HMOResetSuccessScreen: (data) {
       final args = data.getArgs<HMOResetSuccessScreenArguments>(
         orElse: () => const HMOResetSuccessScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i74.HMOResetSuccessScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i75.HMOResetSuccessScreen(key: args.key),
         settings: data,
       );
     },
-    _i75.HMOResetPinScreen: (data) {
+    _i76.HMOResetPinScreen: (data) {
       final args = data.getArgs<HMOResetPinScreenArguments>(
         orElse: () => const HMOResetPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i75.HMOResetPinScreen(
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i76.HMOResetPinScreen(
           key: args.key,
           phone: args.phone,
           resetToken: args.resetToken,
@@ -1410,110 +1429,110 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i76.HMOLoginScreen: (data) {
+    _i77.HMOLoginScreen: (data) {
       final args = data.getArgs<HMOLoginScreenArguments>(
         orElse: () => const HMOLoginScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i76.HMOLoginScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i77.HMOLoginScreen(key: args.key),
         settings: data,
       );
     },
-    _i77.HMOForgotPinScreen: (data) {
+    _i78.HMOForgotPinScreen: (data) {
       final args = data.getArgs<HMOForgotPinScreenArguments>(
         orElse: () => const HMOForgotPinScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i77.HMOForgotPinScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i78.HMOForgotPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i78.HMOChangePhoneNumber: (data) {
+    _i79.HMOChangePhoneNumber: (data) {
       final args = data.getArgs<HMOChangePhoneNumberArguments>(nullOk: false);
-      return _i95.MaterialPageRoute<dynamic>(
+      return _i96.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i78.HMOChangePhoneNumber(key: args.key, id: args.id),
+            _i79.HMOChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
       );
     },
-    _i79.HMOProfileInfoScreen: (data) {
+    _i80.HMOProfileInfoScreen: (data) {
       final args = data.getArgs<HMOProfileInfoScreenArguments>(
         orElse: () => const HMOProfileInfoScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i79.HMOProfileInfoScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i80.HMOProfileInfoScreen(key: args.key),
         settings: data,
       );
     },
-    _i80.HMOProfileScreen: (data) {
+    _i81.HMOProfileScreen: (data) {
       final args = data.getArgs<HMOProfileScreenArguments>(
         orElse: () => const HMOProfileScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i80.HMOProfileScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i81.HMOProfileScreen(key: args.key),
         settings: data,
       );
     },
-    _i81.HMOResetPinPadScreen: (data) {
+    _i82.HMOResetPinPadScreen: (data) {
       final args = data.getArgs<HMOResetPinPadScreenArguments>(
         orElse: () => const HMOResetPinPadScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i81.HMOResetPinPadScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i82.HMOResetPinPadScreen(key: args.key),
         settings: data,
       );
     },
-    _i82.HMOSettingScreen: (data) {
+    _i83.HMOSettingScreen: (data) {
       final args = data.getArgs<HMOSettingScreenArguments>(
         orElse: () => const HMOSettingScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i82.HMOSettingScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i83.HMOSettingScreen(key: args.key),
         settings: data,
       );
     },
-    _i83.HMORolesAndPermissionScreen: (data) {
+    _i84.HMORolesAndPermissionScreen: (data) {
       final args = data.getArgs<HMORolesAndPermissionScreenArguments>(
         orElse: () => const HMORolesAndPermissionScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i83.HMORolesAndPermissionScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i84.HMORolesAndPermissionScreen(key: args.key),
         settings: data,
       );
     },
-    _i84.HMOUsersScreen: (data) {
+    _i85.HMOUsersScreen: (data) {
       final args = data.getArgs<HMOUsersScreenArguments>(
         orElse: () => const HMOUsersScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i84.HMOUsersScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i85.HMOUsersScreen(key: args.key),
         settings: data,
       );
     },
-    _i85.ProHealthSubScreen: (data) {
+    _i86.ProHealthSubScreen: (data) {
       final args = data.getArgs<ProHealthSubScreenArguments>(
         orElse: () => const ProHealthSubScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i85.ProHealthSubScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i86.ProHealthSubScreen(key: args.key),
         settings: data,
       );
     },
-    _i86.ApplicationFormScreen: (data) {
+    _i87.ApplicationFormScreen: (data) {
       final args = data.getArgs<ApplicationFormScreenArguments>(
         orElse: () => const ApplicationFormScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i86.ApplicationFormScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i87.ApplicationFormScreen(key: args.key),
         settings: data,
       );
     },
-    _i87.SubsribersScreen: (data) {
+    _i88.SubsribersScreen: (data) {
       final args = data.getArgs<SubsribersScreenArguments>(
         orElse: () => const SubsribersScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i87.SubsribersScreen(
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i88.SubsribersScreen(
           key: args.key,
           isSubStatus: args.isSubStatus,
           mySubPlans: args.mySubPlans,
@@ -1521,83 +1540,83 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i88.FamilyFormScreen: (data) {
+    _i89.FamilyFormScreen: (data) {
       final args = data.getArgs<FamilyFormScreenArguments>(
         orElse: () => const FamilyFormScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i88.FamilyFormScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i89.FamilyFormScreen(key: args.key),
         settings: data,
       );
     },
-    _i89.CoorporateFormScreen: (data) {
+    _i90.CoorporateFormScreen: (data) {
       final args = data.getArgs<CoorporateFormScreenArguments>(
         orElse: () => const CoorporateFormScreenArguments(),
       );
-      return _i95.MaterialPageRoute<dynamic>(
-        builder: (context) => _i89.CoorporateFormScreen(key: args.key),
+      return _i96.MaterialPageRoute<dynamic>(
+        builder: (context) => _i90.CoorporateFormScreen(key: args.key),
         settings: data,
       );
     },
-    _i90.MoreScreen: (data) {
+    _i91.MoreScreen: (data) {
       final args = data.getArgs<MoreScreenArguments>(
         orElse: () => const MoreScreenArguments(),
       );
-      return _i95.PageRouteBuilder<dynamic>(
+      return _i96.PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            _i90.MoreScreen(key: args.key),
+            _i91.MoreScreen(key: args.key),
         settings: data,
         transitionsBuilder:
             data.transition ?? _i1.TransitionsBuilders.slideRight,
         transitionDuration: const Duration(milliseconds: 300),
       );
     },
-    _i91.PharmMoreScreen: (data) {
+    _i92.PharmMoreScreen: (data) {
       final args = data.getArgs<PharmMoreScreenArguments>(
         orElse: () => const PharmMoreScreenArguments(),
       );
-      return _i95.PageRouteBuilder<dynamic>(
+      return _i96.PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            _i91.PharmMoreScreen(key: args.key),
+            _i92.PharmMoreScreen(key: args.key),
         settings: data,
         transitionsBuilder:
             data.transition ?? _i1.TransitionsBuilders.slideRight,
         transitionDuration: const Duration(milliseconds: 300),
       );
     },
-    _i92.BusinessProvidersMoreScreen: (data) {
+    _i93.BusinessProvidersMoreScreen: (data) {
       final args = data.getArgs<BusinessProvidersMoreScreenArguments>(
         orElse: () => const BusinessProvidersMoreScreenArguments(),
       );
-      return _i95.PageRouteBuilder<dynamic>(
+      return _i96.PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            _i92.BusinessProvidersMoreScreen(key: args.key),
+            _i93.BusinessProvidersMoreScreen(key: args.key),
         settings: data,
         transitionsBuilder:
             data.transition ?? _i1.TransitionsBuilders.slideRight,
         transitionDuration: const Duration(milliseconds: 300),
       );
     },
-    _i93.SpecialistsProvidersMoreScreen: (data) {
+    _i94.SpecialistsProvidersMoreScreen: (data) {
       final args = data.getArgs<SpecialistsProvidersMoreScreenArguments>(
         orElse: () => const SpecialistsProvidersMoreScreenArguments(),
       );
-      return _i95.PageRouteBuilder<dynamic>(
+      return _i96.PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            _i93.SpecialistsProvidersMoreScreen(key: args.key),
+            _i94.SpecialistsProvidersMoreScreen(key: args.key),
         settings: data,
         transitionsBuilder:
             data.transition ?? _i1.TransitionsBuilders.slideRight,
         transitionDuration: const Duration(milliseconds: 300),
       );
     },
-    _i94.HMOMoreScreen: (data) {
+    _i95.HMOMoreScreen: (data) {
       final args = data.getArgs<HMOMoreScreenArguments>(
         orElse: () => const HMOMoreScreenArguments(),
       );
-      return _i95.PageRouteBuilder<dynamic>(
+      return _i96.PageRouteBuilder<dynamic>(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            _i94.HMOMoreScreen(key: args.key),
+            _i95.HMOMoreScreen(key: args.key),
         settings: data,
         transitionsBuilder:
             data.transition ?? _i1.TransitionsBuilders.slideRight,
@@ -1622,7 +1641,7 @@ class DashboardArguments {
     this.mySubPlans,
   });
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final int? index;
 
@@ -1660,7 +1679,7 @@ class DashboardArguments {
 class PharmacyDashboardArguments {
   const PharmacyDashboardArguments({this.key, this.index});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final int? index;
 
@@ -1684,7 +1703,7 @@ class PharmacyDashboardArguments {
 class RoleOnboardingArguments {
   const RoleOnboardingArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1706,7 +1725,7 @@ class RoleOnboardingArguments {
 class GetStartedOnboardingArguments {
   const GetStartedOnboardingArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1728,7 +1747,7 @@ class GetStartedOnboardingArguments {
 class SignUpScreenArguments {
   const SignUpScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1750,7 +1769,7 @@ class SignUpScreenArguments {
 class ChangePhoneNumberArguments {
   const ChangePhoneNumberArguments({this.key, required this.id});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? id;
 
@@ -1774,7 +1793,7 @@ class ChangePhoneNumberArguments {
 class SetupPinScreenArguments {
   const SetupPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1796,7 +1815,7 @@ class SetupPinScreenArguments {
 class LoginScreenArguments {
   const LoginScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1818,7 +1837,7 @@ class LoginScreenArguments {
 class WelcomeScreenArguments {
   const WelcomeScreenArguments({this.key, this.phone});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -1842,7 +1861,7 @@ class WelcomeScreenArguments {
 class ForgotPinScreenArguments {
   const ForgotPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1864,7 +1883,7 @@ class ForgotPinScreenArguments {
 class ResetPinScreenArguments {
   const ResetPinScreenArguments({this.key, this.phone});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -1888,7 +1907,7 @@ class ResetPinScreenArguments {
 class SuccessScreenArguments {
   const SuccessScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1910,7 +1929,7 @@ class SuccessScreenArguments {
 class ProfileScreenArguments {
   const ProfileScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1932,7 +1951,7 @@ class ProfileScreenArguments {
 class PharmacyProfileScreenArguments {
   const PharmacyProfileScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1954,7 +1973,7 @@ class PharmacyProfileScreenArguments {
 class ProfileInfoScreenArguments {
   const ProfileInfoScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1976,7 +1995,7 @@ class ProfileInfoScreenArguments {
 class PharmacyProfileInfoScreenArguments {
   const PharmacyProfileInfoScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -1998,7 +2017,7 @@ class PharmacyProfileInfoScreenArguments {
 class SupportScreenArguments {
   const SupportScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2020,7 +2039,7 @@ class SupportScreenArguments {
 class ResetPinPadScreenArguments {
   const ResetPinPadScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2042,7 +2061,7 @@ class ResetPinPadScreenArguments {
 class HealthCareResetPinPadScreenArguments {
   const HealthCareResetPinPadScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2064,7 +2083,7 @@ class HealthCareResetPinPadScreenArguments {
 class PharmacyResetPinPadScreenArguments {
   const PharmacyResetPinPadScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2086,7 +2105,7 @@ class PharmacyResetPinPadScreenArguments {
 class AskMeScreenArguments {
   const AskMeScreenArguments({this.key, this.inText, this.isDashboard = false});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? inText;
 
@@ -2114,7 +2133,7 @@ class AskMeScreenArguments {
 class EmptyNotificationArguments {
   const EmptyNotificationArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2136,7 +2155,7 @@ class EmptyNotificationArguments {
 class FaqScreenArguments {
   const FaqScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2158,7 +2177,7 @@ class FaqScreenArguments {
 class SplashScreenArguments {
   const SplashScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2180,7 +2199,7 @@ class SplashScreenArguments {
 class WalletScreenArguments {
   const WalletScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2202,7 +2221,7 @@ class WalletScreenArguments {
 class TransactionScreenArguments {
   const TransactionScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2224,7 +2243,7 @@ class TransactionScreenArguments {
 class FundScreenArguments {
   const FundScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2246,7 +2265,7 @@ class FundScreenArguments {
 class FundWalletPayScreenArguments {
   const FundWalletPayScreenArguments({this.key, this.screenName, this.amount});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? screenName;
 
@@ -2278,7 +2297,7 @@ class PaymentStatusScreenArguments {
     required this.isUserType,
   });
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final bool isSuccessful;
 
@@ -2306,7 +2325,7 @@ class PaymentStatusScreenArguments {
 class ViewMedicationScreenArguments {
   const ViewMedicationScreenArguments({this.key, required this.id});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? id;
 
@@ -2330,7 +2349,7 @@ class ViewMedicationScreenArguments {
 class PharmViewMedicationScreenArguments {
   const PharmViewMedicationScreenArguments({this.key, required this.id});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? id;
 
@@ -2354,7 +2373,7 @@ class PharmViewMedicationScreenArguments {
 class PharmacySignUpScreenArguments {
   const PharmacySignUpScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2376,7 +2395,7 @@ class PharmacySignUpScreenArguments {
 class PharmacySetupPinScreenArguments {
   const PharmacySetupPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2398,7 +2417,7 @@ class PharmacySetupPinScreenArguments {
 class PharmacyLoginScreenArguments {
   const PharmacyLoginScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2420,7 +2439,7 @@ class PharmacyLoginScreenArguments {
 class PharmacyChangePhoneNumberArguments {
   const PharmacyChangePhoneNumberArguments({this.key, required this.id});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? id;
 
@@ -2444,7 +2463,7 @@ class PharmacyChangePhoneNumberArguments {
 class PharmacyForgotPinScreenArguments {
   const PharmacyForgotPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2470,7 +2489,7 @@ class PharmacyResetPinScreenArguments {
     this.resetToken,
   });
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -2498,7 +2517,7 @@ class PharmacyResetPinScreenArguments {
 class PharmacyWelcomeScreenArguments {
   const PharmacyWelcomeScreenArguments({this.key, this.phone});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -2522,7 +2541,7 @@ class PharmacyWelcomeScreenArguments {
 class KycScreenArguments {
   const KycScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2544,7 +2563,7 @@ class KycScreenArguments {
 class HMOKycScreenArguments {
   const HMOKycScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2566,7 +2585,7 @@ class HMOKycScreenArguments {
 class HealthCareKycScreenArguments {
   const HealthCareKycScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2588,7 +2607,7 @@ class HealthCareKycScreenArguments {
 class PharmacySettingScreenArguments {
   const PharmacySettingScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2610,7 +2629,7 @@ class PharmacySettingScreenArguments {
 class PharmResetSuccessScreenArguments {
   const PharmResetSuccessScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2632,7 +2651,7 @@ class PharmResetSuccessScreenArguments {
 class UsersScreenArguments {
   const UsersScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2654,7 +2673,7 @@ class UsersScreenArguments {
 class DoctorScreenArguments {
   const DoctorScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2676,7 +2695,7 @@ class DoctorScreenArguments {
 class RolesAndPermissionScreenArguments {
   const RolesAndPermissionScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2698,7 +2717,7 @@ class RolesAndPermissionScreenArguments {
 class HealthCareRolesAndPermissionScreenArguments {
   const HealthCareRolesAndPermissionScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2722,7 +2741,7 @@ class HealthCareRolesAndPermissionScreenArguments {
 class HealthCareHospitalAndClinicSignUpScreenArguments {
   const HealthCareHospitalAndClinicSignUpScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2750,7 +2769,7 @@ class HealthCareDoctorSpecialistSignUpScreenArguments {
     required this.healthCareArea,
   });
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? healthCareType;
 
@@ -2780,7 +2799,7 @@ class HealthCareDoctorSpecialistSignUpScreenArguments {
 class HealthCareLoginScreenArguments {
   const HealthCareLoginScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2802,7 +2821,7 @@ class HealthCareLoginScreenArguments {
 class HealthCareChangePhoneNumberArguments {
   const HealthCareChangePhoneNumberArguments({this.key, required this.id});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? id;
 
@@ -2826,7 +2845,7 @@ class HealthCareChangePhoneNumberArguments {
 class HealthCareForgotPinScreenArguments {
   const HealthCareForgotPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2852,7 +2871,7 @@ class HealthCareResetPinScreenArguments {
     this.resetToken,
   });
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -2880,7 +2899,7 @@ class HealthCareResetPinScreenArguments {
 class HealthCareResetSuccessScreenArguments {
   const HealthCareResetSuccessScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2902,7 +2921,7 @@ class HealthCareResetSuccessScreenArguments {
 class HealthCareSetupPinScreenArguments {
   const HealthCareSetupPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2924,7 +2943,7 @@ class HealthCareSetupPinScreenArguments {
 class HealthCareWelcomeScreenArguments {
   const HealthCareWelcomeScreenArguments({this.key, this.phone});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -2948,7 +2967,7 @@ class HealthCareWelcomeScreenArguments {
 class BusinessProviderDashboardArguments {
   const BusinessProviderDashboardArguments({this.key, this.index});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final int? index;
 
@@ -2972,7 +2991,7 @@ class BusinessProviderDashboardArguments {
 class BusinessProvidersHomeScreenArguments {
   const BusinessProvidersHomeScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -2994,7 +3013,7 @@ class BusinessProvidersHomeScreenArguments {
 class SpecialistsProviderDashboardArguments {
   const SpecialistsProviderDashboardArguments({this.key, this.index});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final int? index;
 
@@ -3018,7 +3037,7 @@ class SpecialistsProviderDashboardArguments {
 class SpecialistsProvidersHomeScreenArguments {
   const SpecialistsProvidersHomeScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3040,7 +3059,7 @@ class SpecialistsProvidersHomeScreenArguments {
 class HMODashboardArguments {
   const HMODashboardArguments({this.key, this.index});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final int? index;
 
@@ -3064,7 +3083,7 @@ class HMODashboardArguments {
 class HMOHomeScreenArguments {
   const HMOHomeScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3086,7 +3105,7 @@ class HMOHomeScreenArguments {
 class HealthCareProfileInfoScreenArguments {
   const HealthCareProfileInfoScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3108,7 +3127,7 @@ class HealthCareProfileInfoScreenArguments {
 class HealthCareProfileScreenArguments {
   const HealthCareProfileScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3130,7 +3149,7 @@ class HealthCareProfileScreenArguments {
 class HealthCareSettingScreenArguments {
   const HealthCareSettingScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3152,7 +3171,7 @@ class HealthCareSettingScreenArguments {
 class AcceleratePaymentViewArguments {
   const AcceleratePaymentViewArguments({this.key, required this.url});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? url;
 
@@ -3176,7 +3195,7 @@ class AcceleratePaymentViewArguments {
 class AcceleratePaymentViewPharmacyArguments {
   const AcceleratePaymentViewPharmacyArguments({this.key, required this.url});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? url;
 
@@ -3197,10 +3216,34 @@ class AcceleratePaymentViewPharmacyArguments {
   }
 }
 
+class AcceleratePaymentViewWalletArguments {
+  const AcceleratePaymentViewWalletArguments({this.key, required this.url});
+
+  final _i96.Key? key;
+
+  final String? url;
+
+  @override
+  String toString() {
+    return '{"key": "$key", "url": "$url"}';
+  }
+
+  @override
+  bool operator ==(covariant AcceleratePaymentViewWalletArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key && other.url == url;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode ^ url.hashCode;
+  }
+}
+
 class HealthCarePractitionerProfileInfoScreenArguments {
   const HealthCarePractitionerProfileInfoScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3224,7 +3267,7 @@ class HealthCarePractitionerProfileInfoScreenArguments {
 class HealthCarePractitionerProfileScreenArguments {
   const HealthCarePractitionerProfileScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3248,7 +3291,7 @@ class HealthCarePractitionerProfileScreenArguments {
 class HMOWelcomeScreenArguments {
   const HMOWelcomeScreenArguments({this.key, this.phone});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -3272,7 +3315,7 @@ class HMOWelcomeScreenArguments {
 class HMOSignUpScreenArguments {
   const HMOSignUpScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3294,7 +3337,7 @@ class HMOSignUpScreenArguments {
 class HMOSetupPinScreenArguments {
   const HMOSetupPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3316,7 +3359,7 @@ class HMOSetupPinScreenArguments {
 class HMOResetSuccessScreenArguments {
   const HMOResetSuccessScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3338,7 +3381,7 @@ class HMOResetSuccessScreenArguments {
 class HMOResetPinScreenArguments {
   const HMOResetPinScreenArguments({this.key, this.phone, this.resetToken});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? phone;
 
@@ -3366,7 +3409,7 @@ class HMOResetPinScreenArguments {
 class HMOLoginScreenArguments {
   const HMOLoginScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3388,7 +3431,7 @@ class HMOLoginScreenArguments {
 class HMOForgotPinScreenArguments {
   const HMOForgotPinScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3410,7 +3453,7 @@ class HMOForgotPinScreenArguments {
 class HMOChangePhoneNumberArguments {
   const HMOChangePhoneNumberArguments({this.key, required this.id});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? id;
 
@@ -3434,7 +3477,7 @@ class HMOChangePhoneNumberArguments {
 class HMOProfileInfoScreenArguments {
   const HMOProfileInfoScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3456,7 +3499,7 @@ class HMOProfileInfoScreenArguments {
 class HMOProfileScreenArguments {
   const HMOProfileScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3478,7 +3521,7 @@ class HMOProfileScreenArguments {
 class HMOResetPinPadScreenArguments {
   const HMOResetPinPadScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3500,7 +3543,7 @@ class HMOResetPinPadScreenArguments {
 class HMOSettingScreenArguments {
   const HMOSettingScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3522,7 +3565,7 @@ class HMOSettingScreenArguments {
 class HMORolesAndPermissionScreenArguments {
   const HMORolesAndPermissionScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3544,7 +3587,7 @@ class HMORolesAndPermissionScreenArguments {
 class HMOUsersScreenArguments {
   const HMOUsersScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3566,7 +3609,7 @@ class HMOUsersScreenArguments {
 class ProHealthSubScreenArguments {
   const ProHealthSubScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3588,7 +3631,7 @@ class ProHealthSubScreenArguments {
 class ApplicationFormScreenArguments {
   const ApplicationFormScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3614,7 +3657,7 @@ class SubsribersScreenArguments {
     this.mySubPlans,
   });
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   final String? isSubStatus;
 
@@ -3642,7 +3685,7 @@ class SubsribersScreenArguments {
 class FamilyFormScreenArguments {
   const FamilyFormScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3664,7 +3707,7 @@ class FamilyFormScreenArguments {
 class CoorporateFormScreenArguments {
   const CoorporateFormScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3686,7 +3729,7 @@ class CoorporateFormScreenArguments {
 class MoreScreenArguments {
   const MoreScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3708,7 +3751,7 @@ class MoreScreenArguments {
 class PharmMoreScreenArguments {
   const PharmMoreScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3730,7 +3773,7 @@ class PharmMoreScreenArguments {
 class BusinessProvidersMoreScreenArguments {
   const BusinessProvidersMoreScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3752,7 +3795,7 @@ class BusinessProvidersMoreScreenArguments {
 class SpecialistsProvidersMoreScreenArguments {
   const SpecialistsProvidersMoreScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3774,7 +3817,7 @@ class SpecialistsProvidersMoreScreenArguments {
 class HMOMoreScreenArguments {
   const HMOMoreScreenArguments({this.key});
 
-  final _i95.Key? key;
+  final _i96.Key? key;
 
   @override
   String toString() {
@@ -3793,9 +3836,9 @@ class HMOMoreScreenArguments {
   }
 }
 
-extension NavigatorStateExtension on _i96.NavigationService {
+extension NavigatorStateExtension on _i97.NavigationService {
   Future<dynamic> navigateToDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     bool? isTapHMOPlan,
     String? isSubStatus,
@@ -3823,7 +3866,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -3842,7 +3885,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToRoleOnboarding({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3860,7 +3903,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToGetStartedOnboarding({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3878,7 +3921,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3896,7 +3939,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -3915,7 +3958,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3933,7 +3976,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3951,7 +3994,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -3970,7 +4013,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -3988,7 +4031,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -4007,7 +4050,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4025,7 +4068,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4043,7 +4086,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4061,7 +4104,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4079,7 +4122,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4097,7 +4140,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSupportScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4115,7 +4158,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4133,7 +4176,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4151,7 +4194,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4169,7 +4212,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToAskMeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? inText,
     bool? isDashboard = false,
     int? routerId,
@@ -4193,7 +4236,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToEmptyNotification({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4211,7 +4254,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToFaqScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4229,7 +4272,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSplashScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4247,7 +4290,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToWalletScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4265,7 +4308,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToTransactionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4283,7 +4326,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToFundScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4301,7 +4344,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToFundWalletPayScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? screenName,
     String? amount,
     int? routerId,
@@ -4325,7 +4368,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPaymentStatusScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required bool isSuccessful,
     required String? isUserType,
     int? routerId,
@@ -4349,7 +4392,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToViewMedicationScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -4368,7 +4411,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmViewMedicationScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -4387,7 +4430,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacySignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4405,7 +4448,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacySetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4423,7 +4466,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4441,7 +4484,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -4460,7 +4503,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4478,7 +4521,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     String? resetToken,
     int? routerId,
@@ -4502,7 +4545,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacyWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -4521,7 +4564,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToKycScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4539,7 +4582,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOKycScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4557,7 +4600,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareKycScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4575,7 +4618,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmacySettingScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4593,7 +4636,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmResetSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4611,7 +4654,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToUsersScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4629,7 +4672,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToDoctorScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4647,7 +4690,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToRolesAndPermissionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4665,7 +4708,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareRolesAndPermissionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4683,7 +4726,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareHospitalAndClinicSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4701,7 +4744,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareDoctorSpecialistSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? healthCareType,
     required List<String>? healthCareArea,
     int? routerId,
@@ -4725,7 +4768,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4743,7 +4786,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -4762,7 +4805,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4780,7 +4823,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     String? resetToken,
     int? routerId,
@@ -4804,7 +4847,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareResetSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4822,7 +4865,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareSetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4840,7 +4883,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -4859,7 +4902,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToBusinessProviderDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -4878,7 +4921,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToBusinessProvidersHomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4896,7 +4939,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSpecialistsProviderDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -4915,7 +4958,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSpecialistsProvidersHomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4933,7 +4976,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMODashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -4952,7 +4995,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOHomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4970,7 +5013,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -4988,7 +5031,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5006,7 +5049,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCareSettingScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5024,7 +5067,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToAcceleratePaymentView({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? url,
     int? routerId,
     bool preventDuplicates = true,
@@ -5043,7 +5086,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToAcceleratePaymentViewPharmacy({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? url,
     int? routerId,
     bool preventDuplicates = true,
@@ -5061,8 +5104,27 @@ extension NavigatorStateExtension on _i96.NavigationService {
     );
   }
 
+  Future<dynamic> navigateToAcceleratePaymentViewWallet({
+    _i96.Key? key,
+    required String? url,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return navigateTo<dynamic>(
+      Routes.acceleratePaymentViewWallet,
+      arguments: AcceleratePaymentViewWalletArguments(key: key, url: url),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
   Future<dynamic> navigateToHealthCarePractitionerProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5080,7 +5142,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHealthCarePractitionerProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5098,7 +5160,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -5117,7 +5179,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5135,7 +5197,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOSetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5153,7 +5215,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOResetSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5171,7 +5233,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     String? resetToken,
     int? routerId,
@@ -5195,7 +5257,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5213,7 +5275,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5231,7 +5293,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -5250,7 +5312,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5268,7 +5330,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5286,7 +5348,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5304,7 +5366,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOSettingScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5322,7 +5384,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMORolesAndPermissionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5340,7 +5402,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOUsersScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5358,7 +5420,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToProHealthSubScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5376,7 +5438,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToApplicationFormScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5394,7 +5456,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSubsribersScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? isSubStatus,
     String? mySubPlans,
     int? routerId,
@@ -5418,7 +5480,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToFamilyFormScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5436,7 +5498,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToCoorporateFormScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5454,7 +5516,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5472,7 +5534,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToPharmMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5490,7 +5552,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToBusinessProvidersMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5508,7 +5570,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToSpecialistsProvidersMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5526,7 +5588,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> navigateToHMOMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5544,7 +5606,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     bool? isTapHMOPlan,
     String? isSubStatus,
@@ -5572,7 +5634,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -5591,7 +5653,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithRoleOnboarding({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5609,7 +5671,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithGetStartedOnboarding({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5627,7 +5689,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5645,7 +5707,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -5664,7 +5726,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5682,7 +5744,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5700,7 +5762,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -5719,7 +5781,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5737,7 +5799,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -5756,7 +5818,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5774,7 +5836,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5792,7 +5854,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5810,7 +5872,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5828,7 +5890,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5846,7 +5908,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSupportScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5864,7 +5926,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5882,7 +5944,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5900,7 +5962,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5918,7 +5980,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithAskMeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? inText,
     bool? isDashboard = false,
     int? routerId,
@@ -5942,7 +6004,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithEmptyNotification({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5960,7 +6022,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithFaqScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5978,7 +6040,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSplashScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5996,7 +6058,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithWalletScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6014,7 +6076,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithTransactionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6032,7 +6094,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithFundScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6050,7 +6112,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithFundWalletPayScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? screenName,
     String? amount,
     int? routerId,
@@ -6074,7 +6136,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPaymentStatusScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required bool isSuccessful,
     required String? isUserType,
     int? routerId,
@@ -6098,7 +6160,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithViewMedicationScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -6117,7 +6179,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmViewMedicationScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -6136,7 +6198,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacySignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6154,7 +6216,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacySetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6172,7 +6234,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6190,7 +6252,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -6209,7 +6271,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6227,7 +6289,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     String? resetToken,
     int? routerId,
@@ -6251,7 +6313,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacyWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -6270,7 +6332,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithKycScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6288,7 +6350,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOKycScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6306,7 +6368,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareKycScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6324,7 +6386,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmacySettingScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6342,7 +6404,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmResetSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6360,7 +6422,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithUsersScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6378,7 +6440,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithDoctorScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6396,7 +6458,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithRolesAndPermissionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6414,7 +6476,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareRolesAndPermissionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6432,7 +6494,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareHospitalAndClinicSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6450,7 +6512,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareDoctorSpecialistSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? healthCareType,
     required List<String>? healthCareArea,
     int? routerId,
@@ -6474,7 +6536,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6492,7 +6554,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -6511,7 +6573,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6529,7 +6591,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     String? resetToken,
     int? routerId,
@@ -6553,7 +6615,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareResetSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6571,7 +6633,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareSetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6589,7 +6651,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -6608,7 +6670,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithBusinessProviderDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -6627,7 +6689,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithBusinessProvidersHomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6645,7 +6707,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSpecialistsProviderDashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -6664,7 +6726,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSpecialistsProvidersHomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6682,7 +6744,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMODashboard({
-    _i95.Key? key,
+    _i96.Key? key,
     int? index,
     int? routerId,
     bool preventDuplicates = true,
@@ -6701,7 +6763,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOHomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6719,7 +6781,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6737,7 +6799,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6755,7 +6817,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCareSettingScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6773,7 +6835,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithAcceleratePaymentView({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? url,
     int? routerId,
     bool preventDuplicates = true,
@@ -6792,7 +6854,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithAcceleratePaymentViewPharmacy({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? url,
     int? routerId,
     bool preventDuplicates = true,
@@ -6810,8 +6872,27 @@ extension NavigatorStateExtension on _i96.NavigationService {
     );
   }
 
+  Future<dynamic> replaceWithAcceleratePaymentViewWallet({
+    _i96.Key? key,
+    required String? url,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return replaceWith<dynamic>(
+      Routes.acceleratePaymentViewWallet,
+      arguments: AcceleratePaymentViewWalletArguments(key: key, url: url),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
   Future<dynamic> replaceWithHealthCarePractitionerProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6829,7 +6910,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHealthCarePractitionerProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6847,7 +6928,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOWelcomeScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     int? routerId,
     bool preventDuplicates = true,
@@ -6866,7 +6947,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOSignUpScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6884,7 +6965,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOSetupPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6902,7 +6983,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOResetSuccessScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6920,7 +7001,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOResetPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? phone,
     String? resetToken,
     int? routerId,
@@ -6944,7 +7025,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOLoginScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6962,7 +7043,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOForgotPinScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6980,7 +7061,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOChangePhoneNumber({
-    _i95.Key? key,
+    _i96.Key? key,
     required String? id,
     int? routerId,
     bool preventDuplicates = true,
@@ -6999,7 +7080,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOProfileInfoScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7017,7 +7098,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOProfileScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7035,7 +7116,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOResetPinPadScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7053,7 +7134,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOSettingScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7071,7 +7152,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMORolesAndPermissionScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7089,7 +7170,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOUsersScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7107,7 +7188,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithProHealthSubScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7125,7 +7206,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithApplicationFormScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7143,7 +7224,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSubsribersScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     String? isSubStatus,
     String? mySubPlans,
     int? routerId,
@@ -7167,7 +7248,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithFamilyFormScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7185,7 +7266,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithCoorporateFormScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7203,7 +7284,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7221,7 +7302,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithPharmMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7239,7 +7320,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithBusinessProvidersMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7257,7 +7338,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithSpecialistsProvidersMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7275,7 +7356,7 @@ extension NavigatorStateExtension on _i96.NavigationService {
   }
 
   Future<dynamic> replaceWithHMOMoreScreen({
-    _i95.Key? key,
+    _i96.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
