@@ -13107,75 +13107,6 @@ class AuthViewModel extends BaseViewModel {
                             ],
                           ),
                         ),
-
-                        // TextFormWidget(
-                        //   hint: 'Duration',
-                        //   isShowHint: true,
-                        //   // label: 'E.g 15',
-                        //   hintWeight: FontWeight.w400,
-                        //   hintColor: AppColors.reminder,
-                        //   hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        //   borderColor: AppColors.transparent,
-                        //   keyboardType: TextInputType.number,
-                        //   floatingLabelBehavior: FloatingLabelBehavior.never,
-                        //   borderTopLeft: 10.r,
-                        //   borderTopRight: 10.r,
-                        //   borderBottomLeft: 10.r,
-                        //   borderBottomRight: 10.r,
-                        //   fillColor: AppColors.grey,
-                        //   isFilled: true,
-                        //   readOnly: true,
-                        //   controller: medDurationController,
-                        //   onChange: (p0) {
-                        //     if (p0 != null && p0.trim().isNotEmpty) {
-                        //       final parsed = int.tryParse(p0.trim());
-                        //       if (parsed != null) {
-                        //         _duration = parsed;
-                        //         intList = List.generate(
-                        //           _duration!,
-                        //           (index) => index,
-                        //         );
-                        //         dateTimeObject = inputFormat.parse(
-                        //           model.pickedDate!,
-                        //         );
-                        //         final localDate = dateTimeObject!;
-                        //         final utcStartDate = DateTime.utc(
-                        //           localDate.year,
-                        //           localDate.month,
-                        //           localDate.day,
-                        //         );
-
-                        //         // Now safely add your duration
-                        //         final utcEndDate = utcStartDate.add(
-                        //           Duration(days: _duration! - 1),
-                        //         );
-
-                        //         // Display or store
-                        //         endDateController.text = utcEndDate
-                        //             .toIso8601String();
-                        //         endDateIso = utcEndDate.toIso8601String();
-                        //       } else {
-                        //         // Optional: handle invalid input (e.g., show error or clear output)
-                        //         print('⚠️ Invalid number input: $p0');
-                        //       }
-                        //     } else {
-                        //       // Optional: clear output when input is empty
-                        //       endDateController.clear();
-                        //     }
-                        //     model.notifyListeners();
-                        //   },
-                        //   style: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'GoogleSans',
-                        //   ),
-                        //   labelStyle: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'GoogleSans',
-                        //     color: AppColors.infoGrey,
-                        //   ),
-                        // ),
                         SizedBox(height: 24.0.h),
                         model.isCusSchedule
                             ? Column(
@@ -17013,7 +16944,6 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ),
                                       SizedBox(height: 24.0.h),
-
                                       TextFormWidget(
                                         hint: 'End Date',
                                         label: '18 Feb, 2026',
@@ -17114,7 +17044,6 @@ class AuthViewModel extends BaseViewModel {
                                           ],
                                         ),
                                       ),
-
                                       SizedBox(height: 24.0.h),
                                       model.isCusSchedule
                                           ? Column(
@@ -17347,9 +17276,9 @@ class AuthViewModel extends BaseViewModel {
                                                                     Expanded(
                                                                       child: Container(
                                                                         padding: EdgeInsets.fromLTRB(
-                                                                          16.w,
+                                                                          12.w,
                                                                           8.0.w,
-                                                                          16.0.w,
+                                                                          8.0.w,
                                                                           8.0.w,
                                                                         ),
                                                                         width: double
@@ -19685,6 +19614,7 @@ class AuthViewModel extends BaseViewModel {
                               SizedBox(height: 6.10.h),
                               Divider(color: AppColors.infoGrey1),
                               SizedBox(height: 6.10.h),
+                             
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -19698,6 +19628,7 @@ class AuthViewModel extends BaseViewModel {
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
+                                  
                                   TextView(
                                     text: '$_getTotalNumberOfReminders',
                                     textStyle: TextStyle(
@@ -21403,31 +21334,26 @@ class AuthViewModel extends BaseViewModel {
     if (selectedIndexes.contains(0)) {
       _getTotalNumberOfReminders +=
           (_getTotalTimesForReminder! *
-          // _getTotalNoForDaysForReminder! *
-          addedPhoneReminderList.length);
+          addedEmailReminderList.length);
     }
     if (selectedIndexes.contains(1)) {
       _getTotalNumberOfReminders +=
           (_getTotalTimesForReminder! *
-          // _getTotalNoForDaysForReminder! *
-          addedPhoneReminderList.length);
+          addedEmailReminderList.length);
     }
     if (selectedIndexes.contains(2)) {
       _getTotalNumberOfReminders +=
           (_getTotalTimesForReminder! *
-          // _getTotalNoForDaysForReminder! *
           addedPhoneReminderList.length);
     }
     if (selectedIndexes.contains(3)) {
       _getTotalNumberOfReminders +=
           (_getTotalTimesForReminder! *
-          // _getTotalNoForDaysForReminder! *
           addedPhoneReminderList.length);
     }
     if (selectedIndexes.contains(4)) {
       _getTotalNumberOfReminders +=
           (_getTotalTimesForReminder! *
-          // _getTotalNoForDaysForReminder! *
           addedPhoneReminderList.length);
     }
   }
