@@ -21762,7 +21762,7 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  getActualTimeOfTheDay() {
+  Future<void> getActualTimeOfTheDay() async {
     final hour = DateTime.now().hour;
 
     if (hour < 12) {
