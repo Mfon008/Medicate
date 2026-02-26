@@ -115,7 +115,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               await model.getUserDetails(
                 context: context,
-                phoneNo: model.returnPhoneNoStructureWith234(
+                phoneNo: model.formatPhoneNumberForWelcomeScreen(
                   widget.phone ??
                       SharedPreferencesService
                           .instance
@@ -275,7 +275,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       context,
                                       signInEntity: LoginEntityModel(
                                         phone: model
-                                            .returnPhoneNoStructureWith234(
+                                            .formatPhoneNumberForWelcomeScreen(
                                               widget.phone ??
                                                   SharedPreferencesService
                                                       .instance
@@ -325,7 +325,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           model.signIn(
                             context,
                             signInEntity: LoginEntityModel(
-                              phone: model.returnPhoneNoStructureWith234(
+                              phone: model.formatPhoneNumberForWelcomeScreen(
                                 widget.phone ??
                                     SharedPreferencesService
                                         .instance

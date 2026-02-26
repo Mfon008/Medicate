@@ -102,16 +102,23 @@ class WalletScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
+                        
                         if (model.isLoading)
                           SpinKitThreeBounce(
                             color: AppColors.primary.withOpacity(.5),
                             size: 34,
                           ),
+
                         if (model.getWalletTransactionHistoryResponseModel !=
                                 null &&
                             model
                                     .getWalletTransactionHistoryResponseModel!
                                     .data !=
+                                null &&
+                            model
+                                    .getWalletTransactionHistoryResponseModel!
+                                    .data!
+                                    .transactions !=
                                 null &&
                             model
                                 .getWalletTransactionHistoryResponseModel!
@@ -121,7 +128,9 @@ class WalletScreen extends StatelessWidget {
                           ...model
                               .getWalletTransactionHistoryResponseModel!
                               .data!
-                              .transactions!.take(10).toList()
+                              .transactions!
+                              .take(10)
+                              .toList()
                               .asMap()
                               .entries
                               .map((entry) {
@@ -249,7 +258,8 @@ class WalletScreen extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                              }),
+                              })
+                      
                       ],
                     ),
                   ),

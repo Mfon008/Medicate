@@ -31,6 +31,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await  model.getActualTimeOfTheDay();
           await model.getTodaysReminder(
             context,
             period: model.timePeriod,
@@ -41,6 +42,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
             status: model.isReminderStatus,
             page: model.pageOngoing.toString(),
           );
+         
         });
       },
       disposeViewModel: false,
