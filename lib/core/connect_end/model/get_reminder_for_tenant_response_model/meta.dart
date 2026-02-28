@@ -4,10 +4,10 @@ part 'meta.g.dart';
 
 @JsonSerializable()
 class Meta {
-  dynamic page;
-  dynamic limit;
-  dynamic total;
-  dynamic totalPages;
+  int? page;
+  int? limit;
+  int? total;
+  int? totalPages;
 
   Meta({this.page, this.limit, this.total, this.totalPages});
 

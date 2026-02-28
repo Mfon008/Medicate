@@ -22,8 +22,8 @@ class PharmViewMedicationScreen extends StatelessWidget {
     return ViewModelBuilder<PharmViewModel>.reactive(
       viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          model.getReminderById(context, id: id);
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          await model.getReminderById(context, id: id);
           medication = model.getReminderByIdModel?.data?.medication;
           imageUrl = model.sanitizeImageUrl(medication?.medicationImage?.url);
           model.allNotificationChannels.addAll(
@@ -444,37 +444,6 @@ class PharmViewMedicationScreen extends StatelessWidget {
                               ),
                               SizedBox(height: 5.10.h),
                               TextView(
-                                text: 'Start Date',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 12.8.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.infoGrey,
-                                ),
-                              ),
-                              SizedBox(height: 4.10.h),
-                              TextView(
-                                text: DateFormat('d MMM, yyyy').format(
-                                  model
-                                      .getReminderByIdModel!
-                                      .data!
-                                      .medication!
-                                      .startDateTime!,
-                                ),
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.8.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
-                              SizedBox(height: 5.10.h),
-                              Divider(
-                                color: AppColors.infoGrey,
-                                thickness: .14,
-                              ),
-                              SizedBox(height: 5.10.h),
-                              TextView(
                                 text: 'Frequency',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
@@ -652,7 +621,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                                   right: 4.10.w,
                                                 ),
                                                 padding: EdgeInsets.symmetric(
-                                                  horizontal: 4.0.w,
+                                                  horizontal: 2.0.w,
                                                   vertical: 6.w,
                                                 ),
                                                 decoration: BoxDecoration(
@@ -668,13 +637,13 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     SvgPicture.asset(
-                                                      AppImage.timer,
+                                                      AppImage.freq_timer,
                                                       color: AppColors.reminder,
                                                       width: 18.20.sp,
                                                     ),
                                                     SizedBox(width: 5.10.w),
                                                     TextView(
-                                                      text: time,
+                                                      text: formatToAmPm(time),
                                                       textStyle: TextStyle(
                                                         fontFamily:
                                                             'GoogleSans',
@@ -693,12 +662,48 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
+                              
                               SizedBox(height: 5.10.h),
+                              
                               Divider(
                                 color: AppColors.infoGrey,
                                 thickness: .14,
                               ),
                               SizedBox(height: 5.10.h),
+                              TextView(
+                                text: 'Start Date',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 12.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                              SizedBox(height: 4.10.h),
+                              TextView(
+                                text: DateFormat('d MMM, yyyy').format(
+                                  model
+                                      .getReminderByIdModel!
+                                      .data!
+                                      .medication!
+                                      .startDateTime!,
+                                ),
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              SizedBox(height: 5.10.h),
+                              Divider(
+                                color: AppColors.infoGrey,
+                                thickness: .14,
+                              ),
+                              
+
+                              SizedBox(height: 5.10.h),
+
                               TextView(
                                 text: 'End Date',
                                 textStyle: TextStyle(
@@ -870,4 +875,8 @@ class PharmViewMedicationScreen extends StatelessWidget {
       },
     );
   }
+  String formatToAmPm(String time24) {
+  final parsedTime = DateFormat("HH:mm").parse(time24);
+  return DateFormat("hh:mm a").format(parsedTime);
+}
 }

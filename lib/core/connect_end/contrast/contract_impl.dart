@@ -20,7 +20,8 @@ import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
-import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart' show PayWithWalletResponseModel;
+import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart'
+    show PayWithWalletResponseModel;
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';

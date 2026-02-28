@@ -37,6 +37,7 @@ import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/deactivate_user_modal_widget.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
+import '../../../ui/dashboard/profile/wallet/fund_screen.dart';
 import '../../../ui/dashboard/reminder/med_type.dart';
 import '../../../ui/dashboard/reminder/medication_class.dart';
 import '../../../ui/widget/add_role_modal_widget.dart';
@@ -56,6 +57,8 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/create_payment_wallet_entity_model.dart';
+import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/create_tenant_reminder_entity_model/daily_dose_time.dart';
@@ -69,9 +72,15 @@ import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
+import '../model/get_transaction_wallet_response_model/transaction.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/login_entity_model.dart';
+import '../model/pay_with_wallet_entity_model.dart';
+import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -222,6 +231,21 @@ class PharmViewModel extends BaseViewModel {
   UpdateDosesStatusModel? _updateDosesStatusModel;
   UpdateDosesStatusModel? get updateDosesStatusModel => _updateDosesStatusModel;
 
+  CreatePaymentWalletModel? _createPaymentWalletModel;
+  CreatePaymentWalletModel? get createPaymentWalletModel =>
+      _createPaymentWalletModel;
+  GetWalletResponseModel? _getWalletBalanceResponseModel;
+  GetWalletResponseModel? get getWalletBalanceResponseModel =>
+      _getWalletBalanceResponseModel;
+  GetTransactionWalletResponseModel? _getWalletTransactionHistoryResponseModel;
+  GetTransactionWalletResponseModel?
+  get getWalletTransactionHistoryResponseModel =>
+      _getWalletTransactionHistoryResponseModel;
+  PayWithWalletResponseModel? _payWithWalletResponseModel;
+  PayWithWalletResponseModel? get payWithWalletResponseModel =>
+      _payWithWalletResponseModel;
+
+
   int linIndex = 1;
   int linIndexUpdate = 1;
   int indexOfMedicationClassList = 0;
@@ -305,7 +329,6 @@ class PharmViewModel extends BaseViewModel {
   int? totalDuration;
   int? numberOfTimes;
   String endDateIso = '';
-  // String _dosageLabel = '';
   String medTypeResult = '';
   String medTypeResultImage = '';
   String medTypeResultImageUpdate = '';
@@ -319,7 +342,6 @@ class PharmViewModel extends BaseViewModel {
   dynamic timeSelected;
 
   int? _getTotalTimesForReminder;
-  int _getTotalNumberOfReminders = 0;
 
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
@@ -415,6 +437,8 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController endDateControllerUpdate = TextEditingController(
     text: '',
   );
+
+  TextEditingController fundAmountController = TextEditingController();
   MedicationClass? medCard;
   String? pickedDate;
   File? imageDrug;
@@ -468,6 +492,7 @@ class PharmViewModel extends BaseViewModel {
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPhoneReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyCreateAddPhoneReminder = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyFundWallet = GlobalKey<FormState>();
 
   DateFormat inputFormat = DateFormat("dd MMM, yyyy");
   DateTime? dateTimeObject;
@@ -3917,7 +3942,7 @@ class PharmViewModel extends BaseViewModel {
 
   errorRemidnderImage(medType) {
     if (medType == 'TABLET') {
-      return AppImage.pills;
+      return AppImage.tablet;
     }
     if (medType == 'CAPSULE') {
       return AppImage.pills;
@@ -3928,9 +3953,6 @@ class PharmViewModel extends BaseViewModel {
     if (medType == 'INJECTION') {
       return AppImage.syringe;
     }
-    // if (medType == 'DRIP') {
-    //   return AppImage.drip;
-    // }
     if (medType == 'OINTMENT') {
       return AppImage.ointment;
     }
@@ -3944,7 +3966,7 @@ class PharmViewModel extends BaseViewModel {
   }
 
   bool checkReminderEmpty() {
-    final reminders = getReminderResponseModel?.data?.data;
+    final reminders = getReminderResponseModel?.data?.reminders;
 
     if (reminders == null || reminders.isEmpty) return true;
 
@@ -4031,31 +4053,7 @@ class PharmViewModel extends BaseViewModel {
           return false;
         }).toList();
       });
-      // for (var med in medicationClassList) {
-      //   final dosageMap = med.dosageMap ?? [];
 
-      //   // Map through the day-level list
-      //   final controllersPerDay = dosageMap.map<List<TextEditingController>>((
-      //     dayItem,
-      //   ) {
-      //     final doses = (dayItem['doses'] ?? []) as List;
-
-      //     // Create controllers for each dose
-      //     final doseControllers = doses.map<TextEditingController>((dose) {
-      //       final timeValue = dose['time']?.toString() ?? '';
-      //       print('⏰ Time found: $timeValue');
-      //       return TextEditingController(text: timeValue);
-      //     }).toList();
-
-      //     return doseControllers;
-      //   }).toList();
-
-      //   doseAfterControllers =
-      //       controllersPerDay; // assign per medication if you're looping
-      //   // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
-      // }
-
-      print('✅ doseAfterControllers created: ${doseAfterControllers.length}');
       model.notifyListeners();
     });
   }
@@ -5598,6 +5596,7 @@ class PharmViewModel extends BaseViewModel {
   }
 
   paymentWidget({
+    context,
     bool isWallet = false,
     String? text,
     String? icon,
@@ -5632,26 +5631,51 @@ class PharmViewModel extends BaseViewModel {
           !isWallet
               ? SizedBox.shrink()
               : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextView(
-                      text: '₦0.00',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.infoGrey,
-                      ),
+                    SizedBox(width: 10.w),
+                    ViewModelBuilder<PharmViewModel>.reactive(
+                      viewModelBuilder: () => PharmViewModel(),
+                      onViewModelReady: (model) {
+                        model.getWalletBalance(context);
+                      },
+                      disposeViewModel: false,
+                      builder: (_, PharmViewModel model, __) {
+                        return SizedBox(
+                          width: 90.w,
+                          child: TextView(
+                            text: formatNaira(
+                              int.parse(
+                                model
+                                        .getWalletBalanceResponseModel
+                                        ?.data
+                                        ?.balance ??
+                                    "0",
+                              ),
+                            ),
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.0.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.infoGrey,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(width: 12.w),
-                    TextView(
-                      text: 'Fund',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.0.sp,
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.w400,
-                        decoration: TextDecoration.underline,
-                        decorationColor: AppColors.primary,
+                    GestureDetector(
+                      onTap: () => fundPaymentWallet(context),
+                      child: TextView(
+                        text: 'Fund',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.0.sp,
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.w400,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primary,
+                        ),
                       ),
                     ),
                   ],
@@ -6510,7 +6534,7 @@ class PharmViewModel extends BaseViewModel {
                           model
                               .getReminderForTenantResponseModel!
                               .data!
-                              .data!
+                              .reminders!
                               .isNotEmpty
                       ? SizedBox(
                           height: MediaQuery.of(context).size.height * .62,
@@ -6523,7 +6547,7 @@ class PharmViewModel extends BaseViewModel {
                                   ...model
                                       .getReminderForTenantResponseModel!
                                       .data!
-                                      .data!
+                                      .reminders!
                                       .reversed
                                       .map(
                                         (e) => reminderWidget(
@@ -6538,7 +6562,7 @@ class PharmViewModel extends BaseViewModel {
                                   ...model
                                       .getReminderForTenantResponseModel!
                                       .data!
-                                      .data!
+                                      .reminders!
                                       .reversed
                                       .map(
                                         (e) => reminderWidget(
@@ -6553,7 +6577,7 @@ class PharmViewModel extends BaseViewModel {
                                   ...model
                                       .getReminderForTenantResponseModel!
                                       .data!
-                                      .data!
+                                      .reminders!
                                       .reversed
                                       .map(
                                         (e) => reminderWidget(
@@ -7400,7 +7424,8 @@ class PharmViewModel extends BaseViewModel {
                 fillColor: AppColors.white,
                 isFilled: true,
                 controller: model.phoneNumberController,
-                validator: (value) => AppValidator.validatePhoneNew()(value),
+                validator: (value) =>
+                    AppValidator.validatePhoneNewPatient()(value),
                 style: TextStyle(
                   fontSize: 16.20.sp,
                   fontWeight: FontWeight.w400,
@@ -8499,6 +8524,9 @@ class PharmViewModel extends BaseViewModel {
                                                 .contains(
                                                   formattedSelectedTimeAndPeriod,
                                                 )) {
+                                              formattedSelectedTimeAndPeriod =
+                                                  '--:--';
+                                              model.globalTimeIndex = null;
                                             } else {
                                               model
                                                   .formattedSelectedTimeAndPeriodList!
@@ -9241,18 +9269,24 @@ class PharmViewModel extends BaseViewModel {
                                                 onTap: () {
                                                   if (addedPhoneReminderList.contains(
                                                     returnPhoneNoStructureWith234Rep(
-                                                      model.phoneNumberController.text,
+                                                      model
+                                                          .phoneNumberController
+                                                          .text,
                                                     ),
                                                   )) {
                                                     addedPhoneReminderList.remove(
                                                       returnPhoneNoStructureWith234Rep(
-                                                        model.phoneNumberController.text,
+                                                        model
+                                                            .phoneNumberController
+                                                            .text,
                                                       ),
                                                     );
                                                   } else {
                                                     addedPhoneReminderList.add(
                                                       returnPhoneNoStructureWith234Rep(
-                                                        model.phoneNumberController.text,
+                                                        model
+                                                            .phoneNumberController
+                                                            .text,
                                                       ),
                                                     );
                                                   }
@@ -9264,7 +9298,9 @@ class PharmViewModel extends BaseViewModel {
                                                   padding:
                                                       addedPhoneReminderList.contains(
                                                         returnPhoneNoStructureWith234Rep(
-                                                          model.phoneNumberController.text,
+                                                          model
+                                                              .phoneNumberController
+                                                              .text,
                                                         ),
                                                       )
                                                       ? EdgeInsets.all(4.0.w)
@@ -9277,7 +9313,9 @@ class PharmViewModel extends BaseViewModel {
                                                     color:
                                                         addedPhoneReminderList.contains(
                                                           returnPhoneNoStructureWith234Rep(
-                                                            model.phoneNumberController.text,
+                                                            model
+                                                                .phoneNumberController
+                                                                .text,
                                                           ),
                                                         )
                                                         ? AppColors.primary
@@ -9287,7 +9325,9 @@ class PharmViewModel extends BaseViewModel {
                                                           addedPhoneReminderList
                                                               .contains(
                                                                 returnPhoneNoStructureWith234Rep(
-                                                                  model.phoneNumberController.text,
+                                                                  model
+                                                                      .phoneNumberController
+                                                                      .text,
                                                                 ),
                                                               )
                                                           ? AppColors
@@ -9305,9 +9345,11 @@ class PharmViewModel extends BaseViewModel {
                                               ),
                                               SizedBox(width: 9.10.w),
                                               TextView(
-                                                text: model
-                                                    .phoneNumberController
-                                                    .text,
+                                                text: formatPhoneNumber(
+                                                  model
+                                                      .phoneNumberController
+                                                      .text,
+                                                ),
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
                                                   fontSize: 16.2.sp,
@@ -9403,9 +9445,11 @@ class PharmViewModel extends BaseViewModel {
                                                       child: Container(
                                                         padding:
                                                             addedPhoneReminderList
-                                                                .contains(returnPhoneNoStructureWith234(
-                                                                  o,
-                                                                ),)
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    o,
+                                                                  ),
+                                                                )
                                                             ? EdgeInsets.all(
                                                                 4.0.w,
                                                               )
@@ -9420,9 +9464,9 @@ class PharmViewModel extends BaseViewModel {
                                                           color:
                                                               addedPhoneReminderList
                                                                   .contains(
-                                                                     returnPhoneNoStructureWith234(
-                                                                  o,
-                                                                ),
+                                                                    returnPhoneNoStructureWith234(
+                                                                      o,
+                                                                    ),
                                                                   )
                                                               ? AppColors
                                                                     .primary
@@ -9432,9 +9476,9 @@ class PharmViewModel extends BaseViewModel {
                                                             color:
                                                                 addedPhoneReminderList
                                                                     .contains(
-                                                                       returnPhoneNoStructureWith234(
-                                                                  o,
-                                                                ),
+                                                                      returnPhoneNoStructureWith234(
+                                                                        o,
+                                                                      ),
                                                                     )
                                                                 ? AppColors
                                                                       .transparent
@@ -9447,8 +9491,8 @@ class PharmViewModel extends BaseViewModel {
                                                             addedPhoneReminderList
                                                                 .contains(
                                                                   returnPhoneNoStructureWith234(
-                                                                  o,
-                                                                ),
+                                                                    o,
+                                                                  ),
                                                                 )
                                                             ? Icon(
                                                                 Icons.check,
@@ -11275,9 +11319,12 @@ class PharmViewModel extends BaseViewModel {
                                           ),
                                           width: double.infinity,
                                           decoration: BoxDecoration(
-                                            color: AppColors.grey,
+                                            color: AppColors.white,
                                             borderRadius: BorderRadius.circular(
                                               10.r,
+                                            ),
+                                            border: Border.all(
+                                              color: AppColors.infoGrey1,
                                             ),
                                           ),
                                           child: TextView(
@@ -11713,14 +11760,14 @@ class PharmViewModel extends BaseViewModel {
                                         SizedBox(height: 24.0.h),
                                         TextFormWidget(
                                           hint: 'Start Date',
-                                          borderColor: AppColors.transparent,
+                                          borderColor: AppColors.infoGrey1,
                                           borderTopLeft: 10.r,
                                           borderTopRight: 10.r,
                                           borderBottomLeft: 10.r,
                                           borderBottomRight: 10.r,
                                           readOnly: true,
                                           hintSize: 12.52.sp,
-                                          fillColor: AppColors.grey,
+                                          fillColor: AppColors.white,
                                           isFilled: true,
                                           controller: model.dateTimeController,
                                           suffixWidget: Padding(
@@ -12486,6 +12533,10 @@ class PharmViewModel extends BaseViewModel {
                                                                 .contains(
                                                                   formattedSelectedTimeAndPeriod,
                                                                 )) {
+                                                              formattedSelectedTimeAndPeriod =
+                                                                  '--:--';
+                                                              model.globalTimeIndex =
+                                                                  null;
                                                             } else {
                                                               model
                                                                   .formattedSelectedTimeAndPeriodList!
@@ -13233,22 +13284,27 @@ class PharmViewModel extends BaseViewModel {
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                                                  if (addedPhoneReminderList
-                                                      .contains(
-                                                       returnPhoneNoStructureWith234Rep(
-                                                      model.phoneNumberController.text,
+                                                  if (addedPhoneReminderList.contains(
+                                                    returnPhoneNoStructureWith234Rep(
+                                                      model
+                                                          .phoneNumberController
+                                                          .text,
                                                     ),
-                                                      )) {
+                                                  )) {
                                                     addedPhoneReminderList.remove(
-                                                     returnPhoneNoStructureWith234Rep(
-                                                      model.phoneNumberController.text,
-                                                    ),
+                                                      returnPhoneNoStructureWith234Rep(
+                                                        model
+                                                            .phoneNumberController
+                                                            .text,
+                                                      ),
                                                     );
                                                   } else {
                                                     addedPhoneReminderList.add(
                                                       returnPhoneNoStructureWith234Rep(
-                                                      model.phoneNumberController.text,
-                                                    ),
+                                                        model
+                                                            .phoneNumberController
+                                                            .text,
+                                                      ),
                                                     );
                                                   }
 
@@ -13258,12 +13314,13 @@ class PharmViewModel extends BaseViewModel {
                                                 },
                                                 child: Container(
                                                   padding:
-                                                      addedPhoneReminderList
-                                                          .contains(
-                                                           returnPhoneNoStructureWith234Rep(
-                                                      model.phoneNumberController.text,
-                                                    ),
-                                                          )
+                                                      addedPhoneReminderList.contains(
+                                                        returnPhoneNoStructureWith234Rep(
+                                                          model
+                                                              .phoneNumberController
+                                                              .text,
+                                                        ),
+                                                      )
                                                       ? EdgeInsets.all(4.0.w)
                                                       : EdgeInsets.all(4.w),
                                                   decoration: BoxDecoration(
@@ -13272,21 +13329,24 @@ class PharmViewModel extends BaseViewModel {
                                                           6.r,
                                                         ),
                                                     color:
-                                                        addedPhoneReminderList
-                                                            .contains(
-                                                             returnPhoneNoStructureWith234Rep(
-                                                      model.phoneNumberController.text,
-                                                    ),
-                                                            )
+                                                        addedPhoneReminderList.contains(
+                                                          returnPhoneNoStructureWith234Rep(
+                                                            model
+                                                                .phoneNumberController
+                                                                .text,
+                                                          ),
+                                                        )
                                                         ? AppColors.primary
                                                         : AppColors.transparent,
                                                     border: Border.all(
                                                       color:
                                                           addedPhoneReminderList
                                                               .contains(
-                                                               returnPhoneNoStructureWith234Rep(
-                                                      model.phoneNumberController.text,
-                                                    ),
+                                                                returnPhoneNoStructureWith234Rep(
+                                                                  model
+                                                                      .phoneNumberController
+                                                                      .text,
+                                                                ),
                                                               )
                                                           ? AppColors
                                                                 .transparent
@@ -13376,13 +13436,24 @@ class PharmViewModel extends BaseViewModel {
                                                     GestureDetector(
                                                       onTap: () {
                                                         if (addedPhoneReminderList
-                                                            .contains(returnPhoneNoStructureWith234(o
-                                                    ),)) {
+                                                            .contains(
+                                                              returnPhoneNoStructureWith234(
+                                                                o,
+                                                              ),
+                                                            )) {
                                                           addedPhoneReminderList
-                                                              .remove(returnPhoneNoStructureWith234(o));
+                                                              .remove(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              );
                                                         } else {
                                                           addedPhoneReminderList
-                                                              .add(returnPhoneNoStructureWith234(o));
+                                                              .add(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              );
                                                         }
                                                         model._isPhoneFlagged =
                                                             true;
@@ -13392,7 +13463,11 @@ class PharmViewModel extends BaseViewModel {
                                                       child: Container(
                                                         padding:
                                                             addedPhoneReminderList
-                                                                .contains(returnPhoneNoStructureWith234(o))
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    o,
+                                                                  ),
+                                                                )
                                                             ? EdgeInsets.all(
                                                                 4.0.w,
                                                               )
@@ -13406,7 +13481,11 @@ class PharmViewModel extends BaseViewModel {
                                                               ),
                                                           color:
                                                               addedPhoneReminderList
-                                                                  .contains(returnPhoneNoStructureWith234(o))
+                                                                  .contains(
+                                                                    returnPhoneNoStructureWith234(
+                                                                      o,
+                                                                    ),
+                                                                  )
                                                               ? AppColors
                                                                     .primary
                                                               : AppColors
@@ -13414,7 +13493,11 @@ class PharmViewModel extends BaseViewModel {
                                                           border: Border.all(
                                                             color:
                                                                 addedPhoneReminderList
-                                                                    .contains(returnPhoneNoStructureWith234(o))
+                                                                    .contains(
+                                                                      returnPhoneNoStructureWith234(
+                                                                        o,
+                                                                      ),
+                                                                    )
                                                                 ? AppColors
                                                                       .transparent
                                                                 : AppColors
@@ -13424,7 +13507,11 @@ class PharmViewModel extends BaseViewModel {
                                                         ),
                                                         child:
                                                             addedPhoneReminderList
-                                                                .contains(returnPhoneNoStructureWith234(o))
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    o,
+                                                                  ),
+                                                                )
                                                             ? Icon(
                                                                 Icons.check,
                                                                 size: 12.sp,
@@ -14382,334 +14469,7 @@ class PharmViewModel extends BaseViewModel {
               ],
             ),
           ),
-          SizedBox(height: 16.20.h),
-          addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 24.0.h),
-                    TextView(
-                      text: 'TOTAL SUMMARY',
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 14.80.sp,
-                        color: AppColors.deep,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 4.2.h),
-                    Divider(color: AppColors.infoGrey1),
-                    SizedBox(height: 10.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: DottedBorder(
-                        options: RoundedRectDottedBorderOptions(
-                          dashPattern: [3, 3],
-                          strokeWidth: .99,
-                          radius: Radius.circular(10),
-                          color: AppColors.infoGrey1,
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 16.20.w,
-                            horizontal: 16.0.w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            color: AppColors.dashboard,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total Days',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '${returnTotalDays(model)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total Reminders',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '$_getTotalNumberOfReminders',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: selectedIndexes.contains(0)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(0)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(0)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(0)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Email  (x${_getTotalTimesForReminder! * addedEmailReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '₦0',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(1)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(1)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(1)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(1)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Push  (x${_getTotalTimesForReminder! * addedEmailReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '₦0',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'WhatsApp  (x${_getTotalTimesForReminder! * addedPhoneReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${20 * _getTotalTimesForReminder! * addedPhoneReminderList.length}',
-                                          textStyle: TextStyle(
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(2)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(2)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(2)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                             
-                              selectedIndexes.contains(2)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'SMS (x${_getTotalTimesForReminder! * addedPhoneReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${15 * _getTotalTimesForReminder! * addedPhoneReminderList.length}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(4)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(4)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(4)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(4)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Phone Calls  (x${_getTotalTimesForReminder! * addedPhoneReminderList.length} calls)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${50 * _getTotalTimesForReminder! * addedPhoneReminderList.length}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '₦$costTotal.00',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : SizedBox.shrink(),
+
           SizedBox(height: 16.20.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -14770,7 +14530,374 @@ class PharmViewModel extends BaseViewModel {
               ),
             ],
           ),
-          SizedBox(height: 26.h),
+          
+          SizedBox(height: 24.20.h),
+          TextView(
+            text: 'NOTIFICATION CHANNELS',
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 14.80.sp,
+              color: AppColors.deep,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Divider(color: AppColors.grey),
+          SizedBox(height: 12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+            decoration: BoxDecoration(
+              color: AppColors.grey,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'Selected Channels',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 12.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text:
+                      '${model.medicationClassList[indexOfMedicationClassList].dosage}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.black,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.20.h),
+          addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 24.0.h),
+                    TextView(
+                      text: 'TOTAL SUMMARY',
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 14.80.sp,
+                        color: AppColors.deep,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 4.2.h),
+                    Divider(color: AppColors.infoGrey1),
+                    SizedBox(height: 10.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: DottedBorder(
+                        options: RoundedRectDottedBorderOptions(
+                          dashPattern: [3, 3],
+                          strokeWidth: .99,
+                          radius: Radius.circular(10),
+                          color: AppColors.infoGrey1,
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10.w,
+                                  horizontal: 16.0.w,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Total Days',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text: '${returnTotalDays(model)}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(color: AppColors.infoGrey1),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10.w,
+                                  horizontal: 16.0.w,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Total Reminders',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text: '${calculateTotalReminders(model)}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              selectedIndexes.contains(0)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(0)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Email (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text: '₦0',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(1)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(1)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Push (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text: '₦0',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(3)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(3)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'WhatsApp (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${20 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(2)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(2)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'SMS (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${15 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(4)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(4)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Phone Calls (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} calls)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${50 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              Divider(color: AppColors.infoGrey1),
+                              Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: AppColors.nearDashboard,
+                                ),
+
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                  vertical: 14.w,
+                                  horizontal: 16.0.w,
+                                ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextView(
+                                        text: 'Total',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.80.sp,
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      TextView(
+                                        text: '₦$costTotal.00',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 16.80.sp,
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox.shrink(),
+              SizedBox(height: 26.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -14856,6 +14983,7 @@ class PharmViewModel extends BaseViewModel {
                             ),
                       );
                     }
+
                     model.notifyListeners();
                   },
                 ),
@@ -15129,6 +15257,7 @@ class PharmViewModel extends BaseViewModel {
           ),
           SizedBox(height: 12.h),
           paymentWidget(
+            context: context,
             isWallet: true,
             text: 'Pay with Wallet',
             icon: AppImage.wallet_pay,
@@ -15581,59 +15710,12 @@ class PharmViewModel extends BaseViewModel {
     if (pickedDated != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
       model.medicationClassList[index].dateAndTime = pickedDate;
-
-      // await selectTimeUPDATE(context: context, index: index);
       medicationClassList[index].dateAndTime = pickedDate;
       startDateIso = DateTime.utc(
         pickedDated.year,
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
-
-      // if (medicationClassList[index].duration!.isNotEmpty) {
-      //   final parsed = int.tryParse(medicationClassList[index].duration!);
-      //   if (parsed != null) {
-      //     _duration = parsed;
-      //     medicationClassList[index].listOfTimes = List.generate(
-      //       _duration!,
-      //       (i) => i,
-      //     );
-      //     dateTimeObject = inputFormat.parse(pickedDate!);
-
-      //     final localDate = dateTimeObject!;
-      //     final utcStartDate = DateTime.utc(
-      //       localDate.year,
-      //       localDate.month,
-      //       localDate.day,
-      //     );
-
-      //     // Now safely add your duration
-      //     final utcEndDate = utcStartDate.add(Duration(days: _duration! - 1));
-      //     medicationClassList[index].endDate = utcEndDate.toIso8601String();
-      //     medicationClassList[index].endDateIso = DateTime.parse(
-      //       utcEndDate.toIso8601String(),
-      //     );
-
-      //     // ✅ Ensure controller lists match new duration
-      //     while (doseAfterControllers.length < _duration!) {
-      //       doseAfterControllers.add([]);
-      //     }
-      //     while (periodAfterLabels.length < _duration!) {
-      //       periodAfterLabels.add([]);
-      //     }
-
-      //     // ✅ Trim extra ones if user reduces duration
-      //     if (doseAfterControllers.length > _duration!) {
-      //       doseAfterControllers.removeRange(
-      //         _duration!,
-      //         doseAfterControllers.length,
-      //       );
-      //     }
-      //     if (periodAfterLabels.length > _duration!) {
-      //       periodAfterLabels.removeRange(_duration!, periodAfterLabels.length);
-      //     }
-      //   }
-      // }
     }
     setModalState!(() {});
     model.notifyListeners();
@@ -15836,37 +15918,34 @@ class PharmViewModel extends BaseViewModel {
         selectedIndexes.contains(4)) {
       costTotal = costTotal * addedPhoneReminderList.length;
     }
-    totalReminder();
+    calculateTotalReminders(model);
     notifyListeners();
   }
 
-  void totalReminder() {
-    _getTotalNumberOfReminders = 0;
-    if (selectedIndexes.contains(0)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedEmailReminderList.length);
+  int calculateTotalReminders(model) {
+    final medications = model.medicationClassList ?? [];
+
+    int totalReminders = 0;
+
+    for (var med in medications) {
+      final bool isCustom = med.isCusSchedule;
+      final int durationInDays = int.parse(med.duration);
+      final int timesPerDay = int.parse(med.timesToTake);
+
+      int frequencyPerDay = 0;
+
+      if (isCustom == false) {
+        frequencyPerDay = timesPerDay * durationInDays * selectedIndexes.length;
+      } else if (isCustom == true) {
+        // Flatten all daily times and divide by number of days
+        frequencyPerDay =
+            (getTotalCustomDoses(med.dosageMap ?? []) * selectedIndexes.length);
+      }
+
+      totalReminders += frequencyPerDay;
     }
-    if (selectedIndexes.contains(1)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedEmailReminderList.length);
-    }
-    if (selectedIndexes.contains(2)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedPhoneReminderList.length);
-    }
-    if (selectedIndexes.contains(3)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedPhoneReminderList.length);
-    }
-    if (selectedIndexes.contains(4)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedPhoneReminderList.length);
-    }
+
+    return totalReminders;
   }
 
   void showEmailDialog(
@@ -16514,7 +16593,6 @@ class PharmViewModel extends BaseViewModel {
                                     } else {
                                       isPhoneValid = false;
                                     }
-                                    print(isPhoneValid);
                                     notifyListeners();
                                     return result;
                                   },
@@ -16597,8 +16675,7 @@ class PharmViewModel extends BaseViewModel {
   String returnPhoneNoStructureWith234(String phoneNo) {
     if (phoneNo.substring(4).contains('0')) {
       phoneNo = phoneNo.substring(4);
-    }
-    else{
+    } else {
       phoneNo = phoneNo;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -16610,7 +16687,10 @@ class PharmViewModel extends BaseViewModel {
   String returnPhoneNoStructureWith234Rep(String phoneNo) {
     if (phoneNo.startsWith('0')) {
       phoneNo = '+234${phoneNo.substring(1)}';
-    }else{
+    }
+    if (phoneNo.startsWith('+234')) {
+      phoneNo = phoneNo;
+    } else {
       phoneNo = '+234$phoneNo';
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -16636,7 +16716,7 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
     return '+234$phoneNo';
   }
-  
+
   void createReminder(
     context, {
     CreateTenantReminderEntityModel? createReminderEntityModel,
@@ -16788,7 +16868,7 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getReminderById(context, {String? id}) async {
+  Future<void> getReminderById(context, {String? id}) async {
     try {
       _isLoading = true;
       _getReminderByIdModel = await runBusyFuture(
@@ -16971,7 +17051,7 @@ class PharmViewModel extends BaseViewModel {
   Future<void> onLoading(page) async {
     await Future.delayed(const Duration(milliseconds: 100));
 
-    if (_getReminderResponseModel!.data!.data!.isNotEmpty) {
+    if (_getReminderResponseModel!.data!.reminders!.isNotEmpty) {
       try {
         _isLoading = true;
         if (isReminderStatus == 'all' ||
@@ -17035,8 +17115,11 @@ class PharmViewModel extends BaseViewModel {
   }
 
   String isMedTypeView(medType) {
-    if (medType == 'PILL') {
+    if (medType == 'CAPSULE') {
       return AppImage.pills;
+    }
+    if (medType == 'TABLET') {
+      return AppImage.tablet;
     }
     if (medType == 'SYRUP') {
       return AppImage.syrup;
@@ -17669,4 +17752,346 @@ class PharmViewModel extends BaseViewModel {
     if (totalCount == 0) return 0.0; // prevent divide-by-zero error
     return takenCount / totalCount;
   }
+
+  void fundPaymentWallet(context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // prevent closing by tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<PharmViewModel>.reactive(
+          viewModelBuilder: () => PharmViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          builder: (_, PharmViewModel model, __) {
+            return Container(
+              color: AppColors.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(Icons.close, color: Colors.white, size: 18),
+                      label: Text(
+                        "Close",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: TextButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6.10.h),
+                  Dialog(
+                    insetPadding: EdgeInsets.all(16.20.w),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: AppColors.white,
+                    child: Padding(
+                      padding: EdgeInsets.all(34.w),
+                      child: Form(
+                        key: formKeyFundWallet,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextView(
+                              text: 'Fund Wallet',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                color: AppColors.black,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            TextView(
+                              text: 'Enter Amount',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                color: AppColors.black,
+                                fontSize: 13.20.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            TextFormWidget(
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+
+                              label: '',
+                              hintSize: 16.60.sp,
+                              controller: fundAmountController,
+                              inputFormatters: [AmountFormatter()],
+                              keyboardType: TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              validator: AppValidator.validateAmount(
+                                minAmount: 100.00,
+                                maxAmount: 1000000000,
+                              ),
+                              labelStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                color: AppColors.infoGrey,
+                              ),
+                              fillColor: AppColors.transparent,
+                              isFilled: true,
+                            ),
+
+                            SizedBox(height: 35.h),
+                            // 🔹 Save button
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (formKeyFundWallet.currentState!
+                                      .validate()) {
+                                    model.createPayment(
+                                      context,
+                                      amount: fundAmountController.text
+                                          .trim()
+                                          .replaceAll(',', ''),
+                                    );
+                                  }
+                                  model.notifyListeners();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  padding: EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                                child: model.isLoading
+                                    ? SpinKitCircle(
+                                        color: AppColors.white,
+                                        size: 22.sp,
+                                      )
+                                    : Text(
+                                        "Proceed",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Future<void> createPayment(
+    BuildContext context, {
+    required String amount,
+    String? description,
+    String? paymentType,
+  }) async {
+    try {
+      _isLoading = true;
+      _createPaymentWalletModel = await runBusyFuture(
+        repositoryImply.createWalletPayment(
+          createPaymentWalletEntityModel: CreatePaymentWalletEntityModel(
+            amount: double.parse(amount).toInt(),
+            currency: "NGN",
+            description: description ?? "Wallet top-up payment",
+            paymentForType: paymentType ?? "WALLET_TOPUP",
+            paymentForId: "wallet-topup-001",
+            callbackUrl: "https://wallet.medicate.health/payments/return",
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createPaymentWalletModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createPaymentWalletModel?.message ?? '',
+        );
+        initiateWalletPayment(
+          reference: _createPaymentWalletModel?.data?.transactionReference,
+          context: context,
+        );
+      } else {
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: false,
+            isUserType: 'everyday_user',
+          ),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> initiateWalletPayment({
+    String? reference,
+    required BuildContext context,
+  }) async {
+    try {
+      _isLoading = true;
+      _initiatePaymentResponseModel = await runBusyFuture(
+        repositoryImply.initiateWalletPayment(
+          initiatePaymentWalletEntityModel: InitiatePaymentWalletEntityModel(
+            reference: reference,
+            callbackUrl: "https://wallet.medicate.health/payments/return",
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_createPaymentWalletModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _initiatePaymentResponseModel?.message ?? '',
+        );
+        final result = await navigate.navigateTo(
+          Routes.acceleratePaymentViewWallet,
+          arguments: AcceleratePaymentViewWalletArguments(
+            url: _initiatePaymentResponseModel?.data?.redirectUrl,
+          ),
+        );
+        if (result == true) {
+          await getWalletBalance(context);
+          await getWalletTransactionHistory(context);
+        }
+      } else {
+        AppUtils.snackbar(
+          context,
+          message: 'Unable to make transaction.',
+          error: true,
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWalletBalance(context) async {
+    try {
+      _isLoading = true;
+      _getWalletBalanceResponseModel = await runBusyFuture(
+        repositoryImply.getWalletBalance(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWalletTransactionHistory(context) async {
+    try {
+      _isLoading = true;
+      _getWalletTransactionHistoryResponseModel = await runBusyFuture(
+        repositoryImply.getTransactionWallet(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+  }
+
+  Map<String, List<Transaction>> groupTransactionsByDate(
+    List<Transaction> transactions,
+  ) {
+    final Map<String, List<Transaction>> grouped = {};
+
+    for (final tx in transactions) {
+      final dateKey = DateFormat(
+        'yyyy-MM-dd',
+      ).format(DateTime.parse(tx.createdAt!)); // normalize date
+
+      grouped.putIfAbsent(dateKey, () => []);
+      grouped[dateKey]!.add(tx);
+    }
+
+    return grouped;
+  }
+
+  Future<void> payWithWalletAPI({
+    String? reference,
+    required BuildContext context,
+    PharmViewModel? model,
+  }) async {
+    try {
+      _isLoading = true;
+      _payWithWalletResponseModel = await runBusyFuture(
+        repositoryImply.payWithWallet(
+          payWithWalletEntityModel: PayWithWalletEntityModel(
+            transactionReference: reference,
+          ),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_payWithWalletResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _payWithWalletResponseModel?.message ?? '',
+        );
+        medicationClassList.clear();
+        await getWalletBalance(context);
+        navigate.navigateTo(
+          Routes.paymentStatusScreen,
+          arguments: PaymentStatusScreenArguments(
+            isSuccessful: true,
+            isUserType: 'everyday_user',
+          ),
+        );
+        model?.medicationClassList.clear();
+      } else {
+        AppUtils.snackbar(
+          context,
+          message: 'Unable to make transaction.',
+          error: true,
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
 }

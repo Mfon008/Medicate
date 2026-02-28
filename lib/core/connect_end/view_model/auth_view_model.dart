@@ -447,7 +447,6 @@ class AuthViewModel extends BaseViewModel {
   int? globalTimeIndex;
 
   int? _getTotalTimesForReminder;
-  int _getTotalNumberOfReminders = 0;
 
   String notificationChannelFlowWidgetIcon(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
@@ -13697,6 +13696,9 @@ class AuthViewModel extends BaseViewModel {
                                                 .contains(
                                                   formattedSelectedTimeAndPeriod,
                                                 )) {
+                                              formattedSelectedTimeAndPeriod =
+                                                  '--:--';
+                                              model.globalTimeIndex = null;
                                             } else {
                                               model
                                                   .formattedSelectedTimeAndPeriodList!
@@ -17687,6 +17689,10 @@ class AuthViewModel extends BaseViewModel {
                                                               .contains(
                                                                 formattedSelectedTimeAndPeriod,
                                                               )) {
+                                                            formattedSelectedTimeAndPeriod =
+                                                                '--:--';
+                                                            model.globalTimeIndex =
+                                                                null;
                                                           } else {
                                                             model
                                                                 .formattedSelectedTimeAndPeriodList!
@@ -19547,337 +19553,7 @@ class AuthViewModel extends BaseViewModel {
               ],
             ),
           ),
-          SizedBox(height: 16.20.h),
-
-          addedPhoneReminderList.isNotEmpty || addedEmailReminderList.isNotEmpty
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 24.0.h),
-                    TextView(
-                      text: 'TOTAL SUMMARY',
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 14.80.sp,
-                        color: AppColors.deep,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 4.2.h),
-                    Divider(color: AppColors.infoGrey1),
-                    SizedBox(height: 10.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: DottedBorder(
-                        options: RoundedRectDottedBorderOptions(
-                          dashPattern: [3, 3],
-                          strokeWidth: .99,
-                          radius: Radius.circular(10),
-                          color: AppColors.infoGrey1,
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(
-                            vertical: 16.20.w,
-                            horizontal: 16.0.w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            color: AppColors.dashboard,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total Days',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '${returnTotalDays(model)}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                             
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total Reminders',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  
-                                  TextView(
-                                    text: '$_getTotalNumberOfReminders',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: selectedIndexes.contains(0)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(0)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(0)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(0)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Email  (x${_getTotalTimesForReminder! * addedEmailReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '₦0',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(1)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(1)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(1)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(1)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Push  (x${_getTotalTimesForReminder! * addedEmailReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text: '₦0',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(3)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(3)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'WhatsApp  (x${_getTotalTimesForReminder! * addedPhoneReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${20 * _getTotalTimesForReminder! * addedPhoneReminderList.length}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(2)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(2)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(2)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(2)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'SMS  (x${_getTotalTimesForReminder! * addedPhoneReminderList.length} msgs)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${15 * _getTotalTimesForReminder! * addedPhoneReminderList.length}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(4)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(4)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              SizedBox(
-                                height: selectedIndexes.contains(4)
-                                    ? 6.10.h
-                                    : 0.h,
-                              ),
-                              selectedIndexes.contains(4)
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text:
-                                              'Phone Calls  (x${_getTotalTimesForReminder! * addedPhoneReminderList.length} calls)',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                        TextView(
-                                          text:
-                                              '₦${50 * _getTotalTimesForReminder! * addedPhoneReminderList.length}',
-                                          textStyle: TextStyle(
-                                            // fontFamily: 'Arial',
-                                            fontSize: 16.80.sp,
-                                            color: AppColors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                              SizedBox(height: 6.10.h),
-                              Divider(color: AppColors.infoGrey1),
-                              SizedBox(height: 6.10.h),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextView(
-                                    text: 'Total',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: '₦$costTotal.00',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 16.80.sp,
-                                      color: AppColors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              : SizedBox.shrink(),
+          
           SizedBox(height: 16.20.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -19938,7 +19614,329 @@ class AuthViewModel extends BaseViewModel {
               ),
             ],
           ),
-          SizedBox(height: 26.h),
+          
+          SizedBox(height: 16.20.h),
+
+          addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 24.0.h),
+                    TextView(
+                      text: 'TOTAL SUMMARY',
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 14.80.sp,
+                        color: AppColors.deep,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 4.2.h),
+                    Divider(color: AppColors.infoGrey1),
+                    SizedBox(height: 10.h),
+                    SizedBox(
+                      width: double.infinity,
+                      child: DottedBorder(
+                        options: RoundedRectDottedBorderOptions(
+                          dashPattern: [3, 3],
+                          strokeWidth: .99,
+                          radius: Radius.circular(10),
+                          color: AppColors.infoGrey1,
+                        ),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10.w,
+                                  horizontal: 16.0.w,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Total Days',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text: '${returnTotalDays(model)}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(color: AppColors.infoGrey1),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10.w,
+                                  horizontal: 16.0.w,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextView(
+                                      text: 'Total Reminders',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    TextView(
+                                      text: '${calculateTotalReminders(model)}',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.80.sp,
+                                        color: AppColors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              selectedIndexes.contains(0)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(0)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Email (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text: '₦0',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(1)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(1)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Push (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text: '₦0',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(3)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(3)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'WhatsApp (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${20 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(2)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(2)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'SMS (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${15 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(4)
+                                  ? Divider(color: AppColors.infoGrey1)
+                                  : SizedBox.shrink(),
+                              selectedIndexes.contains(4)
+                                  ? Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                        horizontal: 16.0.w,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          TextView(
+                                            text:
+                                                'Phone Calls (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} calls)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          TextView(
+                                            text:
+                                                '₦${50 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                            textStyle: TextStyle(
+                                              fontSize: 16.80.sp,
+                                              color: AppColors.black,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                              Divider(color: AppColors.infoGrey1),
+                              Container(
+                                width: double.infinity,
+                                
+                                decoration: BoxDecoration(
+                                  color: AppColors.nearDashboard,
+                                ),
+
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                  vertical: 14.w,
+                                  horizontal: 16.0.w,
+                                ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextView(
+                                        text: 'Total',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.80.sp,
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      TextView(
+                                        text: '₦$costTotal.00',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 16.80.sp,
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : SizedBox.shrink(),
+              SizedBox(height: 26.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -21325,37 +21323,34 @@ class AuthViewModel extends BaseViewModel {
         selectedIndexes.contains(4)) {
       costTotal = costTotal * addedPhoneReminderList.length;
     }
-    totalReminder();
+    calculateTotalReminders(model);
     notifyListeners();
   }
 
-  void totalReminder() {
-    _getTotalNumberOfReminders = 0;
-    if (selectedIndexes.contains(0)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedEmailReminderList.length);
+  int calculateTotalReminders(model) {
+    final medications = model.medicationClassList ?? [];
+
+    int totalReminders = 0;
+
+    for (var med in medications) {
+      final bool isCustom = med.isCusSchedule;
+      final int durationInDays = int.parse(med.duration);
+      final int timesPerDay = int.parse(med.timesToTake);
+
+      int frequencyPerDay = 0;
+
+      if (isCustom == false) {
+        frequencyPerDay = timesPerDay * durationInDays * selectedIndexes.length;
+      } else if (isCustom == true) {
+        // Flatten all daily times and divide by number of days
+        frequencyPerDay =
+            (getTotalCustomDoses(med.dosageMap ?? []) * selectedIndexes.length);
+      }
+
+      totalReminders += frequencyPerDay;
     }
-    if (selectedIndexes.contains(1)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedEmailReminderList.length);
-    }
-    if (selectedIndexes.contains(2)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedPhoneReminderList.length);
-    }
-    if (selectedIndexes.contains(3)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedPhoneReminderList.length);
-    }
-    if (selectedIndexes.contains(4)) {
-      _getTotalNumberOfReminders +=
-          (_getTotalTimesForReminder! *
-          addedPhoneReminderList.length);
-    }
+
+    return totalReminders;
   }
 
   paymentWidget({

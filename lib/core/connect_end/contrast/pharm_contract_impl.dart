@@ -3,6 +3,8 @@ import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/pharm_auth_api.dart';
 import 'package:medicate_app/core/connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/create_payment_wallet_entity_model.dart';
+import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
@@ -13,9 +15,14 @@ import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/login_entity_model.dart';
+import '../model/pay_with_wallet_entity_model.dart';
+import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -186,4 +193,24 @@ class PharmContractsImpl {
 
   Future<GetReminderById> getReminderByUserId({String? userId}) async =>
       await _api.getReminderByUserId(userId: userId);
+
+  Future<CreatePaymentWalletModel> createWalletPayment({
+    CreatePaymentWalletEntityModel? createPaymentWalletEntityModel,
+  }) async => await _api.createWalletPayment(
+    createPaymentWalletEntityModel: createPaymentWalletEntityModel,
+  );
+  Future<InitiatePaymentResponseModel> initiateWalletPayment({
+    InitiatePaymentWalletEntityModel? initiatePaymentWalletEntityModel,
+  }) async => await _api.initiateWalletPayment(
+    initiatePaymentWalletEntityModel: initiatePaymentWalletEntityModel,
+  );
+  Future<PayWithWalletResponseModel> payWithWallet({
+    PayWithWalletEntityModel? payWithWalletEntityModel,
+  }) async => await _api.payWithWallet(
+    payWithWalletEntityModel: payWithWalletEntityModel,
+  );
+  Future<GetTransactionWalletResponseModel> getTransactionWallet() async =>
+      await _api.getTransactionWallet();
+  Future<GetWalletResponseModel> getWalletBalance() async =>
+      await _api.getWalletBalance();
 }

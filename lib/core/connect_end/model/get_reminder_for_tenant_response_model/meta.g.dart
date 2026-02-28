@@ -7,10 +7,10 @@ part of 'meta.dart';
 // **************************************************************************
 
 Meta _$MetaFromJson(Map<String, dynamic> json) => Meta(
-  page: json['page'],
-  limit: json['limit'],
-  total: json['total'],
-  totalPages: json['totalPages'],
+  page: (json['page'] as num?)?.toInt(),
+  limit: (json['limit'] as num?)?.toInt(),
+  total: (json['total'] as num?)?.toInt(),
+  totalPages: (json['totalPages'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$MetaToJson(Meta instance) => <String, dynamic>{

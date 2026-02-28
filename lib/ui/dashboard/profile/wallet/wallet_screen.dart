@@ -102,7 +102,6 @@ class WalletScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        
                         if (model.isLoading)
                           SpinKitThreeBounce(
                             color: AppColors.primary.withOpacity(.5),
@@ -258,8 +257,7 @@ class WalletScreen extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                              })
-                      
+                              }),
                       ],
                     ),
                   ),

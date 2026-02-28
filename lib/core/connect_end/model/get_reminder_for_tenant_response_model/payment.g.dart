@@ -13,7 +13,9 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) => Payment(
   status: json['status'] as String?,
   reminderGroupId: json['reminderGroupId'] as String?,
   notificationChannelsPaidFor:
-      json['notificationChannelsPaidFor'] as List<dynamic>?,
+      (json['notificationChannelsPaidFor'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
 );
 
 Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{

@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'medication.dart';
+import 'patient_details.dart';
 import 'payment.dart';
 import 'user.dart';
 
@@ -12,11 +13,12 @@ class Reminder {
   String? id;
   String? userId;
   String? tenantId;
+  PatientDetails? patientDetails;
   Medication? medication;
   String? timeZone;
   bool? isActive;
   List<String>? notificationChannels;
-  List<String>? phoneNumbers;
+  List<dynamic>? phoneNumbers;
   List<String>? emails;
   List<Payment>? payments;
   String? reminderGroupId;
@@ -28,6 +30,7 @@ class Reminder {
     this.id,
     this.userId,
     this.tenantId,
+    this.patientDetails,
     this.medication,
     this.timeZone,
     this.isActive,

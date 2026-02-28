@@ -9,7 +9,7 @@ class Payment {
   String? currency;
   String? status;
   String? reminderGroupId;
-  List<dynamic>? notificationChannelsPaidFor;
+  List<String>? notificationChannelsPaidFor;
 
   Payment({
     this.transactionReference,

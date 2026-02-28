@@ -5,6 +5,8 @@ import 'package:injectable/injectable.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
+import '../model/create_payment_wallet_entity_model.dart';
+import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
@@ -16,9 +18,14 @@ import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/login_entity_model.dart';
+import '../model/pay_with_wallet_entity_model.dart';
+import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -356,6 +363,43 @@ class PharmRepoImpl {
   Future<GetReminderById> getReminderByUserId({String? userId}) async {
     final response = await _contract.getReminderByUserId(userId: userId);
 
+    return response;
+  }
+
+  Future<CreatePaymentWalletModel> createWalletPayment({
+    CreatePaymentWalletEntityModel? createPaymentWalletEntityModel,
+  }) async {
+    final response = await _contract.createWalletPayment(
+      createPaymentWalletEntityModel: createPaymentWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<InitiatePaymentResponseModel> initiateWalletPayment({
+    InitiatePaymentWalletEntityModel? initiatePaymentWalletEntityModel,
+  }) async {
+    final response = await _contract.initiateWalletPayment(
+      initiatePaymentWalletEntityModel: initiatePaymentWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<PayWithWalletResponseModel> payWithWallet({
+    PayWithWalletEntityModel? payWithWalletEntityModel,
+  }) async {
+    final response = await _contract.payWithWallet(
+      payWithWalletEntityModel: payWithWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<GetTransactionWalletResponseModel> getTransactionWallet() async {
+    final response = await _contract.getTransactionWallet();
+    return response;
+  }
+
+  Future<GetWalletResponseModel> getWalletBalance() async {
+    final response = await _contract.getWalletBalance();
     return response;
   }
 

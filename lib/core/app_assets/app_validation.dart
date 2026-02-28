@@ -113,6 +113,25 @@ class AppValidator {
       return null;
     };
   }
+  static String? Function(String?) validatePhoneNewPatient({String? error}) {
+    return (String? value) {
+      if (value!.isEmpty) {
+        return error ?? 'Enter a valid phone number';
+      }
+      if (value.startsWith("+234") && value.length != 14) {
+        return error ?? 'Not a valid phone number9.';
+      }
+      // Land lines eg 080
+      if (value.startsWith(RegExp("0[789]")) && value.length != 11) {
+        return error ?? 'Not a valid phone number17.';
+      }
+      if (!value.startsWith(RegExp("0[789]")) && value.length != 10) {
+        return error ?? 'Not a valid phone number8.';
+      }
+      
+      return null;
+    };
+  }
 
   static String? Function(String?) validatePhoneAddress({String? error}) {
     return (String? value) {

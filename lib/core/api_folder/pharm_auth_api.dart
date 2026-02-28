@@ -6,6 +6,8 @@ import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_role_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
+import '../connect_end/model/create_payment_wallet_entity_model.dart';
+import '../connect_end/model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../connect_end/model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../connect_end/model/create_user_entity_model.dart';
@@ -15,9 +17,14 @@ import '../connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../connect_end/model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../connect_end/model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
 import '../connect_end/model/login_entity_model.dart';
+import '../connect_end/model/pay_with_wallet_entity_model.dart';
+import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -754,4 +761,85 @@ class PharmApi {
       rethrow;
     }
   }
+
+
+  Future<CreatePaymentWalletModel> createWalletPayment({
+    CreatePaymentWalletEntityModel? createPaymentWalletEntityModel,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.create_payment,
+        RequestMethod.post,
+        data: createPaymentWalletEntityModel?.toJson(),
+      );
+      logger.d(response.data);
+      return CreatePaymentWalletModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<InitiatePaymentResponseModel> initiateWalletPayment({
+    InitiatePaymentWalletEntityModel? initiatePaymentWalletEntityModel,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.initiate_payment,
+        RequestMethod.post,
+        data: initiatePaymentWalletEntityModel?.toJson(),
+      );
+      logger.d(response.data);
+      return InitiatePaymentResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<PayWithWalletResponseModel> payWithWallet({
+    PayWithWalletEntityModel? payWithWalletEntityModel,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.pay_with_wallet,
+        RequestMethod.post,
+        data: payWithWalletEntityModel?.toJson(),
+      );
+      logger.d(response.data);
+      return PayWithWalletResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetTransactionWalletResponseModel> getTransactionWallet() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_transaction,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetTransactionWalletResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetWalletResponseModel> getWalletBalance() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_wallet,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetWalletResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
 }

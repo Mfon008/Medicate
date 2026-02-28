@@ -378,7 +378,10 @@ class _PharmacySignUpScreenState extends State<PharmacySignUpScreen> {
                                 context,
                                 signUpEntity: SignUpPharmacyEntityModel(
                                   name: nameController.text.trim(),
-                                  phone: model.returnReminderPhoneStructureWith234(phoneController.text.trim()),
+                                  phone: model
+                                      .returnReminderPhoneStructureWith234(
+                                        phoneController.text.trim(),
+                                      ),
                                   licenseNumber: licenseNoController.text
                                       .trim(),
                                   businessAddress: businessAddressController

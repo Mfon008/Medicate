@@ -92,6 +92,7 @@ class AppImage {
   static const String profile = 'assets/svgs/profile.svg';
   static const String providers = 'assets/svgs/providers.svg';
   static const String timer = 'assets/svgs/timer.svg';
+  static const String freq_timer = 'assets/svgs/freq_time.svg';
   static const String track_meds_use = 'assets/svgs/track_meds_use.svg';
   static const String filter = 'assets/svgs/filter.svg';
   static const String key = 'assets/svgs/key.svg';

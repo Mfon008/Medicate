@@ -100,12 +100,15 @@ class TransactionScreen extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.all(10.0.w),
                                   decoration: BoxDecoration(
-                                     color:e.type=='DEBIT'?AppColors.appRed .withOpacity(.1): AppColors.green
-                                                  .withOpacity(.1),
+                                    color: e.type == 'DEBIT'
+                                        ? AppColors.appRed.withOpacity(.1)
+                                        : AppColors.green.withOpacity(.1),
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
                                   child: SvgPicture.asset(
-                                    e.type=='DEBIT'?AppImage.up_stroke:  AppImage.down_stroke,
+                                    e.type == 'DEBIT'
+                                        ? AppImage.up_stroke
+                                        : AppImage.down_stroke,
                                     height: 13.9.h,
                                     width: 13.9.w,
                                   ),
@@ -117,7 +120,9 @@ class TransactionScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextView(
-                                      text:e.type=='DEBIT'? 'Debit Wallet': 'Wallet Funded',
+                                      text: e.type == 'DEBIT'
+                                          ? 'Debit Wallet'
+                                          : 'Wallet Funded',
                                       textStyle: TextStyle(
                                         fontSize: 14.9.sp,
                                         fontWeight: FontWeight.w400,

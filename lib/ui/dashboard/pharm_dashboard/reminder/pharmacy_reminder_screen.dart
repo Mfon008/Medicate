@@ -1030,8 +1030,8 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                 Center(
                   child:
                       model.getReminderResponseModel != null &&
-                          model.getReminderResponseModel!.data!.data != null &&
-                          model.getReminderResponseModel!.data!.data!.isNotEmpty
+                          model.getReminderResponseModel!.data!.reminders != null &&
+                          model.getReminderResponseModel!.data!.reminders!.isNotEmpty
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -1071,7 +1071,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                     model
                                             .getReminderResponseModel!
                                             .data!
-                                            .data!
+                                            .reminders!
                                             .length >
                                         4
                                     ? MediaQuery.of(context).size.height * .65
@@ -1201,10 +1201,10 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                           ...model
                                               .getReminderResponseModel!
                                               .data!
-                                              .data!
+                                              .reminders!
                                               .reversed
                                               .where(
-                                                (e) => e.user!.fullName!
+                                                (e) => e.patientDetails!.fullName!
                                                     .toLowerCase()
                                                     .contains(
                                                       model
@@ -1224,7 +1224,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                           ...model
                                               .getReminderResponseModel!
                                               .data!
-                                              .data!
+                                              .reminders!
                                               .reversed
                                               .map(
                                                 (e) => reminderWidget(
@@ -1241,7 +1241,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                           ...model
                                               .getReminderResponseModel!
                                               .data!
-                                              .data!
+                                              .reminders!
                                               .reversed
                                               .where(
                                                 (e) => e.user!.fullName!
@@ -1264,7 +1264,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                           ...model
                                               .getReminderResponseModel!
                                               .data!
-                                              .data!
+                                              .reminders!
                                               .reversed
                                               .map(
                                                 (e) => reminderWidget(
@@ -1281,7 +1281,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                           ...model
                                               .getReminderResponseModel!
                                               .data!
-                                              .data!
+                                              .reminders!
                                               .reversed
                                               .where(
                                                 (e) => e.user!.fullName!
@@ -1304,7 +1304,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                           ...model
                                               .getReminderResponseModel!
                                               .data!
-                                              .data!
+                                              .reminders!
                                               .reversed
                                               .map(
                                                 (e) => reminderWidget(
@@ -2171,7 +2171,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                   ),
                   SizedBox(height: 4.20.h),
                   TextView(
-                    text: reminder.user?.fullName ?? '',
+                    text: reminder.patientDetails?.fullName?.capitalize()?? '',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 14.50.sp,
@@ -2185,6 +2185,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  SizedBox(height: 10.h),
                   TextView(
                     text:
                         reminder.medication?.medicationStatus?.capitalize() ??
@@ -2339,187 +2340,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
       ),
     ),
   );
-
-  // reminderWidget({
-  //   context,
-  //   isTab,
-  //   Reminder? reminder,
-  //   PharmViewModel? model,
-  //   bool isComplete = false,
-  // }) => GestureDetector(
-  //   onTap: () => navigate.navigateTo(
-  //     Routes.pharmViewMedicationScreen,
-  //     arguments: PharmViewMedicationScreenArguments(id: reminder.id),
-  //   ),
-  //   child: Container(
-  //     padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),
-  //     margin: EdgeInsets.only(bottom: 16.w),
-  //     width: double.infinity,
-  //     decoration: BoxDecoration(
-  //       color: AppColors.white,
-  //       borderRadius: BorderRadius.circular(10.r),
-  //       border: Border.all(color:AppColors.grey)
-  //     ),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Expanded(
-  //           child: Container(
-  //             padding: EdgeInsets.symmetric(
-  //               vertical: 36.0.w,
-  //               horizontal: 36.40.w,
-  //             ),
-  //             width: MediaQuery.of(context).size.width / 2.5,
-  //             height: 150.h,
-  //             decoration: BoxDecoration(
-  //               color: AppColors.dashboard,
-  //               borderRadius: BorderRadius.circular(10.r),
-  //             ),
-  //             child: Image.network(
-  //               reminder?.medication?.medicationImage?.url ?? '',
-  //               height: 76.h,
-  //               width: 76.w,
-  //               fit: BoxFit.cover,
-  //               errorBuilder: (context, error, stackTrace) => Padding(
-  //                 padding: EdgeInsets.all(18.w),
-  //                 child: SvgPicture.asset(
-  //                   color: AppColors.primary,
-  //                   model!.errorRemidnderImage(
-  //                     reminder!.medication!.medicationType,
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         SizedBox(width: 15.20.w),
-  //         Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             SizedBox(
-  //               width: 140.w,
-  //               child: TextView(
-  //                 text: reminder?.medication?.medicationName ?? '',
-  //                 maxLines: 1,
-  //                 textOverflow: TextOverflow.ellipsis,
-  //                 textStyle: TextStyle(
-  //                   fontFamily: 'GoogleSans',
-  //                   fontSize: 16.2.sp,
-  //                   fontWeight: FontWeight.w500,
-  //                   color: AppColors.reminder,
-  //                 ),
-  //               ),
-  //             ),
-  //             SizedBox(height: 4.h),
-  //             TextView(
-  //               text:
-  //                   '${DateFormat('MMM d').format(reminder!.medication!.startDateTime!)} - ${DateFormat('MMM d').format(reminder.medication!.endDateTime!)}',
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 13.2.sp,
-  //                 fontWeight: FontWeight.w400,
-  //                 color: AppColors.grey1,
-  //               ),
-  //             ),
-  //             SizedBox(height: 6.h),
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.end,
-  //               children: [
-  //                 SizedBox(
-  //                   width: isTab ? 230.w : 130.w,
-  //                   child: ClipRRect(
-  //                     borderRadius: const BorderRadius.all(
-  //                       Radius.circular(5.0),
-  //                     ), // Adjust radius as needed
-  //                     child: LinearProgressIndicator(
-  //                       minHeight: 4.0, // Adjust height as needed
-  //                       value: model!.getReminderStatusValue(
-  //                         reminder.medication!.dailyDoseTimes!,
-  //                       ),
-  //                       color: AppColors.lightBlue, // Progress bar color
-  //                       backgroundColor:
-  //                           Colors.grey[300], // Background track color
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 7.10.w),
-  //                 TextView(
-  //                   text: '${model.takenCount}/${model.totalCount}',
-  //                   textStyle: TextStyle(
-  //                     fontFamily: 'Arial',
-  //                     fontSize: 12.sp,
-  //                     fontWeight: FontWeight.w400,
-  //                     color: AppColors.infoGrey,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //             SizedBox(height: 14.h),
-  //             TextView(
-  //               text: 'Dosage',
-  //               textStyle: TextStyle(
-  //                 fontFamily: 'Arial',
-  //                 fontSize: 13.2.sp,
-  //                 fontWeight: FontWeight.w400,
-  //                 color: AppColors.infoGrey,
-  //               ),
-  //             ),
-  //             SizedBox(height: 2.h),
-  //             Row(
-  //               children: [
-  //                 TextView(
-  //                   text: reminder.medication?.dosage ?? '',
-  //                   textStyle: TextStyle(
-  //                     fontFamily: 'Arial',
-  //                     fontSize: 14.2.sp,
-  //                     fontWeight: FontWeight.w400,
-  //                     color: AppColors.reminder,
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 4.6.w),
-  //                 TextView(
-  //                   text: 'x${reminder.medication?.timesPerDay} daily',
-  //                   textStyle: TextStyle(
-  //                     fontFamily: 'Arial',
-  //                     fontSize: 12.sp,
-  //                     fontWeight: FontWeight.w400,
-  //                     color: AppColors.infoGrey,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //             SizedBox(height: 6.h),
-  //             Row(
-  //               children: [
-  //                 Container(
-  //                   padding: EdgeInsets.all(3.2.w),
-  //                   decoration: BoxDecoration(
-  //                     color: !isComplete
-  //                         ? payStatusColor(reminder.payments)
-  //                         : AppColors.app_green,
-  //                     shape: BoxShape.circle,
-  //                   ),
-  //                 ),
-  //                 SizedBox(width: 4.6.w),
-  //                 TextView(
-  //                   text: !isComplete
-  //                       ? payStatus(reminder.payments)
-  //                       : 'Completed',
-  //                   textStyle: TextStyle(
-  //                     fontFamily: 'Arial',
-  //                     fontSize: 12.sp,
-  //                     fontWeight: FontWeight.w400,
-  //                     color: AppColors.reminder,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   ),
-  // );
 
   payStatus(List<Payment>? payments) {
     if (payments!.isNotEmpty && payments[0].status == 'SUCCESS') {
