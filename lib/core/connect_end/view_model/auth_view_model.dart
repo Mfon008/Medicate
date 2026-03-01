@@ -464,6 +464,22 @@ class AuthViewModel extends BaseViewModel {
     return AppImage.bell;
   }
 
+   String notificationChannelFlowWidgetIconSelected(int select) {
+    if (select == 0) {
+      return AppImage.channel_email;
+    }
+    if (select ==  2) {
+      return AppImage.sms;
+    }
+    if (select == 3) {
+      return AppImage.whatsapp;
+    }
+    if (select == 4) {
+      return AppImage.phone;
+    }
+    return AppImage.bell;
+  }
+
   String notificationChannelFormatName(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
       return 'Email';
@@ -475,6 +491,22 @@ class AuthViewModel extends BaseViewModel {
       return 'Whatsapp';
     }
     if (notificationChannel.toLowerCase() == 'phone_call') {
+      return 'Phone Call';
+    }
+    return 'Push';
+  }
+
+   String notificationChannelFormatNameSelected(int select) {
+    if (select == 0) {
+      return 'Email';
+    }
+    if (select == 2) {
+      return 'SMS';
+    }
+    if (select == 3) {
+      return 'Whatsapp';
+    }
+    if (select == 4) {
       return 'Phone Call';
     }
     return 'Push';
@@ -507,6 +539,44 @@ class AuthViewModel extends BaseViewModel {
             SizedBox(width: 7.10.w),
             TextView(
               text: notificationChannelFormatName(notificationType),
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.reminder,
+              ),
+            ),
+          ],
+        ),
+      );
+  
+  Widget notificationChannelFlowWidgetSelection({required int selected}) =>
+      Container(
+        width:
+            selected == 4 ||
+               selected == 3
+            ? 120.w
+            : 90.w,
+        margin: EdgeInsets.only(right: 4.10.w),
+        padding: EdgeInsets.symmetric(vertical: 4.w),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.infoGrey1),
+          borderRadius: BorderRadius.circular(22),
+          color: AppColors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              notificationChannelFlowWidgetIconSelected(selected),
+              color: AppColors.infoGrey,
+              width: selected == 2 ? 24.0 : selected == 0 ? 14.sp:16.20.w,
+              height: selected == 2 ? 24.0 : selected == 0 ? 12.sp: 16.20.sp,
+            ),
+            SizedBox(width: 7.10.w),
+            TextView(
+              text: notificationChannelFormatNameSelected(selected),
               textStyle: TextStyle(
                 fontFamily: 'GoogleSans',
                 fontSize: 13.2.sp,
@@ -19617,6 +19687,114 @@ class AuthViewModel extends BaseViewModel {
           
           SizedBox(height: 16.20.h),
 
+          SizedBox(height: 24.20.h),
+          TextView(
+            text: 'NOTIFICATION CHANNELS',
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 14.80.sp,
+              color: AppColors.deep,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Divider(color: AppColors.grey),
+          SizedBox(height: 12.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+            decoration: BoxDecoration(
+              color: AppColors.grey,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextView(
+                  text: 'Selected Channels',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                Wrap(
+                  spacing: 4.10,
+                  runSpacing: 6,
+                  children: [
+                    ...selectedIndexes.map(
+                      (e) => model.notificationChannelFlowWidgetSelection(
+                        selected: e,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 6.0.h),
+                Divider(color: AppColors.infoGrey1),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text: 'Phone numbers',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                Wrap(
+                  spacing: 4.10,
+                  runSpacing: 6,
+                  children: [
+                    ...addedPhoneReminderList.map((o)=>TextView(
+                  text: '${formatPhoneNumber(o)}, ',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),),
+                  ],
+                ),
+                SizedBox(height: 6.0.h),
+                Divider(color: AppColors.infoGrey1),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text: 'Email',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                Wrap(
+                  spacing: 4.10,
+                  runSpacing: 6,
+                  children: [
+                    ...addedEmailReminderList.map(
+                      (e) => TextView(
+                  text: '$e, ',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 6.0.h),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.20.h),
+
           addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -19936,7 +20114,7 @@ class AuthViewModel extends BaseViewModel {
                   ],
                 )
               : SizedBox.shrink(),
-              SizedBox(height: 26.h),
+              SizedBox(height: 46.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

@@ -245,7 +245,6 @@ class PharmViewModel extends BaseViewModel {
   PayWithWalletResponseModel? get payWithWalletResponseModel =>
       _payWithWalletResponseModel;
 
-
   int linIndex = 1;
   int linIndexUpdate = 1;
   int indexOfMedicationClassList = 0;
@@ -7454,7 +7453,17 @@ class PharmViewModel extends BaseViewModel {
                 fillColor: AppColors.white,
                 isFilled: true,
                 controller: model.emailController,
+                keyboardType: TextInputType.emailAddress,
                 validator: AppValidator.validateEmail(),
+                inputFormatters: [
+                  TextInputFormatter.withFunction((oldValue, newValue) {
+                    return newValue.copyWith(
+                      text: newValue.text.toLowerCase(),
+                      selection: newValue.selection,
+                    );
+                  }),
+                ],
+
                 style: TextStyle(
                   fontSize: 16.20.sp,
                   fontWeight: FontWeight.w400,
@@ -7516,34 +7525,6 @@ class PharmViewModel extends BaseViewModel {
                           ),
                         ),
                         SizedBox(height: 16.h),
-                        // TextFormWidget(
-                        //   hint: 'Drug Name',
-                        //   borderColor: AppColors.transparent,
-                        //   borderTopLeft: 10.r,
-                        //   borderTopRight: 10.r,
-                        //   borderBottomLeft: 10.r,
-                        //   borderBottomRight: 10.r,
-                        //   hintSize: 13.62.sp,
-                        //   fillColor: AppColors.grey,
-                        //   isFilled: true,
-                        //   controller: drugNameController,
-                        //   validator: AppValidator.validateString(),
-                        //   style: TextStyle(
-                        //     fontSize: 16.20.sp,
-                        //     fontWeight: FontWeight.w400,
-                        //     fontFamily: 'GoogleSans',
-                        //   ),
-                        // ),
-                        // SizedBox(height: 16.h),
-                        // TextView(
-                        //   text: 'Medication Type',
-                        //   textStyle: TextStyle(
-                        //     fontFamily: 'Arial',
-                        //     fontSize: 14.sp,
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        // ),
-                        // SizedBox(height: 12.h),
                         TextFormWidget(
                           hint: 'Medication Type',
                           hintWeight: FontWeight.w400,
@@ -8908,6 +8889,132 @@ class PharmViewModel extends BaseViewModel {
                                             ],
                                           ),
                                         ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 12.w,
+                                            right: 20.w,
+                                            top: 10.w
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (addedEmailReminderList
+                                                      .contains(
+                                                        model
+                                                            .emailController
+                                                            .text,
+                                                      )) {
+                                                    addedEmailReminderList
+                                                        .remove(
+                                                          model
+                                                              .emailController
+                                                              .text,
+                                                        );
+                                                  } else {
+                                                    addedEmailReminderList.add(
+                                                      model
+                                                          .emailController
+                                                          .text,
+                                                    );
+                                                  }
+                                                  model._isEmailFlagged = true;
+                                                  setModalState!(() {});
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      addedEmailReminderList
+                                                          .contains(
+                                                            model
+                                                                .emailController
+                                                                .text,
+                                                          )
+                                                      ? EdgeInsets.all(4.0.w)
+                                                      : EdgeInsets.all(4.0.w),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          6.r,
+                                                        ),
+                                                    color:
+                                                        addedEmailReminderList
+                                                            .contains(
+                                                              model
+                                                                  .emailController
+                                                                  .text,
+                                                            )
+                                                        ? AppColors.primary
+                                                        : AppColors.transparent,
+                                                    border: Border.all(
+                                                      color:
+                                                          addedEmailReminderList
+                                                              .contains(
+                                                                model
+                                                                    .emailController
+                                                                    .text,
+                                                              )
+                                                          ? AppColors
+                                                                .transparent
+                                                          : AppColors.infoGrey,
+                                                      width: .78,
+                                                    ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 12.sp,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 9.10.w),
+                                              TextView(
+                                                text:
+                                                    model.emailController.text,
+
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 16.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.all(
+                                                      1.2.w,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          AppColors.app_green,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      size: 13.4.sp,
+                                                      color: AppColors.white,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10.w),
+                                                  TextView(
+                                                    text: 'Primary',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 13.72.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 2.0.h),
+                                        Divider(color: AppColors.infoGrey1),
                                         SizedBox(height: 15.20.h),
                                         ...emailReminderList.asMap().entries.map((
                                           entry,
@@ -8989,37 +9096,6 @@ class PharmViewModel extends BaseViewModel {
                                                             : SizedBox.shrink(),
                                                       ),
                                                     ),
-                                                    // Transform.scale(
-                                                    //   scale:
-                                                    //       MediaQuery.of(
-                                                    //             context,
-                                                    //           ).size.shortestSide >=
-                                                    //           600
-                                                    //       ? 1.5
-                                                    //       : 1.1,
-                                                    //   child: Checkbox(
-                                                    //     value: addedEmailReminderList
-                                                    //         .contains(o),
-                                                    //     onChanged: (_) {
-                                                    //       if (addedEmailReminderList
-                                                    //           .contains(o)) {
-                                                    //         addedEmailReminderList.remove(
-                                                    //           o,
-                                                    //         );
-                                                    //       } else {
-                                                    //         addedEmailReminderList.add(o);
-                                                    //       }
-                                                    //       model!.notifyListeners();
-                                                    //     },
-                                                    //     activeColor: AppColors.primary,
-                                                    //     shape: RoundedRectangleBorder(
-                                                    //       borderRadius:
-                                                    //           BorderRadius.circular(4),
-                                                    //     ),
-                                                    //     visualDensity: VisualDensity
-                                                    //         .compact, // 👈 reduces internal padding
-                                                    //   ),
-                                                    // ),
                                                     SizedBox(width: 9.10.w),
                                                     SizedBox(
                                                       width: 220.w,
@@ -12956,6 +13032,135 @@ class PharmViewModel extends BaseViewModel {
                                             ],
                                           ),
                                         ),
+
+                                        SizedBox(height: 15.20.h),
+
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 12.w,
+                                            right: 20.w,
+                                            top: 10.w
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (addedEmailReminderList
+                                                      .contains(
+                                                        model
+                                                            .emailController
+                                                            .text,
+                                                      )) {
+                                                    addedEmailReminderList
+                                                        .remove(
+                                                          model
+                                                              .emailController
+                                                              .text,
+                                                        );
+                                                  } else {
+                                                    addedEmailReminderList.add(
+                                                      model
+                                                          .emailController
+                                                          .text,
+                                                    );
+                                                  }
+                                                  model._isEmailFlagged = true;
+                                                  setModalState!(() {});
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      addedEmailReminderList
+                                                          .contains(
+                                                            model
+                                                                .emailController
+                                                                .text,
+                                                          )
+                                                      ? EdgeInsets.all(4.0.w)
+                                                      : EdgeInsets.all(4.0.w),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          6.r,
+                                                        ),
+                                                    color:
+                                                        addedEmailReminderList
+                                                            .contains(
+                                                              model
+                                                                  .emailController
+                                                                  .text,
+                                                            )
+                                                        ? AppColors.primary
+                                                        : AppColors.transparent,
+                                                    border: Border.all(
+                                                      color:
+                                                          addedEmailReminderList
+                                                              .contains(
+                                                                model
+                                                                    .emailController
+                                                                    .text,
+                                                              )
+                                                          ? AppColors
+                                                                .transparent
+                                                          : AppColors.infoGrey,
+                                                      width: .78,
+                                                    ),
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 12.sp,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 9.10.w),
+                                              TextView(
+                                                text:
+                                                    model.emailController.text,
+
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 16.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.all(
+                                                      1.2.w,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          AppColors.app_green,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      size: 13.4.sp,
+                                                      color: AppColors.white,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10.w),
+                                                  TextView(
+                                                    text: 'Primary',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 13.72.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 2.0.h),
+                                        Divider(color: AppColors.infoGrey1),
                                         SizedBox(height: 15.20.h),
                                         ...emailReminderList.asMap().entries.map((
                                           entry,
@@ -14530,7 +14735,7 @@ class PharmViewModel extends BaseViewModel {
               ),
             ],
           ),
-          
+
           SizedBox(height: 24.20.h),
           TextView(
             text: 'NOTIFICATION CHANNELS',
@@ -14558,23 +14763,82 @@ class PharmViewModel extends BaseViewModel {
                   text: 'Selected Channels',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
+                    fontSize: 15.8.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.infoGrey,
                   ),
                 ),
                 SizedBox(height: 6.0.h),
+                Wrap(
+                  spacing: 4.10,
+                  runSpacing: 6,
+                  children: [
+                    ...selectedIndexes.map(
+                      (e) => model.notificationChannelFlowWidgetSelection(
+                        selected: e,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 6.0.h),
+                Divider(color: AppColors.infoGrey1),
+                SizedBox(height: 6.0.h),
                 TextView(
-                  text:
-                      '${model.medicationClassList[indexOfMedicationClassList].dosage}',
+                  text: 'Phone numbers',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
+                    fontSize: 15.8.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.black,
+                    color: AppColors.infoGrey,
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 6.0.h),
+                Wrap(
+                  spacing: 4.10,
+                  runSpacing: 6,
+                  children: [
+                    ...addedPhoneReminderList.map((o)=>TextView(
+                  text: '${formatPhoneNumber(o)}, ',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),),
+                  ],
+                ),
+                SizedBox(height: 6.0.h),
+                Divider(color: AppColors.infoGrey1),
+                SizedBox(height: 6.0.h),
+                TextView(
+                  text: 'Email',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 15.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
+                ),
+                SizedBox(height: 6.0.h),
+                Wrap(
+                  spacing: 4.10,
+                  runSpacing: 6,
+                  children: [
+                    ...addedEmailReminderList.map(
+                      (e) => TextView(
+                  text: '$e, ',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
+                ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 6.0.h),
               ],
             ),
           ),
@@ -14860,9 +15124,9 @@ class PharmViewModel extends BaseViewModel {
 
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                  vertical: 14.w,
-                                  horizontal: 16.0.w,
-                                ),
+                                    vertical: 14.w,
+                                    horizontal: 16.0.w,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -14897,7 +15161,7 @@ class PharmViewModel extends BaseViewModel {
                   ],
                 )
               : SizedBox.shrink(),
-              SizedBox(height: 26.h),
+          SizedBox(height: 46.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -15083,6 +15347,22 @@ class PharmViewModel extends BaseViewModel {
     return AppImage.bell;
   }
 
+  String notificationChannelFlowWidgetIconSelected(int select) {
+    if (select == 0) {
+      return AppImage.channel_email;
+    }
+    if (select ==  2) {
+      return AppImage.sms;
+    }
+    if (select == 3) {
+      return AppImage.whatsapp;
+    }
+    if (select == 4) {
+      return AppImage.phone;
+    }
+    return AppImage.bell;
+  }
+
   String notificationChannelFormatName(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
       return 'Email';
@@ -15094,6 +15374,22 @@ class PharmViewModel extends BaseViewModel {
       return 'Whatsapp';
     }
     if (notificationChannel.toLowerCase() == 'phone_call') {
+      return 'Phone Call';
+    }
+    return 'Push';
+  }
+
+  String notificationChannelFormatNameSelected(int select) {
+    if (select == 0) {
+      return 'Email';
+    }
+    if (select == 2) {
+      return 'SMS';
+    }
+    if (select == 3) {
+      return 'Whatsapp';
+    }
+    if (select == 4) {
       return 'Phone Call';
     }
     return 'Push';
@@ -15126,6 +15422,44 @@ class PharmViewModel extends BaseViewModel {
             SizedBox(width: 7.10.w),
             TextView(
               text: notificationChannelFormatName(notificationType),
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.reminder,
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget notificationChannelFlowWidgetSelection({required int selected}) =>
+      Container(
+        width:
+            selected == 4 ||
+               selected == 3
+            ? 120.w
+            : 90.w,
+        margin: EdgeInsets.only(right: 4.10.w),
+        padding: EdgeInsets.symmetric(vertical: 4.w),
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.infoGrey1),
+          borderRadius: BorderRadius.circular(22),
+          color: AppColors.white,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              notificationChannelFlowWidgetIconSelected(selected),
+              color: AppColors.infoGrey,
+              width: selected == 2 ? 24.0 : selected == 0 ? 14.sp:16.20.w,
+              height: selected == 2 ? 24.0 : selected == 0 ? 12.10.sp: 16.20.sp,
+            ),
+            SizedBox(width: 7.10.w),
+            TextView(
+              text: notificationChannelFormatNameSelected(selected),
               textStyle: TextStyle(
                 fontFamily: 'GoogleSans',
                 fontSize: 13.2.sp,
@@ -18093,5 +18427,4 @@ class PharmViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-
 }
