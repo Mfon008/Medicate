@@ -1917,6 +1917,9 @@ class PharmViewModel extends BaseViewModel {
     if (phoneNumber.startsWith('+234')) {
       return phoneNumber.replaceFirst('+234', '0');
     }
+    if (!phoneNumber.startsWith('0')) {
+      return '0$phoneNumber';
+    }
     return phoneNumber; // return unchanged if it doesn't start with +234
   }
 
@@ -5836,26 +5839,7 @@ class PharmViewModel extends BaseViewModel {
         setModalState: setModalState,
         scrollController: scrollController,
       );
-    }
-    // else if (linIndex == 2) {
-    //   return secondModalFlow(
-    //     model: model,
-    //     context: context,
-    //     setModalState: setModalState,
-    //     scrollController: scrollController,
-    //     // id: id,
-    //   );
-    // }
-    // else if (linIndex == 4) {
-    //   return thirdModalFlow(
-    //     model: model,
-    //     context: context,
-    //     setModalState: setModalState,
-    //     scrollController: scrollController,
-    //     id: id,
-    //   );
-    // }
-    else if (linIndex == 3) {
+    } else if (linIndex == 3) {
       return fourthModalFlow(
         model: model,
         context: context,
@@ -5869,13 +5853,6 @@ class PharmViewModel extends BaseViewModel {
       setModalState: setModalState,
       scrollController: scrollController,
     );
-    // firstUserReminderModalFLow(
-    //   model: model,
-    //   context: context,
-    //   setModalState: setModalState,
-    //   scrollController: scrollController,
-    //   id: id,
-    // );
   }
 
   DateTime combineDateAndTime({
@@ -7423,6 +7400,9 @@ class PharmViewModel extends BaseViewModel {
                 fillColor: AppColors.white,
                 isFilled: true,
                 controller: model.phoneNumberController,
+                onChange: (v) {
+                  setModalState!(() {});
+                },
                 validator: (value) =>
                     AppValidator.validatePhoneNewPatient()(value),
                 style: TextStyle(
@@ -7791,7 +7771,7 @@ class PharmViewModel extends BaseViewModel {
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
                           hint: 'Start Date',
-                          label: '13 Feb, 2025 10:30 AM',
+                          label: '13 Feb, 2026',
                           hintWeight: FontWeight.w400,
                           hintColor: AppColors.reminder,
                           hintSize: Platform.isAndroid ? 14.sp : 12.sp,
@@ -7833,7 +7813,7 @@ class PharmViewModel extends BaseViewModel {
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
                           hint: 'End Date',
-                          label: '18 Feb, 2025',
+                          label: '18 Feb, 2026',
                           hintWeight: FontWeight.w400,
                           hintColor: AppColors.reminder,
                           hintSize: Platform.isAndroid ? 14.sp : 12.sp,
@@ -8428,60 +8408,52 @@ class PharmViewModel extends BaseViewModel {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            formattedSelectedTimeAndPeriod =
-                                                '--:--';
-                                            model.globalTimeIndex = null;
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                              16.w,
-                                              8.0.w,
-                                              16.0.w,
-                                              8.0.w,
+                                        child: Container(
+                                          padding: EdgeInsets.fromLTRB(
+                                            16.w,
+                                            8.0.w,
+                                            16.0.w,
+                                            8.0.w,
+                                          ),
+                                          width: double.infinity,
+                                          height: 50.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
                                             ),
-                                            width: double.infinity,
-                                            height: 50.h,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.r),
-                                              border: Border.all(
-                                                color: AppColors.infoGrey1,
+                                            border: Border.all(
+                                              color: AppColors.infoGrey1,
+                                            ),
+                                            color: AppColors.white,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              TextView(
+                                                text: getTimeFreq(),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
                                               ),
-                                              color: AppColors.white,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                TextView(
-                                                  text: getTimeFreq(),
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
-                                                  ),
+                                              IconButton(
+                                                onPressed: () {
+                                                  selectTimeFreq(
+                                                    context: context,
+                                                    model: model,
+                                                  );
+                                                  setModalState!(() {});
+                                                },
+                                                icon: Icon(
+                                                  Icons.access_time_rounded,
+                                                  color: AppColors.fineGrey,
+                                                  size: 20.sp,
                                                 ),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    selectTimeFreq(
-                                                      context: context,
-                                                      model: model,
-                                                    );
-                                                    setModalState!(() {});
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.access_time_rounded,
-                                                    color: AppColors.fineGrey,
-                                                    size: 20.sp,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -8842,7 +8814,7 @@ class PharmViewModel extends BaseViewModel {
                                                         ),
                                                         child: TextView(
                                                           text:
-                                                              '${emailReminderList.length}',
+                                                              '${emailReminderList.length + 1}',
                                                           textStyle: TextStyle(
                                                             fontFamily: 'Arial',
                                                             fontSize: 11.8.sp,
@@ -8893,7 +8865,7 @@ class PharmViewModel extends BaseViewModel {
                                           padding: EdgeInsets.only(
                                             left: 12.w,
                                             right: 20.w,
-                                            top: 10.w
+                                            top: 10.w,
                                           ),
                                           child: Row(
                                             children: [
@@ -8912,6 +8884,7 @@ class PharmViewModel extends BaseViewModel {
                                                               .text,
                                                         );
                                                   } else {
+                                                    addedEmailReminderList.clear();
                                                     addedEmailReminderList.add(
                                                       model
                                                           .emailController
@@ -9358,6 +9331,8 @@ class PharmViewModel extends BaseViewModel {
                                                       ),
                                                     );
                                                   } else {
+                                                    addedPhoneReminderList
+                                                        .clear();
                                                     addedPhoneReminderList.add(
                                                       returnPhoneNoStructureWith234Rep(
                                                         model
@@ -11870,7 +11845,7 @@ class PharmViewModel extends BaseViewModel {
                                         SizedBox(height: 24.0.h),
                                         TextFormWidget(
                                           hint: 'End Date',
-                                          label: '18 Feb, 2025',
+                                          label: '18 Feb, 2026',
                                           hintWeight: FontWeight.w400,
                                           hintColor: AppColors.reminder,
                                           hintSize: Platform.isAndroid
@@ -12202,10 +12177,10 @@ class PharmViewModel extends BaseViewModel {
                                                                       Expanded(
                                                                         child: Container(
                                                                           padding: EdgeInsets.fromLTRB(
-                                                                            16.w,
+                                                                            12.w,
                                                                             8.0.w,
-                                                                            16.0.w,
-                                                                            8.0.w,
+                                                                            4.w,
+                                                                            10.0.w,
                                                                           ),
                                                                           width:
                                                                               double.infinity,
@@ -12224,6 +12199,8 @@ class PharmViewModel extends BaseViewModel {
                                                                           child: Row(
                                                                             mainAxisAlignment:
                                                                                 MainAxisAlignment.spaceBetween,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.end,
                                                                             children: [
                                                                               TextView(
                                                                                 text: getTimeFreqCustom(
@@ -13039,7 +13016,7 @@ class PharmViewModel extends BaseViewModel {
                                           padding: EdgeInsets.only(
                                             left: 12.w,
                                             right: 20.w,
-                                            top: 10.w
+                                            top: 10.w,
                                           ),
                                           child: Row(
                                             children: [
@@ -13058,6 +13035,8 @@ class PharmViewModel extends BaseViewModel {
                                                               .text,
                                                         );
                                                   } else {
+                                                    addedEmailReminderList
+                                                        .clear();
                                                     addedEmailReminderList.add(
                                                       model
                                                           .emailController
@@ -13504,6 +13483,8 @@ class PharmViewModel extends BaseViewModel {
                                                       ),
                                                     );
                                                   } else {
+                                                    addedPhoneReminderList
+                                                        .clear();
                                                     addedPhoneReminderList.add(
                                                       returnPhoneNoStructureWith234Rep(
                                                         model
@@ -13944,1187 +13925,974 @@ class PharmViewModel extends BaseViewModel {
     StateSetter? setModalState,
     ScrollController? scrollController,
     BuildContext? context,
-  }) => Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(22.r),
-      color: AppColors.white,
-    ),
-    child: SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
-      controller: scrollController,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: 20, width: 20),
-              TextView(
-                text: modalName(),
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 16.70.sp,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.deep,
+  }) {
+    if (model == null || model.medicationClassList.isEmpty) {
+      return const SizedBox.shrink();
+    }
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22.r),
+        color: AppColors.white,
+      ),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+        controller: scrollController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(height: 20, width: 20),
+                TextView(
+                  text: modalName(),
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 16.70.sp,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.deep,
+                  ),
                 ),
-              ),
 
-              Padding(
-                padding: EdgeInsets.only(top: 4.w),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context!);
-                  },
-                  child: SvgPicture.asset(
-                    AppImage.cancel,
-                    height: 14.20,
-                    width: 14.20,
-                    color: AppColors.black,
+                Padding(
+                  padding: EdgeInsets.only(top: 4.w),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await model.clearReminderMedsVaraibles(model);
+                      model.medicationClassList.clear();
+                      Navigator.pop(context!);
+                    },
+                    child: SvgPicture.asset(
+                      AppImage.cancel,
+                      height: 14.20,
+                      width: 14.20,
+                      color: AppColors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 13.60.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context!).size.width * .82,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(5.0),
-                  ), // Adjust radius as needed
-                  child: LinearProgressIndicator(
-                    minHeight: 4.0, // Adjust height as needed
-                    value: linIndex / 2,
-                    color: AppColors.primary, // Progress bar color
-                    backgroundColor: Colors.grey[300], // Background track color
+              ],
+            ),
+            SizedBox(height: 13.60.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context!).size.width * .82,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(5.0),
+                    ), // Adjust radius as needed
+                    child: LinearProgressIndicator(
+                      minHeight: 4.0, // Adjust height as needed
+                      value: linIndex / 2,
+                      color: AppColors.primary, // Progress bar color
+                      backgroundColor:
+                          Colors.grey[300], // Background track color
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 10.w),
-              TextView(
-                text: '$linIndex/2',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
+                SizedBox(width: 10.w),
+                TextView(
+                  text: '$linIndex/2',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.reminder,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed:
-                    model!.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.first
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList -= 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 22.sp,
-                  color:
+              ],
+            ),
+            SizedBox(height: 20.h),
+            model.medicationClassList.length == 1
+              ? SizedBox.shrink():Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed:
                       model.medicationClassList[model
                               .indexOfMedicationClassList] ==
                           model.medicationClassList.first
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary,
+                      ? () {}
+                      : () {
+                          model.indexOfMedicationClassList -= 1;
+                          model.notifyListeners();
+                        },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 22.sp,
+                    color:
+                        model.medicationClassList[model
+                                .indexOfMedicationClassList] ==
+                            model.medicationClassList.first
+                        ? AppColors.primaryLight.withOpacity(.7)
+                        : AppColors.primary,
+                  ),
                 ),
-              ),
-              SizedBox(width: 20.h),
-              TextView(
-                text:
-                    '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.infoGrey,
+                SizedBox(width: 20.h),
+                TextView(
+                  text:
+                      '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
                 ),
-              ),
-              SizedBox(width: 20.h),
-              IconButton(
-                onPressed:
-                    model.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.last
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList += 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_forward,
-                  size: 22.sp,
-                  color:
+                SizedBox(width: 20.h),
+                IconButton(
+                  onPressed:
                       model.medicationClassList[model
                               .indexOfMedicationClassList] ==
                           model.medicationClassList.last
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary1,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          TextView(
-            text: 'PATIENTS DETAILS',
-            textStyle: TextStyle(
-              fontFamily: 'GoogleSans',
-              fontSize: 14.80.sp,
-              color: AppColors.deep,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Divider(color: AppColors.grey),
-          SizedBox(height: 12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 16.20.w, horizontal: 16.w),
-            decoration: BoxDecoration(
-              color: AppColors.dashboard,
-              borderRadius: BorderRadius.circular(8.2),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'Patient Name',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
+                      ? () {}
+                      : () {
+                          model.indexOfMedicationClassList += 1;
+                          model.notifyListeners();
+                        },
+                  icon: Icon(
+                    Icons.arrow_forward,
+                    size: 22.sp,
+                    color:
+                        model.medicationClassList[model
+                                .indexOfMedicationClassList] ==
+                            model.medicationClassList.last
+                        ? AppColors.primaryLight.withOpacity(.7)
+                        : AppColors.primary1,
                   ),
                 ),
-                SizedBox(height: 4.10.h),
-                TextView(
-                  text: model.fullNameController.text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                SizedBox(height: 5.10.h),
-                Divider(color: AppColors.infoGrey, thickness: .14),
-                SizedBox(height: 5.10.h),
-                TextView(
-                  text: 'Phone Number',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 4.10.h),
-                TextView(
-                  text: model.phoneNumberController.text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                SizedBox(height: 10.h),
               ],
             ),
-          ),
-          SizedBox(height: 20.h),
-          TextView(
-            text: 'MEDICATION DETAILS',
-            textStyle: TextStyle(
-              fontFamily: 'GoogleSans',
-              fontSize: 14.80.sp,
-              color: AppColors.deep,
-              fontWeight: FontWeight.w700,
+            SizedBox(height: 20.h),
+            TextView(
+              text: 'PATIENTS DETAILS',
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 14.80.sp,
+                color: AppColors.deep,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-          SizedBox(height: 12.h),
-          Divider(color: AppColors.grey),
-          SizedBox(height: 12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
-            decoration: BoxDecoration(
-              color: AppColors.grey,
-              borderRadius: BorderRadius.circular(10.r),
+            SizedBox(height: 12.h),
+            Divider(color: AppColors.grey),
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                vertical: 16.20.w,
+                horizontal: 16.w,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.dashboard,
+                borderRadius: BorderRadius.circular(8.2),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Patient Name',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 4.10.h),
+                  TextView(
+                    text: model.fullNameController.text,
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 5.10.h),
+                  Divider(color: AppColors.infoGrey, thickness: .14),
+                  SizedBox(height: 5.10.h),
+                  TextView(
+                    text: 'Phone Number',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 4.10.h),
+                  TextView(
+                    text: model.phoneNumberController.text,
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                ],
+              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'Medication Name',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
+            SizedBox(height: 20.h),
+            TextView(
+              text: 'MEDICATION DETAILS',
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 14.80.sp,
+                color: AppColors.deep,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Divider(color: AppColors.grey),
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+              decoration: BoxDecoration(
+                color: AppColors.grey,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Medication Name',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
                   ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text:
-                      '${model.medicationClassList[model.indexOfMedicationClassList].medicationName}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text:
+                        '${model.medicationClassList[model.indexOfMedicationClassList].medicationName}',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 24.w,
-                    horizontal: 108.0.w,
-                  ),
-                  width: double.infinity,
-                  height: 140.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child:
-                      model
-                              .medicationClassList[model
-                                  .indexOfMedicationClassList]
-                              .medicationFile !=
-                          null
-                      ? Image.file(
-                          model
-                              .medicationClassList[model
-                                  .indexOfMedicationClassList]
-                              .medicationFile!,
-                          errorBuilder: (context, error, stackTrace) =>
-                              SizedBox.shrink(),
-                        )
-                      : Center(
-                          child: SvgPicture.asset(
+                  SizedBox(height: 10.h),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 24.w,
+                      horizontal: 108.0.w,
+                    ),
+                    width: double.infinity,
+                    height: 140.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child:
+                        model
+                                .medicationClassList[model
+                                    .indexOfMedicationClassList]
+                                .medicationFile !=
+                            null
+                        ? Image.file(
                             model
                                 .medicationClassList[model
                                     .indexOfMedicationClassList]
-                                .medicationTypeIcon!,
-                            height: 100.h,
-                            width: 94.60,
+                                .medicationFile!,
+                            errorBuilder: (context, error, stackTrace) =>
+                                SizedBox.shrink(),
+                          )
+                        : Center(
+                            child: SvgPicture.asset(
+                              model
+                                  .medicationClassList[model
+                                      .indexOfMedicationClassList]
+                                  .medicationTypeIcon!,
+                              height: 100.h,
+                              width: 94.60,
+                            ),
                           ),
-                        ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Medication Type',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
                   ),
-                ),
-                SizedBox(height: 6.0.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      model
-                          .medicationClassList[model.indexOfMedicationClassList]
-                          .medicationTypeIcon!,
+                  SizedBox(height: 10.h),
+                  Divider(
+                    color: AppColors.infoGrey.withOpacity(.2),
+                    thickness: .7,
+                  ),
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text: 'Medication Type',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
                     ),
-                    SizedBox(width: 6.0.w),
-                    TextView(
-                      text:
-                          '${model.medicationClassList[model.indexOfMedicationClassList].medicationType}',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.black,
+                  ),
+                  SizedBox(height: 6.0.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SvgPicture.asset(
+                        model
+                            .medicationClassList[model
+                                .indexOfMedicationClassList]
+                            .medicationTypeIcon!,
                       ),
+                      SizedBox(width: 6.0.w),
+                      TextView(
+                        text:
+                            '${model.medicationClassList[model.indexOfMedicationClassList].medicationType}',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 16.0.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                ],
+              ),
+            ),
+            SizedBox(height: 24.h),
+            TextView(
+              text: 'SET SCHEDULE AND DOSAGE',
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 14.80.sp,
+                color: AppColors.deep,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Divider(color: AppColors.grey),
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+              decoration: BoxDecoration(
+                color: AppColors.grey,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Dosage',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
                     ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
-          ),
-          SizedBox(height: 24.h),
-          TextView(
-            text: 'SET SCHEDULE AND DOSAGE',
-            textStyle: TextStyle(
-              fontFamily: 'GoogleSans',
-              fontSize: 14.80.sp,
-              color: AppColors.deep,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Divider(color: AppColors.grey),
-          SizedBox(height: 12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
-            decoration: BoxDecoration(
-              color: AppColors.grey,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'Dosage',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
                   ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text:
-                      '${model.medicationClassList[indexOfMedicationClassList].dosage}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text:
+                        '${model.medicationClassList[indexOfMedicationClassList].dosage}',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text:
-                      model
+                  SizedBox(height: 10.h),
+                  Divider(
+                    color: AppColors.infoGrey.withOpacity(.2),
+                    thickness: .7,
+                  ),
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text:
+                        model
+                            .medicationClassList[model
+                                .indexOfMedicationClassList]
+                            .isCusSchedule!
+                        ? 'Per-day Schedule'
+                        : 'Frequency',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 6.0.h),
+                  model
                           .medicationClassList[model.indexOfMedicationClassList]
                           .isCusSchedule!
-                      ? 'Per-day Schedule'
-                      : 'Frequency',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                model
-                        .medicationClassList[model.indexOfMedicationClassList]
-                        .isCusSchedule!
-                    ? SizedBox(
-                        height:
-                            model
-                                    .medicationClassList[model
-                                        .indexOfMedicationClassList]
-                                    .dosageMap
-                                    .length >
-                                1
-                            ? 160.h
-                            : 90.h,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...model.medicationClassList[model.indexOfMedicationClassList].dosageMap.map(
-                                (e) => Container(
-                                  padding: EdgeInsets.all(7.10.w),
-                                  margin: EdgeInsets.only(bottom: 12.w),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: AppColors.f1),
-                                    color: AppColors.white.withOpacity(.8),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  TextView(
-                                                    text: 'Day ${e['day']} ',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'GoogleSans',
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: AppColors.reminder,
-                                                    ),
-                                                  ),
-                                                  TextView(
-                                                    text:
-                                                        '(${DateFormat('MMM dd').format(DateTime.parse(model.medicationClassList[model.indexOfMedicationClassList].startDateIso.toString()).add(Duration(days: e['day'] - 1)))})',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.fineGrey,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10.h),
-                                              SizedBox(
-                                                width: 300.h,
-                                                child: Wrap(
-                                                  spacing: 3.70,
-                                                  runSpacing: 6,
-                                                  children: (() {
-                                                    final Set<String>
-                                                    uniqueTimes = {};
-                                                    for (final dose
-                                                        in e['doses']) {
-                                                      uniqueTimes.add(
-                                                        dose['time'],
-                                                      );
-                                                    }
-                                                    return uniqueTimes.map((
-                                                      time,
-                                                    ) {
-                                                      return Container(
-                                                        width: 90.w,
-                                                        margin: EdgeInsets.only(
-                                                          right: 3.10.w,
-                                                        ),
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal:
-                                                                  3.20.w,
-                                                              vertical: 4.w,
-                                                            ),
-                                                        decoration: BoxDecoration(
-                                                          border: Border.all(
-                                                            color: AppColors
-                                                                .infoGrey1,
-                                                          ),
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22,
-                                                              ),
-                                                          color:
-                                                              AppColors.white,
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              AppImage.timer,
-                                                              color: AppColors
-                                                                  .reminder,
-                                                              width: 15.20.sp,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 4.10.w,
-                                                            ),
-                                                            TextView(
-                                                              text: time,
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'GoogleSans',
-                                                                fontSize:
-                                                                    12.8.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: AppColors
-                                                                    .reminder,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    }).toList();
-                                                  })(),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextView(
-                            text: showNoTimes(
-                              int.parse(
-                                model
-                                    .medicationClassList[model
-                                        .indexOfMedicationClassList]
-                                    .timesToTake!,
-                              ),
-                            ),
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
-                            ),
-                          ),
-                          SizedBox(height: 6.0.h),
-                          Wrap(
-                            spacing: 4.10,
-                            runSpacing: 6,
-                            children: (() {
-                              final Set<String> uniqueTimes = {};
-
-                              for (final day
-                                  in model
+                      ? SizedBox(
+                          height:
+                              model
                                       .medicationClassList[model
                                           .indexOfMedicationClassList]
-                                      .dosageMap!) {
-                                for (final dose in day['doses']) {
-                                  uniqueTimes.add(dose['time']);
-                                }
-                              }
-
-                              return uniqueTimes.map((time) {
-                                return Container(
-                                  width: 100.w,
-                                  margin: EdgeInsets.only(right: 4.10.w),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 4.0.w,
-                                    vertical: 6.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: AppColors.infoGrey1,
+                                      .dosageMap
+                                      .length >
+                                  1
+                              ? 160.h
+                              : 90.h,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ...model.medicationClassList[model.indexOfMedicationClassList].dosageMap.map(
+                                  (e) => Container(
+                                    padding: EdgeInsets.all(7.10.w),
+                                    margin: EdgeInsets.only(bottom: 12.w),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: AppColors.f1),
+                                      color: AppColors.white.withOpacity(.8),
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    borderRadius: BorderRadius.circular(22),
-                                    color: AppColors.white,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppImage.timer,
-                                        color: AppColors.reminder,
-                                        width: 18.20.sp,
-                                      ),
-                                      SizedBox(width: 5.10.w),
-                                      TextView(
-                                        text: time,
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 12.8.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Day ${e['day']} ',
+                                                      textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'GoogleSans',
+                                                        fontSize: 12.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                    TextView(
+                                                      text:
+                                                          '(${DateFormat('MMM dd').format(DateTime.parse(model.medicationClassList[model.indexOfMedicationClassList].startDateIso.toString()).add(Duration(days: e['day'] - 1)))})',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 12.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 10.h),
+                                                SizedBox(
+                                                  width: 300.h,
+                                                  child: Wrap(
+                                                    spacing: 3.70,
+                                                    runSpacing: 6,
+                                                    children: (() {
+                                                      final Set<String>
+                                                      uniqueTimes = {};
+                                                      for (final dose
+                                                          in e['doses']) {
+                                                        uniqueTimes.add(
+                                                          dose['time'],
+                                                        );
+                                                      }
+                                                      return uniqueTimes.map((
+                                                        time,
+                                                      ) {
+                                                        return Container(
+                                                          width: 90.w,
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                right: 3.10.w,
+                                                              ),
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    3.20.w,
+                                                                vertical: 4.w,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                              color: AppColors
+                                                                  .infoGrey1,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  22,
+                                                                ),
+                                                            color:
+                                                                AppColors.white,
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                AppImage.timer,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                                width: 15.20.sp,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 4.10.w,
+                                                              ),
+                                                              TextView(
+                                                                text: time,
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'GoogleSans',
+                                                                  fontSize:
+                                                                      12.8.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      }).toList();
+                                                    })(),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                );
-                              }).toList();
-                            })(),
+                                ),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: showNoTimes(
+                                int.parse(
+                                  model
+                                      .medicationClassList[model
+                                          .indexOfMedicationClassList]
+                                      .timesToTake!,
+                                ),
+                              ),
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16.0.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            SizedBox(height: 6.0.h),
+                            Wrap(
+                              spacing: 4.10,
+                              runSpacing: 6,
+                              children: (() {
+                                final Set<String> uniqueTimes = {};
 
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Start Date',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
+                                for (final day
+                                    in model
+                                        .medicationClassList[model
+                                            .indexOfMedicationClassList]
+                                        .dosageMap!) {
+                                  for (final dose in day['doses']) {
+                                    uniqueTimes.add(dose['time']);
+                                  }
+                                }
+
+                                return uniqueTimes.map((time) {
+                                  return Container(
+                                    width: 100.w,
+                                    margin: EdgeInsets.only(right: 4.10.w),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 4.0.w,
+                                      vertical: 6.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: AppColors.infoGrey1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(22),
+                                      color: AppColors.white,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppImage.timer,
+                                          color: AppColors.reminder,
+                                          width: 18.20.sp,
+                                        ),
+                                        SizedBox(width: 5.10.w),
+                                        TextView(
+                                          text: time,
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 12.8.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList();
+                              })(),
+                            ),
+                          ],
+                        ),
+
+                  SizedBox(height: 10.h),
+                  Divider(
+                    color: AppColors.infoGrey.withOpacity(.2),
+                    thickness: .7,
                   ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text:
-                      '${model.medicationClassList[model.indexOfMedicationClassList].dateAndTime}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Duration',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: getReturnDurationNumberOfDays(
-                    int.parse(
-                      model
-                          .medicationClassList[model.indexOfMedicationClassList]
-                          .duration!,
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text: 'Start Date',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
                     ),
                   ),
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text:
+                        '${model.medicationClassList[model.indexOfMedicationClassList].dateAndTime}',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'End Date',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
+                  SizedBox(height: 10.h),
+                  Divider(
+                    color: AppColors.infoGrey.withOpacity(.2),
+                    thickness: .7,
                   ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: model
-                      .medicationClassList[model.indexOfMedicationClassList]
-                      .endDate!,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text: 'Duration',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
                   ),
-                ),
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text: getReturnDurationNumberOfDays(
+                      int.parse(
+                        model
+                            .medicationClassList[model
+                                .indexOfMedicationClassList]
+                            .duration!,
+                      ),
+                    ),
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Divider(
+                    color: AppColors.infoGrey.withOpacity(.2),
+                    thickness: .7,
+                  ),
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text: 'End Date',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text: model
+                        .medicationClassList[model.indexOfMedicationClassList]
+                        .endDate!,
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                    ),
+                  ),
 
-                SizedBox(height: 10.h),
-                Divider(
-                  color: AppColors.infoGrey.withOpacity(.2),
-                  thickness: .7,
-                ),
-                SizedBox(height: 10.h),
-                TextView(
-                  text: 'Note',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
+                  SizedBox(height: 10.h),
+                  Divider(
+                    color: AppColors.infoGrey.withOpacity(.2),
+                    thickness: .7,
                   ),
-                ),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: model
-                      .medicationClassList[model.indexOfMedicationClassList]
-                      .note!,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 16.0.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text: 'Note',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10.h),
-              ],
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text: model
+                        .medicationClassList[model.indexOfMedicationClassList]
+                        .note!,
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16.0.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.black,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                ],
+              ),
             ),
-          ),
 
-          SizedBox(height: 16.20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed:
-                    model.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.first
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList -= 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 22.sp,
-                  color:
+            SizedBox(height: 16.20.h),
+           model.medicationClassList.length == 1
+              ? SizedBox.shrink(): Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed:
                       model.medicationClassList[model
                               .indexOfMedicationClassList] ==
                           model.medicationClassList.first
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary,
+                      ? () {}
+                      : () {
+                          model.indexOfMedicationClassList -= 1;
+                          model.notifyListeners();
+                        },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    size: 22.sp,
+                    color:
+                        model.medicationClassList[model
+                                .indexOfMedicationClassList] ==
+                            model.medicationClassList.first
+                        ? AppColors.primaryLight.withOpacity(.7)
+                        : AppColors.primary,
+                  ),
                 ),
-              ),
-              SizedBox(width: 10.h),
-              TextView(
-                text:
-                    '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.infoGrey,
+                SizedBox(width: 10.h),
+                TextView(
+                  text:
+                      '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.infoGrey,
+                  ),
                 ),
-              ),
-              SizedBox(width: 10.h),
-              IconButton(
-                onPressed:
-                    model.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.last
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList += 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_forward,
-                  size: 22.sp,
-                  color:
+                SizedBox(width: 10.h),
+                IconButton(
+                  onPressed:
                       model.medicationClassList[model
                               .indexOfMedicationClassList] ==
                           model.medicationClassList.last
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary1,
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 24.20.h),
-          TextView(
-            text: 'NOTIFICATION CHANNELS',
-            textStyle: TextStyle(
-              fontFamily: 'GoogleSans',
-              fontSize: 14.80.sp,
-              color: AppColors.deep,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Divider(color: AppColors.grey),
-          SizedBox(height: 12.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
-            decoration: BoxDecoration(
-              color: AppColors.grey,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'Selected Channels',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
+                      ? () {}
+                      : () {
+                          model.indexOfMedicationClassList += 1;
+                          model.notifyListeners();
+                        },
+                  icon: Icon(
+                    Icons.arrow_forward,
+                    size: 22.sp,
+                    color:
+                        model.medicationClassList[model
+                                .indexOfMedicationClassList] ==
+                            model.medicationClassList.last
+                        ? AppColors.primaryLight.withOpacity(.7)
+                        : AppColors.primary1,
                   ),
                 ),
-                SizedBox(height: 6.0.h),
-                Wrap(
-                  spacing: 4.10,
-                  runSpacing: 6,
-                  children: [
-                    ...selectedIndexes.map(
-                      (e) => model.notificationChannelFlowWidgetSelection(
-                        selected: e,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 6.0.h),
-                Divider(color: AppColors.infoGrey1),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: 'Phone numbers',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Wrap(
-                  spacing: 4.10,
-                  runSpacing: 6,
-                  children: [
-                    ...addedPhoneReminderList.map((o)=>TextView(
-                  text: '${formatPhoneNumber(o)}, ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),),
-                  ],
-                ),
-                SizedBox(height: 6.0.h),
-                Divider(color: AppColors.infoGrey1),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: 'Email',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Wrap(
-                  spacing: 4.10,
-                  runSpacing: 6,
-                  children: [
-                    ...addedEmailReminderList.map(
-                      (e) => TextView(
-                  text: '$e, ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 6.0.h),
               ],
             ),
-          ),
-          SizedBox(height: 16.20.h),
-          addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 24.0.h),
-                    TextView(
-                      text: 'TOTAL SUMMARY',
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 14.80.sp,
-                        color: AppColors.deep,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: 4.2.h),
-                    Divider(color: AppColors.infoGrey1),
-                    SizedBox(height: 10.h),
-                    SizedBox(
-                      width: double.infinity,
-                      child: DottedBorder(
-                        options: RoundedRectDottedBorderOptions(
-                          dashPattern: [3, 3],
-                          strokeWidth: .99,
-                          radius: Radius.circular(10),
-                          color: AppColors.infoGrey1,
-                        ),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                          ),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10.w,
-                                  horizontal: 16.0.w,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextView(
-                                      text: 'Total Days',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 16.80.sp,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextView(
-                                      text: '${returnTotalDays(model)}',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 16.80.sp,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Divider(color: AppColors.infoGrey1),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10.w,
-                                  horizontal: 16.0.w,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextView(
-                                      text: 'Total Reminders',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 16.80.sp,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    TextView(
-                                      text: '${calculateTotalReminders(model)}',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 16.80.sp,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              selectedIndexes.contains(0)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(0)
-                                  ? Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.w,
-                                        horizontal: 16.0.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextView(
-                                            text:
-                                                'Email (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          TextView(
-                                            text: '₦0',
-                                            textStyle: TextStyle(
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(1)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(1)
-                                  ? Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.w,
-                                        horizontal: 16.0.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextView(
-                                            text:
-                                                'Push (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          TextView(
-                                            text: '₦0',
-                                            textStyle: TextStyle(
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(3)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(3)
-                                  ? Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.w,
-                                        horizontal: 16.0.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextView(
-                                            text:
-                                                'WhatsApp (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          TextView(
-                                            text:
-                                                '₦${20 * calculateTotalReminders(model) / selectedIndexes.length}',
-                                            textStyle: TextStyle(
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(2)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(2)
-                                  ? Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.w,
-                                        horizontal: 16.0.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextView(
-                                            text:
-                                                'SMS (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          TextView(
-                                            text:
-                                                '₦${15 * calculateTotalReminders(model) / selectedIndexes.length}',
-                                            textStyle: TextStyle(
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(4)
-                                  ? Divider(color: AppColors.infoGrey1)
-                                  : SizedBox.shrink(),
-                              selectedIndexes.contains(4)
-                                  ? Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 10.w,
-                                        horizontal: 16.0.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextView(
-                                            text:
-                                                'Phone Calls (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} calls)',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          TextView(
-                                            text:
-                                                '₦${50 * calculateTotalReminders(model) / selectedIndexes.length}',
-                                            textStyle: TextStyle(
-                                              fontSize: 16.80.sp,
-                                              color: AppColors.black,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                              Divider(color: AppColors.infoGrey1),
-                              Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: AppColors.nearDashboard,
-                                ),
 
-                                child: Padding(
+            SizedBox(height: 24.20.h),
+            TextView(
+              text: 'NOTIFICATION CHANNELS',
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 14.80.sp,
+                color: AppColors.deep,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Divider(color: AppColors.grey),
+            SizedBox(height: 12.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(12.w, 12.w, 12.w, 2.w),
+              decoration: BoxDecoration(
+                color: AppColors.grey,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Selected Channels',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 6.0.h),
+                  Wrap(
+                    spacing: 4.10,
+                    runSpacing: 6,
+                    children: [
+                      ...selectedIndexes.map(
+                        (e) => model.notificationChannelFlowWidgetSelection(
+                          selected: e,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.0.h),
+                  Divider(color: AppColors.infoGrey1),
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text: 'Phone numbers',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 6.0.h),
+                  Wrap(
+                    spacing: 4.10,
+                    runSpacing: 6,
+                    children: List.generate(addedPhoneReminderList.length, (
+                      index,
+                    ) {
+                      final isLast = index == addedPhoneReminderList.length - 1;
+                      final phone = addedPhoneReminderList[index];
+
+                      return TextView(
+                        text: isLast
+                            ? formatPhoneNumber(phone)
+                            : '${formatPhoneNumber(phone)}, ',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.8.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.reminder,
+                        ),
+                      );
+                    }),
+                  ),
+                  SizedBox(height: 6.0.h),
+                  Divider(color: AppColors.infoGrey1),
+                  SizedBox(height: 6.0.h),
+                  TextView(
+                    text: 'Email',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 6.0.h),
+                  Wrap(
+                    spacing: 4.10,
+                    runSpacing: 6,
+                    children:  List.generate(addedEmailReminderList.length, (
+                      index,
+                    ) {
+                      final isLast = index == addedEmailReminderList.length - 1;
+                      final email = addedEmailReminderList[index];
+
+                      return TextView(
+                        text: isLast
+                            ? email
+                            : '$email, ',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.8.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.reminder,
+                        ),
+                      );
+                    }),
+                    
+                  ),
+                  SizedBox(height: 6.0.h),
+                ],
+              ),
+            ),
+            SizedBox(height: 16.20.h),
+            addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 24.0.h),
+                      TextView(
+                        text: 'TOTAL SUMMARY',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 14.80.sp,
+                          color: AppColors.deep,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 4.2.h),
+                      Divider(color: AppColors.infoGrey1),
+                      SizedBox(height: 10.h),
+                      SizedBox(
+                        width: double.infinity,
+                        child: DottedBorder(
+                          options: RoundedRectDottedBorderOptions(
+                            dashPattern: [3, 3],
+                            strokeWidth: .99,
+                            radius: Radius.circular(10),
+                            color: AppColors.infoGrey1,
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
                                   padding: EdgeInsets.symmetric(
-                                    vertical: 14.w,
+                                    vertical: 10.w,
                                     horizontal: 16.0.w,
                                   ),
                                   child: Row(
@@ -15132,133 +14900,385 @@ class PharmViewModel extends BaseViewModel {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       TextView(
-                                        text: 'Total',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 16.80.sp,
-                                          color: AppColors.black,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: '₦$costTotal.00',
+                                        text: 'Total Days',
                                         textStyle: TextStyle(
                                           fontFamily: 'Arial',
                                           fontSize: 16.80.sp,
                                           color: AppColors.black,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      TextView(
+                                        text: '${returnTotalDays(model)}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.80.sp,
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                            ],
+                                Divider(color: AppColors.infoGrey1),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 10.w,
+                                    horizontal: 16.0.w,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextView(
+                                        text: 'Total Reminders',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 16.80.sp,
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      TextView(
+                                        text:
+                                            '${calculationForTotalReminderForEmail + calculationForTotalReminderForPhone}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.80.sp,
+                                          color: AppColors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                selectedIndexes.contains(0)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(0)
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10.w,
+                                          horizontal: 16.0.w,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextView(
+                                              text:
+                                                  'Email (x${returnMailTimes()} msgs)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            TextView(
+                                              text: '₦0',
+                                              textStyle: TextStyle(
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(1)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(1)
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10.w,
+                                          horizontal: 16.0.w,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextView(
+                                              text:
+                                                  'Push (x${returnMailTimes()} msgs)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            TextView(
+                                              text: '₦0',
+                                              textStyle: TextStyle(
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(3)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(3)
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10.w,
+                                          horizontal: 16.0.w,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextView(
+                                              text:
+                                                  'WhatsApp (x${returnPhoneTimes()} msgs)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            TextView(
+                                              text:
+                                                  '₦${20 * returnPhoneTimes()}',
+                                              textStyle: TextStyle(
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(2)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(2)
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10.w,
+                                          horizontal: 16.0.w,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextView(
+                                              text:
+                                                  'SMS (x${returnPhoneTimes()} msgs)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            TextView(
+                                              text:
+                                                  '₦${15 * returnPhoneTimes()}',
+                                              textStyle: TextStyle(
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(4)
+                                    ? Divider(color: AppColors.infoGrey1)
+                                    : SizedBox.shrink(),
+                                selectedIndexes.contains(4)
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10.w,
+                                          horizontal: 16.0.w,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextView(
+                                              text:
+                                                  'Phone Calls (x${returnPhoneTimes()} calls)',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                            TextView(
+                                              text:
+                                                  '₦${50 * returnPhoneTimes()}',
+                                              textStyle: TextStyle(
+                                                fontSize: 16.80.sp,
+                                                color: AppColors.black,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                                Divider(color: AppColors.infoGrey1),
+                                Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.nearDashboard,
+                                  ),
+
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 14.w,
+                                      horizontal: 16.0.w,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextView(
+                                          text: 'Total',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: '₦$costTotal.00',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.80.sp,
+                                            color: AppColors.black,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                )
-              : SizedBox.shrink(),
-          SizedBox(height: 46.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  buttonColor: AppColors.dashboard,
-                  buttonText: 'Previous',
-                  color: AppColors.deep,
-                  fontSize: 14.sp,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    linIndex--;
-                    model.indexOfMedicationClassList = 0;
-                    model.notifyListeners();
-                  },
+                    ],
+                  )
+                : SizedBox.shrink(),
+            SizedBox(height: 46.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: ButtonWidget(
+                    border: 100.r,
+                    buttonColor: AppColors.dashboard,
+                    buttonText: 'Previous',
+                    color: AppColors.deep,
+                    fontSize: 14.sp,
+                    buttonBorderColor: AppColors.transparent,
+                    onPressed: () {
+                      linIndex--;
+                      model.indexOfMedicationClassList = 0;
+                      model.notifyListeners();
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(width: 20.w),
-              Flexible(
-                child: ButtonWidget(
-                  border: 100.r,
-                  fontSize: 14.sp,
-                  buttonColor: AppColors.primary,
-                  isLoading: model.isLoading,
-                  buttonText: addedPhoneReminderList.isEmpty
-                      ? 'Set Up'
-                      : 'Proceed to Pay',
-                  color: AppColors.white,
-                  buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    if (addedPhoneReminderList.isNotEmpty) {
-                      linIndex++;
-                    } else {
-                      model.createReminder(
-                        context,
-                        createReminderEntityModel:
-                            CreateTenantReminderEntityModel(
-                              patientDetails: PatientDetails(
-                                fullName: model.fullNameController.text,
-                                phoneNumber:
-                                    returnReminderPhoneStructureWith234(
-                                      model.phoneNumberController.text,
-                                    ),
+                SizedBox(width: 20.w),
+                Flexible(
+                  child: ButtonWidget(
+                    border: 100.r,
+                    fontSize: 14.sp,
+                    buttonColor: AppColors.primary,
+                    isLoading: model.isLoading,
+                    buttonText: addedPhoneReminderList.isEmpty
+                        ? 'Set Up'
+                        : 'Proceed to Pay',
+                    color: AppColors.white,
+                    buttonBorderColor: AppColors.transparent,
+                    onPressed: () {
+                      if (addedPhoneReminderList.isNotEmpty) {
+                        linIndex++;
+                      } else {
+                        model.createReminder(
+                          context,
+                          createReminderEntityModel:
+                              CreateTenantReminderEntityModel(
+                                patientDetails: PatientDetails(
+                                  fullName: model.fullNameController.text,
+                                  phoneNumber:
+                                      returnReminderPhoneStructureWith234(
+                                        model.phoneNumberController.text,
+                                      ),
+                                ),
+                                medications: model.medicationClassList.map((m) {
+                                  return Medication(
+                                    medicationName: m.medicationName,
+                                    scheduleType: m.isCusSchedule!
+                                        ? 'CUSTOM'
+                                        : 'FIXED',
+                                    dosage: m.dosage,
+                                    medicationType: m.medicationType!
+                                        .toUpperCase(),
+                                    startDateTime: m.startDateIso,
+                                    endDateTime: m.endDateIso,
+                                    durationInDays: int.parse(m.duration!),
+                                    timesPerDay: m.isCusSchedule!
+                                        ? ''
+                                        : int.parse(m.timesToTake!),
+                                    dailyDoseTimes: (m.dosageMap as List)
+                                        .map(
+                                          (
+                                            dayData,
+                                          ) => (dayData['doses'] as List)
+                                              .map(
+                                                (
+                                                  dose,
+                                                ) => DailyDoseTime.fromJson(
+                                                  dose as Map<String, dynamic>,
+                                                ),
+                                              )
+                                              .toList(),
+                                        )
+                                        .toList(),
+                                    note: m.note,
+                                    medicationImage: m.imageData!.url == null
+                                        ? null
+                                        : MedicationImage.fromJson(
+                                            m.imageData!.toJson(),
+                                          ),
+                                  );
+                                }).toList(),
+                                timeZone: "Africa/Lagos",
+                                notificationChannels: notificationChannel,
+                                emails: emailReminderList,
                               ),
-                              medications: model.medicationClassList.map((m) {
-                                return Medication(
-                                  medicationName: m.medicationName,
-                                  scheduleType: m.isCusSchedule!
-                                      ? 'CUSTOM'
-                                      : 'FIXED',
-                                  dosage: m.dosage,
-                                  medicationType: m.medicationType!
-                                      .toUpperCase(),
-                                  startDateTime: m.startDateIso,
-                                  endDateTime: m.endDateIso,
-                                  durationInDays: int.parse(m.duration!),
-                                  timesPerDay: m.isCusSchedule!
-                                      ? ''
-                                      : int.parse(m.timesToTake!),
-                                  dailyDoseTimes: (m.dosageMap as List)
-                                      .map(
-                                        (dayData) => (dayData['doses'] as List)
-                                            .map(
-                                              (dose) => DailyDoseTime.fromJson(
-                                                dose as Map<String, dynamic>,
-                                              ),
-                                            )
-                                            .toList(),
-                                      )
-                                      .toList(),
-                                  note: m.note,
-                                  medicationImage: m.imageData!.url == null
-                                      ? null
-                                      : MedicationImage.fromJson(
-                                          m.imageData!.toJson(),
-                                        ),
-                                );
-                              }).toList(),
-                              timeZone: "Africa/Lagos",
-                              notificationChannels: notificationChannel,
-                              emails: emailReminderList,
-                            ),
-                      );
-                    }
+                        );
+                      }
 
-                    model.notifyListeners();
-                  },
+                      model.notifyListeners();
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 26.h),
-        ],
+              ],
+            ),
+            SizedBox(height: 26.h),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   String showNoTimes(number) {
     if (number == 1) {
@@ -15351,7 +15371,7 @@ class PharmViewModel extends BaseViewModel {
     if (select == 0) {
       return AppImage.channel_email;
     }
-    if (select ==  2) {
+    if (select == 2) {
       return AppImage.sms;
     }
     if (select == 3) {
@@ -15435,11 +15455,7 @@ class PharmViewModel extends BaseViewModel {
 
   Widget notificationChannelFlowWidgetSelection({required int selected}) =>
       Container(
-        width:
-            selected == 4 ||
-               selected == 3
-            ? 120.w
-            : 90.w,
+        width: selected == 4 || selected == 3 ? 120.w : 90.w,
         margin: EdgeInsets.only(right: 4.10.w),
         padding: EdgeInsets.symmetric(vertical: 4.w),
         decoration: BoxDecoration(
@@ -15454,8 +15470,16 @@ class PharmViewModel extends BaseViewModel {
             SvgPicture.asset(
               notificationChannelFlowWidgetIconSelected(selected),
               color: AppColors.infoGrey,
-              width: selected == 2 ? 24.0 : selected == 0 ? 14.sp:16.20.w,
-              height: selected == 2 ? 24.0 : selected == 0 ? 12.10.sp: 16.20.sp,
+              width: selected == 2
+                  ? 24.0
+                  : selected == 0
+                  ? 14.sp
+                  : 16.20.w,
+              height: selected == 2
+                  ? 24.0
+                  : selected == 0
+                  ? 12.10.sp
+                  : 16.20.sp,
             ),
             SizedBox(width: 7.10.w),
             TextView(
@@ -16256,10 +16280,16 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  int calculateTotalReminders(model) {
+  int calculationForTotalReminderForEmail = 0;
+  int calculationForTotalReminderForPhone = 0;
+  int? calculationForTotalReminderPerDay;
+  calculateTotalReminders(model) {
     final medications = model.medicationClassList ?? [];
+    calculationForTotalReminderForEmail = 0;
+    calculationForTotalReminderForPhone = 0;
 
-    int totalReminders = 0;
+    // int totalReminders = 0;
+    int _frequencyPerDay = 0;
 
     for (var med in medications) {
       final bool isCustom = med.isCusSchedule;
@@ -16269,17 +16299,74 @@ class PharmViewModel extends BaseViewModel {
       int frequencyPerDay = 0;
 
       if (isCustom == false) {
-        frequencyPerDay = timesPerDay * durationInDays * selectedIndexes.length;
+        frequencyPerDay = timesPerDay * durationInDays;
       } else if (isCustom == true) {
         // Flatten all daily times and divide by number of days
-        frequencyPerDay =
-            (getTotalCustomDoses(med.dosageMap ?? []) * selectedIndexes.length);
+        frequencyPerDay = (getTotalCustomDoses(med.dosageMap ?? []));
       }
 
-      totalReminders += frequencyPerDay;
+      _frequencyPerDay = frequencyPerDay;
+
+      // totalReminders += frequencyPerDay;
+      if (addedEmailReminderList.isNotEmpty && selectedIndexes.contains(0) ||
+          selectedIndexes.contains(1)) {
+        if (selectedIndexes.contains(0) && selectedIndexes.contains(1)) {
+          calculationForTotalReminderForEmail +=
+              (_frequencyPerDay * 2 * addedEmailReminderList.length);
+        } else {
+          calculationForTotalReminderForEmail +=
+              _frequencyPerDay * addedEmailReminderList.length;
+        }
+      }
+      if (addedPhoneReminderList.isNotEmpty && selectedIndexes.contains(2) ||
+          selectedIndexes.contains(3) ||
+          selectedIndexes.contains(4)) {
+        if (selectedIndexes.contains(2) &&
+            selectedIndexes.contains(3) &&
+            selectedIndexes.contains(4)) {
+          calculationForTotalReminderForPhone +=
+              _frequencyPerDay * 3 * addedPhoneReminderList.length;
+        } else if (selectedIndexes.contains(2) && selectedIndexes.contains(3) ||
+            selectedIndexes.contains(2) && selectedIndexes.contains(4) ||
+            selectedIndexes.contains(3) && selectedIndexes.contains(4)) {
+          calculationForTotalReminderForPhone +=
+              _frequencyPerDay * 2 * addedPhoneReminderList.length;
+        } else {
+          calculationForTotalReminderForPhone +=
+              _frequencyPerDay * addedPhoneReminderList.length;
+        }
+      }
     }
 
-    return totalReminders;
+    notifyListeners();
+
+    // return totalReminders;
+  }
+
+  int returnMailTimes() {
+    int calEmailTimes = 0;
+    if (selectedIndexes.contains(0) && selectedIndexes.contains(1)) {
+      calEmailTimes += (calculationForTotalReminderForEmail / 2).toInt();
+    } else {
+      calEmailTimes += calculationForTotalReminderForEmail;
+    }
+    return calEmailTimes;
+  }
+
+  int returnPhoneTimes() {
+    int calPhoneTimes = 0;
+    if (selectedIndexes.contains(2) &&
+        selectedIndexes.contains(3) &&
+        selectedIndexes.contains(4)) {
+      calPhoneTimes += (calculationForTotalReminderForPhone / 3).toInt();
+    } else if (selectedIndexes.contains(2) && selectedIndexes.contains(3) ||
+        selectedIndexes.contains(2) && selectedIndexes.contains(4) ||
+        selectedIndexes.contains(3) && selectedIndexes.contains(4)) {
+      calPhoneTimes += (calculationForTotalReminderForPhone / 2).toInt();
+    } else {
+      calPhoneTimes += calculationForTotalReminderForPhone;
+    }
+    return calPhoneTimes;
   }
 
   void showEmailDialog(

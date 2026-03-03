@@ -228,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           navigate.navigateTo(
                             Routes.welcomeScreen,
                             arguments: WelcomeScreenArguments(
-                              phone: '+234${phoneController.text}',
+                              phone: phoneController.text,
                             ),
                           );
                         }

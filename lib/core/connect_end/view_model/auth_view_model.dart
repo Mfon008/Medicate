@@ -464,11 +464,11 @@ class AuthViewModel extends BaseViewModel {
     return AppImage.bell;
   }
 
-   String notificationChannelFlowWidgetIconSelected(int select) {
+  String notificationChannelFlowWidgetIconSelected(int select) {
     if (select == 0) {
       return AppImage.channel_email;
     }
-    if (select ==  2) {
+    if (select == 2) {
       return AppImage.sms;
     }
     if (select == 3) {
@@ -496,7 +496,7 @@ class AuthViewModel extends BaseViewModel {
     return 'Push';
   }
 
-   String notificationChannelFormatNameSelected(int select) {
+  String notificationChannelFormatNameSelected(int select) {
     if (select == 0) {
       return 'Email';
     }
@@ -549,14 +549,10 @@ class AuthViewModel extends BaseViewModel {
           ],
         ),
       );
-  
+
   Widget notificationChannelFlowWidgetSelection({required int selected}) =>
       Container(
-        width:
-            selected == 4 ||
-               selected == 3
-            ? 120.w
-            : 90.w,
+        width: selected == 4 || selected == 3 ? 120.w : 90.w,
         margin: EdgeInsets.only(right: 4.10.w),
         padding: EdgeInsets.symmetric(vertical: 4.w),
         decoration: BoxDecoration(
@@ -571,8 +567,16 @@ class AuthViewModel extends BaseViewModel {
             SvgPicture.asset(
               notificationChannelFlowWidgetIconSelected(selected),
               color: AppColors.infoGrey,
-              width: selected == 2 ? 24.0 : selected == 0 ? 14.sp:16.20.w,
-              height: selected == 2 ? 24.0 : selected == 0 ? 12.sp: 16.20.sp,
+              width: selected == 2
+                  ? 24.0
+                  : selected == 0
+                  ? 14.sp
+                  : 16.20.w,
+              height: selected == 2
+                  ? 24.0
+                  : selected == 0
+                  ? 12.sp
+                  : 16.20.sp,
             ),
             SizedBox(width: 7.10.w),
             TextView(
@@ -624,6 +628,9 @@ class AuthViewModel extends BaseViewModel {
   String formatPhoneNumber(String phoneNumber) {
     if (phoneNumber.startsWith('+234')) {
       return phoneNumber.replaceFirst('+234', '0');
+    }
+    if (!phoneNumber.startsWith('0')) {
+      return '0$phoneNumber';
     }
     return phoneNumber; // return unchanged if it doesn't start with +234
   }
@@ -13094,7 +13101,7 @@ class AuthViewModel extends BaseViewModel {
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
                           hint: 'End Date',
-                          label: '18 Feb, 2025',
+                          label: '18 Feb, 2026',
                           hintWeight: FontWeight.w400,
                           hintColor: AppColors.reminder,
                           hintSize: Platform.isAndroid ? 14.sp : 12.sp,
@@ -16973,7 +16980,7 @@ class AuthViewModel extends BaseViewModel {
                                       SizedBox(height: 24.0.h),
                                       TextFormWidget(
                                         hint: 'Start Date',
-                                        label: '13 Feb, 2025',
+                                        label: '13 Feb, 2026',
                                         hintWeight: FontWeight.w400,
                                         hintColor: AppColors.reminder,
                                         hintSize: Platform.isAndroid
@@ -19033,66 +19040,68 @@ class AuthViewModel extends BaseViewModel {
             ],
           ),
           SizedBox(height: 20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed:
-                    model!.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.first
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList -= 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 22.sp,
-                  color:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.first
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary,
-                ),
-              ),
-              SizedBox(width: 10.w),
-              TextView(
-                text:
-                    '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.infoGrey,
-                ),
-              ),
+          model!.medicationClassList.length == 1
+              ? SizedBox.shrink()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.first
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList -= 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.first
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary,
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    TextView(
+                      text:
+                          '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 13.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.infoGrey,
+                      ),
+                    ),
 
-              SizedBox(width: 10.w),
-              IconButton(
-                onPressed:
-                    model.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.last
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList += 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_forward,
-                  size: 22.sp,
-                  color:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.last
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary1,
+                    SizedBox(width: 10.w),
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.last
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList += 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.last
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary1,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
           SizedBox(height: 16.20.h),
           TextView(
             text: 'MEDICATION DETAILS',
@@ -19623,68 +19632,70 @@ class AuthViewModel extends BaseViewModel {
               ],
             ),
           ),
-          
+
           SizedBox(height: 16.20.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed:
-                    model.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.first
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList -= 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 22.sp,
-                  color:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.first
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary,
+          model.medicationClassList.length == 1
+              ? SizedBox.shrink()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.first
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList -= 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.first
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary,
+                      ),
+                    ),
+                    SizedBox(width: 10.h),
+                    TextView(
+                      text:
+                          '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 13.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.infoGrey,
+                      ),
+                    ),
+                    SizedBox(width: 10.h),
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.last
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList += 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.last
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary1,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(width: 10.h),
-              TextView(
-                text:
-                    '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.infoGrey,
-                ),
-              ),
-              SizedBox(width: 10.h),
-              IconButton(
-                onPressed:
-                    model.medicationClassList[model
-                            .indexOfMedicationClassList] ==
-                        model.medicationClassList.last
-                    ? () {}
-                    : () {
-                        model.indexOfMedicationClassList += 1;
-                        model.notifyListeners();
-                      },
-                icon: Icon(
-                  Icons.arrow_forward,
-                  size: 22.sp,
-                  color:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.last
-                      ? AppColors.primaryLight.withOpacity(.7)
-                      : AppColors.primary1,
-                ),
-              ),
-            ],
-          ),
-          
+
           SizedBox(height: 16.20.h),
 
           SizedBox(height: 24.20.h),
@@ -19747,17 +19758,24 @@ class AuthViewModel extends BaseViewModel {
                 Wrap(
                   spacing: 4.10,
                   runSpacing: 6,
-                  children: [
-                    ...addedPhoneReminderList.map((o)=>TextView(
-                  text: '${formatPhoneNumber(o)}, ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),),
-                  ],
+                  children: List.generate(addedPhoneReminderList.length, (
+                    index,
+                  ) {
+                    final isLast = index == addedPhoneReminderList.length - 1;
+                    final phone = addedPhoneReminderList[index];
+
+                    return TextView(
+                      text: isLast
+                          ? formatPhoneNumber(phone)
+                          : '${formatPhoneNumber(phone)}, ',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14.8.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.reminder,
+                      ),
+                    );
+                  }),
                 ),
                 SizedBox(height: 6.0.h),
                 Divider(color: AppColors.infoGrey1),
@@ -19775,19 +19793,22 @@ class AuthViewModel extends BaseViewModel {
                 Wrap(
                   spacing: 4.10,
                   runSpacing: 6,
-                  children: [
-                    ...addedEmailReminderList.map(
-                      (e) => TextView(
-                  text: '$e, ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                    ),
-                  ],
+                  children: List.generate(addedEmailReminderList.length, (
+                    index,
+                  ) {
+                    final isLast = index == addedEmailReminderList.length - 1;
+                    final email = addedEmailReminderList[index];
+
+                    return TextView(
+                      text: isLast ? email : '$email, ',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 14.8.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.reminder,
+                      ),
+                    );
+                  }),
                 ),
                 SizedBox(height: 6.0.h),
               ],
@@ -20070,16 +20091,16 @@ class AuthViewModel extends BaseViewModel {
                               Divider(color: AppColors.infoGrey1),
                               Container(
                                 width: double.infinity,
-                                
+
                                 decoration: BoxDecoration(
                                   color: AppColors.nearDashboard,
                                 ),
 
                                 child: Padding(
                                   padding: EdgeInsets.symmetric(
-                                  vertical: 14.w,
-                                  horizontal: 16.0.w,
-                                ),
+                                    vertical: 14.w,
+                                    horizontal: 16.0.w,
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -20114,7 +20135,7 @@ class AuthViewModel extends BaseViewModel {
                   ],
                 )
               : SizedBox.shrink(),
-              SizedBox(height: 46.h),
+          SizedBox(height: 46.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

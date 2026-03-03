@@ -123,9 +123,9 @@ class AppValidator {
       }
       // Land lines eg 080
       if (value.startsWith(RegExp("0[789]")) && value.length != 11) {
-        return error ?? 'Not a valid phone number17.';
+        return error ?? 'Not a valid phone number7.';
       }
-      if (!value.startsWith(RegExp("0[789]")) && value.length != 10) {
+      if (!value.startsWith(RegExp("0[789]")) && value.length != 10 && !value.startsWith("+234")) {
         return error ?? 'Not a valid phone number8.';
       }
       
