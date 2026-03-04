@@ -485,6 +485,10 @@ class PharmViewModel extends BaseViewModel {
 
   bool get updateControllersInitialized => _updateControllersInitialized;
 
+  int calculationForTotalReminderForEmail = 0;
+  int calculationForTotalReminderForPhone = 0;
+  // int? calculationForTotalReminderPerDay;
+
   List<int> intList = [];
   List<int> intListCustom = [];
 
@@ -16280,9 +16284,6 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  int calculationForTotalReminderForEmail = 0;
-  int calculationForTotalReminderForPhone = 0;
-  int? calculationForTotalReminderPerDay;
   calculateTotalReminders(model) {
     final medications = model.medicationClassList ?? [];
     calculationForTotalReminderForEmail = 0;

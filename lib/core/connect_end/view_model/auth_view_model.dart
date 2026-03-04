@@ -285,6 +285,10 @@ class AuthViewModel extends BaseViewModel {
   DateTime? dateTimeObject;
   List listOfDosage = [];
 
+  int calculationForTotalReminderForEmail = 0;
+  int calculationForTotalReminderForPhone = 0;
+  // int? calculationForTotalReminderPerDay;
+
   String? imageReminderUpdate;
   List<List<upReminder.DailyDoseTime>> dailyDose = [];
 
@@ -19600,7 +19604,6 @@ class AuthViewModel extends BaseViewModel {
                     color: AppColors.black,
                   ),
                 ),
-
                 SizedBox(height: 10.h),
                 Divider(
                   color: AppColors.infoGrey.withOpacity(.2),
@@ -19695,9 +19698,7 @@ class AuthViewModel extends BaseViewModel {
                     ),
                   ],
                 ),
-
           SizedBox(height: 16.20.h),
-
           SizedBox(height: 24.20.h),
           TextView(
             text: 'NOTIFICATION CHANNELS',
@@ -19815,7 +19816,6 @@ class AuthViewModel extends BaseViewModel {
             ),
           ),
           SizedBox(height: 16.20.h),
-
           addedPhoneReminderList.isNotEmpty || emailReminderList.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -19899,7 +19899,7 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                     ),
                                     TextView(
-                                      text: '${calculateTotalReminders(model)}',
+                                      text:'${calculationForTotalReminderForEmail + calculationForTotalReminderForPhone}',
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 16.80.sp,
@@ -19925,7 +19925,7 @@ class AuthViewModel extends BaseViewModel {
                                         children: [
                                           TextView(
                                             text:
-                                                'Email (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                                'Email (x${returnMailTimes()} msgs)',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 16.80.sp,
@@ -19960,7 +19960,7 @@ class AuthViewModel extends BaseViewModel {
                                         children: [
                                           TextView(
                                             text:
-                                                'Push (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                                'Push (x${returnMailTimes()} msgs)',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 16.80.sp,
@@ -19995,7 +19995,7 @@ class AuthViewModel extends BaseViewModel {
                                         children: [
                                           TextView(
                                             text:
-                                                'WhatsApp (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                                'WhatsApp (x${returnPhoneTimes()} msgs)',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 16.80.sp,
@@ -20005,7 +20005,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                           TextView(
                                             text:
-                                                '₦${20 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                                '₦${20 * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -20031,7 +20031,7 @@ class AuthViewModel extends BaseViewModel {
                                         children: [
                                           TextView(
                                             text:
-                                                'SMS (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} msgs)',
+                                                'SMS (x${returnPhoneTimes()} msgs)',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 16.80.sp,
@@ -20041,7 +20041,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                           TextView(
                                             text:
-                                                '₦${15 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                                '₦${15 * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -20067,7 +20067,7 @@ class AuthViewModel extends BaseViewModel {
                                         children: [
                                           TextView(
                                             text:
-                                                'Phone Calls (x${(calculateTotalReminders(model) / selectedIndexes.length).toInt()} calls)',
+                                                'Phone Calls (x${returnPhoneTimes()} calls)',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 16.80.sp,
@@ -20077,7 +20077,7 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                           TextView(
                                             text:
-                                                '₦${50 * calculateTotalReminders(model) / selectedIndexes.length}',
+                                                '₦${50 * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -21432,10 +21432,6 @@ class AuthViewModel extends BaseViewModel {
                                         phoneController.text.trim(),
                                       );
                                 }
-                                print(
-                                  '.........${returnPhoneNoStructureAdd234After(phoneController.text.trim())}',
-                                );
-                                print('.bbbbbbbb..${phoneController.text}');
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }
@@ -21526,10 +21522,13 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  int calculateTotalReminders(model) {
+  calculateTotalReminders(model) {
     final medications = model.medicationClassList ?? [];
+    calculationForTotalReminderForEmail = 0;
+    calculationForTotalReminderForPhone = 0;
 
-    int totalReminders = 0;
+    // int totalReminders = 0;
+    int _frequencyPerDay = 0;
 
     for (var med in medications) {
       final bool isCustom = med.isCusSchedule;
@@ -21539,17 +21538,74 @@ class AuthViewModel extends BaseViewModel {
       int frequencyPerDay = 0;
 
       if (isCustom == false) {
-        frequencyPerDay = timesPerDay * durationInDays * selectedIndexes.length;
+        frequencyPerDay = timesPerDay * durationInDays;
       } else if (isCustom == true) {
         // Flatten all daily times and divide by number of days
-        frequencyPerDay =
-            (getTotalCustomDoses(med.dosageMap ?? []) * selectedIndexes.length);
+        frequencyPerDay = (getTotalCustomDoses(med.dosageMap ?? []));
       }
 
-      totalReminders += frequencyPerDay;
+      _frequencyPerDay = frequencyPerDay;
+
+      // totalReminders += frequencyPerDay;
+      if (addedEmailReminderList.isNotEmpty && selectedIndexes.contains(0) ||
+          selectedIndexes.contains(1)) {
+        if (selectedIndexes.contains(0) && selectedIndexes.contains(1)) {
+          calculationForTotalReminderForEmail +=
+              (_frequencyPerDay * 2 * addedEmailReminderList.length);
+        } else {
+          calculationForTotalReminderForEmail +=
+              _frequencyPerDay * addedEmailReminderList.length;
+        }
+      }
+      if (addedPhoneReminderList.isNotEmpty && selectedIndexes.contains(2) ||
+          selectedIndexes.contains(3) ||
+          selectedIndexes.contains(4)) {
+        if (selectedIndexes.contains(2) &&
+            selectedIndexes.contains(3) &&
+            selectedIndexes.contains(4)) {
+          calculationForTotalReminderForPhone +=
+              _frequencyPerDay * 3 * addedPhoneReminderList.length;
+        } else if (selectedIndexes.contains(2) && selectedIndexes.contains(3) ||
+            selectedIndexes.contains(2) && selectedIndexes.contains(4) ||
+            selectedIndexes.contains(3) && selectedIndexes.contains(4)) {
+          calculationForTotalReminderForPhone +=
+              _frequencyPerDay * 2 * addedPhoneReminderList.length;
+        } else {
+          calculationForTotalReminderForPhone +=
+              _frequencyPerDay * addedPhoneReminderList.length;
+        }
+      }
     }
 
-    return totalReminders;
+    notifyListeners();
+
+    // return totalReminders;
+  }
+
+  int returnMailTimes() {
+    int calEmailTimes = 0;
+    if (selectedIndexes.contains(0) && selectedIndexes.contains(1)) {
+      calEmailTimes += (calculationForTotalReminderForEmail / 2).toInt();
+    } else {
+      calEmailTimes += calculationForTotalReminderForEmail;
+    }
+    return calEmailTimes;
+  }
+
+  int returnPhoneTimes() {
+    int calPhoneTimes = 0;
+    if (selectedIndexes.contains(2) &&
+        selectedIndexes.contains(3) &&
+        selectedIndexes.contains(4)) {
+      calPhoneTimes += (calculationForTotalReminderForPhone / 3).toInt();
+    } else if (selectedIndexes.contains(2) && selectedIndexes.contains(3) ||
+        selectedIndexes.contains(2) && selectedIndexes.contains(4) ||
+        selectedIndexes.contains(3) && selectedIndexes.contains(4)) {
+      calPhoneTimes += (calculationForTotalReminderForPhone / 2).toInt();
+    } else {
+      calPhoneTimes += calculationForTotalReminderForPhone;
+    }
+    return calPhoneTimes;
   }
 
   paymentWidget({
