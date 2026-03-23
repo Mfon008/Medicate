@@ -93,8 +93,10 @@ import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
 import '../../../ui/widget/accelerate_payment_view.dart';
+import '../../../ui/widget/accelerate_payment_view_hmo_plan.dart';
 import '../../../ui/widget/accelerate_payment_view_pharmacy.dart';
 import '../../../ui/widget/accelerate_payment_view_wallet.dart';
+import '../../../ui/widget/payment_success_submit_app_screen.dart';
 import '../../api_folder/auth_api.dart';
 import '../../api_folder/healthcare_api.dart';
 import '../../api_folder/hmo_api.dart';
@@ -206,6 +208,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: SubsribersScreen),
     MaterialRoute(page: FamilyFormScreen),
     MaterialRoute(page: CoorporateFormScreen),
+    MaterialRoute(page: AcceleratePaymentViewHmoPlan),
+    MaterialRoute(page: PaymentSuccessSubmitAppScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

@@ -113,6 +113,7 @@ class AppValidator {
       return null;
     };
   }
+
   static String? Function(String?) validatePhoneNewPatient({String? error}) {
     return (String? value) {
       if (value!.isEmpty) {
@@ -125,10 +126,12 @@ class AppValidator {
       if (value.startsWith(RegExp("0[789]")) && value.length != 11) {
         return error ?? 'Not a valid phone number7.';
       }
-      if (!value.startsWith(RegExp("0[789]")) && value.length != 10 && !value.startsWith("+234")) {
+      if (!value.startsWith(RegExp("0[789]")) &&
+          value.length != 10 &&
+          !value.startsWith("+234")) {
         return error ?? 'Not a valid phone number8.';
       }
-      
+
       return null;
     };
   }

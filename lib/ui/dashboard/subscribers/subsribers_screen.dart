@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/connect_end/model/active_hmo_plan_response_model/datum.dart';
 import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/image.dart';
@@ -35,70 +36,13 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
         if (widget.mySubPlans != '') {
           model.mySubPlans = widget.mySubPlans ?? '';
         }
+        model.getHMOActivePlan(context);
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
-          // appBar: AppBar(
-          //   automaticallyImplyLeading: false,
-          //   backgroundColor: AppColors.white,
-          //   toolbarHeight: 80.0,
-          //   title: Padding(
-          //     padding: EdgeInsets.symmetric(horizontal: 4.w),
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         Container(
-          //           decoration: BoxDecoration(
-          //             shape: BoxShape.circle,
-          //             color: AppColors.inactive.withOpacity(.1),
-          //             border: Border.all(
-          //               color: AppColors.inactive.withOpacity(.4),
-          //             ),
-          //           ),
-          //           child: IconButton(
-          //             icon: SvgPicture.asset(
-          //               AppImage.burger,
-          //               color: AppColors.primary,
-          //               height: isTablet(context) ? 34.h : 14.h,
-          //               width: isTablet(context) ? 34.w : 14.w,
-          //             ),
-          //             onPressed: () => navigate.navigateTo(Routes.moreScreen),
-          //           ),
-          //         ),
-          // TextView(
-          //   text: 'HMO Plans',
-          //   textStyle: TextStyle(
-          //     fontSize: 16.sp,
-          //     fontWeight: FontWeight.w700,
-          //     color: AppColors.black,
-          //   ),
-          // ),
-          //         Container(
-          //           decoration: BoxDecoration(
-          //             shape: BoxShape.circle,
-          //             color: AppColors.inactive.withOpacity(.1),
-          //             border: Border.all(
-          //               color: AppColors.inactive..withOpacity(.4),
-          //             ),
-          //           ),
-          //           child: IconButton(
-          //             icon: SvgPicture.asset(
-          //               AppImage.bell,
-          //               height: isTablet(context) ? 40.h : 20.h,
-          //               width: isTablet(context) ? 40.w : 20.w,
-          //               color: AppColors.primary,
-          //             ),
-          //             onPressed: () {},
-          //             splashRadius: 28,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 24.50.w, horizontal: 16.w),
             child: Column(
@@ -223,13 +167,18 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                               ),
                               SizedBox(height: 20.h),
 
-                              ...[1, 2, 3, 8, 6].map(
-                                (e) => subscriberWidget(
-                                  context: context,
-                                  isTab: isTablet(context),
-                                  model: model,
+                              if (model.activeHmoPlanResponseModel != null &&
+                                  model
+                                      .activeHmoPlanResponseModel!
+                                      .data!
+                                      .isNotEmpty)
+                                ...model.activeHmoPlanResponseModel!.data!.map(
+                                  (e) => subscriberWidget(
+                                    context: context,
+                                    data: e,
+                                    isTab: isTablet(context),
+                                  ),
                                 ),
-                              ),
                               SizedBox(height: 20.40.h),
                               Divider(
                                 color: AppColors.buttonGrey1,
@@ -509,10 +458,13 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
   GestureDetector subscriberWidget({
     context,
     isTab,
-    AuthViewModel? model,
+    Datum? data,
     bool isComplete = false,
   }) => GestureDetector(
-    onTap: () => navigate.navigateTo(Routes.proHealthSubScreen),
+    onTap: () => navigate.navigateTo(
+      Routes.proHealthSubScreen,
+      arguments: ProHealthSubScreenArguments(hmoId: data.id),
+    ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 14.w),
       margin: EdgeInsets.only(bottom: 16.w),
@@ -532,8 +484,8 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
               color: AppColors.dashboard,
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Image.asset(
-              AppImage.pro_health,
+            child: Image.network(
+              data?.logo?.url ?? '',
               height: 76.h,
               width: 76.w,
               fit: BoxFit.cover,
@@ -553,7 +505,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
               SizedBox(
                 width: 220.w,
                 child: TextView(
-                  text: 'ProHealth',
+                  text: data?.name ?? '',
                   maxLines: 1,
                   textOverflow: TextOverflow.ellipsis,
                   textStyle: TextStyle(
@@ -570,7 +522,9 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                   SvgPicture.asset(AppImage.locator, height: 10.h, width: 10.w),
                   SizedBox(width: 6.8.w),
                   TextView(
-                    text: '45 Riverside Ave • 1.5km',
+                    text: data!.businessAddress! == ""
+                        ? 'Not Available'
+                        : data.businessAddress!,
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 13.2.sp,
@@ -592,7 +546,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                       ),
                       SizedBox(width: 6.8.w),
                       TextView(
-                        text: '0809876543',
+                        text: data.phone ?? '',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 13.2.sp,
@@ -603,25 +557,25 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                     ],
                   ),
                   SizedBox(width: 10),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppImage.world_web,
-                        height: 10.h,
-                        width: 10.w,
-                      ),
-                      SizedBox(width: 6.8.w),
-                      TextView(
-                        text: 'Visit Website',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.2.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     SvgPicture.asset(
+                  //       AppImage.world_web,
+                  //       height: 10.h,
+                  //       width: 10.w,
+                  //     ),
+                  //     SizedBox(width: 6.8.w),
+                  //     TextView(
+                  //       text: 'Visit Website',
+                  //       textStyle: TextStyle(
+                  //         fontFamily: 'Arial',
+                  //         fontSize: 13.2.sp,
+                  //         fontWeight: FontWeight.w400,
+                  //         color: AppColors.reminder,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
               SizedBox(height: 20.6.h),

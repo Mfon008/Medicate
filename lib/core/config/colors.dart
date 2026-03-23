@@ -13,6 +13,8 @@ class AppColors {
   static const thickGrey = Color(0xFF2C2E34);
   static const appRed = Color(0xFFF04444);
   static const faintedRed = Color(0xFFFDECEC);
+  static const faintedBlue = Color(0xFFE8F6FF);
+  static const faintedPurple = Color(0xFFF4E9FF);
   static const skyBlue = Color(0xFFF5F9FF);
   static const greygrey = Color(0xFF7D7F81);
   static const greygrey1 = Color(0xFF75808A);
@@ -46,6 +48,7 @@ class AppColors {
   static const app_green = Color(0xFF28AA63);
   static const app_green_light = Color(0xFFEAFBF2);
   static const appWhite = Color(0xFFFFFFFF);
+  static const purple = Color(0xFFA859F7);
   static const deep = Color(0xFF06173A);
   static const black = Colors.black;
   static const white = Colors.white;

@@ -18,3 +18,12 @@ String formatNaira(num amount) {
   );
   return formatter.format(amount);
 }
+
+String formatNairaNoDecimal(num amount) {
+  final formatter = NumberFormat.currency(
+    locale: 'en_NG',
+    symbol: '₦',
+    decimalDigits: 0,
+  );
+  return formatter.format(amount);
+}

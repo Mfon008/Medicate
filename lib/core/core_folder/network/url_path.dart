@@ -62,5 +62,10 @@ class UrlConfig {
   static const String get_wallet = '/wallet/balance';
   static const String create_payment = '/payment/create';
   static const String pay_with_wallet = '/payment/pay-with-wallet';
-  // static const String get_user_details_by_tenant = 'auth/get-user-details-by-tenant';
+  static const String get_user_hmos = 'hmos';
+  static const String get_user_hmos_application = 'hmo/applications';
+  static const String start_application = 'hmo/applications/start';
+  static const String save_first_step = 'hmo/applications/save-step';
+  static const String get_hospital_by_id = 'hmo/hospitals';
+  static const String submit_hmo_plan = 'hmo/applications/submit';
 }

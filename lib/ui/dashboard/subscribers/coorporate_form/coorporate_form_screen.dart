@@ -1,14 +1,26 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 
 class CoorporateFormScreen extends StatelessWidget {
-  const CoorporateFormScreen({super.key});
+  CoorporateFormScreen({
+    super.key,
+    required this.planTypeName,
+    required this.planTeirName,
+    required this.planId,
+    required this.hmoId,
+  });
+
+  String? planTypeName;
+  String? planTeirName;
+  String? planId;
+  String? hmoId;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +43,7 @@ class CoorporateFormScreen extends StatelessWidget {
                 children: [
                   GlobalNavigator(),
                   TextView(
-                    text: 'Apply for Ruby Individual Basic',
+                    text: 'Apply for $planTeirName $planTypeName Basic',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 16.sp,

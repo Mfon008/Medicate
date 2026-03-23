@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
-
+import '../../../core/app_assets/constant.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../widget/button.dart';
@@ -13,8 +14,10 @@ import '../../widget/divider_widget.dart';
 import '../../widget/text.dart';
 import '../../widget/xela_divider_models.dart';
 
+// ignore: must_be_immutable
 class ProHealthSubScreen extends StatefulWidget {
-  const ProHealthSubScreen({super.key});
+  ProHealthSubScreen({super.key, required this.hmoId});
+  String? hmoId;
 
   @override
   State<ProHealthSubScreen> createState() => _ProHealthSubScreenState();
@@ -25,7 +28,13 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+        model.getHMOActivePlanByType(
+          context,
+          hmoId: widget.hmoId,
+          type: model.isProSubStatus,
+        );
+      },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, AuthViewModel model, _) {
@@ -89,7 +98,12 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: () {
-                                        model.isProSubStatus = 'individual';
+                                        model.isProSubStatus = 'Individual';
+                                        model.getHMOActivePlanByType(
+                                          context,
+                                          hmoId: widget.hmoId,
+                                          type: model.isProSubStatus,
+                                        );
                                         model.notifyListeners();
                                       },
                                       child: Container(
@@ -97,7 +111,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                           vertical: 10.w,
                                         ),
                                         decoration:
-                                            model.isProSubStatus == 'individual'
+                                            model.isProSubStatus == 'Individual'
                                             ? BoxDecoration(
                                                 color: AppColors.primary,
                                                 borderRadius:
@@ -113,7 +127,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                             fontFamily: 'Arial',
                                             color:
                                                 model.isProSubStatus ==
-                                                    'individual'
+                                                    'Individual'
                                                 ? AppColors.white
                                                 : AppColors.grey1,
                                           ),
@@ -125,7 +139,12 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: () {
-                                        model.isProSubStatus = 'family';
+                                        model.isProSubStatus = 'Family';
+                                        model.getHMOActivePlanByType(
+                                          context,
+                                          hmoId: widget.hmoId,
+                                          type: model.isProSubStatus,
+                                        );
                                         model.notifyListeners();
                                       },
                                       child: Container(
@@ -133,7 +152,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                           vertical: 10.w,
                                         ),
                                         decoration:
-                                            model.isProSubStatus == 'family'
+                                            model.isProSubStatus == 'Family'
                                             ? BoxDecoration(
                                                 color: AppColors.primary,
                                                 borderRadius:
@@ -148,7 +167,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                             fontWeight: FontWeight.w500,
                                             fontFamily: 'Arial',
                                             color:
-                                                model.isProSubStatus == 'family'
+                                                model.isProSubStatus == 'Family'
                                                 ? AppColors.white
                                                 : AppColors.grey1,
                                           ),
@@ -160,7 +179,12 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: () {
-                                        model.isProSubStatus = 'corporate';
+                                        model.isProSubStatus = 'Corporate';
+                                        model.getHMOActivePlanByType(
+                                          context,
+                                          hmoId: widget.hmoId,
+                                          type: model.isProSubStatus,
+                                        );
                                         model.notifyListeners();
                                       },
                                       child: Container(
@@ -168,7 +192,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                           vertical: 10.w,
                                         ),
                                         decoration:
-                                            model.isProSubStatus == 'corporate'
+                                            model.isProSubStatus == 'Corporate'
                                             ? BoxDecoration(
                                                 color: AppColors.primary,
                                                 borderRadius:
@@ -184,7 +208,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                             fontFamily: 'Arial',
                                             color:
                                                 model.isProSubStatus ==
-                                                    'corporate'
+                                                    'Corporate'
                                                 ? AppColors.white
                                                 : AppColors.grey1,
                                           ),
@@ -195,11 +219,28 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                 ],
                               ),
                             ),
-                            model.isProSubStatus == 'individual'
-                                ? individualWidget()
-                                : model.isProSubStatus == 'family'
-                                ? familyWidget()
-                                : coorporateWidget(),
+                            if (model.getHmosPlanResponseModel != null &&
+                                model
+                                    .getHmosPlanResponseModel!
+                                    .data!
+                                    .isNotEmpty)
+                              model.isProSubStatus == 'Individual'
+                                  ? individualWidget(
+                                      model: model,
+                                      data:
+                                          model.getHmosPlanResponseModel!.data,
+                                    )
+                                  : model.isProSubStatus == 'Family'
+                                  ? familyWidget(
+                                      model: model,
+                                      data:
+                                          model.getHmosPlanResponseModel!.data,
+                                    )
+                                  : coorporateWidget(
+                                      model: model,
+                                      data:
+                                          model.getHmosPlanResponseModel!.data,
+                                    ),
                           ],
                         ),
                       ),
@@ -458,7 +499,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                               width: double.infinity,
                               padding: EdgeInsets.symmetric(
                                 vertical: 24.w,
-                                horizontal: 24.w,
+                                horizontal: 22.w,
                               ),
                               margin: EdgeInsets.symmetric(horizontal: 42.w),
                               decoration: BoxDecoration(
@@ -506,6 +547,130 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                 ],
                               ),
                             ),
+
+                            SizedBox(height: 20.h),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 24.w,
+                                horizontal: 22.w,
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 42.w),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.faintedBlue,
+                                ),
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.faintedBlue,
+                                    ),
+                                    padding: EdgeInsets.all(12.w),
+                                    child: SvgPicture.asset(
+                                      AppImage.pearl,
+                                      height: 16.6.h,
+                                      width: 16.6.w,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  TextView(
+                                    text: 'Pearl',
+                                    textStyle: TextStyle(
+                                      fontSize: 18.4.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'Arial',
+                                      color: AppColors.deep,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  rowthickCheckWidget(
+                                    text: 'Enhanced coverage',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  rowthickCheckWidget(
+                                    text: 'Extended medications',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  rowthickCheckWidget(
+                                    text: 'Wider hospital network',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  rowthickCheckWidget(
+                                    text: 'Specialist consultations',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  SizedBox(height: 30.h),
+                                ],
+                              ),
+                            ),
+
+                            SizedBox(height: 20.h),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 24.w,
+                                horizontal: 22.w,
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 42.w),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.faintedPurple,
+                                ),
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.faintedPurple,
+                                    ),
+                                    padding: EdgeInsets.all(12.w),
+                                    child: SvgPicture.asset(
+                                      AppImage.diamond,
+                                      height: 16.6.h,
+                                      width: 16.6.w,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  TextView(
+                                    text: 'Diamond',
+                                    textStyle: TextStyle(
+                                      fontSize: 18.4.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'Arial',
+                                      color: AppColors.deep,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                  rowthickCheckWidget(
+                                    text: 'Premium coverage',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  rowthickCheckWidget(
+                                    text: 'Full medication access',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  rowthickCheckWidget(
+                                    text: 'VIP hospital network',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  rowthickCheckWidget(
+                                    text: 'International coverage',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  rowthickCheckWidget(
+                                    text: 'Priority treatment',
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  SizedBox(height: 20.h),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -520,7 +685,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     );
   }
 
-  Column individualWidget() => Column(
+  Column individualWidget({AuthViewModel? model, List<Datum>? data}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(height: 20.h),
@@ -594,158 +759,258 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       SizedBox(height: 10.h),
       Divider(color: AppColors.infoGrey1),
       SizedBox(height: 20.h),
-      GestureDetector(
-        onTap: () => navigate.navigateTo(Routes.applicationFormScreen),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0.r),
-            border: Border.all(color: AppColors.infoGrey1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(AppImage.person2),
-                      SizedBox(width: 6.w),
-                      TextView(
-                        text: 'Basic Plan',
-                        textStyle: TextStyle(
-                          fontSize: 18.6.sp,
-                          fontFamily: 'Arial',
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.deep,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 4.w,
-                      horizontal: 10.w,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.appRed),
-                      color: AppColors.faintedRed,
-                      borderRadius: BorderRadius.circular(100.r),
-                    ),
-                    child: Row(
+      if (data!.isNotEmpty)
+        ...data.map(
+          (o) => GestureDetector(
+            onTap: () => navigate.navigateTo(
+              Routes.applicationFormScreen,
+              arguments: ApplicationFormScreenArguments(
+                planTypeName: o.planType,
+                planTeirName: o.planTier,
+                planId: o.id,
+                hmoId: widget.hmoId,
+                data: o,
+              ),
+            ),
+            child: Card(
+              elevation: 1,
+              color: AppColors.appWhite,
+              shadowColor: AppColors.infoGrey,
+              margin: EdgeInsets.only(bottom: 20.w),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SvgPicture.asset(AppImage.star, color: AppColors.red),
-                        SizedBox(width: 6.w),
-                        TextView(
-                          text: 'Ruby',
-                          textStyle: TextStyle(
-                            fontFamily: 'GoogleSans',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.red,
+                        Row(
+                          children: [
+                            SvgPicture.asset(AppImage.person2),
+                            SizedBox(width: 6.w),
+                            TextView(
+                              text: individualPlanText(o.planName!),
+                              textStyle: TextStyle(
+                                fontSize: 18.6.sp,
+                                fontFamily: 'Arial',
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.deep,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 4.w,
+                            horizontal: 10.w,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: tiersColor(o)),
+                            color: tiersBorderColor(o),
+                            borderRadius: BorderRadius.circular(100.r),
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                tiersSvgImage(o),
+                                color: tiersColor(o),
+                              ),
+                              SizedBox(width: 6.w),
+                              TextView(
+                                text: o.planTier ?? '',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 15.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: tiersColor(o),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              TextView(
-                text:
-                    'Essential healthcare coverage for individuals with access to quality medical services at affordable rates.',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.fineGrey,
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextView(
-                    text: '₦75,000 ',
-                    textStyle: TextStyle(
-                      fontSize: 28.8.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.deep,
-                    ),
-                  ),
-                  TextView(
-                    text: '/12 months',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 15.8.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.fineGrey,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              TextView(
-                text: '3 hospitals in network',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.fineGrey,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              rowlightCheckWidget('Outpatient consultations'),
-              rowlightCheckWidget('Inpatient care'),
-              rowlightCheckWidget('Laboratory tests'),
-              rowlightCheckWidget('Pharmacy benefits'),
-              SizedBox(height: 10.h),
-              TextView(
-                text: '+1 more benefits',
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 12.w),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.r),
-                  color: AppColors.primary,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                    SizedBox(height: 20.h),
                     TextView(
-                      text: 'Subscribe Now',
+                      text: o.description ?? "",
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 15.8.sp,
+                        fontSize: 15.2.sp,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.white,
+                        color: AppColors.fineGrey,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(Icons.arrow_forward, color: AppColors.white),
+                    SizedBox(height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextView(
+                          text: formatNairaNoDecimal(o.price ?? 0),
+                          textStyle: TextStyle(
+                            fontSize: 28.8.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.deep,
+                          ),
+                        ),
+                        TextView(
+                          text: ' /${o.duration} months',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.8.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.fineGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    TextView(
+                      text: '${o.hospitalCount} hospitals in network',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 15.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.fineGrey,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    ...((model!.hmoPlanType == o
+                            ? o.benefitsSnippet
+                            : o.benefitsSnippet!.take(4))!
+                        .map(
+                          (benefit) =>
+                              rowlightCheckWidget(benefit.description!),
+                        )),
+                    SizedBox(height: 10.h),
+                    GestureDetector(
+                      onTap: () {
+                        if (model.hmoPlanType == o) {
+                          model.hmoPlanType = null;
+                        } else {
+                          model.hmoPlanType = o;
+                        }
+                        model.notifyListeners();
+                      },
+                      child: TextView(
+                        text: model.hmoPlanType == o
+                            ? 'Show less'
+                            : '+${o.benefitsSnippet!.length - 4} more benefits',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 12.w),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.r),
+                        color: AppColors.primary,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextView(
+                            text: 'Subscribe Now',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 15.8.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(Icons.arrow_forward, color: AppColors.white),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
-      ),
       SizedBox(height: 30.h),
     ],
   );
 
-  Column coorporateWidget() => Column(
+  String individualPlanText(String text) {
+    if (text == 'Individual Pearl Plus') {
+      return 'Pearl Plan';
+    }
+    if (text == 'Individual Premium Plan') {
+      return 'Diamond Plan';
+    }
+    return 'Basic Plan';
+  }
+
+  String familyPlanText(String text) {
+    if (text == 'Family Pearl') {
+      return 'Pearl Plan';
+    }
+    if (text == 'Family Premium Plus') {
+      return 'Diamond Plan';
+    }
+    return 'Basic Plan';
+  }
+
+  String corporatePlanText(String text) {
+    if (text == 'Corporate Pearl Plan') {
+      return 'Pearl Plan';
+    }
+    if (text == 'Corporate Premium Plan') {
+      return 'Diamond Plan';
+    }
+    return 'Basic Plan';
+  }
+
+  Color tiersColor(Datum e) {
+    if (e.planTier == 'Pearl') {
+      return AppColors.lightBlue;
+    }
+
+    if (e.planTier == 'Diamond') {
+      return AppColors.purple;
+    }
+
+    return AppColors.appRed;
+  }
+
+  Color tiersBorderColor(Datum e) {
+    if (e.planTier == 'Pearl') {
+      return AppColors.faintedBlue;
+    }
+
+    if (e.planTier == 'Diamond') {
+      return AppColors.faintedPurple;
+    }
+
+    return AppColors.faintedRed;
+  }
+
+  String tiersSvgImage(Datum e) {
+    if (e.planTier == 'Pearl') {
+      return AppImage.pearl;
+    }
+    if (e.planTier == 'Diamond') {
+      return AppImage.diamond;
+    }
+
+    return AppImage.star;
+  }
+
+  Column coorporateWidget({AuthViewModel? model, List<Datum>? data}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(height: 20.h),
@@ -819,158 +1084,191 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       SizedBox(height: 10.h),
       Divider(color: AppColors.infoGrey1),
       SizedBox(height: 20.h),
-      GestureDetector(
-        onTap: () => navigate.navigateTo(Routes.coorporateFormScreen),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0.r),
-            border: Border.all(color: AppColors.infoGrey1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(AppImage.person2),
-                      SizedBox(width: 6.w),
-                      TextView(
-                        text: 'Basic Plan',
-                        textStyle: TextStyle(
-                          fontSize: 18.6.sp,
-                          fontFamily: 'Arial',
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.deep,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 4.w,
-                      horizontal: 10.w,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.appRed),
-                      color: AppColors.faintedRed,
-                      borderRadius: BorderRadius.circular(100.r),
-                    ),
-                    child: Row(
+      if (data!.isNotEmpty)
+        ...data.map(
+          (o) => GestureDetector(
+            onTap: () => navigate.navigateTo(
+              Routes.coorporateFormScreen,
+              arguments: CoorporateFormScreenArguments(
+                planTypeName: o.planType,
+                planTeirName: o.planTier,
+                planId: o.id,
+                hmoId: widget.hmoId,
+              ),
+            ),
+            child: Card(
+              elevation: 1,
+              color: AppColors.appWhite,
+              shadowColor: AppColors.infoGrey,
+              margin: EdgeInsets.only(bottom: 20.w),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SvgPicture.asset(AppImage.star, color: AppColors.red),
-                        SizedBox(width: 6.w),
-                        TextView(
-                          text: 'Ruby',
-                          textStyle: TextStyle(
-                            fontFamily: 'GoogleSans',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.red,
+                        Row(
+                          children: [
+                            SvgPicture.asset(AppImage.person2),
+                            SizedBox(width: 6.w),
+                            TextView(
+                              text: corporatePlanText(o.planName!),
+                              textStyle: TextStyle(
+                                fontSize: 18.6.sp,
+                                fontFamily: 'Arial',
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.deep,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 4.w,
+                            horizontal: 10.w,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: tiersColor(o)),
+                            color: tiersBorderColor(o),
+                            borderRadius: BorderRadius.circular(100.r),
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                tiersSvgImage(o),
+                                color: tiersColor(o),
+                              ),
+                              SizedBox(width: 6.w),
+                              TextView(
+                                text: o.planTier ?? '',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 15.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: tiersColor(o),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              TextView(
-                text:
-                    'Basic group coverage for organizations with 10+ employees.',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.fineGrey,
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextView(
-                    text: '₦65,000 ',
-                    textStyle: TextStyle(
-                      fontSize: 28.8.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.deep,
-                    ),
-                  ),
-                  TextView(
-                    text: '/12 months',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 15.8.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.fineGrey,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              TextView(
-                text: '3 hospitals in network',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.fineGrey,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              rowlightCheckWidget('Staff outpatient care'),
-              rowlightCheckWidget('Staff inpatient care'),
-              rowlightCheckWidget('Basic pharmacy'),
-              rowlightCheckWidget('Emergency care'),
-              SizedBox(height: 10.h),
-              TextView(
-                text: '+1 more benefits',
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 12.w),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.r),
-                  color: AppColors.primary,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                    SizedBox(height: 20.h),
                     TextView(
-                      text: 'Subscribe Now',
+                      text: o.description ?? "",
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 15.8.sp,
+                        fontSize: 15.2.sp,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.white,
+                        color: AppColors.fineGrey,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(Icons.arrow_forward, color: AppColors.white),
+                    SizedBox(height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextView(
+                          text: formatNairaNoDecimal(o.price ?? 0),
+                          textStyle: TextStyle(
+                            fontSize: 28.8.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.deep,
+                          ),
+                        ),
+                        TextView(
+                          text: ' /${o.duration} months',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.8.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.fineGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+                    TextView(
+                      text: '${o.hospitalCount} hospitals in network',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 15.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.fineGrey,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    ...((model!.hmoPlanType == o
+                            ? o.benefitsSnippet
+                            : o.benefitsSnippet!.take(4))!
+                        .map(
+                          (benefit) =>
+                              rowlightCheckWidget(benefit.description!),
+                        )),
+                    SizedBox(height: 10.h),
+                    GestureDetector(
+                      onTap: () {
+                        if (model.hmoPlanType == o) {
+                          model.hmoPlanType = null;
+                        } else {
+                          model.hmoPlanType = o;
+                        }
+                        model.notifyListeners();
+                      },
+                      child: TextView(
+                        text: model.hmoPlanType == o
+                            ? 'Show less'
+                            : '+${o.benefitsSnippet!.length - 4} more benefits',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 12.w),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.r),
+                        color: AppColors.primary,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextView(
+                            text: 'Subscribe Now',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 15.8.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(Icons.arrow_forward, color: AppColors.white),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
-      ),
       SizedBox(height: 30.h),
     ],
   );
 
-  Column familyWidget() => Column(
+  Column familyWidget({AuthViewModel? model, List<Datum>? data}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(height: 20.h),
@@ -1044,163 +1342,196 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       SizedBox(height: 10.h),
       Divider(color: AppColors.infoGrey1),
       SizedBox(height: 20.h),
-      GestureDetector(
-        onTap: () => navigate.navigateTo(Routes.familyFormScreen),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.0.r),
-            border: Border.all(color: AppColors.infoGrey1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(AppImage.person2),
-                      SizedBox(width: 6.w),
-                      TextView(
-                        text: 'Basic Plan',
-                        textStyle: TextStyle(
-                          fontSize: 18.6.sp,
-                          fontFamily: 'Arial',
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.deep,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      vertical: 4.w,
-                      horizontal: 10.w,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.appRed),
-                      color: AppColors.faintedRed,
-                      borderRadius: BorderRadius.circular(100.r),
-                    ),
-                    child: Row(
+      if (data!.isNotEmpty)
+        ...data.map(
+          (o) => GestureDetector(
+            onTap: () => navigate.navigateTo(
+              Routes.familyFormScreen,
+              arguments: FamilyFormScreenArguments(
+                planTypeName: o.planType,
+                planTeirName: o.planTier,
+                planId: o.id,
+                hmoId: widget.hmoId,
+              ),
+            ),
+            child: Card(
+              elevation: 1,
+              color: AppColors.appWhite,
+              shadowColor: AppColors.infoGrey,
+              margin: EdgeInsets.only(bottom: 20.w),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 22.w, horizontal: 22.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SvgPicture.asset(AppImage.star, color: AppColors.red),
-                        SizedBox(width: 6.w),
-                        TextView(
-                          text: 'Ruby',
-                          textStyle: TextStyle(
-                            fontFamily: 'GoogleSans',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.red,
+                        Row(
+                          children: [
+                            SvgPicture.asset(AppImage.person2),
+                            SizedBox(width: 6.w),
+                            TextView(
+                              text: familyPlanText(o.planName!),
+                              textStyle: TextStyle(
+                                fontSize: 18.6.sp,
+                                fontFamily: 'Arial',
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.deep,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 4.w,
+                            horizontal: 10.w,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: tiersColor(o)),
+                            color: tiersBorderColor(o),
+                            borderRadius: BorderRadius.circular(100.r),
+                          ),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset(
+                                tiersSvgImage(o),
+                                color: tiersColor(o),
+                              ),
+                              SizedBox(width: 6.w),
+                              TextView(
+                                text: o.planTier ?? '',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 15.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: tiersColor(o),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              TextView(
-                text:
-                    'Basic family coverage for spouse and up to 4 dependents under 18.',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.fineGrey,
-                ),
-              ),
-              SizedBox(height: 16.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  TextView(
-                    text: '₦180,000 ',
-                    textStyle: TextStyle(
-                      fontSize: 28.8.sp,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.deep,
-                    ),
-                  ),
-                  TextView(
-                    text: '/12 months',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 15.8.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.fineGrey,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-              TextView(
-                text: 'Up to 4 dependents included',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              TextView(
-                text: '3 hospitals in network',
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.fineGrey,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              rowlightCheckWidget('Family outpatient care'),
-              rowlightCheckWidget('Family inpatient care'),
-              rowlightCheckWidget('Antenatal & postnatal care'),
-              rowlightCheckWidget('Child immunization'),
-              SizedBox(height: 10.h),
-              TextView(
-                text: '+1 more benefits',
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 12.w),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100.r),
-                  color: AppColors.primary,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                    SizedBox(height: 20.h),
                     TextView(
-                      text: 'Subscribe Now',
+                      text: o.description ?? "",
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
-                        fontSize: 15.8.sp,
+                        fontSize: 15.2.sp,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.white,
+                        color: AppColors.fineGrey,
                       ),
                     ),
-                    SizedBox(width: 10),
-                    Icon(Icons.arrow_forward, color: AppColors.white),
+                    SizedBox(height: 16.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextView(
+                          text: formatNairaNoDecimal(o.price ?? 0),
+                          textStyle: TextStyle(
+                            fontSize: 28.8.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.deep,
+                          ),
+                        ),
+                        TextView(
+                          text: ' /${o.duration} months',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.8.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.fineGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // SizedBox(height: 20.h),
+                    // TextView(
+                    //   text: 'Up to 4 dependents included',
+                    //   textStyle: TextStyle(
+                    //     fontFamily: 'Arial',
+                    //     fontSize: 15.2.sp,
+                    //     fontWeight: FontWeight.w400,
+                    //     color: AppColors.reminder,
+                    //   ),
+                    // ),
+                    // SizedBox(height: 20.h),
+                    TextView(
+                      text: '${o.hospitalCount} hospitals in network',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 15.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.fineGrey,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    ...((model!.hmoPlanType == o
+                            ? o.benefitsSnippet
+                            : o.benefitsSnippet!.take(4))!
+                        .map(
+                          (benefit) =>
+                              rowlightCheckWidget(benefit.description!),
+                        )),
+                    SizedBox(height: 10.h),
+                    GestureDetector(
+                      onTap: () {
+                        if (model.hmoPlanType == o) {
+                          model.hmoPlanType = null;
+                        } else {
+                          model.hmoPlanType = o;
+                        }
+                        model.notifyListeners();
+                      },
+                      child: TextView(
+                        text: model.hmoPlanType == o
+                            ? 'Show less'
+                            : '+${o.benefitsSnippet!.length - 4} more benefits',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 12.w),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100.r),
+                        color: AppColors.primary,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextView(
+                            text: 'Subscribe Now',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 15.8.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.white,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(Icons.arrow_forward, color: AppColors.white),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
-      ),
       SizedBox(height: 30.h),
     ],
   );

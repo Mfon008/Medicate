@@ -6,15 +6,36 @@ import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart';
 
 class ApplicationFormScreen extends StatelessWidget {
-  ApplicationFormScreen({super.key});
+  ApplicationFormScreen({
+    super.key,
+    required this.planTypeName,
+    required this.planTeirName,
+    required this.planId,
+    required this.hmoId,
+    required this.data,
+  });
+
+  String? planTypeName;
+  String? planTeirName;
+  String? planId;
+  String? hmoId;
+  Datum? data;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+        model.checkPlanTypeAndTier(
+          context: context,
+          model: model,
+          planType: planTypeName,
+          planTier: planTeirName,
+        );
+      },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, AuthViewModel model, _) {
@@ -31,7 +52,7 @@ class ApplicationFormScreen extends StatelessWidget {
                 children: [
                   GlobalNavigator(),
                   TextView(
-                    text: 'Apply for Ruby Individual Basic',
+                    text: 'Apply for $planTeirName $planTypeName Basic',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 16.sp,
@@ -71,6 +92,11 @@ class ApplicationFormScreen extends StatelessWidget {
                   child: model.setSubscriptionModalFlow(
                     model: model,
                     context: context,
+                    planType: planTypeName,
+                    planTier: planTeirName,
+                    hmoId: hmoId,
+                    planId: planId,
+                    data: data,
                   ),
                 ),
               ],

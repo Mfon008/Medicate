@@ -12,6 +12,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/daily_dose_time.dart'
     as getR;
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
+    as hmo;
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
+    as d;
 import 'package:medicate_app/core/app_assets/country_code_format.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/medication_image.dart';
@@ -22,7 +26,12 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/daily_dos
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/data.dart'
     as getReminderId;
 import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
+import 'package:medicate_app/core/connect_end/model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_first_step_personal_info_entity_model/personal_info.dart';
+import 'package:medicate_app/core/connect_end/model/save_second_step_entity_model/plan_specific.dart';
+import 'package:medicate_app/core/connect_end/model/save_third_step_entity_model/document.dart'
+    as sv;
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_doses_status_model/update_doses_status_model.dart';
@@ -51,6 +60,7 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
+import '../model/active_hmo_plan_response_model/active_hmo_plan_response_model.dart';
 import '../model/api_result_model.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
@@ -58,6 +68,9 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_reminder_entity_model/medication.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
+import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
+import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/datum.dart';
@@ -74,12 +87,21 @@ import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.d
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
+import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
+import '../model/save_second_step_response_model/save_second_step_response_model.dart';
+import '../model/save_third_step_entity_model/save_third_step_entity_model.dart';
+import '../model/save_third_step_response_model/save_third_step_response_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
+import '../model/start_application_entity_model.dart';
+import '../model/start_application_rsponse_model/start_application_rsponse_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
+import '../model/upload_application_document_response_model/upload_application_document_response_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -96,6 +118,10 @@ class AuthViewModel extends BaseViewModel {
   final session = locator<SharedPreferencesService>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _isLoadingDoc1 = false;
+  bool get isLoadingDoc1 => _isLoadingDoc1;
+  bool _isLoadingDoc2 = false;
+  bool get isLoadingDoc2 => _isLoadingDoc2;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool get isTogglePassword => _isTogglePassword;
   bool _isTogglePassword = false;
@@ -103,6 +129,7 @@ class AuthViewModel extends BaseViewModel {
   bool get isTogglePasswordConfirm => _isTogglePasswordConfirm;
   bool _isTogglePasswordConfirm = false;
   bool onToggleMic = false;
+  hmo.Datum? hmoPlanType;
 
   LoginResponseModel? _loginResponseModel;
   LoginResponseModel? get loginResponseModel => _loginResponseModel;
@@ -115,6 +142,9 @@ class AuthViewModel extends BaseViewModel {
   InitiatePaymentResponseModel? _initiatePaymentResponseModel;
   InitiatePaymentResponseModel? get initiatePaymentResponseModel =>
       _initiatePaymentResponseModel;
+  HmoPlanPaymentResponseModel? _hmoPlanPaymentResponseModel;
+  HmoPlanPaymentResponseModel? get hmoPlanPaymentResponseModel =>
+      _hmoPlanPaymentResponseModel;
   CreatePaymentWalletModel? _createPaymentWalletModel;
   CreatePaymentWalletModel? get createPaymentWalletModel =>
       _createPaymentWalletModel;
@@ -129,6 +159,33 @@ class AuthViewModel extends BaseViewModel {
   PayWithWalletResponseModel? get payWithWalletResponseModel =>
       _payWithWalletResponseModel;
 
+  StartApplicationRsponseModel? _startApplicationResponseModel;
+  StartApplicationRsponseModel? get startApplicationResponseModel =>
+      _startApplicationResponseModel;
+  SaveFirstStepPersonalResponseModel? _saveFirstStepPersonalResponseModel;
+  SaveFirstStepPersonalResponseModel? get saveFirstStepPersonalResponseModel =>
+      _saveFirstStepPersonalResponseModel;
+  SaveSecondStepResponseModel? _saveSecondStepResponseModel;
+  SaveSecondStepResponseModel? get saveSecondStepResponseModel =>
+      _saveSecondStepResponseModel;
+  SaveThirdStepResponseModel? _saveThirdStepResponseModel;
+  SaveThirdStepResponseModel? get saveThirdStepResponseModel =>
+      _saveThirdStepResponseModel;
+
+  GetHmosPlanResponseModel? _getHmosPlanResponseModel;
+  GetHmosPlanResponseModel? get getHmosPlanResponseModel =>
+      _getHmosPlanResponseModel;
+
+  GetHospitalByIdResponseModel? _getHospitalByIdResponseModel;
+  GetHospitalByIdResponseModel? get getHospitalByIdResponseModel =>
+      _getHospitalByIdResponseModel;
+  GetIndividualApplicationDetailsModel? _getIndividualApplicationDetailsModel;
+  GetIndividualApplicationDetailsModel?
+  get getIndividualApplicationDetailsModel =>
+      _getIndividualApplicationDetailsModel;
+  ActiveHmoPlanResponseModel? _activeHmoPlanResponseModel;
+  ActiveHmoPlanResponseModel? get activeHmoPlanResponseModel =>
+      _activeHmoPlanResponseModel;
   GetUserDetailsNoPhoneModel? _getUserDetailsNoPhoneModel;
   GetUserDetailsNoPhoneModel? get getUserDetailsNoPhoneModel =>
       _getUserDetailsNoPhoneModel;
@@ -162,6 +219,11 @@ class AuthViewModel extends BaseViewModel {
   CreateReminderResponseModel? _createReminderResponseModel;
   CreateReminderResponseModel? get createReminderResponseModel =>
       _createReminderResponseModel;
+  UploadApplicationDocumentResponseModel?
+  _uploadApplicationDocumentResponseModel;
+  UploadApplicationDocumentResponseModel?
+  get uploadApplicationDocumentResponseModel =>
+      _uploadApplicationDocumentResponseModel;
   UploadImageReminderResponseModel? _uploadImageReminderResponseModel;
   UploadImageReminderResponseModel? get uploadImageReminderResponseModel =>
       _uploadImageReminderResponseModel;
@@ -182,6 +244,10 @@ class AuthViewModel extends BaseViewModel {
   GlobalKey<FormState> firstFormReminderUpdateKey = GlobalKey<FormState>();
   GlobalKey<FormState> secondFormReminderKey = GlobalKey<FormState>();
   GlobalKey<FormState> secondFormReminderUpdateKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
+
+  GlobalKey<FormState> firstSubModalFlowKey = GlobalKey<FormState>();
+  GlobalKey<FormState> secondSubModalFlowKey = GlobalKey<FormState>();
 
   List<MedicationClass> medicationClassList = [];
   String startDateIso = '';
@@ -287,7 +353,6 @@ class AuthViewModel extends BaseViewModel {
 
   int calculationForTotalReminderForEmail = 0;
   int calculationForTotalReminderForPhone = 0;
-  // int? calculationForTotalReminderPerDay;
 
   String? imageReminderUpdate;
   List<List<upReminder.DailyDoseTime>> dailyDose = [];
@@ -406,7 +471,7 @@ class AuthViewModel extends BaseViewModel {
 
   String isSubStatus = 'Plans';
   String mySubPlans = '';
-  String isProSubStatus = 'individual';
+  String isProSubStatus = 'Individual';
 
   int linSubIndex = 1;
   int linFamIndex = 1;
@@ -414,6 +479,7 @@ class AuthViewModel extends BaseViewModel {
   bool isSubTapped = false;
   bool isPaidTapped = false;
   bool isCusSchedule = false;
+  bool isCronicAil = false;
   List<bool> isCusScheduleUpdate = [];
   bool isDosageOthers = false;
 
@@ -436,10 +502,14 @@ class AuthViewModel extends BaseViewModel {
   List<String> selectedTimes = []; // ["09:30 AM", "10:30 AM"]
   List<String> selectedCustomTimes = []; // ["09:30 AM", "10:30 AM"]
 
+  TextEditingController medicalHistoryController = TextEditingController();
+  TextEditingController medicalHistoryDetailsController =
+      TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController phoneNoController = TextEditingController();
+  TextEditingController emailAddsController = TextEditingController();
   TextEditingController resAddressController = TextEditingController();
   TextEditingController filterStateController = TextEditingController();
   TextEditingController hospitalController = TextEditingController();
@@ -447,6 +517,7 @@ class AuthViewModel extends BaseViewModel {
 
   Map<int, String?> selectedTimePerDay = {};
   Map<int, List<String>> timesPerDay = {};
+  List<sv.Document>? uploadDocumentsApplication = [];
 
   int? globalTimeIndex;
 
@@ -629,6 +700,18 @@ class AuthViewModel extends BaseViewModel {
     return phoneNo;
   }
 
+  String returnPhoneNoStructureAdd234AfterAgain(String phoneNo) {
+    if (phoneNo.startsWith('+234')) {
+      phoneNo = phoneNo;
+    } else if (phoneNo.startsWith('0')) {
+      phoneNo = '+234${phoneNo.substring(1)}';
+    } else {
+      phoneNo = '+234${phoneNo.substring(0)}';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
   String formatPhoneNumber(String phoneNumber) {
     if (phoneNumber.startsWith('+234')) {
       return phoneNumber.replaceFirst('+234', '0');
@@ -661,7 +744,50 @@ class AuthViewModel extends BaseViewModel {
     return phoneNo;
   }
 
-  setSubscriptionModalFlow({AuthViewModel? model, BuildContext? context}) {
+  String tiersSvgImage(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppImage.pearl;
+    }
+    if (planTier == 'Diamond') {
+      return AppImage.diamond;
+    }
+
+    return AppImage.star;
+  }
+
+  Color tiersColor(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppColors.lightBlue;
+    }
+
+    if (planTier == 'Diamond') {
+      return AppColors.purple;
+    }
+
+    return AppColors.appRed;
+  }
+
+  Color tiersBorderColor(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppColors.faintedBlue;
+    }
+
+    if (planTier == 'Diamond') {
+      return AppColors.faintedPurple;
+    }
+
+    return AppColors.faintedRed;
+  }
+
+  setSubscriptionModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) {
     if (linSubIndex == 2) {
       return secondSubModalFlow(model: model, context: context);
     }
@@ -669,12 +795,35 @@ class AuthViewModel extends BaseViewModel {
       return thirdSubModalFlow(model: model, context: context);
     }
     if (linSubIndex == 4) {
-      return fourthSubModalFlow(model: model, context: context);
+      return fourthSubModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+        planId: planId,
+        data: data,
+        hmoId: hmoId,
+      );
     }
     if (linSubIndex == 5) {
-      return fifthSubModalFlow(model: model, context: context);
+      return fifthSubModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+        planId: planId,
+        data: data,
+        hmoId: hmoId,
+      );
     }
-    return firstSubModalFlow(model: model, context: context);
+    return firstSubModalFlow(
+      model: model,
+      context: context,
+      planType: planType,
+      planTier: planTier,
+      planId: planId,
+      hmoId: hmoId,
+    );
   }
 
   setFamilyAppModalFlow({AuthViewModel? model, BuildContext? context}) {
@@ -709,278 +858,619 @@ class AuthViewModel extends BaseViewModel {
     return firstCorpModalFlow(model: model, context: context);
   }
 
-  firstSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Center(
-        child: TextView(
-          text: modalSubscriptionName(),
-          textStyle: TextStyle(
-            fontFamily: 'GoogleSans',
-            fontSize: 16.70.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.deep,
+  checkPlanTypeAndTier({
+    BuildContext? context,
+    AuthViewModel? model,
+    String? planType,
+    String? planTier,
+  }) async {
+    if (planType == 'Individual' && planTier == 'Ruby') {
+      await model!.getIndividualApplicationDetails(
+        context,
+        applicationId: session.applicationIdIndividualRuby,
+      );
+      await model.getHospitalById(
+        context,
+        hospitalId: model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.preferredHospitalId,
+      );
+      model.fullNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.fullName ??
+          '';
+      model.emailAddsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.email ??
+          '';
+      model.dobController.text =
+          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+              .toString()
+              .substring(0, 10) ??
+          '';
+      model.genderController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.gender ??
+          '';
+      model.phoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.phone ??
+          '';
+      model.resAddressController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.residentialAddress ??
+          '';
+      model.filterStateController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+      model.hospitalController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+      model.linSubIndex =
+          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+      model.medicalHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.medicalHistory ??
+          '';
+      model.medicalHistoryDetailsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.chronicAilmentDetails ??
+          '';
+
+      if (model.getIndividualApplicationDetailsModel != null) {
+        for (var e
+            in model.getIndividualApplicationDetailsModel!.data!.documents!) {
+          if (e.documentType == 'BIRTH_CERTIFICATE') {
+            model.uploadDocumentsApplication!.insert(
+              0,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          } else if (e.documentType == 'NATIONAL_ID') {
+            if (model.uploadDocumentsApplication!.isEmpty) {
+              model.uploadDocumentsApplication!.add(
+                sv.Document(),
+              ); // fill index 0 if missing
+            }
+            model.uploadDocumentsApplication!.insert(
+              1,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          }
+        }
+      }
+    }
+    if (planType == 'Individual' && planTier == 'Pearl') {
+      print('print it in here:::${session.applicationIdIndividualPearl}');
+      await model!.getIndividualApplicationDetails(
+        context,
+        applicationId: session.applicationIdIndividualPearl,
+      );
+
+      print(
+        'print name here:::${model.getIndividualApplicationDetailsModel?.data?.personalInfo?.fullName}',
+      );
+
+      // await model.getHospitalById(
+      //   context,
+      //   hospitalId: model
+      //       .getIndividualApplicationDetailsModel
+      //       ?.data
+      //       ?.personalInfo
+      //       ?.preferredHospitalId,
+      // );
+
+      model.fullNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.fullName ??
+          '';
+      model.emailAddsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.email ??
+          '';
+      model.dobController.text =
+          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+              .toString()
+              .substring(0, 10) ??
+          '';
+      model.genderController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.gender ??
+          '';
+      model.phoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.phone ??
+          '';
+      model.resAddressController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.residentialAddress ??
+          '';
+      model.filterStateController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+      model.hospitalController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+      model.linSubIndex =
+          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+      model.medicalHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.medicalHistory ??
+          '';
+      model.medicalHistoryDetailsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.chronicAilmentDetails ??
+          '';
+    }
+    if (planType == 'Individual' && planTier == 'Diamond') {
+      await model!.getIndividualApplicationDetails(
+        context,
+        applicationId:
+            SharedPreferencesService.instance.applicationIdIndividualDiamond,
+      );
+      await model.getHospitalById(
+        context,
+        hospitalId: model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.preferredHospitalId,
+      );
+      model.fullNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.fullName ??
+          '';
+      model.emailAddsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.email ??
+          '';
+      model.dobController.text =
+          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+              .toString()
+              .substring(0, 10) ??
+          '';
+      model.genderController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.gender ??
+          '';
+      model.phoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.phone ??
+          '';
+      model.resAddressController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.residentialAddress ??
+          '';
+      model.filterStateController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+      model.hospitalController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+      model.linSubIndex =
+          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+      model.medicalHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.medicalHistory ??
+          '';
+      model.medicalHistoryDetailsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.chronicAilmentDetails ??
+          '';
+    }
+    model!.notifyListeners();
+  }
+
+  firstSubModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+  }) => Form(
+    key: firstSubModalFlowKey,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: TextView(
+            text: modalSubscriptionName(),
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 16.70.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.deep,
+            ),
           ),
         ),
-      ),
-      SizedBox(height: 20.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: SizedBox(
-              width: MediaQuery.of(context!).size.width * .80,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5.0),
-                ), // Adjust radius as needed
-                child: LinearProgressIndicator(
-                  minHeight: 4.0, // Adjust height as needed
-                  value: model!.linSubIndex / 5,
-                  color: AppColors.primary, // Progress bar color
-                  backgroundColor: Colors.grey[300], // Background track color
+        SizedBox(height: 20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context!).size.width * .80,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: model!.linSubIndex / 5,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(width: 10.w),
-          TextView(
-            text: '${model.linSubIndex}/5',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 13.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
+            SizedBox(width: 10.w),
+            TextView(
+              text: '${model.linSubIndex}/5',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
             ),
+          ],
+        ),
+        SizedBox(height: 14.20.h),
+        TextView(
+          text: 'Personal Information',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
           ),
-        ],
-      ),
-      SizedBox(height: 14.20.h),
-      TextView(
-        text: 'Personal Information',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
         ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      TextFormWidget(
-        hint: 'Full Name',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: fullNameController,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        TextFormWidget(
+          hint: 'Full Name',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: fullNameController,
+          validator: AppValidator.validateString(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
         ),
-      ),
-      SizedBox(height: 18.6.h),
-      TextFormWidget(
-        hint: 'Date of Birth',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        readOnly: true,
-        controller: dobController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Padding(
-          padding: EdgeInsets.all(8.w),
-          child: SvgPicture.asset(AppImage.calendar),
+        SizedBox(height: 18.6.h),
+        TextFormWidget(
+          hint: 'Date of Birth',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          readOnly: true,
+          controller: dobController,
+          // validator: AppValidator.validateString(),
+          suffixWidget: Padding(
+            padding: EdgeInsets.all(8.w),
+            child: SvgPicture.asset(AppImage.calendar),
+          ),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
         ),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Gender',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          label: 'Select Gender',
+          labelStyle: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+            color: AppColors.infoGrey,
+          ),
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: genderController,
+          validator: AppValidator.validateString(),
+          suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+            color: AppColors.infoGrey,
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextFormWidget(
-        hint: 'Gender',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        label: 'Select Gender',
-        labelStyle: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-          color: AppColors.infoGrey,
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Email Address',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          isFilled: true,
+          controller: emailAddsController,
+          validator: AppValidator.validateEmail(),
+          inputFormatters: [
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              return newValue.copyWith(
+                text: newValue.text.toLowerCase(),
+                selection: newValue.selection,
+              );
+            }),
+          ],
         ),
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: genderController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-          color: AppColors.infoGrey,
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Phone Number',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: phoneNoController,
+          validator: AppValidator.validateString(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextFormWidget(
-        hint: 'Phone Number',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: phoneNoController,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Residential Address',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: resAddressController,
+          maxline: 4,
+          validator: AppValidator.validateString(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextFormWidget(
-        hint: 'Residential Address',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: resAddressController,
-        maxline: 4,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+        SizedBox(height: 20.6.h),
+        TextView(
+          text: 'Preferred Hospital ',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextView(
-        text: 'Preferred Hospital ',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
+        SizedBox(height: 10.h),
+        TextView(
+          text:
+              'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 15.2.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.infoGrey,
+          ),
         ),
-      ),
-      SizedBox(height: 10.h),
-      TextView(
-        text:
-            'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
-        textStyle: TextStyle(
-          fontFamily: 'Arial',
-          fontSize: 15.2.sp,
-          fontWeight: FontWeight.w400,
-          color: AppColors.infoGrey,
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        TextFormWidget(
+          hint: 'Filter by State',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          label: 'All State',
+          labelStyle: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Arial',
+            color: AppColors.infoGrey,
+          ),
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: filterStateController,
+          validator: AppValidator.validateString(),
+          suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
         ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      TextFormWidget(
-        hint: 'Filter by State',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        label: 'All State',
-        labelStyle: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Arial',
-          color: AppColors.infoGrey,
+        SizedBox(height: 20.h),
+        TextFormWidget(
+          hint: 'Select Hospital',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          label: 'Choose a hospital',
+          labelStyle: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Arial',
+            color: AppColors.infoGrey,
+          ),
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: hospitalController,
+          validator: AppValidator.validateString(),
+          suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
         ),
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: filterStateController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
-      ),
-      SizedBox(height: 20.h),
-      TextFormWidget(
-        hint: 'Select Hospital',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        label: 'Choose a hospital',
-        labelStyle: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Arial',
-          color: AppColors.infoGrey,
+        SizedBox(height: 24.60.h),
+        ButtonWidget(
+          border: 100.r,
+          buttonColor: AppColors.primary,
+          buttonText: 'Continue',
+          color: AppColors.white,
+          isLoading: model.isLoading,
+          buttonBorderColor: AppColors.transparent,
+          onPressed: () async {
+            if (firstSubModalFlowKey.currentState!.validate()) {
+              await model.startApplication(
+                context,
+                startApplication: StartApplicationEntityModel(
+                  hmoId: hmoId,
+                  planId: planId,
+                  planType: planType,
+                ),
+                planTeir: planTier,
+                planType: planType,
+              );
+              await model.saveFirstStepPersonalInfo(
+                context,
+                saveFirstStepPersonalInfoEntityModel:
+                    SaveFirstStepPersonalInfoEntityModel(
+                      applicationId: session.applicationIdIndividualRuby,
+                      step: 1,
+                      personalInfo: PersonalInfo(
+                        fullName: fullNameController.text.trim(),
+                        dob: '1998-10-10',
+                        gender: genderController.text.trim(),
+                        phone: model.returnPhoneNoStructureAdd234AfterAgain(
+                          phoneNoController.text.trim(),
+                        ),
+                        email: emailAddsController.text.trim(),
+                        residentialAddress: resAddressController.text.trim(),
+                        preferredHospitalId: '6995e565e267b045c2087b07',
+                      ),
+                    ),
+              );
+            }
+            model.notifyListeners();
+          },
         ),
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: hospitalController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
-      ),
-      SizedBox(height: 24.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.primary,
-        buttonText: 'Continue',
-        color: AppColors.white,
-        isLoading: model.isLoading,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () {
-          model.linSubIndex++;
-          model.notifyListeners();
-        },
-      ),
-      SizedBox(height: 16.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        isLoading: model.isLoading,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () {
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
-          model.notifyListeners();
-        },
-      ),
-      SizedBox(height: 20.60.h),
-    ],
+        SizedBox(height: 16.60.h),
+        ButtonWidget(
+          border: 100.r,
+          buttonColor: AppColors.dashboard,
+          buttonText: 'Save as Draft',
+          color: AppColors.deep,
+          isLoading: model.isLoading,
+          buttonBorderColor: AppColors.transparent,
+          onPressed: () async {
+            if (firstSubModalFlowKey.currentState!.validate()) {
+              await model.saveFirstStepPersonalInfo(
+                context,
+                saveFirstStepPersonalInfoEntityModel:
+                    SaveFirstStepPersonalInfoEntityModel(
+                      applicationId: session.applicationIdIndividualRuby,
+                      step: 1,
+                      personalInfo: PersonalInfo(
+                        fullName: fullNameController.text.trim(),
+                        dob: '1998-10-10',
+                        gender: genderController.text.trim(),
+                        phone: model.returnPhoneNoStructureAdd234AfterAgain(
+                          phoneNoController.text.trim(),
+                        ),
+                        email: emailAddsController.text.trim(),
+                        residentialAddress: resAddressController.text.trim(),
+                        preferredHospitalId: '6995e565e267b045c2087b07',
+                      ),
+                    ),
+              );
+            }
+            model.notifyListeners();
+          },
+        ),
+        SizedBox(height: 20.60.h),
+      ],
+    ),
   );
 
   firstFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
@@ -1531,335 +2021,273 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  secondSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Center(
-        child: TextView(
-          text: modalSubscriptionName(),
-          textStyle: TextStyle(
-            fontFamily: 'GoogleSans',
-            fontSize: 16.70.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.deep,
+  secondSubModalFlow({AuthViewModel? model, BuildContext? context}) => Form(
+    key: secondSubModalFlowKey,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: TextView(
+            text: modalSubscriptionName(),
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 16.70.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.deep,
+            ),
           ),
         ),
-      ),
-      SizedBox(height: 14.20.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: SizedBox(
-              width: MediaQuery.of(context!).size.width * .80,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5.0),
-                ), // Adjust radius as needed
-                child: LinearProgressIndicator(
-                  minHeight: 4.0, // Adjust height as needed
-                  value: model!.linSubIndex / 5,
-                  color: AppColors.primary, // Progress bar color
-                  backgroundColor: Colors.grey[300], // Background track color
+        SizedBox(height: 14.20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context!).size.width * .80,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: model!.linSubIndex / 5,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(width: 10.w),
-          TextView(
-            text: '${model.linSubIndex}/5',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 13.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 20.h),
-      TextView(
-        text: 'Medical History Declaration',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
-        ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.4.w),
-        decoration: BoxDecoration(
-          color: AppColors.skyBlue,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 8.w),
-              child: Icon(
-                Icons.info_outline,
-                color: AppColors.primary1,
-                size: 20.sp,
+            SizedBox(width: 10.w),
+            TextView(
+              text: '${model.linSubIndex}/5',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
               ),
             ),
-            SizedBox(width: 10.12.w),
+          ],
+        ),
+        SizedBox(height: 20.h),
+        TextView(
+          text: 'Medical History Declaration',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.4.w),
+          decoration: BoxDecoration(
+            color: AppColors.skyBlue,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 8.w),
+                child: Icon(
+                  Icons.info_outline,
+                  color: AppColors.primary1,
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(width: 10.12.w),
+              Expanded(
+                child: TextView(
+                  text:
+                      'Pre-existing conditions may be subject to waiting periods. Please provide accurate information as false declarations may affect your coverage.',
+                  maxLines: 5,
+                  textOverflow: TextOverflow.ellipsis,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 13.2.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.deep,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 20.h),
+        TextFormWidget(
+          hint: 'Medical History',
+          borderColor: AppColors.transparent,
+          label:
+              'Please describe any relevant medical history, previous surgeries, ongoing treatments, allergies, or current medications...',
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: medicalHistoryController,
+          maxline: 3,
+          alignLabelWithHint: true,
+          validator: AppValidator.validateString(),
+          labelStyle: TextStyle(
+            fontSize: 15.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Arial',
+            color: AppColors.infoGrey,
+          ),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+        ),
+        SizedBox(height: 14.60.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            GestureDetector(
+              onTap: () {
+                isSubTapped = !isSubTapped;
+                model.notifyListeners();
+              },
+              child: Container(
+                margin: EdgeInsets.only(top: 4.w),
+                padding: isSubTapped
+                    ? EdgeInsets.all(3.0.w)
+                    : EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.r),
+                  color: isSubTapped
+                      ? AppColors.primary
+                      : AppColors.transparent,
+                  border: Border.all(
+                    color: isSubTapped
+                        ? AppColors.transparent
+                        : AppColors.infoGrey,
+                    width: .48,
+                  ),
+                ),
+                child: isSubTapped
+                    ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+                    : SizedBox.shrink(),
+              ),
+            ),
+            SizedBox(width: 10.w),
             Expanded(
               child: TextView(
-                text:
-                    'Pre-existing conditions may be subject to waiting periods. Please provide accurate information as false declarations may affect your coverage.',
-                maxLines: 5,
-                textOverflow: TextOverflow.ellipsis,
+                text: 'I have a chronic ailment or pre-existing condition',
                 textStyle: TextStyle(
                   fontFamily: 'Arial',
-                  fontSize: 13.2.sp,
+                  fontSize: 15.2.sp,
                   fontWeight: FontWeight.w400,
-                  color: AppColors.deep,
+                  color: AppColors.reminder,
                 ),
               ),
             ),
           ],
         ),
-      ),
-      SizedBox(height: 20.h),
-      TextFormWidget(
-        hint: 'Medical History',
-        borderColor: AppColors.transparent,
-        label:
-            'Please describe any relevant medical history, previous surgeries, ongoing treatments, allergies, or current medications...',
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: fullNameController,
-        maxline: 3,
-        alignLabelWithHint: true,
-        validator: AppValidator.validateString(),
-        labelStyle: TextStyle(
-          fontSize: 15.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Arial',
-          color: AppColors.infoGrey,
-        ),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-        ),
-      ),
-      // Container(
-      //   padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.4.w),
-      //   decoration: BoxDecoration(
-      //     color: AppColors.dashboard,
-      //     borderRadius: BorderRadius.circular(12.r),
-      //   ),
-      //   child: TextView(
-      //     text:
-      //         'Please describe any relevant medical history, previous surgeries, ongoing treatments, allergies, or current medications...',
 
-      //     textStyle: TextStyle(
-      //       fontFamily: 'Arial',
-      //       fontSize: 15.2.sp,
-      //       fontWeight: FontWeight.w400,
-      //       color: AppColors.infoGrey,
-      //     ),
-      //   ),
-      // ),
-      SizedBox(height: 14.60.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              isSubTapped = !isSubTapped;
-              model.notifyListeners();
-            },
-            child: Container(
-              margin: EdgeInsets.only(top: 4.w),
-              padding: isSubTapped
-                  ? EdgeInsets.all(3.0.w)
-                  : EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.r),
-                color: isSubTapped ? AppColors.primary : AppColors.transparent,
-                border: Border.all(
-                  color: isSubTapped
-                      ? AppColors.transparent
-                      : AppColors.infoGrey,
-                  width: .48,
+        SizedBox(height: 20.h),
+        !isSubTapped
+            ? SizedBox.shrink()
+            : TextFormWidget(
+                hint: 'Please provide details',
+                borderColor: AppColors.transparent,
+                label:
+                    'Describe your condition, when it was diagnosed, current treatment...',
+                borderTopLeft: 10.r,
+                borderTopRight: 10.r,
+                borderBottomLeft: 10.r,
+                borderBottomRight: 10.r,
+                hintSize: 14.sp,
+                fillColor: AppColors.grey,
+                isFilled: true,
+                controller: medicalHistoryDetailsController,
+                maxline: 3,
+                alignLabelWithHint: true,
+                validator: AppValidator.validateString(),
+                labelStyle: TextStyle(
+                  fontSize: 15.20.sp,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Arial',
+                  color: AppColors.infoGrey,
+                ),
+                style: TextStyle(
+                  fontSize: 16.20.sp,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'GoogleSans',
                 ),
               ),
-              child: isSubTapped
-                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
-                  : SizedBox.shrink(),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: TextView(
-              text: 'I have a chronic ailment or pre-existing condition',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 15.2.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.reminder,
+        SizedBox(height: 25.60.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ButtonWidget(
+                border: 100.r,
+                buttonColor: AppColors.white,
+                buttonText: 'Previous',
+                color: AppColors.primary,
+                isLoading: model.isLoading,
+                buttonBorderColor: AppColors.primary,
+                onPressed: () {
+                  model.linSubIndex--;
+                  model.notifyListeners();
+                },
               ),
             ),
-          ),
-        ],
-      ),
-
-      SizedBox(height: 20.h),
-      !isSubTapped
-          ? SizedBox.shrink()
-          : TextFormWidget(
-              hint: 'Please provide details',
-              borderColor: AppColors.transparent,
-              label:
-                  'Describe your condition, when it was diagnosed, current treatment...',
-              borderTopLeft: 10.r,
-              borderTopRight: 10.r,
-              borderBottomLeft: 10.r,
-              borderBottomRight: 10.r,
-              hintSize: 14.sp,
-              fillColor: AppColors.grey,
-              isFilled: true,
-              controller: fullNameController,
-              maxline: 3,
-              alignLabelWithHint: true,
-              validator: AppValidator.validateString(),
-              labelStyle: TextStyle(
-                fontSize: 15.20.sp,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Arial',
-                color: AppColors.infoGrey,
-              ),
-              style: TextStyle(
-                fontSize: 16.20.sp,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'GoogleSans',
+            SizedBox(width: 20.w),
+            Expanded(
+              child: ButtonWidget(
+                border: 100.r,
+                buttonColor: AppColors.primary,
+                buttonText: 'Continue',
+                color: AppColors.white,
+                isLoading: model.isLoading,
+                buttonBorderColor: AppColors.transparent,
+                onPressed: () {
+                  if (secondSubModalFlowKey.currentState!.validate()) {
+                    saveSecondIndividualStep(
+                      context,
+                      saveSecondIndividualStep: SaveSecondStepEntityModel(
+                        applicationId: session.applicationIdIndividualRuby,
+                        step: 2,
+                        planSpecific: PlanSpecific(
+                          medicalHistory: medicalHistoryController.text.trim(),
+                          hasChronicAilment: isSubTapped,
+                          chronicAilmentDetails: medicalHistoryDetailsController
+                              .text
+                              .trim(),
+                        ),
+                      ),
+                    );
+                  }
+                  model.notifyListeners();
+                },
               ),
             ),
-      //     : Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           Stack(
-      //             clipBehavior: Clip.none,
-      //             children: [
-      //               TextView(
-      //                 text: 'Please provide details',
-      //                 textStyle: TextStyle(
-      //                   fontFamily: 'Arial',
-      //                   fontSize: 15.2.sp,
-      //                   fontWeight: FontWeight.w400,
-      //                   color: AppColors.reminder,
-      //                 ),
-      //               ),
-      //               Positioned(
-      //                 right: -12.10,
-      //                 child: TextView(
-      //                   text: '*',
-      //                   textStyle: TextStyle(
-      //                     fontFamily: 'Arial',
-      //                     fontSize: 18.sp,
-      //                     fontWeight: FontWeight.w500,
-      //                     color: AppColors.red,
-      //                   ),
-      //                 ),
-      //               ),
-      //             ],
-      //           ),
-      //           SizedBox(height: 10.h),
-      //           Container(
-      //             padding: EdgeInsets.symmetric(
-      //               vertical: 12.w,
-      //               horizontal: 10.4.w,
-      //             ),
-      //             decoration: BoxDecoration(
-      //               color: AppColors.dashboard,
-      //               borderRadius: BorderRadius.circular(12.r),
-      //             ),
-      //             child: TextView(
-      //               text:
-      //                   'Describe your condition, when it was diagnosed, current treatment...',
-
-      //               textStyle: TextStyle(
-      //                 fontFamily: 'Arial',
-      //                 fontSize: 15.2.sp,
-      //                 fontWeight: FontWeight.w400,
-      //                 color: AppColors.infoGrey,
-      //               ),
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      SizedBox(height: 25.60.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: ButtonWidget(
-              border: 100.r,
-              buttonColor: AppColors.white,
-              buttonText: 'Previous',
-              color: AppColors.primary,
-              isLoading: model.isLoading,
-              buttonBorderColor: AppColors.primary,
-              onPressed: () {
-                model.linSubIndex--;
-                model.notifyListeners();
-              },
-            ),
-          ),
-          SizedBox(width: 20.w),
-          Expanded(
-            child: ButtonWidget(
-              border: 100.r,
-              buttonColor: AppColors.primary,
-              buttonText: 'Continue',
-              color: AppColors.white,
-              isLoading: model.isLoading,
-              buttonBorderColor: AppColors.transparent,
-              onPressed: () {
-                model.linSubIndex++;
-                model.notifyListeners();
-              },
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 16.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () async {
-          navigate.back();
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
-          model.notifyListeners();
-        },
-      ),
-      SizedBox(height: 20.60.h),
-    ],
+          ],
+        ),
+        SizedBox(height: 16.60.h),
+        ButtonWidget(
+          border: 100.r,
+          buttonColor: AppColors.dashboard,
+          buttonText: 'Save as Draft',
+          color: AppColors.deep,
+          buttonBorderColor: AppColors.transparent,
+          onPressed: () async {
+            model.notifyListeners();
+          },
+        ),
+        SizedBox(height: 20.60.h),
+      ],
+    ),
   );
 
   secondFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
@@ -2750,159 +3178,75 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  thirdSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Center(
-        child: TextView(
-          text: modalSubscriptionName(),
-          textStyle: TextStyle(
-            fontFamily: 'GoogleSans',
-            fontSize: 16.70.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.deep,
+  thirdSubModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? hmoId,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: TextView(
+            text: modalSubscriptionName(),
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 16.70.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.deep,
+            ),
           ),
         ),
-      ),
-      SizedBox(height: 14.20.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: SizedBox(
-              width: MediaQuery.of(context!).size.width * .80,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5.0),
-                ), // Adjust radius as needed
-                child: LinearProgressIndicator(
-                  minHeight: 4.0, // Adjust height as needed
-                  value: model!.linSubIndex / 5,
-                  color: AppColors.primary, // Progress bar color
-                  backgroundColor: Colors.grey[300], // Background track color
+        SizedBox(height: 14.20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context!).size.width * .80,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: model!.linSubIndex / 5,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(width: 10.w),
-          TextView(
-            text: '${model.linSubIndex}/5',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 13.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 20.h),
-      TextView(
-        text: 'Required Documents',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
-        ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      Stack(
-        clipBehavior: Clip.none,
-        children: [
-          TextView(
-            text: 'Birth Certificate or Age Declaration',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
-            ),
-          ),
-          Positioned(
-            right: -12.10,
-            child: TextView(
-              text: '*',
+            SizedBox(width: 10.w),
+            TextView(
+              text: '${model.linSubIndex}/5',
               textStyle: TextStyle(
                 fontFamily: 'Arial',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.red,
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
               ),
             ),
-          ),
-        ],
-      ),
-      SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(AppImage.upload_doc),
-                  SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+          ],
+        ),
+        SizedBox(height: 20.h),
+        TextView(
+          text: 'Required Documents',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
           ),
         ),
-      ),
-
-      SizedBox(height: 20.h),
-      Stack(
-        clipBehavior: Clip.none,
-        children: [
-          SizedBox(
-            width: 300.w,
-            child: TextView(
-              text:
-                  'Valid ID (National ID, International Passport, Driver\'s License, Voter\'s Card)',
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            TextView(
+              text: 'Birth Certificate or Age Declaration',
               textStyle: TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 14.2.sp,
@@ -2910,141 +3254,397 @@ class AuthViewModel extends BaseViewModel {
                 color: AppColors.reminder,
               ),
             ),
-          ),
-          Positioned(
-            right: 2.0,
-            child: TextView(
-              text: '*',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.red,
+            Positioned(
+              right: -12.10,
+              child: TextView(
+                text: '*',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.red,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(AppImage.upload_doc),
-                  SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
+          ],
+        ),
+        SizedBox(height: 10.20.h),
+
+        model.uploadDocumentsApplication!.isNotEmpty &&
+                model.uploadDocumentsApplication![0].docName != null
+            ? Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 13.4.w,
+                  vertical: 10.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: AppColors.fineGrey),
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(AppImage.kyc_file),
+                    SizedBox(width: 14.w),
+                    Expanded(
+                      flex: 3,
+                      child: TextView(
+                        text: '${model.uploadDocumentsApplication![0].docName}',
+                        fontSize: 22.sp,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
                           fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
+                          color: AppColors.black,
                         ),
                       ),
-                    ],
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: TextView(
+                        text: '..png',
+                        fontSize: 22.sp,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    GestureDetector(
+                      onTap: () {
+                        model.pickDocumentAndUpload(
+                          context: context,
+                          docType: 'BIRTH_CERTIFICATE',
+                          index: 0,
+                        );
+                        model.notifyListeners();
+                      },
+                      child: SvgPicture.asset(AppImage.upload),
+                    ),
+                    SizedBox(width: 10.w),
+                    GestureDetector(
+                      onTap: () {
+                        model.uploadDocumentsApplication![0] = sv.Document();
+                        model.notifyListeners();
+                      },
+                      child: SvgPicture.asset(AppImage.delete),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox(
+                width: double.infinity,
+                child: DottedBorder(
+                  options: RoundedRectDottedBorderOptions(
+                    dashPattern: [10, 10],
+                    strokeWidth: .94,
+                    radius: Radius.circular(10),
+                    color: AppColors.primary,
                   ),
-                ],
+                  child: GestureDetector(
+                    onTap: () {
+                      if (model.uploadDocumentsApplication!.isNotEmpty&& model.uploadDocumentsApplication![0].docName ==
+                          null) {
+                        model.pickDocumentAndUpload(
+                          context: context,
+                          docType: 'BIRTH_CERTIFICATE',
+                          index: 0,
+                        );
+                      } else {
+                        model.pickDocumentAndUpload(
+                          context: context,
+                          docType: 'BIRTH_CERTIFICATE',
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.20.w,
+                        horizontal: 22.0.w,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: AppColors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(AppImage.upload_doc),
+                          SizedBox(width: 10.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextView(
+                                text: 'Upload Document',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 14.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              SizedBox(height: 2.0.h),
+                              TextView(
+                                text:
+                                    'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 13.6.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.fineGrey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+        SizedBox(height: 20.h),
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            SizedBox(
+              width: 300.w,
+              child: TextView(
+                text:
+                    'Valid ID (National ID, International Passport, Driver\'s License, Voter\'s Card)',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 14.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
               ),
             ),
-          ),
+            Positioned(
+              right: 2.0,
+              child: TextView(
+                text: '*',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.red,
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
+        SizedBox(height: 10.20.h),
 
-      SizedBox(height: 35.60.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: ButtonWidget(
-              border: 100.r,
-              buttonColor: AppColors.white,
-              buttonText: 'Previous',
-              color: AppColors.primary,
-              isLoading: model.isLoading,
-              buttonBorderColor: AppColors.primary,
-              onPressed: () {
-                model.linSubIndex--;
-                model.notifyListeners();
-              },
+        model.uploadDocumentsApplication!.length <= 1 ||
+                model.uploadDocumentsApplication![1].docName == null
+            ? SizedBox(
+                width: double.infinity,
+                child: DottedBorder(
+                  options: RoundedRectDottedBorderOptions(
+                    dashPattern: [10, 10],
+                    strokeWidth: .94,
+                    radius: Radius.circular(10),
+                    color: AppColors.primary,
+                  ),
+                  child: GestureDetector(
+                    onTap: () => model.pickDocumentAndUpload(
+                      context: context,
+                      docType: 'NATIONAL_ID',
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.20.w,
+                        horizontal: 22.0.w,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: AppColors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(AppImage.upload_doc),
+                          SizedBox(width: 10.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextView(
+                                text: 'Upload Document',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 14.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              SizedBox(height: 2.0.h),
+                              TextView(
+                                text:
+                                    'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 13.6.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.fineGrey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 13.4.w,
+                  vertical: 10.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: AppColors.fineGrey),
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(AppImage.kyc_file),
+                    SizedBox(width: 14.w),
+                    Expanded(
+                      flex: 3,
+                      child: TextView(
+                        text:
+                            model.uploadDocumentsApplication!.length > 1 &&
+                                model.uploadDocumentsApplication![1] !=
+                                    sv.Document()
+                            ? model.uploadDocumentsApplication![1].docName!
+                            : "",
+                        fontSize: 22.sp,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: TextView(
+                        text: '..png',
+                        fontSize: 22.sp,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    GestureDetector(
+                      onTap: () {
+                        model.pickDocumentAndUpload(
+                          context: context,
+                          docType: 'NATIONAL_ID',
+                          index: 1,
+                        );
+                        model.notifyListeners();
+                      },
+                      child: SvgPicture.asset(AppImage.upload),
+                    ),
+                    SizedBox(width: 10.w),
+                    GestureDetector(
+                      onTap: () {
+                        model.uploadDocumentsApplication!.removeAt(1);
+                        model.notifyListeners();
+                      },
+                      child: SvgPicture.asset(AppImage.delete),
+                    ),
+                  ],
+                ),
+              ),
+        SizedBox(height: 35.60.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ButtonWidget(
+                border: 100.r,
+                buttonColor: AppColors.white,
+                buttonText: 'Previous',
+                color: AppColors.primary,
+                isLoading: model.isLoading,
+                buttonBorderColor: AppColors.primary,
+                onPressed: () {
+                  model.linSubIndex--;
+                  model.notifyListeners();
+                },
+              ),
             ),
-          ),
-          SizedBox(width: 20.w),
-          Expanded(
-            child: ButtonWidget(
-              border: 100.r,
-              buttonColor: AppColors.primary,
-              buttonText: 'Continue',
-              color: AppColors.white,
-              isLoading: model.isLoading,
-              buttonBorderColor: AppColors.transparent,
-              onPressed: () {
-                model.linSubIndex++;
-                model.notifyListeners();
-              },
+            SizedBox(width: 20.w),
+            Expanded(
+              child: ButtonWidget(
+                border: 100.r,
+                buttonColor: AppColors.primary,
+                buttonText: 'Continue',
+                color: AppColors.white,
+                isLoading: model.isLoading,
+                buttonBorderColor: AppColors.transparent,
+                onPressed: () {
+                  if (model.uploadDocumentsApplication!.isNotEmpty &&
+                      model.uploadDocumentsApplication![0].docName != null &&
+                      model.uploadDocumentsApplication!.length > 1) {
+                    saveThirdIndividualStep(
+                      context,
+                      saveThirdIndividualStep: SaveThirdStepEntityModel(
+                        applicationId: session.applicationIdIndividualRuby,
+                        step: 3,
+                        documents: model.uploadDocumentsApplication,
+                      ),
+                    );
+                  }
+                  model.notifyListeners();
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-      SizedBox(height: 20.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () async {
-          navigate.back();
-          navigate.back();
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
-          model.notifyListeners();
-        },
-      ),
-      SizedBox(height: 20.60.h),
-    ],
-  );
+          ],
+        ),
+        SizedBox(height: 20.60.h),
+        ButtonWidget(
+          border: 100.r,
+          buttonColor: AppColors.dashboard,
+          buttonText: 'Save as Draft',
+          color: AppColors.deep,
+          buttonBorderColor: AppColors.transparent,
+          onPressed: () {
+            if (model.uploadDocumentsApplication!.isNotEmpty &&
+                model.uploadDocumentsApplication![0].docName != null &&
+                model.uploadDocumentsApplication!.length > 1) {
+              saveThirdIndividualStep(
+                context,
+                saveThirdIndividualStep: SaveThirdStepEntityModel(
+                  applicationId: session.applicationIdIndividualRuby,
+                  step: 3,
+                  documents: model.uploadDocumentsApplication,
+                ),
+              );
+            }
+            model.notifyListeners();
+          },
+        ),
+        SizedBox(height: 20.60.h),
+      ],
+    );
+  }
 
   thirdFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -4013,7 +4613,15 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  fourthSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  fourthSubModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -4105,7 +4713,7 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'Ruby Individual Basic',
+                  text: '$planTier $planType Basic',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.2.sp,
@@ -4134,16 +4742,19 @@ class AuthViewModel extends BaseViewModel {
                     horizontal: 10.w,
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.appRed),
-                    color: AppColors.faintedRed,
+                    border: Border.all(color: tiersColor(planTier!)),
+                    color: tiersBorderColor(planTier),
                     borderRadius: BorderRadius.circular(100.r),
                   ),
                   child: Row(
                     children: [
-                      SvgPicture.asset(AppImage.star, color: AppColors.red),
+                      SvgPicture.asset(
+                        tiersSvgImage(planTier),
+                        color: tiersColor(planTier),
+                      ),
                       SizedBox(width: 6.w),
                       TextView(
-                        text: 'Ruby',
+                        text: planTier,
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
                           fontSize: 15.2.sp,
@@ -4170,7 +4781,7 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '12 months',
+                  text: '${data?.duration} months',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.2.sp,
@@ -4196,7 +4807,15 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '₦75,000',
+                  text: formatNairaNoDecimal(
+                    model.saveThirdStepResponseModel?.data?.totalAmount ??
+                        model
+                            .getIndividualApplicationDetailsModel
+                            ?.data
+                            ?.totalAmount ??
+                        data?.price ??
+                        0,
+                  ),
                   textStyle: TextStyle(
                     fontSize: 20.2.sp,
                     fontWeight: FontWeight.w700,
@@ -4292,7 +4911,14 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '₦75,000',
+                  text: formatNairaNoDecimal(
+                    model.saveThirdStepResponseModel?.data?.totalAmount ??
+                        model
+                            .getIndividualApplicationDetailsModel
+                            ?.data
+                            ?.totalAmount ??
+                        0,
+                  ),
                   textStyle: TextStyle(
                     fontSize: 15.8.sp,
                     fontWeight: FontWeight.w500,
@@ -4332,8 +4958,10 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                model.linSubIndex++;
-                model.notifyListeners();
+                if (isPaidTapped && onTapPaymentMeth != '') {
+                  model.linSubIndex++;
+                  model.notifyListeners();
+                }
               },
             ),
           ),
@@ -4347,27 +4975,35 @@ class AuthViewModel extends BaseViewModel {
         color: AppColors.deep,
         buttonBorderColor: AppColors.transparent,
         onPressed: () async {
-          navigate.back();
-          navigate.back();
-          navigate.back();
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
-          model.notifyListeners();
+          // navigate.back();
+          // navigate.back();
+          // navigate.back();
+          // navigate.back();
+          // navigate.navigateTo(
+          //   Routes.dashboard,
+          //   arguments: DashboardArguments(
+          //     index: 0,
+          //     isTapHMOPlan: true,
+          //     isSubStatus: 'subscribers',
+          //     mySubPlans: 'Draft',
+          //   ),
+          // );
+          // model.notifyListeners();
         },
       ),
       SizedBox(height: 20.60.h),
     ],
   );
 
-  fifthSubModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  fifthSubModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -4458,7 +5094,13 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'Mercy A',
+                  text:
+                      model
+                          .getIndividualApplicationDetailsModel
+                          ?.data
+                          ?.personalInfo
+                          ?.fullName ??model.saveThirdStepResponseModel?.data?.personalInfo?.fullName??
+                      '',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.2.sp,
@@ -4482,7 +5124,13 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'mercy@medicatehealth.com',
+                  text:
+                      model
+                          .getIndividualApplicationDetailsModel
+                          ?.data
+                          ?.personalInfo
+                          ?.email ??model.saveThirdStepResponseModel?.data?.personalInfo?.email??
+                      '',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -4506,7 +5154,13 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '+2349054345643',
+                  text:
+                      model
+                          .getIndividualApplicationDetailsModel
+                          ?.data
+                          ?.personalInfo
+                          ?.phone ??model.saveThirdStepResponseModel?.data?.personalInfo?.phone??
+                      '',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -4530,7 +5184,7 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'Ruby Individual Basic',
+                  text: '$planTier $planType Basic',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -4559,16 +5213,19 @@ class AuthViewModel extends BaseViewModel {
                     horizontal: 10.w,
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.appRed),
-                    color: AppColors.faintedRed,
+                    border: Border.all(color: tiersColor(planTier!)),
+                    color: tiersBorderColor(planTier),
                     borderRadius: BorderRadius.circular(100.r),
                   ),
                   child: Row(
                     children: [
-                      SvgPicture.asset(AppImage.star, color: AppColors.red),
+                      SvgPicture.asset(
+                        tiersSvgImage(planTier),
+                        color: tiersColor(planTier),
+                      ),
                       SizedBox(width: 6.w),
                       TextView(
-                        text: 'Ruby',
+                        text: planTier,
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
                           fontSize: 15.2.sp,
@@ -4594,13 +5251,25 @@ class AuthViewModel extends BaseViewModel {
                     color: AppColors.infoGrey,
                   ),
                 ),
-                TextView(
-                  text: 'Maitama District Hospital',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 15.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
+                SizedBox(
+                  width: 200.w,
+                  child: TextView(
+                    text:
+                        model
+                            .getHospitalByIdResponseModel
+                            ?.data
+                            ?.hospital
+                            ?.name?? 
+                        '',
+                    maxLines: 2,
+                    textOverflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 15.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
                   ),
                 ),
               ],
@@ -4619,7 +5288,8 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '2 file(s) uploaded',
+                  text:
+                      '${model.getIndividualApplicationDetailsModel?.data?.documents?.length??model.saveThirdStepResponseModel?.data?.documents?.length} ${fileTextListLength(model.getIndividualApplicationDetailsModel?.data?.documents?.length??model.saveThirdStepResponseModel?.data?.documents?.length)} uploaded',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -4645,7 +5315,14 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '₦75,000',
+                  text: formatNairaNoDecimal(
+                    model.saveThirdStepResponseModel?.data?.totalAmount ??
+                        model
+                            .getIndividualApplicationDetailsModel
+                            ?.data
+                            ?.totalAmount ??
+                        0,
+                  ),
                   textStyle: TextStyle(
                     fontSize: 20.2.sp,
                     fontWeight: FontWeight.w700,
@@ -4989,7 +5666,6 @@ class AuthViewModel extends BaseViewModel {
               buttonText: 'Previous',
               fontSize: 16.sp,
               color: AppColors.primary,
-              isLoading: model.isLoading,
               buttonBorderColor: AppColors.primary,
               onPressed: () {
                 model.linSubIndex--;
@@ -5009,6 +5685,12 @@ class AuthViewModel extends BaseViewModel {
               fontSize: 14.sp,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
+                if (isPaidTapped) {
+                  initiateHMOPlanPayment(
+                    context,
+                    applicationId: session.applicationIdIndividualRuby,
+                  );
+                }
                 model.notifyListeners();
               },
             ),
@@ -7339,7 +8021,6 @@ class AuthViewModel extends BaseViewModel {
                           Future.delayed(Duration(milliseconds: 200), () {
                             Navigator.pop(ctx, indexDaily.toString());
                           });
-                          print('iiiiiiiiiiii::: ${model!.isCusSchedule} ');
                         },
                         child: Container(
                           margin: EdgeInsets.only(bottom: 12.w),
@@ -7395,9 +8076,6 @@ class AuthViewModel extends BaseViewModel {
                         Future.delayed(Duration(milliseconds: 200), () {
                           Navigator.pop(ctx, indexDaily.toString());
                         });
-                        print(
-                          'isCusScheduleisCusScheduleisCusSchedule::: ${model.isCusSchedule} ',
-                        );
                       },
                       child: Container(
                         margin: EdgeInsets.only(bottom: 12.w),
@@ -7444,57 +8122,6 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       ),
                     ),
-
-                    // for (int i = 1; i < 6; i++)
-                    //   GestureDetector(
-                    //     onTap: () {
-                    //       setMenuState(() {
-                    //         indexDaily = i;
-                    //       });
-
-                    //       Future.delayed(Duration(milliseconds: 200), () {
-                    //         Navigator.pop(ctx, indexDaily.toString());
-                    //       });
-                    //     },
-                    //     child: Container(
-                    //       margin: EdgeInsets.only(bottom: 12.w),
-                    //       padding: EdgeInsets.symmetric(
-                    //         vertical: 12.w,
-                    //         horizontal: 12.w,
-                    //       ),
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //         color: indexDaily == i
-                    //             ? AppColors.skyBlue
-                    //             : AppColors.white,
-                    //         border: Border.all(
-                    //           color: indexDaily == i
-                    //               ? AppColors.primary1
-                    //               : Colors.transparent,
-                    //         ),
-                    //       ),
-                    //       child: Row(
-                    //         children: [
-                    //           TextView(
-                    //             text: i.toString(),
-                    //             textStyle: TextStyle(
-                    //               fontFamily: 'Arial',
-                    //               fontSize: 16.60.sp,
-                    //               color: AppColors.black,
-                    //               fontWeight: FontWeight.w400,
-                    //             ),
-                    //           ),
-                    //           const Spacer(),
-                    //           if (indexDaily == i)
-                    //             Icon(
-                    //               Icons.check,
-                    //               color: AppColors.primary1,
-                    //               size: 15.60.sp,
-                    //             ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
                   ],
                 ),
               ),
@@ -7650,57 +8277,6 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       ),
                     ),
-
-                    // for (int i = 1; i < 6; i++)
-                    //   GestureDetector(
-                    //     onTap: () {
-                    //       setMenuState(() {
-                    //         indexDaily = i;
-                    //       });
-
-                    //       Future.delayed(Duration(milliseconds: 200), () {
-                    //         Navigator.pop(ctx, indexDaily.toString());
-                    //       });
-                    //     },
-                    //     child: Container(
-                    //       margin: EdgeInsets.only(bottom: 12.w),
-                    //       padding: EdgeInsets.symmetric(
-                    //         vertical: 12.w,
-                    //         horizontal: 12.w,
-                    //       ),
-                    //       decoration: BoxDecoration(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //         color: indexDaily == i
-                    //             ? AppColors.skyBlue
-                    //             : AppColors.white,
-                    //         border: Border.all(
-                    //           color: indexDaily == i
-                    //               ? AppColors.primary1
-                    //               : Colors.transparent,
-                    //         ),
-                    //       ),
-                    //       child: Row(
-                    //         children: [
-                    //           TextView(
-                    //             text: i.toString(),
-                    //             textStyle: TextStyle(
-                    //               fontFamily: 'Arial',
-                    //               fontSize: 16.60.sp,
-                    //               color: AppColors.black,
-                    //               fontWeight: FontWeight.w400,
-                    //             ),
-                    //           ),
-                    //           const Spacer(),
-                    //           if (indexDaily == i)
-                    //             Icon(
-                    //               Icons.check,
-                    //               color: AppColors.primary1,
-                    //               size: 15.60.sp,
-                    //             ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ),
                   ],
                 ),
               ),
@@ -9442,55 +10018,6 @@ class AuthViewModel extends BaseViewModel {
     AppUtils.snackbar(context, message: 'Medication has been added.');
     setModalState!(() {});
     model.notifyListeners();
-
-    // for (int day = 0; day < model.doseControllers.length; day++) {
-    //   List<Map<String, String>> dayDoses = [];
-
-    //   for (int i = 0; i < model.doseControllers[day].length; i++) {
-    //     dayDoses.add({
-    //       'time': model.doseControllers[day][i].text,
-    //       'period': model.periodLabels[day][i],
-    //       'date': startDateIsoWithin.substring(0, 10),
-    //       'isoDate': startDateIsoWithin,
-    //     });
-    //   }
-    //   startDateIsoWithin = DateTime.parse(
-    //     startDateIsoWithin,
-    //   ).add(Duration(days: 0 + 1)).toString();
-
-    //   addTimePeriod.add({
-    //     'day': day + 1, // so Day 1, Day 2, etc.
-    //     'doses': dayDoses,
-    //   });
-    // }
-
-    // await Future.delayed(Duration(seconds: 1), () {});
-    // medicationClassList.add(
-    //   MedicationClass(
-    //     medicationName: medNameController.text,
-    //     drugName: drugNameController.text,
-    //     medicationType: medTypeController.text,
-    //     medicationTypeIcon: medTypeResultImage,
-    //     description: descriptionController.text,
-    //     medicationFile: model.imageDrug,
-    //     dosage: medDosageController.text,
-    //     imageData: model.uploadImageReminderResponseModel?.data ?? Data(),
-    //     dateAndTime: model.dateTimeController.text,
-    //     // duration: medDurationController.text,
-    //     duration: returnNoDays.toString(),
-    //     endDate: endDateController.text,
-    //     startDateIso: DateTime.parse(startDateIso),
-    //     endDateIso: DateTime.parse(endDateIso),
-    //     timesToTake: medDailyInTakenController.text,
-    //     note: noteController.text,
-    //     listOfTimes: intList,
-    //     dosageMap: addTimePeriod,
-    //   ),
-    // );
-    // await Future.delayed(Duration(seconds: 1), () {});
-
-    // clearReminderMedsVaraibles(model);
-    // model.notifyListeners();
   }
 
   clearReminderMedsVaraibles(model) {
@@ -10053,10 +10580,6 @@ class AuthViewModel extends BaseViewModel {
         doseAfterControllers.add([]);
       }
     }
-
-    // final doses = List<Map<String, dynamic>>.from(
-    //   dosageMap[callback]['doses'] ?? [],
-    // );
 
     List<Map<String, dynamic>> doses = [];
 
@@ -11105,12 +11628,6 @@ class AuthViewModel extends BaseViewModel {
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
-      // await selectTimeUPDATE(
-      //   context: context,
-      //   index: index,
-      //   model: model,
-      //   setModalState: setModalState,
-      // );
     }
     setModalState!(() {});
     model.notifyListeners();
@@ -11157,8 +11674,6 @@ class AuthViewModel extends BaseViewModel {
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
-      print('After time select → startDateIso: $startDateIso');
-      print('iso$startDateIso');
     }
     notifyListeners();
   }
@@ -11530,6 +12045,337 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void sendOtpEverydayUser(context, {String? phone}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.sendOtp(phone!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+
+        modalBottomSheetMenuVerifyPhone(context: context, phoneNo: phone);
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void verifyChangePhoneOtp({
+    context,
+    VerifyPhoneEntityModel? verifyPhoneEntity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.verifyChangePhoneOtp(verifyPhoneEntity!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+
+        navigate.navigateTo(
+          Routes.pharmacyChangePhoneNumber,
+          arguments: PharmacyChangePhoneNumberArguments(
+            id: v['data']['resetToken'],
+          ),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void modalBottomSheetMenuVerifyPhone({
+    context,
+    String? phoneNo,
+    String? id,
+    String? name,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (builder) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.9, // 80% of screen height
+            minChildSize: 0.5, // Can be dragged to 30% of screen height
+            maxChildSize: 0.9,
+            builder: (context, scrollController) {
+              return ViewModelBuilder<AuthViewModel>.reactive(
+                viewModelBuilder: () => AuthViewModel(),
+                onViewModelReady: (model) {},
+                disposeViewModel: false,
+                builder: (_, AuthViewModel model, _) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(
+                        context,
+                      ).viewInsets.bottom, // 👈 pushes content above keyboard
+                    ), //could change this to Color(0xFF737373),
+                    //so you don't have to change MaterialApp canvasColor
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: const Radius.circular(20.0),
+                          topRight: const Radius.circular(20.0),
+                        ),
+                      ),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(20.0),
+                          ),
+                        ),
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          padding: EdgeInsets.symmetric(
+                            vertical: 20.w,
+                            horizontal: 20.w,
+                          ),
+                          child: Form(
+                            key: formKeyValidateVerify,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(width: 30.w),
+                                    TextView(
+                                      text: 'Verify Phone Number',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () => Navigator.pop(context),
+                                      child: SvgPicture.asset(
+                                        AppImage.x,
+                                        width: 24.w,
+                                        height: 24.h,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 32.h),
+
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Arial',
+                                    ),
+                                    children: [
+                                      const TextSpan(
+                                        text:
+                                            "Enter the 4-digit code we sent to your phone number ",
+                                      ),
+                                      TextSpan(
+                                        text: "$phoneNo",
+                                        style: TextStyle(
+                                          color: AppColors.primary,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {},
+                                      ),
+                                      const TextSpan(
+                                        text: " to complete your verification.",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 24.h),
+                                Center(
+                                  child: Pinput(
+                                    length: 4,
+                                    obscureText: true,
+                                    defaultPinTheme: defaultPinTheme,
+                                    focusedPinTheme: defaultPinTheme.copyWith(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.transparent,
+                                        border: Border.all(
+                                          color: AppColors.primary,
+                                          width: 2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    submittedPinTheme: defaultPinTheme.copyWith(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.transparent,
+                                        border: Border.all(
+                                          color: AppColors.primary,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    validator: AppValidator.validateOTP(),
+                                    onCompleted: (pin) {
+                                      pinInput = pin;
+                                      notifyListeners();
+                                    },
+                                  ),
+                                ),
+                                SizedBox(height: 24.h),
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 16.w,
+                                    horizontal: 16.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    color: AppColors.skyBlue,
+                                  ),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Arial',
+                                      ),
+                                      children: [
+                                        const TextSpan(
+                                          text: "Didn’t receive a code? ",
+                                        ),
+                                        TextSpan(
+                                          text: "Resend",
+                                          style: TextStyle(
+                                            color: AppColors.primary,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () => model.resendOtp(
+                                              context,
+                                              resendotp: ResendOtpEntityModel(
+                                                phone: phoneNo,
+                                              ),
+                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 16.24.h),
+                                Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 16.w,
+                                    horizontal: 16.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    color: AppColors.skyBlue,
+                                  ),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14.sp,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Arial',
+                                      ),
+                                      children: [
+                                        const TextSpan(
+                                          text: "Incorrect Number? ",
+                                        ),
+                                        TextSpan(
+                                          text: "Change",
+                                          style: TextStyle(
+                                            color: AppColors.primary,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () => navigate.navigateTo(
+                                              Routes.pharmacyChangePhoneNumber,
+                                              arguments:
+                                                  PharmacyChangePhoneNumberArguments(
+                                                    id: id,
+                                                  ),
+                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: model.isLoading ? 20.h : 0.h),
+                                model.isLoading
+                                    ? Center(
+                                        child: SpinKitFadingCircle(
+                                          color: AppColors.primary,
+                                          size: 28.sp,
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(height: 300.h),
+                                ButtonWidget(
+                                  border: 100.r,
+                                  buttonColor: AppColors.primary,
+                                  buttonText: 'Verify',
+                                  fontSize: 16.sp,
+                                  color: AppColors.white,
+                                  isLoading: _isLoading,
+                                  buttonBorderColor: AppColors.transparent,
+                                  onPressed: () {
+                                    if (formKeyValidateVerify.currentState!
+                                        .validate()) {
+                                      verifyChangePhoneOtp(
+                                        context: context,
+                                        verifyPhoneEntity:
+                                            VerifyPhoneEntityModel(
+                                              phone: '$phoneNo',
+                                              otp: pinInput,
+                                            ),
+                                      );
+                                    }
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                SizedBox(height: 20.h),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> getUserDetails({context, phoneNo}) async {
     try {
       _isLoading = true;
@@ -11669,6 +12515,52 @@ class AuthViewModel extends BaseViewModel {
         repositoryImply.uploadImage(file!),
         throwException: true,
       );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> uploadDocument({
+    context,
+    String? applicationId,
+    MultipartFile? file,
+    int? index,
+    String? docType,
+  }) async {
+    try {
+      _isLoading = true;
+      _uploadApplicationDocumentResponseModel = await runBusyFuture(
+        repositoryImply.uploadAppDocument(
+          appliationId: applicationId,
+          file: file,
+        ),
+        throwException: true,
+      );
+      if (_uploadApplicationDocumentResponseModel?.statusCode == 201) {
+        if (index != null) {
+          uploadDocumentsApplication![index] = sv.Document(
+            documentType: docType,
+            uploadId: _uploadApplicationDocumentResponseModel?.data?.uploadId,
+            docName:
+                _uploadApplicationDocumentResponseModel?.data?.originalName,
+          );
+        } else {
+          uploadDocumentsApplication!.add(
+            sv.Document(
+              documentType: docType,
+              uploadId: _uploadApplicationDocumentResponseModel?.data?.uploadId,
+              docName:
+                  _uploadApplicationDocumentResponseModel?.data?.originalName,
+            ),
+          );
+        }
+        _uploadApplicationDocumentResponseModel = null;
+        notifyListeners();
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -13919,7 +14811,6 @@ class AuthViewModel extends BaseViewModel {
                                       : SizedBox.shrink(),
                                 ],
                               ),
-
                         SizedBox(height: 20.h),
                         TextFormWidget(
                           hint: 'Notes & Instructions',
@@ -19899,7 +20790,8 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                     ),
                                     TextView(
-                                      text:'${calculationForTotalReminderForEmail + calculationForTotalReminderForPhone}',
+                                      text:
+                                          '${calculationForTotalReminderForEmail + calculationForTotalReminderForPhone}',
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 16.80.sp,
@@ -20004,8 +20896,7 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text:
-                                                '₦${20 * returnPhoneTimes()}',
+                                            text: '₦${20 * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -20040,8 +20931,7 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text:
-                                                '₦${15 * returnPhoneTimes()}',
+                                            text: '₦${15 * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -20076,8 +20966,7 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text:
-                                                '₦${50 * returnPhoneTimes()}',
+                                            text: '₦${50 * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -21781,6 +22670,76 @@ class AuthViewModel extends BaseViewModel {
     model?.notifyListeners();
   }
 
+  void initiateHMOPlanPayment(context, {String? applicationId}) async {
+    try {
+      _isLoading = true;
+      _hmoPlanPaymentResponseModel = await runBusyFuture(
+        repositoryImply.hmoPlanPayment(applicationID: applicationId),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_hmoPlanPaymentResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _hmoPlanPaymentResponseModel?.message ?? '',
+        );
+        navigate.navigateTo(
+          Routes.acceleratePaymentViewHmoPlan,
+          arguments: AcceleratePaymentViewHmoPlanArguments(
+            url: _hmoPlanPaymentResponseModel?.data?.redirectUrl,
+          ),
+        );
+        // model?.medicationClassList.clear();
+      } else {
+        // navigate.navigateTo(
+        //   Routes.paymentStatusScreen,
+        //   arguments: PaymentStatusScreenArguments(
+        //     isSuccessful: false,
+        //     isUserType: 'everyday_user',
+        //   ),
+        // );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void submitApplication(context, {String? applicationId}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.submitHmoPlan(applicationID: applicationId),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message'] ?? '');
+        navigate.navigateTo(
+          Routes.dashboard,
+          arguments: DashboardArguments(index: 0),
+        );
+        session.applicationIdIndividualRuby = '';
+        // model?.medicationClassList.clear();
+      } else {
+        // navigate.navigateTo(
+        //   Routes.paymentStatusScreen,
+        //   arguments: PaymentStatusScreenArguments(
+        //     isSuccessful: false,
+        //     isUserType: 'everyday_user',
+        //   ),
+        // );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   void createReminderPaid(
     context, {
     CreateReminderEntityModel? createReminderEntityModel,
@@ -22761,5 +23720,227 @@ class AuthViewModel extends BaseViewModel {
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
+  }
+
+  Future<void> getHMOActivePlan(context) async {
+    try {
+      _isLoading = true;
+      _activeHmoPlanResponseModel = await runBusyFuture(
+        repositoryImply.getActiveHmoPlan(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getHMOActivePlanByType(
+    context, {
+    String? hmoId,
+    String? type,
+  }) async {
+    try {
+      _isLoading = true;
+      _getHmosPlanResponseModel = await runBusyFuture(
+        repositoryImply.getActiveHmoPlanByType(hmodId: hmoId, type: type),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getIndividualApplicationDetails(
+    context, {
+    String? applicationId,
+  }) async {
+    try {
+      _isLoading = true;
+      _getIndividualApplicationDetailsModel = await runBusyFuture(
+        repositoryImply.getIndividualApplication(appliationId: applicationId),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getHospitalById(context, {String? hospitalId}) async {
+    try {
+      _isLoading = true;
+      _getHospitalByIdResponseModel = await runBusyFuture(
+        repositoryImply.getHospitalById(hospitalId: hospitalId),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> startApplication(
+    context, {
+    StartApplicationEntityModel? startApplication,
+    String? planType,
+    String? planTeir,
+  }) async {
+    try {
+      _isLoading = true;
+      _startApplicationResponseModel = await runBusyFuture(
+        repositoryImply.startApplication(startApplication: startApplication),
+        throwException: true,
+      );
+      if (planType == 'Individual' && planTeir == 'Ruby') {
+        session.applicationIdIndividualRuby =
+            _startApplicationResponseModel!.data!.id!;
+      }
+      if (planType == 'Individual' && planTeir == 'Pearl') {
+        session.applicationIdIndividualPearl =
+            _startApplicationResponseModel!.data!.id!;
+        print('oooo pearl ${_startApplicationResponseModel!.data!.id!}');
+        print(
+          'session.applicationIdIndividualPearl pearl ${session.applicationIdIndividualPearl}',
+        );
+      }
+      if (planType == 'Individual' && planTeir == 'Diamond') {
+        session.applicationIdIndividualDiamond =
+            _startApplicationResponseModel!.data!.id!;
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> saveFirstStepPersonalInfo(
+    context, {
+    SaveFirstStepPersonalInfoEntityModel? saveFirstStepPersonalInfoEntityModel,
+  }) async {
+    try {
+      _isLoading = true;
+      _saveFirstStepPersonalResponseModel = await runBusyFuture(
+        repositoryImply.saveFirstIndividualStep(
+          saveFirstIndividualStep: saveFirstStepPersonalInfoEntityModel,
+        ),
+        throwException: true,
+      );
+      if (_saveFirstStepPersonalResponseModel?.statusCode == 201) {
+        linSubIndex++;
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> saveSecondIndividualStep(
+    context, {
+    SaveSecondStepEntityModel? saveSecondIndividualStep,
+  }) async {
+    try {
+      _isLoading = true;
+      _saveSecondStepResponseModel = await runBusyFuture(
+        repositoryImply.saveSecondIndividualStep(
+          saveSecondIndividualStep: saveSecondIndividualStep,
+        ),
+        throwException: true,
+      );
+      if (_saveSecondStepResponseModel?.statusCode == 201) {
+        linSubIndex++;
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> saveThirdIndividualStep(
+    context, {
+    SaveThirdStepEntityModel? saveThirdIndividualStep,
+  }) async {
+    try {
+      _isLoading = true;
+      _saveThirdStepResponseModel = await runBusyFuture(
+        repositoryImply.saveThirdIndividualStep(
+          saveThirdIndividualStep: saveThirdIndividualStep,
+        ),
+        throwException: true,
+      );
+      if (_saveThirdStepResponseModel?.statusCode == 201) {
+        linSubIndex++;
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  File? imageDocument;
+  String? fileImageDocument;
+
+  void pickDocumentAndUpload({
+    BuildContext? context,
+    String? docType,
+    int? index,
+  }) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) async {
+          imageDocument = file;
+          fileImageDocument = imageDocument!.path.split("/").last;
+          _isLoadingDoc1 = true;
+          await uploadDocument(
+            context: context,
+            applicationId: session.applicationIdIndividualRuby,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageDocument).readAsBytesSync(),
+              filename: imageDocument!.path.split("/").last,
+            ),
+            index: index,
+            docType: docType,
+          );
+          _isLoadingDoc1 = false;
+          // ignore: collection_methods_unrelated_type
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+    notifyListeners();
+  }
+
+  fileTextListLength(int? length) {
+    if (length! > 1) {
+      return 'file(s)';
+    }
+    return 'file';
   }
 }

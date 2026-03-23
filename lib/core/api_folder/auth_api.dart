@@ -6,21 +6,33 @@ import 'package:medicate_app/core/connect_end/model/create_payment_wallet_model/
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_individual_application_details_model/get_individual_application_details_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/get_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_wallet_response_model/get_wallet_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/pay_with_wallet_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/reset_password_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_second_step_entity_model/save_second_step_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_third_step_entity_model/save_third_step_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_third_step_response_model/save_third_step_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/set_pin_response_model/set_pin_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/start_application_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/start_application_rsponse_model/start_application_rsponse_model.dart';
 import 'package:medicate_app/core/connect_end/model/support_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
     as sup;
+import '../connect_end/model/active_hmo_plan_response_model/active_hmo_plan_response_model.dart';
+import '../connect_end/model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../connect_end/model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../connect_end/model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
@@ -29,10 +41,12 @@ import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
+import '../connect_end/model/save_second_step_response_model/save_second_step_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
 import '../connect_end/model/update_doses_status_model/update_doses_status_model.dart';
 import '../connect_end/model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../connect_end/model/update_user_profile_response_model/update_user_profile_response_model.dart';
+import '../connect_end/model/upload_application_document_response_model/upload_application_document_response_model.dart';
 import '../connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/verify_otp_response_model/verify_otp_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -113,6 +127,23 @@ class AuthApi {
     }
   }
 
+  Future<dynamic> verifyChangePhoneOtp(
+    VerifyPhoneEntityModel verifyPhoneEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.verify_otp,
+        RequestMethod.post,
+        data: verifyPhoneEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<ForgotPasswordResponseModel> forgotPasword(
     ResendOtpEntityModel forgotPassword,
   ) async {
@@ -141,6 +172,21 @@ class AuthApi {
       );
       logger.d(response.data);
       return VerifyPassOtpRespnseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> sendOtp(String phone) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.send_otp,
+        RequestMethod.post,
+        data: {'phone': phone},
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -551,6 +597,191 @@ class AuthApi {
       );
       logger.d(response.data);
       return GetWalletResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_user_hmos,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return ActiveHmoPlanResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetHmosPlanResponseModel> getActiveHmoPlanByType({
+    String? hmodId,
+    String? type,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos}/$hmodId/plans',
+        RequestMethod.getParams,
+        queryParams: {'type': type},
+      );
+      logger.d(response.data);
+      return GetHmosPlanResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetIndividualApplicationDetailsModel> getIndividualApplication({
+    String? appliationId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos_application}/$appliationId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetIndividualApplicationDetailsModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<UploadApplicationDocumentResponseModel> uploadAppDocument({
+    String? appliationId,
+    MultipartFile? file,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos_application}/$appliationId/documents/upload',
+        RequestMethod.upload,
+        formData: FormData.fromMap({'document': file}),
+      );
+      logger.d(response.data);
+      return UploadApplicationDocumentResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetHospitalByIdResponseModel> getHospitalById({
+    String? hospitalId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_hospital_by_id}/$hospitalId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetHospitalByIdResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<StartApplicationRsponseModel> startApplication({
+    StartApplicationEntityModel? startApplication,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.start_application,
+        RequestMethod.post,
+        data: startApplication?.toJson(),
+      );
+      logger.d(response.data);
+      return StartApplicationRsponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<SaveFirstStepPersonalResponseModel> saveFirstIndividualStep({
+    SaveFirstStepPersonalInfoEntityModel? saveFirstIndividualStep,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.save_first_step,
+        RequestMethod.post,
+        data: saveFirstIndividualStep?.toJson(),
+      );
+      logger.d(response.data);
+      return SaveFirstStepPersonalResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<SaveSecondStepResponseModel> saveSecondIndividualStep({
+    SaveSecondStepEntityModel? saveSecondIndividualStep,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.save_first_step,
+        RequestMethod.post,
+        data: saveSecondIndividualStep?.toJson(),
+      );
+      logger.d(response.data);
+      return SaveSecondStepResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
+    SaveThirdStepEntityModel? saveThirdIndividualStep,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.save_first_step,
+        RequestMethod.post,
+        data: saveThirdIndividualStep?.toJson(),
+      );
+      logger.d(response.data);
+      return SaveThirdStepResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<HmoPlanPaymentResponseModel> hmoPlanPayment({
+    String? applicationID,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos_application}/$applicationID/pay',
+        RequestMethod.post,
+        data: {
+          "paymentMethod": "PAYMENT_GATEWAY",
+          "callbackUrl": "https://example.com/hmo/payment/callback",
+        },
+      );
+      logger.d(response.data);
+      return HmoPlanPaymentResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> submitHmoPlan({String? applicationID}) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.submit_hmo_plan,
+        RequestMethod.post,
+        data: {"applicationId": applicationID},
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

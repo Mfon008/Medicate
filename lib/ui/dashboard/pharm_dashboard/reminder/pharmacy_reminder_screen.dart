@@ -1030,8 +1030,13 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                 Center(
                   child:
                       model.getReminderResponseModel != null &&
-                          model.getReminderResponseModel!.data!.reminders != null &&
-                          model.getReminderResponseModel!.data!.reminders!.isNotEmpty
+                          model.getReminderResponseModel!.data!.reminders !=
+                              null &&
+                          model
+                              .getReminderResponseModel!
+                              .data!
+                              .reminders!
+                              .isNotEmpty
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -1202,9 +1207,10 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               .getReminderResponseModel!
                                               .data!
                                               .reminders!
-                                              .reversed
                                               .where(
-                                                (e) => e.patientDetails!.fullName!
+                                                (e) => e
+                                                    .patientDetails!
+                                                    .fullName!
                                                     .toLowerCase()
                                                     .contains(
                                                       model
@@ -1225,7 +1231,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               .getReminderResponseModel!
                                               .data!
                                               .reminders!
-                                              .reversed
                                               .map(
                                                 (e) => reminderWidget(
                                                   context: context,
@@ -1242,7 +1247,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               .getReminderResponseModel!
                                               .data!
                                               .reminders!
-                                              .reversed
                                               .where(
                                                 (e) => e.user!.fullName!
                                                     .toLowerCase()
@@ -1265,7 +1269,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               .getReminderResponseModel!
                                               .data!
                                               .reminders!
-                                              .reversed
                                               .map(
                                                 (e) => reminderWidget(
                                                   context: context,
@@ -1282,7 +1285,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               .getReminderResponseModel!
                                               .data!
                                               .reminders!
-                                              .reversed
                                               .where(
                                                 (e) => e.user!.fullName!
                                                     .toLowerCase()
@@ -1305,7 +1307,6 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                                               .getReminderResponseModel!
                                               .data!
                                               .reminders!
-                                              .reversed
                                               .map(
                                                 (e) => reminderWidget(
                                                   context: context,
@@ -2171,7 +2172,7 @@ class _PharmacyReminderScreenState extends State<PharmacyReminderScreen> {
                   ),
                   SizedBox(height: 4.20.h),
                   TextView(
-                    text: reminder.patientDetails?.fullName?.capitalize()?? '',
+                    text: reminder.patientDetails?.fullName?.capitalize() ?? '',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 14.50.sp,

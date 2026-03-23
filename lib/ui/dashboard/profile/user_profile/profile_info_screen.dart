@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/main.dart';
@@ -110,21 +111,31 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                       .instance
                       .usersData1['user']['email'] ??
                   '';
-              dobController.text = model.getDOB(
-                SharedPreferencesService.instance.usersData1['dateOfBirth'] ??
-                    "",
-              );
+              dobController.text =
+                  SharedPreferencesService.instance.usersData1['dateOfBirth'] !=
+                      null
+                  ? model.getDOB(
+                      SharedPreferencesService
+                              .instance
+                              .usersData1['dateOfBirth'] ??
+                          "",
+                    )
+                  : '';
               genderController.text =
                   SharedPreferencesService.instance.usersData1['gender'] ?? '';
-              ageController.text = model
-                  .calculateAge(
-                    model.getDOB(
-                      SharedPreferencesService
-                          .instance
-                          .usersData1['dateOfBirth'],
-                    ),
-                  )
-                  .toString();
+              ageController.text =
+                  SharedPreferencesService.instance.usersData1['dateOfBirth'] !=
+                      null
+                  ? model
+                        .calculateAge(
+                          model.getDOB(
+                            SharedPreferencesService
+                                .instance
+                                .usersData1['dateOfBirth'],
+                          ),
+                        )
+                        .toString()
+                  : '';
               model.countryController.text =
                   SharedPreferencesService.instance.usersData1['country'] ?? '';
               heightController.text =
@@ -203,16 +214,29 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                               ],
                             ),
 
-                            TextView(
-                              text: 'Change',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.primary,
-                                decoration: TextDecoration.underline,
-                                decorationColor: AppColors.primary,
+                            GestureDetector(
+                              onTap: () => model.sendOtpEverydayUser(
+                                context,
+                                phone: SharedPreferencesService
+                                    .instance
+                                    .usersData1['user']['phone']['number'],
                               ),
+                              child: model.isLoading
+                                  ? SpinKitCircle(
+                                      color: AppColors.primary,
+                                      size: 30.sp,
+                                    )
+                                  : TextView(
+                                      text: 'Change',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.primary,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppColors.primary,
+                                      ),
+                                    ),
                             ),
                           ],
                         ),

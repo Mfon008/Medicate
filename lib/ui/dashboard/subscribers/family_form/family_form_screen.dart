@@ -1,16 +1,26 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 
+// ignore: must_be_immutable
 class FamilyFormScreen extends StatelessWidget {
-  FamilyFormScreen({super.key});
+  FamilyFormScreen({
+    super.key,
+    required this.planTypeName,
+    required this.planTeirName,
+    required this.planId,
+    required this.hmoId,
+  });
+
+  String? planTypeName;
+  String? planTeirName;
+  String? planId;
+  String? hmoId;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +43,7 @@ class FamilyFormScreen extends StatelessWidget {
                 children: [
                   GlobalNavigator(),
                   TextView(
-                    text: 'Apply for Ruby Individual Basic',
+                    text: 'Apply for $planTeirName $planTypeName Basic',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 16.sp,

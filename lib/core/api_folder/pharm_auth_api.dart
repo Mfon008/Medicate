@@ -762,7 +762,6 @@ class PharmApi {
     }
   }
 
-
   Future<CreatePaymentWalletModel> createWalletPayment({
     CreatePaymentWalletEntityModel? createPaymentWalletEntityModel,
   }) async {
@@ -841,5 +840,4 @@ class PharmApi {
       rethrow;
     }
   }
-
 }

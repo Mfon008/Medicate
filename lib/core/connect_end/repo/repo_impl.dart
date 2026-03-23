@@ -8,33 +8,47 @@ import 'package:medicate_app/core/connect_end/model/verify_otp_response_model/ve
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/contract_impl.dart';
+import '../model/active_hmo_plan_response_model/active_hmo_plan_response_model.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
+import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
+import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
+import '../model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
+import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
+import '../model/save_second_step_response_model/save_second_step_response_model.dart';
+import '../model/save_third_step_entity_model/save_third_step_entity_model.dart';
+import '../model/save_third_step_response_model/save_third_step_response_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_response_model/set_pin_response_model.dart';
 import '../model/sign_up_entity_model.dart';
 import '../model/sign_up_response_model/sign_up_response_model.dart';
+import '../model/start_application_entity_model.dart';
+import '../model/start_application_rsponse_model/start_application_rsponse_model.dart';
 import '../model/support_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
+import '../model/upload_application_document_response_model/upload_application_document_response_model.dart';
 import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -73,6 +87,13 @@ class AuthRepoImpl {
     return response;
   }
 
+  Future<dynamic> verifyChangePhoneOtp(
+    VerifyPhoneEntityModel verifyPhoneEntity,
+  ) async {
+    final response = await _contract.verifyChangePhoneOtp(verifyPhoneEntity);
+    return response;
+  }
+
   Future<ForgotPasswordResponseModel> forgotPasword(
     ResendOtpEntityModel forgotPassword,
   ) async {
@@ -84,6 +105,11 @@ class AuthRepoImpl {
     VerifyPhoneEntityModel verifyPhoneEntity,
   ) async {
     final response = await _contract.verifyForgotPassword(verifyPhoneEntity);
+    return response;
+  }
+
+  Future<dynamic> sendOtp(String phone) async {
+    final response = await _contract.sendOtp(phone);
     return response;
   }
 
@@ -281,6 +307,97 @@ class AuthRepoImpl {
 
   Future<GetWalletResponseModel> getWalletBalance() async {
     final response = await _contract.getWalletBalance();
+    return response;
+  }
+
+  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan() async {
+    final response = await _contract.getActiveHmoPlan();
+    return response;
+  }
+
+  Future<GetHmosPlanResponseModel> getActiveHmoPlanByType({
+    String? hmodId,
+    String? type,
+  }) async {
+    final response = await _contract.getActiveHmoPlanByType(
+      hmodId: hmodId,
+      type: type,
+    );
+    return response;
+  }
+
+  Future<GetIndividualApplicationDetailsModel> getIndividualApplication({
+    String? appliationId,
+  }) async {
+    final response = await _contract.getIndividualApplication(
+      appliationId: appliationId,
+    );
+    return response;
+  }
+
+  Future<StartApplicationRsponseModel> startApplication({
+    StartApplicationEntityModel? startApplication,
+  }) async {
+    final response = await _contract.startApplication(
+      startApplication: startApplication,
+    );
+    return response;
+  }
+
+  Future<SaveFirstStepPersonalResponseModel> saveFirstIndividualStep({
+    SaveFirstStepPersonalInfoEntityModel? saveFirstIndividualStep,
+  }) async {
+    final response = await _contract.saveFirstIndividualStep(
+      saveFirstIndividualStep: saveFirstIndividualStep,
+    );
+    return response;
+  }
+
+  Future<SaveSecondStepResponseModel> saveSecondIndividualStep({
+    SaveSecondStepEntityModel? saveSecondIndividualStep,
+  }) async {
+    final response = await _contract.saveSecondIndividualStep(
+      saveSecondIndividualStep: saveSecondIndividualStep,
+    );
+    return response;
+  }
+
+  Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
+    SaveThirdStepEntityModel? saveThirdIndividualStep,
+  }) async {
+    final response = await _contract.saveThirdIndividualStep(
+      saveThirdIndividualStep: saveThirdIndividualStep,
+    );
+    return response;
+  }
+
+  Future<GetHospitalByIdResponseModel> getHospitalById({
+    String? hospitalId,
+  }) async {
+    final response = await _contract.getHospitalById(hospitalId: hospitalId);
+    return response;
+  }
+
+  Future<UploadApplicationDocumentResponseModel> uploadAppDocument({
+    String? appliationId,
+    MultipartFile? file,
+  }) async {
+    final response = await _contract.uploadAppDocument(
+      appliationId: appliationId,
+      file: file,
+    );
+    return response;
+  }
+
+  Future<HmoPlanPaymentResponseModel> hmoPlanPayment({
+    String? applicationID
+  }) async {
+    final response = await _contract.hmoPlanPayment(applicationID: applicationID);
+    return response;
+  }
+  
+  Future<dynamic> submitHmoPlan({String? applicationID}) async  {
+    final response = await _contract.submitHmoPlan(applicationID: applicationID);
     return response;
   }
 

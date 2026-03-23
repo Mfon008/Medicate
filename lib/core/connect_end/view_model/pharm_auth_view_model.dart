@@ -2007,18 +2007,20 @@ class PharmViewModel extends BaseViewModel {
                 : SizedBox.shrink(),
           ),
           SizedBox(width: 10.w),
-          SvgPicture.asset(
-            svgIcon!,
-            height: returnChannelIconHeight(text),
-            width: returnChannelIconWidth(text),
-            color: AppColors.infoGrey,
-          ),
-          SizedBox(width: 10.w),
+          svgIcon == null
+              ? SizedBox.shrink()
+              : SvgPicture.asset(
+                  svgIcon,
+                  height: returnChannelIconHeight(text),
+                  width: returnChannelIconWidth(text),
+                  color: AppColors.infoGrey,
+                ),
+          SizedBox(width: svgIcon == null ? 6.w : 10.w),
           TextView(
             text: text,
             textStyle: TextStyle(
               fontFamily: 'Arial',
-              fontSize: 15.82.sp,
+              fontSize: 15.22.sp,
               fontWeight: FontWeight.w400,
               color: AppColors.reminder,
             ),
@@ -8888,7 +8890,8 @@ class PharmViewModel extends BaseViewModel {
                                                               .text,
                                                         );
                                                   } else {
-                                                    addedEmailReminderList.clear();
+                                                    addedEmailReminderList
+                                                        .clear();
                                                     addedEmailReminderList.add(
                                                       model
                                                           .emailController
@@ -14010,65 +14013,66 @@ class PharmViewModel extends BaseViewModel {
             ),
             SizedBox(height: 20.h),
             model.medicationClassList.length == 1
-              ? SizedBox.shrink():Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.first
-                      ? () {}
-                      : () {
-                          model.indexOfMedicationClassList -= 1;
-                          model.notifyListeners();
-                        },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    size: 22.sp,
-                    color:
-                        model.medicationClassList[model
-                                .indexOfMedicationClassList] ==
-                            model.medicationClassList.first
-                        ? AppColors.primaryLight.withOpacity(.7)
-                        : AppColors.primary,
+                ? SizedBox.shrink()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.first
+                            ? () {}
+                            : () {
+                                model.indexOfMedicationClassList -= 1;
+                                model.notifyListeners();
+                              },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 22.sp,
+                          color:
+                              model.medicationClassList[model
+                                      .indexOfMedicationClassList] ==
+                                  model.medicationClassList.first
+                              ? AppColors.primaryLight.withOpacity(.7)
+                              : AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(width: 20.h),
+                      TextView(
+                        text:
+                            '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                      SizedBox(width: 20.h),
+                      IconButton(
+                        onPressed:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.last
+                            ? () {}
+                            : () {
+                                model.indexOfMedicationClassList += 1;
+                                model.notifyListeners();
+                              },
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          size: 22.sp,
+                          color:
+                              model.medicationClassList[model
+                                      .indexOfMedicationClassList] ==
+                                  model.medicationClassList.last
+                              ? AppColors.primaryLight.withOpacity(.7)
+                              : AppColors.primary1,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(width: 20.h),
-                TextView(
-                  text:
-                      '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(width: 20.h),
-                IconButton(
-                  onPressed:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.last
-                      ? () {}
-                      : () {
-                          model.indexOfMedicationClassList += 1;
-                          model.notifyListeners();
-                        },
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    size: 22.sp,
-                    color:
-                        model.medicationClassList[model
-                                .indexOfMedicationClassList] ==
-                            model.medicationClassList.last
-                        ? AppColors.primaryLight.withOpacity(.7)
-                        : AppColors.primary1,
-                  ),
-                ),
-              ],
-            ),
             SizedBox(height: 20.h),
             TextView(
               text: 'PATIENTS DETAILS',
@@ -14680,66 +14684,67 @@ class PharmViewModel extends BaseViewModel {
             ),
 
             SizedBox(height: 16.20.h),
-           model.medicationClassList.length == 1
-              ? SizedBox.shrink(): Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.first
-                      ? () {}
-                      : () {
-                          model.indexOfMedicationClassList -= 1;
-                          model.notifyListeners();
-                        },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    size: 22.sp,
-                    color:
-                        model.medicationClassList[model
-                                .indexOfMedicationClassList] ==
-                            model.medicationClassList.first
-                        ? AppColors.primaryLight.withOpacity(.7)
-                        : AppColors.primary,
+            model.medicationClassList.length == 1
+                ? SizedBox.shrink()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.first
+                            ? () {}
+                            : () {
+                                model.indexOfMedicationClassList -= 1;
+                                model.notifyListeners();
+                              },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 22.sp,
+                          color:
+                              model.medicationClassList[model
+                                      .indexOfMedicationClassList] ==
+                                  model.medicationClassList.first
+                              ? AppColors.primaryLight.withOpacity(.7)
+                              : AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(width: 10.h),
+                      TextView(
+                        text:
+                            '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                      SizedBox(width: 10.h),
+                      IconButton(
+                        onPressed:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.last
+                            ? () {}
+                            : () {
+                                model.indexOfMedicationClassList += 1;
+                                model.notifyListeners();
+                              },
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          size: 22.sp,
+                          color:
+                              model.medicationClassList[model
+                                      .indexOfMedicationClassList] ==
+                                  model.medicationClassList.last
+                              ? AppColors.primaryLight.withOpacity(.7)
+                              : AppColors.primary1,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(width: 10.h),
-                TextView(
-                  text:
-                      '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(width: 10.h),
-                IconButton(
-                  onPressed:
-                      model.medicationClassList[model
-                              .indexOfMedicationClassList] ==
-                          model.medicationClassList.last
-                      ? () {}
-                      : () {
-                          model.indexOfMedicationClassList += 1;
-                          model.notifyListeners();
-                        },
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    size: 22.sp,
-                    color:
-                        model.medicationClassList[model
-                                .indexOfMedicationClassList] ==
-                            model.medicationClassList.last
-                        ? AppColors.primaryLight.withOpacity(.7)
-                        : AppColors.primary1,
-                  ),
-                ),
-              ],
-            ),
 
             SizedBox(height: 24.20.h),
             TextView(
@@ -14836,16 +14841,14 @@ class PharmViewModel extends BaseViewModel {
                   Wrap(
                     spacing: 4.10,
                     runSpacing: 6,
-                    children:  List.generate(addedEmailReminderList.length, (
+                    children: List.generate(addedEmailReminderList.length, (
                       index,
                     ) {
                       final isLast = index == addedEmailReminderList.length - 1;
                       final email = addedEmailReminderList[index];
 
                       return TextView(
-                        text: isLast
-                            ? email
-                            : '$email, ',
+                        text: isLast ? email : '$email, ',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14.8.sp,
@@ -14854,7 +14857,6 @@ class PharmViewModel extends BaseViewModel {
                         ),
                       );
                     }),
-                    
                   ),
                   SizedBox(height: 6.0.h),
                 ],
@@ -16290,6 +16292,7 @@ class PharmViewModel extends BaseViewModel {
     calculationForTotalReminderForPhone = 0;
 
     // int totalReminders = 0;
+    // ignore: no_leading_underscores_for_local_identifiers
     int _frequencyPerDay = 0;
 
     for (var med in medications) {

@@ -662,9 +662,9 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                              
+
                               SizedBox(height: 5.10.h),
-                              
+
                               Divider(
                                 color: AppColors.infoGrey,
                                 thickness: .14,
@@ -700,7 +700,6 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                 color: AppColors.infoGrey,
                                 thickness: .14,
                               ),
-                              
 
                               SizedBox(height: 5.10.h),
 
@@ -875,8 +874,9 @@ class PharmViewMedicationScreen extends StatelessWidget {
       },
     );
   }
+
   String formatToAmPm(String time24) {
-  final parsedTime = DateFormat("HH:mm").parse(time24);
-  return DateFormat("hh:mm a").format(parsedTime);
-}
+    final parsedTime = DateFormat("HH:mm").parse(time24);
+    return DateFormat("hh:mm a").format(parsedTime);
+  }
 }
