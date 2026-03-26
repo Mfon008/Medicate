@@ -6,6 +6,7 @@ import 'package:medicate_app/core/connect_end/model/create_payment_wallet_model/
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospital_network_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_individual_application_details_model/get_individual_application_details_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
@@ -782,6 +783,20 @@ class AuthApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({String? planId}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos_plan}/$planId/hospital-networks',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetHmoPlanHospitalNetworkResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

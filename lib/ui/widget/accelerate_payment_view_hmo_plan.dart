@@ -87,9 +87,7 @@ class _AcceleratePaymentViewHmoPlanState
               actions: [
                 GestureDetector(
                   onTap: () {
-                    navigate.navigateTo(
-                      Routes.paymentSuccessSubmitAppScreen,
-                    );
+                    navigate.navigateTo(Routes.paymentSuccessSubmitAppScreen);
                     setState(() {});
                     model.notifyListeners();
                   },

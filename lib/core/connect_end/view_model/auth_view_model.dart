@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmo_plan_hospital_network_response_model/hospital.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/daily_dose_time.dart'
     as getR;
 import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
@@ -68,6 +70,7 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_reminder_entity_model/medication.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospital_network_response_model.dart';
 import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
@@ -130,6 +133,9 @@ class AuthViewModel extends BaseViewModel {
   bool _isTogglePasswordConfirm = false;
   bool onToggleMic = false;
   hmo.Datum? hmoPlanType;
+
+  File? imageDocument;
+  String? fileImageDocument;
 
   LoginResponseModel? _loginResponseModel;
   LoginResponseModel? get loginResponseModel => _loginResponseModel;
@@ -203,6 +209,8 @@ class AuthViewModel extends BaseViewModel {
   SetPinResponseModel? get setPinResponseModel => _setPinResponseModel;
   ResendOtpResponseModel? _resendOtpResponseModel;
   ResendOtpResponseModel? get resendOtpResponseModel => _resendOtpResponseModel;
+  GetHmoPlanHospitalNetworkResponseModel? _getHmoPlanHospitalNetworkResponseModel;
+  GetHmoPlanHospitalNetworkResponseModel? get getHmoPlanHospitalNetworkResponseModel => _getHmoPlanHospitalNetworkResponseModel;
   ChangePhoneNoResponseModel? _changePhoneNoResponseModel;
   ChangePhoneNoResponseModel? get changePhoneNoResponseModel =>
       _changePhoneNoResponseModel;
@@ -514,6 +522,7 @@ class AuthViewModel extends BaseViewModel {
   TextEditingController filterStateController = TextEditingController();
   TextEditingController hospitalController = TextEditingController();
   TextEditingController fundAmountController = TextEditingController();
+  String? hospitalId;
 
   Map<int, String?> selectedTimePerDay = {};
   Map<int, List<String>> timesPerDay = {};
@@ -522,6 +531,7 @@ class AuthViewModel extends BaseViewModel {
   int? globalTimeIndex;
 
   int? _getTotalTimesForReminder;
+  DateTime? _selectedDate;
 
   String notificationChannelFlowWidgetIcon(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
@@ -863,9 +873,11 @@ class AuthViewModel extends BaseViewModel {
     AuthViewModel? model,
     String? planType,
     String? planTier,
+    String? planId,
   }) async {
     if (planType == 'Individual' && planTier == 'Ruby') {
-      await model!.getIndividualApplicationDetails(
+      await model!.getHmoPlanHospitalNetwork(context,planId: planId);
+      await model.getIndividualApplicationDetails(
         context,
         applicationId: session.applicationIdIndividualRuby,
       );
@@ -1127,6 +1139,20 @@ class AuthViewModel extends BaseViewModel {
     model!.notifyListeners();
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(), // Initial date shown
+      firstDate: DateTime(1900), // Earliest selectable date
+      lastDate: DateTime(2100), // Latest selectable date
+    );
+    if (picked != null && picked != _selectedDate) {
+      _selectedDate = picked;
+      dobController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
+    }
+    notifyListeners();
+  }
+
   firstSubModalFlow({
     AuthViewModel? model,
     BuildContext? context,
@@ -1226,10 +1252,12 @@ class AuthViewModel extends BaseViewModel {
           isFilled: true,
           readOnly: true,
           controller: dobController,
-          // validator: AppValidator.validateString(),
           suffixWidget: Padding(
             padding: EdgeInsets.all(8.w),
-            child: SvgPicture.asset(AppImage.calendar),
+            child: GestureDetector(
+              onTap: () => _selectDate(context),
+              child: SvgPicture.asset(AppImage.calendar),
+            ),
           ),
           style: TextStyle(
             fontSize: 16.20.sp,
@@ -1255,9 +1283,43 @@ class AuthViewModel extends BaseViewModel {
           hintSize: 14.sp,
           fillColor: AppColors.grey,
           isFilled: true,
+          readOnly: true,
           controller: genderController,
           validator: AppValidator.validateString(),
-          suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+          suffixWidget: PopupMenuButton<String>(
+            color: AppColors.white,
+            onSelected: (value) {
+              genderController.text = value;
+              notifyListeners();
+            },
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: "Male",
+                child: TextView(
+                  text: 'Male',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 13.70.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "Female",
+                child: TextView(
+                  text: 'Female',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 13.70.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
           style: TextStyle(
             fontSize: 16.20.sp,
             fontWeight: FontWeight.w400,
@@ -1354,6 +1416,7 @@ class AuthViewModel extends BaseViewModel {
           borderColor: AppColors.transparent,
           borderTopLeft: 10.r,
           label: 'All State',
+          readOnly: true,
           labelStyle: TextStyle(
             fontSize: 16.20.sp,
             fontWeight: FontWeight.w400,
@@ -1368,7 +1431,31 @@ class AuthViewModel extends BaseViewModel {
           isFilled: true,
           controller: filterStateController,
           validator: AppValidator.validateString(),
-          suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+          suffixWidget: PopupMenuButton<String>(
+            color: AppColors.white,
+            onSelected: (value) {
+              filterStateController.text = value;
+              notifyListeners();
+            },
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+            itemBuilder: (context) => [
+              if(model.getHmoPlanHospitalNetworkResponseModel!=null && model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.isNotEmpty)
+               ...model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.map((e)=>PopupMenuItem(
+                value: e.state,
+                child: TextView(
+                  text: e.state??'',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 13.70.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),)
+              
+              
+            ],
+          ),
         ),
         SizedBox(height: 20.h),
         TextFormWidget(
@@ -1376,6 +1463,7 @@ class AuthViewModel extends BaseViewModel {
           borderColor: AppColors.transparent,
           borderTopLeft: 10.r,
           label: 'Choose a hospital',
+          readOnly: true,
           labelStyle: TextStyle(
             fontSize: 16.20.sp,
             fontWeight: FontWeight.w400,
@@ -1390,7 +1478,32 @@ class AuthViewModel extends BaseViewModel {
           isFilled: true,
           controller: hospitalController,
           validator: AppValidator.validateString(),
-          suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+          suffixWidget:PopupMenuButton<Hospital>(
+            color: AppColors.white,
+            onSelected: (value) {
+              hospitalController.text = value.name!;
+              hospitalId = value.id!;
+              notifyListeners();
+            },
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+            itemBuilder: (context) => [
+              if(model.getHmoPlanHospitalNetworkResponseModel!=null && model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.isNotEmpty)
+               ...model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.map((e)=>PopupMenuItem(
+                value: e,
+                child: TextView(
+                  text: e.name??'',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 13.70.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),)
+              
+              
+            ],
+          ),
         ),
         SizedBox(height: 24.60.h),
         ButtonWidget(
@@ -1420,14 +1533,14 @@ class AuthViewModel extends BaseViewModel {
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
-                        dob: '1998-10-10',
+                        dob: dobController.text.trim(),
                         gender: genderController.text.trim(),
                         phone: model.returnPhoneNoStructureAdd234AfterAgain(
                           phoneNoController.text.trim(),
                         ),
                         email: emailAddsController.text.trim(),
                         residentialAddress: resAddressController.text.trim(),
-                        preferredHospitalId: '6995e565e267b045c2087b07',
+                        preferredHospitalId: hospitalId,
                       ),
                     ),
               );
@@ -3347,8 +3460,9 @@ class AuthViewModel extends BaseViewModel {
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      if (model.uploadDocumentsApplication!.isNotEmpty&& model.uploadDocumentsApplication![0].docName ==
-                          null) {
+                      if (model.uploadDocumentsApplication!.isNotEmpty &&
+                          model.uploadDocumentsApplication![0].docName ==
+                              null) {
                         model.pickDocumentAndUpload(
                           context: context,
                           docType: 'BIRTH_CERTIFICATE',
@@ -5099,7 +5213,12 @@ class AuthViewModel extends BaseViewModel {
                           .getIndividualApplicationDetailsModel
                           ?.data
                           ?.personalInfo
-                          ?.fullName ??model.saveThirdStepResponseModel?.data?.personalInfo?.fullName??
+                          ?.fullName ??
+                      model
+                          .saveThirdStepResponseModel
+                          ?.data
+                          ?.personalInfo
+                          ?.fullName ??
                       '',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
@@ -5129,7 +5248,12 @@ class AuthViewModel extends BaseViewModel {
                           .getIndividualApplicationDetailsModel
                           ?.data
                           ?.personalInfo
-                          ?.email ??model.saveThirdStepResponseModel?.data?.personalInfo?.email??
+                          ?.email ??
+                      model
+                          .saveThirdStepResponseModel
+                          ?.data
+                          ?.personalInfo
+                          ?.email ??
                       '',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
@@ -5159,7 +5283,12 @@ class AuthViewModel extends BaseViewModel {
                           .getIndividualApplicationDetailsModel
                           ?.data
                           ?.personalInfo
-                          ?.phone ??model.saveThirdStepResponseModel?.data?.personalInfo?.phone??
+                          ?.phone ??
+                      model
+                          .saveThirdStepResponseModel
+                          ?.data
+                          ?.personalInfo
+                          ?.phone ??
                       '',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
@@ -5259,7 +5388,7 @@ class AuthViewModel extends BaseViewModel {
                             .getHospitalByIdResponseModel
                             ?.data
                             ?.hospital
-                            ?.name?? 
+                            ?.name ??
                         '',
                     maxLines: 2,
                     textOverflow: TextOverflow.ellipsis,
@@ -5289,7 +5418,7 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 TextView(
                   text:
-                      '${model.getIndividualApplicationDetailsModel?.data?.documents?.length??model.saveThirdStepResponseModel?.data?.documents?.length} ${fileTextListLength(model.getIndividualApplicationDetailsModel?.data?.documents?.length??model.saveThirdStepResponseModel?.data?.documents?.length)} uploaded',
+                      '${model.getIndividualApplicationDetailsModel?.data?.documents?.length ?? model.saveThirdStepResponseModel?.data?.documents?.length} ${fileTextListLength(model.getIndividualApplicationDetailsModel?.data?.documents?.length ?? model.saveThirdStepResponseModel?.data?.documents?.length)} uploaded',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -22739,6 +22868,23 @@ class AuthViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
+  
+  Future<void> getHmoPlanHospitalNetwork(context, {String? planId}) async {
+    try {
+      _isLoading = true;
+      _getHmoPlanHospitalNetworkResponseModel = await runBusyFuture(
+        repositoryImply.getHospitalNetworkPlan(planId: planId),
+        throwException: true,
+      );
+      _isLoading = false;
+      
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 
   void createReminderPaid(
     context, {
@@ -23901,9 +24047,6 @@ class AuthViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-
-  File? imageDocument;
-  String? fileImageDocument;
 
   void pickDocumentAndUpload({
     BuildContext? context,

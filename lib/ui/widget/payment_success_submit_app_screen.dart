@@ -11,9 +11,7 @@ import 'package:stacked/stacked.dart';
 import 'text.dart';
 
 class PaymentSuccessSubmitAppScreen extends StatelessWidget {
-  const PaymentSuccessSubmitAppScreen({
-    super.key,
-  });
+  const PaymentSuccessSubmitAppScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,29 +34,26 @@ class PaymentSuccessSubmitAppScreen extends StatelessWidget {
                     padding: EdgeInsets.all(10.w),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color
-                          : AppColors.app_green.withOpacity(.09),
+                      color: AppColors.app_green.withOpacity(.09),
                     ),
                     child: Container(
                       padding: EdgeInsets.all(12.0.w),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color
-                            : AppColors.app_green,
+                        color: AppColors.app_green,
                       ),
                       child: Center(
-                        child
-                            : Icon(
-                                Icons.check,
-                                size: 30.30.sp,
-                                color: AppColors.white,
-                              ),
+                        child: Icon(
+                          Icons.check,
+                          size: 30.30.sp,
+                          color: AppColors.white,
+                        ),
                       ),
                     ),
                   ),
                   SizedBox(height: 25.30.h),
                   TextView(
-                    text:'Payment Successful!',
+                    text: 'Payment Successful!',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 20.2.sp,
@@ -68,7 +63,7 @@ class PaymentSuccessSubmitAppScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 23.30.h),
                   TextView(
-                    text:PaymentStatusString.successfulHmo,
+                    text: PaymentStatusString.successfulHmo,
                     textAlign: TextAlign.center,
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
@@ -79,16 +74,21 @@ class PaymentSuccessSubmitAppScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 30.h),
                   ButtonWidget(
-                          border: 100.r,
-                          fontSize: 14.sp,
-                          buttonColor: AppColors.primary,
-                          buttonText: 'Submit Application',
-                          color: AppColors.white,
-                          buttonBorderColor: AppColors.transparent,isLoading: model.isLoading,
-                          onPressed: () {
-                           model.submitApplication(context,applicationId: model.session.applicationIdIndividualRuby);
-                          },
-                        ),
+                    border: 100.r,
+                    fontSize: 14.sp,
+                    buttonColor: AppColors.primary,
+                    buttonText: 'Submit Application',
+                    color: AppColors.white,
+                    buttonBorderColor: AppColors.transparent,
+                    isLoading: model.isLoading,
+                    onPressed: () {
+                      model.submitApplication(
+                        context,
+                        applicationId:
+                            model.session.applicationIdIndividualRuby,
+                      );
+                    },
+                  ),
                   SizedBox(height: 30.h),
                 ],
               ),

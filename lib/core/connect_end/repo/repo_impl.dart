@@ -15,6 +15,7 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospital_network_response_model.dart';
 import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
@@ -390,14 +391,23 @@ class AuthRepoImpl {
   }
 
   Future<HmoPlanPaymentResponseModel> hmoPlanPayment({
-    String? applicationID
+    String? applicationID,
   }) async {
-    final response = await _contract.hmoPlanPayment(applicationID: applicationID);
+    final response = await _contract.hmoPlanPayment(
+      applicationID: applicationID,
+    );
+    return response;
+  }
+
+  Future<dynamic> submitHmoPlan({String? applicationID}) async {
+    final response = await _contract.submitHmoPlan(
+      applicationID: applicationID,
+    );
     return response;
   }
   
-  Future<dynamic> submitHmoPlan({String? applicationID}) async  {
-    final response = await _contract.submitHmoPlan(applicationID: applicationID);
+ Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({String? planId}) async {
+    final response = await _contract.getHospitalNetworkPlan(planId: planId);
     return response;
   }
 
