@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
@@ -15,18 +16,28 @@ class FamilyFormScreen extends StatelessWidget {
     required this.planTeirName,
     required this.planId,
     required this.hmoId,
+    required this.data,
   });
 
   String? planTypeName;
   String? planTeirName;
   String? planId;
   String? hmoId;
+  Datum? data;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
-      onViewModelReady: (model) {},
+      onViewModelReady: (model) {
+        model.checkFamPlanTypeAndTier(
+          context: context,
+          model: model,
+          planType: planTypeName,
+          planTier: planTeirName,
+          planId: planId,
+        );
+      },
       disposeViewModel: false,
       onDispose: (viewModel) {},
       builder: (_, AuthViewModel model, _) {
@@ -67,6 +78,7 @@ class FamilyFormScreen extends StatelessWidget {
             ),
           ),
           body: SingleChildScrollView(
+            controller: model.dependentController,
             padding: EdgeInsets.symmetric(vertical: 14.50.w, horizontal: 16.w),
             child: Column(
               children: [
@@ -83,6 +95,11 @@ class FamilyFormScreen extends StatelessWidget {
                   child: model.setFamilyAppModalFlow(
                     model: model,
                     context: context,
+                    planType: planTypeName,
+                    planTier: planTeirName,
+                    hmoId: hmoId,
+                    planId: planId,
+                    data: data,
                   ),
                 ),
               ],

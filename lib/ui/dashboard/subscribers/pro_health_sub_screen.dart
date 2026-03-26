@@ -547,7 +547,6 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                 ],
                               ),
                             ),
-
                             SizedBox(height: 20.h),
                             Container(
                               width: double.infinity,
@@ -607,7 +606,6 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                 ],
                               ),
                             ),
-
                             SizedBox(height: 20.h),
                             Container(
                               width: double.infinity,
@@ -819,6 +817,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                             children: [
                               SvgPicture.asset(
                                 tiersSvgImage(o),
+                                // ignore: deprecated_member_use
                                 color: tiersColor(o),
                               ),
                               SizedBox(width: 6.w),
@@ -871,7 +870,8 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                     ),
                     SizedBox(height: 20.h),
                     TextView(
-                      text: '${o.hospitalCount} hospitals in network',
+                      text:
+                          '${o.hospitalCount} ${model!.getHospitalNetworkTxt(o.hospitalCount)}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 15.2.sp,
@@ -880,7 +880,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    ...((model!.hmoPlanType == o
+                    ...((model.hmoPlanType == o
                             ? o.benefitsSnippet
                             : o.benefitsSnippet!.take(4))!
                         .map(
@@ -1093,7 +1093,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                 planTypeName: o.planType,
                 planTeirName: o.planTier,
                 planId: o.id,
-                hmoId: widget.hmoId,
+                hmoId: widget.hmoId,data: o
               ),
             ),
             child: Card(
@@ -1194,7 +1194,8 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                     ),
                     SizedBox(height: 20.h),
                     TextView(
-                      text: '${o.hospitalCount} hospitals in network',
+                      text:
+                          '${o.hospitalCount} ${model!.getHospitalNetworkTxt(o.hospitalCount)}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 15.2.sp,
@@ -1203,7 +1204,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    ...((model!.hmoPlanType == o
+                    ...((model.hmoPlanType == o
                             ? o.benefitsSnippet
                             : o.benefitsSnippet!.take(4))!
                         .map(
@@ -1223,6 +1224,8 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                       child: TextView(
                         text: model.hmoPlanType == o
                             ? 'Show less'
+                            : o.benefitsSnippet!.length < 4
+                            ? ''
                             : '+${o.benefitsSnippet!.length - 4} more benefits',
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
@@ -1352,6 +1355,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                 planTeirName: o.planTier,
                 planId: o.id,
                 hmoId: widget.hmoId,
+                data: o
               ),
             ),
             child: Card(
@@ -1462,7 +1466,8 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                     // ),
                     // SizedBox(height: 20.h),
                     TextView(
-                      text: '${o.hospitalCount} hospitals in network',
+                      text:
+                          '${o.hospitalCount} ${model!.getHospitalNetworkTxt(o.hospitalCount)}',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 15.2.sp,
@@ -1471,7 +1476,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                       ),
                     ),
                     SizedBox(height: 20.h),
-                    ...((model!.hmoPlanType == o
+                    ...((model.hmoPlanType == o
                             ? o.benefitsSnippet
                             : o.benefitsSnippet!.take(4))!
                         .map(

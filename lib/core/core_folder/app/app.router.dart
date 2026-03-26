@@ -1575,6 +1575,7 @@ class StackedRouter extends _i1.RouterBase {
           planTeirName: args.planTeirName,
           planId: args.planId,
           hmoId: args.hmoId,
+          data: args.data,
         ),
         settings: data,
       );
@@ -1588,6 +1589,7 @@ class StackedRouter extends _i1.RouterBase {
           planTeirName: args.planTeirName,
           planId: args.planId,
           hmoId: args.hmoId,
+          data: args.data,
         ),
         settings: data,
       );
@@ -3779,6 +3781,7 @@ class FamilyFormScreenArguments {
     required this.planTeirName,
     required this.planId,
     required this.hmoId,
+    required this.data,
   });
 
   final _i98.Key? key;
@@ -3791,9 +3794,11 @@ class FamilyFormScreenArguments {
 
   final String? hmoId;
 
+  final _i99.Datum? data;
+
   @override
   String toString() {
-    return '{"key": "$key", "planTypeName": "$planTypeName", "planTeirName": "$planTeirName", "planId": "$planId", "hmoId": "$hmoId"}';
+    return '{"key": "$key", "planTypeName": "$planTypeName", "planTeirName": "$planTeirName", "planId": "$planId", "hmoId": "$hmoId", "data": "$data"}';
   }
 
   @override
@@ -3803,7 +3808,8 @@ class FamilyFormScreenArguments {
         other.planTypeName == planTypeName &&
         other.planTeirName == planTeirName &&
         other.planId == planId &&
-        other.hmoId == hmoId;
+        other.hmoId == hmoId &&
+        other.data == data;
   }
 
   @override
@@ -3812,7 +3818,8 @@ class FamilyFormScreenArguments {
         planTypeName.hashCode ^
         planTeirName.hashCode ^
         planId.hashCode ^
-        hmoId.hashCode;
+        hmoId.hashCode ^
+        data.hashCode;
   }
 }
 
@@ -3823,6 +3830,7 @@ class CoorporateFormScreenArguments {
     required this.planTeirName,
     required this.planId,
     required this.hmoId,
+    required this.data,
   });
 
   final _i98.Key? key;
@@ -3835,9 +3843,11 @@ class CoorporateFormScreenArguments {
 
   final String? hmoId;
 
+  final _i99.Datum? data;
+
   @override
   String toString() {
-    return '{"key": "$key", "planTypeName": "$planTypeName", "planTeirName": "$planTeirName", "planId": "$planId", "hmoId": "$hmoId"}';
+    return '{"key": "$key", "planTypeName": "$planTypeName", "planTeirName": "$planTeirName", "planId": "$planId", "hmoId": "$hmoId", "data": "$data"}';
   }
 
   @override
@@ -3847,7 +3857,8 @@ class CoorporateFormScreenArguments {
         other.planTypeName == planTypeName &&
         other.planTeirName == planTeirName &&
         other.planId == planId &&
-        other.hmoId == hmoId;
+        other.hmoId == hmoId &&
+        other.data == data;
   }
 
   @override
@@ -3856,7 +3867,8 @@ class CoorporateFormScreenArguments {
         planTypeName.hashCode ^
         planTeirName.hashCode ^
         planId.hashCode ^
-        hmoId.hashCode;
+        hmoId.hashCode ^
+        data.hashCode;
   }
 }
 
@@ -5700,6 +5712,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
+    required _i99.Datum? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5714,6 +5727,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
         planTeirName: planTeirName,
         planId: planId,
         hmoId: hmoId,
+        data: data,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -5728,6 +5742,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
+    required _i99.Datum? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5742,6 +5757,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
         planTeirName: planTeirName,
         planId: planId,
         hmoId: hmoId,
+        data: data,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -7551,6 +7567,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
+    required _i99.Datum? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7565,6 +7582,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
         planTeirName: planTeirName,
         planId: planId,
         hmoId: hmoId,
+        data: data,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -7579,6 +7597,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
+    required _i99.Datum? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7593,6 +7612,7 @@ extension NavigatorStateExtension on _i100.NavigationService {
         planTeirName: planTeirName,
         planId: planId,
         hmoId: hmoId,
+        data: data,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,

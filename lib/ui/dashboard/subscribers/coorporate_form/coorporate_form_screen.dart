@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
@@ -15,12 +16,14 @@ class CoorporateFormScreen extends StatelessWidget {
     required this.planTeirName,
     required this.planId,
     required this.hmoId,
+    required this.data,
   });
 
   String? planTypeName;
   String? planTeirName;
   String? planId;
   String? hmoId;
+  Datum? data;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +85,11 @@ class CoorporateFormScreen extends StatelessWidget {
                   ),
                   child: model.setCoorporateModalFlow(
                     model: model,
-                    context: context,
+                    context: context,planType: planTypeName,
+                    planTier: planTeirName,
+                    hmoId: hmoId,
+                    planId: planId,
+                    data: data,
                   ),
                 ),
               ],
