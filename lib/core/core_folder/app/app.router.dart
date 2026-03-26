@@ -1597,17 +1597,25 @@ class StackedRouter extends _i1.RouterBase {
         nullOk: false,
       );
       return _i98.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i91.AcceleratePaymentViewHmoPlan(key: args.key, url: args.url),
+        builder: (context) => _i91.AcceleratePaymentViewHmoPlan(
+          key: args.key,
+          url: args.url,
+          planType: args.planType,
+          planTier: args.planTier,
+        ),
         settings: data,
       );
     },
     _i92.PaymentSuccessSubmitAppScreen: (data) {
       final args = data.getArgs<PaymentSuccessSubmitAppScreenArguments>(
-        orElse: () => const PaymentSuccessSubmitAppScreenArguments(),
+        nullOk: false,
       );
       return _i98.MaterialPageRoute<dynamic>(
-        builder: (context) => _i92.PaymentSuccessSubmitAppScreen(key: args.key),
+        builder: (context) => _i92.PaymentSuccessSubmitAppScreen(
+          key: args.key,
+          planType: args.planType,
+          planTiers: args.planTiers,
+        ),
         settings: data,
       );
     },
@@ -3853,48 +3861,70 @@ class CoorporateFormScreenArguments {
 }
 
 class AcceleratePaymentViewHmoPlanArguments {
-  const AcceleratePaymentViewHmoPlanArguments({this.key, required this.url});
+  const AcceleratePaymentViewHmoPlanArguments({
+    this.key,
+    required this.url,
+    required this.planType,
+    required this.planTier,
+  });
 
   final _i98.Key? key;
 
   final String? url;
 
+  final String? planType;
+
+  final String? planTier;
+
   @override
   String toString() {
-    return '{"key": "$key", "url": "$url"}';
+    return '{"key": "$key", "url": "$url", "planType": "$planType", "planTier": "$planTier"}';
   }
 
   @override
   bool operator ==(covariant AcceleratePaymentViewHmoPlanArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key && other.url == url;
+    return other.key == key &&
+        other.url == url &&
+        other.planType == planType &&
+        other.planTier == planTier;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ url.hashCode;
+    return key.hashCode ^ url.hashCode ^ planType.hashCode ^ planTier.hashCode;
   }
 }
 
 class PaymentSuccessSubmitAppScreenArguments {
-  const PaymentSuccessSubmitAppScreenArguments({this.key});
+  const PaymentSuccessSubmitAppScreenArguments({
+    this.key,
+    required this.planType,
+    required this.planTiers,
+  });
 
   final _i98.Key? key;
 
+  final String? planType;
+
+  final String? planTiers;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "planType": "$planType", "planTiers": "$planTiers"}';
   }
 
   @override
   bool operator ==(covariant PaymentSuccessSubmitAppScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key &&
+        other.planType == planType &&
+        other.planTiers == planTiers;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ planType.hashCode ^ planTiers.hashCode;
   }
 }
 
@@ -5723,6 +5753,8 @@ extension NavigatorStateExtension on _i100.NavigationService {
   Future<dynamic> navigateToAcceleratePaymentViewHmoPlan({
     _i98.Key? key,
     required String? url,
+    required String? planType,
+    required String? planTier,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5731,7 +5763,12 @@ extension NavigatorStateExtension on _i100.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.acceleratePaymentViewHmoPlan,
-      arguments: AcceleratePaymentViewHmoPlanArguments(key: key, url: url),
+      arguments: AcceleratePaymentViewHmoPlanArguments(
+        key: key,
+        url: url,
+        planType: planType,
+        planTier: planTier,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -5741,6 +5778,8 @@ extension NavigatorStateExtension on _i100.NavigationService {
 
   Future<dynamic> navigateToPaymentSuccessSubmitAppScreen({
     _i98.Key? key,
+    required String? planType,
+    required String? planTiers,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5749,7 +5788,11 @@ extension NavigatorStateExtension on _i100.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.paymentSuccessSubmitAppScreen,
-      arguments: PaymentSuccessSubmitAppScreenArguments(key: key),
+      arguments: PaymentSuccessSubmitAppScreenArguments(
+        key: key,
+        planType: planType,
+        planTiers: planTiers,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -7561,6 +7604,8 @@ extension NavigatorStateExtension on _i100.NavigationService {
   Future<dynamic> replaceWithAcceleratePaymentViewHmoPlan({
     _i98.Key? key,
     required String? url,
+    required String? planType,
+    required String? planTier,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7569,7 +7614,12 @@ extension NavigatorStateExtension on _i100.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.acceleratePaymentViewHmoPlan,
-      arguments: AcceleratePaymentViewHmoPlanArguments(key: key, url: url),
+      arguments: AcceleratePaymentViewHmoPlanArguments(
+        key: key,
+        url: url,
+        planType: planType,
+        planTier: planTier,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -7579,6 +7629,8 @@ extension NavigatorStateExtension on _i100.NavigationService {
 
   Future<dynamic> replaceWithPaymentSuccessSubmitAppScreen({
     _i98.Key? key,
+    required String? planType,
+    required String? planTiers,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7587,7 +7639,11 @@ extension NavigatorStateExtension on _i100.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.paymentSuccessSubmitAppScreen,
-      arguments: PaymentSuccessSubmitAppScreenArguments(key: key),
+      arguments: PaymentSuccessSubmitAppScreenArguments(
+        key: key,
+        planType: planType,
+        planTiers: planTiers,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

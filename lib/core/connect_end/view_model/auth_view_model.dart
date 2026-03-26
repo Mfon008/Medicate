@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -209,8 +208,11 @@ class AuthViewModel extends BaseViewModel {
   SetPinResponseModel? get setPinResponseModel => _setPinResponseModel;
   ResendOtpResponseModel? _resendOtpResponseModel;
   ResendOtpResponseModel? get resendOtpResponseModel => _resendOtpResponseModel;
-  GetHmoPlanHospitalNetworkResponseModel? _getHmoPlanHospitalNetworkResponseModel;
-  GetHmoPlanHospitalNetworkResponseModel? get getHmoPlanHospitalNetworkResponseModel => _getHmoPlanHospitalNetworkResponseModel;
+  GetHmoPlanHospitalNetworkResponseModel?
+  _getHmoPlanHospitalNetworkResponseModel;
+  GetHmoPlanHospitalNetworkResponseModel?
+  get getHmoPlanHospitalNetworkResponseModel =>
+      _getHmoPlanHospitalNetworkResponseModel;
   ChangePhoneNoResponseModel? _changePhoneNoResponseModel;
   ChangePhoneNoResponseModel? get changePhoneNoResponseModel =>
       _changePhoneNoResponseModel;
@@ -799,10 +801,20 @@ class AuthViewModel extends BaseViewModel {
     d.Datum? data,
   }) {
     if (linSubIndex == 2) {
-      return secondSubModalFlow(model: model, context: context);
+      return secondSubModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+      );
     }
     if (linSubIndex == 3) {
-      return thirdSubModalFlow(model: model, context: context);
+      return thirdSubModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+      );
     }
     if (linSubIndex == 4) {
       return fourthSubModalFlow(
@@ -836,7 +848,15 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
-  setFamilyAppModalFlow({AuthViewModel? model, BuildContext? context}) {
+  setFamilyAppModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) {
     if (linFamIndex == 2) {
       return secondFamModalFlow(model: model, context: context);
     }
@@ -849,7 +869,14 @@ class AuthViewModel extends BaseViewModel {
     if (linFamIndex == 5) {
       return fifthFamModalFlow(model: model, context: context);
     }
-    return firstFamModalFlow(model: model, context: context);
+    return firstFamModalFlow(
+      model: model,
+      context: context,
+      planType: planType,
+      planTier: planTier,
+      planId: planId,
+      hmoId: hmoId,
+    );
   }
 
   setCoorporateModalFlow({AuthViewModel? model, BuildContext? context}) {
@@ -876,7 +903,7 @@ class AuthViewModel extends BaseViewModel {
     String? planId,
   }) async {
     if (planType == 'Individual' && planTier == 'Ruby') {
-      await model!.getHmoPlanHospitalNetwork(context,planId: planId);
+      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
       await model.getIndividualApplicationDetails(
         context,
         applicationId: session.applicationIdIndividualRuby,
@@ -981,91 +1008,10 @@ class AuthViewModel extends BaseViewModel {
       }
     }
     if (planType == 'Individual' && planTier == 'Pearl') {
-      print('print it in here:::${session.applicationIdIndividualPearl}');
-      await model!.getIndividualApplicationDetails(
+      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+      await model.getIndividualApplicationDetails(
         context,
         applicationId: session.applicationIdIndividualPearl,
-      );
-
-      print(
-        'print name here:::${model.getIndividualApplicationDetailsModel?.data?.personalInfo?.fullName}',
-      );
-
-      // await model.getHospitalById(
-      //   context,
-      //   hospitalId: model
-      //       .getIndividualApplicationDetailsModel
-      //       ?.data
-      //       ?.personalInfo
-      //       ?.preferredHospitalId,
-      // );
-
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-    }
-    if (planType == 'Individual' && planTier == 'Diamond') {
-      await model!.getIndividualApplicationDetails(
-        context,
-        applicationId:
-            SharedPreferencesService.instance.applicationIdIndividualDiamond,
       );
       await model.getHospitalById(
         context,
@@ -1135,6 +1081,141 @@ class AuthViewModel extends BaseViewModel {
               ?.planSpecific
               ?.chronicAilmentDetails ??
           '';
+
+      if (model.getIndividualApplicationDetailsModel != null) {
+        for (var e
+            in model.getIndividualApplicationDetailsModel!.data!.documents!) {
+          if (e.documentType == 'BIRTH_CERTIFICATE') {
+            model.uploadDocumentsApplication!.insert(
+              0,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          } else if (e.documentType == 'NATIONAL_ID') {
+            if (model.uploadDocumentsApplication!.isEmpty) {
+              model.uploadDocumentsApplication!.add(
+                sv.Document(),
+              ); // fill index 0 if missing
+            }
+            model.uploadDocumentsApplication!.insert(
+              1,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          }
+        }
+      }
+    }
+    if (planType == 'Individual' && planTier == 'Diamond') {
+      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+      await model.getIndividualApplicationDetails(
+        context,
+        applicationId: session.applicationIdIndividualDiamond,
+      );
+      await model.getHospitalById(
+        context,
+        hospitalId: model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.preferredHospitalId,
+      );
+      model.fullNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.fullName ??
+          '';
+      model.emailAddsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.email ??
+          '';
+      model.dobController.text =
+          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+              .toString()
+              .substring(0, 10) ??
+          '';
+      model.genderController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.gender ??
+          '';
+      model.phoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.phone ??
+          '';
+      model.resAddressController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.residentialAddress ??
+          '';
+      model.filterStateController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+      model.hospitalController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+      model.linSubIndex =
+          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+      model.medicalHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.medicalHistory ??
+          '';
+      model.medicalHistoryDetailsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.chronicAilmentDetails ??
+          '';
+      if (model.getIndividualApplicationDetailsModel != null) {
+        for (var e
+            in model.getIndividualApplicationDetailsModel?.data?.documents ??
+                []) {
+          if (e.documentType == 'BIRTH_CERTIFICATE') {
+            model.uploadDocumentsApplication!.insert(
+              0,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          } else if (e.documentType == 'NATIONAL_ID') {
+            if (model.uploadDocumentsApplication!.isEmpty) {
+              model.uploadDocumentsApplication!.add(
+                sv.Document(),
+              ); // fill index 0 if missing
+            }
+            model.uploadDocumentsApplication!.insert(
+              1,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          }
+        }
+      }
     }
     model!.notifyListeners();
   }
@@ -1439,21 +1520,30 @@ class AuthViewModel extends BaseViewModel {
             },
             child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
             itemBuilder: (context) => [
-              if(model.getHmoPlanHospitalNetworkResponseModel!=null && model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.isNotEmpty)
-               ...model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.map((e)=>PopupMenuItem(
-                value: e.state,
-                child: TextView(
-                  text: e.state??'',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 13.70.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.black,
-                  ),
-                ),
-              ),)
-              
-              
+              if (model.getHmoPlanHospitalNetworkResponseModel != null &&
+                  model
+                      .getHmoPlanHospitalNetworkResponseModel!
+                      .data!
+                      .hospitals!
+                      .isNotEmpty)
+                ...model
+                    .getHmoPlanHospitalNetworkResponseModel!
+                    .data!
+                    .hospitals!
+                    .map(
+                      (e) => PopupMenuItem(
+                        value: e.state,
+                        child: TextView(
+                          text: e.state ?? '',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 13.70.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -1478,7 +1568,7 @@ class AuthViewModel extends BaseViewModel {
           isFilled: true,
           controller: hospitalController,
           validator: AppValidator.validateString(),
-          suffixWidget:PopupMenuButton<Hospital>(
+          suffixWidget: PopupMenuButton<Hospital>(
             color: AppColors.white,
             onSelected: (value) {
               hospitalController.text = value.name!;
@@ -1487,21 +1577,30 @@ class AuthViewModel extends BaseViewModel {
             },
             child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
             itemBuilder: (context) => [
-              if(model.getHmoPlanHospitalNetworkResponseModel!=null && model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.isNotEmpty)
-               ...model.getHmoPlanHospitalNetworkResponseModel!.data!.hospitals!.map((e)=>PopupMenuItem(
-                value: e,
-                child: TextView(
-                  text: e.name??'',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 13.70.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.black,
-                  ),
-                ),
-              ),)
-              
-              
+              if (model.getHmoPlanHospitalNetworkResponseModel != null &&
+                  model
+                      .getHmoPlanHospitalNetworkResponseModel!
+                      .data!
+                      .hospitals!
+                      .isNotEmpty)
+                ...model
+                    .getHmoPlanHospitalNetworkResponseModel!
+                    .data!
+                    .hospitals!
+                    .map(
+                      (e) => PopupMenuItem(
+                        value: e,
+                        child: TextView(
+                          text: e.name ?? '',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 13.70.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
@@ -1529,7 +1628,10 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: session.applicationIdIndividualRuby,
+                      applicationId: returnSavedApplicationType(
+                        planType: planType,
+                        planTeir: planTier,
+                      ),
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
@@ -1562,18 +1664,21 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: session.applicationIdIndividualRuby,
+                      applicationId: returnSavedApplicationType(
+                        planType: planType,
+                        planTeir: planTier,
+                      ),
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
-                        dob: '1998-10-10',
+                        dob: dobController.text.trim(),
                         gender: genderController.text.trim(),
                         phone: model.returnPhoneNoStructureAdd234AfterAgain(
                           phoneNoController.text.trim(),
                         ),
                         email: emailAddsController.text.trim(),
                         residentialAddress: resAddressController.text.trim(),
-                        preferredHospitalId: '6995e565e267b045c2087b07',
+                        preferredHospitalId: hospitalId,
                       ),
                     ),
               );
@@ -1586,7 +1691,14 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
-  firstFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  firstFamModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -2134,7 +2246,12 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  secondSubModalFlow({AuthViewModel? model, BuildContext? context}) => Form(
+  secondSubModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+  }) => Form(
     key: secondSubModalFlowKey,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2369,7 +2486,10 @@ class AuthViewModel extends BaseViewModel {
                     saveSecondIndividualStep(
                       context,
                       saveSecondIndividualStep: SaveSecondStepEntityModel(
-                        applicationId: session.applicationIdIndividualRuby,
+                        applicationId: returnSavedApplicationType(
+                          planType: planType,
+                          planTeir: planTier,
+                        ),
                         step: 2,
                         planSpecific: PlanSpecific(
                           medicalHistory: medicalHistoryController.text.trim(),
@@ -2394,7 +2514,25 @@ class AuthViewModel extends BaseViewModel {
           buttonText: 'Save as Draft',
           color: AppColors.deep,
           buttonBorderColor: AppColors.transparent,
-          onPressed: () async {
+          onPressed: () {
+            if (secondSubModalFlowKey.currentState!.validate()) {
+              saveSecondIndividualStep(
+                context,
+                saveSecondIndividualStep: SaveSecondStepEntityModel(
+                  applicationId: returnSavedApplicationType(
+                    planType: planType,
+                    planTeir: planTier,
+                  ),
+                  step: 2,
+                  planSpecific: PlanSpecific(
+                    medicalHistory: medicalHistoryController.text.trim(),
+                    hasChronicAilment: isSubTapped,
+                    chronicAilmentDetails: medicalHistoryDetailsController.text
+                        .trim(),
+                  ),
+                ),
+              );
+            }
             model.notifyListeners();
           },
         ),
@@ -3294,7 +3432,8 @@ class AuthViewModel extends BaseViewModel {
   thirdSubModalFlow({
     AuthViewModel? model,
     BuildContext? context,
-    String? hmoId,
+    String? planType,
+    String? planTier,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -3433,6 +3572,8 @@ class AuthViewModel extends BaseViewModel {
                           context: context,
                           docType: 'BIRTH_CERTIFICATE',
                           index: 0,
+                          planType: planType,
+                          planTier: planTier,
                         );
                         model.notifyListeners();
                       },
@@ -3467,11 +3608,15 @@ class AuthViewModel extends BaseViewModel {
                           context: context,
                           docType: 'BIRTH_CERTIFICATE',
                           index: 0,
+                          planType: planType,
+                          planTier: planTier,
                         );
                       } else {
                         model.pickDocumentAndUpload(
                           context: context,
                           docType: 'BIRTH_CERTIFICATE',
+                          planType: planType,
+                          planTier: planTier,
                         );
                       }
                     },
@@ -3570,6 +3715,8 @@ class AuthViewModel extends BaseViewModel {
                     onTap: () => model.pickDocumentAndUpload(
                       context: context,
                       docType: 'NATIONAL_ID',
+                      planType: planType,
+                      planTier: planTier,
                     ),
                     child: Container(
                       width: double.infinity,
@@ -3670,6 +3817,8 @@ class AuthViewModel extends BaseViewModel {
                           context: context,
                           docType: 'NATIONAL_ID',
                           index: 1,
+                          planType: planType,
+                          planTier: planTier,
                         );
                         model.notifyListeners();
                       },
@@ -3714,13 +3863,19 @@ class AuthViewModel extends BaseViewModel {
                 isLoading: model.isLoading,
                 buttonBorderColor: AppColors.transparent,
                 onPressed: () {
-                  if (model.uploadDocumentsApplication!.isNotEmpty &&
+                  if(model.uploadDocumentsApplication!.isNotEmpty && model.uploadDocumentsApplication![0].uploadId ==''){
+                    linSubIndex++;
+                  }
+                  else if (model.uploadDocumentsApplication!.isNotEmpty &&
                       model.uploadDocumentsApplication![0].docName != null &&
                       model.uploadDocumentsApplication!.length > 1) {
                     saveThirdIndividualStep(
                       context,
                       saveThirdIndividualStep: SaveThirdStepEntityModel(
-                        applicationId: session.applicationIdIndividualRuby,
+                        applicationId: returnSavedApplicationType(
+                          planType: planType,
+                          planTeir: planTier,
+                        ),
                         step: 3,
                         documents: model.uploadDocumentsApplication,
                       ),
@@ -3746,7 +3901,10 @@ class AuthViewModel extends BaseViewModel {
               saveThirdIndividualStep(
                 context,
                 saveThirdIndividualStep: SaveThirdStepEntityModel(
-                  applicationId: session.applicationIdIndividualRuby,
+                  applicationId: returnSavedApplicationType(
+                    planType: planType,
+                    planTeir: planTier,
+                  ),
                   step: 3,
                   documents: model.uploadDocumentsApplication,
                 ),
@@ -4873,7 +5031,7 @@ class AuthViewModel extends BaseViewModel {
                           fontFamily: 'GoogleSans',
                           fontSize: 15.2.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.red,
+                          color: tiersColor(planTier),
                         ),
                       ),
                     ],
@@ -5088,22 +5246,7 @@ class AuthViewModel extends BaseViewModel {
         buttonText: 'Save as Draft',
         color: AppColors.deep,
         buttonBorderColor: AppColors.transparent,
-        onPressed: () async {
-          // navigate.back();
-          // navigate.back();
-          // navigate.back();
-          // navigate.back();
-          // navigate.navigateTo(
-          //   Routes.dashboard,
-          //   arguments: DashboardArguments(
-          //     index: 0,
-          //     isTapHMOPlan: true,
-          //     isSubStatus: 'subscribers',
-          //     mySubPlans: 'Draft',
-          //   ),
-          // );
-          // model.notifyListeners();
-        },
+        onPressed: () async {},
       ),
       SizedBox(height: 20.60.h),
     ],
@@ -5359,7 +5502,7 @@ class AuthViewModel extends BaseViewModel {
                           fontFamily: 'GoogleSans',
                           fontSize: 15.2.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.red,
+                          color: tiersColor(planTier),
                         ),
                       ),
                     ],
@@ -5817,7 +5960,12 @@ class AuthViewModel extends BaseViewModel {
                 if (isPaidTapped) {
                   initiateHMOPlanPayment(
                     context,
-                    applicationId: session.applicationIdIndividualRuby,
+                    planTier: planTier,
+                    planType: planType,
+                    applicationId: returnSavedApplicationType(
+                      planTeir: planTier,
+                      planType: planType,
+                    ),
                   );
                 }
                 model.notifyListeners();
@@ -22799,7 +22947,12 @@ class AuthViewModel extends BaseViewModel {
     model?.notifyListeners();
   }
 
-  void initiateHMOPlanPayment(context, {String? applicationId}) async {
+  void initiateHMOPlanPayment(
+    context, {
+    String? applicationId,
+    String? planType,
+    String? planTier,
+  }) async {
     try {
       _isLoading = true;
       _hmoPlanPaymentResponseModel = await runBusyFuture(
@@ -22816,17 +22969,11 @@ class AuthViewModel extends BaseViewModel {
           Routes.acceleratePaymentViewHmoPlan,
           arguments: AcceleratePaymentViewHmoPlanArguments(
             url: _hmoPlanPaymentResponseModel?.data?.redirectUrl,
+            planTier: planTier,
+            planType: planType,
           ),
         );
-        // model?.medicationClassList.clear();
       } else {
-        // navigate.navigateTo(
-        //   Routes.paymentStatusScreen,
-        //   arguments: PaymentStatusScreenArguments(
-        //     isSuccessful: false,
-        //     isUserType: 'everyday_user',
-        //   ),
-        // );
       }
     } catch (e) {
       _isLoading = false;
@@ -22836,7 +22983,12 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void submitApplication(context, {String? applicationId}) async {
+  void submitApplication(
+    context, {
+    String? applicationId,
+    String? planType,
+    String? planTier,
+  }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
@@ -22850,17 +23002,16 @@ class AuthViewModel extends BaseViewModel {
           Routes.dashboard,
           arguments: DashboardArguments(index: 0),
         );
-        session.applicationIdIndividualRuby = '';
-        // model?.medicationClassList.clear();
-      } else {
-        // navigate.navigateTo(
-        //   Routes.paymentStatusScreen,
-        //   arguments: PaymentStatusScreenArguments(
-        //     isSuccessful: false,
-        //     isUserType: 'everyday_user',
-        //   ),
-        // );
-      }
+        if (planType == 'Individual' && planTier == 'Ruby') {
+          session.applicationIdIndividualRuby = '';
+        }
+        if (planType == 'Individual' && planTier == 'Pearl') {
+          session.applicationIdIndividualPearl = '';
+        }
+        if (planType == 'Individual' && planTier == 'Diamond') {
+          session.applicationIdIndividualDiamond = '';
+        }
+      } else {}
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -22868,7 +23019,7 @@ class AuthViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-  
+
   Future<void> getHmoPlanHospitalNetwork(context, {String? planId}) async {
     try {
       _isLoading = true;
@@ -22877,7 +23028,6 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -23939,6 +24089,18 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  returnSavedApplicationType({String? planType, String? planTeir}) {
+    if (planType == 'Individual' && planTeir == 'Ruby') {
+      return session.applicationIdIndividualRuby;
+    }
+    if (planType == 'Individual' && planTeir == 'Pearl') {
+      return session.applicationIdIndividualPearl;
+    }
+    if (planType == 'Individual' && planTeir == 'Diamond') {
+      return session.applicationIdIndividualDiamond;
+    }
+  }
+
   Future<void> startApplication(
     context, {
     StartApplicationEntityModel? startApplication,
@@ -23958,14 +24120,15 @@ class AuthViewModel extends BaseViewModel {
       if (planType == 'Individual' && planTeir == 'Pearl') {
         session.applicationIdIndividualPearl =
             _startApplicationResponseModel!.data!.id!;
-        print('oooo pearl ${_startApplicationResponseModel!.data!.id!}');
-        print(
-          'session.applicationIdIndividualPearl pearl ${session.applicationIdIndividualPearl}',
-        );
       }
       if (planType == 'Individual' && planTeir == 'Diamond') {
         session.applicationIdIndividualDiamond =
             _startApplicationResponseModel!.data!.id!;
+
+        print('oooo Diamond ${_startApplicationResponseModel!.data!.id!}');
+        print(
+          'session.applicationIdIndividualDiamond Diamond ${session.applicationIdIndividualDiamond}',
+        );
       }
       _isLoading = false;
     } catch (e) {
@@ -24051,6 +24214,8 @@ class AuthViewModel extends BaseViewModel {
   void pickDocumentAndUpload({
     BuildContext? context,
     String? docType,
+    String? planType,
+    String? planTier,
     int? index,
   }) {
     try {
@@ -24062,7 +24227,10 @@ class AuthViewModel extends BaseViewModel {
           _isLoadingDoc1 = true;
           await uploadDocument(
             context: context,
-            applicationId: session.applicationIdIndividualRuby,
+            applicationId: returnSavedApplicationType(
+              planType: planType,
+              planTeir: planTier,
+            ),
             file: MultipartFile.fromBytes(
               formartFileImage(imageDocument).readAsBytesSync(),
               filename: imageDocument!.path.split("/").last,

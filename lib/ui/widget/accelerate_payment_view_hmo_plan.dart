@@ -16,8 +16,15 @@ import '../../main.dart';
 // ignore: must_be_immutable
 class AcceleratePaymentViewHmoPlan extends StatefulWidget {
   String? url;
+  String? planType;
+  String? planTier;
 
-  AcceleratePaymentViewHmoPlan({super.key, required this.url});
+  AcceleratePaymentViewHmoPlan({
+    super.key,
+    required this.url,
+    required this.planType,
+    required this.planTier,
+  });
 
   @override
   State<AcceleratePaymentViewHmoPlan> createState() =>
@@ -87,7 +94,13 @@ class _AcceleratePaymentViewHmoPlanState
               actions: [
                 GestureDetector(
                   onTap: () {
-                    navigate.navigateTo(Routes.paymentSuccessSubmitAppScreen);
+                    navigate.navigateTo(
+                      Routes.paymentSuccessSubmitAppScreen,
+                      arguments: PaymentSuccessSubmitAppScreenArguments(
+                        planType: widget.planType,
+                        planTiers: widget.planTier,
+                      ),
+                    );
                     setState(() {});
                     model.notifyListeners();
                   },

@@ -11,7 +11,9 @@ import 'package:stacked/stacked.dart';
 import 'text.dart';
 
 class PaymentSuccessSubmitAppScreen extends StatelessWidget {
-  const PaymentSuccessSubmitAppScreen({super.key});
+  PaymentSuccessSubmitAppScreen({super.key, required this.planType, required this.planTiers});
+  String? planType;
+  String? planTiers;
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +86,9 @@ class PaymentSuccessSubmitAppScreen extends StatelessWidget {
                     onPressed: () {
                       model.submitApplication(
                         context,
+                        planTier: planTiers,planType: planType,
                         applicationId:
-                            model.session.applicationIdIndividualRuby,
+                            model.returnSavedApplicationType(planTeir: planTiers,planType: planType),
                       );
                     },
                   ),
