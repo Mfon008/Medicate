@@ -34,7 +34,7 @@ class ApplicationFormScreen extends StatelessWidget {
           model: model,
           planType: planTypeName,
           planTier: planTeirName,
-          planId: planId
+          planId: planId,
         );
       },
       disposeViewModel: false,

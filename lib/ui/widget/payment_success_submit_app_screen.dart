@@ -11,7 +11,11 @@ import 'package:stacked/stacked.dart';
 import 'text.dart';
 
 class PaymentSuccessSubmitAppScreen extends StatelessWidget {
-  PaymentSuccessSubmitAppScreen({super.key, required this.planType, required this.planTiers});
+  PaymentSuccessSubmitAppScreen({
+    super.key,
+    required this.planType,
+    required this.planTiers,
+  });
   String? planType;
   String? planTiers;
 
@@ -86,9 +90,12 @@ class PaymentSuccessSubmitAppScreen extends StatelessWidget {
                     onPressed: () {
                       model.submitApplication(
                         context,
-                        planTier: planTiers,planType: planType,
-                        applicationId:
-                            model.returnSavedApplicationType(planTeir: planTiers,planType: planType),
+                        planTier: planTiers,
+                        planType: planType,
+                        applicationId: model.returnSavedApplicationType(
+                          planTeir: planTiers,
+                          planType: planType,
+                        ),
                       );
                     },
                   ),

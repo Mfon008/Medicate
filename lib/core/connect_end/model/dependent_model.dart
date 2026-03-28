@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
+
 class DependentModelClass {
-  String? fullname;
-  String? relationship;
-  String? dob;
-  String? gender;
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController relationshipController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+  DependentModelClass({required this.fullNameController,required this.relationshipController, required this.dobController, required this.genderController});
 }

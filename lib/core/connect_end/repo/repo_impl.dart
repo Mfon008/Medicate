@@ -34,6 +34,7 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
 import '../model/save_second_step_response_model/save_second_step_response_model.dart';
 import '../model/save_third_step_entity_model/save_third_step_entity_model.dart';
@@ -363,6 +364,15 @@ class AuthRepoImpl {
     return response;
   }
 
+  Future<SaveSecondStepResponseModel> saveSecondFamStep({
+    SaveSecondFamStepEntityModel? saveSecondFamStep,
+  }) async {
+    final response = await _contract.saveSecondFamStep(
+      saveSecondFamStep: saveSecondFamStep,
+    );
+    return response;
+  }
+
   Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
     SaveThirdStepEntityModel? saveThirdIndividualStep,
   }) async {
@@ -405,8 +415,10 @@ class AuthRepoImpl {
     );
     return response;
   }
-  
- Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({String? planId}) async {
+
+  Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({
+    String? planId,
+  }) async {
     final response = await _contract.getHospitalNetworkPlan(planId: planId);
     return response;
   }

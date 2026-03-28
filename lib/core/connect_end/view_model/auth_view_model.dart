@@ -92,6 +92,8 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_fam_step_entity_model/dependent.dart';
+import '../model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
 import '../model/save_second_step_response_model/save_second_step_response_model.dart';
 import '../model/save_third_step_entity_model/save_third_step_entity_model.dart';
@@ -111,6 +113,8 @@ import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dar
 import '../model/verify_phone_entity_model.dart';
 import '../repo/repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart';
+import 'package:medicate_app/core/connect_end/model/save_second_fam_step_entity_model/plan_specific.dart'
+    as pl;
 
 class AuthViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -261,6 +265,7 @@ class AuthViewModel extends BaseViewModel {
   GlobalKey<FormState> secondSubModalFlowKey = GlobalKey<FormState>();
   GlobalKey<FormState> firstFamModalFlowKey = GlobalKey<FormState>();
   GlobalKey<FormState> secondFamModalFlowKey = GlobalKey<FormState>();
+  GlobalKey<FormState> second2FamModalFlowKey = GlobalKey<FormState>();
 
   List<MedicationClass> medicationClassList = [];
   String startDateIso = '';
@@ -515,12 +520,20 @@ class AuthViewModel extends BaseViewModel {
   DateTime now = DateTime.now();
   List<String> selectedTimes = []; // ["09:30 AM", "10:30 AM"]
   List<String> selectedCustomTimes = []; // ["09:30 AM", "10:30 AM"]
-  List<DependentModelClass> dependentModelList = [DependentModelClass()];
+  List<DependentModelClass> dependentModelList = [
+    DependentModelClass(
+      fullNameController: TextEditingController(),
+      relationshipController: TextEditingController(),
+      dobController: TextEditingController(),
+      genderController: TextEditingController(),
+    ),
+  ];
 
   TextEditingController medicalHistoryController = TextEditingController();
   TextEditingController medicalHistoryDetailsController =
       TextEditingController();
   TextEditingController fullNameController = TextEditingController();
+  TextEditingController famMedsHistoryController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController genderController = TextEditingController();
   TextEditingController phoneNoController = TextEditingController();
@@ -531,14 +544,135 @@ class AuthViewModel extends BaseViewModel {
   TextEditingController fundAmountController = TextEditingController();
   String? hospitalId;
 
+  List<TextEditingController> famFullNameController = [];
+  List<TextEditingController> famRelationshipController = [];
+  List<TextEditingController> famDobController = [];
+  List<TextEditingController> famGenderController = [];
+
   Map<int, String?> selectedTimePerDay = {};
   Map<int, List<String>> timesPerDay = {};
   List<sv.Document>? uploadDocumentsApplication = [];
 
   int? globalTimeIndex;
+  ScrollController dependentController = ScrollController();
+  List<String> dependentRelationship = ['Spouse', 'Child', 'Adopted Child'];
 
   int? _getTotalTimesForReminder;
   DateTime? _selectedDate;
+  int? getSpouseCountValue;
+
+  int? getChildCountValue;
+  int? getTotalCountValue;
+
+  returnTypeOfCertificate(String relationship) {
+    if (relationship.toLowerCase() == 'spouse') {
+      return 'Marriage Certificate';
+    } else if (relationship.toLowerCase() == 'child') {
+      return 'Birth Certificate';
+    } else if (relationship.toLowerCase() == 'adopted'||relationship.toLowerCase() == 'adopted child') {
+      return 'Birth Certificate & Adopted Certificate';
+    }
+  }
+
+  double returnHeight(model) {
+    // calculate height first
+    double height;
+    if (model.dependentModelList.length < 4 &&
+        model.dependentModelList.length > 2 &&
+        dependentIndex == null) {
+      height = 220.h;
+    } else if (model.dependentModelList.length < 4 && dependentIndex != null) {
+      height = 400.h;
+    } else if (model.dependentModelList.length > 1 && dependentIndex != null) {
+      height = 600.h;
+    } else if (model.dependentModelList.length > 1 &&
+        model.dependentModelList.length < 2 &&
+        dependentIndex == null) {
+      height = 130.h;
+    } else if (model.dependentModelList.length > 1 &&
+        model.dependentModelList.length < 3 &&
+        dependentIndex == null) {
+      height = 130.h;
+    } else if (model.dependentModelList.length > 2 &&
+        model.dependentModelList.length < 3 &&
+        dependentIndex == null) {
+      height = 230.h;
+    } else if (model.dependentModelList.length > 3 && dependentIndex == null) {
+      height = 286.0.h;
+    } else {
+      height = 60.h;
+    }
+
+    return height;
+  }
+
+  bool get isSpouseSelected {
+    return dependentModelList.any(
+      (d) => d.relationshipController.text.trim().toLowerCase() == "spouse",
+    );
+  }
+
+  int get spouseCount {
+    return (dependentModelList
+        .where(
+          (d) => d.relationshipController.text.trim().toLowerCase() == "spouse",
+        )
+        .length);
+  }
+
+  getSpouseCount(model) {
+    getSpouseCountValue = model
+        .getIndividualApplicationDetailsModel!
+        .data!
+        .planSpecific!
+        .dependent!
+        .where((e) => e.relationship == "Spouse")
+        .length;
+  }
+
+  getChildCount(model) {
+    getChildCountValue = model
+        .getIndividualApplicationDetailsModel!
+        .data!
+        .planSpecific!
+        .dependent!
+        .where((e) => e.relationship == "Child" || e.relationship == "Adopted")
+        .length;
+  }
+
+  getTotalSpouseAndChildCount(model) {
+    getTotalCountValue =
+        model
+            .getIndividualApplicationDetailsModel!
+            .data!
+            .planSpecific!
+            .dependent!
+            .where(
+              (e) => e.relationship == "Child" || e.relationship == "Adopted",
+            )
+            .length +
+        model
+            .getIndividualApplicationDetailsModel!
+            .data!
+            .planSpecific!
+            .dependent!
+            .where((e) => e.relationship == "Spouse")
+            .length;
+  }
+
+  int get childCount {
+    return dependentModelList.where((d) {
+      final relation = d.relationshipController.text.trim().toLowerCase();
+      return relation == "child" || relation == "adopted child";
+    }).length;
+  }
+
+  int get totalChildrenCount {
+    return dependentModelList.where((d) {
+      final relation = d.relationshipController.text.trim().toLowerCase();
+      return ["child", "adopted child"].contains(relation);
+    }).length;
+  }
 
   String notificationChannelFlowWidgetIcon(String notificationChannel) {
     if (notificationChannel.toLowerCase() == 'email') {
@@ -863,7 +997,12 @@ class AuthViewModel extends BaseViewModel {
     d.Datum? data,
   }) {
     if (linFamIndex == 2) {
-      return secondFamModalFlow(model: model, context: context);
+      return secondFamModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+      );
     }
     if (linFamIndex == 3) {
       return thirdFamModalFlow(model: model, context: context);
@@ -1302,7 +1441,7 @@ class AuthViewModel extends BaseViewModel {
           model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
       model.hospitalController.text =
           model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
+      model.linFamIndex =
           model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
       model.medicalHistoryController.text =
           model
@@ -1319,6 +1458,36 @@ class AuthViewModel extends BaseViewModel {
               ?.chronicAilmentDetails ??
           '';
       model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+      model.famMedsHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.familyMedicalHistory ??
+          '';
+      model.dependentModelList = model
+          .getIndividualApplicationDetailsModel!
+          .data!
+          .planSpecific!
+          .dependent!
+          .map(
+            (e) => DependentModelClass(
+              fullNameController: TextEditingController(text: e.fullName),
+              relationshipController: TextEditingController(
+                text: e.relationship,
+              ),
+              dobController: TextEditingController(
+                text: DateFormat(
+                  'yyyy-MM-dd',
+                ).format(DateTime.parse(e.dob.toString())),
+              ),
+              genderController: TextEditingController(text: e.gender),
+            ),
+          )
+          .toList();
+      getChildCount(model);
+      getSpouseCount(model);
+      getTotalSpouseAndChildCount(model);
 
       if (model.getIndividualApplicationDetailsModel != null) {
         for (var e
@@ -1355,7 +1524,7 @@ class AuthViewModel extends BaseViewModel {
       await model!.getHmoPlanHospitalNetwork(context, planId: planId);
       await model.getIndividualApplicationDetails(
         context,
-        applicationId: session.applicationIdIndividualPearl,
+        applicationId: session.applicationIdFamilyPearl,
       );
       await model.getHospitalById(
         context,
@@ -1461,7 +1630,7 @@ class AuthViewModel extends BaseViewModel {
       await model!.getHmoPlanHospitalNetwork(context, planId: planId);
       await model.getIndividualApplicationDetails(
         context,
-        applicationId: session.applicationIdIndividualDiamond,
+        applicationId: session.applicationIdFamilyDiamond,
       );
       await model.getHospitalById(
         context,
@@ -1578,6 +1747,26 @@ class AuthViewModel extends BaseViewModel {
       dobController.text = DateFormat('yyyy-MM-dd').format(_selectedDate!);
     }
     notifyListeners();
+  }
+
+  Future<void> _selectDateDependent({
+    BuildContext? context,
+    AuthViewModel? model,
+    int? index,
+  }) async {
+    final DateTime? picked = await showDatePicker(
+      context: context!,
+      initialDate: _selectedDate ?? DateTime.now(), // Initial date shown
+      firstDate: DateTime(1900), // Earliest selectable date
+      lastDate: DateTime(2100), // Latest selectable date
+    );
+    if (picked != null && picked != _selectedDate) {
+      _selectedDate = picked;
+      model!.dependentModelList[index!].dobController.text = DateFormat(
+        'yyyy-MM-dd',
+      ).format(_selectedDate!);
+    }
+    model!.notifyListeners();
   }
 
   firstSubModalFlow({
@@ -2965,7 +3154,6 @@ class AuthViewModel extends BaseViewModel {
             ),
           ],
         ),
-
         SizedBox(height: 20.h),
         !isSubTapped
             ? SizedBox.shrink()
@@ -3088,8 +3276,12 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
-  ScrollController dependentController = ScrollController();
-  secondFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  secondFamModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planTier,
+    String? planType,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Form(
@@ -3210,7 +3402,7 @@ class AuthViewModel extends BaseViewModel {
         hintSize: 14.sp,
         fillColor: AppColors.grey,
         isFilled: true,
-        controller: fullNameController,
+        controller: famMedsHistoryController,
         maxline: 3,
         alignLabelWithHint: true,
         validator: AppValidator.validateString(),
@@ -3242,39 +3434,16 @@ class AuthViewModel extends BaseViewModel {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(Icons.cancel, size: 13.6.sp, color: AppColors.appRed),
-                SizedBox(width: 2.6.w),
-                TextView(
-                  text: 'Spouse (0 of 1)',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 130.w,
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.w),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.infoGrey),
-              borderRadius: BorderRadius.circular(1000),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
                 Icon(
-                  Icons.check_circle_sharp,
+                  spouseCount == 0 ? Icons.cancel : Icons.check_circle_sharp,
                   size: 13.6.sp,
-                  color: AppColors.app_green,
+                  color: spouseCount == 0
+                      ? AppColors.appRed
+                      : AppColors.app_green,
                 ),
                 SizedBox(width: 2.6.w),
                 TextView(
-                  text: 'Children (3 of 3)',
+                  text: 'Spouse (${getSpouseCountValue ?? spouseCount} of 1)',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 12.sp,
@@ -3289,22 +3458,116 @@ class AuthViewModel extends BaseViewModel {
             width: 130.w,
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.w),
             decoration: BoxDecoration(
-              color: AppColors.app_green,
+              border: Border.all(
+                color: childCount == 3
+                    ? AppColors.infoGrey
+                    : AppColors.transparent,
+              ),
               borderRadius: BorderRadius.circular(1000),
+              color: childCount < 3
+                  ? AppColors.app_green
+                  : AppColors.transparent,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Icon(Icons.cancel, size: 13.6.sp, color: AppColors.white),
+                childCount < 3
+                    ? Icon(
+                        Icons.check_circle_sharp,
+                        size: 13.6.sp,
+                        color: AppColors.appWhite,
+                      )
+                    : Icon(
+                        childCount == 0
+                            ? Icons.cancel
+                            : Icons.check_circle_sharp,
+                        size: 13.6.sp,
+                        color: childCount == 0
+                            ? AppColors.appRed
+                            : AppColors.app_green,
+                      ),
                 SizedBox(width: 2.6.w),
                 TextView(
-                  text: 'Total (3 of 4)',
+                  text: 'Children (${getChildCountValue ?? childCount} of 3)',
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: childCount < 3
+                        ? AppColors.appWhite
+                        : AppColors.reminder,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 130.w,
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.w),
+            decoration: BoxDecoration(
+              color:
+                  int.parse(
+                        '${getTotalCountValue ?? totalChildrenCount + spouseCount}',
+                      ) <
+                      4
+                  ? AppColors.app_green
+                  : AppColors.transparent,
+              borderRadius: BorderRadius.circular(1000),
+              border: Border.all(
+                color:
+                    int.parse(
+                          '${getTotalCountValue ?? totalChildrenCount + spouseCount}',
+                        ) ==
+                        4
+                    ? AppColors.infoGrey
+                    : AppColors.transparent,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                int.parse(
+                          '${getTotalCountValue ?? totalChildrenCount + spouseCount}',
+                        ) <
+                        4
+                    ? Icon(
+                        Icons.check_circle_sharp,
+                        size: 13.6.sp,
+                        color: AppColors.appWhite,
+                      )
+                    : Icon(
+                        int.parse(
+                                  '${getTotalCountValue ?? totalChildrenCount + spouseCount}',
+                                ) ==
+                                0
+                            ? Icons.cancel
+                            : Icons.check_circle_sharp,
+                        size: 13.6.sp,
+                        color:
+                            int.parse(
+                                  '${getTotalCountValue ?? totalChildrenCount + spouseCount}',
+                                ) ==
+                                0
+                            ? AppColors.appRed
+                            : AppColors.app_green,
+                      ),
+                SizedBox(width: 2.6.w),
+                TextView(
+                  text:
+                      'Total (${getTotalCountValue ?? totalChildrenCount + spouseCount} of 4)',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.white,
+                    color:
+                        int.parse(
+                              '${getTotalCountValue ?? totalChildrenCount + spouseCount}',
+                            ) <
+                            4
+                        ? AppColors.white
+                        : AppColors.reminder,
                   ),
                 ),
               ],
@@ -3329,7 +3592,14 @@ class AuthViewModel extends BaseViewModel {
               ? SizedBox.shrink()
               : GestureDetector(
                   onTap: () {
-                    model.dependentModelList.add(DependentModelClass());
+                    model.dependentModelList.add(
+                      DependentModelClass(
+                        fullNameController: TextEditingController(),
+                        relationshipController: TextEditingController(),
+                        dobController: TextEditingController(),
+                        genderController: TextEditingController(),
+                      ),
+                    );
                     model.notifyListeners();
                   },
                   child: Row(
@@ -3354,7 +3624,7 @@ class AuthViewModel extends BaseViewModel {
       Divider(color: AppColors.infoGrey1),
       SizedBox(height: 10.h),
       SizedBox(
-        height: model.dependentModelList.length > 1 && dependentIndex != index ? 600.h : 270.h,
+        height: returnHeight(model),
         child: ListView.builder(
           // <<< STOP LIST FROM SCROLLING
           shrinkWrap: true,
@@ -3364,7 +3634,7 @@ class AuthViewModel extends BaseViewModel {
               color: AppColors.white,
               elevation: .78,
               margin: EdgeInsets.only(bottom: 18.w),
-              child: dependentIndex != index
+              child: model.dependentIndex != index
                   ? Container(
                       padding: EdgeInsets.symmetric(
                         vertical: 15.8.w,
@@ -3409,7 +3679,7 @@ class AuthViewModel extends BaseViewModel {
                                       SizedBox(width: 12.w),
                                       GestureDetector(
                                         onTap: () {
-                                          dependentIndex = index;
+                                          model.dependentIndex = index;
                                           model.notifyListeners();
                                         },
                                         child: TextView(
@@ -3456,180 +3726,349 @@ class AuthViewModel extends BaseViewModel {
                               color: AppColors.white,
                               borderRadius: BorderRadius.circular(10.r),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                model.dependentModelList.length > 1
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextView(
-                                            text: 'Dependent ${index + 1}',
+                            child: Form(
+                              key: second2FamModalFlowKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  model.dependentModelList.length > 1
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            TextView(
+                                              text: 'Dependent ${index + 1}',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 14.2.sp,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    model.dependentModelList
+                                                        .removeAt(index);
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.delete,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 12.w),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    model.dependentIndex = null;
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: TextView(
+                                                    text: 'Hide',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'GoogleSans',
+                                                      fontSize: 12.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.infoGrey,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          AppColors.infoGrey,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
+                                  SizedBox(
+                                    height: model.dependentModelList.length > 1
+                                        ? 20.h
+                                        : 0.h,
+                                  ),
+                                  TextFormWidget(
+                                    hint: 'Full Name',
+                                    label: 'Enter Full Name',
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    hintSize: 14.sp,
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    validator: AppValidator.validateString(),
+                                    labelStyle: TextStyle(
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 16.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'GoogleSans',
+                                    ),
+                                    onChange: (val) {
+                                      model
+                                              .dependentModelList[index]
+                                              .fullNameController
+                                              .text =
+                                          val;
+                                      model.notifyListeners();
+                                    },
+                                    controller: model
+                                        .dependentModelList[index]
+                                        .fullNameController,
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  TextFormWidget(
+                                    hint: 'Relationship',
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    hintSize: 14.sp,
+                                    fillColor: AppColors.grey,
+                                    label: 'Select Relationship',
+                                    labelStyle: TextStyle(
+                                      color: AppColors.infoGrey,
+                                    ),
+                                    isFilled: true,
+                                    readOnly: true,
+                                    validator: AppValidator.validateString(),
+                                    suffixWidget: PopupMenuButton<String>(
+                                      color: AppColors.white,
+                                      onSelected: (value) {
+                                        model
+                                                .dependentModelList[index]
+                                                .relationshipController
+                                                .text =
+                                            value;
+                                        model.notifyListeners();
+                                      },
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.grey1,
+                                      ),
+                                      itemBuilder: (context) {
+                                        final hasSpouse =
+                                            model.isSpouseSelected;
+
+                                        final filteredList = model
+                                            .dependentRelationship
+                                            .where((relation) {
+                                              if (relation == "Spouse") {
+                                                return !hasSpouse ||
+                                                    model
+                                                            .dependentModelList[index]
+                                                            .relationshipController
+                                                            .text ==
+                                                        "Spouse";
+                                              }
+                                              return true;
+                                            })
+                                            .toList();
+
+                                        return filteredList
+                                            .map(
+                                              (o) => PopupMenuItem<String>(
+                                                value: o,
+                                                child: Text(o),
+                                              ),
+                                            )
+                                            .toList();
+                                      },
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 16.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'GoogleSans',
+                                    ),
+                                    controller: model
+                                        .dependentModelList[index]
+                                        .relationshipController,
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  TextFormWidget(
+                                    hint: 'Date of Birth',
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    readOnly: true,
+                                    hintSize: 14.sp,
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    suffixWidget: Padding(
+                                      padding: EdgeInsets.all(8.w),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _selectDateDependent(
+                                            context: context,
+                                            index: index,
+                                            model: model,
+                                          );
+                                          model.notifyListeners();
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppImage.calendar,
+                                        ),
+                                      ),
+                                    ),
+                                    validator: AppValidator.validateString(),
+                                    style: TextStyle(
+                                      fontSize: 16.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'GoogleSans',
+                                    ),
+                                    controller: model
+                                        .dependentModelList[index]
+                                        .dobController,
+                                    onChange: (val) {
+                                      model
+                                              .dependentModelList[index]
+                                              .dobController
+                                              .text =
+                                          val;
+                                      model.notifyListeners();
+                                    },
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  TextFormWidget(
+                                    hint: 'Gender',
+                                    borderColor: AppColors.transparent,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    readOnly: true,
+                                    label: 'Select Gender',
+                                    hintSize: 14.sp,
+                                    fillColor: AppColors.grey,
+                                    isFilled: true,
+                                    suffixWidget: PopupMenuButton<String>(
+                                      color: AppColors.white,
+                                      onSelected: (value) {
+                                        model
+                                                .dependentModelList[index]
+                                                .genderController
+                                                .text =
+                                            value;
+                                        notifyListeners();
+                                      },
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: AppColors.grey1,
+                                      ),
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          value: "Male",
+                                          child: TextView(
+                                            text: 'Male',
                                             textStyle: TextStyle(
                                               fontFamily: 'GoogleSans',
-                                              fontSize: 14.2.sp,
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.reminder,
+                                              fontSize: 13.70.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
                                             ),
                                           ),
-                                          Row(
+                                        ),
+                                        PopupMenuItem(
+                                          value: "Female",
+                                          child: TextView(
+                                            text: 'Female',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 13.70.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    validator: AppValidator.validateString(),
+                                    style: TextStyle(
+                                      fontSize: 16.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'GoogleSans',
+                                    ),
+                                    controller: model
+                                        .dependentModelList[index]
+                                        .genderController,
+                                  ),
+                                  SizedBox(
+                                    height:
+                                        model
+                                                .dependentModelList[index]
+                                                .relationshipController
+                                                .text !=
+                                            ''
+                                        ? 20.h
+                                        : 0.h,
+                                  ),
+                                  model
+                                              .dependentModelList[index]
+                                              .relationshipController
+                                              .text !=
+                                          ''
+                                      ? Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 13.0.h,
+                                            horizontal: 15.0.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              10.r,
+                                            ),
+                                            color: AppColors.skyBlue,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  model.dependentModelList
-                                                      .removeAt(index);
-                                                  model.notifyListeners();
-                                                },
-                                                child: SvgPicture.asset(
-                                                  AppImage.delete,
-                                                ),
+                                              Icon(
+                                                Icons.info_outline,
+                                                color: AppColors.primary1,
+                                                size: 25.0.sp,
                                               ),
-                                              SizedBox(width: 12.w),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  dependentIndex = null;
-                                                  model.notifyListeners();
-                                                },
-                                                child: TextView(
-                                                  text: 'Hide',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'GoogleSans',
-                                                    fontSize: 12.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.infoGrey,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    decorationColor:
-                                                        AppColors.infoGrey,
+                                              SizedBox(width: 10.12.w),
+                                              Expanded(
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    text: 'Required Document:',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 13.4.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.deep,
+                                                    ),
+                                                    children: <TextSpan>[
+                                                      TextSpan(
+                                                        text:
+                                                            ' ${returnTypeOfCertificate(model.dependentModelList[index].relationshipController.text)}',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'GoogleSans',
+                                                          fontSize: 13.4.sp,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: AppColors.deep,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      )
-                                    : SizedBox.shrink(),
-                                SizedBox(
-                                  height: model.dependentModelList.length > 1
-                                      ? 20.h
-                                      : 0.h,
-                                ),
-                                TextFormWidget(
-                                  hint: 'Full Name',
-                                  label: 'Enter Full Name',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: 14.sp,
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  validator: AppValidator.validateString(),
-                                  labelStyle: TextStyle(
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 16.20.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'GoogleSans',
-                                  ),
-                                  onChange: (val) {},
-                                ),
-                                SizedBox(height: 16.h),
-                                TextFormWidget(
-                                  hint: 'Relationship',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  hintSize: 14.sp,
-                                  fillColor: AppColors.grey,
-                                  label: 'Select Relationship',
-                                  labelStyle: TextStyle(
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  isFilled: true,
-                                  onChange: (val) {},
-                                  validator: AppValidator.validateString(),
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(13.2.w),
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: SvgPicture.asset(
-                                        AppImage.arrow_down,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 16.20.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'GoogleSans',
-                                  ),
-                                ),
-                                SizedBox(height: 16.h),
-                                TextFormWidget(
-                                  hint: 'Date of Birth',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  readOnly: true,
-                                  hintSize: 14.sp,
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(10.w),
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: SvgPicture.asset(
-                                        AppImage.calendar,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  validator: AppValidator.validateString(),
-                                  style: TextStyle(
-                                    fontSize: 16.20.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'GoogleSans',
-                                  ),
-                                ),
-                                SizedBox(height: 16.h),
-                                TextFormWidget(
-                                  hint: 'Gender',
-                                  borderColor: AppColors.transparent,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  readOnly: true,
-                                  label: 'Select Gender',
-                                  hintSize: 14.sp,
-                                  fillColor: AppColors.grey,
-                                  isFilled: true,
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(13.2.w),
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: SvgPicture.asset(
-                                        AppImage.arrow_down,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  validator: AppValidator.validateString(),
-                                  style: TextStyle(
-                                    fontSize: 16.20.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'GoogleSans',
-                                  ),
-                                ),
-                              ],
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -3667,7 +4106,37 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                model.linFamIndex++;
+                if (secondFamModalFlowKey.currentState!.validate() &&
+                    second2FamModalFlowKey.currentState!.validate()) {
+                  saveSecondFamStep(
+                    context,
+                    saveSecondFamStep: SaveSecondFamStepEntityModel(
+                      applicationId: returnSavedApplicationType(
+                        planType: planType,
+                        planTeir: planTier,
+                      ),
+                      step: 2,
+                      planSpecific: pl.PlanSpecific(
+                        familyMedicalHistory: famMedsHistoryController.text
+                            .trim(),
+                        dependents: model.dependentModelList
+                            .map(
+                              (e) => Dependent(
+                                fullName: e.fullNameController.text.trim(),
+                                relationship:
+                                    e.relationshipController.text ==
+                                        'Adopted Child'
+                                    ? 'Adopted'
+                                    : e.relationshipController.text.trim(),
+                                gender: e.genderController.text.trim(),
+                                dob: e.dobController.text.trim(),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  );
+                }
                 model.notifyListeners();
               },
             ),
@@ -3682,18 +4151,36 @@ class AuthViewModel extends BaseViewModel {
         color: AppColors.deep,
         buttonBorderColor: AppColors.transparent,
         onPressed: () async {
-          // navigate.back();
-          // navigate.back();
-          // navigate.navigateTo(
-          //   Routes.dashboard,
-          //   arguments: DashboardArguments(
-          //     index: 0,
-          //     isTapHMOPlan: true,
-          //     isSubStatus: 'subscribers',
-          //     mySubPlans: 'Draft',
-          //   ),
-          // );
-          // model.notifyListeners();
+          if (secondFamModalFlowKey.currentState!.validate() &&
+              second2FamModalFlowKey.currentState!.validate()) {
+            saveSecondFamStep(
+              context,
+              saveSecondFamStep: SaveSecondFamStepEntityModel(
+                applicationId: returnSavedApplicationType(
+                  planType: planType,
+                  planTeir: planTier,
+                ),
+                step: 2,
+                planSpecific: pl.PlanSpecific(
+                  familyMedicalHistory: famMedsHistoryController.text.trim(),
+                  dependents: model.dependentModelList
+                      .map(
+                        (e) => Dependent(
+                          fullName: e.fullNameController.text.trim(),
+                          relationship:
+                              e.relationshipController.text == 'Adopted Child'
+                              ? 'Adopted'
+                              : e.relationshipController.text.trim(),
+                          gender: e.genderController.text.trim(),
+                          dob: e.dobController.text.trim(),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            );
+          }
+          model.notifyListeners();
         },
       ),
       SizedBox(height: 20.60.h),
@@ -4537,6 +5024,7 @@ class AuthViewModel extends BaseViewModel {
                   ],
                 ),
               ),
+
         SizedBox(height: 35.60.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -24941,16 +25429,38 @@ class AuthViewModel extends BaseViewModel {
             planTier == 'Diamond') {
           linSubIndex++;
         }
-        if (planType == 'Family' && planTier == 'Ruby' ||
-            planTier == 'Pearl' ||
-            planTier == 'Diamond') {
-          linFamIndex++;
-        }
+        // if (planType == 'Family' && planTier == 'Ruby' ||
+        //     planTier == 'Pearl' ||
+        //     planTier == 'Diamond') {
+        //   linFamIndex++;
+        // }
         if (planType == 'Corporate' && planTier == 'Ruby' ||
             planTier == 'Pearl' ||
             planTier == 'Diamond') {
           linCorpIndex++;
         }
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> saveSecondFamStep(
+    context, {
+    SaveSecondFamStepEntityModel? saveSecondFamStep,
+  }) async {
+    try {
+      _isLoading = true;
+      _saveSecondStepResponseModel = await runBusyFuture(
+        repositoryImply.saveSecondFamStep(saveSecondFamStep: saveSecondFamStep),
+        throwException: true,
+      );
+      if (_saveSecondStepResponseModel?.statusCode == 201) {
+        linFamIndex++;
       }
       _isLoading = false;
     } catch (e) {

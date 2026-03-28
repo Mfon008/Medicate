@@ -33,6 +33,7 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
 import '../model/save_third_step_entity_model/save_third_step_entity_model.dart';
 import '../model/save_third_step_response_model/save_third_step_response_model.dart';
@@ -200,6 +201,10 @@ class AuthContractsImpl {
   }) async => await _api.saveSecondIndividualStep(
     saveSecondIndividualStep: saveSecondIndividualStep,
   );
+  Future<SaveSecondStepResponseModel> saveSecondFamStep({
+    SaveSecondFamStepEntityModel? saveSecondFamStep,
+  }) async =>
+      await _api.saveSecondFamStep(saveSecondFamStep: saveSecondFamStep);
   Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
     SaveThirdStepEntityModel? saveThirdIndividualStep,
   }) async => await _api.saveThirdIndividualStep(
@@ -218,6 +223,7 @@ class AuthContractsImpl {
   }) async => await _api.hmoPlanPayment(applicationID: applicationID);
   Future<dynamic> submitHmoPlan({String? applicationID}) async =>
       await _api.submitHmoPlan(applicationID: applicationID);
-  Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({String? planId}) async  =>
-      await _api.getHospitalNetworkPlan(planId: planId);
+  Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({
+    String? planId,
+  }) async => await _api.getHospitalNetworkPlan(planId: planId);
 }

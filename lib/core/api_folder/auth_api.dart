@@ -42,6 +42,7 @@ import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
+import '../connect_end/model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../connect_end/model/save_second_step_response_model/save_second_step_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
 import '../connect_end/model/update_doses_status_model/update_doses_status_model.dart';
@@ -737,6 +738,23 @@ class AuthApi {
     }
   }
 
+  Future<SaveSecondStepResponseModel> saveSecondFamStep({
+    SaveSecondFamStepEntityModel? saveSecondFamStep,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.save_first_step,
+        RequestMethod.post,
+        data: saveSecondFamStep?.toJson(),
+      );
+      logger.d(response.data);
+      return SaveSecondStepResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
     SaveThirdStepEntityModel? saveThirdIndividualStep,
   }) async {
@@ -789,7 +807,9 @@ class AuthApi {
     }
   }
 
-  Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({String? planId}) async {
+  Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({
+    String? planId,
+  }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.get_user_hmos_plan}/$planId/hospital-networks',

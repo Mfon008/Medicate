@@ -1093,7 +1093,8 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                 planTypeName: o.planType,
                 planTeirName: o.planTier,
                 planId: o.id,
-                hmoId: widget.hmoId,data: o
+                hmoId: widget.hmoId,
+                data: o,
               ),
             ),
             child: Card(
@@ -1355,7 +1356,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                 planTeirName: o.planTier,
                 planId: o.id,
                 hmoId: widget.hmoId,
-                data: o
+                data: o,
               ),
             ),
             child: Card(

@@ -85,7 +85,8 @@ class CoorporateFormScreen extends StatelessWidget {
                   ),
                   child: model.setCoorporateModalFlow(
                     model: model,
-                    context: context,planType: planTypeName,
+                    context: context,
+                    planType: planTypeName,
                     planTier: planTeirName,
                     hmoId: hmoId,
                     planId: planId,
