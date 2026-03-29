@@ -569,7 +569,8 @@ class AuthViewModel extends BaseViewModel {
       return 'Marriage Certificate';
     } else if (relationship.toLowerCase() == 'child') {
       return 'Birth Certificate';
-    } else if (relationship.toLowerCase() == 'adopted'||relationship.toLowerCase() == 'adopted child') {
+    } else if (relationship.toLowerCase() == 'adopted' ||
+        relationship.toLowerCase() == 'adopted child') {
       return 'Birth Certificate & Adopted Certificate';
     }
   }
@@ -1005,13 +1006,34 @@ class AuthViewModel extends BaseViewModel {
       );
     }
     if (linFamIndex == 3) {
-      return thirdFamModalFlow(model: model, context: context);
+      return thirdFamModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+      );
     }
     if (linFamIndex == 4) {
-      return fourthFamModalFlow(model: model, context: context);
+      return fourthFamModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+        planId: planId,
+        data: data,
+        hmoId: hmoId,
+      );
     }
     if (linFamIndex == 5) {
-      return fifthFamModalFlow(model: model, context: context);
+      return fifthFamModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+        planId: planId,
+        data: data,
+        hmoId: hmoId,
+      );
     }
     return firstFamModalFlow(
       model: model,
@@ -1578,7 +1600,7 @@ class AuthViewModel extends BaseViewModel {
           model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
       model.hospitalController.text =
           model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
+      model.linFamIndex =
           model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
       model.medicalHistoryController.text =
           model
@@ -1596,9 +1618,41 @@ class AuthViewModel extends BaseViewModel {
           '';
       model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
 
+      model.famMedsHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.familyMedicalHistory ??
+          '';
+      model.dependentModelList = model
+          .getIndividualApplicationDetailsModel!
+          .data!
+          .planSpecific!
+          .dependent!
+          .map(
+            (e) => DependentModelClass(
+              fullNameController: TextEditingController(text: e.fullName),
+              relationshipController: TextEditingController(
+                text: e.relationship,
+              ),
+              dobController: TextEditingController(
+                text: DateFormat(
+                  'yyyy-MM-dd',
+                ).format(DateTime.parse(e.dob.toString())),
+              ),
+              genderController: TextEditingController(text: e.gender),
+            ),
+          )
+          .toList();
+      getChildCount(model);
+      getSpouseCount(model);
+      getTotalSpouseAndChildCount(model);
+
       if (model.getIndividualApplicationDetailsModel != null) {
         for (var e
-            in model.getIndividualApplicationDetailsModel!.data!.documents!) {
+            in model.getIndividualApplicationDetailsModel!.data!.documents ??
+                []) {
           if (e.documentType == 'BIRTH_CERTIFICATE') {
             model.uploadDocumentsApplication!.insert(
               0,
@@ -5112,7 +5166,12 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
-  thirdFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  thirdFamModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planTier,
+    String? planType,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -5198,63 +5257,146 @@ class AuthViewModel extends BaseViewModel {
         ],
       ),
       SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
-              ),
+      model.uploadDocumentsApplication!.isNotEmpty &&
+              model.uploadDocumentsApplication![0].docName != null
+          ? Container(
+              padding: EdgeInsets.symmetric(horizontal: 13.4.w, vertical: 10.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
+                border: Border.all(color: AppColors.fineGrey),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(AppImage.upload_doc),
+                  SvgPicture.asset(AppImage.kyc_file),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    flex: 3,
+                    child: TextView(
+                      text: '${model.uploadDocumentsApplication![0].docName}',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextView(
+                      text: '..png',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
                   SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        index: 0,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.upload),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.uploadDocumentsApplication![0] = sv.Document();
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.delete),
                   ),
                 ],
               ),
+            )
+          : SizedBox(
+              width: double.infinity,
+              child: DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [10, 10],
+                  strokeWidth: .94,
+                  radius: Radius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    if (model.uploadDocumentsApplication!.isNotEmpty &&
+                        model.uploadDocumentsApplication![0].docName == null) {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        index: 0,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                    } else {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.20.w,
+                      horizontal: 22.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.upload_doc),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'Upload Document',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            TextView(
+                              text:
+                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.fineGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
 
       SizedBox(height: 20.h),
       Stack(
@@ -5288,63 +5430,139 @@ class AuthViewModel extends BaseViewModel {
         ],
       ),
       SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
+      model.uploadDocumentsApplication!.length <= 1 ||
+              model.uploadDocumentsApplication![1].docName == null
+          ? SizedBox(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
+              child: DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [10, 10],
+                  strokeWidth: .94,
+                  radius: Radius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: GestureDetector(
+                  onTap: () => model.pickDocumentAndUpload(
+                    context: context,
+                    docType: 'NATIONAL_ID',
+                    planType: planType,
+                    planTier: planTier,
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.20.w,
+                      horizontal: 22.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.upload_doc),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'Upload Document',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            TextView(
+                              text:
+                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.fineGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 13.4.w, vertical: 10.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
+                border: Border.all(color: AppColors.fineGrey),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(AppImage.upload_doc),
+                  SvgPicture.asset(AppImage.kyc_file),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    flex: 3,
+                    child: TextView(
+                      text:
+                          model.uploadDocumentsApplication!.length > 1 &&
+                              model.uploadDocumentsApplication![1] !=
+                                  sv.Document()
+                          ? model.uploadDocumentsApplication![1].docName!
+                          : "",
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextView(
+                      text: '..png',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
                   SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'NATIONAL_ID',
+                        index: 1,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.upload),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.uploadDocumentsApplication!.removeAt(1);
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.delete),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-      ),
+
       SizedBox(height: 20.h),
       Stack(
         clipBehavior: Clip.none,
@@ -5373,270 +5591,397 @@ class AuthViewModel extends BaseViewModel {
         ],
       ),
       SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
+      model.uploadDocumentsApplication!.length <= 2 ||
+              model.uploadDocumentsApplication![2].docName == null
+          ? SizedBox(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
+              child: DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [10, 10],
+                  strokeWidth: .94,
+                  radius: Radius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    model.pickDocumentAndUpload(
+                      context: context,
+                      docType: 'BIRTH_CERTIFICATE',
+                      planType: planType,
+                      planTier: planTier,
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.20.w,
+                      horizontal: 22.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.upload_doc),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'Upload Document',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            TextView(
+                              text:
+                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.fineGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 13.4.w, vertical: 10.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
+                border: Border.all(color: AppColors.fineGrey),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(AppImage.upload_doc),
+                  SvgPicture.asset(AppImage.kyc_file),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    flex: 3,
+                    child: TextView(
+                      text: '${model.uploadDocumentsApplication![2].docName}',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextView(
+                      text: '..png',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
                   SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        index: 2,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.upload),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.uploadDocumentsApplication!.removeAt(2);
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.delete),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-      ),
+      SizedBox(height: 10.20.h),
+      model.uploadDocumentsApplication!.length <= 3 ||
+              model.uploadDocumentsApplication![3].docName == null
+          ? SizedBox(
+              width: double.infinity,
+              child: DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [10, 10],
+                  strokeWidth: .94,
+                  radius: Radius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    model.pickDocumentAndUpload(
+                      context: context,
+                      docType: 'BIRTH_CERTIFICATE',
+                      planType: planType,
+                      planTier: planTier,
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.20.w,
+                      horizontal: 22.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.upload_doc),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'Upload Document',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            TextView(
+                              text:
+                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.fineGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 13.4.w, vertical: 10.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: AppColors.fineGrey),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(AppImage.kyc_file),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    flex: 3,
+                    child: TextView(
+                      text: '${model.uploadDocumentsApplication![3].docName}',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextView(
+                      text: '..png',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        index: 3,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.upload),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.uploadDocumentsApplication!.removeAt(3);
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.delete),
+                  ),
+                ],
+              ),
+            ),
 
       SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
+      model.uploadDocumentsApplication!.length <= 4 ||
+              model.uploadDocumentsApplication![4].docName == null
+          ? SizedBox(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
+              child: DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [10, 10],
+                  strokeWidth: .94,
+                  radius: Radius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    model.pickDocumentAndUpload(
+                      context: context,
+                      docType: 'BIRTH_CERTIFICATE',
+                      planType: planType,
+                      planTier: planTier,
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.20.w,
+                      horizontal: 22.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.upload_doc),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'Upload Document',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            TextView(
+                              text:
+                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.fineGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 13.4.w, vertical: 10.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
+                border: Border.all(color: AppColors.fineGrey),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(AppImage.upload_doc),
+                  SvgPicture.asset(AppImage.kyc_file),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    flex: 3,
+                    child: TextView(
+                      text: '${model.uploadDocumentsApplication![4].docName}',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextView(
+                      text: '..png',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
                   SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        index: 4,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.upload),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.uploadDocumentsApplication!.removeAt(4);
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.delete),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-      ),
-
-      SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(AppImage.upload_doc),
-                  SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
       SizedBox(height: 20.h),
-
-      Stack(
-        clipBehavior: Clip.none,
-        children: [
-          TextView(
-            text: 'Birth Certificate or Age Declaration',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 14.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
-            ),
-          ),
-          Positioned(
-            right: -12.10,
-            child: TextView(
-              text: '*',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(AppImage.upload_doc),
-                  SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-
-      SizedBox(height: 20.h),
-
       Stack(
         clipBehavior: Clip.none,
         children: [
@@ -5664,63 +6009,292 @@ class AuthViewModel extends BaseViewModel {
         ],
       ),
       SizedBox(height: 10.20.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
+      model.uploadDocumentsApplication!.length <= 5 ||
+              model.uploadDocumentsApplication![5].docName == null
+          ? SizedBox(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
+              child: DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [10, 10],
+                  strokeWidth: .94,
+                  radius: Radius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    model.pickDocumentAndUpload(
+                      context: context,
+                      docType: 'BIRTH_CERTIFICATE',
+                      planType: planType,
+                      planTier: planTier,
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.20.w,
+                      horizontal: 22.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.upload_doc),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'Upload Document',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            TextView(
+                              text:
+                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.fineGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 13.4.w, vertical: 10.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
+                border: Border.all(color: AppColors.fineGrey),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(AppImage.upload_doc),
+                  SvgPicture.asset(AppImage.kyc_file),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    flex: 3,
+                    child: TextView(
+                      text: '${model.uploadDocumentsApplication![5].docName}',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextView(
+                      text: '..png',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
                   SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      TextView(
-                        text:
-                            'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.6.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.fineGrey,
-                        ),
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        index: 5,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.upload),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.uploadDocumentsApplication!.removeAt(5);
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.delete),
                   ),
                 ],
               ),
             ),
+      SizedBox(height: 20.h),
+      Stack(
+        clipBehavior: Clip.none,
+        children: [
+          TextView(
+            text: 'Adoption certificate',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 14.2.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
           ),
-        ),
+          Positioned(
+            right: -12.10,
+            child: TextView(
+              text: '*',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.red,
+              ),
+            ),
+          ),
+        ],
       ),
+      SizedBox(height: 10.20.h),
+      model.uploadDocumentsApplication!.length <= 6 ||
+              model.uploadDocumentsApplication![6].docName == null
+          ? SizedBox(
+              width: double.infinity,
+              child: DottedBorder(
+                options: RoundedRectDottedBorderOptions(
+                  dashPattern: [10, 10],
+                  strokeWidth: .94,
+                  radius: Radius.circular(10),
+                  color: AppColors.primary,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    model.pickDocumentAndUpload(
+                      context: context,
+                      docType: 'BIRTH_CERTIFICATE',
+                      planType: planType,
+                      planTier: planTier,
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.20.w,
+                      horizontal: 22.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                      color: AppColors.white,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SvgPicture.asset(AppImage.upload_doc),
+                        SizedBox(width: 10.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'Upload Document',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            TextView(
+                              text:
+                                  'Max file size: 2MB (.jpg, .jpeg,\n.png, or .pdf supported)',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 13.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.fineGrey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 13.4.w, vertical: 10.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.r),
+                border: Border.all(color: AppColors.fineGrey),
+              ),
+              child: Row(
+                children: [
+                  SvgPicture.asset(AppImage.kyc_file),
+                  SizedBox(width: 14.w),
+                  Expanded(
+                    flex: 3,
+                    child: TextView(
+                      text: '${model.uploadDocumentsApplication![6].docName}',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: TextView(
+                      text: '..png',
+                      fontSize: 22.sp,
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.pickDocumentAndUpload(
+                        context: context,
+                        docType: 'BIRTH_CERTIFICATE',
+                        index: 6,
+                        planType: planType,
+                        planTier: planTier,
+                      );
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.upload),
+                  ),
+                  SizedBox(width: 10.w),
+                  GestureDetector(
+                    onTap: () {
+                      model.uploadDocumentsApplication!.removeAt(6);
+                      model.notifyListeners();
+                    },
+                    child: SvgPicture.asset(AppImage.delete),
+                  ),
+                ],
+              ),
+            ),
 
       SizedBox(height: 35.60.h),
       Row(
@@ -5750,7 +6324,27 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                model.linFamIndex++;
+                if (model.uploadDocumentsApplication!.isNotEmpty &&
+                    model.uploadDocumentsApplication![0].uploadId == ''&&
+                    model.uploadDocumentsApplication![1].uploadId == '') {
+                  linFamIndex++;
+                } else if (model.uploadDocumentsApplication!.isNotEmpty &&
+                    model.uploadDocumentsApplication![0].docName != null &&
+                    model.uploadDocumentsApplication!.length > 1) {
+                  saveThirdIndividualStep(
+                    context,
+                    planTier: planTier,
+                    planType: planType,
+                    saveThirdIndividualStep: SaveThirdStepEntityModel(
+                      applicationId: returnSavedApplicationType(
+                        planType: planType,
+                        planTeir: planTier,
+                      ),
+                      step: 3,
+                      documents: model.uploadDocumentsApplication,
+                    ),
+                  );
+                }
                 model.notifyListeners();
               },
             ),
@@ -5764,19 +6358,24 @@ class AuthViewModel extends BaseViewModel {
         buttonText: 'Save as Draft',
         color: AppColors.deep,
         buttonBorderColor: AppColors.transparent,
-        onPressed: () async {
-          navigate.back();
-          navigate.back();
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
+        onPressed: () {
+          if (model.uploadDocumentsApplication!.isNotEmpty &&
+              model.uploadDocumentsApplication![0].docName != null &&
+              model.uploadDocumentsApplication!.length > 1) {
+            saveThirdIndividualStep(
+              context,
+              planTier: planTier,
+              planType: planType,
+              saveThirdIndividualStep: SaveThirdStepEntityModel(
+                applicationId: returnSavedApplicationType(
+                  planType: planType,
+                  planTeir: planTier,
+                ),
+                step: 3,
+                documents: model.uploadDocumentsApplication,
+              ),
+            );
+          }
           model.notifyListeners();
         },
       ),
@@ -7173,7 +7772,15 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  fourthFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  fourthFamModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -7265,7 +7872,7 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'Ruby Individual Basic',
+                  text: '$planTier $planType Basic',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.2.sp,
@@ -7294,21 +7901,24 @@ class AuthViewModel extends BaseViewModel {
                     horizontal: 10.w,
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.appRed),
-                    color: AppColors.faintedRed,
+                    border: Border.all(color: tiersColor(planTier!)),
+                    color: tiersBorderColor(planTier),
                     borderRadius: BorderRadius.circular(100.r),
                   ),
                   child: Row(
                     children: [
-                      SvgPicture.asset(AppImage.star, color: AppColors.red),
+                      SvgPicture.asset(
+                        tiersSvgImage(planTier),
+                        color: tiersColor(planTier),
+                      ),
                       SizedBox(width: 6.w),
                       TextView(
-                        text: 'Ruby',
+                        text: planTier,
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
                           fontSize: 15.2.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.red,
+                          color: tiersColor(planTier),
                         ),
                       ),
                     ],
@@ -7330,7 +7940,7 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '12 months',
+                  text: '${data?.duration} months',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.2.sp,
@@ -7356,7 +7966,15 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '₦180,000',
+                  text: formatNairaNoDecimal(
+                    model.saveThirdStepResponseModel?.data?.totalAmount ??
+                        model
+                            .getIndividualApplicationDetailsModel
+                            ?.data
+                            ?.totalAmount ??
+                        data?.price ??
+                        0,
+                  ),
                   textStyle: TextStyle(
                     fontSize: 20.2.sp,
                     fontWeight: FontWeight.w700,
@@ -7452,7 +8070,14 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '₦180,000',
+                  text: formatNairaNoDecimal(
+                    model.saveThirdStepResponseModel?.data?.totalAmount ??
+                        model
+                            .getIndividualApplicationDetailsModel
+                            ?.data
+                            ?.totalAmount ??
+                        0,
+                  ),
                   textStyle: TextStyle(
                     fontSize: 15.8.sp,
                     fontWeight: FontWeight.w500,
@@ -7506,28 +8131,21 @@ class AuthViewModel extends BaseViewModel {
         buttonText: 'Save as Draft',
         color: AppColors.deep,
         buttonBorderColor: AppColors.transparent,
-        onPressed: () async {
-          navigate.back();
-          navigate.back();
-          navigate.back();
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
-          model.notifyListeners();
-        },
+        onPressed: () async {},
       ),
       SizedBox(height: 20.60.h),
     ],
   );
 
-  fifthFamModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  fifthFamModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -7618,7 +8236,18 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'Mercy A',
+                  text:
+                      model
+                          .getIndividualApplicationDetailsModel
+                          ?.data
+                          ?.personalInfo
+                          ?.fullName ??
+                      model
+                          .saveThirdStepResponseModel
+                          ?.data
+                          ?.personalInfo
+                          ?.fullName ??
+                      '',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.2.sp,
@@ -7642,7 +8271,18 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'mercy@medicatehealth.com',
+                  text:
+                      model
+                          .getIndividualApplicationDetailsModel
+                          ?.data
+                          ?.personalInfo
+                          ?.email ??
+                      model
+                          .saveThirdStepResponseModel
+                          ?.data
+                          ?.personalInfo
+                          ?.email ??
+                      '',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -7666,7 +8306,18 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '+2349054345643',
+                  text:
+                      model
+                          .getIndividualApplicationDetailsModel
+                          ?.data
+                          ?.personalInfo
+                          ?.phone ??
+                      model
+                          .saveThirdStepResponseModel
+                          ?.data
+                          ?.personalInfo
+                          ?.phone ??
+                      '',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -7690,7 +8341,7 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: 'Ruby Individual Basic',
+                  text: '$planTier $planType Basic',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -7719,21 +8370,24 @@ class AuthViewModel extends BaseViewModel {
                     horizontal: 10.w,
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.appRed),
-                    color: AppColors.faintedRed,
+                    border: Border.all(color: tiersColor(planTier!)),
+                    color: tiersBorderColor(planTier),
                     borderRadius: BorderRadius.circular(100.r),
                   ),
                   child: Row(
                     children: [
-                      SvgPicture.asset(AppImage.star, color: AppColors.red),
+                      SvgPicture.asset(
+                        tiersSvgImage(planTier),
+                        color: tiersColor(planTier),
+                      ),
                       SizedBox(width: 6.w),
                       TextView(
-                        text: 'Ruby',
+                        text: planTier,
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
                           fontSize: 15.2.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.red,
+                          color: tiersColor(planTier),
                         ),
                       ),
                     ],
@@ -7754,13 +8408,25 @@ class AuthViewModel extends BaseViewModel {
                     color: AppColors.infoGrey,
                   ),
                 ),
-                TextView(
-                  text: 'Maitama District Hospital',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 15.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
+                SizedBox(
+                  width: 200.w,
+                  child: TextView(
+                    text:
+                        model
+                            .getHospitalByIdResponseModel
+                            ?.data
+                            ?.hospital
+                            ?.name ??
+                        '',
+                    maxLines: 2,
+                    textOverflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end,
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 15.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
                   ),
                 ),
               ],
@@ -7779,7 +8445,8 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '2 file(s) uploaded',
+                  text:
+                      '${model.getIndividualApplicationDetailsModel?.data?.documents?.length ?? model.saveThirdStepResponseModel?.data?.documents?.length} ${fileTextListLength(model.getIndividualApplicationDetailsModel?.data?.documents?.length ?? model.saveThirdStepResponseModel?.data?.documents?.length)} uploaded',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -7805,7 +8472,14 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 TextView(
-                  text: '₦180,000',
+                  text: formatNairaNoDecimal(
+                    model.saveThirdStepResponseModel?.data?.totalAmount ??
+                        model
+                            .getIndividualApplicationDetailsModel
+                            ?.data
+                            ?.totalAmount ??
+                        0,
+                  ),
                   textStyle: TextStyle(
                     fontSize: 20.2.sp,
                     fontWeight: FontWeight.w700,
@@ -8169,6 +8843,17 @@ class AuthViewModel extends BaseViewModel {
               fontSize: 14.sp,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
+                if (isPaidTapped) {
+                  initiateHMOPlanPayment(
+                    context,
+                    planTier: planTier,
+                    planType: planType,
+                    applicationId: returnSavedApplicationType(
+                      planTeir: planTier,
+                      planType: planType,
+                    ),
+                  );
+                }
                 model.notifyListeners();
               },
             ),
