@@ -266,6 +266,8 @@ class AuthViewModel extends BaseViewModel {
   GlobalKey<FormState> firstFamModalFlowKey = GlobalKey<FormState>();
   GlobalKey<FormState> secondFamModalFlowKey = GlobalKey<FormState>();
   GlobalKey<FormState> second2FamModalFlowKey = GlobalKey<FormState>();
+  GlobalKey<FormState> firstCorModalFlowKey = GlobalKey<FormState>();
+  GlobalKey<FormState> secondCorModalFlowKey = GlobalKey<FormState>();
 
   List<MedicationClass> medicationClassList = [];
   String startDateIso = '';
@@ -1055,18 +1057,51 @@ class AuthViewModel extends BaseViewModel {
     d.Datum? data,
   }) {
     if (linCorpIndex == 2) {
-      return secondCorpModalFlow(model: model, context: context);
+      return secondCorpModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+      );
     }
     if (linCorpIndex == 3) {
-      return thirdCorpModalFlow(model: model, context: context);
+      return thirdCorpModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+      );
     }
     if (linCorpIndex == 4) {
-      return fourthCorpModalFlow(model: model, context: context);
+      return fourthCorpModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+        planId: planId,
+        hmoId: hmoId,
+        data: data,
+      );
     }
     if (linCorpIndex == 5) {
-      return fifthCorpModalFlow(model: model, context: context);
+      return fifthCorpModalFlow(
+        model: model,
+        context: context,
+        planType: planType,
+        planTier: planTier,
+        planId: planId,
+        hmoId: hmoId,
+        data: data,
+      );
     }
-    return firstCorpModalFlow(model: model, context: context);
+    return firstCorpModalFlow(
+      model: model,
+      context: context,
+      planType: planType,
+      planTier: planTier,
+      planId: planId,
+      hmoId: hmoId,
+    );
   }
 
   checkPlanTypeAndTier({
@@ -1789,6 +1824,397 @@ class AuthViewModel extends BaseViewModel {
     model!.notifyListeners();
   }
 
+  checkCorpPlanTypeAndTier({
+    BuildContext? context,
+    AuthViewModel? model,
+    String? planType,
+    String? planTier,
+    String? planId,
+  }) async {
+    if (planType == 'Corporate' && planTier == 'Ruby') {
+      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+      await model.getIndividualApplicationDetails(
+        context,
+        applicationId: session.applicationIdCorporateRuby,
+      );
+      await model.getHospitalById(
+        context,
+        hospitalId: model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.preferredHospitalId,
+      );
+      model.fullNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.fullName ??
+          '';
+      model.emailAddsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.email ??
+          '';
+      model.dobController.text =
+          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+              .toString()
+              .substring(0, 10) ??
+          '';
+      model.genderController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.gender ??
+          '';
+      model.phoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.phone ??
+          '';
+      model.resAddressController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.residentialAddress ??
+          '';
+      model.filterStateController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+      model.hospitalController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+      model.linCorpIndex =
+          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+      model.medicalHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.medicalHistory ??
+          '';
+      model.medicalHistoryDetailsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.chronicAilmentDetails ??
+          '';
+      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+      model.famMedsHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.familyMedicalHistory ??
+          '';
+      // model.dependentModelList = model
+      //     .getIndividualApplicationDetailsModel!
+      //     .data!
+      //     .planSpecific!
+      //     .dependent!
+      //     .map(
+      //       (e) => DependentModelClass(
+      //         fullNameController: TextEditingController(text: e.fullName),
+      //         relationshipController: TextEditingController(
+      //           text: e.relationship,
+      //         ),
+      //         dobController: TextEditingController(
+      //           text: DateFormat(
+      //             'yyyy-MM-dd',
+      //           ).format(DateTime.parse(e.dob.toString())),
+      //         ),
+      //         genderController: TextEditingController(text: e.gender),
+      //       ),
+      //     )
+      //     .toList();
+      // getChildCount(model);
+      // getSpouseCount(model);
+      // getTotalSpouseAndChildCount(model);
+
+      if (model.getIndividualApplicationDetailsModel != null) {
+        for (var e
+            in model.getIndividualApplicationDetailsModel!.data!.documents ??
+                []) {
+          if (e.documentType == 'BIRTH_CERTIFICATE') {
+            model.uploadDocumentsApplication!.insert(
+              0,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          } else if (e.documentType == 'NATIONAL_ID') {
+            if (model.uploadDocumentsApplication!.isEmpty) {
+              model.uploadDocumentsApplication!.add(
+                sv.Document(),
+              ); // fill index 0 if missing
+            }
+            model.uploadDocumentsApplication!.insert(
+              1,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          }
+        }
+      }
+    }
+    if (planType == 'Corporate' && planTier == 'Pearl') {
+      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+      await model.getIndividualApplicationDetails(
+        context,
+        applicationId: session.applicationIdCorporatePearl,
+      );
+      await model.getHospitalById(
+        context,
+        hospitalId: model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.preferredHospitalId,
+      );
+      model.fullNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.fullName ??
+          '';
+      model.emailAddsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.email ??
+          '';
+      model.dobController.text =
+          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+              .toString()
+              .substring(0, 10) ??
+          '';
+      model.genderController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.gender ??
+          '';
+      model.phoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.phone ??
+          '';
+      model.resAddressController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.residentialAddress ??
+          '';
+      model.filterStateController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+      model.hospitalController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+      model.linFamIndex =
+          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+      model.medicalHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.medicalHistory ??
+          '';
+      model.medicalHistoryDetailsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.chronicAilmentDetails ??
+          '';
+      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+
+      model.famMedsHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.familyMedicalHistory ??
+          '';
+      // model.dependentModelList = model
+      //     .getIndividualApplicationDetailsModel!
+      //     .data!
+      //     .planSpecific!
+      //     .dependent!
+      //     .map(
+      //       (e) => DependentModelClass(
+      //         fullNameController: TextEditingController(text: e.fullName),
+      //         relationshipController: TextEditingController(
+      //           text: e.relationship,
+      //         ),
+      //         dobController: TextEditingController(
+      //           text: DateFormat(
+      //             'yyyy-MM-dd',
+      //           ).format(DateTime.parse(e.dob.toString())),
+      //         ),
+      //         genderController: TextEditingController(text: e.gender),
+      //       ),
+      //     )
+      //     .toList();
+      // getChildCount(model);
+      // getSpouseCount(model);
+      // getTotalSpouseAndChildCount(model);
+
+      if (model.getIndividualApplicationDetailsModel != null) {
+        for (var e
+            in model.getIndividualApplicationDetailsModel!.data!.documents ??
+                []) {
+          if (e.documentType == 'BIRTH_CERTIFICATE') {
+            model.uploadDocumentsApplication!.insert(
+              0,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          } else if (e.documentType == 'NATIONAL_ID') {
+            if (model.uploadDocumentsApplication!.isEmpty) {
+              model.uploadDocumentsApplication!.add(
+                sv.Document(),
+              ); // fill index 0 if missing
+            }
+            model.uploadDocumentsApplication!.insert(
+              1,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          }
+        }
+      }
+    }
+    if (planType == 'Corporate' && planTier == 'Diamond') {
+      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+      await model.getIndividualApplicationDetails(
+        context,
+        applicationId: session.applicationIdCorporateDiamond,
+      );
+      await model.getHospitalById(
+        context,
+        hospitalId: model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.preferredHospitalId,
+      );
+      model.fullNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.fullName ??
+          '';
+      model.emailAddsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.email ??
+          '';
+      model.dobController.text =
+          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+              .toString()
+              .substring(0, 10) ??
+          '';
+      model.genderController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.gender ??
+          '';
+      model.phoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.phone ??
+          '';
+      model.resAddressController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.personalInfo
+              ?.residentialAddress ??
+          '';
+      model.filterStateController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+      model.hospitalController.text =
+          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+      model.linSubIndex =
+          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+      model.medicalHistoryController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.medicalHistory ??
+          '';
+      model.medicalHistoryDetailsController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.chronicAilmentDetails ??
+          '';
+      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+      if (model.getIndividualApplicationDetailsModel != null) {
+        for (var e
+            in model.getIndividualApplicationDetailsModel?.data?.documents ??
+                []) {
+          if (e.documentType == 'BIRTH_CERTIFICATE') {
+            model.uploadDocumentsApplication!.insert(
+              0,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          } else if (e.documentType == 'NATIONAL_ID') {
+            if (model.uploadDocumentsApplication!.isEmpty) {
+              model.uploadDocumentsApplication!.add(
+                sv.Document(),
+              ); // fill index 0 if missing
+            }
+            model.uploadDocumentsApplication!.insert(
+              1,
+              sv.Document(
+                docName: e.originalName,
+                documentType: e.documentType,
+                uploadId: '',
+              ),
+            );
+          }
+        }
+      }
+    }
+    model!.notifyListeners();
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -2256,6 +2682,16 @@ class AuthViewModel extends BaseViewModel {
           buttonBorderColor: AppColors.transparent,
           onPressed: () async {
             if (firstSubModalFlowKey.currentState!.validate()) {
+              await model.startApplication(
+                context,
+                startApplication: StartApplicationEntityModel(
+                  hmoId: hmoId,
+                  planId: planId,
+                  planType: planType,
+                ),
+                planTeir: planTier,
+                planType: planType,
+              );
               await model.saveFirstStepPersonalInfo(
                 context,
                 planTeir: planTier,
@@ -2581,7 +3017,6 @@ class AuthViewModel extends BaseViewModel {
                       ?.data
                       ?.hospitals ??
                   [];
-
               // Extract states and remove duplicates
               final uniqueStates = hospitals
                   .map((e) => e.state)
@@ -2725,6 +3160,16 @@ class AuthViewModel extends BaseViewModel {
           buttonBorderColor: AppColors.transparent,
           onPressed: () async {
             if (firstFamModalFlowKey.currentState!.validate()) {
+              await model.startApplication(
+                context,
+                startApplication: StartApplicationEntityModel(
+                  hmoId: hmoId,
+                  planId: planId,
+                  planType: planType,
+                ),
+                planTeir: planTier,
+                planType: planType,
+              );
               await model.saveFirstStepPersonalInfo(
                 context,
                 planTeir: planTier,
@@ -2749,6 +3194,11 @@ class AuthViewModel extends BaseViewModel {
                       ),
                     ),
               );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (model.dependentController.hasClients) {
+                  model.dependentController.jumpTo(0.0);
+                }
+              });
             }
             model.notifyListeners();
           },
@@ -2758,278 +3208,491 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
-  firstCorpModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Center(
-        child: TextView(
-          text: modalCorporateName(),
-          textStyle: TextStyle(
-            fontFamily: 'GoogleSans',
-            fontSize: 16.70.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.deep,
+  firstCorpModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+  }) => Form(
+    key: firstCorModalFlowKey,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: TextView(
+            text: modalCorporateName(),
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 16.70.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.deep,
+            ),
           ),
         ),
-      ),
-      SizedBox(height: 20.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: SizedBox(
-              width: MediaQuery.of(context!).size.width * .80,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5.0),
-                ), // Adjust radius as needed
-                child: LinearProgressIndicator(
-                  minHeight: 4.0, // Adjust height as needed
-                  value: model!.linCorpIndex / 5,
-                  color: AppColors.primary, // Progress bar color
-                  backgroundColor: Colors.grey[300], // Background track color
+        SizedBox(height: 20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context!).size.width * .80,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: model!.linCorpIndex / 5,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
                 ),
               ),
             ),
+            SizedBox(width: 10.w),
+            TextView(
+              text: '${model.linCorpIndex}/5',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 14.20.h),
+        TextView(
+          text: 'Personal Information',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
           ),
-          SizedBox(width: 10.w),
-          TextView(
-            text: '${model.linCorpIndex}/5',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 13.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
+        ),
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        TextFormWidget(
+          hint: 'Full Name',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: fullNameController,
+          validator: AppValidator.validateString(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+        ),
+        SizedBox(height: 18.6.h),
+        TextFormWidget(
+          hint: 'Date of Birth',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          readOnly: true,
+          controller: dobController,
+          validator: AppValidator.validateString(),
+          suffixWidget: Padding(
+            padding: EdgeInsets.all(8.w),
+            child: GestureDetector(
+              onTap: () => _selectDate(context),
+              child: SvgPicture.asset(AppImage.calendar),
             ),
           ),
-        ],
-      ),
-      SizedBox(height: 14.20.h),
-      TextView(
-        text: 'Personal Information',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
         ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      TextFormWidget(
-        hint: 'Full Name',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: fullNameController,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Gender',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          readOnly: true,
+          label: 'Select Gender',
+          labelStyle: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+            color: AppColors.infoGrey,
+          ),
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: genderController,
+          validator: AppValidator.validateString(),
+          suffixWidget: PopupMenuButton<String>(
+            color: AppColors.white,
+            onSelected: (value) {
+              genderController.text = value;
+              notifyListeners();
+            },
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: "Male",
+                child: TextView(
+                  text: 'Male',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 13.70.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: "Female",
+                child: TextView(
+                  text: 'Female',
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 13.70.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+            color: AppColors.infoGrey,
+          ),
         ),
-      ),
-      SizedBox(height: 18.6.h),
-      TextFormWidget(
-        hint: 'Date of Birth',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        readOnly: true,
-        controller: dobController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Padding(
-          padding: EdgeInsets.all(8.w),
-          child: SvgPicture.asset(AppImage.calendar),
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Email Address',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          isFilled: true,
+          controller: emailAddsController,
+          validator: AppValidator.validateEmail(),
+          inputFormatters: [
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              return newValue.copyWith(
+                text: newValue.text.toLowerCase(),
+                selection: newValue.selection,
+              );
+            }),
+          ],
         ),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Phone Number',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: phoneNoController,
+          validator: AppValidator.validateString(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextFormWidget(
-        hint: 'Gender',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        label: 'Select Gender',
-        labelStyle: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-          color: AppColors.infoGrey,
+        SizedBox(height: 20.6.h),
+        TextFormWidget(
+          hint: 'Residential Address',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: resAddressController,
+          maxline: 4,
+          validator: AppValidator.validateString(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
         ),
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: genderController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-          color: AppColors.infoGrey,
+        SizedBox(height: 20.6.h),
+        TextView(
+          text: 'Preferred Hospital ',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextFormWidget(
-        hint: 'Phone Number',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: phoneNoController,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+        SizedBox(height: 10.h),
+        TextView(
+          text:
+              'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 15.2.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.infoGrey,
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextFormWidget(
-        hint: 'Residential Address',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: resAddressController,
-        maxline: 4,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        TextFormWidget(
+          hint: 'Filter by State',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          label: 'All State',
+          readOnly: true,
+          labelStyle: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Arial',
+            color: AppColors.infoGrey,
+          ),
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: filterStateController,
+          validator: AppValidator.validateString(),
+          suffixWidget: PopupMenuButton<String>(
+            color: AppColors.white,
+            onSelected: (value) {
+              filterStateController.text = value;
+              notifyListeners();
+            },
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+            itemBuilder: (context) {
+              final hospitals =
+                  model
+                      .getHmoPlanHospitalNetworkResponseModel
+                      ?.data
+                      ?.hospitals ??
+                  [];
+
+              // Extract states and remove duplicates
+              final uniqueStates = hospitals
+                  .map((e) => e.state)
+                  .where((e) => e != null && e.isNotEmpty)
+                  .toSet()
+                  .toList();
+
+              return uniqueStates.map((state) {
+                return PopupMenuItem(
+                  value: state!,
+                  child: TextView(
+                    text: state,
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 13.70.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.black,
+                    ),
+                  ),
+                );
+              }).toList();
+            },
+          ),
         ),
-      ),
-      SizedBox(height: 20.6.h),
-      TextView(
-        text: 'Preferred Hospital ',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
+        SizedBox(height: 20.h),
+        TextFormWidget(
+          hint: 'Select Hospital',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          label: 'Choose a hospital',
+          labelStyle: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'Arial',
+            color: AppColors.infoGrey,
+          ),
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          readOnly: true,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          controller: hospitalController,
+          validator: AppValidator.validateString(),
+          suffixWidget: PopupMenuButton<Hospital>(
+            color: AppColors.white,
+            onSelected: (value) {
+              hospitalController.text = value.name!;
+              hospitalId = value.id!;
+              notifyListeners();
+            },
+            child: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
+            itemBuilder: (context) => [
+              if (model.getHmoPlanHospitalNetworkResponseModel != null &&
+                  model
+                      .getHmoPlanHospitalNetworkResponseModel!
+                      .data!
+                      .hospitals!
+                      .isNotEmpty)
+                ...model
+                    .getHmoPlanHospitalNetworkResponseModel!
+                    .data!
+                    .hospitals!
+                    .map(
+                      (e) => PopupMenuItem(
+                        value: e,
+                        child: TextView(
+                          text: e.name ?? '',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 13.70.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+            ],
+          ),
         ),
-      ),
-      SizedBox(height: 10.h),
-      TextView(
-        text:
-            'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
-        textStyle: TextStyle(
-          fontFamily: 'Arial',
-          fontSize: 15.2.sp,
-          fontWeight: FontWeight.w400,
-          color: AppColors.infoGrey,
+        SizedBox(height: 24.60.h),
+        ButtonWidget(
+          border: 100.r,
+          buttonColor: AppColors.primary,
+          buttonText: 'Continue',
+          color: AppColors.white,
+          isLoading: model.isLoading,
+          buttonBorderColor: AppColors.transparent,
+          onPressed: () async {
+            if (firstCorModalFlowKey.currentState!.validate()) {
+              await model.startApplication(
+                context,
+                startApplication: StartApplicationEntityModel(
+                  hmoId: hmoId,
+                  planId: planId,
+                  planType: planType,
+                ),
+                planTeir: planTier,
+                planType: planType,
+              );
+              await model.saveFirstStepPersonalInfo(
+                context,
+                planTeir: planTier,
+                planType: planType,
+                saveFirstStepPersonalInfoEntityModel:
+                    SaveFirstStepPersonalInfoEntityModel(
+                      applicationId: returnSavedApplicationType(
+                        planType: planType,
+                        planTeir: planTier,
+                      ),
+                      step: 1,
+                      personalInfo: PersonalInfo(
+                        fullName: fullNameController.text.trim(),
+                        dob: dobController.text.trim(),
+                        gender: genderController.text.trim(),
+                        phone: model.returnPhoneNoStructureAdd234AfterAgain(
+                          phoneNoController.text.trim(),
+                        ),
+                        email: emailAddsController.text.trim(),
+                        residentialAddress: resAddressController.text.trim(),
+                        preferredHospitalId: hospitalId,
+                      ),
+                    ),
+              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (model.dependentController.hasClients) {
+                  model.dependentController.jumpTo(0.0);
+                }
+              });
+              model.notifyListeners();
+            }
+          },
         ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      TextFormWidget(
-        hint: 'Filter by State',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        label: 'All State',
-        labelStyle: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Arial',
-          color: AppColors.infoGrey,
+        SizedBox(height: 16.60.h),
+        ButtonWidget(
+          border: 100.r,
+          buttonColor: AppColors.dashboard,
+          buttonText: 'Save as Draft',
+          color: AppColors.deep,
+          isLoading: model.isLoading,
+          buttonBorderColor: AppColors.transparent,
+          onPressed: () async {
+            if (firstCorModalFlowKey.currentState!.validate()) {
+              await model.startApplication(
+                context,
+                startApplication: StartApplicationEntityModel(
+                  hmoId: hmoId,
+                  planId: planId,
+                  planType: planType,
+                ),
+                planTeir: planTier,
+                planType: planType,
+              );
+              await model.saveFirstStepPersonalInfo(
+                context,
+                planTeir: planTier,
+                planType: planType,
+                saveFirstStepPersonalInfoEntityModel:
+                    SaveFirstStepPersonalInfoEntityModel(
+                      applicationId: returnSavedApplicationType(
+                        planType: planType,
+                        planTeir: planTier,
+                      ),
+                      step: 1,
+                      personalInfo: PersonalInfo(
+                        fullName: fullNameController.text.trim(),
+                        dob: dobController.text.trim(),
+                        gender: genderController.text.trim(),
+                        phone: model.returnPhoneNoStructureAdd234AfterAgain(
+                          phoneNoController.text.trim(),
+                        ),
+                        email: emailAddsController.text.trim(),
+                        residentialAddress: resAddressController.text.trim(),
+                        preferredHospitalId: hospitalId,
+                      ),
+                    ),
+              );
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (model.dependentController.hasClients) {
+                  model.dependentController.jumpTo(0.0);
+                }
+              });
+              model.notifyListeners();
+            }
+          },
         ),
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: filterStateController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
-      ),
-      SizedBox(height: 20.h),
-      TextFormWidget(
-        hint: 'Select Hospital',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        label: 'Choose a hospital',
-        labelStyle: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'Arial',
-          color: AppColors.infoGrey,
-        ),
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        controller: hospitalController,
-        validator: AppValidator.validateString(),
-        suffixWidget: Icon(Icons.keyboard_arrow_down, color: AppColors.grey1),
-      ),
-      SizedBox(height: 24.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.primary,
-        buttonText: 'Continue',
-        color: AppColors.white,
-        isLoading: model.isLoading,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () {
-          model.linCorpIndex++;
-          model.notifyListeners();
-        },
-      ),
-      SizedBox(height: 16.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        isLoading: model.isLoading,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () {
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
-          model.notifyListeners();
-        },
-      ),
-      SizedBox(height: 20.60.h),
-    ],
+        SizedBox(height: 20.60.h),
+      ],
+    ),
   );
 
   secondSubModalFlow({
@@ -4241,7 +4904,12 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  secondCorpModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  secondCorpModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planTier,
+    String? planType,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -4876,7 +5544,16 @@ class AuthViewModel extends BaseViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SvgPicture.asset(AppImage.upload_doc),
+                          model.isLoadingDoc1
+                              ? SizedBox(
+                                  width: 20.w,
+                                  height: 20.h,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                    strokeWidth: 2.w,
+                                  ),
+                                )
+                              : SvgPicture.asset(AppImage.upload_doc),
                           SizedBox(width: 10.w),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -4974,7 +5651,16 @@ class AuthViewModel extends BaseViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SvgPicture.asset(AppImage.upload_doc),
+                          model.isLoadingDoc1
+                              ? SizedBox(
+                                  width: 20.w,
+                                  height: 20.h,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                    strokeWidth: 2.w,
+                                  ),
+                                )
+                              : SvgPicture.asset(AppImage.upload_doc),
                           SizedBox(width: 10.w),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -5364,7 +6050,16 @@ class AuthViewModel extends BaseViewModel {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(AppImage.upload_doc),
+                        model.isLoadingDoc1
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                  strokeWidth: 2.w,
+                                ),
+                              )
+                            : SvgPicture.asset(AppImage.upload_doc),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -5397,7 +6092,6 @@ class AuthViewModel extends BaseViewModel {
                 ),
               ),
             ),
-
       SizedBox(height: 20.h),
       Stack(
         clipBehavior: Clip.none,
@@ -5461,7 +6155,16 @@ class AuthViewModel extends BaseViewModel {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(AppImage.upload_doc),
+                        model.isLoadingDoc1
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                  strokeWidth: 2.w,
+                                ),
+                              )
+                            : SvgPicture.asset(AppImage.upload_doc),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -5624,7 +6327,16 @@ class AuthViewModel extends BaseViewModel {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(AppImage.upload_doc),
+                        model.isLoadingDoc1
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                  strokeWidth: 2.w,
+                                ),
+                              )
+                            : SvgPicture.asset(AppImage.upload_doc),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -5754,7 +6466,16 @@ class AuthViewModel extends BaseViewModel {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(AppImage.upload_doc),
+                        model.isLoadingDoc1
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                  strokeWidth: 2.w,
+                                ),
+                              )
+                            : SvgPicture.asset(AppImage.upload_doc),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -5885,7 +6606,16 @@ class AuthViewModel extends BaseViewModel {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(AppImage.upload_doc),
+                        model.isLoadingDoc1
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                  strokeWidth: 2.w,
+                                ),
+                              )
+                            : SvgPicture.asset(AppImage.upload_doc),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6042,7 +6772,16 @@ class AuthViewModel extends BaseViewModel {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(AppImage.upload_doc),
+                        model.isLoadingDoc1
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                  strokeWidth: 2.w,
+                                ),
+                              )
+                            : SvgPicture.asset(AppImage.upload_doc),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6199,7 +6938,16 @@ class AuthViewModel extends BaseViewModel {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SvgPicture.asset(AppImage.upload_doc),
+                        model.isLoadingDoc1
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.h,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                  strokeWidth: 2.w,
+                                ),
+                              )
+                            : SvgPicture.asset(AppImage.upload_doc),
                         SizedBox(width: 10.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -6325,7 +7073,7 @@ class AuthViewModel extends BaseViewModel {
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
                 if (model.uploadDocumentsApplication!.isNotEmpty &&
-                    model.uploadDocumentsApplication![0].uploadId == ''&&
+                    model.uploadDocumentsApplication![0].uploadId == '' &&
                     model.uploadDocumentsApplication![1].uploadId == '') {
                   linFamIndex++;
                 } else if (model.uploadDocumentsApplication!.isNotEmpty &&
@@ -6383,7 +7131,12 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  thirdCorpModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  thirdCorpModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planTier,
+    String? planType,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -8865,7 +9618,15 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  fourthCorpModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  fourthCorpModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -9219,7 +9980,15 @@ class AuthViewModel extends BaseViewModel {
     ],
   );
 
-  fifthCorpModalFlow({AuthViewModel? model, BuildContext? context}) => Column(
+  fifthCorpModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    String? planType,
+    String? planTier,
+    String? planId,
+    String? hmoId,
+    d.Datum? data,
+  }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Center(
@@ -24888,6 +25657,27 @@ class AuthViewModel extends BaseViewModel {
         }
         if (planType == 'Individual' && planTier == 'Diamond') {
           session.applicationIdIndividualDiamond = '';
+        }
+        if (planType == 'Family' && planTier == 'Ruby') {
+          session.applicationIdFamilyRuby = '';
+        }
+        if (planType == 'Family' && planTier == 'Pearl') {
+          session.applicationIdFamilyPearl = '';
+        }
+        if (planType == 'Family' && planTier == 'Diamond') {
+          session.applicationIdFamilyDiamond = '';
+        }
+        if (planType == 'Corporate' && planTier == 'Diamond') {
+          session.applicationIdCorporateDiamond = '';
+        }
+        if (planType == 'Corporate' && planTier == 'Ruby') {
+          session.applicationIdCorporateRuby = '';
+        }
+        if (planType == 'Corporate' && planTier == 'Pearl') {
+          session.applicationIdCorporatePearl = '';
+        }
+        if (planType == 'Corporate' && planTier == 'Diamond') {
+          session.applicationIdCorporateDiamond = '';
         }
       } else {}
     } catch (e) {
