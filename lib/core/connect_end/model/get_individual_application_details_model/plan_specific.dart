@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:medicate_app/core/connect_end/model/get_individual_application_details_model/dependent.dart';
+import 'package:medicate_app/core/connect_end/model/get_individual_application_details_model/staff_list_file.dart';
 
 part 'plan_specific.g.dart';
 
@@ -16,6 +17,7 @@ class PlanSpecific {
   String? hrContactEmail;
   int? staffCount;
   List<Dependent>? dependent;
+  StaffListFile? staffListFile;
 
   PlanSpecific({
     this.medicalHistory,
@@ -29,6 +31,7 @@ class PlanSpecific {
     this.hrContactEmail,
     this.staffCount,
     this.dependent,
+    this.staffListFile
   });
 
   factory PlanSpecific.fromJson(Map<String, dynamic> json) {

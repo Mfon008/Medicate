@@ -34,6 +34,7 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_corp_entity_model/save_second_corp_entity_model.dart';
 import '../model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
 import '../model/save_second_step_response_model/save_second_step_response_model.dart';
@@ -360,6 +361,15 @@ class AuthRepoImpl {
   }) async {
     final response = await _contract.saveSecondIndividualStep(
       saveSecondIndividualStep: saveSecondIndividualStep,
+    );
+    return response;
+  }
+
+   Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
+    SaveSecondCorpEntityModel? saveSecondCorporateStep,
+  }) async {
+    final response = await _contract.saveSecondCorporateStep(
+      saveSecondCorporateStep: saveSecondCorporateStep,
     );
     return response;
   }

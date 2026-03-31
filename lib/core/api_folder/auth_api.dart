@@ -19,6 +19,7 @@ import 'package:medicate_app/core/connect_end/model/pay_with_wallet_entity_model
 import 'package:medicate_app/core/connect_end/model/reset_password_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_second_corp_entity_model/save_second_corp_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_second_step_entity_model/save_second_step_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_third_step_entity_model/save_third_step_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_third_step_response_model/save_third_step_response_model.dart';
@@ -729,6 +730,23 @@ class AuthApi {
         UrlConfig.save_first_step,
         RequestMethod.post,
         data: saveSecondIndividualStep?.toJson(),
+      );
+      logger.d(response.data);
+      return SaveSecondStepResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
+    SaveSecondCorpEntityModel? saveSecondCorporateStep,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.save_first_step,
+        RequestMethod.post,
+        data: saveSecondCorporateStep?.toJson(),
       );
       logger.d(response.data);
       return SaveSecondStepResponseModel.fromJson(response.data);

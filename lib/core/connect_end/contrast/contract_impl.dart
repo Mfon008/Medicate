@@ -33,6 +33,7 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_corp_entity_model/save_second_corp_entity_model.dart';
 import '../model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
 import '../model/save_third_step_entity_model/save_third_step_entity_model.dart';
@@ -205,6 +206,10 @@ class AuthContractsImpl {
     SaveSecondFamStepEntityModel? saveSecondFamStep,
   }) async =>
       await _api.saveSecondFamStep(saveSecondFamStep: saveSecondFamStep);
+   Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
+    SaveSecondCorpEntityModel? saveSecondCorporateStep,
+  }) async =>
+      await _api.saveSecondCorporateStep(saveSecondCorporateStep: saveSecondCorporateStep);
   Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
     SaveThirdStepEntityModel? saveThirdIndividualStep,
   }) async => await _api.saveThirdIndividualStep(

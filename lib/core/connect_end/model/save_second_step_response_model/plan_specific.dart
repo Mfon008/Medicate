@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:medicate_app/core/connect_end/model/save_second_step_response_model/staff_list_file.dart';
 
 part 'plan_specific.g.dart';
 
@@ -14,6 +15,7 @@ class PlanSpecific {
   String? hrContactPhone;
   String? hrContactEmail;
   int? staffCount;
+  StaffListFile? staffListFile;
 
   PlanSpecific({
     this.medicalHistory,
@@ -26,6 +28,7 @@ class PlanSpecific {
     this.hrContactPhone,
     this.hrContactEmail,
     this.staffCount,
+    this.staffListFile,
   });
 
   factory PlanSpecific.fromJson(Map<String, dynamic> json) {

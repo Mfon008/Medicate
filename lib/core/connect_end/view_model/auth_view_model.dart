@@ -30,6 +30,7 @@ import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/get
 import 'package:medicate_app/core/connect_end/model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_first_step_personal_info_entity_model/personal_info.dart';
+import 'package:medicate_app/core/connect_end/model/save_second_corp_entity_model/staff_list_file.dart';
 import 'package:medicate_app/core/connect_end/model/save_second_step_entity_model/plan_specific.dart';
 import 'package:medicate_app/core/connect_end/model/save_third_step_entity_model/document.dart'
     as sv;
@@ -92,6 +93,7 @@ import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
+import '../model/save_second_corp_entity_model/save_second_corp_entity_model.dart';
 import '../model/save_second_fam_step_entity_model/dependent.dart';
 import '../model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../model/save_second_step_entity_model/save_second_step_entity_model.dart';
@@ -115,6 +117,8 @@ import '../repo/repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart';
 import 'package:medicate_app/core/connect_end/model/save_second_fam_step_entity_model/plan_specific.dart'
     as pl;
+import 'package:medicate_app/core/connect_end/model/save_second_corp_entity_model/plan_specific.dart'
+    as p;
 
 class AuthViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -318,6 +322,13 @@ class AuthViewModel extends BaseViewModel {
   bool isPhoneValid = false;
   bool _initializedUpdate = false;
   bool _initializedUpContoller = false;
+
+  TextEditingController orgNameController = TextEditingController();
+  TextEditingController cacRegNoController = TextEditingController();
+  TextEditingController hrNameController = TextEditingController();
+  TextEditingController hrPhoneNoController = TextEditingController();
+  TextEditingController hrEmailController = TextEditingController();
+  TextEditingController staffCountController = TextEditingController();
 
   TextEditingController medNameController = TextEditingController();
   TextEditingController medDosageController = TextEditingController();
@@ -1062,6 +1073,7 @@ class AuthViewModel extends BaseViewModel {
         context: context,
         planType: planType,
         planTier: planTier,
+        data: data,
       );
     }
     if (linCorpIndex == 3) {
@@ -1913,59 +1925,79 @@ class AuthViewModel extends BaseViewModel {
               ?.planSpecific
               ?.familyMedicalHistory ??
           '';
-      // model.dependentModelList = model
-      //     .getIndividualApplicationDetailsModel!
-      //     .data!
-      //     .planSpecific!
-      //     .dependent!
-      //     .map(
-      //       (e) => DependentModelClass(
-      //         fullNameController: TextEditingController(text: e.fullName),
-      //         relationshipController: TextEditingController(
-      //           text: e.relationship,
-      //         ),
-      //         dobController: TextEditingController(
-      //           text: DateFormat(
-      //             'yyyy-MM-dd',
-      //           ).format(DateTime.parse(e.dob.toString())),
-      //         ),
-      //         genderController: TextEditingController(text: e.gender),
-      //       ),
-      //     )
-      //     .toList();
-      // getChildCount(model);
-      // getSpouseCount(model);
-      // getTotalSpouseAndChildCount(model);
+      model.cacRegNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.cacNumber ??
+          '';
+      model.orgNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.organizationName ??
+          '';
+      model.hrNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactName ??
+          '';
+      model.hrPhoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactPhone ??
+          '';
+      model.hrEmailController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactEmail ??
+          '';
+      model.staffCountController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.staffCount
+              .toString() ??
+          '';
 
-      if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel!.data!.documents ??
-                []) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadDocumentsApplication!.insert(
-              0,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          } else if (e.documentType == 'NATIONAL_ID') {
-            if (model.uploadDocumentsApplication!.isEmpty) {
-              model.uploadDocumentsApplication!.add(
-                sv.Document(),
-              ); // fill index 0 if missing
-            }
-            model.uploadDocumentsApplication!.insert(
-              1,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          }
-        }
+      if (model.getIndividualApplicationDetailsModel != null &&
+          model
+                  .getIndividualApplicationDetailsModel!
+                  .data!
+                  .planSpecific!
+                  .staffListFile !=
+              null) {
+        model.uploadDocumentsApplication!.insert(
+          0,
+          sv.Document(
+            docName:
+                model
+                    .getIndividualApplicationDetailsModel!
+                    .data!
+                    .planSpecific!
+                    .staffListFile!
+                    .originalName ??
+                '',
+            documentType:
+                model
+                    .getIndividualApplicationDetailsModel!
+                    .data!
+                    .planSpecific!
+                    .staffListFile
+                    ?.documentType ??
+                '',
+            uploadId: '',
+          ),
+        );
       }
     }
     if (planType == 'Corporate' && planTier == 'Pearl') {
@@ -2051,58 +2083,80 @@ class AuthViewModel extends BaseViewModel {
               ?.planSpecific
               ?.familyMedicalHistory ??
           '';
-      // model.dependentModelList = model
-      //     .getIndividualApplicationDetailsModel!
-      //     .data!
-      //     .planSpecific!
-      //     .dependent!
-      //     .map(
-      //       (e) => DependentModelClass(
-      //         fullNameController: TextEditingController(text: e.fullName),
-      //         relationshipController: TextEditingController(
-      //           text: e.relationship,
-      //         ),
-      //         dobController: TextEditingController(
-      //           text: DateFormat(
-      //             'yyyy-MM-dd',
-      //           ).format(DateTime.parse(e.dob.toString())),
-      //         ),
-      //         genderController: TextEditingController(text: e.gender),
-      //       ),
-      //     )
-      //     .toList();
-      // getChildCount(model);
-      // getSpouseCount(model);
-      // getTotalSpouseAndChildCount(model);
+      model.cacRegNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.cacNumber ??
+          '';
+      model.orgNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.organizationName ??
+          '';
+      model.hrNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactName ??
+          '';
+      model.hrPhoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactPhone ??
+          '';
+      model.hrEmailController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactEmail ??
+          '';
+      model.staffCountController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.staffCount
+              .toString() ??
+          '';
 
       if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel!.data!.documents ??
-                []) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadDocumentsApplication!.insert(
-              0,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          } else if (e.documentType == 'NATIONAL_ID') {
-            if (model.uploadDocumentsApplication!.isEmpty) {
-              model.uploadDocumentsApplication!.add(
-                sv.Document(),
-              ); // fill index 0 if missing
-            }
-            model.uploadDocumentsApplication!.insert(
-              1,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          }
+        if (model.getIndividualApplicationDetailsModel != null &&
+            model
+                    .getIndividualApplicationDetailsModel!
+                    .data!
+                    .planSpecific!
+                    .staffListFile !=
+                null) {
+          model.uploadDocumentsApplication!.insert(
+            0,
+            sv.Document(
+              docName:
+                  model
+                      .getIndividualApplicationDetailsModel!
+                      .data!
+                      .planSpecific!
+                      .staffListFile!
+                      .originalName ??
+                  '',
+              documentType:
+                  model
+                      .getIndividualApplicationDetailsModel!
+                      .data!
+                      .planSpecific!
+                      .staffListFile
+                      ?.documentType ??
+                  '',
+              uploadId: '',
+            ),
+          );
         }
       }
     }
@@ -2181,35 +2235,79 @@ class AuthViewModel extends BaseViewModel {
               ?.chronicAilmentDetails ??
           '';
       model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
-      if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel?.data?.documents ??
-                []) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadDocumentsApplication!.insert(
-              0,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          } else if (e.documentType == 'NATIONAL_ID') {
-            if (model.uploadDocumentsApplication!.isEmpty) {
-              model.uploadDocumentsApplication!.add(
-                sv.Document(),
-              ); // fill index 0 if missing
-            }
-            model.uploadDocumentsApplication!.insert(
-              1,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          }
-        }
+
+      model.cacRegNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.cacNumber ??
+          '';
+      model.orgNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.organizationName ??
+          '';
+      model.hrNameController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactName ??
+          '';
+      model.hrPhoneNoController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactPhone ??
+          '';
+      model.hrEmailController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.hrContactEmail ??
+          '';
+      model.staffCountController.text =
+          model
+              .getIndividualApplicationDetailsModel
+              ?.data
+              ?.planSpecific
+              ?.staffCount
+              .toString() ??
+          '';
+      if (model.getIndividualApplicationDetailsModel != null &&
+          model
+                  .getIndividualApplicationDetailsModel!
+                  .data!
+                  .planSpecific!
+                  .staffListFile !=
+              null) {
+        model.uploadDocumentsApplication!.insert(
+          0,
+          sv.Document(
+            docName:
+                model
+                    .getIndividualApplicationDetailsModel!
+                    .data!
+                    .planSpecific!
+                    .staffListFile!
+                    .originalName ??
+                '',
+            documentType:
+                model
+                    .getIndividualApplicationDetailsModel!
+                    .data!
+                    .planSpecific!
+                    .staffListFile
+                    ?.documentType ??
+                '',
+            uploadId: '',
+          ),
+        );
       }
     }
     model!.notifyListeners();
@@ -4909,435 +5007,560 @@ class AuthViewModel extends BaseViewModel {
     BuildContext? context,
     String? planTier,
     String? planType,
-  }) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Center(
-        child: TextView(
-          text: modalCorporateName(),
-          textStyle: TextStyle(
-            fontFamily: 'GoogleSans',
-            fontSize: 16.70.sp,
-            fontWeight: FontWeight.w700,
-            color: AppColors.deep,
-          ),
-        ),
-      ),
-      SizedBox(height: 14.20.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: SizedBox(
-              width: MediaQuery.of(context!).size.width * .80,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(5.0),
-                ), // Adjust radius as needed
-                child: LinearProgressIndicator(
-                  minHeight: 4.0, // Adjust height as needed
-                  value: model!.linCorpIndex / 5,
-                  color: AppColors.primary, // Progress bar color
-                  backgroundColor: Colors.grey[300], // Background track color
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          TextView(
-            text: '${model.linCorpIndex}/5',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 13.2.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 20.h),
-      TextView(
-        text: 'Organization Details',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
-        ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      TextFormWidget(
-        hint: 'Organization Name',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-        ),
-        onChange: (val) {},
-      ),
-      SizedBox(height: 16.h),
-      TextFormWidget(
-        hint: 'CAC Registration Number',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        label: 'RC 123456',
-        labelStyle: TextStyle(color: AppColors.infoGrey),
-        isFilled: true,
-        onChange: (val) {},
-        validator: AppValidator.validateString(),
-        suffixWidget: Padding(
-          padding: EdgeInsets.all(13.2.w),
-          child: GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset(AppImage.arrow_down, fit: BoxFit.cover),
-          ),
-        ),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-        ),
-      ),
-
-      SizedBox(height: 10.h),
-
-      TextView(
-        text: 'HR Contact Person',
-        textStyle: TextStyle(
-          fontFamily: 'GoogleSans',
-          fontSize: 17.2.sp,
-          fontWeight: FontWeight.w700,
-          color: AppColors.reminder,
-        ),
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      TextFormWidget(
-        hint: 'Contact Name',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        validator: AppValidator.validateString(),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-        ),
-        onChange: (val) {},
-      ),
-      SizedBox(height: 16.h),
-      TextFormWidget(
-        hint: 'Contact Phone',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        onChange: (val) {},
-        validator: AppValidator.validateString(),
-        suffixWidget: Padding(
-          padding: EdgeInsets.all(13.2.w),
-          child: GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset(AppImage.arrow_down, fit: BoxFit.cover),
-          ),
-        ),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-        ),
-      ),
-
-      SizedBox(height: 16.h),
-      TextFormWidget(
-        hint: 'Contact Email',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        onChange: (val) {},
-        validator: AppValidator.validateString(),
-        suffixWidget: Padding(
-          padding: EdgeInsets.all(13.2.w),
-          child: GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset(AppImage.arrow_down, fit: BoxFit.cover),
-          ),
-        ),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-        ),
-      ),
-
-      SizedBox(height: 20.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TextView(
-            text: 'Staff List Upload',
+    d.Datum? data,
+  }) => Form(
+    key: secondCorModalFlowKey,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: TextView(
+            text: modalCorporateName(),
             textStyle: TextStyle(
               fontFamily: 'GoogleSans',
-              fontSize: 16.sp,
+              fontSize: 16.70.sp,
               fontWeight: FontWeight.w700,
-              color: AppColors.reminder,
-            ),
-          ),
-          Row(
-            children: [
-              Icon(Icons.download, color: AppColors.primary1, size: 14.2.sp),
-              SizedBox(width: 5.10.h),
-              TextView(
-                text: 'Download Template',
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 13.2.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.primary1,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      SizedBox(height: 10.h),
-      Divider(color: AppColors.infoGrey1),
-      SizedBox(height: 10.h),
-      SizedBox(
-        width: double.infinity,
-        child: DottedBorder(
-          options: RoundedRectDottedBorderOptions(
-            dashPattern: [10, 10],
-            strokeWidth: .94,
-            radius: Radius.circular(10),
-            color: AppColors.primary,
-          ),
-          child: GestureDetector(
-            // onTap: () => model.pickImageCAC(context),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                vertical: 16.20.w,
-                horizontal: 22.0.w,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(AppImage.upload_doc),
-                  SizedBox(width: 10.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextView(
-                        text: 'Upload Document',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 14.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                      SizedBox(height: 2.0.h),
-                      SizedBox(
-                        width: 220.w,
-                        child: TextView(
-                          text:
-                              'Max file size: 2MB (.CSV, .XLSX/XLS, supported)',
-                          maxLines: 2,
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 13.6.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.fineGrey,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              color: AppColors.deep,
             ),
           ),
         ),
-      ),
-      SizedBox(height: 20.h),
-
-      Container(
-        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.4.w),
-        decoration: BoxDecoration(
-          color: AppColors.skyBlue,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        SizedBox(height: 14.20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 2.w),
-                  child: Icon(
-                    Icons.info_outline,
-                    color: AppColors.primary1,
-                    size: 20.sp,
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context!).size.width * .80,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: model!.linCorpIndex / 5,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
                   ),
                 ),
-                SizedBox(width: 10.12.w),
+              ),
+            ),
+            SizedBox(width: 10.w),
+            TextView(
+              text: '${model.linCorpIndex}/5',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 13.2.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20.h),
+        TextView(
+          text: 'Organization Details',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        TextFormWidget(
+          hint: 'Organization Name',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          validator: AppValidator.validateString(),
+          controller: model.orgNameController,
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+          onChange: (val) {},
+        ),
+        SizedBox(height: 16.h),
+        TextFormWidget(
+          hint: 'CAC Registration Number',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          controller: model.cacRegNoController,
+          label: 'RC 123456',
+          labelStyle: TextStyle(color: AppColors.infoGrey),
+          isFilled: true,
+          onChange: (val) {},
+          validator: AppValidator.validateString(),
+          // suffixWidget: Padding(
+          //   padding: EdgeInsets.all(13.2.w),
+          //   child: GestureDetector(
+          //     onTap: () {},
+          //     child: SvgPicture.asset(AppImage.arrow_down, fit: BoxFit.cover),
+          //   ),
+          // ),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+        ),
+        SizedBox(height: 10.h),
+        TextView(
+          text: 'HR Contact Person',
+          textStyle: TextStyle(
+            fontFamily: 'GoogleSans',
+            fontSize: 17.2.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.reminder,
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        TextFormWidget(
+          hint: 'Contact Name',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          controller: model.hrNameController,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          validator: AppValidator.validateString(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+          onChange: (val) {},
+        ),
+        SizedBox(height: 16.h),
+        TextFormWidget(
+          hint: 'Contact Phone',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          controller: model.hrPhoneNoController,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          onChange: (val) {},
+          validator: AppValidator.validateString(),
+          // suffixWidget: Padding(
+          //   padding: EdgeInsets.all(13.2.w),
+          //   child: GestureDetector(
+          //     onTap: () {},
+          //     child: SvgPicture.asset(AppImage.arrow_down, fit: BoxFit.cover),
+          //   ),
+          // ),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+        ),
+        SizedBox(height: 16.h),
+        TextFormWidget(
+          hint: 'Contact Email',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          fillColor: AppColors.grey,
+          controller: model.hrEmailController,
+          isFilled: true,
+          onChange: (val) {},
+          validator: AppValidator.validateString(),
+          // suffixWidget: Padding(
+          //   padding: EdgeInsets.all(13.2.w),
+          //   child: GestureDetector(
+          //     onTap: () {},
+          //     child: SvgPicture.asset(AppImage.arrow_down, fit: BoxFit.cover),
+          //   ),
+          // ),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+        ),
+        SizedBox(height: 20.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextView(
+              text: 'Staff List Upload',
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+                color: AppColors.reminder,
+              ),
+            ),
+            Row(
+              children: [
+                Icon(Icons.download, color: AppColors.primary1, size: 14.2.sp),
+                SizedBox(width: 5.10.h),
                 TextView(
-                  text: 'File Format Requirement',
+                  text: 'Download Template',
                   textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 15.2.sp,
+                    fontFamily: 'GoogleSans',
+                    fontSize: 13.2.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.primary1,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 10.h),
-            BulletText(
-              'CSV file with headers: Name, Email, Phone, Department (optional), Tier (optional)',
+          ],
+        ),
+        SizedBox(height: 10.h),
+        Divider(color: AppColors.infoGrey1),
+        SizedBox(height: 10.h),
+        model.uploadDocumentsApplication!.isNotEmpty &&
+                model.uploadDocumentsApplication![0].docName != null
+            ? Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 13.4.w,
+                  vertical: 10.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(color: AppColors.fineGrey),
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(AppImage.kyc_file),
+                    SizedBox(width: 14.w),
+                    Expanded(
+                      flex: 3,
+                      child: TextView(
+                        text: '${model.uploadDocumentsApplication![0].docName}',
+                        fontSize: 22.sp,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: TextView(
+                        text: '..png',
+                        fontSize: 22.sp,
+                        maxLines: 1,
+                        textOverflow: TextOverflow.ellipsis,
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    GestureDetector(
+                      onTap: () {
+                        model.pickDocumentAndUpload(
+                          context: context,
+                          docType: 'STAFF_LIST',
+                          index: 0,
+                          planType: planType,
+                          planTier: planTier,
+                        );
+                        model.notifyListeners();
+                      },
+                      child: SvgPicture.asset(AppImage.upload),
+                    ),
+                    SizedBox(width: 10.w),
+                    GestureDetector(
+                      onTap: () {
+                        model.uploadDocumentsApplication!.removeAt(0);
+                        model.notifyListeners();
+                      },
+                      child: SvgPicture.asset(AppImage.delete),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox(
+                width: double.infinity,
+                child: DottedBorder(
+                  options: RoundedRectDottedBorderOptions(
+                    dashPattern: [10, 10],
+                    strokeWidth: .94,
+                    radius: Radius.circular(10),
+                    color: AppColors.primary,
+                  ),
+                  child: GestureDetector(
+                    onTap: () => model.pickDocumentAndUpload(
+                      context: context,
+                      docType: 'STAFF_LIST',
+                      planType: planType,
+                      planTier: planTier,
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.20.w,
+                        horizontal: 22.0.w,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.r),
+                        color: AppColors.white,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          model.isLoadingDoc1
+                              ? SizedBox(
+                                  width: 20.w,
+                                  height: 20.h,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primary,
+                                    strokeWidth: 2.w,
+                                  ),
+                                )
+                              : SvgPicture.asset(AppImage.upload_doc),
+                          SizedBox(width: 10.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextView(
+                                text: 'Upload Document',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 14.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.reminder,
+                                ),
+                              ),
+                              SizedBox(height: 2.0.h),
+                              SizedBox(
+                                width: 220.w,
+                                child: TextView(
+                                  text:
+                                      'Max file size: 2MB (.CSV, .XLSX/XLS, supported)',
+                                  maxLines: 2,
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 13.6.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.fineGrey,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+        SizedBox(height: 20.h),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.4.w),
+          decoration: BoxDecoration(
+            color: AppColors.skyBlue,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 2.w),
+                    child: Icon(
+                      Icons.info_outline,
+                      color: AppColors.primary1,
+                      size: 20.sp,
+                    ),
+                  ),
+                  SizedBox(width: 10.12.w),
+                  TextView(
+                    text: 'File Format Requirement',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 15.2.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.primary1,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+              BulletText(
+                'CSV file with headers: Name, Email, Phone, Department (optional), Tier (optional)',
+              ),
+              BulletText(
+                'Tier options: ruby, pearl, diamond (leave empty for default plan tier)',
+              ),
+              BulletText(
+                'Phone numbers should include country code (e.g., +234...)',
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 20.h),
+        TextFormWidget(
+          hint: 'Or Enter Staff Count Manually',
+          borderColor: AppColors.transparent,
+          borderTopLeft: 10.r,
+          borderTopRight: 10.r,
+          borderBottomLeft: 10.r,
+          borderBottomRight: 10.r,
+          hintSize: 14.sp,
+          controller: model.staffCountController,
+          fillColor: AppColors.grey,
+          isFilled: true,
+          onChange: (val) {},
+          validator: AppValidator.validateInt(),
+          style: TextStyle(
+            fontSize: 16.20.sp,
+            fontWeight: FontWeight.w400,
+            fontFamily: 'GoogleSans',
+          ),
+        ),
+        SizedBox(height: 10.h),
+        TextView(
+          text: 'Total cost: ${formatNairaNoDecimal(data!.price!)}',
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 14.2.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.infoGrey,
+          ),
+        ),
+        SizedBox(height: 25.60.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: ButtonWidget(
+                border: 100.r,
+                buttonColor: AppColors.white,
+                buttonText: 'Previous',
+                color: AppColors.primary,
+                isLoading: model.isLoading,
+                buttonBorderColor: AppColors.primary,
+                onPressed: () {
+                  model.linCorpIndex--;
+                  model.notifyListeners();
+                },
+              ),
             ),
-            BulletText(
-              'Tier options: ruby, pearl, diamond (leave empty for default plan tier)',
-            ),
-            BulletText(
-              'Phone numbers should include country code (e.g., +234...)',
+            SizedBox(width: 20.w),
+            Expanded(
+              child: ButtonWidget(
+                border: 100.r,
+                buttonColor: AppColors.primary,
+                buttonText: 'Continue',
+                color: AppColors.white,
+                isLoading: model.isLoading,
+                buttonBorderColor: AppColors.transparent,
+                onPressed: () async {
+                  if (secondCorModalFlowKey.currentState!.validate()) {
+                    saveSecondCorpStep(
+                      context,
+
+                      planTier: planTier,
+                      planType: planType,
+                      saveSecondCorpEntityModel: SaveSecondCorpEntityModel(
+                        applicationId: returnSavedApplicationType(
+                          planType: planType,
+                          planTeir: planTier,
+                        ),
+                        step: 2,
+                        planSpecific: p.PlanSpecific(
+                          organizationName: model.orgNameController.text.trim(),
+                          cacNumber: model.cacRegNoController.text.trim(),
+                          hrContactName: model.hrNameController.text.trim(),
+                          hrContactPhone: model.hrPhoneNoController.text.trim(),
+                          hrContactEmail: model.hrEmailController.text.trim(),
+                          staffCount:
+                              int.tryParse(
+                                model.staffCountController.text.trim(),
+                              ) ??
+                              0,
+                          staffListFile: StaffListFile(
+                            uploadId:
+                                model.uploadDocumentsApplication?[0].uploadId,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  model.notifyListeners();
+                },
+              ),
             ),
           ],
         ),
-      ),
-      SizedBox(height: 20.h),
-      TextFormWidget(
-        hint: 'Or Enter Staff Count Manually',
-        borderColor: AppColors.transparent,
-        borderTopLeft: 10.r,
-        borderTopRight: 10.r,
-        borderBottomLeft: 10.r,
-        borderBottomRight: 10.r,
-        hintSize: 14.sp,
-        fillColor: AppColors.grey,
-        isFilled: true,
-        onChange: (val) {},
-        validator: AppValidator.validateString(),
-        suffixWidget: Padding(
-          padding: EdgeInsets.all(13.2.w),
-          child: GestureDetector(
-            onTap: () {},
-            child: SvgPicture.asset(AppImage.arrow_down, fit: BoxFit.cover),
-          ),
+        SizedBox(height: 16.60.h),
+        ButtonWidget(
+          border: 100.r,
+          buttonColor: AppColors.dashboard,
+          buttonText: 'Save as Draft',
+          color: AppColors.deep,
+          buttonBorderColor: AppColors.transparent,
+          onPressed: () async {
+            if (secondCorModalFlowKey.currentState!.validate()) {
+              saveSecondCorpStep(
+                context,
+                planTier: planTier,
+                planType: planType,
+                saveSecondCorpEntityModel: SaveSecondCorpEntityModel(
+                  applicationId: returnSavedApplicationType(
+                    planType: planType,
+                    planTeir: planTier,
+                  ),
+                  step: 2,
+                  planSpecific: p.PlanSpecific(
+                    organizationName: model.orgNameController.text.trim(),
+                    cacNumber: model.cacRegNoController.text.trim(),
+                    hrContactName: model.hrNameController.text.trim(),
+                    hrContactPhone: model.hrPhoneNoController.text.trim(),
+                    hrContactEmail: model.hrEmailController.text.trim(),
+                    staffCount:
+                        int.tryParse(model.staffCountController.text.trim()) ??
+                        0,
+                    staffListFile: StaffListFile(
+                      uploadId: model.uploadDocumentsApplication?[0].uploadId,
+                    ),
+                  ),
+                ),
+              );
+            }
+            model.notifyListeners();
+          },
         ),
-        style: TextStyle(
-          fontSize: 16.20.sp,
-          fontWeight: FontWeight.w400,
-          fontFamily: 'GoogleSans',
-        ),
-      ),
-      SizedBox(height: 10.h),
-      TextView(
-        text: 'Total cost: ₦65,000',
-        textStyle: TextStyle(
-          fontFamily: 'Arial',
-          fontSize: 14.2.sp,
-          fontWeight: FontWeight.w400,
-          color: AppColors.infoGrey,
-        ),
-      ),
-
-      SizedBox(height: 25.60.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: ButtonWidget(
-              border: 100.r,
-              buttonColor: AppColors.white,
-              buttonText: 'Previous',
-              color: AppColors.primary,
-              isLoading: model.isLoading,
-              buttonBorderColor: AppColors.primary,
-              onPressed: () {
-                model.linCorpIndex--;
-                model.notifyListeners();
-              },
-            ),
-          ),
-          SizedBox(width: 20.w),
-          Expanded(
-            child: ButtonWidget(
-              border: 100.r,
-              buttonColor: AppColors.primary,
-              buttonText: 'Continue',
-              color: AppColors.white,
-              isLoading: model.isLoading,
-              buttonBorderColor: AppColors.transparent,
-              onPressed: () {
-                model.linCorpIndex++;
-                model.notifyListeners();
-              },
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 16.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () async {
-          navigate.back();
-          navigate.back();
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(
-              index: 0,
-              isTapHMOPlan: true,
-              isSubStatus: 'subscribers',
-              mySubPlans: 'Draft',
-            ),
-          );
-          model.notifyListeners();
-        },
-      ),
-      SizedBox(height: 20.60.h),
-    ],
+        SizedBox(height: 20.60.h),
+      ],
+    ),
   );
 
   thirdSubModalFlow({
@@ -26904,11 +27127,31 @@ class AuthViewModel extends BaseViewModel {
             planTier == 'Diamond') {
           linSubIndex++;
         }
-        // if (planType == 'Family' && planTier == 'Ruby' ||
-        //     planTier == 'Pearl' ||
-        //     planTier == 'Diamond') {
-        //   linFamIndex++;
-        // }
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void saveSecondCorpStep(
+    BuildContext context, {
+    SaveSecondCorpEntityModel? saveSecondCorpEntityModel,
+    String? planType,
+    String? planTier,
+  }) async {
+    try {
+      _isLoading = true;
+      _saveSecondStepResponseModel = await runBusyFuture(
+        repositoryImply.saveSecondCorporateStep(
+          saveSecondCorporateStep: saveSecondCorpEntityModel,
+        ),
+        throwException: true,
+      );
+      if (_saveSecondStepResponseModel?.statusCode == 201) {
         if (planType == 'Corporate' && planTier == 'Ruby' ||
             planTier == 'Pearl' ||
             planTier == 'Diamond') {

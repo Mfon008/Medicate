@@ -30,7 +30,7 @@ class CoorporateFormScreen extends StatelessWidget {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
-         model.checkCorpPlanTypeAndTier(
+        model.checkCorpPlanTypeAndTier(
           context: context,
           model: model,
           planType: planTypeName,
