@@ -491,9 +491,11 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Padding(
                 padding: EdgeInsets.all(18.w),
-                child: SvgPicture.asset(
+                child: Image.asset(
                   AppImage.pro_health,
-                  color: AppColors.primary,
+                  height: 76.h,
+                  width: 76.w,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
@@ -557,25 +559,6 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                     ],
                   ),
                   SizedBox(width: 10),
-                  // Row(
-                  //   children: [
-                  //     SvgPicture.asset(
-                  //       AppImage.world_web,
-                  //       height: 10.h,
-                  //       width: 10.w,
-                  //     ),
-                  //     SizedBox(width: 6.8.w),
-                  //     TextView(
-                  //       text: 'Visit Website',
-                  //       textStyle: TextStyle(
-                  //         fontFamily: 'Arial',
-                  //         fontSize: 13.2.sp,
-                  //         fontWeight: FontWeight.w400,
-                  //         color: AppColors.reminder,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
               SizedBox(height: 20.6.h),

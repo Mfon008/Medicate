@@ -17,7 +17,7 @@ PlanSpecific _$PlanSpecificFromJson(Map<String, dynamic> json) => PlanSpecific(
   hrContactPhone: json['hrContactPhone'] as String?,
   hrContactEmail: json['hrContactEmail'] as String?,
   staffCount: (json['staffCount'] as num?)?.toInt(),
-  dependent: (json['dependent'] as List<dynamic>?)
+  dependent: (json['dependents'] as List<dynamic>?)
       ?.map((e) => Dependent.fromJson(e as Map<String, dynamic>))
       .toList(),
   staffListFile: json['staffListFile'] == null
@@ -37,6 +37,6 @@ Map<String, dynamic> _$PlanSpecificToJson(PlanSpecific instance) =>
       'hrContactPhone': instance.hrContactPhone,
       'hrContactEmail': instance.hrContactEmail,
       'staffCount': instance.staffCount,
-      'dependent': instance.dependent,
+      'dependents': instance.dependent,
       'staffListFile': instance.staffListFile,
     };
