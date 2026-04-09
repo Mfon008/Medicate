@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, deprecated_member_use, must_be_immutable
+// ignore_for_file: strict_top_level_inference, deprecated_member_use, must_be_immutable, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,8 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/connect_end/model/active_hmo_plan_response_model/datum.dart';
 import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
+import '../../../core/app_assets/constant.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/get_my_subscription_response_model/subscription.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
@@ -35,6 +37,9 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
         }
         if (widget.mySubPlans != '') {
           model.mySubPlans = widget.mySubPlans ?? '';
+          model.getMySubscriptionDetails(context, status: model.mySubPlans);
+        } else {
+          model.getMySubscriptionDetails(context, status: 'All');
         }
         model.getHMOActivePlan(context);
       },
@@ -102,7 +107,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                 : BoxDecoration(),
                             alignment: Alignment.center,
                             child: TextView(
-                              text: 'My Subsription',
+                              text: 'My Subscription',
                               textStyle: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
@@ -131,7 +136,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                 children: [
                                   Expanded(
                                     child: TextFormWidget(
-                                      label: 'Search HMOs..',
+                                      label: 'Search HMOs.',
                                       labelStyle: TextStyle(
                                         fontFamily: 'Arial',
                                         fontSize: 14.60.sp,
@@ -233,7 +238,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                 children: [
                                   SizedBox(height: 10.h),
                                   TextFormWidget(
-                                    label: 'Search HMOs..',
+                                    label: 'Search Users.',
                                     labelStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14.60.sp,
@@ -263,13 +268,25 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                       subStatusWidget(
                                         color: AppColors.app_green,
                                         mainText: 'All Plans',
-                                        statusText: '10',
-                                        onTap: () {
-                                          model.mySubPlans = 'All Plans';
+                                        statusText:
+                                            model.getMySubscriptionResponseModel ==
+                                                null
+                                            ? '0'
+                                            : model.addAllStatusCount(
+                                                model
+                                                    .getMySubscriptionResponseModel!
+                                                    .data!
+                                                    .summary!,
+                                              )!,
+                                        onTap: () async {
+                                          model.mySubPlans = 'All';
+                                          model.getMySubscriptionDetails(
+                                            context,
+                                            status: model.mySubPlans,
+                                          );
                                           model.notifyListeners();
                                         },
-                                        borderColor:
-                                            model.mySubPlans == 'All Plans'
+                                        borderColor: model.mySubPlans == 'All'
                                             ? AppColors.primary
                                             : AppColors.transparent,
                                       ),
@@ -277,9 +294,22 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                       subStatusWidget(
                                         color: AppColors.yellow,
                                         mainText: 'Under Review',
-                                        statusText: '1',
-                                        onTap: () {
+                                        statusText:
+                                            model.getMySubscriptionResponseModel !=
+                                                null
+                                            ? model
+                                                  .getMySubscriptionResponseModel!
+                                                  .data!
+                                                  .summary!
+                                                  .reviewPendingCount
+                                                  .toString()
+                                            : '0',
+                                        onTap: () async {
                                           model.mySubPlans = 'Under Review';
+                                          model.getMySubscriptionDetails(
+                                            context,
+                                            status: 'ReviewPending',
+                                          );
                                           model.notifyListeners();
                                         },
                                         borderColor:
@@ -297,9 +327,22 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                       subStatusWidget(
                                         color: AppColors.grey1,
                                         mainText: 'Draft',
-                                        statusText: '1',
-                                        onTap: () {
+                                        statusText:
+                                            model.getMySubscriptionResponseModel !=
+                                                null
+                                            ? model
+                                                  .getMySubscriptionResponseModel!
+                                                  .data!
+                                                  .summary!
+                                                  .draftCount
+                                                  .toString()
+                                            : '0',
+                                        onTap: () async {
                                           model.mySubPlans = 'Draft';
+                                          model.getMySubscriptionDetails(
+                                            context,
+                                            status: model.mySubPlans,
+                                          );
                                           model.notifyListeners();
                                         },
                                         borderColor: model.mySubPlans == 'Draft'
@@ -310,9 +353,22 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                       subStatusWidget(
                                         color: AppColors.red,
                                         mainText: 'Rejected',
-                                        statusText: '1',
-                                        onTap: () {
+                                        statusText:
+                                            model.getMySubscriptionResponseModel !=
+                                                null
+                                            ? model
+                                                  .getMySubscriptionResponseModel!
+                                                  .data!
+                                                  .summary!
+                                                  .rejectedCount
+                                                  .toString()
+                                            : '0',
+                                        onTap: () async {
                                           model.mySubPlans = 'Rejected';
+                                          model.getMySubscriptionDetails(
+                                            context,
+                                            status: model.mySubPlans,
+                                          );
                                           model.notifyListeners();
                                         },
                                         borderColor:
@@ -323,7 +379,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                     ],
                                   ),
                                   SizedBox(height: 20.h),
-                                  model.mySubPlans == 'All Plans'
+                                  model.mySubPlans == 'All'
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -337,52 +393,85 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                 color: AppColors.deep,
                                               ),
                                             ),
-                                            Container(
-                                              padding: EdgeInsets.all(12.w),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.r),
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      TextView(
-                                                        text: 'Status: ',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 15.4.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
+                                            PopupMenuButton<String>(
+                                              color: AppColors.white,
+                                              onSelected: (value) {
+                                                model.selectStatus = value;
+                                                model.notifyListeners();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(12.w),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        8.r,
                                                       ),
-                                                      TextView(
-                                                        text: 'All',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 15.4.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .infoGrey,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        TextView(
+                                                          text: 'Status: ',
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 15.4.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: AppColors
+                                                                .reminder,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(width: 12.w),
-                                                  Icon(
-                                                    Icons
-                                                        .keyboard_arrow_down_rounded,
-                                                    color: AppColors.infoGrey,
-                                                  ),
-                                                ],
+                                                        TextView(
+                                                          text: model
+                                                              .selectStatus,
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 15.4.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: AppColors
+                                                                .infoGrey,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(width: 12.w),
+                                                    Icon(
+                                                      Icons
+                                                          .keyboard_arrow_down_rounded,
+                                                      color: AppColors.infoGrey,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
+                                              itemBuilder: (context) => [
+                                                ...[
+                                                  'All',
+                                                  'Active',
+                                                  'Expiring',
+                                                  'Expired',
+                                                ].map(
+                                                  (e) => PopupMenuItem(
+                                                    value: e,
+                                                    child: TextView(
+                                                      text: e,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 14.0.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         )
@@ -439,7 +528,111 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 16.20.h),
-                                  plansSubWidget(statusText: 'Active'),
+                                  if (model.getMySubscriptionResponseModel !=
+                                          null &&
+                                      model
+                                          .getMySubscriptionResponseModel!
+                                          .data!
+                                          .subscriptions!
+                                          .isNotEmpty)
+                                    ...model
+                                        .getMySubscriptionResponseModel!
+                                        .data!
+                                        .subscriptions!
+                                        .skip(model.mySubscriptionIndex)
+                                        .take(10)
+                                        .toList()
+                                        .map(
+                                          (e) => plansSubWidget(subscriber: e),
+                                        ),
+                                  SizedBox(height: 20.40.h),
+                                  Divider(
+                                    color: AppColors.buttonGrey1,
+                                    thickness: .4,
+                                  ),
+                                  SizedBox(height: 4.0.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        onPressed:
+                                            model.mySubscriptionIndex - 10 >= 0
+                                            ? () {
+                                                if (model.mySubscriptionIndex -
+                                                        10 >=
+                                                    0) {
+                                                  model.mySubscriptionIndex -=
+                                                      10;
+                                                }
+                                                model.mySubscriptionIndexIncrement--;
+                                                model.notifyListeners();
+                                              }
+                                            : () {},
+                                        icon: Icon(
+                                          Icons.arrow_back,
+                                          color:
+                                              model.mySubscriptionIndex - 10 >=
+                                                  0
+                                              ? AppColors.primary1
+                                              : AppColors.primary1.withOpacity(
+                                                  .4,
+                                                ),
+                                          size: 20.sp,
+                                        ),
+                                      ),
+
+                                      TextView(
+                                        text: 'Page ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.subscriptions!.length ~/ 10 + 1}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 15.2.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed:
+                                            model.mySubscriptionIndex + 10 <
+                                                model
+                                                    .getMySubscriptionResponseModel!
+                                                    .data!
+                                                    .subscriptions!
+                                                    .length
+                                            ? () {
+                                                if (model.mySubscriptionIndex +
+                                                        10 <
+                                                    model
+                                                        .getMySubscriptionResponseModel!
+                                                        .data!
+                                                        .subscriptions!
+                                                        .length) {
+                                                  model.mySubscriptionIndex +=
+                                                      10;
+                                                }
+                                                model.mySubscriptionIndexIncrement++;
+                                                model.notifyListeners();
+                                              }
+                                            : () {},
+                                        icon: Icon(
+                                          Icons.arrow_forward,
+                                          color:
+                                              model.mySubscriptionIndex + 10 <
+                                                  model
+                                                      .getMySubscriptionResponseModel!
+                                                      .data!
+                                                      .subscriptions!
+                                                      .length
+                                              ? AppColors.primary1
+                                              : AppColors.primary1.withOpacity(
+                                                  .4,
+                                                ),
+                                          size: 20.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
                                   SizedBox(height: 40.h),
                                 ],
                               ),
@@ -562,44 +755,16 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                 ],
               ),
               SizedBox(height: 20.6.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextView(
-                        text: 'Open 24 hours',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.2.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.app_green,
-                        ),
-                      ),
-                      TextView(
-                        text: '• Hospital',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.2.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.reminder,
-                        ),
-                      ),
-                    ],
-                  ),
-                  TextView(
-                    text: 'HMO Plans',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 13.2.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primary1,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.primary1,
-                    ),
-                  ),
-                ],
+              TextView(
+                text: 'HMO Plans',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.primary1,
+                  decoration: TextDecoration.underline,
+                  decorationColor: AppColors.primary1,
+                ),
               ),
             ],
           ),
@@ -660,9 +825,10 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
     ),
   );
 
-  plansSubWidget({required String statusText}) => Container(
+  plansSubWidget({required Subscription subscriber}) => Container(
     width: double.infinity,
     padding: EdgeInsets.all(16.w),
+    margin: EdgeInsets.only(bottom: 10.w),
     decoration: BoxDecoration(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(12.r),
@@ -677,18 +843,18 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 6.w, horizontal: 10.w),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.yellow),
+                border: Border.all(color: statusColorProp(subscriber.status)),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: TextView(
-                text: statusText,
+                text: statusTextProp(subscriber.status) ?? '',
                 maxLines: 3,
                 textOverflow: TextOverflow.ellipsis,
                 textStyle: TextStyle(
                   fontFamily: 'GoogleSans',
-                  fontSize: 13.2.sp,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.yellow,
+                  color: statusColorProp(subscriber.status),
                 ),
               ),
             ),
@@ -696,21 +862,24 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 4.w, horizontal: 10.w),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.appRed),
-                color: AppColors.faintedRed,
+                border: Border.all(color: tiersColor(subscriber.planTier!)),
+                color: tiersBorderColor(subscriber.planTier!),
                 borderRadius: BorderRadius.circular(100.r),
               ),
               child: Row(
                 children: [
-                  SvgPicture.asset(AppImage.star, color: AppColors.red),
+                  SvgPicture.asset(
+                    tiersSvgImage(subscriber.planTier!),
+                    color: tiersColor(subscriber.planTier!),
+                  ),
                   SizedBox(width: 6.w),
                   TextView(
-                    text: 'Ruby',
+                    text: subscriber.planTier ?? '',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
-                      fontSize: 15.2.sp,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.red,
+                      color: tiersColor(subscriber.planTier!),
                     ),
                   ),
                 ],
@@ -721,7 +890,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: TextView(
-                  text: 'ID: MED-RUBY-001',
+                  text: 'ID: ${subscriber.id}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -735,7 +904,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
         ),
         SizedBox(height: 10.h),
         TextView(
-          text: 'Individual Basic Plan',
+          text: '${subscriber.planType}',
           textStyle: TextStyle(
             fontFamily: 'GoogleSans',
             fontSize: 17.2.sp,
@@ -760,7 +929,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                   ),
                 ),
                 TextView(
-                  text: '2023-12-10',
+                  text: subscriber.startDate ?? '--',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.8.sp,
@@ -783,7 +952,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                   ),
                 ),
                 TextView(
-                  text: '2023-12-10',
+                  text: subscriber.endDate ?? '--',
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 15.8.sp,
@@ -807,7 +976,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                 ),
 
                 TextView(
-                  text: '₦65,000',
+                  text: formatNairaNoDecimal(subscriber.totalAmount!),
                   textStyle: TextStyle(
                     fontSize: 15.8.sp,
                     fontWeight: FontWeight.w400,
@@ -852,4 +1021,62 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
       ],
     ),
   );
+
+  Color tiersColor(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppColors.lightBlue;
+    }
+
+    if (planTier == 'Diamond') {
+      return AppColors.purple;
+    }
+
+    return AppColors.appRed;
+  }
+
+  Color tiersBorderColor(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppColors.faintedBlue;
+    }
+
+    if (planTier == 'Diamond') {
+      return AppColors.faintedPurple;
+    }
+
+    return AppColors.faintedRed;
+  }
+
+  String tiersSvgImage(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppImage.pearl;
+    }
+    if (planTier == 'Diamond') {
+      return AppImage.diamond;
+    }
+
+    return AppImage.star;
+  }
+
+  statusTextProp(String? status) {
+    if (status == 'ReviewPending') {
+      return 'Pending';
+    }
+    if (status == 'Draft') {
+      return 'Draft';
+    }
+  }
+
+  statusColorProp(String? status) {
+    if (status == 'ReviewPending') {
+      return AppColors.yellow;
+    }
+    if (status == 'Draft') {
+      return AppColors.infoGrey;
+    }
+    if (status == 'Active') {
+      return AppColors.app_green;
+    }
+
+    return AppColors.red;
+  }
 }

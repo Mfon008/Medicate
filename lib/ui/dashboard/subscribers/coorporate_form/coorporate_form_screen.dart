@@ -49,28 +49,34 @@ class CoorporateFormScreen extends StatelessWidget {
             toolbarHeight: 80.0,
             title: Padding(
               padding: EdgeInsets.symmetric(horizontal: 4.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  GlobalNavigator(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GlobalNavigator(),
+                      TextView(
+                        text: 'View',
+                        textStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontFamily: 'Arial',
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
                   TextView(
-                    text: 'Apply for $planTeirName $planTypeName Basic',
+                    text:
+                        'Apply for $planTeirName $planTypeName ${tierTypeLastName(planTeirName)}',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w700,
                       color: AppColors.deep,
-                    ),
-                  ),
-                  TextView(
-                    text: 'View',
-                    textStyle: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: 'Arial',
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.primary,
-                      decoration: TextDecoration.underline,
-                      decorationColor: AppColors.primary,
                     ),
                   ),
                 ],
@@ -107,5 +113,15 @@ class CoorporateFormScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  String tierTypeLastName(String? text) {
+    if (text == 'Ruby') {
+      return 'Basic';
+    }
+    if (text == 'Pearl') {
+      return 'Pearl';
+    }
+    return 'Premium';
   }
 }

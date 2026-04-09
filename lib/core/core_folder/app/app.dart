@@ -45,6 +45,7 @@ import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/speciali
 import '../../../ui/dashboard/hmo/hmo_dashboard.dart';
 import '../../../ui/dashboard/hmo/hmo_home_screen.dart';
 import '../../../ui/dashboard/hmo/hmo_more_screen.dart';
+import '../../../ui/dashboard/home_screen.dart';
 import '../../../ui/dashboard/subscribers/application_form/application_form_screen.dart';
 import '../../../ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart';
 import '../../../ui/dashboard/subscribers/family_form/family_form_screen.dart';
@@ -120,6 +121,7 @@ import '../network/support_network_service.dart';
 @StackedApp(
   routes: [
     MaterialRoute(page: Dashboard, initial: true),
+    MaterialRoute(page: HomeScreen),
     MaterialRoute(page: PharmacyDashboard),
     MaterialRoute(page: RoleOnboarding),
     MaterialRoute(page: GetStartedOnboarding),

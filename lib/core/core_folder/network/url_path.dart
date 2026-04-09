@@ -69,4 +69,5 @@ class UrlConfig {
   static const String save_first_step = 'hmo/applications/save-step';
   static const String get_hospital_by_id = 'hmo/hospitals';
   static const String submit_hmo_plan = 'hmo/applications/submit';
+  static const String my_subscription = 'hmo/applications/my-subscriptions';
 }

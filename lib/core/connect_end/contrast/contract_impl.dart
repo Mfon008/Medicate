@@ -16,6 +16,7 @@ import '../model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospi
 import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
+import '../model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
@@ -206,10 +207,11 @@ class AuthContractsImpl {
     SaveSecondFamStepEntityModel? saveSecondFamStep,
   }) async =>
       await _api.saveSecondFamStep(saveSecondFamStep: saveSecondFamStep);
-   Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
+  Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
     SaveSecondCorpEntityModel? saveSecondCorporateStep,
-  }) async =>
-      await _api.saveSecondCorporateStep(saveSecondCorporateStep: saveSecondCorporateStep);
+  }) async => await _api.saveSecondCorporateStep(
+    saveSecondCorporateStep: saveSecondCorporateStep,
+  );
   Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
     SaveThirdStepEntityModel? saveThirdIndividualStep,
   }) async => await _api.saveThirdIndividualStep(
@@ -231,4 +233,7 @@ class AuthContractsImpl {
   Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({
     String? planId,
   }) async => await _api.getHospitalNetworkPlan(planId: planId);
+  Future<GetMySubscriptionResponseModel> getMySubscriptions({
+    String? status,
+  }) async => await _api.getMySubscriptions(status: status);
 }

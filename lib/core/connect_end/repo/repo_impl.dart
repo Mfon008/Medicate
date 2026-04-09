@@ -19,6 +19,7 @@ import '../model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospi
 import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
+import '../model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
@@ -365,7 +366,7 @@ class AuthRepoImpl {
     return response;
   }
 
-   Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
+  Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
     SaveSecondCorpEntityModel? saveSecondCorporateStep,
   }) async {
     final response = await _contract.saveSecondCorporateStep(
@@ -430,6 +431,13 @@ class AuthRepoImpl {
     String? planId,
   }) async {
     final response = await _contract.getHospitalNetworkPlan(planId: planId);
+    return response;
+  }
+
+ Future<GetMySubscriptionResponseModel> getMySubscriptions({
+    String? status,
+  }) async {
+    final response = await _contract.getMySubscriptions(status: status);
     return response;
   }
 

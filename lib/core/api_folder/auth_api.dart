@@ -9,6 +9,7 @@ import 'package:medicate_app/core/connect_end/model/forgot_password_response_mod
 import 'package:medicate_app/core/connect_end/model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospital_network_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_individual_application_details_model/get_individual_application_details_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/get_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -835,6 +836,23 @@ class AuthApi {
       );
       logger.d(response.data);
       return GetHmoPlanHospitalNetworkResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetMySubscriptionResponseModel> getMySubscriptions({
+    String? status,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.my_subscription,
+        RequestMethod.getParams,
+        queryParams: {'statusFilter':status}
+      );
+      logger.d(response.data);
+      return GetMySubscriptionResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

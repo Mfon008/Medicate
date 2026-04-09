@@ -6,7 +6,6 @@ class AppRoutes {
   AppRoutes();
 
   String returnAppRoutes(type) {
-    print('typetypeytpe:::${type.authType}');
     if (type == null) {
       return Routes.splashScreen;
     }

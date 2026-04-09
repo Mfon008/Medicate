@@ -13,7 +13,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import '../../../core/connect_end/model/get_my_subscription_response_model/summary.dart';
 import 'package:medicate_app/core/connect_end/model/get_hmo_plan_hospital_network_response_model/hospital.dart';
+import 'package:medicate_app/core/connect_end/model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/daily_dose_time.dart'
     as getR;
 import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
@@ -220,6 +222,9 @@ class AuthViewModel extends BaseViewModel {
   SetPinResponseModel? get setPinResponseModel => _setPinResponseModel;
   ResendOtpResponseModel? _resendOtpResponseModel;
   ResendOtpResponseModel? get resendOtpResponseModel => _resendOtpResponseModel;
+  GetMySubscriptionResponseModel? _getMySubscriptionResponseModel;
+  GetMySubscriptionResponseModel? get getMySubscriptionResponseModel =>
+      _getMySubscriptionResponseModel;
   GetHmoPlanHospitalNetworkResponseModel?
   _getHmoPlanHospitalNetworkResponseModel;
   GetHmoPlanHospitalNetworkResponseModel?
@@ -283,8 +288,11 @@ class AuthViewModel extends BaseViewModel {
   dynamic groupedTransactions;
   dynamic transactions;
 
+  String selectStatus = 'All';
   Timer? _timer;
   int _start = 60;
+  int mySubscriptionIndex = 0;
+  int mySubscriptionIndexIncrement = 1;
   final _pickImage = ImagePickerHandler();
   File? image;
   File? imageDrug;
@@ -508,7 +516,7 @@ class AuthViewModel extends BaseViewModel {
   int? dependentIndex;
 
   String isSubStatus = 'Plans';
-  String mySubPlans = '';
+  String mySubPlans = 'All';
   String isProSubStatus = 'Individual';
 
   int linSubIndex = 1;
@@ -1865,7 +1873,7 @@ class AuthViewModel extends BaseViewModel {
               ?.chronicAilmentDetails ??
           '';
       model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
-     if (model.getIndividualApplicationDetailsModel != null) {
+      if (model.getIndividualApplicationDetailsModel != null) {
         for (var e
             in model.getIndividualApplicationDetailsModel!.data!.documents ??
                 []) {
@@ -2836,6 +2844,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTeir: planTier,
                 planType: planType,
+                isSavedDraft: false,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
                       applicationId: returnSavedApplicationType(
@@ -2884,6 +2893,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTeir: planTier,
                 planType: planType,
+                isSavedDraft: true,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
                       applicationId: returnSavedApplicationType(
@@ -5015,6 +5025,7 @@ class AuthViewModel extends BaseViewModel {
                     second2FamModalFlowKey.currentState!.validate()) {
                   saveSecondFamStep(
                     context,
+                    isSavedDraft: false,
                     saveSecondFamStep: SaveSecondFamStepEntityModel(
                       applicationId: returnSavedApplicationType(
                         planType: planType,
@@ -5060,6 +5071,7 @@ class AuthViewModel extends BaseViewModel {
               second2FamModalFlowKey.currentState!.validate()) {
             saveSecondFamStep(
               context,
+              isSavedDraft: true,
               saveSecondFamStep: SaveSecondFamStepEntityModel(
                 applicationId: returnSavedApplicationType(
                   planType: planType,
@@ -5560,6 +5572,7 @@ class AuthViewModel extends BaseViewModel {
                       context,
                       planTier: planTier,
                       planType: planType,
+                      isSavedDraft: false,
                       saveSecondCorpEntityModel: SaveSecondCorpEntityModel(
                         applicationId: returnSavedApplicationType(
                           planType: planType,
@@ -5604,6 +5617,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTier: planTier,
                 planType: planType,
+                isSavedDraft: true,
                 saveSecondCorpEntityModel: SaveSecondCorpEntityModel(
                   applicationId: returnSavedApplicationType(
                     planType: planType,
@@ -5838,7 +5852,8 @@ class AuthViewModel extends BaseViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          model.isLoadingDoc1
+                          model.uploadDocumentsApplication!.isNotEmpty &&
+                                  model.isLoadingDoc1
                               ? SizedBox(
                                   width: 20.w,
                                   height: 20.h,
@@ -5945,7 +5960,8 @@ class AuthViewModel extends BaseViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          model.isLoadingDoc1
+                          model.uploadDocumentsApplication!.length == 2 &&
+                                  model.isLoadingDoc1
                               ? SizedBox(
                                   width: 20.w,
                                   height: 20.h,
@@ -6097,6 +6113,7 @@ class AuthViewModel extends BaseViewModel {
                       context,
                       planTier: planTier,
                       planType: planType,
+                      isSavedDraft: false,
                       saveThirdIndividualStep: SaveThirdStepEntityModel(
                         applicationId: returnSavedApplicationType(
                           planType: planType,
@@ -6128,6 +6145,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTier: planTier,
                 planType: planType,
+                isSavedDraft: true,
                 saveThirdIndividualStep: SaveThirdStepEntityModel(
                   applicationId: returnSavedApplicationType(
                     planType: planType,
@@ -7347,7 +7365,10 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () async {
-                if (model.uploadDocumentsApplication!.isNotEmpty) {
+                if (model.uploadFamDocumentsApplication1 != null &&
+                    model.uploadFamDocumentsApplication1!.uploadId == '' &&
+                    model.uploadFamDocumentsApplication2 != null &&
+                    model.uploadFamDocumentsApplication2!.uploadId == '') {
                   linFamIndex++;
                 } else if (model.uploadFamDocumentsApplication1 != null &&
                     model.uploadFamDocumentsApplication2 != null) {
@@ -16279,25 +16300,25 @@ class AuthViewModel extends BaseViewModel {
   }
 
   Future<void> addFamDocumentApplication(index) async {
-    if (uploadFamDocumentsApplication1!=null) {
+    if (uploadFamDocumentsApplication1 != null) {
       uploadDocumentsApplication!.add(uploadFamDocumentsApplication1!);
     }
-    if (uploadFamDocumentsApplication2!=null) {
+    if (uploadFamDocumentsApplication2 != null) {
       uploadDocumentsApplication!.add(uploadFamDocumentsApplication2!);
     }
-    if (uploadFamDocumentsApplication3!=null) {
+    if (uploadFamDocumentsApplication3 != null) {
       uploadDocumentsApplication!.add(uploadFamDocumentsApplication3!);
     }
-    if (uploadFamDocumentsApplication4!=null) {
+    if (uploadFamDocumentsApplication4 != null) {
       uploadDocumentsApplication!.add(uploadFamDocumentsApplication4!);
     }
-    if (uploadFamDocumentsApplication5!=null) {
+    if (uploadFamDocumentsApplication5 != null) {
       uploadDocumentsApplication!.add(uploadFamDocumentsApplication5!);
     }
-    if (uploadFamDocumentsApplication6!=null) {
+    if (uploadFamDocumentsApplication6 != null) {
       uploadDocumentsApplication!.add(uploadFamDocumentsApplication6!);
     }
-    if (uploadFamDocumentsApplication7!=null) {
+    if (uploadFamDocumentsApplication7 != null) {
       uploadDocumentsApplication!.add(uploadFamDocumentsApplication7!);
     }
   }
@@ -27656,6 +27677,7 @@ class AuthViewModel extends BaseViewModel {
     SaveFirstStepPersonalInfoEntityModel? saveFirstStepPersonalInfoEntityModel,
     String? planType,
     String? planTeir,
+    bool? isSavedDraft,
   }) async {
     try {
       _isLoading = true;
@@ -27666,20 +27688,31 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       if (_saveFirstStepPersonalResponseModel?.statusCode == 201) {
-        if (planType == 'Individual' && planTeir == 'Ruby' ||
-            planTeir == 'Pearl' ||
-            planTeir == 'Diamond') {
-          linSubIndex++;
-        }
-        if (planType == 'Family' && planTeir == 'Ruby' ||
-            planTeir == 'Pearl' ||
-            planTeir == 'Diamond') {
-          linFamIndex++;
-        }
-        if (planType == 'Corporate' && planTeir == 'Ruby' ||
-            planTeir == 'Pearl' ||
-            planTeir == 'Diamond') {
-          linCorpIndex++;
+        if (!isSavedDraft!) {
+          if (planType == 'Individual' && planTeir == 'Ruby' ||
+              planTeir == 'Pearl' ||
+              planTeir == 'Diamond') {
+            linSubIndex++;
+          }
+          if (planType == 'Family' && planTeir == 'Ruby' ||
+              planTeir == 'Pearl' ||
+              planTeir == 'Diamond') {
+            linFamIndex++;
+          }
+          if (planType == 'Corporate' && planTeir == 'Ruby' ||
+              planTeir == 'Pearl' ||
+              planTeir == 'Diamond') {
+            linCorpIndex++;
+          }
+        } else {
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+              mySubPlans: 'Draft',
+            ),
+          );
         }
       }
       _isLoading = false;
@@ -27696,6 +27729,7 @@ class AuthViewModel extends BaseViewModel {
     SaveSecondStepEntityModel? saveSecondIndividualStep,
     String? planType,
     String? planTier,
+    bool? isSavedDraft,
   }) async {
     try {
       _isLoading = true;
@@ -27706,10 +27740,21 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       if (_saveSecondStepResponseModel?.statusCode == 201) {
-        if (planType == 'Individual' && planTier == 'Ruby' ||
-            planTier == 'Pearl' ||
-            planTier == 'Diamond') {
-          linSubIndex++;
+        if (!isSavedDraft!) {
+          if (planType == 'Individual' && planTier == 'Ruby' ||
+              planTier == 'Pearl' ||
+              planTier == 'Diamond') {
+            linSubIndex++;
+          }
+        } else {
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+              mySubPlans: 'Draft',
+            ),
+          );
         }
       }
       _isLoading = false;
@@ -27726,6 +27771,7 @@ class AuthViewModel extends BaseViewModel {
     SaveSecondCorpEntityModel? saveSecondCorpEntityModel,
     String? planType,
     String? planTier,
+    bool? isSavedDraft,
   }) async {
     try {
       _isLoading = true;
@@ -27736,10 +27782,21 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       if (_saveSecondStepResponseModel?.statusCode == 201) {
-        if (planType == 'Corporate' && planTier == 'Ruby' ||
-            planTier == 'Pearl' ||
-            planTier == 'Diamond') {
-          linCorpIndex++;
+        if (!isSavedDraft!) {
+          if (planType == 'Corporate' && planTier == 'Ruby' ||
+              planTier == 'Pearl' ||
+              planTier == 'Diamond') {
+            linCorpIndex++;
+          }
+        } else {
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+              mySubPlans: 'Draft',
+            ),
+          );
         }
         uploadDocumentsApplication!.clear();
       }
@@ -27755,6 +27812,7 @@ class AuthViewModel extends BaseViewModel {
   Future<void> saveSecondFamStep(
     context, {
     SaveSecondFamStepEntityModel? saveSecondFamStep,
+    bool? isSavedDraft,
   }) async {
     try {
       _isLoading = true;
@@ -27763,7 +27821,18 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       if (_saveSecondStepResponseModel?.statusCode == 201) {
-        linFamIndex++;
+        if (!isSavedDraft!) {
+          linFamIndex++;
+        } else {
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+              mySubPlans: 'Draft',
+            ),
+          );
+        }
       }
       _isLoading = false;
     } catch (e) {
@@ -27779,6 +27848,7 @@ class AuthViewModel extends BaseViewModel {
     SaveThirdStepEntityModel? saveThirdIndividualStep,
     String? planType,
     String? planTier,
+    bool? isSavedDraft,
   }) async {
     try {
       _isLoading = true;
@@ -27789,20 +27859,31 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       if (_saveThirdStepResponseModel?.statusCode == 201) {
-        if (planType == 'Individual' && planTier == 'Ruby' ||
-            planTier == 'Pearl' ||
-            planTier == 'Diamond') {
-          linSubIndex++;
-        }
-        if (planType == 'Family' && planTier == 'Ruby' ||
-            planTier == 'Pearl' ||
-            planTier == 'Diamond') {
-          linFamIndex++;
-        }
-        if (planType == 'Corporate' && planTier == 'Ruby' ||
-            planTier == 'Pearl' ||
-            planTier == 'Diamond') {
-          linCorpIndex++;
+        if (!isSavedDraft!) {
+          if (planType == 'Individual' && planTier == 'Ruby' ||
+              planTier == 'Pearl' ||
+              planTier == 'Diamond') {
+            linSubIndex++;
+          }
+          if (planType == 'Family' && planTier == 'Ruby' ||
+              planTier == 'Pearl' ||
+              planTier == 'Diamond') {
+            linFamIndex++;
+          }
+          if (planType == 'Corporate' && planTier == 'Ruby' ||
+              planTier == 'Pearl' ||
+              planTier == 'Diamond') {
+            linCorpIndex++;
+          }
+        } else {
+          navigate.navigateTo(
+            Routes.dashboard,
+            arguments: DashboardArguments(
+              isTapHMOPlan: true,
+              isSubStatus: 'subscribers',
+              mySubPlans: 'Draft',
+            ),
+          );
         }
       }
       _isLoading = false;
@@ -27972,5 +28053,35 @@ class AuthViewModel extends BaseViewModel {
       return 'hospitals in network';
     }
     return 'hospital in network';
+  }
+
+  void getMySubscriptionDetails(context, {String? status}) async {
+    try {
+      _isLoading = true;
+      _getMySubscriptionResponseModel = await runBusyFuture(
+        repositoryImply.getMySubscriptions(status: status),
+        throwException: true,
+      );
+      _isLoading = false;
+      mySubscriptionIndexIncrement=1;
+      mySubscriptionIndex=0;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  String? addAllStatusCount(Summary sum) {
+    int? allCount =
+        (sum.activeCount! +
+        sum.draftCount! +
+        sum.rejectedCount! +
+        sum.reviewPendingCount!);
+    if (allCount != null) {
+      return allCount.toString();
+    }
+    return '0';
   }
 }

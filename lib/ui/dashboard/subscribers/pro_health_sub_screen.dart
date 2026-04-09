@@ -950,7 +950,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       return 'Pearl Plan';
     }
     if (text == 'Individual Premium Plan') {
-      return 'Diamond Plan';
+      return 'Premium Plan';
     }
     return 'Basic Plan';
   }
@@ -960,7 +960,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       return 'Pearl Plan';
     }
     if (text == 'Family Premium Plus') {
-      return 'Diamond Plan';
+      return 'Premium Plan';
     }
     return 'Basic Plan';
   }
@@ -970,7 +970,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
       return 'Pearl Plan';
     }
     if (text == 'Corporate Premium Plan') {
-      return 'Diamond Plan';
+      return 'Premium Plan';
     }
     return 'Basic Plan';
   }
