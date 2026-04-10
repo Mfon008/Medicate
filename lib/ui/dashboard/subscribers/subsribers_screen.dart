@@ -551,88 +551,95 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                     thickness: .4,
                                   ),
                                   SizedBox(height: 4.0.h),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      IconButton(
-                                        onPressed:
-                                            model.mySubscriptionIndex - 10 >= 0
-                                            ? () {
-                                                if (model.mySubscriptionIndex -
-                                                        10 >=
-                                                    0) {
-                                                  model.mySubscriptionIndex -=
-                                                      10;
-                                                }
-                                                model.mySubscriptionIndexIncrement--;
-                                                model.notifyListeners();
-                                              }
-                                            : () {},
-                                        icon: Icon(
-                                          Icons.arrow_back,
-                                          color:
-                                              model.mySubscriptionIndex - 10 >=
-                                                  0
-                                              ? AppColors.primary1
-                                              : AppColors.primary1.withOpacity(
-                                                  .4,
-                                                ),
-                                          size: 20.sp,
-                                        ),
-                                      ),
+                                  model.getMySubscriptionResponseModel != null
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            IconButton(
+                                              onPressed:
+                                                  model.mySubscriptionIndex -
+                                                          10 >=
+                                                      0
+                                                  ? () {
+                                                      if (model.mySubscriptionIndex -
+                                                              10 >=
+                                                          0) {
+                                                        model.mySubscriptionIndex -=
+                                                            10;
+                                                      }
+                                                      model
+                                                          .mySubscriptionIndexIncrement--;
+                                                      model.notifyListeners();
+                                                    }
+                                                  : () {},
+                                              icon: Icon(
+                                                Icons.arrow_back,
+                                                color:
+                                                    model.mySubscriptionIndex -
+                                                            10 >=
+                                                        0
+                                                    ? AppColors.primary1
+                                                    : AppColors.primary1
+                                                          .withOpacity(.4),
+                                                size: 20.sp,
+                                              ),
+                                            ),
 
-                                      TextView(
-                                        text: 'Page ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.subscriptions!.length ~/ 10 + 1}',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 15.2.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed:
-                                            model.mySubscriptionIndex + 10 <
-                                                model
-                                                    .getMySubscriptionResponseModel!
-                                                    .data!
-                                                    .subscriptions!
-                                                    .length
-                                            ? () {
-                                                if (model.mySubscriptionIndex +
-                                                        10 <
-                                                    model
-                                                        .getMySubscriptionResponseModel!
-                                                        .data!
-                                                        .subscriptions!
-                                                        .length) {
-                                                  model.mySubscriptionIndex +=
-                                                      10;
-                                                }
-                                                model.mySubscriptionIndexIncrement++;
-                                                model.notifyListeners();
-                                              }
-                                            : () {},
-                                        icon: Icon(
-                                          Icons.arrow_forward,
-                                          color:
-                                              model.mySubscriptionIndex + 10 <
-                                                  model
-                                                      .getMySubscriptionResponseModel!
-                                                      .data!
-                                                      .subscriptions!
-                                                      .length
-                                              ? AppColors.primary1
-                                              : AppColors.primary1.withOpacity(
-                                                  .4,
-                                                ),
-                                          size: 20.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
+                                            TextView(
+                                              text:
+                                                  'Page ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.subscriptions!.length ~/ 10 + 1}',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 15.2.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed:
+                                                  model.mySubscriptionIndex +
+                                                          10 <
+                                                      model
+                                                          .getMySubscriptionResponseModel!
+                                                          .data!
+                                                          .subscriptions!
+                                                          .length
+                                                  ? () {
+                                                      if (model.mySubscriptionIndex +
+                                                              10 <
+                                                          model
+                                                              .getMySubscriptionResponseModel!
+                                                              .data!
+                                                              .subscriptions!
+                                                              .length) {
+                                                        model.mySubscriptionIndex +=
+                                                            10;
+                                                      }
+                                                      model
+                                                          .mySubscriptionIndexIncrement++;
+                                                      model.notifyListeners();
+                                                    }
+                                                  : () {},
+                                              icon: Icon(
+                                                Icons.arrow_forward,
+                                                color:
+                                                    model.mySubscriptionIndex +
+                                                            10 <
+                                                        model
+                                                            .getMySubscriptionResponseModel!
+                                                            .data!
+                                                            .subscriptions!
+                                                            .length
+                                                    ? AppColors.primary1
+                                                    : AppColors.primary1
+                                                          .withOpacity(.4),
+                                                size: 20.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
                                   SizedBox(height: 40.h),
                                 ],
                               ),

@@ -3319,6 +3319,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTeir: planTier,
                 planType: planType,
+                isSavedDraft: false,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
                       applicationId: returnSavedApplicationType(
@@ -3372,6 +3373,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTeir: planTier,
                 planType: planType,
+                isSavedDraft: true,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
                       applicationId: returnSavedApplicationType(
@@ -3806,6 +3808,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTeir: planTier,
                 planType: planType,
+                isSavedDraft: false,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
                       applicationId: returnSavedApplicationType(
@@ -3859,6 +3862,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTeir: planTier,
                 planType: planType,
+                isSavedDraft: true,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
                       applicationId: returnSavedApplicationType(
@@ -4133,6 +4137,7 @@ class AuthViewModel extends BaseViewModel {
                       context,
                       planTier: planTier,
                       planType: planType,
+                      isSavedDraft: false,
                       saveSecondIndividualStep: SaveSecondStepEntityModel(
                         applicationId: returnSavedApplicationType(
                           planType: planType,
@@ -4168,6 +4173,7 @@ class AuthViewModel extends BaseViewModel {
                 context,
                 planTier: planTier,
                 planType: planType,
+                isSavedDraft: true,
                 saveSecondIndividualStep: SaveSecondStepEntityModel(
                   applicationId: returnSavedApplicationType(
                     planType: planType,
@@ -7377,6 +7383,7 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
+                    isSavedDraft: false,
                     saveThirdIndividualStep: SaveThirdStepEntityModel(
                       applicationId: returnSavedApplicationType(
                         planType: planType,
@@ -7408,6 +7415,7 @@ class AuthViewModel extends BaseViewModel {
               context,
               planTier: planTier,
               planType: planType,
+              isSavedDraft: true,
               saveThirdIndividualStep: SaveThirdStepEntityModel(
                 applicationId: returnSavedApplicationType(
                   planType: planType,
@@ -8033,6 +8041,7 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
+                    isSavedDraft: false,
                     saveThirdIndividualStep: SaveThirdStepEntityModel(
                       applicationId: returnSavedApplicationType(
                         planType: planType,
@@ -8065,6 +8074,7 @@ class AuthViewModel extends BaseViewModel {
               context,
               planTier: planTier,
               planType: planType,
+              isSavedDraft: true,
               saveThirdIndividualStep: SaveThirdStepEntityModel(
                 applicationId: returnSavedApplicationType(
                   planType: planType,
@@ -26170,7 +26180,7 @@ class AuthViewModel extends BaseViewModel {
     calculationForTotalReminderForPhone = 0;
 
     // int totalReminders = 0;
-    int _frequencyPerDay = 0;
+    int frequencyPerDay0 = 0;
 
     for (var med in medications) {
       final bool isCustom = med.isCusSchedule;
@@ -26186,17 +26196,17 @@ class AuthViewModel extends BaseViewModel {
         frequencyPerDay = (getTotalCustomDoses(med.dosageMap ?? []));
       }
 
-      _frequencyPerDay = frequencyPerDay;
+      frequencyPerDay0 = frequencyPerDay;
 
       // totalReminders += frequencyPerDay;
       if (addedEmailReminderList.isNotEmpty && selectedIndexes.contains(0) ||
           selectedIndexes.contains(1)) {
         if (selectedIndexes.contains(0) && selectedIndexes.contains(1)) {
           calculationForTotalReminderForEmail +=
-              (_frequencyPerDay * 2 * addedEmailReminderList.length);
+              (frequencyPerDay0 * 2 * addedEmailReminderList.length);
         } else {
           calculationForTotalReminderForEmail +=
-              _frequencyPerDay * addedEmailReminderList.length;
+              frequencyPerDay0 * addedEmailReminderList.length;
         }
       }
       if (addedPhoneReminderList.isNotEmpty && selectedIndexes.contains(2) ||
@@ -26206,15 +26216,15 @@ class AuthViewModel extends BaseViewModel {
             selectedIndexes.contains(3) &&
             selectedIndexes.contains(4)) {
           calculationForTotalReminderForPhone +=
-              _frequencyPerDay * 3 * addedPhoneReminderList.length;
+              frequencyPerDay0 * 3 * addedPhoneReminderList.length;
         } else if (selectedIndexes.contains(2) && selectedIndexes.contains(3) ||
             selectedIndexes.contains(2) && selectedIndexes.contains(4) ||
             selectedIndexes.contains(3) && selectedIndexes.contains(4)) {
           calculationForTotalReminderForPhone +=
-              _frequencyPerDay * 2 * addedPhoneReminderList.length;
+              frequencyPerDay0 * 2 * addedPhoneReminderList.length;
         } else {
           calculationForTotalReminderForPhone +=
-              _frequencyPerDay * addedPhoneReminderList.length;
+              frequencyPerDay0 * addedPhoneReminderList.length;
         }
       }
     }
@@ -28063,8 +28073,8 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      mySubscriptionIndexIncrement=1;
-      mySubscriptionIndex=0;
+      mySubscriptionIndexIncrement = 1;
+      mySubscriptionIndex = 0;
     } catch (e) {
       _isLoading = false;
       logger.d(e);
