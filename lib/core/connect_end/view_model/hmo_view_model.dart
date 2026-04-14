@@ -1714,6 +1714,8 @@ class HMOViewModel extends BaseViewModel {
 
         navigate.navigateTo(Routes.hMOSetupPinScreen);
       }
+
+      _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);

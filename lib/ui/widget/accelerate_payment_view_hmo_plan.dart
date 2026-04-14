@@ -10,7 +10,6 @@ import 'package:medicate_app/ui/widget/text.dart';
 import 'package:stacked/stacked.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../core/connect_end/view_model/auth_view_model.dart';
-import '../../core/core_folder/app/app.router.dart';
 import '../../main.dart';
 
 // ignore: must_be_immutable
@@ -94,16 +93,10 @@ class _AcceleratePaymentViewHmoPlanState
               actions: [
                 GestureDetector(
                   onTap: () {
-                    navigate.navigateTo(
-                      Routes.paymentSuccessSubmitAppScreen,
-                      arguments: PaymentSuccessSubmitAppScreenArguments(
-                        planType: widget.planType,
-                        planTiers: widget.planTier,
-                      ),
-                    );
-                    setState(() {});
+                    navigate.back(result: 5);
                     model.notifyListeners();
                   },
+                  
                   child: Padding(
                     padding: EdgeInsets.only(right: 10.0.w),
                     child: TextView(

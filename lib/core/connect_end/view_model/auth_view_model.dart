@@ -5858,8 +5858,14 @@ class AuthViewModel extends BaseViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          model.uploadDocumentsApplication!.isNotEmpty &&
-                                  model.isLoadingDoc1
+                          model.uploadDocumentsApplication!.isEmpty &&
+                                      model.isLoadingDoc1 ||
+                                  model
+                                          .uploadDocumentsApplication!
+                                          .isNotEmpty &&
+                                      model.uploadDocumentsApplication![0] ==
+                                          sv.Document() &&
+                                      model.isLoadingDoc1
                               ? SizedBox(
                                   width: 20.w,
                                   height: 20.h,
@@ -5934,7 +5940,6 @@ class AuthViewModel extends BaseViewModel {
           ],
         ),
         SizedBox(height: 10.20.h),
-
         model.uploadDocumentsApplication!.length <= 1 ||
                 model.uploadDocumentsApplication![1].docName == null
             ? SizedBox(
@@ -5966,7 +5971,7 @@ class AuthViewModel extends BaseViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          model.uploadDocumentsApplication!.length == 2 &&
+                          model.uploadDocumentsApplication!.isNotEmpty &&
                                   model.isLoadingDoc1
                               ? SizedBox(
                                   width: 20.w,
@@ -8156,7 +8161,6 @@ class AuthViewModel extends BaseViewModel {
           color: AppColors.reminder,
         ),
       ),
-
       SizedBox(height: 10.h),
       Divider(color: AppColors.infoGrey1),
       SizedBox(height: 10.h),
@@ -8438,7 +8442,15 @@ class AuthViewModel extends BaseViewModel {
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
                 if (isPaidTapped && onTapPaymentMeth != '') {
-                  model.linSubIndex++;
+                  initiateHMOPlanPayment(
+                    context,
+                    planTier: planTier,
+                    planType: planType,
+                    applicationId: returnSavedApplicationType(
+                      planTeir: planTier,
+                      planType: planType,
+                    ),
+                  );
                   model.notifyListeners();
                 }
               },
@@ -8447,15 +8459,15 @@ class AuthViewModel extends BaseViewModel {
         ],
       ),
       SizedBox(height: 20.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () async {},
-      ),
-      SizedBox(height: 20.60.h),
+      // ButtonWidget(
+      //   border: 100.r,
+      //   buttonColor: AppColors.dashboard,
+      //   buttonText: 'Save as Draft',
+      //   color: AppColors.deep,
+      //   buttonBorderColor: AppColors.transparent,
+      //   onPressed: () async {},
+      // ),
+      // SizedBox(height: 20.60.h),
     ],
   );
 
@@ -9165,11 +9177,11 @@ class AuthViewModel extends BaseViewModel {
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
                 if (isPaidTapped) {
-                  initiateHMOPlanPayment(
+                  model.submitApplication(
                     context,
                     planTier: planTier,
                     planType: planType,
-                    applicationId: returnSavedApplicationType(
+                    applicationId: model.returnSavedApplicationType(
                       planTeir: planTier,
                       planType: planType,
                     ),
@@ -9529,22 +9541,32 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                model.linFamIndex++;
-                model.notifyListeners();
+                if (isPaidTapped && onTapPaymentMeth != '') {
+                  initiateHMOPlanPayment(
+                    context,
+                    planTier: planTier,
+                    planType: planType,
+                    applicationId: returnSavedApplicationType(
+                      planTeir: planTier,
+                      planType: planType,
+                    ),
+                  );
+                  model.notifyListeners();
+                }
               },
             ),
           ),
         ],
       ),
       SizedBox(height: 20.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () async {},
-      ),
+      // ButtonWidget(
+      //   border: 100.r,
+      //   buttonColor: AppColors.dashboard,
+      //   buttonText: 'Save as Draft',
+      //   color: AppColors.deep,
+      //   buttonBorderColor: AppColors.transparent,
+      //   onPressed: () async {},
+      // ),
       SizedBox(height: 20.60.h),
     ],
   );
@@ -10621,8 +10643,18 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                model.linCorpIndex++;
-                model.notifyListeners();
+                if (isPaidTapped && onTapPaymentMeth != '') {
+                  initiateHMOPlanPayment(
+                    context,
+                    planTier: planTier,
+                    planType: planType,
+                    applicationId: returnSavedApplicationType(
+                      planTeir: planTier,
+                      planType: planType,
+                    ),
+                  );
+                  model.notifyListeners();
+                }
               },
             ),
           ),
@@ -26451,14 +26483,26 @@ class AuthViewModel extends BaseViewModel {
           context,
           message: _hmoPlanPaymentResponseModel?.message ?? '',
         );
-        navigate.navigateTo(
+        final result = await navigate.navigateTo(
           Routes.acceleratePaymentViewHmoPlan,
           arguments: AcceleratePaymentViewHmoPlanArguments(
             url: _hmoPlanPaymentResponseModel?.data?.redirectUrl,
-            planTier: planTier,
             planType: planType,
+            planTier: planTier,
           ),
         );
+
+        if (result != null) {
+          if (planType == 'Individual') {
+            linSubIndex = result;
+          }
+          if (planType == 'Family') {
+            linFamIndex = result;
+          }
+          if (planType == 'Corporate') {
+            linCorpIndex = result;
+          }
+        }
       } else {}
     } catch (e) {
       _isLoading = false;
