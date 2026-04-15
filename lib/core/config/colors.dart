@@ -9,7 +9,9 @@ class AppColors {
   static const primaryLight = Color.fromARGB(200, 72, 130, 206);
   static const transparent = Colors.transparent;
   static const red = Colors.red;
+  static const red_bar = Color(0xFFE21E48);
   static const inactive = Color(0xFFB9DCEA);
+  static const greyed_blue = Color(0xFFC0D8FB);
   static const thickGrey = Color(0xFF2C2E34);
   static const appRed = Color(0xFFF04444);
   static const faintedRed = Color(0xFFFDECEC);

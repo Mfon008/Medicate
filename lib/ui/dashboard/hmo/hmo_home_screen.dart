@@ -1,18 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
-import 'package:stacked/stacked.dart';
-import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
-import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../core/core_folder/manager/shared_preference.dart';
 import '../../../main.dart';
-import '../../widget/ai_text_form_widget.dart';
 import '../../widget/text.dart';
 
 class HMOHomeScreen extends StatefulWidget {
@@ -23,11 +19,6 @@ class HMOHomeScreen extends StatefulWidget {
 }
 
 class _HMOHomeScreenState extends State<HMOHomeScreen> {
-  bool isTappToChat = false;
-  bool isTapOnScreenOrChatButt = false;
-  String chatText = '';
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -61,12 +52,13 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
                   ), // makes ripple effect round
                 ),
               ),
-              GestureDetector(
-                onTap: () => setState(() => isTappToChat = false),
-                child: SvgPicture.asset(
-                  AppImage.applogoSvg,
-                  height: 28.h,
-                  width: 28.w,
+              TextView(
+                text: 'Dashboard',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 18.2.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
                 ),
               ),
               Container(
@@ -84,7 +76,6 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
                     color: AppColors.primary,
                   ),
                   onPressed: () {},
-                  // navigate.navigateTo(Routes.emptyNotification),
                   splashRadius: 28,
                 ),
               ),
@@ -92,505 +83,927 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
           ),
         ),
       ),
-      body: isTappToChat
-          ? AskMeScreen(inText: chatText, isDashboard: true)
-          : Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.8.w,
-                      vertical: 22.w,
-                    ),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () =>
-                              navigate.navigateTo(Routes.hMOProfileInfoScreen),
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 4.0.w),
-                            padding: EdgeInsets.symmetric(
-                              vertical: 12.w,
-                              horizontal: 11.4.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.white,
-                              borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(
-                                color:
-                                    SharedPreferencesService
-                                                .instance
-                                                .usersData['memberships'] !=
-                                            null &&
-                                        SharedPreferencesService
-                                                .instance
-                                                .usersData['memberships'][0]['profileCompletionPercentage'] ==
-                                            100
-                                    ? AppColors.app_green
-                                    : AppColors.yellow,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  color:
-                                      SharedPreferencesService
-                                                  .instance
-                                                  .usersData['memberships'] !=
-                                              null &&
-                                          SharedPreferencesService
-                                                  .instance
-                                                  .usersData['memberships'][0]['profileCompletionPercentage'] ==
-                                              100
-                                      ? AppColors.app_green
-                                      : AppColors.yellow,
-                                  size: 20.sp,
-                                ),
-                                SizedBox(width: 10.12.w),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextView(
-                                      text:
-                                          SharedPreferencesService
-                                                      .instance
-                                                      .usersData['memberships'] !=
-                                                  null &&
-                                              SharedPreferencesService
-                                                      .instance
-                                                      .usersData['memberships'][0] ==
-                                                  100
-                                          ? 'Completed'
-                                          : 'Complete Registration',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                    TextView(
-                                      text:
-                                          SharedPreferencesService
-                                                      .instance
-                                                      .usersData['memberships'] !=
-                                                  null &&
-                                              SharedPreferencesService
-                                                      .instance
-                                                      .usersData['memberships'][0]['profileCompletionPercentage'] !=
-                                                  null
-                                          ? 'Your registration is ${SharedPreferencesService.instance.usersData['memberships'][0]['profileCompletionPercentage']}% completed'
-                                          : 'Please enter your new PIN.',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.infoGrey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                SvgPicture.asset(
-                                  AppImage.arrow_forward,
-                                  width: 14.20.w,
-                                  height: 14.20.w,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 24.h),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(width: 4.0.w),
-                            Container(
-                              padding: EdgeInsets.all(16.w),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.white,
-                              ),
-                              child: SvgPicture.asset(
-                                AppImage.big_logo,
-                                width: 20.w,
-                                height: 20.w,
-                              ),
-                            ),
-                            SizedBox(width: 22.w),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 250.w,
-                                  child: TextView(
-                                    text:
-                                        'Good Morning, ${SharedPreferencesService.instance.usersData['user']['fullName'] ?? ''}',
-                                    maxLines: 2,
-                                    textOverflow: TextOverflow.ellipsis,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.infoGrey,
-                                    ),
-                                  ),
-                                ),
-                                TextView(
-                                  text: 'How can i help you?',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 18.2.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                                SizedBox(height: 5.10.h),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 36.10.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: conContainerReminder(
-                                icon: AppImage.bell_small,
-                                text: 'Create Reminder',
-                                ontapAi: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Create Reminder';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: conContainer(
-                                icon: AppImage.purchase,
-                                text: 'Purchase Meds',
-                                ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Purchase Meds';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: 22.10.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: conContainer(
-                                icon: AppImage.level,
-                                text: 'Stock Levels',
-                                ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Stock Levels';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: conContainer(
-                                icon: AppImage.cart,
-                                text: 'Orders',
-                                ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Orders';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 22.10.h),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: conContainer(
-                                icon: AppImage.track_reminder,
-                                text: 'Track Reminders',
-                                ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Track Reminder';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: conContainer(
-                                icon: AppImage.appointment,
-                                text: 'Appointment',
-                                ontap: () {
-                                  isTappToChat = !isTappToChat;
-                                  chatText = 'Appointment';
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 60.10.h),
-
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            width: double.infinity.w,
-                            padding: EdgeInsets.only(
-                              top: 2.4.w,
-                              bottom: 8.w,
-                              left: 10.w,
-                              right: 10.w,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18.22.r),
-                              color: AppColors.white,
-                            ),
-                            child: Form(
-                              key: formKey,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AiTextFormWidget(
-                                    label: 'Chat with Medicate AI....',
-                                    validator: AppValidator.validateString(),
-                                    onChange: (p0) {
-                                      setState(() {
-                                        chatText = p0;
-                                      });
-                                    },
-                                    labelStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.infoGrey,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        AppImage.audio,
-                                        width: 22.w,
-                                        height: 22.h,
-                                      ),
-                                      Spacer(),
-                                      SvgPicture.asset(
-                                        AppImage.clipper,
-                                        color: AppColors.black,
-                                        width: 22.w,
-                                        height: 22.h,
-                                      ),
-                                      SizedBox(width: 20.w),
-                                      GestureDetector(
-                                        onTap: () {
-                                          if (formKey.currentState!
-                                              .validate()) {
-                                            isTappToChat = !isTappToChat;
-                                            chatText = chatText;
-                                            setState(() {});
-                                          }
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(14.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppColors.primary,
-                                          ),
-                                          child: SvgPicture.asset(
-                                            AppImage.arrow_up,
-                                            width: 20.w,
-                                            height: 17.20.h,
-                                            color: AppColors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(height: 10.h),
-                      ],
-                    ),
+          children: [
+            GestureDetector(
+              onTap: () => navigate.navigateTo(Routes.hMOProfileInfoScreen),
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 4.0.w),
+                padding: EdgeInsets.symmetric(
+                  vertical: 12.w,
+                  horizontal: 11.4.w,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color:
+                        SharedPreferencesService
+                                    .instance
+                                    .usersData['memberships'] !=
+                                null &&
+                            SharedPreferencesService
+                                    .instance
+                                    .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                                100
+                        ? AppColors.app_green
+                        : AppColors.yellow,
                   ),
                 ),
-                // SizedBox(height: 20.h),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color:
+                          SharedPreferencesService
+                                      .instance
+                                      .usersData['memberships'] !=
+                                  null &&
+                              SharedPreferencesService
+                                      .instance
+                                      .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                                  100
+                          ? AppColors.app_green
+                          : AppColors.yellow,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 10.12.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextView(
+                          text:
+                              SharedPreferencesService
+                                          .instance
+                                          .usersData['memberships'] !=
+                                      null &&
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['memberships'][0] ==
+                                      100
+                              ? 'Completed'
+                              : 'Complete Registration',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.2.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        TextView(
+                          text:
+                              SharedPreferencesService
+                                          .instance
+                                          .usersData['memberships'] !=
+                                      null &&
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['memberships'][0]['profileCompletionPercentage'] !=
+                                      null
+                              ? 'Your registration is ${SharedPreferencesService.instance.usersData['memberships'][0]['profileCompletionPercentage']}% completed'
+                              : 'Please enter your new PIN.',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 13.2.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.infoGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    SvgPicture.asset(
+                      AppImage.arrow_forward,
+                      width: 14.20.w,
+                      height: 14.20.w,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 16.20.h),
+            Row(
+              children: [
+                hmoPlanWidget(
+                  isFinance: false,
+                  text: 'All Plans',
+                  svg: AppImage.hmo_shield,
+                  count: '10',
+                ),
+                SizedBox(width: 7.10.w),
+                hmoPlanWidget(
+                  isFinance: false,
+                  text: 'Plan Request',
+                  svg: AppImage.bell_request,
+                  count: '10',
+                ),
               ],
             ),
+            SizedBox(height: 10.20.h),
+            Row(
+              children: [
+                hmoPlanWidget(
+                  isFinance: false,
+                  text: 'Total Subscribers',
+                  svg: AppImage.sub_members,
+                  count: '10',
+                ),
+                SizedBox(width: 7.10.w),
+                hmoPlanWidget(
+                  isFinance: false,
+                  text: 'Plan Request',
+                  svg: AppImage.renewal_request,
+                  count: '10',
+                ),
+              ],
+            ),
+            SizedBox(height: 10.20.h),
+            Row(
+              children: [
+                hmoPlanWidget(
+                  isFinance: true,
+                  text: 'Finance',
+                  svg: AppImage.sub_members,
+                  count: '₦30,000,000',
+                ),
+                SizedBox(width: 174.0.w),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            majorWidget(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Applications by Tier Level',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16.2.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text:
+                        'Compare applications across Ruby, Pearl, and Diamond tiers',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  SizedBox(
+                    height: 240.h,
+                    child: BarChart(
+                      BarChartData(
+                        alignment: BarChartAlignment.spaceAround,
+                        maxY: 3,
+                        titlesData: FlTitlesData(
+                          topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false),
+                          ),
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              reservedSize: 30,
+                              showTitles: true,
+                              interval: 0.75,
+                              getTitlesWidget: (value, meta) {
+                                return TextView(
+                                  text: value.toString(),
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.reminder,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              reservedSize: 60,
+                              showTitles: true,
+                              getTitlesWidget: (value, meta) {
+                                switch (value.toInt()) {
+                                  case 0:
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 6.w,
+                                          height: 4.0.h,
+                                          margin: EdgeInsets.all(6.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary1,
+                                            borderRadius: BorderRadius.circular(
+                                              100.r,
+                                            ),
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: 'Ruby',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  case 1:
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 6.w,
+                                          height: 4.0.h,
+                                          margin: EdgeInsets.all(6.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary1,
+                                            borderRadius: BorderRadius.circular(
+                                              100.r,
+                                            ),
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: 'Pearl',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  case 2:
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 6.w,
+                                          height: 4.0.h,
+                                          margin: EdgeInsets.all(6.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.primary1,
+                                            borderRadius: BorderRadius.circular(
+                                              100.r,
+                                            ),
+                                          ),
+                                        ),
+                                        TextView(
+                                          text: 'Diamond',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  default:
+                                    return const Text("");
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        gridData: FlGridData(show: false),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: const Border(
+                            left: BorderSide(color: Colors.grey),
+                            bottom: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        barGroups: [
+                          _buildBar(0, 3.0, AppColors.red_bar),
+                          _buildBar(1, 3.0, AppColors.purple),
+                          _buildBar(2, 1.5, AppColors.lightBlue),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+            majorWidget(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Applications by Plan Type',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16.2.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text: 'Individual vs Family vs Corporate plan distribution',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  AspectRatio(
+                    aspectRatio: 1.1,
+                    child: PieChart(
+                      PieChartData(
+                        sections: [
+                          PieChartSectionData(
+                            color: AppColors.lightBlue,
+                            value: 14,
+                            title: 'Corporate 43%',
+                            titleStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.reminder,
+                            ),
+                            radius: 120,
+                            titlePositionPercentageOffset: 1.2,
+                          ),
+                          PieChartSectionData(
+                            color: AppColors.greyed_blue,
+                            value: 43,
+                            title: 'Family 14%',
+                            titleStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.reminder,
+                            ),
+                            radius: 120,
+                            titlePositionPercentageOffset: 1.29,
+                          ),
+                          PieChartSectionData(
+                            color: AppColors.primary,
+                            value: 43,
+                            title: 'Individual 43%',
+                            titleStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.reminder,
+                            ),
+                            radius: 120,
+                            titlePositionPercentageOffset: 1.2,
+                          ),
+                        ],
+                        centerSpaceRadius: 0, // Set > 0 for a donut chart
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 14.w,
+                            height: 7.0.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary1,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextView(
+                            text: '0',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 5.10.h),
+                      Row(
+                        children: [
+                          Container(
+                            width: 14.w,
+                            height: 7.0.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.greyed_blue,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextView(
+                            text: '1',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 5.10.h),
+                      Row(
+                        children: [
+                          Container(
+                            width: 14.w,
+                            height: 7.0.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.lightBlue,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextView(
+                            text: '2',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+            majorWidget(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Monthly Activity Trends',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16.2.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text:
+                        'Applications, and subscribers over the last 6 months',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 30.h),
+                  SizedBox(
+                    height: 320,
+                    child: LineChart(
+                      LineChartData(
+                        minY: 0,
+                        maxY: 8,
+                        gridData: FlGridData(show: false),
+                        borderData: FlBorderData(
+                          show: true,
+                          border: const Border(
+                            left: BorderSide(color: Colors.grey),
+                            bottom: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        titlesData: _titles(),
+                        lineBarsData: [_applicationsLine(), _subscribersLine()],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 14.w,
+                            height: 7.0.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary1,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextView(
+                            text: 'Applications',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 10.h),
+                      Row(
+                        children: [
+                          Container(
+                            width: 14.w,
+                            height: 7.0.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.lightBlue,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextView(
+                            text: 'Subscribers',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 40.h),
+            majorWidget(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Renewals vs New Subscriptions',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16.2.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  TextView(
+                    text:
+                        'Track renewal activity against new subscriber growthpp',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 14.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 30.h),
+                  SizedBox(
+                    height: 320,
+                    child: LineChart(
+                      LineChartData(
+                        minY: 0,
+                        maxY: 8,
+
+                        gridData: FlGridData(show: false),
+
+                        borderData: FlBorderData(
+                          show: true,
+                          border: const Border(
+                            left: BorderSide(color: Colors.grey),
+                            bottom: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+
+                        titlesData: _titles(),
+
+                        lineBarsData: [_newSubscriptions(), _renewals()],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 14.w,
+                            height: 7.0.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.app_green,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextView(
+                            text: 'New Subscriptions',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 10.h),
+                      Row(
+                        children: [
+                          Container(
+                            width: 14.w,
+                            height: 7.0.h,
+                            decoration: BoxDecoration(color: AppColors.yellow),
+                          ),
+                          SizedBox(width: 2.w),
+                          TextView(
+                            text: 'Renewals',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 40.h),
+            majorWidget(child: TextView(text: 'SHIIDO'))
+          ],
+        ),
+      ),
     );
   }
 
-  Widget conContainer({
-    required String icon,
-    required String text,
-    required Function()? ontap,
-  }) => GestureDetector(
-    onTap: ontap,
+  // ignore: strict_top_level_inference
+  Container majorWidget({Widget? child}) => Container(
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(15.r),
+      border: Border.all(color: AppColors.infoGrey1),
+    ),
+    padding: EdgeInsets.all(12.w),
+    child: child,
+  );
+
+  LineChartBarData _newSubscriptions() {
+    return LineChartBarData(
+      isCurved: true,
+      color: Colors.green,
+      barWidth: 2,
+
+      spots: const [
+        FlSpot(0, 0),
+        FlSpot(1, 0),
+        FlSpot(2, 0),
+        FlSpot(3, 0),
+        FlSpot(4, 1.5),
+        FlSpot(5, 6.5),
+      ],
+
+      dotData: FlDotData(show: false),
+
+      belowBarData: BarAreaData(
+        show: true,
+        gradient: LinearGradient(
+          colors: [
+            Colors.green.withOpacity(0.5),
+            Colors.green.withOpacity(0.4),
+            Colors.green.withOpacity(0.1),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+    );
+  }
+
+  LineChartBarData _renewals() {
+    return LineChartBarData(
+      isCurved: true,
+      color: Colors.orange,
+      barWidth: 2,
+      spots: const [
+        FlSpot(0, 0),
+        FlSpot(1, 0),
+        FlSpot(2, 0),
+        FlSpot(3, 0),
+        FlSpot(4, 0.5),
+        FlSpot(5, 2),
+      ],
+
+      dotData: FlDotData(show: false),
+
+      belowBarData: BarAreaData(
+        show: true,
+        gradient: LinearGradient(
+          colors: [
+            Colors.orange.withOpacity(0.5),
+            Colors.orange.withOpacity(0.4),
+            Colors.orange.withOpacity(0.1),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+    );
+  }
+
+  FlTitlesData _titles() {
+    return FlTitlesData(
+      topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      leftTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          interval: 2,
+          getTitlesWidget: (value, meta) {
+            return Text(value.toInt().toString());
+          },
+        ),
+      ),
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 60, // 👈 IMPORTANT
+          getTitlesWidget: _bottomTitle,
+          interval: 1,
+        ),
+      ),
+    );
+  }
+
+  Widget _bottomTitle(double value, TitleMeta meta) {
+    const months = ['Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25', 'Jan 26'];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(height: 10.h),
+        Container(
+          width: 5.4,
+          height: 4,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+        ),
+        SizedBox(height: 10.h),
+        Text(months[value.toInt()]),
+      ],
+    );
+  }
+
+  LineChartBarData _applicationsLine() {
+    return LineChartBarData(
+      isCurved: true,
+      preventCurveOverShooting: true,
+      color: Colors.blue.shade900,
+      barWidth: 1,
+      dotData: FlDotData(
+        show: true,
+        getDotPainter: (spot, percent, bar, index) {
+          return FlDotCirclePainter(
+            radius: 2.6,
+            color: Colors.white,
+            strokeWidth: 1,
+            strokeColor: bar.color!,
+          );
+        },
+      ),
+      spots: const [
+        FlSpot(0, 0),
+        FlSpot(1, 0),
+        FlSpot(2, 0),
+        FlSpot(3, 0),
+        FlSpot(4, 0),
+        FlSpot(5, 5.4), // Jan
+      ],
+    );
+  }
+
+  LineChartBarData _subscribersLine() {
+    return LineChartBarData(
+      isCurved: true,
+      preventCurveOverShooting: true,
+      color: Colors.blue,
+      barWidth: 1,
+      dotData: FlDotData(
+        show: true,
+        getDotPainter: (spot, percent, bar, index) {
+          return FlDotCirclePainter(
+            radius: 2.6,
+            color: Colors.white,
+            strokeWidth: 1,
+            strokeColor: bar.color!,
+          );
+        },
+      ),
+      spots: const [
+        FlSpot(0, 0),
+        FlSpot(1, 0),
+        FlSpot(2, 0),
+        FlSpot(3, 0),
+        FlSpot(4, 0),
+        FlSpot(5, 4.5),
+      ],
+    );
+  }
+
+  BarChartGroupData _buildBar(int x, double y, Color color) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: y,
+          width: 52.0.w,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(8.r),
+            topRight: Radius.circular(8.r),
+          ),
+          gradient: LinearGradient(
+            colors: [color.withOpacity(0.8), color],
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget hmoPlanWidget({
+    String? text,
+    String? svg,
+    String? count,
+    bool? isFinance,
+  }) => Expanded(
     child: Container(
-      padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
+      padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 12.w),
       decoration: BoxDecoration(
         color: AppColors.white,
-        border: Border.all(color: AppColors.inactive),
-        borderRadius: BorderRadius.circular(22.r),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.infoGrey1),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SvgPicture.asset(
-            AppImage.curved_arrow,
-            width: 10.20.w,
-            height: 10.20.h,
-          ),
-          SizedBox(width: 6.10.w),
-          SvgPicture.asset(
-            icon,
-            width: 16.20.w,
-            height: 16.20.h,
-            color: AppColors.lightBlue,
-          ),
-          SizedBox(width: 6.10.w),
-          Flexible(
-            child: TextView(
-              text: text,
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 14.2.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.black,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextView(
+                text: text!,
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 15.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
               ),
-              maxLines: 1,
-              textOverflow: TextOverflow.ellipsis,
-            ),
+              SvgPicture.asset(AppImage.arrow, width: 10.w, height: 10.h),
+            ],
           ),
+          SizedBox(height: 10.w),
+          !isFinance!
+              ? Row(
+                  children: [
+                    SvgPicture.asset(svg!, width: 20.w, height: 20.h),
+                    SizedBox(width: 10.w),
+                    TextView(
+                      text: count!,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 20.2.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.reminder,
+                      ),
+                    ),
+                  ],
+                )
+              : TextView(
+                  text: count!,
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 20.2.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.reminder,
+                  ),
+                ),
         ],
       ),
     ),
-  );
-
-  Widget conContainerReminder({
-    required String icon,
-    required String text,
-    required Function()? ontapAi,
-  }) => ViewModelBuilder<HMOViewModel>.reactive(
-    viewModelBuilder: () => HMOViewModel(),
-    onViewModelReady: (model) {},
-    disposeViewModel: false,
-    onDispose: (viewModel) {},
-    builder: (_, HMOViewModel model, _) {
-      return PopupMenuButton(
-        color: AppColors.white,
-        offset: const Offset(0, 50),
-        padding: EdgeInsets.symmetric(horizontal: 18.22.w, vertical: 18.20.w),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.w),
-        ),
-        onSelected: (String value) {},
-        itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem(
-              value: 'setup yourself',
-              padding: EdgeInsets.symmetric(
-                horizontal: 18.22.w,
-                vertical: 12.w,
-              ),
-              onTap: () {},
-              // () => model
-              //     .showCreateAddPhoneDialog(
-              //       context,
-              //     )
-              // },,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(AppImage.person_plus),
-                  SizedBox(width: 6.10.w),
-                  TextView(
-                    text: 'Set up Yourself',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 13.2.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.reminder,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'ai setup',
-              padding: EdgeInsets.symmetric(
-                horizontal: 18.22.w,
-                vertical: 12.w,
-              ),
-              onTap: ontapAi,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(AppImage.ai_star),
-                  SizedBox(width: 6.10.w),
-                  TextView(
-                    text: 'AI Setup',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 13.2.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.reminder,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ];
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 14.w),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            border: Border.all(color: AppColors.inactive),
-            borderRadius: BorderRadius.circular(22.r),
-          ),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                AppImage.curved_arrow,
-                width: 10.20.w,
-                height: 10.20.h,
-              ),
-              SizedBox(width: 6.10.w),
-              SvgPicture.asset(
-                icon,
-                width: 16.20.w,
-                height: 16.20.h,
-                color: AppColors.lightBlue,
-              ),
-              SizedBox(width: 6.10.w),
-              Flexible(
-                child: TextView(
-                  text: text,
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.black,
-                  ),
-                  maxLines: 1,
-                  textOverflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
   );
 }

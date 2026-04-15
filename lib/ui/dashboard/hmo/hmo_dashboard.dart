@@ -84,7 +84,6 @@ class _HMODashboardState extends State<HMODashboard> {
   @override
   void initState() {
     _currentIndex = widget.index ?? 0;
-    // _isSubStatus = widget.isSubStatus??'Plans';
     super.initState();
   }
 
@@ -145,26 +144,24 @@ class _HMODashboardState extends State<HMODashboard> {
                   icon: Column(
                     children: [
                       SvgPicture.asset(
-                        AppImage.subscription,
-                        color: _currentIndex == 1
-                            ? AppColors.primary
-                            : AppColors.fineGrey,
+                        _currentIndex == 1
+                            ? AppImage.hmo_shield
+                            : AppImage.hmo_shield_light,
                         height: 28.0.h,
                         width: 28.0.w,
                       ),
                       SizedBox(height: 6.0.w),
                     ],
                   ),
-                  label: 'Subscribers',
+                  label: 'HMO Plans',
                 ),
                 BottomNavigationBarItem(
                   icon: Column(
                     children: [
                       SvgPicture.asset(
-                        AppImage.pills_filled,
-                        color: _currentIndex == 2
-                            ? AppColors.primary
-                            : AppColors.fineGrey,
+                        _currentIndex == 2
+                            ? AppImage.hmo_portal
+                            : AppImage.hmo_portal_light,
                         height: 28.0.h,
                         width: 28.0.w,
                       ),
@@ -172,7 +169,7 @@ class _HMODashboardState extends State<HMODashboard> {
                       SizedBox(height: 6.0.w),
                     ],
                   ),
-                  label: 'Reminder',
+                  label: 'HMO Portal',
                 ),
                 BottomNavigationBarItem(
                   icon: Column(
@@ -184,7 +181,10 @@ class _HMODashboardState extends State<HMODashboard> {
                           color: AppColors.inactive.withOpacity(.1),
                         ),
                         child: SvgPicture.asset(
-                          AppImage.big_logo,
+                          AppImage.settings,
+                          color: _currentIndex == 3
+                              ? AppColors.primary
+                              : AppColors.fineGrey,
                           height: 24.0.h,
                           width: 16.20.w,
                         ),
@@ -193,7 +193,7 @@ class _HMODashboardState extends State<HMODashboard> {
                       SizedBox(height: 3.90.w),
                     ],
                   ),
-                  label: 'AskMed',
+                  label: 'Settings',
                 ),
               ],
             ),
