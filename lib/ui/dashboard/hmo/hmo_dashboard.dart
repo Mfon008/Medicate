@@ -10,6 +10,7 @@ import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/text.dart';
 import 'hmo_plan_screen.dart';
+import 'hmo_portal_screen.dart';
 
 class HMODashboard extends StatefulWidget {
   HMODashboard({super.key, this.index});
@@ -25,7 +26,7 @@ class _HMODashboardState extends State<HMODashboard> {
   List<Widget> get _body => [
     HMOHomeScreen(),
     HmoPlanScreen(),
-    Container(),
+    HmoPortalScreen(),
     AskMeScreen(),
   ];
 

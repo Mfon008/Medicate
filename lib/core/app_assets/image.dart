@@ -25,6 +25,10 @@ class AppImage {
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String subscription = 'assets/svgs/subscription.svg';
+  static const String hospital_net = 'assets/svgs/hospital_net.svg';
+  static const String renew = 'assets/svgs/renew.svg';
+  static const String light_claims = 'assets/svgs/light_claims.svg';
+  static const String settlements = 'assets/svgs/settlements.svg';
   static const String sub_members = 'assets/svgs/sub_members.svg';
   static const String renewal_request = 'assets/svgs/renewal_request.svg';
   static const String hmo_plan = 'assets/svgs/hmo_plan.svg';
@@ -95,6 +99,7 @@ class AppImage {
   static const String ussd = 'assets/svgs/ussd.svg';
   static const String audio = 'assets/svgs/audio.svg';
   static const String profile = 'assets/svgs/profile.svg';
+  static const String portal_app = 'assets/svgs/portal_app.svg';
   static const String providers = 'assets/svgs/providers.svg';
   static const String timer = 'assets/svgs/timer.svg';
   static const String freq_timer = 'assets/svgs/freq_time.svg';

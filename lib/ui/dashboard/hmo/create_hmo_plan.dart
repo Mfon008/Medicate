@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/ui/dashboard/hmo/hospital_class.dart';
 import 'package:medicate_app/ui/widget/button.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
@@ -24,6 +23,9 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
   List<TextEditingController> benefitController = [TextEditingController()];
   List<TextEditingController> limitController = [TextEditingController()];
   TextEditingController planTypeController = TextEditingController();
+  TextEditingController renewalPriceController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
   TextEditingController planTierController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
@@ -46,6 +48,8 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
 
   List<String> planType = ['Individual', 'Family', 'Corporate'];
   String? selectedPlanType;
+  List<String> planTier = ['Ruby', 'Pearl', 'Diamond'];
+  String? selectedPlanTier;
 
   Widget planTypeList(
     BuildContext ctx,
@@ -106,6 +110,79 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                   ),
                   const Spacer(),
                   if (planTypeController.text == e)
+                    Icon(
+                      Icons.check,
+                      color: AppColors.primary1,
+                      size: 15.60.sp,
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget planTierList(
+    BuildContext ctx,
+    void Function(void Function()) setMenuState,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10.h),
+        TextView(
+          text: 'Tiers',
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 16.60.sp,
+            color: AppColors.greyee,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        SizedBox(height: 14.h),
+
+        ...planTier.map(
+          (e) => GestureDetector(
+            onTap: () {
+              setState(() {
+                planTierController.text = e;
+                setMenuState(() {});
+              });
+
+              Future.delayed(Duration(milliseconds: 200), () {
+                Navigator.pop(ctx, e.toString());
+              });
+            },
+            child: Container(
+              margin: EdgeInsets.only(bottom: 12.w),
+              padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: planTierController.text == e
+                    ? AppColors.skyBlue
+                    : AppColors.white,
+                border: Border.all(
+                  color: planTierController.text == e
+                      ? AppColors.primary1
+                      : Colors.transparent,
+                ),
+              ),
+              child: Row(
+                children: [
+                  TextView(
+                    text: e,
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 16.60.sp,
+                      color: AppColors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const Spacer(),
+                  if (planTierController.text == e)
                     Icon(
                       Icons.check,
                       color: AppColors.primary1,
@@ -280,7 +357,28 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 validator: AppValidator.validateString(),
                 suffixWidget: Padding(
                   padding: EdgeInsets.all(12.w),
-                  child: SvgPicture.asset(AppImage.arrow_down),
+                  child: GestureDetector(
+                    onTap: () {
+                       showModalBottomSheet(
+                        context: context,
+                        backgroundColor: AppColors.white,
+                        builder: (ctx) => StatefulBuilder(
+                          builder: (ctx, setMenuState) {
+                            return Container(
+                              margin: EdgeInsets.all(16.w),
+                              padding: EdgeInsets.all(10.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: planTierList(ctx, setMenuState),
+                            );
+                          },
+                        ),
+                    );
+                    
+                    },
+                    child: SvgPicture.asset(AppImage.arrow_down)),
                 ),
                 onChange: (p0) {},
               ),
@@ -323,7 +421,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 ),
                 fillColor: AppColors.grey,
                 isFilled: true,
-                controller: planTypeController,
+                controller: priceController,
                 validator: AppValidator.validateString(),
                 onChange: (p0) {},
               ),
@@ -344,7 +442,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 ),
                 fillColor: AppColors.grey,
                 isFilled: true,
-                controller: planTypeController,
+                controller: renewalPriceController,
                 validator: AppValidator.validateString(),
                 onChange: (p0) {},
               ),
@@ -407,7 +505,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 ),
                 fillColor: AppColors.grey,
                 isFilled: true,
-                controller: planTypeController,
+                controller: durationController,
                 validator: AppValidator.validateString(),
                 onChange: (p0) {},
               ),
@@ -544,7 +642,6 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                   ],
                 ),
               ),
-
               SizedBox(height: 20.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
