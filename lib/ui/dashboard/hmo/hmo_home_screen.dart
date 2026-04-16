@@ -87,7 +87,6 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
         padding: EdgeInsets.all(16.0.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-
           children: [
             GestureDetector(
               onTap: () => navigate.navigateTo(Routes.hMOProfileInfoScreen),
@@ -743,7 +742,76 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
               ),
             ),
             SizedBox(height: 40.h),
-            majorWidget(child: TextView(text: 'SHIIDO'))
+            majorWidget(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextView(
+                    text: 'Claims Overview',
+                    textStyle: TextStyle(
+                      fontFamily: 'GoogleSans',
+                      fontSize: 16.2.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 4.10.h),
+                  TextView(
+                    text: 'Claims count and amounts by status',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.42.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.reminder,
+                    ),
+                  ),
+                  SizedBox(height: 20.30.h),
+                  Row(
+                    children: [
+                      claimsWidget(
+                        text: 'Approved Claims',
+                        count: '1',
+                        color: AppColors.app_green,
+                      ),
+                      SizedBox(width: 10.w),
+                      claimsWidget(
+                        text: 'Pending Claims',
+                        count: '1',
+                        color: AppColors.yellow,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 13.20.h),
+                  Row(
+                    children: [
+                      claimsWidget(
+                        text: 'Rejected Claims',
+                        count: '1',
+                        color: AppColors.red,
+                      ),
+                      SizedBox(width: 10.w),
+                      claimsWidget(
+                        text: 'Paid Claims',
+                        count: '1',
+                        color: AppColors.primary,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 13.20.h),
+                  Row(
+                    children: [
+                      claimsWidget(
+                        text: 'Partial approved',
+                        count: '1',
+                        color: AppColors.lightBlue,
+                      ),
+                       SizedBox(width: 164.0.w),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -752,6 +820,7 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
 
   // ignore: strict_top_level_inference
   Container majorWidget({Widget? child}) => Container(
+    width: double.infinity,
     decoration: BoxDecoration(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(15.r),
@@ -1002,6 +1071,62 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
                     color: AppColors.reminder,
                   ),
                 ),
+        ],
+      ),
+    ),
+  );
+
+  Widget claimsWidget({String? text, String? count, Color? color}) => Expanded(
+    child: Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.infoGrey1),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextView(
+            text: text!,
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 13.42.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.reminder,
+            ),
+          ),
+          SizedBox(height: 10.20.h),
+          Row(
+            children: [
+              SvgPicture.asset(
+                AppImage.claims,
+                height: 20.h,
+                width: 20.w,
+                color: color,
+              ),
+              SizedBox(width: 10.20.h),
+              TextView(
+                text: count!,
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 13.42.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.20.h),
+          TextView(
+            text: '₦200,000',
+            textStyle: TextStyle(
+              fontFamily: 'GoogleSans',
+              fontSize: 16.42.sp,
+              fontWeight: FontWeight.w700,
+              color: AppColors.infoGrey,
+            ),
+          ),
         ],
       ),
     ),

@@ -36,6 +36,7 @@ class AppImage {
   static const String ex_error = 'assets/svgs/ex_error.svg';
   static const String bank_transfer = 'assets/svgs/bank_transfer.svg';
   static const String card_pay = 'assets/svgs/card_pay.svg';
+  static const String claims = 'assets/svgs/claims_.svg';
   static const String online_mobile = 'assets/svgs/online_mobile.svg';
   static const String ussd_pay = 'assets/svgs/ussd_pay.svg';
   static const String wallet_pay = 'assets/svgs/wallet_pay.svg';
