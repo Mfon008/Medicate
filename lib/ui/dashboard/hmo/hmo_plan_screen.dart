@@ -119,34 +119,36 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                     ),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 12.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(22.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: AppColors.white,
-                        size: 20.0.sp,
-                        weight: 10,
-                      ),
-                      SizedBox(width: 3.6.w),
-                      TextView(
-                        text: 'Create Plan',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.82.sp,
-                          fontWeight: FontWeight.w600,
+                GestureDetector(onTap: () => navigate.navigateTo(Routes.createHmoPlan),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 12.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(22.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.add,
                           color: AppColors.white,
+                          size: 20.0.sp,
+                          weight: 10,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 3.6.w),
+                        TextView(
+                          text: 'Create Plan',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 14.82.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
