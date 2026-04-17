@@ -21,23 +21,17 @@ class _HmoPortalScreenState extends State<HmoPortalScreen> {
   List<HMOPortalClass> hmoPortalList = [
     HMOPortalClass(
       title: 'Applications',
-      call: () {
-        print('APPLICATION');
-      },
+      call: () => navigate.navigateTo(Routes.hmoApplicationPortalScreen),
       image: AppImage.portal_app,
     ),
     HMOPortalClass(
       title: 'Subscribers',
-      call: () {
-        print('SUBSCRIBERS');
-      },
+      call: () {},
       image: AppImage.subscription,
     ),
     HMOPortalClass(
       title: 'Hospital Network',
-      call: () {
-        print('HOSPITAL NETWORK');
-      },
+      call: () {},
       image: AppImage.hospital_net,
     ),
     HMOPortalClass(title: 'Renewals', call: () {}, image: AppImage.renew),
@@ -48,6 +42,7 @@ class _HmoPortalScreenState extends State<HmoPortalScreen> {
       image: AppImage.settlements,
     ),
   ];
+
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>

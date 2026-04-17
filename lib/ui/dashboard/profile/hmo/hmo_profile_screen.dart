@@ -31,9 +31,6 @@ class HMOProfileScreen extends StatelessWidget {
                 SharedPreferencesService.instance.usersData['user']['phone'],
           );
         });
-        print(
-          'objectformStatusformStatusformStatus${model.getKycStatusBoolSecond(form: model.formStatus, plans: model.planStatus, ass: model.assStatus)}',
-        );
       },
       disposeViewModel: false,
       builder: (_, HMOViewModel model, __) {

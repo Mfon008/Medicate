@@ -2693,7 +2693,7 @@ class AuthViewModel extends BaseViewModel {
         SizedBox(height: 10.h),
         TextView(
           text:
-              'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
+              'Pick your preferred hospital from our vast network of hospitals across Nigeria.',
           textStyle: TextStyle(
             fontFamily: 'Arial',
             fontSize: 15.2.sp,
@@ -2738,7 +2738,6 @@ class AuthViewModel extends BaseViewModel {
                       ?.data
                       ?.hospitals ??
                   [];
-
               // Extract states and remove duplicates
               final uniqueStates = hospitals
                   .map((e) => e.state)
@@ -3170,7 +3169,7 @@ class AuthViewModel extends BaseViewModel {
         SizedBox(height: 10.h),
         TextView(
           text:
-              'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
+              'Pick your preferred hospital from our vast network of hospitals across Nigeria.',
           textStyle: TextStyle(
             fontFamily: 'Arial',
             fontSize: 15.2.sp,
@@ -3657,7 +3656,7 @@ class AuthViewModel extends BaseViewModel {
         SizedBox(height: 10.h),
         TextView(
           text:
-              'Select your preferred hospital from our network of over 93 hospitals across Nigeria. ',
+              'Pick your preferred hospital from our vast network of hospitals across Nigeria.',
           textStyle: TextStyle(
             fontFamily: 'Arial',
             fontSize: 15.2.sp,
@@ -8349,70 +8348,70 @@ class AuthViewModel extends BaseViewModel {
           model.notifyListeners();
         },
       ),
-      SizedBox(height: 10.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              isPaidTapped = !isPaidTapped;
-              model.notifyListeners();
-            },
-            child: Container(
-              margin: EdgeInsets.only(top: 4.w),
-              padding: isPaidTapped
-                  ? EdgeInsets.all(3.0.w)
-                  : EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.r),
-                color: isPaidTapped ? AppColors.primary : AppColors.transparent,
-                border: Border.all(
-                  color: isPaidTapped
-                      ? AppColors.transparent
-                      : AppColors.infoGrey,
-                  width: .48,
-                ),
-              ),
-              child: isPaidTapped
-                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
-                  : SizedBox.shrink(),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'I confirm that I have made the payment of ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                TextView(
-                  text: formatNairaNoDecimal(
-                    model.saveThirdStepResponseModel?.data?.totalAmount ??
-                        model
-                            .getIndividualApplicationDetailsModel
-                            ?.data
-                            ?.totalAmount ??
-                        0,
-                  ),
-                  textStyle: TextStyle(
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.reminder,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      // SizedBox(height: 10.h),
+      // Row(
+      //   mainAxisAlignment: MainAxisAlignment.start,
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     GestureDetector(
+      //       onTap: () {
+      //         isPaidTapped = !isPaidTapped;
+      //         model.notifyListeners();
+      //       },
+      //       child: Container(
+      //         margin: EdgeInsets.only(top: 4.w),
+      //         padding: isPaidTapped
+      //             ? EdgeInsets.all(3.0.w)
+      //             : EdgeInsets.all(8.w),
+      //         decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(4.r),
+      //           color: isPaidTapped ? AppColors.primary : AppColors.transparent,
+      //           border: Border.all(
+      //             color: isPaidTapped
+      //                 ? AppColors.transparent
+      //                 : AppColors.infoGrey,
+      //             width: .48,
+      //           ),
+      //         ),
+      //         child: isPaidTapped
+      //             ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+      //             : SizedBox.shrink(),
+      //       ),
+      //     ),
+      //     SizedBox(width: 10.w),
+      //     Expanded(
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           TextView(
+      //             text: 'I confirm that I have made the payment of ',
+      //             textStyle: TextStyle(
+      //               fontFamily: 'Arial',
+      //               fontSize: 14.sp,
+      //               fontWeight: FontWeight.w400,
+      //               color: AppColors.reminder,
+      //             ),
+      //           ),
+      //           TextView(
+      //             text: formatNairaNoDecimal(
+      //               model.saveThirdStepResponseModel?.data?.totalAmount ??
+      //                   model
+      //                       .getIndividualApplicationDetailsModel
+      //                       ?.data
+      //                       ?.totalAmount ??
+      //                   0,
+      //             ),
+      //             textStyle: TextStyle(
+      //               fontSize: 15.8.sp,
+      //               fontWeight: FontWeight.w500,
+      //               color: AppColors.reminder,
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
       SizedBox(height: 35.60.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -8441,7 +8440,7 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                if (isPaidTapped && onTapPaymentMeth != '') {
+                if (onTapPaymentMeth != '') {
                   initiateHMOPlanPayment(
                     context,
                     planTier: planTier,
@@ -9449,70 +9448,71 @@ class AuthViewModel extends BaseViewModel {
           model.notifyListeners();
         },
       ),
-      SizedBox(height: 10.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              isPaidTapped = !isPaidTapped;
-              model.notifyListeners();
-            },
-            child: Container(
-              margin: EdgeInsets.only(top: 4.w),
-              padding: isPaidTapped
-                  ? EdgeInsets.all(3.0.w)
-                  : EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.r),
-                color: isPaidTapped ? AppColors.primary : AppColors.transparent,
-                border: Border.all(
-                  color: isPaidTapped
-                      ? AppColors.transparent
-                      : AppColors.infoGrey,
-                  width: .48,
-                ),
-              ),
-              child: isPaidTapped
-                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
-                  : SizedBox.shrink(),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'I confirm that I have made the payment of ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                TextView(
-                  text: formatNairaNoDecimal(
-                    model.saveThirdStepResponseModel?.data?.totalAmount ??
-                        model
-                            .getIndividualApplicationDetailsModel
-                            ?.data
-                            ?.totalAmount ??
-                        0,
-                  ),
-                  textStyle: TextStyle(
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.reminder,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      // SizedBox(height: 10.h),
+      // Row(
+      //   mainAxisAlignment: MainAxisAlignment.start,
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     GestureDetector(
+      //       onTap: () {
+      //         isPaidTapped = !isPaidTapped;
+      //         model.notifyListeners();
+      //       },
+      //       child: Container(
+      //         margin: EdgeInsets.only(top: 4.w),
+      //         padding: isPaidTapped
+      //             ? EdgeInsets.all(3.0.w)
+      //             : EdgeInsets.all(8.w),
+      //         decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(4.r),
+      //           color: isPaidTapped ? AppColors.primary : AppColors.transparent,
+      //           border: Border.all(
+      //             color: isPaidTapped
+      //                 ? AppColors.transparent
+      //                 : AppColors.infoGrey,
+      //             width: .48,
+      //           ),
+      //         ),
+      //         child: isPaidTapped
+      //             ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+      //             : SizedBox.shrink(),
+      //       ),
+      //     ),
+      //     SizedBox(width: 10.w),
+      //     Expanded(
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           TextView(
+      //             text: 'I confirm that I have made the payment of ',
+      //             textStyle: TextStyle(
+      //               fontFamily: 'Arial',
+      //               fontSize: 14.sp,
+      //               fontWeight: FontWeight.w400,
+      //               color: AppColors.reminder,
+      //             ),
+      //           ),
+      //           TextView(
+      //             text: formatNairaNoDecimal(
+      //               model.saveThirdStepResponseModel?.data?.totalAmount ??
+      //                   model
+      //                       .getIndividualApplicationDetailsModel
+      //                       ?.data
+      //                       ?.totalAmount ??
+      //                   0,
+      //             ),
+      //             textStyle: TextStyle(
+      //               fontSize: 15.8.sp,
+      //               fontWeight: FontWeight.w500,
+      //               color: AppColors.reminder,
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      
       SizedBox(height: 35.60.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -9541,7 +9541,7 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                if (isPaidTapped && onTapPaymentMeth != '') {
+                if (onTapPaymentMeth != '') {
                   initiateHMOPlanPayment(
                     context,
                     planTier: planTier,
@@ -9567,7 +9567,7 @@ class AuthViewModel extends BaseViewModel {
       //   buttonBorderColor: AppColors.transparent,
       //   onPressed: () async {},
       // ),
-      SizedBox(height: 20.60.h),
+      // SizedBox(height: 20.60.h),
     ],
   );
 
@@ -10551,70 +10551,71 @@ class AuthViewModel extends BaseViewModel {
           model.notifyListeners();
         },
       ),
-      SizedBox(height: 10.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            onTap: () {
-              isPaidTapped = !isPaidTapped;
-              model.notifyListeners();
-            },
-            child: Container(
-              margin: EdgeInsets.only(top: 4.w),
-              padding: isPaidTapped
-                  ? EdgeInsets.all(3.0.w)
-                  : EdgeInsets.all(8.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4.r),
-                color: isPaidTapped ? AppColors.primary : AppColors.transparent,
-                border: Border.all(
-                  color: isPaidTapped
-                      ? AppColors.transparent
-                      : AppColors.infoGrey,
-                  width: .48,
-                ),
-              ),
-              child: isPaidTapped
-                  ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
-                  : SizedBox.shrink(),
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextView(
-                  text: 'I confirm that I have made the payment of ',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.reminder,
-                  ),
-                ),
-                TextView(
-                  text: formatNairaNoDecimal(
-                    model.saveThirdStepResponseModel?.data?.totalAmount ??
-                        model
-                            .getIndividualApplicationDetailsModel
-                            ?.data
-                            ?.totalAmount ??
-                        0,
-                  ),
-                  textStyle: TextStyle(
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.reminder,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      // SizedBox(height: 10.h),
+      // Row(
+      //   mainAxisAlignment: MainAxisAlignment.start,
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     GestureDetector(
+      //       onTap: () {
+      //         isPaidTapped = !isPaidTapped;
+      //         model.notifyListeners();
+      //       },
+      //       child: Container(
+      //         margin: EdgeInsets.only(top: 4.w),
+      //         padding: isPaidTapped
+      //             ? EdgeInsets.all(3.0.w)
+      //             : EdgeInsets.all(8.w),
+      //         decoration: BoxDecoration(
+      //           borderRadius: BorderRadius.circular(4.r),
+      //           color: isPaidTapped ? AppColors.primary : AppColors.transparent,
+      //           border: Border.all(
+      //             color: isPaidTapped
+      //                 ? AppColors.transparent
+      //                 : AppColors.infoGrey,
+      //             width: .48,
+      //           ),
+      //         ),
+      //         child: isPaidTapped
+      //             ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
+      //             : SizedBox.shrink(),
+      //       ),
+      //     ),
+      //     SizedBox(width: 10.w),
+      //     Expanded(
+      //       child: Column(
+      //         crossAxisAlignment: CrossAxisAlignment.start,
+      //         children: [
+      //           TextView(
+      //             text: 'I confirm that I have made the payment of ',
+      //             textStyle: TextStyle(
+      //               fontFamily: 'Arial',
+      //               fontSize: 14.sp,
+      //               fontWeight: FontWeight.w400,
+      //               color: AppColors.reminder,
+      //             ),
+      //           ),
+      //           TextView(
+      //             text: formatNairaNoDecimal(
+      //               model.saveThirdStepResponseModel?.data?.totalAmount ??
+      //                   model
+      //                       .getIndividualApplicationDetailsModel
+      //                       ?.data
+      //                       ?.totalAmount ??
+      //                   0,
+      //             ),
+      //             textStyle: TextStyle(
+      //               fontSize: 15.8.sp,
+      //               fontWeight: FontWeight.w500,
+      //               color: AppColors.reminder,
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      
       SizedBox(height: 35.60.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -10643,7 +10644,7 @@ class AuthViewModel extends BaseViewModel {
               isLoading: model.isLoading,
               buttonBorderColor: AppColors.transparent,
               onPressed: () {
-                if (isPaidTapped && onTapPaymentMeth != '') {
+                if (onTapPaymentMeth != '') {
                   initiateHMOPlanPayment(
                     context,
                     planTier: planTier,
@@ -10660,15 +10661,15 @@ class AuthViewModel extends BaseViewModel {
           ),
         ],
       ),
-      SizedBox(height: 20.60.h),
-      ButtonWidget(
-        border: 100.r,
-        buttonColor: AppColors.dashboard,
-        buttonText: 'Save as Draft',
-        color: AppColors.deep,
-        buttonBorderColor: AppColors.transparent,
-        onPressed: () async {},
-      ),
+      // SizedBox(height: 20.60.h),
+      // ButtonWidget(
+      //   border: 100.r,
+      //   buttonColor: AppColors.dashboard,
+      //   buttonText: 'Save as Draft',
+      //   color: AppColors.deep,
+      //   buttonBorderColor: AppColors.transparent,
+      //   onPressed: () async {},
+      // ),
       SizedBox(height: 20.60.h),
     ],
   );

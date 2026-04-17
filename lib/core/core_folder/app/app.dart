@@ -43,9 +43,11 @@ import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/busi
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart';
 import '../../../ui/dashboard/hmo/create_hmo_plan.dart';
+import '../../../ui/dashboard/hmo/hmo_application_portal_screen.dart';
 import '../../../ui/dashboard/hmo/hmo_dashboard.dart';
 import '../../../ui/dashboard/hmo/hmo_home_screen.dart';
 import '../../../ui/dashboard/hmo/hmo_more_screen.dart';
+import '../../../ui/dashboard/hmo/view_hmo_application_portal_screen.dart';
 import '../../../ui/dashboard/home_screen.dart';
 import '../../../ui/dashboard/subscribers/application_form/application_form_screen.dart';
 import '../../../ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart';
@@ -214,6 +216,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: AcceleratePaymentViewHmoPlan),
     MaterialRoute(page: PaymentSuccessSubmitAppScreen),
     MaterialRoute(page: CreateHmoPlan),
+    MaterialRoute(page: HmoApplicationPortalScreen),
+    MaterialRoute(page: ViewHmoApplicationPortalScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

@@ -100,6 +100,7 @@ class AppImage {
   static const String audio = 'assets/svgs/audio.svg';
   static const String profile = 'assets/svgs/profile.svg';
   static const String portal_app = 'assets/svgs/portal_app.svg';
+  static const String full_portal_app = 'assets/svgs/full_portal_app.svg';
   static const String providers = 'assets/svgs/providers.svg';
   static const String timer = 'assets/svgs/timer.svg';
   static const String freq_timer = 'assets/svgs/freq_time.svg';

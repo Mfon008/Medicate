@@ -973,7 +973,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextView(
-                  text: 'Amonut',
+                  text: 'Amount',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 13.8.sp,

@@ -450,7 +450,14 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: () => setState(() => isTapped = !isTapped),
+                    onTap: () => setState(() {
+                      isTapped = !isTapped;
+                      if(isTapped) {
+                        renewalPriceController.text = priceController.text;
+                      } else {
+                        renewalPriceController.clear();
+                      }
+                    }),
                     child: Container(
                       padding: isTapped
                           ? EdgeInsets.all(4.0.w)
