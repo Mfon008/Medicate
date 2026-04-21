@@ -208,7 +208,8 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                       SvgPicture.asset(
                         AppImage.earth,
                         color: AppColors.lightBlue,
-                        height: 14.50.h,width: 22.50.w,
+                        height: 14.50.h,
+                        width: 22.50.w,
                       ),
                     ],
                   ),
@@ -334,7 +335,9 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                   GestureDetector(
-                    onTap: () => navigate.navigateTo(Routes.viewHmoApplicationPortalScreen),
+                    onTap: () => navigate.navigateTo(
+                      Routes.viewHmoApplicationPortalScreen,
+                    ),
                     child: Container(
                       width: double.infinity,
                       padding: EdgeInsets.all(16.w),
@@ -354,7 +357,9 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(22.r),
-                                  border: Border.all(color: AppColors.app_green),
+                                  border: Border.all(
+                                    color: AppColors.app_green,
+                                  ),
                                 ),
                                 child: TextView(
                                   text: 'Approved',
@@ -406,7 +411,9 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(22.r),
-                                  border: Border.all(color: AppColors.infoGrey1),
+                                  border: Border.all(
+                                    color: AppColors.infoGrey1,
+                                  ),
                                 ),
                                 child: TextView(
                                   text: 'Individual',
@@ -435,7 +442,10 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  SvgPicture.asset(AppImage.phone,color: AppColors.infoGrey,),
+                                  SvgPicture.asset(
+                                    AppImage.phone,
+                                    color: AppColors.infoGrey,
+                                  ),
                                   SizedBox(width: 10.w),
                                   TextView(
                                     text: '0812345678',
@@ -451,7 +461,10 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                               SizedBox(width: 30.w),
                               Row(
                                 children: [
-                                  SvgPicture.asset(AppImage.timer,color: AppColors.infoGrey,),
+                                  SvgPicture.asset(
+                                    AppImage.timer,
+                                    color: AppColors.infoGrey,
+                                  ),
                                   SizedBox(width: 10.w),
                                   TextView(
                                     text: 'Jan 17, 2026',
@@ -469,7 +482,10 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           SizedBox(height: 13.20.h),
                           Row(
                             children: [
-                              SvgPicture.asset(AppImage.message,color: AppColors.infoGrey,),
+                              SvgPicture.asset(
+                                AppImage.message,
+                                color: AppColors.infoGrey,
+                              ),
                               SizedBox(width: 10.w),
                               TextView(
                                 text: 'Adebayo@gmail.com',

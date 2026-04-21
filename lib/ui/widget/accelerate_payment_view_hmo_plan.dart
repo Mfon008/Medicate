@@ -34,32 +34,96 @@ class _AcceleratePaymentViewHmoPlanState
     extends State<AcceleratePaymentViewHmoPlan> {
   WebViewController? _controller;
 
+  bool isTransationMade = false;
+
   void setupWebViewWithPlatform() {
-    if (Platform.isAndroid) {
-      _controller = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setNavigationDelegate(
-          NavigationDelegate(
-            onProgress: (int progress) {
-              // Update loading bar.
-            },
-            onPageStarted: (String url) {},
-            onPageFinished: (String url) {},
-            onHttpError: (HttpResponseError error) {},
-            onWebResourceError: (WebResourceError error) {},
-            onNavigationRequest: (NavigationRequest request) {
-              if (request.url.startsWith(widget.url!)) {
-                return NavigationDecision.prevent;
-              }
-              return NavigationDecision.navigate;
-            },
-          ),
-        )
-        ..loadRequest(Uri.parse(widget.url!));
+    late final PlatformWebViewControllerCreationParams params;
+    if (Platform.isIOS) {
+      params = const PlatformWebViewControllerCreationParams();
     } else {
-      _controller = WebViewController()..loadRequest(Uri.parse(widget.url!));
+      params = const PlatformWebViewControllerCreationParams();
+    }
+    final controller = WebViewController.fromPlatformCreationParams(params);
+    controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {},
+          onPageStarted: (String url) {
+            print("STARTED: $url");
+            _handleCallback(url); // 👈 important for iOS
+          },
+          onPageFinished: (String url) {
+            print("FINISHED: $url");
+          },
+          onWebResourceError: (WebResourceError error) {
+            print("ERROR: ${error.description}");
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            print("NAVAL Navigation: ${request.url}");
+            _handleCallback(request.url);
+
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url!));
+
+    _controller = controller;
+  }
+
+  void _handleCallback(String url) {
+    print("CHECKING URL: $url");
+
+    if (!isTransationMade && url.contains("success") ||
+        url.contains("status=successful") ||
+        url.contains("callback") ||
+        url.contains("BANK_TRANSFER")) {
+      print("✅ PAYMENT SUCCESS");
+      isTransationMade = true;
+      Navigator.pop(context, 5);
+      // navigate.back(result: 5);
+      // setState(() {});
+
+      // if (isTransationMade==true) {
+      //   print('isTransationMade:::::$isTransationMade');
+      //   Navigator.pop(context, 5); 
+      // }
+
+      // return success
+    }
+
+    if (url.contains("failed") || url.contains("status=failed")) {
+      print("❌ PAYMENT FAILED");
     }
   }
+
+  // void setupWebViewWithPlatform() {
+  //   if (Platform.isAndroid) {
+  //     _controller = WebViewController()
+  //       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+  //       ..setNavigationDelegate(
+  //         NavigationDelegate(
+  //           onProgress: (int progress) {
+  //             // Update loading bar.
+  //           },
+  //           onPageStarted: (String url) {},
+  //           onPageFinished: (String url) {},
+  //           onHttpError: (HttpResponseError error) {},
+  //           onWebResourceError: (WebResourceError error) {},
+  //           onNavigationRequest: (NavigationRequest request) {
+  //             if (request.url.startsWith(widget.url!)) {
+  //               return NavigationDecision.prevent;
+  //             }
+  //             return NavigationDecision.navigate;
+  //           },
+  //         ),
+  //       )
+  //       ..loadRequest(Uri.parse(widget.url!));
+  //   } else {
+  //     _controller = WebViewController()..loadRequest(Uri.parse(widget.url!));
+  //   }
+  // }
 
   @override
   void initState() {
@@ -90,27 +154,28 @@ class _AcceleratePaymentViewHmoPlanState
                 ),
               ),
               backgroundColor: AppColors.dashboard,
-              actions: [
-                GestureDetector(
-                  onTap: () {
-                    navigate.back(result: 5);
-                    model.notifyListeners();
-                  },
-                  
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 10.0.w),
-                    child: TextView(
-                      text: 'PROCEED TO SUBMIT',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primary1,
+              actions: isTransationMade
+                  ? [
+                      GestureDetector(
+                        onTap: () {
+                          navigate.back(result: 5);
+                          model.notifyListeners();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 10.0.w),
+                          child: TextView(
+                            text: 'PROCEED TO SUBMIT',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary1,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ],
+                    ]
+                  : [],
             ),
             body: WebViewWidget(controller: _controller!),
           );

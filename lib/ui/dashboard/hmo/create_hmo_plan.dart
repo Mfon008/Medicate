@@ -359,7 +359,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                   padding: EdgeInsets.all(12.w),
                   child: GestureDetector(
                     onTap: () {
-                       showModalBottomSheet(
+                      showModalBottomSheet(
                         context: context,
                         backgroundColor: AppColors.white,
                         builder: (ctx) => StatefulBuilder(
@@ -375,10 +375,10 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                             );
                           },
                         ),
-                    );
-                    
+                      );
                     },
-                    child: SvgPicture.asset(AppImage.arrow_down)),
+                    child: SvgPicture.asset(AppImage.arrow_down),
+                  ),
                 ),
                 onChange: (p0) {},
               ),
@@ -452,7 +452,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                   GestureDetector(
                     onTap: () => setState(() {
                       isTapped = !isTapped;
-                      if(isTapped) {
+                      if (isTapped) {
                         renewalPriceController.text = priceController.text;
                       } else {
                         renewalPriceController.clear();

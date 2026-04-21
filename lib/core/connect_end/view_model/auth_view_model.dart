@@ -8320,7 +8320,16 @@ class AuthViewModel extends BaseViewModel {
         ),
       ),
       SizedBox(height: 10.h),
-
+      paymentWidget(
+        context: context,
+        isWallet: true,
+        text: 'Pay with Wallet',
+        icon: AppImage.wallet_pay,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Wallet';
+          model.notifyListeners();
+        },
+      ),
       paymentWidget(
         isWallet: false,
         text: 'Pay with Card',
@@ -8344,7 +8353,7 @@ class AuthViewModel extends BaseViewModel {
         text: 'Pay with Opay',
         icon: AppImage.opay,
         onTap: () {
-          onTapPaymentMeth = 'Pay with Bank Transfer';
+          onTapPaymentMeth = 'Pay with Opay';
           model.notifyListeners();
         },
       ),
@@ -9422,6 +9431,16 @@ class AuthViewModel extends BaseViewModel {
       ),
       SizedBox(height: 10.h),
       paymentWidget(
+        context: context,
+        isWallet: true,
+        text: 'Pay with Wallet',
+        icon: AppImage.wallet_pay,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Wallet';
+          model.notifyListeners();
+        },
+      ),
+      paymentWidget(
         isWallet: false,
         text: 'Pay with Card',
         icon: AppImage.card_pay,
@@ -9444,10 +9463,11 @@ class AuthViewModel extends BaseViewModel {
         text: 'Pay with Opay',
         icon: AppImage.opay,
         onTap: () {
-          onTapPaymentMeth = 'Pay with Bank Transfer';
+          onTapPaymentMeth = 'Pay with Opay';
           model.notifyListeners();
         },
       ),
+
       // SizedBox(height: 10.h),
       // Row(
       //   mainAxisAlignment: MainAxisAlignment.start,
@@ -9512,7 +9532,6 @@ class AuthViewModel extends BaseViewModel {
       //     ),
       //   ],
       // ),
-      
       SizedBox(height: 35.60.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -10523,6 +10542,16 @@ class AuthViewModel extends BaseViewModel {
         ),
       ),
       SizedBox(height: 10.h),
+      paymentWidget(
+        context: context,
+        isWallet: true,
+        text: 'Pay with Wallet',
+        icon: AppImage.wallet_pay,
+        onTap: () {
+          onTapPaymentMeth = 'Pay with Wallet';
+          model.notifyListeners();
+        },
+      ),
 
       paymentWidget(
         isWallet: false,
@@ -10547,10 +10576,11 @@ class AuthViewModel extends BaseViewModel {
         text: 'Pay with Opay',
         icon: AppImage.opay,
         onTap: () {
-          onTapPaymentMeth = 'Pay with Bank Transfer';
+          onTapPaymentMeth = 'Pay with Opay';
           model.notifyListeners();
         },
       ),
+
       // SizedBox(height: 10.h),
       // Row(
       //   mainAxisAlignment: MainAxisAlignment.start,
@@ -10615,7 +10645,6 @@ class AuthViewModel extends BaseViewModel {
       //     ),
       //   ],
       // ),
-      
       SizedBox(height: 35.60.h),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -15505,6 +15534,21 @@ class AuthViewModel extends BaseViewModel {
         message: 'Unable to login please try again.',
         error: true,
       );
+    }
+    notifyListeners();
+  }
+  
+  void refreshToken(String? refreshToken) async {
+    try {
+      _isLoading = true;
+      await runBusyFuture(
+        repositoryImply.refreshToken(refreshToken!),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
     }
     notifyListeners();
   }
@@ -26329,9 +26373,8 @@ class AuthViewModel extends BaseViewModel {
           !isWallet
               ? SizedBox.shrink()
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    SizedBox(width: 10.w),
                     ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => AuthViewModel(),
                       onViewModelReady: (model) {
@@ -26351,6 +26394,8 @@ class AuthViewModel extends BaseViewModel {
                                     "0",
                               ),
                             ),
+                            maxLines: 1,
+                            textOverflow: TextOverflow.fade,
                             textStyle: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 14.0.sp,
@@ -26492,6 +26537,7 @@ class AuthViewModel extends BaseViewModel {
             planTier: planTier,
           ),
         );
+        print("RESULT: $result");
 
         if (result != null) {
           if (planType == 'Individual') {
@@ -28123,7 +28169,7 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }

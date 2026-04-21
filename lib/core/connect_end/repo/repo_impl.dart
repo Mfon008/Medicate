@@ -30,6 +30,7 @@ import '../model/hmo_plan_payment_response_model/hmo_plan_payment_response_model
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
+import '../model/refresh_token_response_model/refresh_token_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -139,8 +140,9 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<dynamic> refreshToken() async {
-    final response = await _contract.refreshToken();
+  Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async {
+    final response = await _contract.refreshToken(refreshToken);
+    _chacheRefresh(response);
     return response;
   }
 
@@ -434,7 +436,7 @@ class AuthRepoImpl {
     return response;
   }
 
- Future<GetMySubscriptionResponseModel> getMySubscriptions({
+  Future<GetMySubscriptionResponseModel> getMySubscriptions({
     String? status,
   }) async {
     final response = await _contract.getMySubscriptions(status: status);
@@ -447,6 +449,13 @@ class AuthRepoImpl {
       _session.authRefreshToken = data.data.refreshToken;
       _session.usersData = data.data.toJson();
       _session.authType = 'everyday_user';
+    }
+  }
+  
+  void _chacheRefresh(data) {
+    if (data != null) {
+      _session.authToken = data.data.accessToken;
+      _session.authRefreshToken = data.data.refreshToken;
     }
   }
 

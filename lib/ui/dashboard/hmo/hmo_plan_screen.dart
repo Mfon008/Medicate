@@ -119,7 +119,8 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                     ),
                   ],
                 ),
-                GestureDetector(onTap: () => navigate.navigateTo(Routes.createHmoPlan),
+                GestureDetector(
+                  onTap: () => navigate.navigateTo(Routes.createHmoPlan),
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 12.w,
@@ -736,7 +737,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                             ),
                                           ],
                                         ),
-                                         SizedBox(height: 20.w),
+                                        SizedBox(height: 20.w),
                                       ],
                                     ),
                                   ),

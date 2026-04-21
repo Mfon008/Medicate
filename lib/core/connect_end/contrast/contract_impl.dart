@@ -29,6 +29,7 @@ import '../model/initiate_payment_response_model/initiate_payment_response_model
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
+import '../model/refresh_token_response_model/refresh_token_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -92,7 +93,7 @@ class AuthContractsImpl {
     ResendOtpEntityModel? changePhoneNo,
     String? id,
   }) async => await _api.changePhoneNo(changePhoneNo: changePhoneNo, id: id);
-  Future<dynamic> refreshToken() async => await _api.refreshToken();
+  Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async => await _api.refreshToken(refreshToken);
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async =>
       await _api.getUserDetails(phoneNo);
   Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async =>

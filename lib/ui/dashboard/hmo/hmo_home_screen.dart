@@ -805,7 +805,7 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
                         count: '1',
                         color: AppColors.lightBlue,
                       ),
-                       SizedBox(width: 164.0.w),
+                      SizedBox(width: 164.0.w),
                     ],
                   ),
                   SizedBox(height: 10.h),

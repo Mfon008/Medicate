@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 class UrlConfig {
-  static const String refresh_token = 'auth/refresh-token';
+  static const String refresh_token = 'auth/refresh';
   static const String set_pin = 'auth/set-pin';
   static const String send_otp = 'auth/send-otp';
   static const String sign_in = 'auth/login';

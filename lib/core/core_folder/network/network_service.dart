@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:dio/dio.dart';
+import 'package:medicate_app/core/core_folder/network/refresh_interceptor.dart';
 import '../app/app.locator.dart';
 import '../config/configuration.dart';
 import '../manager/shared_preference.dart';
@@ -51,7 +52,8 @@ class NetworkService {
     // authToken ??= session.authToken;
     dio!.interceptors
       ..add(AppInterceptor(authToken ?? ''))
-      ..add(LogInterceptor(requestBody: true, logPrint: printDioLogs));
+      ..add(LogInterceptor(requestBody: true, logPrint: printDioLogs))
+      ..add(RefreshInterceptor(authDio: dio!));
   }
 
   /// Factory constructor used mainly for injecting an instance of [Dio] mock
@@ -76,7 +78,8 @@ class NetworkService {
     try {
       switch (method) {
         case RequestMethod.post:
-          response = await dio!.post(
+          response = await 
+          dio!.post(
             path,
             queryParameters: params,
             data: data,
