@@ -405,27 +405,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 validator: AppValidator.validateString(),
               ),
               SizedBox(height: 20.h),
-              TextFormWidget(
-                hint: 'Price (₦)',
-                borderColor: AppColors.transparent,
-                borderTopLeft: 10.r,
-                borderTopRight: 10.r,
-                borderBottomLeft: 10.r,
-                borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Arial',
-                  fontSize: 14.sp,
-                  color: AppColors.infoGrey,
-                ),
-                fillColor: AppColors.grey,
-                isFilled: true,
-                controller: priceController,
-                validator: AppValidator.validateString(),
-                onChange: (p0) {},
-              ),
-              SizedBox(height: 20.h),
+
               TextFormWidget(
                 hint: 'Renewal Price (₦)',
                 borderColor: AppColors.transparent,
@@ -446,6 +426,29 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 validator: AppValidator.validateString(),
                 onChange: (p0) {},
               ),
+              SizedBox(height: 20.h),
+
+              TextFormWidget(
+                hint: 'Price (₦)',
+                borderColor: AppColors.transparent,
+                borderTopLeft: 10.r,
+                borderTopRight: 10.r,
+                borderBottomLeft: 10.r,
+                borderBottomRight: 10.r,
+                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Arial',
+                  fontSize: 14.sp,
+                  color: AppColors.infoGrey,
+                ),
+                fillColor: AppColors.grey,
+                isFilled: true,
+                controller: priceController,
+                validator: AppValidator.validateString(),
+                onChange: (p0) {},
+              ),
+              
               SizedBox(height: 20.h),
               Row(
                 children: [

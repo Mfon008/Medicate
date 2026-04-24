@@ -219,17 +219,17 @@ class RefreshInterceptor extends Interceptor with ResponseHandler {
     try {
       Response response;
       try {
-        response = await authDio.put(
+        response = await authDio.post(
           UrlConfig.refresh_token,
-          data: {'refresh_token': refreshToken},
+          data: {'refreshToken': refreshToken},
           options: options,
         );
       } on DioException catch (e) {
         final status = e.response?.statusCode;
         if (status == 404 || status == 405) {
-          response = await authDio.put(
+          response = await authDio.post(
            UrlConfig.refresh_token,
-            data: {'refresh_token': refreshToken},
+            data: {'refreshToken': refreshToken},
             options: options,
           );
         } else {

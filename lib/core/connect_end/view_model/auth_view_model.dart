@@ -577,6 +577,7 @@ class AuthViewModel extends BaseViewModel {
   List<TextEditingController> famGenderController = [];
 
   Map<int, String?> selectedTimePerDay = {};
+  Map<int, int?> selectedDoseIndexPerDay = {};
   Map<int, List<String>> timesPerDay = {};
   List<sv.Document>? uploadDocumentsApplication = [];
   sv.Document? uploadFamDocumentsApplication1;
@@ -11612,6 +11613,11 @@ class AuthViewModel extends BaseViewModel {
               (e) => TextEditingController(text: e.dateAndTime),
             )
             .toList();
+        model.durationUpdateControllers = model.medicationClassList
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.duration.toString()),
+            )
+            .toList();
         model.endDateUpdateController = model.medicationClassList
             .map<TextEditingController>(
               (e) => TextEditingController(text: e.endDate),
@@ -13664,6 +13670,7 @@ class AuthViewModel extends BaseViewModel {
     _isLoading = true;
     model!.notifyListeners();
 
+    logger.d('model.isCusSchedule::: ${model.isCusSchedule}');
     if (model.isCusSchedule) {
       for (int day = 0; day < model.returnNoDays!; day++) {
         List<Map<String, String>> dayDoses = [];
@@ -13692,8 +13699,14 @@ class AuthViewModel extends BaseViewModel {
             'date': startDateIsoWithin.substring(0, 10),
             'isoDate': startDateIsoWithin,
           });
+          print(
+            'formattedSelectedTimeAndPeriodList![i]::: ${formattedSelectedTimeAndPeriodList![i]}',
+          );
         }
         logger.d('startDateIsoWithinstartDateIsoWithin::: $startDateIsoWithin');
+        logger.d(
+          'formattedSelectedTimeAndPeriodList::: $formattedSelectedTimeAndPeriodList',
+        );
         startDateIsoWithin = DateTime.parse(
           startDateIsoWithin,
         ).add(Duration(days: 0 + 1)).toString();
@@ -13702,6 +13715,7 @@ class AuthViewModel extends BaseViewModel {
           'day': day + 1, // so Day 1, Day 2, etc.
           'doses': dayDoses,
         });
+        logger.d('addTimePeriod::: $addTimePeriod');
       }
     }
 
@@ -13726,6 +13740,13 @@ class AuthViewModel extends BaseViewModel {
       ),
     );
 
+    for (int i = 0; i < model.medicationClassList.length; i++) {
+      print(
+        'Medication ${i + 1}: ${model.medicationClassList[i].medicationName}',
+      );
+      print('Dosage Map: ${model.medicationClassList[i].dosageMap}');
+    }
+
     await Future.delayed(Duration(seconds: 2), () {});
     model.markUpdateControllersInitializedFalse();
     clearReminderMedsVaraibles(model);
@@ -13743,6 +13764,7 @@ class AuthViewModel extends BaseViewModel {
     drugNameController.clear();
     medTypeController.clear();
     descriptionController.clear();
+    medDurationController.clear();
     medDosageController.clear();
     model.dateTimeController.clear();
     medDurationController.clear();
@@ -15009,22 +15031,22 @@ class AuthViewModel extends BaseViewModel {
     model.notifyListeners();
   }
 
-  Future<void> selectTimeFreqIndex({
-    BuildContext? context,
-    StateSetter? setModalState,
-    int? index,
-  }) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context!,
-      initialTime: TimeOfDay.now(),
-    );
+  // Future<void> selectTimeFreqIndex({
+  //   BuildContext? context,
+  //   StateSetter? setModalState,
+  //   int? index,
+  // }) async {
+  //   final TimeOfDay? pickedTime = await showTimePicker(
+  //     context: context!,
+  //     initialTime: TimeOfDay.now(),
+  //   );
 
-    if (pickedTime != null) {
-      formattedSelectedTimeAndPeriod = formatTimeFreq(pickedTime);
-    }
-    setModalState!(() {});
-    notifyListeners();
-  }
+  //   if (pickedTime != null) {
+  //     formattedSelectedTimeAndPeriod = formatTimeFreq(pickedTime);
+  //   }
+  //   setModalState!(() {});
+  //   notifyListeners();
+  // }
 
   Future<void> selectTimeFreqCustom({
     BuildContext? context,
@@ -15070,21 +15092,19 @@ class AuthViewModel extends BaseViewModel {
     // Update selected map
     selectedTimePerDay[dayIndex] = formatted;
 
-    model.setSelectedTimeForDay(dayIndex, formatted);
+    model.setSelectedTimeForDay(dayIndex, formatted, model);
     model.notifyListeners();
     setModalState?.call(() {});
   }
 
   Future<void> selectTimeFreqCustomUpdate({
-    BuildContext? context,
-    int? dayIndex,
-    StateSetter? setModalState,
-    AuthViewModel? model,
-    dynamic timesPerDay,
-    dynamic timeSelected,
+    required BuildContext context,
+    required AuthViewModel model,
+    required int medicationIndex,
+    required int dayIndex, // 0-based
+    int? doseIndex, // null = add, not null = update
+    required StateSetter setModalState,
   }) async {
-    if (context == null || dayIndex == null || model == null) return;
-
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -15093,21 +15113,76 @@ class AuthViewModel extends BaseViewModel {
     if (pickedTime == null) return;
 
     final formatted = formatTimeFreq(pickedTime);
-    logger.d(timesPerDay);
-    logger.d(dayIndex);
-    final index = timesPerDay.indexWhere(
-      (e) => e["time"] == timeSelected['time'],
-    );
-    if (index != -1) {
-      timesPerDay[index]["time"] = formatted;
+
+    final raw = model.startDateUpdateControllers[medicationIndex].text;
+    final clean = raw.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+    final startDate = DateFormat('dd MMM, yyyy').parse(clean);
+    final currentDate = startDate.add(Duration(days: dayIndex));
+
+    final combined = combineDateAndTime(date: currentDate, time: formatted);
+
+    final newDose = {
+      "time": formatted,
+      "date": DateFormat('yyyy-MM-dd').format(currentDate),
+      "isoDate": combined.toUtc().toIso8601String(),
+    };
+
+    final doses =
+        model.medicationClassList[medicationIndex].dosageMap[dayIndex]['doses'];
+
+    /// ✅ UPDATE
+    if (doseIndex != null && doseIndex < doses.length) {
+      doses[doseIndex] = newDose;
+    }
+    /// ✅ ADD
+    else {
+      final exists = doses.any((e) => e['time'] == formatted);
+      if (!exists) {
+        doses.add(newDose);
+      }
     }
 
-    selectedTimePerDay[dayIndex] = formatted;
+    /// update selection state
+    model.selectedTimePerDay[dayIndex] = formatted;
+    model.selectedDoseIndexPerDay[dayIndex] = doseIndex;
 
-    model.setSelectedTimeForDay(dayIndex, formatted);
     model.notifyListeners();
-    setModalState?.call(() {});
+    setModalState(() {});
   }
+  // Future<void> selectTimeFreqCustomUpdate({
+  //   BuildContext? context,
+  //   int? dayIndex,
+  //   StateSetter? setModalState,
+  //   AuthViewModel? model,
+  //   dynamic timesPerDay,
+  //   dynamic timeSelected,
+  // }) async {
+  //   if (context == null || dayIndex == null || model == null) return;
+
+  //   final pickedTime = await showTimePicker(
+  //     context: context,
+  //     initialTime: TimeOfDay.now(),
+  //   );
+
+  //   if (pickedTime == null) return;
+
+  //   final formatted = formatTimeFreq(pickedTime);
+  //   logger.d(timesPerDay);
+  //   logger.d(dayIndex);
+  //   // ✅ Direct update (no indexWhere needed)
+  //   if (timesPerDay != null &&
+  //       dayIndex < timesPerDay.length &&
+  //       timesPerDay[dayIndex] != null) {
+  //     timesPerDay[dayIndex]["time"] = formatted;
+  //   }
+
+  //   model.selectedTimePerDay[dayIndex] = formatted;
+
+  //   model.setSelectedTimeForDay(dayIndex, formatted, model);
+  //   model.notifyListeners();
+  //   setModalState?.call(() {});
+  // }
 
   String formatTimeFreq(TimeOfDay time) {
     final hour = time.hourOfPeriod == 0 ? 12 : time.hourOfPeriod;
@@ -15134,6 +15209,7 @@ class AuthViewModel extends BaseViewModel {
   Future<void> selectDate({
     BuildContext? context,
     StateSetter? setModalState,
+    AuthViewModel? model,
   }) async {
     pickedDatedStart = await showDatePicker(
       context: context!,
@@ -15152,10 +15228,128 @@ class AuthViewModel extends BaseViewModel {
         pickedDatedStart!.month,
         pickedDatedStart!.day,
       ).toIso8601String();
+      _calculateEndDate(setModalState: setModalState, model: model);
     }
     setModalState!(() {});
     notifyListeners();
   }
+
+  Future<void> _calculateEndDate({
+    StateSetter? setModalState,
+    AuthViewModel? model,
+  }) async {
+    print('ooooo print duration');
+    print(
+      'ooooo print ${model!.pickedDatedStart} and ${model.medDurationController.text}',
+    );
+
+    if (model.pickedDatedStart != null &&
+        model.medDurationController.text.isNotEmpty) {
+      final days = int.tryParse(model.medDurationController.text) ?? 0;
+
+      // ✅ Calculate directly
+      final endDate = model.pickedDatedStart!.add(Duration(days: days - 1));
+
+      // ✅ Store DateTime (recommended)
+      model.pickedEndDate = endDate.toString();
+
+      // ✅ Format ONLY for UI
+      model.endDateController.text = DateFormat('dd MMM, yyyy').format(endDate);
+
+      // ✅ Convert to ISO (no need for parse again)
+      model.endDateIso = DateTime.utc(
+        endDate.year,
+        endDate.month,
+        endDate.day,
+      ).toIso8601String();
+
+      model.returnNoDays = days;
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      model.intListCustom = List.generate(
+        model.returnNoDays!,
+        (index) => index,
+      );
+
+      setModalState?.call(() {});
+      notifyListeners();
+    }
+  }
+
+  Future<void> _calculateEndDateUpdate({
+    StateSetter? setModalState,
+    AuthViewModel? model,
+    int? index,
+  }) async {
+    print('ooooo print duration');
+    print(
+      'ooooo print ${model!.startDateUpdateControllers[index!].text} and ${model.durationUpdateControllers[index].text}',
+    );
+
+    if (model.startDateUpdateControllers[index].text.isNotEmpty &&
+        model.durationUpdateControllers[index].text.isNotEmpty) {
+      final days =
+          int.tryParse(model.durationUpdateControllers[index].text) ?? 0;
+
+      // ✅ FIXED parsing
+      final startDate = DateFormat(
+        'dd MMM, yyyy',
+      ).parse(model.startDateUpdateControllers[index].text);
+
+      final endDate = startDate.add(Duration(days: days - 1));
+
+      // ✅ Format for UI
+      model.endDateUpdateController[index].text = DateFormat(
+        'dd MMM, yyyy',
+      ).format(endDate);
+
+      // ✅ ISO
+      model.endDateIso = DateTime.utc(
+        endDate.year,
+        endDate.month,
+        endDate.day,
+      ).toIso8601String();
+
+      // model.returnNoDays = days;
+      model.medicationClassList[index].duration = days.toString();
+
+      model.numberOfDurationsInDaysList![index] = getReturnDurationNumberOfDays(
+        days,
+      );
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      model.intListCustom = List.generate(days, (i) => i);
+
+      setModalState?.call(() {});
+      notifyListeners();
+    }
+  }
+
+  // Future<void> _calculateEndDate({StateSetter? setModalState, AuthViewModel? model}) async {
+  //   print('ooooo print duaration');
+  //   print('ooooo print ${model!.pickedDatedStart} and ${model.medDurationController.text}');
+  //   if (model!.pickedDatedStart != null && model.medDurationController.text.isNotEmpty) {
+  //     final days = int.tryParse(model.medDurationController.text) ?? 0;
+  //     model.pickedEndDate = model.pickedDatedStart!.add(Duration(days: days)) as String?;
+  //     model.endDateController.text = model.pickedEndDate!;
+  //     final localDate = DateFormat('dd MMM, yyyy').parse(model.pickedEndDate!);
+
+  //     final utcDate = DateTime.utc(
+  //       localDate.year,
+  //       localDate.month,
+  //       localDate.day,
+  //     );
+  //     endDateIso = utcDate.toIso8601String();
+  //     returnNoDays = int.parse(model.medDurationController.text)
+  //     await Future.delayed(Duration(seconds: 1));
+  //     intListCustom = List.generate(returnNoDays!, (index) => index);
+
+  //     setModalState!(() {});
+  //     notifyListeners();
+  //   }
+  // }
 
   Future<void> selectEndDate({
     BuildContext? context,
@@ -15316,8 +15510,8 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
-  void setSelectedTimeForDay(int day, String time) {
-    selectedTimePerDay[day] = time;
+  void setSelectedTimeForDay(int day, String time, AuthViewModel model) {
+    model.selectedTimePerDay[day] = time;
     debugPrint('✅ saved: day $day → $time');
     notifyListeners();
   }
@@ -15344,6 +15538,11 @@ class AuthViewModel extends BaseViewModel {
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
+      _calculateEndDateUpdate(
+        setModalState: setModalState,
+        model: model,
+        index: index,
+      );
     }
     setModalState!(() {});
     model.notifyListeners();
@@ -15537,7 +15736,7 @@ class AuthViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-  
+
   void refreshToken(String? refreshToken) async {
     try {
       _isLoading = true;
@@ -17236,40 +17435,87 @@ class AuthViewModel extends BaseViewModel {
     AuthViewModel? model,
     int? index,
     int? day,
+    int? doseIndex, // null = add new, not null = update
   }) async {
     final duration = int.tryParse(
       model!.medicationClassList[index!].duration ?? '',
     );
     if (duration == null) return;
 
-    final startDate = DateFormat(
-      'dd MMM, yyyy hh:mm a',
-    ).parse(model.startDateUpdateControllers[index].text);
+    final raw = model.startDateUpdateControllers[index].text;
+    final clean = raw.replaceAll(RegExp(r'\s+'), ' ').trim();
 
+    final startDate = DateFormat('dd MMM, yyyy').parse(clean);
     final currentDate = startDate.add(Duration(days: day! - 1));
 
-    List<Map<String, String>> doses = [];
-    if (model.medicationClassList[index].dosageMap[day - 1]['day'] == day &&
-        model.medicationClassList[index].dosageMap[day - 1]['doses'].any(
-          (e) => e['time'] == model.selectedTimePerDay[day - 1],
-        )) {
-      return;
-    } else {
-      final combined = combineDateAndTime(
-        date: currentDate,
-        time: selectedTimePerDay[day - 1]!,
-      );
-      doses.add({
-        'time': selectedTimePerDay[day - 1]!,
-        'date': DateFormat('yyyy-MM-dd').format(currentDate),
-        'isoDate': combined.toUtc().toIso8601String(),
-      });
-      model.medicationClassList[index].dosageMap[day - 1]['doses'].add(
-        doses[0],
-      );
+    final selectedTime = model.selectedTimePerDay[day - 1];
+    if (selectedTime == null) return;
+
+    final combined = combineDateAndTime(date: currentDate, time: selectedTime);
+
+    final newDose = {
+      'time': selectedTime,
+      'date': DateFormat('yyyy-MM-dd').format(currentDate),
+      'isoDate': combined.toUtc().toIso8601String(),
+    };
+
+    final doses = model.medicationClassList[index].dosageMap[day - 1]['doses'];
+
+    /// ✅ UPDATE EXISTING
+    if (doseIndex != null && doseIndex < doses.length) {
+      doses[doseIndex] = newDose;
     }
+    /// ✅ ADD NEW
+    else {
+      // Optional: prevent duplicates
+      final exists = doses.any((e) => e['time'] == selectedTime);
+      if (!exists) {
+        doses.add(newDose);
+      }
+    }
+
     model.notifyListeners();
   }
+
+  // Future<void> buildCustomDosageMap({
+  //   AuthViewModel? model,
+  //   int? index,
+  //   int? day,
+  // }) async {
+  //   final duration = int.tryParse(
+  //     model!.medicationClassList[index!].duration ?? '',
+  //   );
+  //   if (duration == null) return;
+
+  //   final raw = model.startDateUpdateControllers[index].text;
+  //   final clean = raw.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+  //   final startDate = DateFormat('dd MMM, yyyy').parse(clean);
+
+  //   final currentDate = startDate.add(Duration(days: day! - 1));
+
+  //   List<Map<String, String>> doses = [];
+  //   if (model.medicationClassList[index].dosageMap[day - 1]['day'] == day &&
+  //       model.medicationClassList[index].dosageMap[day - 1]['doses'].any(
+  //         (e) => e['time'] == model.selectedTimePerDay[day - 1],
+  //       )) {
+  //     return;
+  //   } else {
+  //     final combined = combineDateAndTime(
+  //       date: currentDate,
+  //       time: selectedTimePerDay[day - 1]!,
+  //     );
+  //     doses.add({
+  //       'time': selectedTimePerDay[day - 1]!,
+  //       'date': DateFormat('yyyy-MM-dd').format(currentDate),
+  //       'isoDate': combined.toUtc().toIso8601String(),
+  //     });
+  //     model.medicationClassList[index].dosageMap[day - 1]['doses'].add(
+  //       doses[0],
+  //     );
+  //   }
+  //   model.notifyListeners();
+  // }
 
   void removeTimeAt({
     required int medicationIndex,
@@ -17313,40 +17559,81 @@ class AuthViewModel extends BaseViewModel {
     });
   }
 
+  // Future<void> selectTimeFreqUpdate({
+  //   BuildContext? context,
+  //   StateSetter? setModalState,
+  //   AuthViewModel? model,
+  //   int? index,
+  // }) async {
+  //   final TimeOfDay? pickedTime = await showTimePicker(
+  //     context: context!,
+  //     initialTime: TimeOfDay.now(),
+  //   );
+
+  //   if (pickedTime == null) return;
+
+  //   final formattedTime = formatTimeFreq(pickedTime); // e.g. 09:30 AM
+
+  //   // Init list if needed
+  //   model!.selectedTimes;
+
+  //   // Prevent duplicates
+  //   if (model.selectedTimes.contains(formattedTime)) return;
+
+  //   // Enforce max timesToTake
+  //   final maxTimes = int.tryParse(
+  //     model.medicationClassList[index!].timesToTake ?? '',
+  //   );
+
+  //   if (maxTimes != null && model.selectedTimes.length >= maxTimes) return;
+
+  //   // Add next time
+  //   model.selectedTimes.add(formattedTime);
+  //   model.getTime = formattedTime;
+
+  //   setModalState?.call(() {});
+  //   notifyListeners();
+  // }
+
   Future<void> selectTimeFreqUpdate({
-    BuildContext? context,
-    StateSetter? setModalState,
-    AuthViewModel? model,
-    int? index,
+    required BuildContext context,
+    required StateSetter setModalState,
+    required AuthViewModel model,
+    required int index,
   }) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context!,
+    final pickedTime = await showTimePicker(
+      context: context,
       initialTime: TimeOfDay.now(),
     );
 
     if (pickedTime == null) return;
 
-    final formattedTime = formatTimeFreq(pickedTime); // e.g. 09:30 AM
+    final formattedTime = formatTimeFreq(pickedTime);
 
-    // Init list if needed
-    model!.selectedTimes;
-
-    // Prevent duplicates
-    if (model.selectedTimes.contains(formattedTime)) return;
-
-    // Enforce max timesToTake
     final maxTimes = int.tryParse(
-      model.medicationClassList[index!].timesToTake ?? '',
+      model.medicationClassList[index].timesToTake ?? '',
     );
 
-    if (maxTimes != null && model.selectedTimes.length >= maxTimes) return;
+    /// ✅ UPDATE MODE
+    if (model.globalTimeIndex != null) {
+      model.selectedTimes[model.globalTimeIndex!] = formattedTime;
+    }
+    /// ✅ ADD MODE
+    else {
+      if (model.selectedTimes.contains(formattedTime)) return;
 
-    // Add next time
-    model.selectedTimes.add(formattedTime);
+      if (maxTimes != null && model.selectedTimes.length >= maxTimes) return;
+
+      model.selectedTimes.add(formattedTime);
+    }
+
     model.getTime = formattedTime;
 
-    setModalState?.call(() {});
-    notifyListeners();
+    /// rebuild map AFTER change
+    await model.buildDosageMap(model: model, index: index);
+
+    setModalState(() {});
+    model.notifyListeners();
   }
 
   firstModalFLow({
@@ -17814,6 +18101,7 @@ class AuthViewModel extends BaseViewModel {
                               onTap: () => model.selectDate(
                                 context: context,
                                 setModalState: setModalState,
+                                model: model,
                               ),
                               child: SvgPicture.asset(
                                 AppImage.calendar,
@@ -17853,7 +18141,7 @@ class AuthViewModel extends BaseViewModel {
                             fontSize: 16.2.sp,
                             color: AppColors.infoGrey,
                           ),
-                          fillColor: AppColors.white,
+                          fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
                           style: TextStyle(
@@ -17861,64 +18149,96 @@ class AuthViewModel extends BaseViewModel {
                             fontWeight: FontWeight.w400,
                             fontFamily: 'GoogleSans',
                           ),
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(8.w),
-                            child: GestureDetector(
-                              onTap: () => model.selectEndDate(
-                                context: context,
-                                setModalState: setModalState,
-                              ),
-                              child: SvgPicture.asset(
-                                AppImage.calendar,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                          // suffixWidget: Padding(
+                          //   padding: EdgeInsets.all(8.w),
+                          //   child: GestureDetector(
+                          //     onTap: () => model.selectEndDate(
+                          //       context: context,
+                          //       setModalState: setModalState,
+                          //     ),
+                          //     child: SvgPicture.asset(
+                          //       AppImage.calendar,
+                          //       fit: BoxFit.cover,
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                         SizedBox(height: 24.0.h),
-                        TextView(
-                          text: 'Duration',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.sp,
+                        TextFormWidget(
+                          hint: 'Duration',
+                          label: '',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          controller: model.medDurationController,
+                          labelStyle: TextStyle(
                             fontWeight: FontWeight.w400,
-                            color: AppColors.reminder,
+                            fontFamily: 'Arial',
+                            fontSize: 16.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.appWhite,
+                          isFilled: true,
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
+                          onChange: (p0) => _calculateEndDate(
+                            setModalState: setModalState,
+                            model: model,
                           ),
                         ),
-                        SizedBox(height: 14.0.h),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(16.w, 0.w, 0.w, 0.w),
-                          width: double.infinity,
-                          height: 50.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            color: AppColors.dashboard,
-                          ),
-                          child: Row(
-                            children: [
-                              TextView(
-                                text: model.numberOfDurationsInDays ?? '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.primary1,
-                                ),
-                              ),
-                              TextView(
-                                text: model.endDateController.text != ''
-                                    ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
-                                    : '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+
+                        // TextView(
+                        //   text: 'Duration',
+                        //   textStyle: TextStyle(
+                        //     fontFamily: 'Arial',
+                        //     fontSize: 14.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     color: AppColors.reminder,
+                        //   ),
+                        // ),
+
+                        // SizedBox(height: 14.0.h),
+                        // Container(
+                        //   padding: EdgeInsets.fromLTRB(16.w, 0.w, 0.w, 0.w),
+                        //   width: double.infinity,
+                        //   height: 50.h,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(10.r),
+                        //     color: AppColors.dashboard,
+                        //   ),
+                        //   child: Row(
+                        //     children: [
+                        //       TextView(
+                        //         text: model.numberOfDurationsInDays ?? '',
+                        //         textStyle: TextStyle(
+                        //           fontFamily: 'GoogleSans',
+                        //           fontSize: 14.sp,
+                        //           fontWeight: FontWeight.w700,
+                        //           color: AppColors.primary1,
+                        //         ),
+                        //       ),
+                        //       TextView(
+                        //         text: model.endDateController.text != ''
+                        //             ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
+                        //             : '',
+                        //         textStyle: TextStyle(
+                        //           fontFamily: 'Arial',
+                        //           fontSize: 14.sp,
+                        //           fontWeight: FontWeight.w400,
+                        //           color: AppColors.reminder,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(height: 24.0.h),
                         model.isCusSchedule
                             ? Column(
@@ -19663,13 +19983,24 @@ class AuthViewModel extends BaseViewModel {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 20.h),
+
                       ...model.medicationClassList.asMap().entries.map((entry) {
                         MedicationClass e = entry.value;
                         int index = entry.key;
-                        final doseItem = index < e.dosageMap.length
-                            ? e.dosageMap[index]
-                            : null;
+                        final doseItem = e.dosageMap.isNotEmpty
+                            ? e.dosageMap[0] // ✅ ALWAYS 0 for fixed schedule
+                            : e.dosageMap[index];
+                        // final doseItem = index < e.dosageMap.length
+                        //     ? e.dosageMap[index]
+                        //     : null;
                         final doses = doseItem?['doses'];
+                        print('indexindexindexindexindex $index');
+                        print('doseItemdoseItemdoseItemdoseItem $doseItem');
+                        print('Doses for medication at index $index: $doses');
+                        print('model.isPhoneFlagged::: ${e.dosageMap}');
+                        print(
+                          'lengthlengthlengthlengthlength::: ${e.dosageMap.length}',
+                        );
                         return Card(
                           color: AppColors.white,
                           elevation: .78,
@@ -20273,7 +20604,7 @@ class AuthViewModel extends BaseViewModel {
                                                 fontSize: 16.2.sp,
                                                 color: AppColors.infoGrey,
                                               ),
-                                              fillColor: AppColors.white,
+                                              fillColor: AppColors.grey,
                                               isFilled: true,
                                               readOnly: true,
                                               validator:
@@ -20283,86 +20614,122 @@ class AuthViewModel extends BaseViewModel {
                                                 fontWeight: FontWeight.w400,
                                                 fontFamily: 'GoogleSans',
                                               ),
-                                              suffixWidget: Padding(
-                                                padding: EdgeInsets.all(8.w),
-                                                child: GestureDetector(
-                                                  onTap: () =>
-                                                      model.selectEndDateUpdate(
-                                                        context: context,
-                                                        setModalState:
-                                                            setModalState,
-                                                        model: model,
-                                                        index: index,
-                                                      ),
-                                                  child: SvgPicture.asset(
-                                                    AppImage.calendar,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
+                                              // suffixWidget: Padding(
+                                              //   padding: EdgeInsets.all(8.w),
+                                              //   child: GestureDetector(
+                                              //     onTap: () =>
+                                              // model.selectEndDateUpdate(
+                                              //           context: context,
+                                              //           setModalState:
+                                              //               setModalState,
+                                              //           model: model,
+                                              //           index: index,
+                                              //         ),
+                                              //     child: SvgPicture.asset(
+                                              //       AppImage.calendar,
+                                              //       fit: BoxFit.cover,
+                                              //     ),
+                                              //   ),
+                                              // ),
                                             ),
                                             SizedBox(height: 24.0.h),
-                                            TextView(
-                                              text: 'Duration',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.sp,
+                                            TextFormWidget(
+                                              hint: 'Duration',
+                                              label: '',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              controller: model
+                                                  .durationUpdateControllers[index],
+                                              labelStyle: TextStyle(
                                                 fontWeight: FontWeight.w400,
-                                                color: AppColors.reminder,
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.2.sp,
+                                                color: AppColors.infoGrey,
                                               ),
-                                            ),
-                                            SizedBox(height: 14.0.h),
-                                            Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                16.w,
-                                                0.w,
-                                                0.w,
-                                                0.w,
+                                              fillColor: AppColors.appWhite,
+                                              isFilled: true,
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
                                               ),
-                                              width: double.infinity,
-                                              height: 50.h,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10.r),
-                                                color: AppColors.dashboard,
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  TextView(
-                                                    text: getReturnDurationNumberOfDays(
-                                                      int.parse(
-                                                        model
-                                                            .medicationClassList[index]
-                                                            .duration!,
-                                                      ),
-                                                    ),
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'GoogleSans',
-                                                      fontSize: 16.sp,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: AppColors.primary1,
-                                                    ),
+                                              onChange: (p0) =>
+                                                  _calculateEndDateUpdate(
+                                                    setModalState:
+                                                        setModalState,
+                                                    model: model,
+                                                    index: index,
                                                   ),
-                                                  TextView(
-                                                    text:
-                                                        model
-                                                                .endDateUpdateController[index]
-                                                                .text ==
-                                                            ''
-                                                        ? ''
-                                                        : ' (${model.startDateUpdateControllers[index].text.substring(0, 6)} - ${model.endDateUpdateController[index].text})',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'Arial',
-                                                      fontSize: 14.sp,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: AppColors.reminder,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
                                             ),
+                                            // TextView(
+                                            //   text: 'Duration',
+                                            //   textStyle: TextStyle(
+                                            //     fontFamily: 'Arial',
+                                            //     fontSize: 14.sp,
+                                            //     fontWeight: FontWeight.w400,
+                                            //     color: AppColors.reminder,
+                                            //   ),
+                                            // ),
+                                            // SizedBox(height: 14.0.h),
+                                            // Container(
+                                            //   padding: EdgeInsets.fromLTRB(
+                                            //     16.w,
+                                            //     0.w,
+                                            //     0.w,
+                                            //     0.w,
+                                            //   ),
+                                            //   width: double.infinity,
+                                            //   height: 50.h,
+                                            //   decoration: BoxDecoration(
+                                            //     borderRadius:
+                                            //         BorderRadius.circular(10.r),
+                                            //     color: AppColors.dashboard,
+                                            //   ),
+                                            //   child: Row(
+                                            //     children: [
+                                            //       TextView(
+                                            //         text: getReturnDurationNumberOfDays(
+                                            //           int.parse(
+                                            //             model
+                                            //                 .medicationClassList[index]
+                                            //                 .duration!,
+                                            //           ),
+                                            //         ),
+                                            //         textStyle: TextStyle(
+                                            //           fontFamily: 'GoogleSans',
+                                            //           fontSize: 16.sp,
+                                            //           fontWeight:
+                                            //               FontWeight.w700,
+                                            //           color: AppColors.primary1,
+                                            //         ),
+                                            //       ),
+                                            //       TextView(
+                                            //         text:
+                                            //             model
+                                            //                     .endDateUpdateController[index]
+                                            //                     .text ==
+                                            //                 ''
+                                            //             ? ''
+                                            //             : ' (${model.startDateUpdateControllers[index].text.substring(0, 6)} - ${model.endDateUpdateController[index].text})',
+                                            //         textStyle: TextStyle(
+                                            //           fontFamily: 'Arial',
+                                            //           fontSize: 14.sp,
+                                            //           fontWeight:
+                                            //               FontWeight.w400,
+                                            //           color: AppColors.reminder,
+                                            //         ),
+                                            //       ),
+                                            //     ],
+                                            //   ),
+                                            // ),
                                             SizedBox(height: 24.0.h),
                                             model
                                                     .medicationClassList[index]
@@ -20672,13 +21039,20 @@ class AuthViewModel extends BaseViewModel {
                                                                                   ),
                                                                                   IconButton(
                                                                                     onPressed: () {
+                                                                                      final selectedIndex = model.selectedDoseIndexPerDay[list];
+
+                                                                                      if (selectedIndex ==
+                                                                                          null) {
+                                                                                        // ❌ Nothing selected → don't update
+                                                                                        return;
+                                                                                      }
                                                                                       selectTimeFreqCustomUpdate(
                                                                                         context: context,
-                                                                                        dayIndex: list,
-                                                                                        timeSelected: timeSelected,
-                                                                                        timesPerDay: e.dosageMap[list]['doses'],
-                                                                                        setModalState: setModalState,
                                                                                         model: model,
+                                                                                        medicationIndex: index,
+                                                                                        dayIndex: list,
+                                                                                        doseIndex: selectedIndex, // ✅ update mode
+                                                                                        setModalState: setModalState!,
                                                                                       );
                                                                                       model.notifyListeners();
                                                                                     },
@@ -20698,14 +21072,17 @@ class AuthViewModel extends BaseViewModel {
                                                                           ),
                                                                           GestureDetector(
                                                                             onTap: () {
-                                                                              model.buildCustomDosageMap(
-                                                                                index: index,
+                                                                              model.selectedDoseIndexPerDay[list] = null;
+                                                                              selectTimeFreqCustomUpdate(
+                                                                                context: context,
                                                                                 model: model,
-                                                                                day:
-                                                                                    list +
-                                                                                    1,
+                                                                                medicationIndex: index,
+                                                                                dayIndex: list,
+                                                                                doseIndex: null, // ✅ update mode
+                                                                                setModalState: setModalState!,
                                                                               );
-                                                                              setModalState!(
+                                                                              model.notifyListeners();
+                                                                              setModalState(
                                                                                 () {},
                                                                               );
                                                                               model.notifyListeners();
@@ -20816,8 +21193,11 @@ class AuthViewModel extends BaseViewModel {
                                                                                           final time = entry.value;
                                                                                           return GestureDetector(
                                                                                             onTap: () {
-                                                                                              selectedTimePerDay[list] = time['time'];
-                                                                                              timeSelected = time;
+                                                                                              model.selectedTimePerDay[list] = time['time'];
+                                                                                              model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
+                                                                                              model.timeSelected = time;
+                                                                                              // selectedTimePerDay[list] = time['time'];
+                                                                                              // timeSelected = time;
                                                                                               setModalState!(
                                                                                                 () {},
                                                                                               );
@@ -20835,13 +21215,13 @@ class AuthViewModel extends BaseViewModel {
                                                                                                 ),
                                                                                                 border: Border.all(
                                                                                                   color:
-                                                                                                      selectedTimePerDay[list] ==
+                                                                                                      model.selectedTimePerDay[list] ==
                                                                                                           time['time']
                                                                                                       ? AppColors.transparent
                                                                                                       : AppColors.app_green,
                                                                                                 ),
                                                                                                 color:
-                                                                                                    selectedTimePerDay[list] ==
+                                                                                                    model.selectedTimePerDay[list] ==
                                                                                                         time['time']
                                                                                                     ? AppColors.app_green
                                                                                                     : AppColors.white,
@@ -20855,7 +21235,7 @@ class AuthViewModel extends BaseViewModel {
                                                                                                       fontSize: 13.2.sp,
                                                                                                       fontWeight: FontWeight.w500,
                                                                                                       color:
-                                                                                                          selectedTimePerDay[list] ==
+                                                                                                          model.selectedTimePerDay[list] ==
                                                                                                               time['time']
                                                                                                           ? AppColors.white
                                                                                                           : AppColors.app_green,
@@ -20880,7 +21260,7 @@ class AuthViewModel extends BaseViewModel {
                                                                                                     child: SvgPicture.asset(
                                                                                                       AppImage.x,
                                                                                                       color:
-                                                                                                          selectedTimePerDay[list] ==
+                                                                                                          model.selectedTimePerDay[list] ==
                                                                                                               time['time']
                                                                                                           ? AppColors.white
                                                                                                           : AppColors.app_green,
@@ -21003,21 +21383,23 @@ class AuthViewModel extends BaseViewModel {
                                                                         model.medicationClassList[index].timesToTake ==
                                                                             'Custom Schedule'
                                                                         ? null
-                                                                        : model.selectedTimes.length >=
-                                                                              int.parse(
-                                                                                model.medicationClassList[index].timesToTake!,
-                                                                              )
-                                                                        ? null
-                                                                        : () => selectTimeFreqUpdate(
-                                                                            context:
-                                                                                context,
-                                                                            setModalState:
-                                                                                setModalState!,
-                                                                            model:
-                                                                                model,
-                                                                            index:
-                                                                                index,
-                                                                          ),
+                                                                        // : model.selectedTimes.length >=
+                                                                        //       int.parse(
+                                                                        //         model.medicationClassList[index].timesToTake!,
+                                                                        //       )
+                                                                        // ? null
+                                                                        : () {
+                                                                            if (model.globalTimeIndex ==
+                                                                                null) {
+                                                                              return;
+                                                                            }
+                                                                            selectTimeFreqUpdate(
+                                                                              context: context,
+                                                                              setModalState: setModalState!,
+                                                                              model: model,
+                                                                              index: index,
+                                                                            );
+                                                                          },
                                                                     icon: Icon(
                                                                       Icons
                                                                           .access_time_rounded,
@@ -21046,13 +21428,24 @@ class AuthViewModel extends BaseViewModel {
                                                                       .selectedTimes
                                                                       .length <=
                                                                   maxTimes) {
-                                                                model
-                                                                    .buildDosageMap(
-                                                                      index:
-                                                                          index,
-                                                                      model:
-                                                                          model,
-                                                                    );
+                                                                model.globalTimeIndex =
+                                                                    null;
+
+                                                                selectTimeFreqUpdate(
+                                                                  context:
+                                                                      context,
+                                                                  setModalState:
+                                                                      setModalState!,
+                                                                  model: model,
+                                                                  index: index,
+                                                                );
+                                                                // model
+                                                                //     .buildDosageMap(
+                                                                //       index:
+                                                                //           index,
+                                                                //       model:
+                                                                //           model,
+                                                                //     );
                                                               }
                                                               setModalState!(
                                                                 () {},
@@ -21736,6 +22129,7 @@ class AuthViewModel extends BaseViewModel {
                                             onTap: () => model.selectDate(
                                               context: context,
                                               setModalState: setModalState,
+                                              model: model,
                                             ),
                                             child: SvgPicture.asset(
                                               AppImage.calendar,
@@ -21772,26 +22166,26 @@ class AuthViewModel extends BaseViewModel {
                                         borderBottomLeft: 10.r,
                                         borderBottomRight: 10.r,
                                         controller: model.endDateController,
-                                        suffixWidget: Padding(
-                                          padding: EdgeInsets.all(8.w),
-                                          child: GestureDetector(
-                                            onTap: () => model.selectEndDate(
-                                              context: context,
-                                              setModalState: setModalState,
-                                            ),
-                                            child: SvgPicture.asset(
-                                              AppImage.calendar,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
+                                        // suffixWidget: Padding(
+                                        //   padding: EdgeInsets.all(8.w),
+                                        //   child: GestureDetector(
+                                        //     onTap: () => model.selectEndDate(
+                                        //       context: context,
+                                        //       setModalState: setModalState,
+                                        //     ),
+                                        //     child: SvgPicture.asset(
+                                        //       AppImage.calendar,
+                                        //       fit: BoxFit.cover,
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         labelStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Arial',
                                           fontSize: 14.2.sp,
                                           color: AppColors.infoGrey,
                                         ),
-                                        fillColor: AppColors.white,
+                                        fillColor: AppColors.grey,
                                         isFilled: true,
                                         readOnly: true,
                                         style: TextStyle(
@@ -21801,63 +22195,95 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ),
                                       SizedBox(height: 24.0.h),
-                                      TextView(
-                                        text: 'Duration',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.sp,
+                                      TextFormWidget(
+                                        hint: 'Duration',
+                                        label: '',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        controller: model.medDurationController,
+                                        labelStyle: TextStyle(
                                           fontWeight: FontWeight.w400,
-                                          color: AppColors.reminder,
+                                          fontFamily: 'Arial',
+                                          fontSize: 16.2.sp,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        fillColor: AppColors.appWhite,
+                                        isFilled: true,
+                                        style: TextStyle(
+                                          fontSize: 16.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                        onChange: (p0) => _calculateEndDate(
+                                          setModalState: setModalState,
+                                          model: model,
                                         ),
                                       ),
-                                      SizedBox(height: 14.0.h),
-                                      Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                          16.w,
-                                          0.w,
-                                          0.w,
-                                          0.w,
-                                        ),
-                                        width: double.infinity,
-                                        height: 50.h,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            10.r,
-                                          ),
-                                          color: AppColors.dashboard,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            TextView(
-                                              text:
-                                                  model
-                                                      .numberOfDurationsInDays ??
-                                                  '',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.primary1,
-                                              ),
-                                            ),
-                                            TextView(
-                                              text:
-                                                  model
-                                                          .endDateController
-                                                          .text !=
-                                                      ''
-                                                  ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
-                                                  : '',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      // TextView(
+                                      //   text: 'Duration',
+                                      //   textStyle: TextStyle(
+                                      //     fontFamily: 'Arial',
+                                      //     fontSize: 14.sp,
+                                      //     fontWeight: FontWeight.w400,
+                                      //     color: AppColors.reminder,
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 14.0.h),
+                                      // Container(
+                                      //   padding: EdgeInsets.fromLTRB(
+                                      //     16.w,
+                                      //     0.w,
+                                      //     0.w,
+                                      //     0.w,
+                                      //   ),
+                                      //   width: double.infinity,
+                                      //   height: 50.h,
+                                      //   decoration: BoxDecoration(
+                                      //     borderRadius: BorderRadius.circular(
+                                      //       10.r,
+                                      //     ),
+                                      //     color: AppColors.dashboard,
+                                      //   ),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       TextView(
+                                      //         text:
+                                      //             model
+                                      //                 .numberOfDurationsInDays ??
+                                      //             '',
+                                      //         textStyle: TextStyle(
+                                      //           fontFamily: 'GoogleSans',
+                                      //           fontSize: 14.sp,
+                                      //           fontWeight: FontWeight.w700,
+                                      //           color: AppColors.primary1,
+                                      //         ),
+                                      //       ),
+                                      //       TextView(
+                                      //         text:
+                                      //             model
+                                      //                     .endDateController
+                                      //                     .text !=
+                                      //                 ''
+                                      //             ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
+                                      //             : '',
+                                      //         textStyle: TextStyle(
+                                      //           fontFamily: 'Arial',
+                                      //           fontSize: 14.sp,
+                                      //           fontWeight: FontWeight.w400,
+                                      //           color: AppColors.reminder,
+                                      //         ),
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
                                       SizedBox(height: 24.0.h),
                                       model.isCusSchedule
                                           ? Column(
