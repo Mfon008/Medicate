@@ -42,12 +42,24 @@ import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/busi
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart';
+import '../../../ui/dashboard/hmo/add_hospital_portal_screen.dart';
+import '../../../ui/dashboard/hmo/create_claims_portal_screen.dart';
 import '../../../ui/dashboard/hmo/create_hmo_plan.dart';
+import '../../../ui/dashboard/hmo/create_settlements_portal_screen.dart';
 import '../../../ui/dashboard/hmo/hmo_application_portal_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_claims_portal_screen.dart';
 import '../../../ui/dashboard/hmo/hmo_dashboard.dart';
 import '../../../ui/dashboard/hmo/hmo_home_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_hospital_network_portal_screen.dart';
 import '../../../ui/dashboard/hmo/hmo_more_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_renewal_portal_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_settlement_portal_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_subscribers_portal_screen.dart';
+import '../../../ui/dashboard/hmo/hmo_view_claims_portal_screen.dart';
 import '../../../ui/dashboard/hmo/view_hmo_application_portal_screen.dart';
+import '../../../ui/dashboard/hmo/view_hmo_renewal_portal_screen.dart';
+import '../../../ui/dashboard/hmo/view_hmo_subscribers_portal_screen.dart';
+import '../../../ui/dashboard/hmo/view_settlement_portal_screen.dart';
 import '../../../ui/dashboard/home_screen.dart';
 import '../../../ui/dashboard/subscribers/application_form/application_form_screen.dart';
 import '../../../ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart';
@@ -218,6 +230,18 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: CreateHmoPlan),
     MaterialRoute(page: HmoApplicationPortalScreen),
     MaterialRoute(page: ViewHmoApplicationPortalScreen),
+    MaterialRoute(page: HmoSubscribersPortalScreen),
+    MaterialRoute(page: ViewHmoSubscribersPortalScreen),
+    MaterialRoute(page: HmoHospitalNetworkPortalScreen),
+    MaterialRoute(page: HmoAddHospitalNetworkPortalScreen),
+    MaterialRoute(page: HmoRenewalPortalScreen),
+    MaterialRoute(page: ViewHmoRenewalPortalScreen),
+    MaterialRoute(page: HmoClaimsPortalScreen),
+    MaterialRoute(page: CreateClaimsPortalScreen),
+    MaterialRoute(page: ViewHmoClaimsPortalScreen),
+    MaterialRoute(page: CreateSettlementsPortalScreen),
+    MaterialRoute(page: ViewHmoSettlementsPortalScreen),
+    MaterialRoute(page: HmoSettlementPortalScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

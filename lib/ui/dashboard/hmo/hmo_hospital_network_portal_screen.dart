@@ -1,17 +1,18 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: strict_top_level_inference, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
-import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class HmoApplicationPortalScreen extends StatelessWidget {
-  const HmoApplicationPortalScreen({super.key});
+class HmoHospitalNetworkPortalScreen extends StatelessWidget {
+  const HmoHospitalNetworkPortalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +105,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextView(
-                      text: 'Applications',
+                      text: 'Hospital Network',
                       textStyle: TextStyle(
                         fontFamily: 'GoogleSans',
                         fontSize: 18.2.sp,
@@ -113,9 +114,9 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 280.w,
+                      width: 240.w,
                       child: TextView(
-                        text: 'Review and process HMO applications',
+                        text: 'Manage hospitals in your network',
                         maxLines: 2,
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
@@ -127,45 +128,36 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                Spacer(),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(2.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primary,
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.add,
+                          size: 16.20.sp,
+                          color: AppColors.white,
+                          weight: 10,
+                        ),
+                        onPressed: () => navigate.navigateTo(
+                          Routes.hmoAddHospitalNetworkPortalScreen,
+                          arguments: HmoAddHospitalNetworkPortalScreenArguments(
+                            isEditing: false,
+                          ),
+                        ),
+                        splashRadius: 28,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
 
-            SizedBox(height: 20.h),
-            Row(
-              children: [
-                hmoPlanWidget(
-                  text: 'All Plans',
-                  svg: AppImage.full_portal_app,
-                  count: '45',
-                  color: AppColors.lightBlue,
-                ),
-                SizedBox(width: 7.10.w),
-                hmoPlanWidget(
-                  text: 'Pending Review',
-                  svg: AppImage.full_portal_app,
-                  count: '30',
-                  color: AppColors.yellow,
-                ),
-              ],
-            ),
-            SizedBox(height: 10.20.h),
-            Row(
-              children: [
-                hmoPlanWidget(
-                  text: 'Approved',
-                  svg: AppImage.full_portal_app,
-                  count: '10',
-                  color: AppColors.app_green,
-                ),
-                SizedBox(width: 7.10.w),
-                hmoPlanWidget(
-                  text: 'Rejected',
-                  svg: AppImage.full_portal_app,
-                  count: '5',
-                  color: AppColors.appRed,
-                ),
-              ],
-            ),
             SizedBox(height: 20.h),
             Container(
               width: double.infinity,
@@ -182,7 +174,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: TextFormWidget(
-                          label: 'Search by name, phone number, email',
+                          label: 'Search Hospital',
                           labelStyle: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 14.60.sp,
@@ -224,7 +216,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                       Expanded(
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(14.w),
+                          padding: EdgeInsets.all(10.w),
                           decoration: BoxDecoration(
                             border: Border.all(color: AppColors.grey),
                             borderRadius: BorderRadius.circular(8.0.r),
@@ -234,7 +226,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   TextView(
-                                    text: 'Type: ',
+                                    text: 'Location: ',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14.82.sp,
@@ -259,11 +251,11 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 20.w),
+                      SizedBox(width: 7.20.w),
                       Expanded(
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(14.w),
+                          padding: EdgeInsets.all(10.w),
                           decoration: BoxDecoration(
                             border: Border.all(color: AppColors.grey),
                             borderRadius: BorderRadius.circular(8.0.r),
@@ -273,7 +265,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                               Row(
                                 children: [
                                   TextView(
-                                    text: 'Tier: ',
+                                    text: 'Status: ',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 14.82.sp,
@@ -292,50 +284,13 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(width: 40.w),
+                              SizedBox(width: 50.w),
                               SvgPicture.asset(AppImage.arrow_down),
                             ],
                           ),
                         ),
                       ),
                     ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(14.w),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grey),
-                      borderRadius: BorderRadius.circular(8.0.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Row(
-                          children: [
-                            TextView(
-                              text: 'Date: ',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.82.sp,
-                                fontWeight: FontWeight.w300,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            TextView(
-                              text: 'Time All',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.60.sp,
-                                color: AppColors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        SvgPicture.asset(AppImage.arrow_down),
-                      ],
-                    ),
                   ),
                   SizedBox(height: 12.h),
                   GestureDetector(
@@ -366,7 +321,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                   ),
                                 ),
                                 child: TextView(
-                                  text: 'Approved',
+                                  text: 'Active',
                                   textStyle: TextStyle(
                                     fontFamily: 'GoogleSans',
                                     fontSize: 14.2.sp,
@@ -384,48 +339,85 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(22.r),
                                   border: Border.all(
-                                    color: AppColors.red.withOpacity(.18),
-                                  ),
-                                  color: AppColors.faintedRed,
-                                ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      AppImage.star,
-                                      color: AppColors.appRed,
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    TextView(
-                                      text: 'Ruby',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 14.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Spacer(),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12.w,
-                                  vertical: 2.2.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(22.r),
-                                  border: Border.all(
-                                    color: AppColors.infoGrey1,
+                                    color: AppColors.searchInputFillColor
+                                        .withOpacity(.18),
                                   ),
                                 ),
                                 child: TextView(
-                                  text: 'Individual',
+                                  text: 'Government',
                                   textStyle: TextStyle(
                                     fontFamily: 'GoogleSans',
                                     fontSize: 14.2.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.reminder1,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              PopupMenuButton(
+                                color: AppColors.white,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                  vertical: 10.w,
+                                ),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    onTap: () {},
+                                    enabled: false,
+                                    child: TextView(
+                                      text: 'More Actions',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.infoGrey,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () => navigate.navigateTo(
+                                      Routes.hmoAddHospitalNetworkPortalScreen,
+                                      arguments:
+                                          HmoAddHospitalNetworkPortalScreenArguments(
+                                            isEditing: true,
+                                          ),
+                                    ),
+                                    child: TextView(
+                                      text: 'Edit Hospital',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () => showActivationDialog(context),
+                                    child: TextView(
+                                      text: 'Deactivate',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 15.2.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                                child: Container(
+                                  padding: EdgeInsets.all(6.10.w),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.skyBlue,
+                                    border: Border.all(
+                                      color: AppColors.skyBlue,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.more_vert,
+                                    size: 16.20.sp,
+                                    color: AppColors.primary,
                                   ),
                                 ),
                               ),
@@ -433,7 +425,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 15.10.h),
                           TextView(
-                            text: 'Adebayo Okonkwo',
+                            text: 'Nnamdi Azikiwe University Teaching Hospital',
                             textStyle: TextStyle(
                               fontFamily: 'GoogleSans',
                               fontSize: 16.52.sp,
@@ -443,7 +435,28 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 10.h),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    AppImage.locator,
+                                    height: 20.h,
+                                    width: 20.w,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  TextView(
+                                    text: 'Nnewi, Anambra',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.reminder,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Row(
                                 children: [
                                   SvgPicture.asset(
@@ -462,49 +475,47 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              SizedBox(width: 30.w),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.timer,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  SizedBox(width: 10.w),
-                                  TextView(
-                                    text: 'Jan 17, 2026',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 13.20.h),
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                AppImage.message,
-                                color: AppColors.infoGrey,
-                              ),
-                              SizedBox(width: 10.w),
-                              TextView(
-                                text: 'Adebayo@gmail.com',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 15.2.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
+                  ),
+                  SizedBox(height: 20.h),
+                  Divider(color: AppColors.grey),
+                  SizedBox(height: 12.20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 22.sp,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(width: 36.0.w),
+                      TextView(
+                        text: 'Page 1 of 10',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+
+                      SizedBox(width: 36.0.w),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          size: 22.sp,
+                          color: AppColors.primary1,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -514,6 +525,123 @@ class HmoApplicationPortalScreen extends StatelessWidget {
       ),
     );
   }
+
+  showActivationDialog(context) => showDialog(
+    context: context,
+    barrierDismissible: false, // prevent closing by tapping outside
+    builder: (BuildContext context) {
+      return Dialog(
+        insetPadding: EdgeInsets.symmetric(vertical: 24.w,horizontal: 20.w),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: AppColors.white,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical:24.w,horizontal: 18.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(28.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.yellow.withOpacity(.2),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(18.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.yellow,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  SvgPicture.asset(AppImage.exclam),
+                ],
+              ),
+              SizedBox(height: 12.h),
+              TextView(
+                text: 'Are you sure?',
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  color: AppColors.black,
+                  fontSize: 18.20.sp,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 12.h),
+              TextView(
+                text: 'This action will activate this Hospital.',
+                textAlign: TextAlign.center,
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  color: AppColors.success,
+                  fontSize: 14.20.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: AppColors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 32.w,
+                        vertical: 12.w,
+                      ),
+                    ),
+                    child: TextView(
+                      text: "No, Cancel",
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 15.6.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+                  // Continue Button
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 12.w,
+                        ),
+                        elevation: 0,
+                      ),
+                      child: TextView(
+                        text: "Yes, Activate",
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 
   Widget hmoPlanWidget({
     String? text,

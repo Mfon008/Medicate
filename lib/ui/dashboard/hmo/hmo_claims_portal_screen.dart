@@ -10,8 +10,8 @@ import '../../../main.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class HmoApplicationPortalScreen extends StatelessWidget {
-  const HmoApplicationPortalScreen({super.key});
+class HmoClaimsPortalScreen extends StatelessWidget {
+  const HmoClaimsPortalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +104,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextView(
-                      text: 'Applications',
+                      text: 'Claims Management',
                       textStyle: TextStyle(
                         fontFamily: 'GoogleSans',
                         fontSize: 18.2.sp,
@@ -113,9 +113,9 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 280.w,
+                      width: 260.h,
                       child: TextView(
-                        text: 'Review and process HMO applications',
+                        text: 'Process and manage subscriber claims',
                         maxLines: 2,
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
@@ -127,44 +127,85 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                SizedBox(width: 10.w,),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.all(2.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.primary,
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.add,
+                          size: 16.20.sp,
+                          color: AppColors.white,
+                          weight: 10,
+                        ),
+                        onPressed: () =>navigate.navigateTo(Routes.createClaimsPortalScreen,arguments: CreateClaimsPortalScreenArguments(isReview: false)),
+                        splashRadius: 28,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
 
             SizedBox(height: 20.h),
             Row(
               children: [
-                hmoPlanWidget(
-                  text: 'All Plans',
-                  svg: AppImage.full_portal_app,
-                  count: '45',
-                  color: AppColors.lightBlue,
+                Expanded(
+                  child: hmoPlanWidget(
+                    text: 'Pending Claims',
+                    svg: AppImage.claims,
+                    count: '15',
+                    color: AppColors.yellow,
+                  ),
                 ),
                 SizedBox(width: 7.10.w),
-                hmoPlanWidget(
-                  text: 'Pending Review',
-                  svg: AppImage.full_portal_app,
-                  count: '30',
-                  color: AppColors.yellow,
+                Expanded(
+                  child: hmoPlanWidget(
+                    text: 'Approved Claims',
+                    svg: AppImage.claims,
+                    count: '10',
+                    color: AppColors.app_green,
+                  ),
                 ),
               ],
             ),
             SizedBox(height: 10.20.h),
             Row(
               children: [
-                hmoPlanWidget(
-                  text: 'Approved',
-                  svg: AppImage.full_portal_app,
-                  count: '10',
-                  color: AppColors.app_green,
+                Expanded(
+                  child: hmoPlanWidget(
+                    text: 'Paid Claims',
+                    svg: AppImage.claims,
+                    count: '15',
+                    color: AppColors.primary,
+                  ),
                 ),
                 SizedBox(width: 7.10.w),
-                hmoPlanWidget(
-                  text: 'Rejected',
-                  svg: AppImage.full_portal_app,
-                  count: '5',
-                  color: AppColors.appRed,
+                Expanded(
+                  child: hmoPlanWidget(
+                    text: 'Partial approved',
+                    svg: AppImage.claims,
+                    count: '10',
+                    color: AppColors.lightBlue,
+                  ),
                 ),
               ],
+            ),
+            SizedBox(height: 10.20.h),
+            FractionallySizedBox(
+              widthFactor: 0.5, // 50% of screen
+              alignment: Alignment.centerLeft,
+              child: hmoPlanWidget(
+                text: 'Rejected Claims',
+                svg: AppImage.renewal_request,
+                count: '5',
+                color: AppColors.red,
+              ),
             ),
             SizedBox(height: 20.h),
             Container(
@@ -182,7 +223,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: TextFormWidget(
-                          label: 'Search by name, phone number, email',
+                          label: 'Search by subscriber, claim number',
                           labelStyle: TextStyle(
                             fontFamily: 'Arial',
                             fontSize: 14.60.sp,
@@ -218,94 +259,13 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 14.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(14.w),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.grey),
-                            borderRadius: BorderRadius.circular(8.0.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Row(
-                                children: [
-                                  TextView(
-                                    text: 'Type: ',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14.82.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: 'All',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14.60.sp,
-                                      color: AppColors.infoGrey,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 40.w),
-                              SvgPicture.asset(AppImage.arrow_down),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 20.w),
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(14.w),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.grey),
-                            borderRadius: BorderRadius.circular(8.0.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Row(
-                                children: [
-                                  TextView(
-                                    text: 'Tier: ',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14.82.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
-                                  TextView(
-                                    text: 'All',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 14.60.sp,
-                                      color: AppColors.infoGrey,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: 40.w),
-                              SvgPicture.asset(AppImage.arrow_down),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+
                   SizedBox(height: 12.h),
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(14.w),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grey),
+                      border: Border.all(color: AppColors.infoGrey1),
                       borderRadius: BorderRadius.circular(8.0.r),
                     ),
                     child: Row(
@@ -339,14 +299,15 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                   GestureDetector(
-                    onTap: () => navigate.navigateTo(
-                      Routes.viewHmoApplicationPortalScreen,
-                    ),
+                    onTap: () => navigate.navigateTo(Routes.viewHmoClaimsPortalScreen),
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(16.w),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.w,
+                        horizontal: 12.w,
+                      ),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grey),
+                        border: Border.all(color: AppColors.infoGrey1),
                         borderRadius: BorderRadius.circular(8.0.r),
                       ),
                       child: Column(
@@ -361,21 +322,19 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(22.r),
-                                  border: Border.all(
-                                    color: AppColors.app_green,
-                                  ),
+                                  border: Border.all(color: AppColors.yellow),
                                 ),
                                 child: TextView(
-                                  text: 'Approved',
+                                  text: 'Pending',
                                   textStyle: TextStyle(
                                     fontFamily: 'GoogleSans',
-                                    fontSize: 14.2.sp,
+                                    fontSize: 13.2.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.app_green,
+                                    color: AppColors.yellow,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 10.w),
+                              SizedBox(width: 7.10.w),
                               Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 12.w,
@@ -384,49 +343,29 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(22.r),
                                   border: Border.all(
-                                    color: AppColors.red.withOpacity(.18),
+                                    color: AppColors.grey1.withOpacity(.18),
                                   ),
-                                  color: AppColors.faintedRed,
                                 ),
-                                child: Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      AppImage.star,
-                                      color: AppColors.appRed,
-                                    ),
-                                    SizedBox(width: 6.w),
-                                    TextView(
-                                      text: 'Ruby',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 14.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.red,
-                                      ),
-                                    ),
-                                  ],
+                                child: TextView(
+                                  text: 'Emergency',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'GoogleSans',
+                                    fontSize: 14.2.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.reminder,
+                                  ),
                                 ),
                               ),
                               Spacer(),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12.w,
-                                  vertical: 2.2.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(22.r),
-                                  border: Border.all(
-                                    color: AppColors.infoGrey1,
-                                  ),
-                                ),
-                                child: TextView(
-                                  text: 'Individual',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 14.2.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.reminder1,
-                                  ),
+                              TextView(
+                                text: 'Review',
+                                textStyle: TextStyle(
+                                  fontFamily: 'GoogleSans',
+                                  fontSize: 14.2.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.primary,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: AppColors.primary,
                                 ),
                               ),
                             ],
@@ -444,39 +383,101 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           SizedBox(height: 10.h),
                           Row(
                             children: [
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(
-                                    AppImage.phone,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  SizedBox(width: 10.w),
                                   TextView(
-                                    text: '0812345678',
+                                    text: 'Claim No',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 15.2.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: 'CLM-2025-001',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16.42.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.thickGrey,
                                     ),
                                   ),
                                 ],
                               ),
                               SizedBox(width: 30.w),
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(
-                                    AppImage.timer,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  SizedBox(width: 10.w),
                                   TextView(
-                                    text: 'Jan 17, 2026',
+                                    text: 'Subscription ID',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 15.2.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: 'PRO-PEARL-001',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.thickGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10.h),
+                          Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextView(
+                                    text: 'Amount',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: '₦200,000,000',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 16.42.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.thickGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: 20.0.w),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextView(
+                                    text: 'Approved Amount',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: '--',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.thickGrey,
                                     ),
                                   ),
                                 ],
@@ -484,18 +485,23 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 13.20.h),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SvgPicture.asset(
-                                AppImage.message,
-                                color: AppColors.infoGrey,
-                              ),
-                              SizedBox(width: 10.w),
                               TextView(
-                                text: 'Adebayo@gmail.com',
+                                text: 'Date Submitted',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
-                                  fontSize: 15.2.sp,
+                                  fontSize: 16.2.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                              TextView(
+                                text: 'Jun 1, 2026 ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.2.sp,
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.reminder,
                                 ),
@@ -505,6 +511,45 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                  ),
+                  SizedBox(height: 30.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    child: Divider(color: AppColors.infoGrey1),
+                  ),
+                  SizedBox(height: 12.20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 22.sp,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(width: 36.0.w),
+                      TextView(
+                        text: 'Page 1 of 10',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+
+                      SizedBox(width: 36.0.w),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          size: 22.sp,
+                          color: AppColors.primary1,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -520,48 +565,47 @@ class HmoApplicationPortalScreen extends StatelessWidget {
     String? svg,
     String? count,
     Color? color,
-  }) => Expanded(
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 12.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.infoGrey1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextView(
-                text: text!,
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
-              ),
-            ],
+  }) => Container(
+    padding: EdgeInsets.symmetric(vertical: 24.w, horizontal: 20.w),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(12.r),
+      border: Border.all(color: AppColors.infoGrey1),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextView(
+          text: text!,
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 13.82.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.reminder,
           ),
-          Row(
-            children: [
-              SvgPicture.asset(svg!, width: 20.w, height: 20.h, color: color),
-              SizedBox(width: 5.10.w),
-              TextView(
-                text: count!,
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 20.2.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.reminder,
-                ),
+        ),
+        SizedBox(height: 10.h),
+        Row(
+          children: [
+            SvgPicture.asset(
+              svg!,
+              width: 16.20.w,
+              height: 16.20.h,
+              color: color,
+            ),
+            SizedBox(width: 7.10.w),
+            TextView(
+              text: count!,
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 20.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.reminder,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     ),
   );
 }

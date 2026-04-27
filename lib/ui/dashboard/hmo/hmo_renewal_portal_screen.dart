@@ -3,15 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/main.dart';
+
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/core_folder/app/app.router.dart';
-import '../../../main.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
-class HmoApplicationPortalScreen extends StatelessWidget {
-  const HmoApplicationPortalScreen({super.key});
+class HmoRenewalPortalScreen extends StatelessWidget {
+  const HmoRenewalPortalScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +105,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextView(
-                      text: 'Applications',
+                      text: 'Renewal Requests',
                       textStyle: TextStyle(
                         fontFamily: 'GoogleSans',
                         fontSize: 18.2.sp,
@@ -113,9 +114,10 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      width: 280.w,
+                      width: 300.h,
                       child: TextView(
-                        text: 'Review and process HMO applications',
+                        text:
+                            'Review and approve subscription renewal requests',
                         maxLines: 2,
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
@@ -133,38 +135,35 @@ class HmoApplicationPortalScreen extends StatelessWidget {
             SizedBox(height: 20.h),
             Row(
               children: [
-                hmoPlanWidget(
-                  text: 'All Plans',
-                  svg: AppImage.full_portal_app,
-                  count: '45',
-                  color: AppColors.lightBlue,
+                Expanded(
+                  child: hmoPlanWidget(
+                    text: 'Pending Request',
+                    svg: AppImage.renewal_request,
+                    count: '15',
+                    color: AppColors.yellow,
+                  ),
                 ),
                 SizedBox(width: 7.10.w),
-                hmoPlanWidget(
-                  text: 'Pending Review',
-                  svg: AppImage.full_portal_app,
-                  count: '30',
-                  color: AppColors.yellow,
+                Expanded(
+                  child: hmoPlanWidget(
+                    text: 'Approved Requests',
+                    svg: AppImage.renewal_request,
+                    count: '10',
+                    color: AppColors.app_green,
+                  ),
                 ),
               ],
             ),
             SizedBox(height: 10.20.h),
-            Row(
-              children: [
-                hmoPlanWidget(
-                  text: 'Approved',
-                  svg: AppImage.full_portal_app,
-                  count: '10',
-                  color: AppColors.app_green,
-                ),
-                SizedBox(width: 7.10.w),
-                hmoPlanWidget(
-                  text: 'Rejected',
-                  svg: AppImage.full_portal_app,
-                  count: '5',
-                  color: AppColors.appRed,
-                ),
-              ],
+            FractionallySizedBox(
+              widthFactor: 0.5, // 50% of screen
+              alignment: Alignment.centerLeft,
+              child: hmoPlanWidget(
+                text: 'Rejected Requests',
+                svg: AppImage.renewal_request,
+                count: '5',
+                color: AppColors.red,
+              ),
             ),
             SizedBox(height: 20.h),
             Container(
@@ -226,7 +225,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           width: double.infinity,
                           padding: EdgeInsets.all(14.w),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.grey),
+                            border: Border.all(color: AppColors.infoGrey1),
                             borderRadius: BorderRadius.circular(8.0.r),
                           ),
                           child: Row(
@@ -265,7 +264,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           width: double.infinity,
                           padding: EdgeInsets.all(14.w),
                           decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.grey),
+                            border: Border.all(color: AppColors.infoGrey1),
                             borderRadius: BorderRadius.circular(8.0.r),
                           ),
                           child: Row(
@@ -305,7 +304,7 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: EdgeInsets.all(14.w),
                     decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.grey),
+                      border: Border.all(color: AppColors.infoGrey1),
                       borderRadius: BorderRadius.circular(8.0.r),
                     ),
                     child: Row(
@@ -339,14 +338,16 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                   GestureDetector(
-                    onTap: () => navigate.navigateTo(
-                      Routes.viewHmoApplicationPortalScreen,
-                    ),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.viewHmoRenewalPortalScreen),
                     child: Container(
                       width: double.infinity,
-                      padding: EdgeInsets.all(16.w),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 16.w,
+                        horizontal: 12.w,
+                      ),
                       decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.grey),
+                        border: Border.all(color: AppColors.infoGrey1),
                         borderRadius: BorderRadius.circular(8.0.r),
                       ),
                       child: Column(
@@ -369,13 +370,13 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                                   text: 'Approved',
                                   textStyle: TextStyle(
                                     fontFamily: 'GoogleSans',
-                                    fontSize: 14.2.sp,
+                                    fontSize: 13.2.sp,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.app_green,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 10.w),
+                              SizedBox(width: 7.10.w),
                               Container(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 12.w,
@@ -443,40 +444,51 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 10.h),
                           Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(
-                                    AppImage.phone,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  SizedBox(width: 10.w),
                                   TextView(
-                                    text: '0812345678',
+                                    text: 'Subscription ID',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 15.2.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: 'PRO-PEARL-001',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.thickGrey,
                                     ),
                                   ),
                                 ],
                               ),
                               SizedBox(width: 30.w),
-                              Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SvgPicture.asset(
-                                    AppImage.timer,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                  SizedBox(width: 10.w),
                                   TextView(
-                                    text: 'Jan 17, 2026',
+                                    text: 'Amount',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 15.2.sp,
                                       fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  TextView(
+                                    text: '₦200,000',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 16.42.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.thickGrey,
                                     ),
                                   ),
                                 ],
@@ -484,18 +496,23 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 13.20.h),
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SvgPicture.asset(
-                                AppImage.message,
-                                color: AppColors.infoGrey,
-                              ),
-                              SizedBox(width: 10.w),
                               TextView(
-                                text: 'Adebayo@gmail.com',
+                                text: 'Date Submitted',
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
-                                  fontSize: 15.2.sp,
+                                  fontSize: 16.2.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                              TextView(
+                                text: 'Jun 1, 2026 ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 16.2.sp,
                                   fontWeight: FontWeight.w400,
                                   color: AppColors.reminder,
                                 ),
@@ -505,6 +522,45 @@ class HmoApplicationPortalScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                  ),
+                  SizedBox(height: 30.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14.w),
+                    child: Divider(color: AppColors.infoGrey1),
+                  ),
+                  SizedBox(height: 12.20.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 22.sp,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      SizedBox(width: 36.0.w),
+                      TextView(
+                        text: 'Page 1 of 10',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+
+                      SizedBox(width: 36.0.w),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          size: 22.sp,
+                          color: AppColors.primary1,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -520,48 +576,47 @@ class HmoApplicationPortalScreen extends StatelessWidget {
     String? svg,
     String? count,
     Color? color,
-  }) => Expanded(
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 12.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.infoGrey1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextView(
-                text: text!,
-                textStyle: TextStyle(
-                  fontFamily: 'Arial',
-                  fontSize: 15.2.sp,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.reminder,
-                ),
-              ),
-            ],
+  }) => Container(
+    padding: EdgeInsets.symmetric(vertical: 24.w, horizontal: 20.w),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(12.r),
+      border: Border.all(color: AppColors.infoGrey1),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextView(
+          text: text!,
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 13.82.sp,
+            fontWeight: FontWeight.w400,
+            color: AppColors.reminder,
           ),
-          Row(
-            children: [
-              SvgPicture.asset(svg!, width: 20.w, height: 20.h, color: color),
-              SizedBox(width: 5.10.w),
-              TextView(
-                text: count!,
-                textStyle: TextStyle(
-                  fontFamily: 'GoogleSans',
-                  fontSize: 20.2.sp,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.reminder,
-                ),
+        ),
+        SizedBox(height: 10.h),
+        Row(
+          children: [
+            SvgPicture.asset(
+              svg!,
+              width: 16.20.w,
+              height: 16.20.h,
+              color: color,
+            ),
+            SizedBox(width: 7.10.w),
+            TextView(
+              text: count!,
+              textStyle: TextStyle(
+                fontFamily: 'GoogleSans',
+                fontSize: 20.2.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.reminder,
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     ),
   );
 }
