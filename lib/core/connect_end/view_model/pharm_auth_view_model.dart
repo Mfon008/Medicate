@@ -405,7 +405,7 @@ class PharmViewModel extends BaseViewModel {
   int? dosageAfterValue;
   List<List<TextEditingController>> doseControllers = [];
   List<List<TextEditingController>> doseControllersUpdate = [];
-  List<List<TextEditingController>> doseAfterControllers = [];
+  // List<List<TextEditingController>> doseAfterControllers = [];
 
   GlobalKey<FormState> firstFormReminderKey = GlobalKey<FormState>();
   GlobalKey<FormState> firstFormReminderUpdateKey = GlobalKey<FormState>();
@@ -544,6 +544,7 @@ class PharmViewModel extends BaseViewModel {
   List<String>? formattedSelectedTimeAndPeriodList = [];
 
   Map<int, String?> selectedTimePerDay = {};
+  Map<int, int?> selectedDoseIndexPerDay = {};
   Map<int, List<String>> timesPerDay = {};
 
   String? pickedEndDate;
@@ -648,15 +649,13 @@ class PharmViewModel extends BaseViewModel {
   }
 
   Future<void> selectTimeFreqCustomUpdate({
-    BuildContext? context,
-    int? dayIndex,
-    StateSetter? setModalState,
-    PharmViewModel? model,
-    dynamic timesPerDay,
-    dynamic timeSelected,
+    required BuildContext context,
+    required PharmViewModel model,
+    required int medicationIndex,
+    required int dayIndex, // 0-based
+    int? doseIndex, // null = add, not null = update
+    required StateSetter setModalState,
   }) async {
-    if (context == null || dayIndex == null || model == null) return;
-
     final pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -665,20 +664,42 @@ class PharmViewModel extends BaseViewModel {
     if (pickedTime == null) return;
 
     final formatted = formatTimeFreq(pickedTime);
-    logger.d(timesPerDay);
-    logger.d(dayIndex);
-    final index = timesPerDay.indexWhere(
-      (e) => e["time"] == timeSelected['time'],
-    );
-    if (index != -1) {
-      timesPerDay[index]["time"] = formatted;
+
+    final raw = model.startDateUpdateControllers[medicationIndex].text;
+    final clean = raw.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+    final startDate = DateFormat('dd MMM, yyyy').parse(clean);
+    final currentDate = startDate.add(Duration(days: dayIndex));
+
+    final combined = combineDateAndTime(date: currentDate, time: formatted);
+
+    final newDose = {
+      "time": formatted,
+      "date": DateFormat('yyyy-MM-dd').format(currentDate),
+      "isoDate": combined.toUtc().toIso8601String(),
+    };
+
+    final doses =
+        model.medicationClassList[medicationIndex].dosageMap[dayIndex]['doses'];
+
+    /// ✅ UPDATE
+    if (doseIndex != null && doseIndex < doses.length) {
+      doses[doseIndex] = newDose;
+    }
+    /// ✅ ADD
+    else {
+      final exists = doses.any((e) => e['time'] == formatted);
+      if (!exists) {
+        doses.add(newDose);
+      }
     }
 
-    selectedTimePerDay[dayIndex] = formatted;
+    /// update selection state
+    model.selectedTimePerDay[dayIndex] = formatted;
+    model.selectedDoseIndexPerDay[dayIndex] = doseIndex;
 
-    model.setSelectedTimeForDay(dayIndex, formatted);
     model.notifyListeners();
-    setModalState?.call(() {});
+    setModalState(() {});
   }
 
   String formatTimeFreq(TimeOfDay time) {
@@ -2998,6 +3019,7 @@ class PharmViewModel extends BaseViewModel {
   Future<void> selectDate({
     BuildContext? context,
     StateSetter? setModalState,
+    PharmViewModel? model,
   }) async {
     pickedDatedStart = await showDatePicker(
       context: context!,
@@ -3010,17 +3032,97 @@ class PharmViewModel extends BaseViewModel {
     if (pickedDatedStart != null) {
       pickedDate = DateFormat('dd MMM, yyyy').format(pickedDatedStart!);
       dateTimeController.text = pickedDate!;
-      // await selectTime(context);
       startDateIso = DateTime.utc(
         pickedDatedStart!.year,
         pickedDatedStart!.month,
         pickedDatedStart!.day,
       ).toIso8601String();
-      print('After time select → startDateIso: $startDateIso');
-      print('iso$startDateIso');
+      _calculateEndDate(setModalState: setModalState, model: model);
     }
     setModalState!(() {});
     notifyListeners();
+  }
+
+  Future<void> _calculateEndDate({
+    StateSetter? setModalState,
+    PharmViewModel? model,
+  }) async {
+    if (model!.pickedDatedStart != null &&
+        model.medDurationController.text.isNotEmpty) {
+      final days = int.tryParse(model.medDurationController.text) ?? 0;
+
+      // ✅ Calculate directly
+      final endDate = model.pickedDatedStart!.add(Duration(days: days - 1));
+
+      // ✅ Store DateTime (recommended)
+      model.pickedEndDate = endDate.toString();
+
+      // ✅ Format ONLY for UI
+      model.endDateController.text = DateFormat('dd MMM, yyyy').format(endDate);
+
+      // ✅ Convert to ISO (no need for parse again)
+      model.endDateIso = DateTime.utc(
+        endDate.year,
+        endDate.month,
+        endDate.day,
+      ).toIso8601String();
+
+      model.returnNoDays = days;
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      model.intListCustom = List.generate(
+        model.returnNoDays!,
+        (index) => index,
+      );
+
+      setModalState?.call(() {});
+      notifyListeners();
+    }
+  }
+
+  Future<void> _calculateEndDateUpdate({
+    StateSetter? setModalState,
+    PharmViewModel? model,
+    int? index,
+  }) async {
+    if (model!.startDateUpdateControllers[index!].text.isNotEmpty &&
+        model.durationUpdateControllers[index].text.isNotEmpty) {
+      final days =
+          int.tryParse(model.durationUpdateControllers[index].text) ?? 0;
+
+      // ✅ FIXED parsing
+      final startDate = DateFormat(
+        'dd MMM, yyyy',
+      ).parse(model.startDateUpdateControllers[index].text);
+
+      final endDate = startDate.add(Duration(days: days - 1));
+
+      // ✅ Format for UI
+      model.endDateUpdateController[index].text = DateFormat(
+        'dd MMM, yyyy',
+      ).format(endDate);
+
+      // ✅ ISO
+      model.endDateIso = DateTime.utc(
+        endDate.year,
+        endDate.month,
+        endDate.day,
+      ).toIso8601String();
+
+      // model.returnNoDays = days;
+      model.medicationClassList[index].duration = days.toString();
+
+      model.numberOfDurationsInDaysList![index] = getReturnDurationNumberOfDays(
+        days,
+      );
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      model.intListCustom = List.generate(days, (i) => i);
+      setModalState?.call(() {});
+      notifyListeners();
+    }
   }
 
   Future<void> selectEndDate({
@@ -3883,7 +3985,6 @@ class PharmViewModel extends BaseViewModel {
             'isoDate': startDateIsoWithin,
           });
         }
-        logger.d('startDateIsoWithinstartDateIsoWithin::: $startDateIsoWithin');
         startDateIsoWithin = DateTime.parse(
           startDateIsoWithin,
         ).add(Duration(days: 0 + 1)).toString();
@@ -4037,6 +4138,11 @@ class PharmViewModel extends BaseViewModel {
               (e) => TextEditingController(text: e.dateAndTime),
             )
             .toList();
+        model.durationUpdateControllers = model.medicationClassList
+            .map<TextEditingController>(
+              (e) => TextEditingController(text: e.duration.toString()),
+            )
+            .toList();
         model.endDateUpdateController = model.medicationClassList
             .map<TextEditingController>(
               (e) => TextEditingController(text: e.endDate),
@@ -4061,6 +4167,29 @@ class PharmViewModel extends BaseViewModel {
           return false;
         }).toList();
       });
+
+      // for (var med in model.medicationClassList) {
+      //   final dosageMap = med.dosageMap ?? [];
+
+      //   // Map through the day-level list
+      //   final controllersPerDay = dosageMap.map<List<TextEditingController>>((
+      //     dayItem,
+      //   ) {
+      //     final doses = (dayItem['doses'] ?? []) as List;
+
+      //     // Create controllers for each dose
+      //     final doseControllers = doses.map<TextEditingController>((dose) {
+      //       final timeValue = dose['time']?.toString() ?? '';
+      //       return TextEditingController(text: timeValue);
+      //     }).toList();
+
+      //     return doseControllers;
+      //   }).toList();
+
+      //   doseAfterControllers =
+      //       controllersPerDay; // assign per medication if you're looping
+      //   // If you want to store for multiple meds: use a parent list like List<List<List<TextEditingController>>>>
+      // }
 
       model.notifyListeners();
     });
@@ -5714,81 +5843,81 @@ class PharmViewModel extends BaseViewModel {
     return totalDuration;
   }
 
-  setNoOfTimesWithDurationUpdate(index) {
-    if (medicationClassList[index].timesToTake!.isNotEmpty) {
-      final timesCount =
-          int.tryParse(medicationClassList[index].timesToTake.toString()) ?? 0;
-      final durationCount =
-          int.tryParse(
-            medicationClassList[index].duration?.toString() ?? '0',
-          ) ??
-          0;
-      // 🔹 Get the old data before rebuilding
-      final oldControllers = List<List<TextEditingController>>.from(
-        doseAfterControllers,
-      );
-      final oldPeriods = List<List<String>>.from(periodAfterLabels);
-      // 🔹 Rebuild dosageMap safely (preserve where possible)
-      medicationClassList[index].dosageMap = List.generate(durationCount, (
-        day,
-      ) {
-        final oldDay = (day < medicationClassList[index].dosageMap.length)
-            ? medicationClassList[index].dosageMap[day]
-            : null;
-        final oldDoses = oldDay != null
-            ? List<Map<String, dynamic>>.from(oldDay['doses'])
-            : [];
-        return {
-          "day": day + 1,
-          "doses": List.generate(timesCount, (doseIndex) {
-            if (doseIndex < oldDoses.length) {
-              // preserve previous time + period if available
-              return {
-                "time": oldDoses[doseIndex]["time"] ?? "",
-                "period": oldDoses[doseIndex]["period"] ?? "",
-                "date": oldDoses[doseIndex]["date"] ?? "",
-                "isoDate": oldDoses[doseIndex]["isoDate"] ?? "",
-              };
-            }
-            // otherwise new empty slot
-            return {"time": "", "period": "", "date": "", "isoDate": ""};
-          }),
-        };
-      });
+  // setNoOfTimesWithDurationUpdate(index) {
+  //   if (medicationClassList[index].timesToTake!.isNotEmpty) {
+  //     final timesCount =
+  //         int.tryParse(medicationClassList[index].timesToTake.toString()) ?? 0;
+  //     final durationCount =
+  //         int.tryParse(
+  //           medicationClassList[index].duration?.toString() ?? '0',
+  //         ) ??
+  //         0;
+  //     // 🔹 Get the old data before rebuilding
+  //     final oldControllers = List<List<TextEditingController>>.from(
+  //       doseAfterControllers,
+  //     );
+  //     final oldPeriods = List<List<String>>.from(periodAfterLabels);
+  //     // 🔹 Rebuild dosageMap safely (preserve where possible)
+  //     medicationClassList[index].dosageMap = List.generate(durationCount, (
+  //       day,
+  //     ) {
+  //       final oldDay = (day < medicationClassList[index].dosageMap.length)
+  //           ? medicationClassList[index].dosageMap[day]
+  //           : null;
+  //       final oldDoses = oldDay != null
+  //           ? List<Map<String, dynamic>>.from(oldDay['doses'])
+  //           : [];
+  //       return {
+  //         "day": day + 1,
+  //         "doses": List.generate(timesCount, (doseIndex) {
+  //           if (doseIndex < oldDoses.length) {
+  //             // preserve previous time + period if available
+  //             return {
+  //               "time": oldDoses[doseIndex]["time"] ?? "",
+  //               "period": oldDoses[doseIndex]["period"] ?? "",
+  //               "date": oldDoses[doseIndex]["date"] ?? "",
+  //               "isoDate": oldDoses[doseIndex]["isoDate"] ?? "",
+  //             };
+  //           }
+  //           // otherwise new empty slot
+  //           return {"time": "", "period": "", "date": "", "isoDate": ""};
+  //         }),
+  //       };
+  //     });
 
-      // 🔹 Rebuild controllers but preserve existing values
-      doseAfterControllers = List.generate(durationCount, (dayIndex) {
-        return List.generate(timesCount, (doseIndex) {
-          if (dayIndex < oldControllers.length &&
-              doseIndex < oldControllers[dayIndex].length) {
-            return oldControllers[dayIndex][doseIndex];
-          } else {
-            return TextEditingController(
-              text:
-                  medicationClassList[index]
-                      .dosageMap[dayIndex]["doses"][doseIndex]["time"] ??
-                  "",
-            );
-          }
-        });
-      });
+  //     // 🔹 Rebuild controllers but preserve existing values
+  //     doseAfterControllers = List.generate(durationCount, (dayIndex) {
+  //       return List.generate(timesCount, (doseIndex) {
+  //         if (dayIndex < oldControllers.length &&
+  //             doseIndex < oldControllers[dayIndex].length) {
+  //           return oldControllers[dayIndex][doseIndex];
+  //         } else {
+  //           return TextEditingController(
+  //             text:
+  //                 medicationClassList[index]
+  //                     .dosageMap[dayIndex]["doses"][doseIndex]["time"] ??
+  //                 "",
+  //           );
+  //         }
+  //       });
+  //     });
 
-      // 🔹 Rebuild period labels safely
-      periodAfterLabels = List.generate(durationCount, (dayIndex) {
-        return List.generate(timesCount, (doseIndex) {
-          if (dayIndex < oldPeriods.length &&
-              doseIndex < oldPeriods[dayIndex].length) {
-            return oldPeriods[dayIndex][doseIndex];
-          } else {
-            return medicationClassList[index]
-                    .dosageMap[dayIndex]["doses"][doseIndex]["period"] ??
-                "";
-          }
-        });
-      });
-      notifyListeners();
-    }
-  }
+  //     // 🔹 Rebuild period labels safely
+  //     periodAfterLabels = List.generate(durationCount, (dayIndex) {
+  //       return List.generate(timesCount, (doseIndex) {
+  //         if (dayIndex < oldPeriods.length &&
+  //             doseIndex < oldPeriods[dayIndex].length) {
+  //           return oldPeriods[dayIndex][doseIndex];
+  //         } else {
+  //           return medicationClassList[index]
+  //                   .dosageMap[dayIndex]["doses"][doseIndex]["period"] ??
+  //               "";
+  //         }
+  //       });
+  //     });
+  //     notifyListeners();
+  //   }
+  // }
 
   void copyDayOneToAllUpdate({
     StateSetter? setModalState,
@@ -5910,44 +6039,44 @@ class PharmViewModel extends BaseViewModel {
     model.notifyListeners();
   }
 
-  Future<void> buildCustomDosageMap({
-    PharmViewModel? model,
-    int? index,
-    int? day,
-  }) async {
-    final duration = int.tryParse(
-      model!.medicationClassList[index!].duration ?? '',
-    );
-    if (duration == null) return;
+  // Future<void> buildCustomDosageMap({
+  //   PharmViewModel? model,
+  //   int? index,
+  //   int? day,
+  // }) async {
+  //   final duration = int.tryParse(
+  //     model!.medicationClassList[index!].duration ?? '',
+  //   );
+  //   if (duration == null) return;
 
-    final startDate = DateFormat(
-      'dd MMM, yyyy hh:mm a',
-    ).parse(model.startDateUpdateControllers[index].text);
+  //   final startDate = DateFormat(
+  //     'dd MMM, yyyy hh:mm a',
+  //   ).parse(model.startDateUpdateControllers[index].text);
 
-    final currentDate = startDate.add(Duration(days: day! - 1));
+  //   final currentDate = startDate.add(Duration(days: day! - 1));
 
-    List<Map<String, String>> doses = [];
-    if (model.medicationClassList[index].dosageMap[day - 1]['day'] == day &&
-        model.medicationClassList[index].dosageMap[day - 1]['doses'].any(
-          (e) => e['time'] == model.selectedTimePerDay[day - 1],
-        )) {
-      return;
-    } else {
-      final combined = combineDateAndTime(
-        date: currentDate,
-        time: selectedTimePerDay[day - 1]!,
-      );
-      doses.add({
-        'time': selectedTimePerDay[day - 1]!,
-        'date': DateFormat('yyyy-MM-dd').format(currentDate),
-        'isoDate': combined.toUtc().toIso8601String(),
-      });
-      model.medicationClassList[index].dosageMap[day - 1]['doses'].add(
-        doses[0],
-      );
-    }
-    model.notifyListeners();
-  }
+  //   List<Map<String, String>> doses = [];
+  //   if (model.medicationClassList[index].dosageMap[day - 1]['day'] == day &&
+  //       model.medicationClassList[index].dosageMap[day - 1]['doses'].any(
+  //         (e) => e['time'] == model.selectedTimePerDay[day - 1],
+  //       )) {
+  //     return;
+  //   } else {
+  //     final combined = combineDateAndTime(
+  //       date: currentDate,
+  //       time: selectedTimePerDay[day - 1]!,
+  //     );
+  //     doses.add({
+  //       'time': selectedTimePerDay[day - 1]!,
+  //       'date': DateFormat('yyyy-MM-dd').format(currentDate),
+  //       'isoDate': combined.toUtc().toIso8601String(),
+  //     });
+  //     model.medicationClassList[index].dosageMap[day - 1]['doses'].add(
+  //       doses[0],
+  //     );
+  //   }
+  //   model.notifyListeners();
+  // }
 
   void removeTimeAt({
     required int medicationIndex,
@@ -5997,34 +6126,39 @@ class PharmViewModel extends BaseViewModel {
     PharmViewModel? model,
     int? index,
   }) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
+    final pickedTime = await showTimePicker(
       context: context!,
       initialTime: TimeOfDay.now(),
     );
 
     if (pickedTime == null) return;
 
-    final formattedTime = formatTimeFreq(pickedTime); // e.g. 09:30 AM
+    final formattedTime = formatTimeFreq(pickedTime);
 
-    // Init list if needed
-    model!.selectedTimes;
-
-    // Prevent duplicates
-    if (model.selectedTimes.contains(formattedTime)) return;
-
-    // Enforce max timesToTake
     final maxTimes = int.tryParse(
-      model.medicationClassList[index!].timesToTake ?? '',
+      model!.medicationClassList[index!].timesToTake ?? '',
     );
 
-    if (maxTimes != null && model.selectedTimes.length >= maxTimes) return;
+    /// ✅ UPDATE MODE
+    if (model.globalTimeIndex != null) {
+      model.selectedTimes[model.globalTimeIndex!] = formattedTime;
+    }
+    /// ✅ ADD MODE
+    else {
+      if (model.selectedTimes.contains(formattedTime)) return;
 
-    // Add next time
-    model.selectedTimes.add(formattedTime);
+      if (maxTimes != null && model.selectedTimes.length >= maxTimes) return;
+
+      model.selectedTimes.add(formattedTime);
+    }
+
     model.getTime = formattedTime;
 
-    setModalState?.call(() {});
-    notifyListeners();
+    /// rebuild map AFTER change
+    await model.buildDosageMap(model: model, index: index);
+
+    setModalState!(() {});
+    model.notifyListeners();
   }
 
   reminderWidget({
@@ -7818,6 +7952,37 @@ class PharmViewModel extends BaseViewModel {
                         ),
                         SizedBox(height: 24.0.h),
                         TextFormWidget(
+                          hint: 'Duration',
+                          label: '',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          controller: model.medDurationController,
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 16.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.appWhite,
+                          isFilled: true,
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'GoogleSans',
+                          ),
+                          onChange: (p0) => _calculateEndDate(
+                            setModalState: setModalState,
+                            model: model,
+                          ),
+                        ),
+                        SizedBox(height: 24.0.h),
+                        TextFormWidget(
                           hint: 'End Date',
                           label: '18 Feb, 2026',
                           hintWeight: FontWeight.w400,
@@ -7835,7 +8000,7 @@ class PharmViewModel extends BaseViewModel {
                             fontSize: 16.2.sp,
                             color: AppColors.infoGrey,
                           ),
-                          fillColor: AppColors.white,
+                          fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
                           style: TextStyle(
@@ -7843,64 +8008,65 @@ class PharmViewModel extends BaseViewModel {
                             fontWeight: FontWeight.w400,
                             fontFamily: 'GoogleSans',
                           ),
-                          suffixWidget: Padding(
-                            padding: EdgeInsets.all(8.w),
-                            child: GestureDetector(
-                              onTap: () => model.selectEndDate(
-                                context: context,
-                                setModalState: setModalState,
-                              ),
-                              child: SvgPicture.asset(
-                                AppImage.calendar,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                          // suffixWidget: Padding(
+                          //   padding: EdgeInsets.all(8.w),
+                          //   child: GestureDetector(
+                          //     onTap: () => model.selectEndDate(
+                          //       context: context,
+                          //       setModalState: setModalState,
+                          //     ),
+                          //     child: SvgPicture.asset(
+                          //       AppImage.calendar,
+                          //       fit: BoxFit.cover,
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                         SizedBox(height: 24.0.h),
-                        TextView(
-                          text: 'Duration',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.reminder,
-                          ),
-                        ),
-                        SizedBox(height: 14.0.h),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(16.w, 0.w, 0.w, 0.w),
-                          width: double.infinity,
-                          height: 50.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.r),
-                            color: AppColors.dashboard,
-                          ),
-                          child: Row(
-                            children: [
-                              TextView(
-                                text: model.numberOfDurationsInDays ?? '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.primary1,
-                                ),
-                              ),
-                              TextView(
-                                text: model.endDateController.text != ''
-                                    ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
-                                    : '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'Arial',
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.reminder,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+
+                        // TextView(
+                        //   text: 'Duration',
+                        //   textStyle: TextStyle(
+                        //     fontFamily: 'Arial',
+                        //     fontSize: 14.sp,
+                        //     fontWeight: FontWeight.w400,
+                        //     color: AppColors.reminder,
+                        //   ),
+                        // ),
+                        // SizedBox(height: 14.0.h),
+                        // Container(
+                        //   padding: EdgeInsets.fromLTRB(16.w, 0.w, 0.w, 0.w),
+                        //   width: double.infinity,
+                        //   height: 50.h,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(10.r),
+                        //     color: AppColors.dashboard,
+                        //   ),
+                        //   child: Row(
+                        //     children: [
+                        //       TextView(
+                        //         text: model.numberOfDurationsInDays ?? '',
+                        //         textStyle: TextStyle(
+                        //           fontFamily: 'GoogleSans',
+                        //           fontSize: 14.sp,
+                        //           fontWeight: FontWeight.w700,
+                        //           color: AppColors.primary1,
+                        //         ),
+                        //       ),
+                        //       TextView(
+                        //         text: model.endDateController.text != ''
+                        //             ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
+                        //             : '',
+                        //         textStyle: TextStyle(
+                        //           fontFamily: 'Arial',
+                        //           fontSize: 14.sp,
+                        //           fontWeight: FontWeight.w400,
+                        //           color: AppColors.reminder,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         SizedBox(height: 24.0.h),
                         model.isCusSchedule
                             ? Column(
@@ -10351,6 +10517,44 @@ class PharmViewModel extends BaseViewModel {
                                               ),
                                               SizedBox(height: 24.0.h),
                                               TextFormWidget(
+                                                hint: 'Duration',
+                                                label: '',
+                                                hintWeight: FontWeight.w400,
+                                                hintColor: AppColors.reminder,
+                                                hintSize: Platform.isAndroid
+                                                    ? 14.sp
+                                                    : 12.sp,
+                                                borderColor:
+                                                    AppColors.infoGrey1,
+                                                borderTopLeft: 10.r,
+                                                borderTopRight: 10.r,
+                                                borderBottomLeft: 10.r,
+                                                borderBottomRight: 10.r,
+                                                controller: model
+                                                    .durationUpdateControllers[index],
+                                                labelStyle: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 16.2.sp,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                                fillColor: AppColors.appWhite,
+                                                isFilled: true,
+                                                style: TextStyle(
+                                                  fontSize: 16.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  fontFamily: 'GoogleSans',
+                                                ),
+                                                onChange: (p0) =>
+                                                    _calculateEndDateUpdate(
+                                                      setModalState:
+                                                          setModalState,
+                                                      model: model,
+                                                      index: index,
+                                                    ),
+                                              ),
+                                              SizedBox(height: 24.0.h),
+                                              TextFormWidget(
                                                 hint: 'End Date',
                                                 hintWeight: FontWeight.w400,
                                                 hintColor: AppColors.reminder,
@@ -10371,7 +10575,7 @@ class PharmViewModel extends BaseViewModel {
                                                   fontSize: 16.2.sp,
                                                   color: AppColors.infoGrey,
                                                 ),
-                                                fillColor: AppColors.white,
+                                                fillColor: AppColors.grey,
                                                 isFilled: true,
                                                 readOnly: true,
                                                 validator:
@@ -10381,91 +10585,92 @@ class PharmViewModel extends BaseViewModel {
                                                   fontWeight: FontWeight.w400,
                                                   fontFamily: 'GoogleSans',
                                                 ),
-                                                suffixWidget: Padding(
-                                                  padding: EdgeInsets.all(8.w),
-                                                  child: GestureDetector(
-                                                    onTap: () => model
-                                                        .selectEndDateUpdate(
-                                                          context: context,
-                                                          setModalState:
-                                                              setModalState,
-                                                          model: model,
-                                                          index: index,
-                                                        ),
-                                                    child: SvgPicture.asset(
-                                                      AppImage.calendar,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
+                                                // suffixWidget: Padding(
+                                                //   padding: EdgeInsets.all(8.w),
+                                                //   child: GestureDetector(
+                                                //     onTap: () => model
+                                                //         .selectEndDateUpdate(
+                                                //           context: context,
+                                                //           setModalState:
+                                                //               setModalState,
+                                                //           model: model,
+                                                //           index: index,
+                                                //         ),
+                                                //     child: SvgPicture.asset(
+                                                //       AppImage.calendar,
+                                                //       fit: BoxFit.cover,
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ),
                                               SizedBox(height: 24.0.h),
-                                              TextView(
-                                                text: 'Duration',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                              SizedBox(height: 14.0.h),
-                                              Container(
-                                                padding: EdgeInsets.fromLTRB(
-                                                  16.w,
-                                                  0.w,
-                                                  0.w,
-                                                  0.w,
-                                                ),
-                                                width: double.infinity,
-                                                height: 50.h,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        10.r,
-                                                      ),
-                                                  color: AppColors.dashboard,
-                                                ),
-                                                child: Row(
-                                                  children: [
-                                                    TextView(
-                                                      text: getReturnDurationNumberOfDays(
-                                                        int.parse(
-                                                          model
-                                                              .medicationClassList[index]
-                                                              .duration!,
-                                                        ),
-                                                      ),
-                                                      textStyle: TextStyle(
-                                                        fontFamily:
-                                                            'GoogleSans',
-                                                        fontSize: 16.sp,
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color:
-                                                            AppColors.primary1,
-                                                      ),
-                                                    ),
-                                                    TextView(
-                                                      text:
-                                                          model
-                                                                  .endDateUpdateController[index]
-                                                                  .text ==
-                                                              ''
-                                                          ? ''
-                                                          : ' (${model.startDateUpdateControllers[index].text.substring(0, 6)} - ${model.endDateUpdateController[index].text})',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'Arial',
-                                                        fontSize: 14.sp,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color:
-                                                            AppColors.reminder,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
+
+                                              // TextView(
+                                              //   text: 'Duration',
+                                              //   textStyle: TextStyle(
+                                              //     fontFamily: 'Arial',
+                                              //     fontSize: 14.sp,
+                                              //     fontWeight: FontWeight.w400,
+                                              //     color: AppColors.reminder,
+                                              //   ),
+                                              // ),
+                                              // SizedBox(height: 14.0.h),
+                                              // Container(
+                                              //   padding: EdgeInsets.fromLTRB(
+                                              //     16.w,
+                                              //     0.w,
+                                              //     0.w,
+                                              //     0.w,
+                                              //   ),
+                                              //   width: double.infinity,
+                                              //   height: 50.h,
+                                              //   decoration: BoxDecoration(
+                                              //     borderRadius:
+                                              //         BorderRadius.circular(
+                                              //           10.r,
+                                              //         ),
+                                              //     color: AppColors.dashboard,
+                                              //   ),
+                                              //   child: Row(
+                                              //     children: [
+                                              //       TextView(
+                                              //         text: getReturnDurationNumberOfDays(
+                                              //           int.parse(
+                                              //             model
+                                              //                 .medicationClassList[index]
+                                              //                 .duration!,
+                                              //           ),
+                                              //         ),
+                                              //         textStyle: TextStyle(
+                                              //           fontFamily:
+                                              //               'GoogleSans',
+                                              //           fontSize: 16.sp,
+                                              //           fontWeight:
+                                              //               FontWeight.w700,
+                                              //           color:
+                                              //               AppColors.primary1,
+                                              //         ),
+                                              //       ),
+                                              //       TextView(
+                                              //         text:
+                                              //             model
+                                              //                     .endDateUpdateController[index]
+                                              //                     .text ==
+                                              //                 ''
+                                              //             ? ''
+                                              //             : ' (${model.startDateUpdateControllers[index].text.substring(0, 6)} - ${model.endDateUpdateController[index].text})',
+                                              //         textStyle: TextStyle(
+                                              //           fontFamily: 'Arial',
+                                              //           fontSize: 14.sp,
+                                              //           fontWeight:
+                                              //               FontWeight.w400,
+                                              //           color:
+                                              //               AppColors.reminder,
+                                              //         ),
+                                              //       ),
+                                              //     ],
+                                              //   ),
+                                              // ),
                                               SizedBox(height: 24.0.h),
                                               model
                                                       .medicationClassList[index]
@@ -10770,13 +10975,20 @@ class PharmViewModel extends BaseViewModel {
                                                                                     ),
                                                                                     IconButton(
                                                                                       onPressed: () {
+                                                                                        final selectedIndex = model.selectedDoseIndexPerDay[list];
+
+                                                                                        if (selectedIndex ==
+                                                                                            null) {
+                                                                                          // ❌ Nothing selected → don't update
+                                                                                          return;
+                                                                                        }
                                                                                         selectTimeFreqCustomUpdate(
                                                                                           context: context,
-                                                                                          dayIndex: list,
-                                                                                          timeSelected: timeSelected,
-                                                                                          timesPerDay: e.dosageMap[list]['doses'],
-                                                                                          setModalState: setModalState,
                                                                                           model: model,
+                                                                                          medicationIndex: index,
+                                                                                          dayIndex: list,
+                                                                                          doseIndex: selectedIndex, // ✅ update mode
+                                                                                          setModalState: setModalState!,
                                                                                         );
                                                                                         model.notifyListeners();
                                                                                       },
@@ -10795,14 +11007,16 @@ class PharmViewModel extends BaseViewModel {
                                                                             ),
                                                                             GestureDetector(
                                                                               onTap: () {
-                                                                                model.buildCustomDosageMap(
-                                                                                  index: index,
+                                                                                model.selectedDoseIndexPerDay[list] = null;
+                                                                                selectTimeFreqCustomUpdate(
+                                                                                  context: context,
                                                                                   model: model,
-                                                                                  day:
-                                                                                      list +
-                                                                                      1,
+                                                                                  medicationIndex: index,
+                                                                                  dayIndex: list,
+                                                                                  doseIndex: null, // ✅ update mode
+                                                                                  setModalState: setModalState!,
                                                                                 );
-                                                                                setModalState!(
+                                                                                setModalState(
                                                                                   () {},
                                                                                 );
                                                                                 model.notifyListeners();
@@ -10912,8 +11126,9 @@ class PharmViewModel extends BaseViewModel {
                                                                                             final time = entry.value;
                                                                                             return GestureDetector(
                                                                                               onTap: () {
-                                                                                                selectedTimePerDay[list] = time['time'];
-                                                                                                timeSelected = time;
+                                                                                                model.selectedTimePerDay[list] = time['time'];
+                                                                                                model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
+                                                                                                model.timeSelected = time;
                                                                                                 setModalState!(
                                                                                                   () {},
                                                                                                 );
@@ -10931,13 +11146,13 @@ class PharmViewModel extends BaseViewModel {
                                                                                                   ),
                                                                                                   border: Border.all(
                                                                                                     color:
-                                                                                                        selectedTimePerDay[list] ==
+                                                                                                        model.selectedTimePerDay[list] ==
                                                                                                             time['time']
                                                                                                         ? AppColors.transparent
                                                                                                         : AppColors.app_green,
                                                                                                   ),
                                                                                                   color:
-                                                                                                      selectedTimePerDay[list] ==
+                                                                                                      model.selectedTimePerDay[list] ==
                                                                                                           time['time']
                                                                                                       ? AppColors.app_green
                                                                                                       : AppColors.white,
@@ -10951,7 +11166,7 @@ class PharmViewModel extends BaseViewModel {
                                                                                                         fontSize: 13.2.sp,
                                                                                                         fontWeight: FontWeight.w500,
                                                                                                         color:
-                                                                                                            selectedTimePerDay[list] ==
+                                                                                                            model.selectedTimePerDay[list] ==
                                                                                                                 time['time']
                                                                                                             ? AppColors.white
                                                                                                             : AppColors.app_green,
@@ -10976,7 +11191,7 @@ class PharmViewModel extends BaseViewModel {
                                                                                                       child: SvgPicture.asset(
                                                                                                         AppImage.x,
                                                                                                         color:
-                                                                                                            selectedTimePerDay[list] ==
+                                                                                                            model.selectedTimePerDay[list] ==
                                                                                                                 time['time']
                                                                                                             ? AppColors.white
                                                                                                             : AppColors.app_green,
@@ -11102,11 +11317,11 @@ class PharmViewModel extends BaseViewModel {
                                                                           model.medicationClassList[index].timesToTake ==
                                                                               'Custom Schedule'
                                                                           ? null
-                                                                          : model.selectedTimes.length >=
-                                                                                int.parse(
-                                                                                  model.medicationClassList[index].timesToTake!,
-                                                                                )
-                                                                          ? null
+                                                                          // : model.selectedTimes.length >=
+                                                                          //       int.parse(
+                                                                          //         model.medicationClassList[index].timesToTake!,
+                                                                          //       )
+                                                                          // ? null
                                                                           : () => selectTimeFreqUpdate(
                                                                               context: context,
                                                                               setModalState: setModalState!,
@@ -11850,6 +12065,41 @@ class PharmViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         SizedBox(height: 24.0.h),
+
+                                        TextFormWidget(
+                                          hint: 'Duration',
+                                          label: '',
+                                          hintWeight: FontWeight.w400,
+                                          hintColor: AppColors.reminder,
+                                          hintSize: Platform.isAndroid
+                                              ? 14.sp
+                                              : 12.sp,
+                                          borderColor: AppColors.infoGrey1,
+                                          borderTopLeft: 10.r,
+                                          borderTopRight: 10.r,
+                                          borderBottomLeft: 10.r,
+                                          borderBottomRight: 10.r,
+                                          controller:
+                                              model.medDurationController,
+                                          labelStyle: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.2.sp,
+                                            color: AppColors.infoGrey,
+                                          ),
+                                          fillColor: AppColors.appWhite,
+                                          isFilled: true,
+                                          style: TextStyle(
+                                            fontSize: 16.20.sp,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'GoogleSans',
+                                          ),
+                                          onChange: (p0) => _calculateEndDate(
+                                            setModalState: setModalState,
+                                            model: model,
+                                          ),
+                                        ),
+                                        SizedBox(height: 24.0.h),
                                         TextFormWidget(
                                           hint: 'End Date',
                                           label: '18 Feb, 2026',
@@ -11864,26 +12114,26 @@ class PharmViewModel extends BaseViewModel {
                                           borderBottomLeft: 10.r,
                                           borderBottomRight: 10.r,
                                           controller: model.endDateController,
-                                          suffixWidget: Padding(
-                                            padding: EdgeInsets.all(8.w),
-                                            child: GestureDetector(
-                                              onTap: () => model.selectEndDate(
-                                                context: context,
-                                                setModalState: setModalState,
-                                              ),
-                                              child: SvgPicture.asset(
-                                                AppImage.calendar,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
+                                          // suffixWidget: Padding(
+                                          //   padding: EdgeInsets.all(8.w),
+                                          //   child: GestureDetector(
+                                          //     onTap: () => model.selectEndDate(
+                                          //       context: context,
+                                          //       setModalState: setModalState,
+                                          //     ),
+                                          //     child: SvgPicture.asset(
+                                          //       AppImage.calendar,
+                                          //       fit: BoxFit.cover,
+                                          //     ),
+                                          //   ),
+                                          // ),
                                           labelStyle: TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontFamily: 'Arial',
                                             fontSize: 14.2.sp,
                                             color: AppColors.infoGrey,
                                           ),
-                                          fillColor: AppColors.white,
+                                          fillColor: AppColors.grey,
                                           isFilled: true,
                                           readOnly: true,
                                           style: TextStyle(
@@ -11893,64 +12143,64 @@ class PharmViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         SizedBox(height: 24.0.h),
-                                        TextView(
-                                          text: 'Duration',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
-                                        SizedBox(height: 14.0.h),
-                                        Container(
-                                          padding: EdgeInsets.fromLTRB(
-                                            16.w,
-                                            0.w,
-                                            0.w,
-                                            0.w,
-                                          ),
-                                          width: double.infinity,
-                                          height: 50.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              10.r,
-                                            ),
-                                            color: AppColors.dashboard,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              TextView(
-                                                text:
-                                                    model
-                                                        .numberOfDurationsInDays ??
-                                                    '',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'GoogleSans',
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: AppColors.primary1,
-                                                ),
-                                              ),
-                                              TextView(
-                                                text:
-                                                    model
-                                                            .endDateController
-                                                            .text !=
-                                                        ''
-                                                    ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
-                                                    : '',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'Arial',
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: 24.0.h),
+                                        // TextView(
+                                        //   text: 'Duration',
+                                        //   textStyle: TextStyle(
+                                        //     fontFamily: 'Arial',
+                                        //     fontSize: 14.sp,
+                                        //     fontWeight: FontWeight.w400,
+                                        //     color: AppColors.reminder,
+                                        //   ),
+                                        // ),
+                                        // SizedBox(height: 14.0.h),
+                                        // Container(
+                                        //   padding: EdgeInsets.fromLTRB(
+                                        //     16.w,
+                                        //     0.w,
+                                        //     0.w,
+                                        //     0.w,
+                                        //   ),
+                                        //   width: double.infinity,
+                                        //   height: 50.h,
+                                        //   decoration: BoxDecoration(
+                                        //     borderRadius: BorderRadius.circular(
+                                        //       10.r,
+                                        //     ),
+                                        //     color: AppColors.dashboard,
+                                        //   ),
+                                        //   child: Row(
+                                        //     children: [
+                                        //       TextView(
+                                        //         text:
+                                        //             model
+                                        //                 .numberOfDurationsInDays ??
+                                        //             '',
+                                        //         textStyle: TextStyle(
+                                        //           fontFamily: 'GoogleSans',
+                                        //           fontSize: 14.sp,
+                                        //           fontWeight: FontWeight.w700,
+                                        //           color: AppColors.primary1,
+                                        //         ),
+                                        //       ),
+                                        //       TextView(
+                                        //         text:
+                                        //             model
+                                        //                     .endDateController
+                                        //                     .text !=
+                                        //                 ''
+                                        //             ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
+                                        //             : '',
+                                        //         textStyle: TextStyle(
+                                        //           fontFamily: 'Arial',
+                                        //           fontSize: 14.sp,
+                                        //           fontWeight: FontWeight.w400,
+                                        //           color: AppColors.reminder,
+                                        //         ),
+                                        //       ),
+                                        //     ],
+                                        //   ),
+                                        // ),
+                                        // SizedBox(height: 24.0.h),
                                         model.isCusSchedule
                                             ? Column(
                                                 crossAxisAlignment:
@@ -16080,6 +16330,11 @@ class PharmViewModel extends BaseViewModel {
         pickedDated.month,
         pickedDated.day,
       ).toIso8601String();
+      _calculateEndDateUpdate(
+        setModalState: setModalState,
+        model: model,
+        index: index,
+      );
     }
     setModalState!(() {});
     model.notifyListeners();
@@ -16545,333 +16800,333 @@ class PharmViewModel extends BaseViewModel {
     return returnDate;
   }
 
-  dosageAfterWidgetContainer({
-    required BuildContext context,
-    required int callback,
-    required Color color,
-    required List<int> listOfTimes,
-    required List<Map<String, dynamic>> dosageMap,
-    required String date,
-  }) {
-    bool isTablet(BuildContext context) =>
-        MediaQuery.of(context).size.shortestSide >= 600;
+  // dosageAfterWidgetContainer({
+  //   required BuildContext context,
+  //   required int callback,
+  //   required Color color,
+  //   required List<int> listOfTimes,
+  //   required List<Map<String, dynamic>> dosageMap,
+  //   required String date,
+  // }) {
+  //   bool isTablet(BuildContext context) =>
+  //       MediaQuery.of(context).size.shortestSide >= 600;
 
-    // ✅ Ensure nested list exists for current day
-    if (doseAfterControllers.length <= callback) {
-      // Create empty lists until callback index exists
-      while (doseAfterControllers.length <= callback) {
-        doseAfterControllers.add([]);
-      }
-    }
+  //   // ✅ Ensure nested list exists for current day
+  //   if (doseAfterControllers.length <= callback) {
+  //     // Create empty lists until callback index exists
+  //     while (doseAfterControllers.length <= callback) {
+  //       doseAfterControllers.add([]);
+  //     }
+  //   }
 
-    List<Map<String, dynamic>> doses = [];
+  //   List<Map<String, dynamic>> doses = [];
 
-    if (callback >= 0 && callback < dosageMap.length) {
-      final item = dosageMap[callback];
-      doses = List<Map<String, dynamic>>.from(item['doses'] ?? []);
-    } else {
-      logger.e(
-        '⚠️ Invalid callback index: $callback for dosageMap length: ${dosageMap.length}',
-      );
-    }
+  //   if (callback >= 0 && callback < dosageMap.length) {
+  //     final item = dosageMap[callback];
+  //     doses = List<Map<String, dynamic>>.from(item['doses'] ?? []);
+  //   } else {
+  //     logger.e(
+  //       '⚠️ Invalid callback index: $callback for dosageMap length: ${dosageMap.length}',
+  //     );
+  //   }
 
-    // Ensure enough controllers exist
-    if (doseAfterControllers[callback].length < doses.length) {
-      for (
-        int i = doseAfterControllers[callback].length;
-        i < doses.length;
-        i++
-      ) {
-        doseAfterControllers[callback].add(
-          TextEditingController(text: doses[i]['time'] ?? ''),
-        );
-      }
-    } else if (doseAfterControllers[callback].length > doses.length) {
-      // remove extra ones if needed
-      doseAfterControllers[callback].removeRange(
-        doses.length,
-        doseAfterControllers[callback].length,
-      );
-    }
+  //   // Ensure enough controllers exist
+  //   if (doseAfterControllers[callback].length < doses.length) {
+  //     for (
+  //       int i = doseAfterControllers[callback].length;
+  //       i < doses.length;
+  //       i++
+  //     ) {
+  //       doseAfterControllers[callback].add(
+  //         TextEditingController(text: doses[i]['time'] ?? ''),
+  //       );
+  //     }
+  //   } else if (doseAfterControllers[callback].length > doses.length) {
+  //     // remove extra ones if needed
+  //     doseAfterControllers[callback].removeRange(
+  //       doses.length,
+  //       doseAfterControllers[callback].length,
+  //     );
+  //   }
 
-    // ✅ Initialize period labels too (if applicable)
-    if (periodAfterLabels.length <= callback) {
-      while (periodAfterLabels.length <= callback) {
-        periodAfterLabels.add([]);
-      }
-    }
+  //   // ✅ Initialize period labels too (if applicable)
+  //   if (periodAfterLabels.length <= callback) {
+  //     while (periodAfterLabels.length <= callback) {
+  //       periodAfterLabels.add([]);
+  //     }
+  //   }
 
-    if (periodAfterLabels[callback].length < doses.length) {
-      for (int i = periodAfterLabels[callback].length; i < doses.length; i++) {
-        periodAfterLabels[callback].add(doses[i]['period'] ?? '');
-      }
-    } else if (periodAfterLabels[callback].length > doses.length) {
-      periodAfterLabels[callback].removeRange(
-        doses.length,
-        periodAfterLabels[callback].length,
-      );
-    }
+  //   if (periodAfterLabels[callback].length < doses.length) {
+  //     for (int i = periodAfterLabels[callback].length; i < doses.length; i++) {
+  //       periodAfterLabels[callback].add(doses[i]['period'] ?? '');
+  //     }
+  //   } else if (periodAfterLabels[callback].length > doses.length) {
+  //     periodAfterLabels[callback].removeRange(
+  //       doses.length,
+  //       periodAfterLabels[callback].length,
+  //     );
+  //   }
 
-    // ✅ Update controllers/labels with data from dosageMap
-    if (callback < dosageMap.length) {
-      final dayData = dosageMap[callback]; // e.g. { "day": 1, "doses": [...] }
-      final doses = List<Map<String, dynamic>>.from(dayData["doses"] ?? []);
+  //   // ✅ Update controllers/labels with data from dosageMap
+  //   if (callback < dosageMap.length) {
+  //     final dayData = dosageMap[callback]; // e.g. { "day": 1, "doses": [...] }
+  //     final doses = List<Map<String, dynamic>>.from(dayData["doses"] ?? []);
 
-      for (int i = 0; i < doses.length; i++) {
-        if (i < doseAfterControllers[callback].length) {
-          doseAfterControllers[callback][i].text = doses[i]["time"] ?? "";
-          periodAfterLabels[callback][i] = doses[i]["period"] ?? "";
-        }
-      }
-    }
+  //     for (int i = 0; i < doses.length; i++) {
+  //       if (i < doseAfterControllers[callback].length) {
+  //         doseAfterControllers[callback][i].text = doses[i]["time"] ?? "";
+  //         periodAfterLabels[callback][i] = doses[i]["period"] ?? "";
+  //       }
+  //     }
+  //   }
 
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(bottom: 10.w),
-      padding: EdgeInsets.symmetric(
-        vertical: dosageAfterValue == callback ? 12.w : 8.w,
-        horizontal: 14.w,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color, width: 2),
-      ),
-      child: dosageAfterValue == callback
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 🔹 Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextView(
-                      text: 'Day ${callback + 1}',
-                      textStyle: TextStyle(
-                        fontFamily: 'GoogleSans',
-                        fontSize: 15.20.sp,
-                        color: AppColors.black,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        dosageAfterValue = null;
-                        notifyListeners();
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_up,
-                        color: AppColors.grey1,
-                        size: 24.sp,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.h),
+  //   return Container(
+  //     width: double.infinity,
+  //     margin: EdgeInsets.only(bottom: 10.w),
+  //     padding: EdgeInsets.symmetric(
+  //       vertical: dosageAfterValue == callback ? 12.w : 8.w,
+  //       horizontal: 14.w,
+  //     ),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(12),
+  //       border: Border.all(color: color, width: 2),
+  //     ),
+  //     child: dosageAfterValue == callback
+  //         ? Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               // 🔹 Header
+  //               Row(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                 children: [
+  //                   TextView(
+  //                     text: 'Day ${callback + 1}',
+  //                     textStyle: TextStyle(
+  //                       fontFamily: 'GoogleSans',
+  //                       fontSize: 15.20.sp,
+  //                       color: AppColors.black,
+  //                       fontWeight: FontWeight.w500,
+  //                     ),
+  //                   ),
+  //                   IconButton(
+  //                     onPressed: () {
+  //                       dosageAfterValue = null;
+  //                       notifyListeners();
+  //                     },
+  //                     icon: Icon(
+  //                       Icons.keyboard_arrow_up,
+  //                       color: AppColors.grey1,
+  //                       size: 24.sp,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //               SizedBox(height: 10.h),
 
-                // 🔹 Render doses
-                ...doseAfterControllers[callback].asMap().entries.map((entry) {
-                  final i = entry.key;
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 10.w),
-                    child: TextFormWidget(
-                      hint: 'Dose ${i + 1}',
-                      borderColor: AppColors.transparent,
-                      borderTopLeft: 10.r,
-                      borderTopRight: 10.r,
-                      borderBottomLeft: 10.r,
-                      borderBottomRight: 10.r,
-                      label: periodAfterLabels[callback][i],
-                      hintSize: 14.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        color: AppColors.infoGrey,
-                      ),
-                      fillColor: AppColors.grey,
-                      isFilled: true,
-                      controller: doseAfterControllers[callback][i],
-                      suffixWidget: Padding(
-                        padding: EdgeInsets.all(8.w),
-                        child: GestureDetector(
-                          onTap: () async {
-                            final result = await selectDosageTime(
-                              context: context,
-                            );
-                            if (result != null) {
-                              doseAfterControllers[callback][i].text =
-                                  result["time"]!;
-                              periodAfterLabels[callback][i] =
-                                  result["period"]!;
+  //               // 🔹 Render doses
+  //               ...doseAfterControllers[callback].asMap().entries.map((entry) {
+  //                 final i = entry.key;
+  //                 return Padding(
+  //                   padding: EdgeInsets.only(bottom: 10.w),
+  //                   child: TextFormWidget(
+  //                     hint: 'Dose ${i + 1}',
+  //                     borderColor: AppColors.transparent,
+  //                     borderTopLeft: 10.r,
+  //                     borderTopRight: 10.r,
+  //                     borderBottomLeft: 10.r,
+  //                     borderBottomRight: 10.r,
+  //                     label: periodAfterLabels[callback][i],
+  //                     hintSize: 14.60.sp,
+  //                     labelStyle: TextStyle(
+  //                       fontWeight: FontWeight.w400,
+  //                       fontFamily: 'Arial',
+  //                       fontSize: 14.2.sp,
+  //                       color: AppColors.infoGrey,
+  //                     ),
+  //                     fillColor: AppColors.grey,
+  //                     isFilled: true,
+  //                     controller: doseAfterControllers[callback][i],
+  //                     suffixWidget: Padding(
+  //                       padding: EdgeInsets.all(8.w),
+  //                       child: GestureDetector(
+  //                         onTap: () async {
+  //                           final result = await selectDosageTime(
+  //                             context: context,
+  //                           );
+  //                           if (result != null) {
+  //                             doseAfterControllers[callback][i].text =
+  //                                 result["time"]!;
+  //                             periodAfterLabels[callback][i] =
+  //                                 result["period"]!;
 
-                              // ✅ Update dosageMap directly
-                              if (callback < dosageMap.length &&
-                                  i <
-                                      (dosageMap[callback]['doses']?.length ??
-                                          0)) {
-                                dosageMap[callback]['doses'][i]['time'] =
-                                    result["time"]!;
-                                dosageMap[callback]['doses'][i]['period'] =
-                                    result["period"]!; // optional
-                                dosageMap[callback]['doses'][i]['date'] =
-                                    implementTimeDurationWithDate(
-                                      date: date,
-                                      callbackIndex: callback,
-                                    ).substring(0, 10); // optional
-                                dosageMap[callback]['doses'][i]['isoDate'] =
-                                    implementTimeDurationWithDate(
-                                      date: date,
-                                      callbackIndex: callback,
-                                    ); // optional
-                              }
-                              notifyListeners();
-                            }
-                          },
-                          child: TextView(
-                            text: 'Edit',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              fontSize: 13.60.sp,
-                              color: AppColors.fineGrey,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline,
-                              decorationColor: AppColors.fineGrey,
-                            ),
-                          ),
-                        ),
-                      ),
-                      validator: AppValidator.validateString(),
-                    ),
-                  );
-                }),
+  //                             // ✅ Update dosageMap directly
+  //                             if (callback < dosageMap.length &&
+  //                                 i <
+  //                                     (dosageMap[callback]['doses']?.length ??
+  //                                         0)) {
+  //                               dosageMap[callback]['doses'][i]['time'] =
+  //                                   result["time"]!;
+  //                               dosageMap[callback]['doses'][i]['period'] =
+  //                                   result["period"]!; // optional
+  //                               dosageMap[callback]['doses'][i]['date'] =
+  //                                   implementTimeDurationWithDate(
+  //                                     date: date,
+  //                                     callbackIndex: callback,
+  //                                   ).substring(0, 10); // optional
+  //                               dosageMap[callback]['doses'][i]['isoDate'] =
+  //                                   implementTimeDurationWithDate(
+  //                                     date: date,
+  //                                     callbackIndex: callback,
+  //                                   ); // optional
+  //                             }
+  //                             notifyListeners();
+  //                           }
+  //                         },
+  //                         child: TextView(
+  //                           text: 'Edit',
+  //                           textStyle: TextStyle(
+  //                             fontFamily: 'GoogleSans',
+  //                             fontSize: 13.60.sp,
+  //                             color: AppColors.fineGrey,
+  //                             fontWeight: FontWeight.w500,
+  //                             decoration: TextDecoration.underline,
+  //                             decorationColor: AppColors.fineGrey,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     validator: AppValidator.validateString(),
+  //                   ),
+  //                 );
+  //               }),
 
-                SizedBox(height: callback == 0 ? 12.0.h : 0.h),
+  //               SizedBox(height: callback == 0 ? 12.0.h : 0.h),
 
-                // 🔹 Apply to all days
-                if (callback == 0)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextView(
-                        text: 'Apply to all days',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.sp,
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Transform.scale(
-                        scale: isTablet(context) ? 1.5 : 1.1,
-                        child: Checkbox(
-                          value: isCheckedUp,
-                          onChanged: (value) {
-                            if (value != null && value) {
-                              for (
-                                int day = 1;
-                                day < doseAfterControllers.length;
-                                day++
-                              ) {
-                                for (
-                                  int i = 0;
-                                  i < doseAfterControllers[0].length;
-                                  i++
-                                ) {
-                                  doseAfterControllers[day][i].text =
-                                      doseAfterControllers[0][i].text;
-                                  periodAfterLabels[day][i] =
-                                      periodAfterLabels[0][i];
+  //               // 🔹 Apply to all days
+  //               if (callback == 0)
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     TextView(
+  //                       text: 'Apply to all days',
+  //                       textStyle: TextStyle(
+  //                         fontFamily: 'Arial',
+  //                         fontSize: 16.sp,
+  //                         color: AppColors.black,
+  //                         fontWeight: FontWeight.w400,
+  //                       ),
+  //                     ),
+  //                     Transform.scale(
+  //                       scale: isTablet(context) ? 1.5 : 1.1,
+  //                       child: Checkbox(
+  //                         value: isCheckedUp,
+  //                         onChanged: (value) {
+  //                           if (value != null && value) {
+  //                             for (
+  //                               int day = 1;
+  //                               day < doseAfterControllers.length;
+  //                               day++
+  //                             ) {
+  //                               for (
+  //                                 int i = 0;
+  //                                 i < doseAfterControllers[0].length;
+  //                                 i++
+  //                               ) {
+  //                                 doseAfterControllers[day][i].text =
+  //                                     doseAfterControllers[0][i].text;
+  //                                 periodAfterLabels[day][i] =
+  //                                     periodAfterLabels[0][i];
 
-                                  // ✅ Also update dosageMap (important for data persistence)
-                                  if (day < dosageMap.length &&
-                                      i <
-                                          (dosageMap[day]['doses']?.length ??
-                                              0)) {
-                                    dosageMap[day]['doses'][i]['time'] =
-                                        doseAfterControllers[0][i].text;
-                                    dosageMap[day]['doses'][i]['period'] =
-                                        periodAfterLabels[0][i];
-                                    dosageMap[day]['doses'][i]['date'] =
-                                        implementTimeDurationWithDate(
-                                          date: date,
-                                          callbackIndex: day,
-                                        ).substring(0, 10);
-                                    dosageMap[day]['doses'][i]['isoDate'] =
-                                        implementTimeDurationWithDate(
-                                          date: date,
-                                          callbackIndex: day,
-                                        );
-                                  }
-                                }
-                              }
-                            } else {
-                              for (
-                                int day = 1;
-                                day < doseAfterControllers.length;
-                                day++
-                              ) {
-                                for (
-                                  int i = 0;
-                                  i < doseAfterControllers[day].length;
-                                  i++
-                                ) {
-                                  doseAfterControllers[day][i].clear();
-                                  periodAfterLabels[day][i] = '';
-                                  if (day < dosageMap.length &&
-                                      i <
-                                          (dosageMap[day]['doses']?.length ??
-                                              0)) {
-                                    dosageMap[day]['doses'][i]['time'] = '';
-                                    dosageMap[day]['doses'][i]['period'] = '';
-                                    dosageMap[day]['doses'][i]['date'] = '';
-                                    dosageMap[day]['doses'][i]['isoDate'] = '';
-                                  }
-                                }
-                              }
-                            }
-                            isCheckedUp = value ?? false;
-                            notifyListeners();
-                          },
-                          activeColor: AppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      ),
-                    ],
-                  ),
-                SizedBox(height: 12.0.h),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextView(
-                  text: 'Day ${callback + 1}',
-                  textStyle: TextStyle(
-                    fontFamily: 'GoogleSans',
-                    fontSize: 15.20.sp,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    dosageAfterValue = callback;
-                    notifyListeners();
-                    // locator<PharmViewModel>().notifyListeners();
-                  },
-                  icon: Icon(
-                    Icons.keyboard_arrow_down,
-                    color: AppColors.grey1,
-                    size: 24.sp,
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
+  //                                 // ✅ Also update dosageMap (important for data persistence)
+  //                                 if (day < dosageMap.length &&
+  //                                     i <
+  //                                         (dosageMap[day]['doses']?.length ??
+  //                                             0)) {
+  //                                   dosageMap[day]['doses'][i]['time'] =
+  //                                       doseAfterControllers[0][i].text;
+  //                                   dosageMap[day]['doses'][i]['period'] =
+  //                                       periodAfterLabels[0][i];
+  //                                   dosageMap[day]['doses'][i]['date'] =
+  //                                       implementTimeDurationWithDate(
+  //                                         date: date,
+  //                                         callbackIndex: day,
+  //                                       ).substring(0, 10);
+  //                                   dosageMap[day]['doses'][i]['isoDate'] =
+  //                                       implementTimeDurationWithDate(
+  //                                         date: date,
+  //                                         callbackIndex: day,
+  //                                       );
+  //                                 }
+  //                               }
+  //                             }
+  //                           } else {
+  //                             for (
+  //                               int day = 1;
+  //                               day < doseAfterControllers.length;
+  //                               day++
+  //                             ) {
+  //                               for (
+  //                                 int i = 0;
+  //                                 i < doseAfterControllers[day].length;
+  //                                 i++
+  //                               ) {
+  //                                 doseAfterControllers[day][i].clear();
+  //                                 periodAfterLabels[day][i] = '';
+  //                                 if (day < dosageMap.length &&
+  //                                     i <
+  //                                         (dosageMap[day]['doses']?.length ??
+  //                                             0)) {
+  //                                   dosageMap[day]['doses'][i]['time'] = '';
+  //                                   dosageMap[day]['doses'][i]['period'] = '';
+  //                                   dosageMap[day]['doses'][i]['date'] = '';
+  //                                   dosageMap[day]['doses'][i]['isoDate'] = '';
+  //                                 }
+  //                               }
+  //                             }
+  //                           }
+  //                           isCheckedUp = value ?? false;
+  //                           notifyListeners();
+  //                         },
+  //                         activeColor: AppColors.primary,
+  //                         shape: RoundedRectangleBorder(
+  //                           borderRadius: BorderRadius.circular(4),
+  //                         ),
+  //                         visualDensity: VisualDensity.compact,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               SizedBox(height: 12.0.h),
+  //             ],
+  //           )
+  //         : Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               TextView(
+  //                 text: 'Day ${callback + 1}',
+  //                 textStyle: TextStyle(
+  //                   fontFamily: 'GoogleSans',
+  //                   fontSize: 15.20.sp,
+  //                   color: AppColors.black,
+  //                   fontWeight: FontWeight.w500,
+  //                 ),
+  //               ),
+  //               IconButton(
+  //                 onPressed: () {
+  //                   dosageAfterValue = callback;
+  //                   notifyListeners();
+  //                   // locator<PharmViewModel>().notifyListeners();
+  //                 },
+  //                 icon: Icon(
+  //                   Icons.keyboard_arrow_down,
+  //                   color: AppColors.grey1,
+  //                   size: 24.sp,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //   );
+  // }
 
   void showPhoneDialog(
     BuildContext context, {
