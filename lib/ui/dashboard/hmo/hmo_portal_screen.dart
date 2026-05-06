@@ -34,11 +34,19 @@ class _HmoPortalScreenState extends State<HmoPortalScreen> {
       call: () => navigate.navigateTo(Routes.hmoHospitalNetworkPortalScreen),
       image: AppImage.hospital_net,
     ),
-    HMOPortalClass(title: 'Renewals', call: () =>navigate.navigateTo(Routes.hmoRenewalPortalScreen), image: AppImage.renew),
-    HMOPortalClass(title: 'Claims', call: () =>navigate.navigateTo(Routes.hmoClaimsPortalScreen), image: AppImage.light_claims),
+    HMOPortalClass(
+      title: 'Renewals',
+      call: () => navigate.navigateTo(Routes.hmoRenewalPortalScreen),
+      image: AppImage.renew,
+    ),
+    HMOPortalClass(
+      title: 'Claims',
+      call: () => navigate.navigateTo(Routes.hmoClaimsPortalScreen),
+      image: AppImage.light_claims,
+    ),
     HMOPortalClass(
       title: 'Settlements',
-      call: ()=>navigate.navigateTo(Routes.hmoSettlementPortalScreen),
+      call: () => navigate.navigateTo(Routes.hmoSettlementPortalScreen),
       image: AppImage.settlements,
     ),
   ];

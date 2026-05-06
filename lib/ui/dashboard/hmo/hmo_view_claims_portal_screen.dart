@@ -57,7 +57,6 @@ class ViewHmoClaimsPortalScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              
               TextView(
                 text: 'Subscriber',
                 textStyle: TextStyle(
@@ -209,14 +208,14 @@ class ViewHmoClaimsPortalScreen extends StatelessWidget {
               ),
               SizedBox(height: 40.h),
 
-               ButtonWidget(
-                      border: 100.r,
-                      buttonColor: AppColors.primary,
-                      buttonText: 'Review Claim',
-                      color: AppColors.white,
-                      buttonBorderColor: AppColors.primary,
-                      onPressed: () {},
-                    ),
+              ButtonWidget(
+                border: 100.r,
+                buttonColor: AppColors.primary,
+                buttonText: 'Review Claim',
+                color: AppColors.white,
+                buttonBorderColor: AppColors.primary,
+                onPressed: () {},
+              ),
               SizedBox(height: 20.60.h),
             ],
           ),

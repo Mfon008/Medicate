@@ -78,8 +78,7 @@ class NetworkService {
     try {
       switch (method) {
         case RequestMethod.post:
-          response = await 
-          dio!.post(
+          response = await dio!.post(
             path,
             queryParameters: params,
             data: data,

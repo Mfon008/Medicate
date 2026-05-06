@@ -49,8 +49,7 @@ class RefreshInterceptor extends Interceptor with ResponseHandler {
     if (data is Map<String, dynamic>) {
       message = ('first error').toLowerCase();
     } else if (data is Map) {
-      message = ('second   ')
-          .toLowerCase();
+      message = ('second   ').toLowerCase();
     }
     if (message.isEmpty) return false;
     return _tokenExpiredPhrases.any((p) => message.contains(p));
@@ -58,10 +57,7 @@ class RefreshInterceptor extends Interceptor with ResponseHandler {
 
   /// Intercept 2xx responses that contain "Token session expired" so we never pass them to UI.
   @override
-  void onResponse(
-    Response response,
-    ResponseInterceptorHandler handler,
-  ) {
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (_isRefreshEndpoint(response.requestOptions)) {
       return handler.next(response);
     }
@@ -69,13 +65,15 @@ class RefreshInterceptor extends Interceptor with ResponseHandler {
     final status = response.statusCode ?? 0;
     if (status >= 200 && status < 300 && _isTokenExpiredResponse(response)) {
       logger.w(
-          'Token-expired message in success body → treating as 401 for refresh');
+        'Token-expired message in success body → treating as 401 for refresh',
+      );
 
       final syntheticError = DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-          type: DioExceptionType.badResponse,
-          error: 'Token session expired (intercepted from response body)');
+        requestOptions: response.requestOptions,
+        response: response,
+        type: DioExceptionType.badResponse,
+        error: 'Token session expired (intercepted from response body)',
+      );
 
       return handler.reject(syntheticError);
     }
@@ -175,12 +173,14 @@ class RefreshInterceptor extends Interceptor with ResponseHandler {
       if (e is DioException) {
         handler.next(e);
       } else {
-        handler.next(DioException(
-          requestOptions: requestOptions,
-          error: e,
-          stackTrace: st,
-          type: DioExceptionType.unknown,
-        ));
+        handler.next(
+          DioException(
+            requestOptions: requestOptions,
+            error: e,
+            stackTrace: st,
+            type: DioExceptionType.unknown,
+          ),
+        );
       }
     }
   }
@@ -228,7 +228,7 @@ class RefreshInterceptor extends Interceptor with ResponseHandler {
         final status = e.response?.statusCode;
         if (status == 404 || status == 405) {
           response = await authDio.post(
-           UrlConfig.refresh_token,
+            UrlConfig.refresh_token,
             data: {'refreshToken': refreshToken},
             options: options,
           );
@@ -239,7 +239,9 @@ class RefreshInterceptor extends Interceptor with ResponseHandler {
 
       logger.i('Refresh response received: ${response.statusCode}');
 
-      final data = LoginResponseModel.fromJson(response.data as Map<String, dynamic>);
+      final data = LoginResponseModel.fromJson(
+        response.data as Map<String, dynamic>,
+      );
       final newAccess = data.data?.accessToken ?? '';
       final newRefresh = data.data?.refreshToken ?? '';
 

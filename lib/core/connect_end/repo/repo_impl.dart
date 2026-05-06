@@ -451,7 +451,7 @@ class AuthRepoImpl {
       _session.authType = 'everyday_user';
     }
   }
-  
+
   void _chacheRefresh(data) {
     if (data != null) {
       _session.authToken = data.data.accessToken;

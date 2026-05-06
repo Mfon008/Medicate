@@ -74,7 +74,8 @@ class HMOSettingScreen extends StatelessWidget {
                     text: '2FA',
                     bottomLeft: 12,
                     bottomRight: 12,
-                    // onTap: () => navigate.navigateTo(Routes.resetPinPadScreen),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.hMOTwoFactorAuthScreen),
                   ),
                   SizedBox(height: 30.h),
                   TextView(
@@ -153,7 +154,7 @@ class HMOSettingScreen extends StatelessWidget {
                     text: 'Users',
                     topLeft: 12,
                     topRight: 12,
-                    onTap: () => navigate.navigateTo(Routes.usersScreen),
+                    onTap: () => navigate.navigateTo(Routes.hMOUsersScreen),
                   ),
                   SizedBox(height: 1.0.h),
                   profileContainer(
@@ -162,7 +163,7 @@ class HMOSettingScreen extends StatelessWidget {
                     bottomRight: 12,
                     text: 'Roles and Permissions',
                     onTap: () =>
-                        navigate.navigateTo(Routes.rolesAndPermissionScreen),
+                        navigate.navigateTo(Routes.hMORolesAndPermissionScreen),
                   ),
                   SizedBox(height: 30.h),
                 ],

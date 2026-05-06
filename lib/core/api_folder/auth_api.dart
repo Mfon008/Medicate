@@ -239,7 +239,7 @@ class AuthApi {
     try {
       final response = await _service.call(
         UrlConfig.refresh_token,
-        data:{'refreshToken':refreshToken},
+        data: {'refreshToken': refreshToken},
         RequestMethod.post,
       );
       logger.d(response.data);

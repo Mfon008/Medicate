@@ -6,10 +6,17 @@ import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dar
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
+import '../model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart';
+import '../model/create_hmo_plan_reponse_model/create_hmo_plan_reponse_model.dart';
+import '../model/create_hospital_network_entity_model.dart';
+import '../model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
 import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
+import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -22,8 +29,9 @@ import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
-import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
+import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -136,13 +144,30 @@ class HMORepoImpl {
     return response;
   }
 
-  Future<GetPharmacyKycResponseModel> getHMOKyc() async {
+  Future<GetHmoKycResponseModel> getHMOKyc() async {
     final response = await _contract.getHMOKyc();
     return response;
   }
 
-  Future<dynamic> updateHMOKyc(UpdatePharmacyKycEntityModel updateKyc) async {
+  Future<dynamic> updateHMOKyc(UpdateHmoKycEntityModel updateKyc) async {
     final response = await _contract.updateHMOKyc(updateKyc);
+    return response;
+  }
+
+  Future<dynamic> updateThirdHMOKyc(
+    UpdateThirdHmoKycEntityModel updateKyc,
+  ) async {
+    final response = await _contract.updateThirdHMOKyc(updateKyc);
+    return response;
+  }
+
+  Future<GetAllListedPlanTypesResponseModel> getListedPlanTypesForHMO() async {
+    final response = await _contract.getListedPlanTypesForHMO();
+    return response;
+  }
+
+  Future<GetListedPlanTiersResponseModel> getListedPlanTiersForHMO() async {
+    final response = await _contract.getListedPlanTiersForHMO();
     return response;
   }
 
@@ -207,6 +232,33 @@ class HMORepoImpl {
 
   Future<dynamic> uploadProPicture(MultipartFile file) async {
     final response = await _contract.uploadProPicture(file);
+    return response;
+  }
+
+  Future<GetListOfHospitalResponseModel> getListOfHospitals({
+    String? page,
+  }) async {
+    final response = await _contract.getListOfHospitals(page: page);
+    return response;
+  }
+
+  Future<CreateHmoPlanReponseModel> createHmoPlan({CreateHmoPlanEntityModel? createPlan}) async {
+    final response = await _contract.createHmoPlan(createPlan: createPlan);
+    return response;
+  }
+
+  Future<dynamic> selectPlanType({String? id}) async {
+    final response = await _contract.selectPlanType(id:id);
+    return response;
+  }
+
+  Future<dynamic> deSelectPlanType({String? id}) async {
+    final response = await _contract.deSelectPlanType(id:id);
+    return response;
+  }
+  
+  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({CreateHospitalNetworkEntityModel? createHospital}) async {
+    final response = await _contract.createHospitalNetwork(createHospital: createHospital);
     return response;
   }
 

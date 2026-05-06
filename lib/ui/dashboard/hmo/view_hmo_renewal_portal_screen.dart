@@ -160,7 +160,10 @@ class ViewHmoRenewalPortalScreen extends StatelessWidget {
               SizedBox(height: 24.0.h),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical:15.40.w, horizontal: 12.w),
+                padding: EdgeInsets.symmetric(
+                  vertical: 15.40.w,
+                  horizontal: 12.w,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.fadedyellow,
                   borderRadius: BorderRadius.circular(12.r),

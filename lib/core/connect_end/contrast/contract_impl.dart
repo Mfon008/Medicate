@@ -93,7 +93,8 @@ class AuthContractsImpl {
     ResendOtpEntityModel? changePhoneNo,
     String? id,
   }) async => await _api.changePhoneNo(changePhoneNo: changePhoneNo, id: id);
-  Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async => await _api.refreshToken(refreshToken);
+  Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async =>
+      await _api.refreshToken(refreshToken);
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async =>
       await _api.getUserDetails(phoneNo);
   Future<SetPinResponseModel> setPin(SetPinEntityModel setPinEntity) async =>

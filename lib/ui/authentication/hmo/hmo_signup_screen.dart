@@ -31,6 +31,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
   TextEditingController lastNameController = TextEditingController();
   TextEditingController designationController = TextEditingController();
   TextEditingController busEmailController = TextEditingController();
+  TextEditingController busAddressController = TextEditingController();
 
   bool isChecked = false;
   bool isPhone = false;
@@ -185,7 +186,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(
+                              final result = AppValidator.validatePhoneNew()(
                                 value,
                               );
                               if (result != null) {
@@ -202,7 +203,6 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     ],
                   ),
                   SizedBox(height: 16.h),
-
                   TextFormWidget(
                     hint: 'HMO name',
                     borderColor: AppColors.transparent,
@@ -308,7 +308,27 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                     validator: AppValidator.validateEmail(),
                   ),
                   SizedBox(height: 16.h),
-
+                  TextFormWidget(
+                    hint: 'Business Address',
+                    borderColor: AppColors.transparent,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    label: 'Enter business address',
+                    hintSize: isTablet(context) ? 6.82.sp : 14.0.sp,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Arial',
+                      fontSize: 14.sp,
+                      color: AppColors.infoGrey,
+                    ),
+                    fillColor: AppColors.grey,
+                    isFilled: true,
+                    controller: busAddressController,
+                    validator: AppValidator.validateString(),
+                  ),
+                  SizedBox(height: 16.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -382,13 +402,16 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
                               model.signUpHMO(
                                 context,
                                 signUpEntity: HmoSignUpEntityModel(
-                                  phone: '+234${phoneController.text.trim()}',
+                                  phone:
+                                      '+234${model.returnPhoneNoStructure(phoneController.text.trim())}',
                                   hmoName: hmoNameController.text.trim(),
                                   firstName: firstNameController.text.trim(),
                                   lastName: lastNameController.text.trim(),
                                   designation: designationController.text
                                       .trim(),
                                   businessEmail: busEmailController.text.trim(),
+                                  businessAddress: busAddressController.text
+                                      .trim(),
                                 ),
                               );
                             }
@@ -493,11 +516,7 @@ class _HMOSignUpScreenState extends State<HMOSignUpScreen> {
     );
   }
 
-  bool isPassed({
-    required bool isPhone,
-    // required bool isName,
-    required bool isChecked,
-  }) {
+  bool isPassed({required bool isPhone, required bool isChecked}) {
     if (isPhone == true && isChecked == true) {
       return true;
     }

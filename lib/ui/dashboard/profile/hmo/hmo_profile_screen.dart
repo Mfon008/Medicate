@@ -24,7 +24,7 @@ class HMOProfileScreen extends StatelessWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await model.getTenant(context);
           await model.getHMOKyc(context);
-          model.hmoKycStatus();
+          // model.hmoKycStatus();
           model.getUserDetails(
             context: context,
             phoneNo:

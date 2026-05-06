@@ -9,6 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:medicate_app/core/connect_end/model/create_hospital_network_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
 import 'package:pinput/pinput.dart';
@@ -33,11 +35,16 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
+import '../model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart';
+import '../model/create_hmo_plan_reponse_model/create_hmo_plan_reponse_model.dart';
 import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
-import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
+import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/kyc_document.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
@@ -51,11 +58,12 @@ import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
-import '../model/update_hmo_profile_entity_model/bank_detail.dart';
+import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
 import '../model/update_hmo_profile_entity_model/logo.dart';
 import '../model/update_pharmacy_kyc_entity_model/document.dart';
-import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_role_entity_model.dart';
+import '../model/update_third_hmo_kyc_entity_model/application_form.dart';
+import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -64,6 +72,16 @@ import '../model/verify_phone_entity_model.dart';
 import '../repo/hmo_repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
     as ph;
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/logo.dart'
+    as lg;
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/cac_certificate.dart'
+    as cc;
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/hmo_accreditation.dart'
+    as ac;
+import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/tax_id_certificate.dart'
+    as tx;
+import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
+    as fl;
 
 String startDateIso = '';
 
@@ -173,11 +191,19 @@ class HMOViewModel extends BaseViewModel {
   GetCreatedUserResponseModel? get getCreatedUserResponseModel =>
       _getCreatedUserResponseModel;
 
+  GetAllListedPlanTypesResponseModel? _getAllListedPlanTypesResponseModel;
+  GetAllListedPlanTypesResponseModel? get getAllListedPlanTypesResponseModel =>
+      _getAllListedPlanTypesResponseModel;
+  GetListOfHospitalResponseModel? _getAllOfHospitalsResponseModel;
+  GetListOfHospitalResponseModel? get getAllOfHospitalsResponseModel =>
+      _getAllOfHospitalsResponseModel;
+  GetListedPlanTiersResponseModel? _getAllListedPlanTiersResponseModel;
+  GetListedPlanTiersResponseModel? get getAllListedPlanTiersResponseModel =>
+      _getAllListedPlanTiersResponseModel;
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
-  GetPharmacyKycResponseModel? get getPharmacyKycResponseModel =>
-      _getPharmacyKycResponseModel;
-  GetPharmacyKycResponseModel? _getPharmacyKycResponseModel;
+  GetHmoKycResponseModel? get getHmoKycResponseModel => _getHmoKycResponseModel;
+  GetHmoKycResponseModel? _getHmoKycResponseModel;
   SetPinPharmResponseModel? _setPinPharmResponseModel;
   SetPinPharmResponseModel? get setPinPharmResponseModel =>
       _setPinPharmResponseModel;
@@ -199,6 +225,12 @@ class HMOViewModel extends BaseViewModel {
   UploadImageResponseModel? _uploadImageResponseModelTIN;
   UploadImageResponseModel? get uploadImageResponseModelTIN =>
       _uploadImageResponseModelTIN;
+  CreateHmoPlanReponseModel? _createHmoPlanReponseModel;
+  CreateHmoPlanReponseModel? get createHmoPlanReponseModel =>
+      _createHmoPlanReponseModel;
+  CreateHospitalNetworkResponseModel? _createHospitalNetworkResponseModel;
+  CreateHospitalNetworkResponseModel? get createHospitalNetworkResponseModel =>
+      _createHospitalNetworkResponseModel;
 
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
@@ -227,6 +259,15 @@ class HMOViewModel extends BaseViewModel {
   TextEditingController stateController = TextEditingController();
   TextEditingController lgaController = TextEditingController();
   String? userRoleControllerId;
+
+  List<TextEditingController> benefitController = [TextEditingController()];
+  List<TextEditingController> limitController = [TextEditingController()];
+  TextEditingController planTypeController = TextEditingController();
+  TextEditingController renewalPriceController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
+  TextEditingController planTierController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
 
   HMOViewModel({this.context});
 
@@ -271,6 +312,26 @@ class HMOViewModel extends BaseViewModel {
   KycDocument? docKycForm;
   KycDocument? docKycPlan;
   KycDocument? docKycAss;
+
+  int page = 1;
+
+  String returnPhoneNoStructureAdd234After(String phoneNo) {
+    if (phoneNo.startsWith('0')) {
+      phoneNo = '+234${phoneNo.substring(1)}';
+    } else {
+      phoneNo = '+234$phoneNo';
+    }
+    notifyListeners();
+    return phoneNo;
+  }
+
+  String returnPhoneNoStructure(String phoneNo) {
+    if (phoneNo.substring(0, 1).contains('0')) {
+      phoneNo = phoneNo.substring(1);
+    }
+    notifyListeners();
+    return phoneNo;
+  }
 
   void pickImage(BuildContext context) {
     try {
@@ -1443,7 +1504,7 @@ class HMOViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      AppUtils.snackbar(context, message: 'Please try again..', error: true);
     }
     notifyListeners();
   }
@@ -1518,7 +1579,7 @@ class HMOViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      AppUtils.snackbar(context, message: 'Please try again.', error: true);
     }
     notifyListeners();
   }
@@ -1534,7 +1595,7 @@ class HMOViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      AppUtils.snackbar(context, message: 'Please try again.', error: true);
     }
     notifyListeners();
   }
@@ -1624,10 +1685,33 @@ class HMOViewModel extends BaseViewModel {
   Future<void> getHMOKyc(context) async {
     try {
       _isLoading = true;
-      _getPharmacyKycResponseModel = await runBusyFuture(
+      _getHmoKycResponseModel = await runBusyFuture(
         repositoryImply.getHMOKyc(),
         throwException: true,
       );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: 'Please try again.', error: true);
+    }
+    notifyListeners();
+  }
+
+  void updateHMOKyc(context, {UpdateHmoKycEntityModel? updateKyc}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHMOKyc(updateKyc!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 201) {
+        AppUtils.snackbar(context, message: v['message']);
+        getHMOKyc(context);
+        kycDocumentsList.clear();
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -1637,20 +1721,160 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void updateHMOKyc(context, {UpdatePharmacyKycEntityModel? updateKyc}) async {
+  void updateThirdHMOKyc(
+    context, {
+    UpdateThirdHmoKycEntityModel? updateKyc,
+  }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.updateHMOKyc(updateKyc!),
+        repositoryImply.updateThirdHMOKyc(updateKyc!),
         throwException: true,
       );
-      if (v['statusCode'] == 200) {
+      if (v['statusCode'] == 201) {
         AppUtils.snackbar(context, message: v['message']);
         getHMOKyc(context);
         kycDocumentsList.clear();
       } else {
         AppUtils.snackbar(context, message: v['message'], error: true);
       }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getListedPlanTypesForHMO() async {
+    try {
+      _isLoading = true;
+      _getAllListedPlanTypesResponseModel = await runBusyFuture(
+        repositoryImply.getListedPlanTypesForHMO(),
+        throwException: true,
+      );
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getListedPlanTiersForHMO() async {
+    try {
+      _isLoading = true;
+      _getAllListedPlanTiersResponseModel = await runBusyFuture(
+        repositoryImply.getListedPlanTiersForHMO(),
+        throwException: true,
+      );
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getListOfHospital() async {
+    try {
+      _isLoading = true;
+      _getAllOfHospitalsResponseModel = await runBusyFuture(
+        repositoryImply.getListOfHospitals(page: page.toString()),
+        throwException: true,
+      );
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> createHospitalNetwork({
+    context,
+    CreateHospitalNetworkEntityModel? createHospital
+  }) async {
+    try {
+      _isLoading = true;
+      _createHospitalNetworkResponseModel = await runBusyFuture(
+        repositoryImply.createHospitalNetwork(createHospital: createHospital),
+        throwException: true,
+      );
+      if (_createHospitalNetworkResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createHospitalNetworkResponseModel?.message ?? '',
+        );
+        navigate.navigateTo(Routes.hMODashboard,arguments: HMODashboardArguments(index: 1));
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> createHmoPlan({
+    context,
+    CreateHmoPlanEntityModel? createPlan,
+  }) async {
+    try {
+      _isLoading = true;
+      _createHmoPlanReponseModel = await runBusyFuture(
+        repositoryImply.createHmoPlan(createPlan: createPlan),
+        throwException: true,
+      );
+      if (_createHmoPlanReponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createHmoPlanReponseModel?.message ?? '',
+        );
+        navigate.navigateTo(Routes.hMODashboard,arguments: HMODashboardArguments(index: 1));
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> selectPlanType({context, String? id}) async {
+    try {
+      _isLoading = true;
+      await runBusyFuture(
+        repositoryImply.selectPlanType(id: id),
+        throwException: true,
+      );
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> deSelectPlanType({context, String? id}) async {
+    try {
+      _isLoading = true;
+      await runBusyFuture(
+        repositoryImply.deSelectPlanType(id: id),
+        throwException: true,
+      );
+
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -2413,7 +2637,7 @@ class HMOViewModel extends BaseViewModel {
           _uploadImageResponseModelLogo = _uploadImageResponseModel;
           kycDocumentsList.add(
             Document(
-              documentType: 'HMOLOGO',
+              documentType: 'HMO_LOGO',
               file: ph.File(
                 width: _uploadImageResponseModelLogo!.data!.width,
                 height: _uploadImageResponseModelLogo!.data!.height,
@@ -2452,7 +2676,7 @@ class HMOViewModel extends BaseViewModel {
           _uploadImageResponseModelCAC = _uploadImageResponseModel;
           kycDocumentsList.add(
             Document(
-              documentType: 'CACREGISTRATIONCERTIFICATE',
+              documentType: 'CAC_REGISTRATION_CERTIFICATE',
               file: ph.File(
                 width: _uploadImageResponseModelCAC!.data!.width,
                 height: _uploadImageResponseModelCAC!.data!.height,
@@ -2492,7 +2716,7 @@ class HMOViewModel extends BaseViewModel {
           _uploadImageResponseModel = null;
           kycDocumentsList.add(
             Document(
-              documentType: 'TAXIDENTIFICATIONNUMBER',
+              documentType: 'TAX_IDENTIFICATION_NUMBER',
               file: ph.File(
                 width: _uploadImageResponseModelTIN!.data!.width,
                 height: _uploadImageResponseModelTIN!.data!.height,
@@ -2531,7 +2755,7 @@ class HMOViewModel extends BaseViewModel {
 
           kycDocumentsList.add(
             Document(
-              documentType: 'NHISLICENSE',
+              documentType: 'NHIS_LICENSE',
               file: ph.File(
                 width: _uploadImageResponseModelNHISLicense!.data!.width,
                 height: _uploadImageResponseModelNHISLicense!.data!.height,
@@ -2685,73 +2909,73 @@ class HMOViewModel extends BaseViewModel {
     return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
   }
 
-  hmoKycStatus() {
-    if (getPharmacyKycResponseModel!.data != {} &&
-        getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
-          docKycLogo = doc;
-          return doc.documentType == 'HMOLOGO';
-        })) {
-      logoStatus = docKycLogo!.status!;
-    }
-    if (getPharmacyKycResponseModel!.data != {} &&
-        getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
-          docKycCac = doc;
-          return doc.documentType == 'CACREGISTRATIONCERTIFICATE';
-        })) {
-      cacStatus = docKycCac!.status!;
-    }
-    if (getPharmacyKycResponseModel != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
-          docKycLicense = doc;
-          return doc.documentType == 'NHISLICENSE';
-        })) {
-      licenseStatus = docKycLicense!.status!;
-    }
-    if (getPharmacyKycResponseModel != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
-          docKycTin = doc;
-          return doc.documentType == 'TAXIDENTIFICATIONNUMBER';
-        })) {
-      tinStatus = docKycTin!.status!;
-    }
-    if (getPharmacyKycResponseModel != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
-          docKycForm = doc;
-          return doc.documentType == 'APPLICATION_FORM';
-        })) {
-      formStatus = docKycForm!.status!;
-    }
-    if (getPharmacyKycResponseModel != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
-          docKycPlan = doc;
-          return doc.documentType == 'AVAILABLE_PLAN';
-        })) {
-      planStatus = docKycPlan!.status!;
-    }
-    if (getPharmacyKycResponseModel != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments != null &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
-        getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
-          docKycAss = doc;
-          return doc.documentType == 'ASSOCIATED_CLINIC';
-        })) {
-      assStatus = docKycAss!.status!;
-      // }
-    }
-    notifyListeners();
-  }
+  // hmoKycStatus() {
+  //   if (getHmoKycResponseModel!.data != {} &&
+  //       getHmoKycResponseModel!.data!.kycDocuments != null &&
+  //       getHmoKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
+  //         docKycLogo = doc;
+  //         return doc.documentType == 'HMOLOGO';
+  //       })) {
+  //     logoStatus = docKycLogo!.status!;
+  //   }
+  //   if (getPharmacyKycResponseModel!.data != {} &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
+  //         docKycCac = doc;
+  //         return doc.documentType == 'CACREGISTRATIONCERTIFICATE';
+  //       })) {
+  //     cacStatus = docKycCac!.status!;
+  //   }
+  //   if (getPharmacyKycResponseModel != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
+  //         docKycLicense = doc;
+  //         return doc.documentType == 'NHISLICENSE';
+  //       })) {
+  //     licenseStatus = docKycLicense!.status!;
+  //   }
+  //   if (getPharmacyKycResponseModel != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
+  //         docKycTin = doc;
+  //         return doc.documentType == 'TAXIDENTIFICATIONNUMBER';
+  //       })) {
+  //     tinStatus = docKycTin!.status!;
+  //   }
+  //   if (getPharmacyKycResponseModel != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
+  //         docKycForm = doc;
+  //         return doc.documentType == 'APPLICATION_FORM';
+  //       })) {
+  //     formStatus = docKycForm!.status!;
+  //   }
+  //   if (getPharmacyKycResponseModel != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
+  //         docKycPlan = doc;
+  //         return doc.documentType == 'AVAILABLE_PLAN';
+  //       })) {
+  //     planStatus = docKycPlan!.status!;
+  //   }
+  //   if (getPharmacyKycResponseModel != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments != null &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.isNotEmpty &&
+  //       getPharmacyKycResponseModel!.data!.kycDocuments!.any((doc) {
+  //         docKycAss = doc;
+  //         return doc.documentType == 'ASSOCIATED_CLINIC';
+  //       })) {
+  //     assStatus = docKycAss!.status!;
+  //     // }
+  //   }
+  //   notifyListeners();
+  // }
 
   Color getKycStatusColor({logo, cac, license, tin}) {
     if (logo == 'PENDING' ||
@@ -3789,8 +4013,29 @@ class HMOViewModel extends BaseViewModel {
                                   imageTIN != null) {
                                 updateHMOKyc(
                                   contxxt,
-                                  updateKyc: UpdatePharmacyKycEntityModel(
-                                    documents: kycDocumentsList,
+                                  updateKyc: UpdateHmoKycEntityModel(
+                                    logo: lg.Logo.fromJson(
+                                      fl.File.fromJson(
+                                        kycDocumentsList[0].file!.toJson(),
+                                      ).toJson(),
+                                    ),
+                                    cacCertificate: cc.CacCertificate.fromJson(
+                                      fl.File.fromJson(
+                                        kycDocumentsList[1].file!.toJson(),
+                                      ).toJson(),
+                                    ),
+                                    hmoAccreditation:
+                                        ac.HmoAccreditation.fromJson(
+                                          fl.File.fromJson(
+                                            kycDocumentsList[2].file!.toJson(),
+                                          ).toJson(),
+                                        ),
+                                    taxIdCertificate:
+                                        tx.TaxIdCertificate.fromJson(
+                                          fl.File.fromJson(
+                                            kycDocumentsList[3].file!.toJson(),
+                                          ).toJson(),
+                                        ),
                                   ),
                                 );
                               } else {
@@ -4522,69 +4767,84 @@ class HMOViewModel extends BaseViewModel {
                                     imageAppForm != null &&
                                     imageAss != null &&
                                     imagePlan != null) {
-                                  await updateHMO(
+                                  updateThirdHMOKyc(
                                     contxxt,
-                                    update: UpdateHmoProfileEntityModel(
-                                      logo: null,
-                                      name:
-                                          getTetantResponseModel!.data!.name ??
-                                          '',
-                                      businessAddress:
-                                          getTetantResponseModel
-                                              ?.data
-                                              ?.businessAddress ??
-                                          '',
-                                      businessEmail:
-                                          getTetantResponseModel
-                                              ?.data
-                                              ?.businessEmail ??
-                                          "",
-                                      country:
-                                          getTetantResponseModel
-                                              ?.data
-                                              ?.country ??
-                                          '',
-                                      state:
-                                          getTetantResponseModel?.data?.state ??
-                                          "",
-                                      lga:
-                                          getTetantResponseModel?.data?.lga ??
-                                          '',
-                                      contactPersonFirstName:
-                                          getTetantResponseModel
-                                              ?.data
-                                              ?.contactPersonFirstName ??
-                                          '',
-                                      contactPersonLastName:
-                                          getTetantResponseModel
-                                              ?.data
-                                              ?.contactPersonLastName ??
-                                          '',
-                                      contactPersonDesignation:
-                                          getTetantResponseModel
-                                              ?.data
-                                              ?.contactPersonDesignation ??
-                                          '',
-                                      bankDetails: [
-                                        BankDetail(
-                                          bankName: bankNameController.text
-                                              .trim(),
-                                          accountName: accountNameController
-                                              .text
-                                              .trim(),
-                                          accountNumber: accountNumberController
-                                              .text
-                                              .trim(),
-                                        ),
-                                      ],
+                                    updateKyc: UpdateThirdHmoKycEntityModel(
+                                      bankName: bankNameController.text.trim(),
+                                      accountName: accountNameController.text,
+                                      accountNumber:
+                                          accountNumberController.text,
+                                      applicationForm: ApplicationForm.fromJson(
+                                        fl.File.fromJson(
+                                          kycDocumentsList[0].file!.toJson(),
+                                        ).toJson(),
+                                      ),
                                     ),
                                   );
-                                  updateHMOKyc(
-                                    contxxt,
-                                    updateKyc: UpdatePharmacyKycEntityModel(
-                                      documents: kycDocumentsList,
-                                    ),
-                                  );
+
+                                  // await updateHMO(
+                                  //   contxxt,
+                                  //   update: UpdateHmoProfileEntityModel(
+                                  //     logo: null,
+                                  //     name:
+                                  //         getTetantResponseModel!.data!.name ??
+                                  //         '',
+                                  //     businessAddress:
+                                  //         getTetantResponseModel
+                                  //             ?.data
+                                  //             ?.businessAddress ??
+                                  //         '',
+                                  //     businessEmail:
+                                  //         getTetantResponseModel
+                                  //             ?.data
+                                  //             ?.businessEmail ??
+                                  //         "",
+                                  //     country:
+                                  //         getTetantResponseModel
+                                  //             ?.data
+                                  //             ?.country ??
+                                  //         '',
+                                  //     state:
+                                  //         getTetantResponseModel?.data?.state ??
+                                  //         "",
+                                  //     lga:
+                                  //         getTetantResponseModel?.data?.lga ??
+                                  //         '',
+                                  //     contactPersonFirstName:
+                                  //         getTetantResponseModel
+                                  //             ?.data
+                                  //             ?.contactPersonFirstName ??
+                                  //         '',
+                                  //     contactPersonLastName:
+                                  //         getTetantResponseModel
+                                  //             ?.data
+                                  //             ?.contactPersonLastName ??
+                                  //         '',
+                                  //     contactPersonDesignation:
+                                  //         getTetantResponseModel
+                                  //             ?.data
+                                  //             ?.contactPersonDesignation ??
+                                  //         '',
+                                  //     bankDetails: [
+                                  //       BankDetail(
+                                  //         bankName: bankNameController.text
+                                  //             .trim(),
+                                  //         accountName: accountNameController
+                                  //             .text
+                                  //             .trim(),
+                                  //         accountNumber: accountNumberController
+                                  //             .text
+                                  //             .trim(),
+                                  //       ),
+                                  //     ],
+                                  //   ),updateThirdHMOKyc
+                                  // );
+                                  // // updateHMOKyc(
+                                  //   contxxt,
+                                  //   updateKyc: UpdatePharmacyKycEntityModel(
+                                  //     documents: kycDocumentsList,
+                                  //   ),
+                                  // );
                                 } else {
                                   AppUtils.snackbar(
                                     context,

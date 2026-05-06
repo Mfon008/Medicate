@@ -127,7 +127,7 @@ class HmoClaimsPortalScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(width: 10.w,),
+                SizedBox(width: 10.w),
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.all(2.w),
@@ -143,7 +143,12 @@ class HmoClaimsPortalScreen extends StatelessWidget {
                           color: AppColors.white,
                           weight: 10,
                         ),
-                        onPressed: () =>navigate.navigateTo(Routes.createClaimsPortalScreen,arguments: CreateClaimsPortalScreenArguments(isReview: false)),
+                        onPressed: () => navigate.navigateTo(
+                          Routes.createClaimsPortalScreen,
+                          arguments: CreateClaimsPortalScreenArguments(
+                            isReview: false,
+                          ),
+                        ),
                         splashRadius: 28,
                       ),
                     ),
@@ -299,7 +304,8 @@ class HmoClaimsPortalScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                   GestureDetector(
-                    onTap: () => navigate.navigateTo(Routes.viewHmoClaimsPortalScreen),
+                    onTap: () =>
+                        navigate.navigateTo(Routes.viewHmoClaimsPortalScreen),
                     child: Container(
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(

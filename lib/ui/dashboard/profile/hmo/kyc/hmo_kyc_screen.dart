@@ -41,7 +41,7 @@ class HMOKycScreen extends StatelessWidget {
             WidgetsBinding.instance.addPostFrameCallback((_) async {
               await model.getTenant(context);
               await model.getHMOKyc(context);
-              model.hmoKycStatus();
+              // model.hmoKycStatus();
               model.bankNameController.text =
                   model
                       .getTetantResponseModel

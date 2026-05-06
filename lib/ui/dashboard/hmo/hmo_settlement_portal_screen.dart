@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/core_folder/app/app.router.dart';
@@ -144,7 +143,9 @@ class HmoSettlementPortalScreen extends StatelessWidget {
                           color: AppColors.white,
                           weight: 10,
                         ),
-                        onPressed: () =>navigate.navigateTo(Routes.createSettlementsPortalScreen),
+                        onPressed: () => navigate.navigateTo(
+                          Routes.createSettlementsPortalScreen,
+                        ),
                         splashRadius: 28,
                       ),
                     ),
@@ -276,7 +277,9 @@ class HmoSettlementPortalScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.h),
                   GestureDetector(
-                    onTap: () =>navigate.navigateTo(Routes.viewHmoSettlementsPortalScreen),
+                    onTap: () => navigate.navigateTo(
+                      Routes.viewHmoSettlementsPortalScreen,
+                    ),
                     child: Container(
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(
@@ -291,27 +294,28 @@ class HmoSettlementPortalScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 12.w,
-                                  vertical: 2.2.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(22.r),
-                                  border: Border.all(color: AppColors.yellow),
-                                ),
-                                child: TextView(
-                                  text: 'Pending',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 13.2.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.yellow,
-                                  ),
-                                ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 2.2.h,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(22.r),
+                              border: Border.all(color: AppColors.yellow),
+                            ),
+                            child: TextView(
+                              text: 'Pending',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 13.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.yellow,
                               ),
+                            ),
+                          ),
                           SizedBox(height: 15.10.h),
                           TextView(
-                            text: 'Lagos State University Teaching Hospital (LASUTH)',
+                            text:
+                                'Lagos State University Teaching Hospital (LASUTH)',
                             textStyle: TextStyle(
                               fontFamily: 'GoogleSans',
                               fontSize: 16.52.sp,

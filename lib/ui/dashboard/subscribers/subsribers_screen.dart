@@ -95,7 +95,10 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                         child: GestureDetector(
                           onTap: () {
                             model.isSubStatus = 'subscribers';
-                            model.getMySubscriptionDetails(context, status: 'All');
+                            model.getMySubscriptionDetails(
+                              context,
+                              status: 'All',
+                            );
                             model.notifyListeners();
                           },
                           child: Container(

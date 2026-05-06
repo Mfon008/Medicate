@@ -2175,7 +2175,7 @@ class PharmViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      AppUtils.snackbar(context, message: 'Please try again.', error: true);
     }
     notifyListeners();
   }

@@ -1,12 +1,19 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_hmo_plan_reponse_model/create_hmo_plan_reponse_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_hospital_network_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
 
 import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
-import '../connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../connect_end/model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../connect_end/model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../connect_end/model/get_roles_response_model/get_roles_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -19,8 +26,9 @@ import '../connect_end/model/roles_entity_model.dart';
 import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
-import '../connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
+import '../connect_end/model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
 import '../connect_end/model/update_role_entity_model.dart';
+import '../connect_end/model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../connect_end/model/update_user_entity_model.dart';
 import '../connect_end/model/upload_image_response_model/upload_image_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
@@ -289,29 +297,74 @@ class HMOApi {
     }
   }
 
-  Future<GetPharmacyKycResponseModel> getHMOKyc() async {
+  Future<GetHmoKycResponseModel> getHMOKyc() async {
     try {
       final response = await _service.call(
-        UrlConfig.get_kyc,
+        UrlConfig.get_hmo_kyc,
         RequestMethod.get,
       );
       logger.d(response.data);
-      return GetPharmacyKycResponseModel.fromJson(response.data);
+      return GetHmoKycResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<dynamic> updateHMOKyc(UpdatePharmacyKycEntityModel updateKyc) async {
+  Future<dynamic> updateHMOKyc(UpdateHmoKycEntityModel updateKyc) async {
     try {
       final response = await _service.call(
-        UrlConfig.update_pharm_kyc,
-        RequestMethod.patch,
+        UrlConfig.update_hmo_kyc_two,
+        RequestMethod.post,
         data: updateKyc.toJson(),
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateThirdHMOKyc(
+    UpdateThirdHmoKycEntityModel updateKyc,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.update_third_hmo_kyc_two,
+        RequestMethod.post,
+        data: updateKyc.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetAllListedPlanTypesResponseModel> getListedPlanTypesForHMO() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.listed_plan_types_hmo,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetAllListedPlanTypesResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetListedPlanTiersResponseModel> getListedPlanTiersForHMO() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.listed_plan_tiers_hmo,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetListedPlanTiersResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -472,6 +525,80 @@ class HMOApi {
         UrlConfig.upload_pro_picture,
         RequestMethod.patch,
         data: FormData.fromMap({'file': file}),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<GetListOfHospitalResponseModel> getListOfHospitals({String? page}) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_hospital_by_id,
+        RequestMethod.get,
+        queryParams: {'page':page,'limit':'10'},
+      );
+      logger.d(response.data);
+      return GetListOfHospitalResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({CreateHospitalNetworkEntityModel? createHospital}) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_hospital_by_id,
+        RequestMethod.post,
+        data:createHospital?.toJson(),
+      );
+      logger.d(response.data);
+      return CreateHospitalNetworkResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<CreateHmoPlanReponseModel> createHmoPlan({CreateHmoPlanEntityModel? createPlan}) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_user_hmos_plan,
+        RequestMethod.post,
+        data:createPlan?.toJson(),
+      );
+      logger.d(response.data);
+      return CreateHmoPlanReponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<dynamic> selectPlanType({String? id}) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.selects_plan_type,
+        RequestMethod.post,
+        data:{'planTypeId':id},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deSelectPlanType({String? id}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.selects_plan_type}/$id',
+        RequestMethod.delete,
       );
       logger.d(response.data);
       return response.data;

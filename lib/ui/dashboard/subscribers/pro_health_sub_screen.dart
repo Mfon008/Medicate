@@ -99,6 +99,11 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                     child: GestureDetector(
                                       onTap: () {
                                         model.isProSubStatus = 'Individual';
+                                        if (model.getHmosPlanResponseModel !=
+                                            null) {
+                                          model.getHmosPlanResponseModel!.data!
+                                              .clear();
+                                        }
                                         model.getHMOActivePlanByType(
                                           context,
                                           hmoId: widget.hmoId,
@@ -140,6 +145,11 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                     child: GestureDetector(
                                       onTap: () {
                                         model.isProSubStatus = 'Family';
+                                        if (model.getHmosPlanResponseModel !=
+                                            null) {
+                                          model.getHmosPlanResponseModel!.data!
+                                              .clear();
+                                        }
                                         model.getHMOActivePlanByType(
                                           context,
                                           hmoId: widget.hmoId,
@@ -180,6 +190,11 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                     child: GestureDetector(
                                       onTap: () {
                                         model.isProSubStatus = 'Corporate';
+                                        if (model.getHmosPlanResponseModel !=
+                                            null) {
+                                          model.getHmosPlanResponseModel!.data!
+                                              .clear();
+                                        }
                                         model.getHMOActivePlanByType(
                                           context,
                                           hmoId: widget.hmoId,

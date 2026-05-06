@@ -52,7 +52,13 @@ class UrlConfig {
   static const String initiate_payment = 'payment/initiate';
   static const String state = 'countries/states/q';
   static const String get_kyc = 'auth/get-kyc';
+  static const String get_hmo_kyc = 'auth/hmo/kyc/status';
   static const String update_pharm_kyc = 'auth/upload-kyc';
+  static const String update_hmo_kyc_two = 'auth/hmo/kyc/level-2/submit';
+  static const String update_third_hmo_kyc_two = 'auth/hmo/kyc/level-3/submit';
+  static const String listed_plan_types_hmo =
+      'hmo/settings/plan-types/available';
+  static const String listed_plan_tiers_hmo = 'hmo/settings/plan-tiers';
 
   static const String get_user_details_by_tenant =
       'auth/get-user-details-by-tenant';
@@ -64,6 +70,7 @@ class UrlConfig {
   static const String pay_with_wallet = '/payment/pay-with-wallet';
   static const String get_user_hmos = 'hmos';
   static const String get_user_hmos_plan = 'hmo/plans';
+  static const String selects_plan_type = 'hmo/settings/plan-types/select';
   static const String get_user_hmos_application = 'hmo/applications';
   static const String start_application = 'hmo/applications/start';
   static const String save_first_step = 'hmo/applications/save-step';

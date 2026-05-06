@@ -87,7 +87,7 @@ class _AcceleratePaymentViewHmoPlanState
 
       // if (isTransationMade==true) {
       //   print('isTransationMade:::::$isTransationMade');
-      //   Navigator.pop(context, 5); 
+      //   Navigator.pop(context, 5);
       // }
 
       // return success

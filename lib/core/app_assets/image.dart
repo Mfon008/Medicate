@@ -13,6 +13,7 @@ class AppImage {
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';
+  static const String two_fa_ui = 'assets/svgs/2fa_ui.svg';
   static const String users = 'assets/svgs/users.svg';
   static const String active_patients = 'assets/svgs/active_patients.svg';
   static const String month_order = 'assets/svgs/month_order.svg';

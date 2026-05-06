@@ -61,6 +61,9 @@ import '../../../ui/dashboard/hmo/view_hmo_renewal_portal_screen.dart';
 import '../../../ui/dashboard/hmo/view_hmo_subscribers_portal_screen.dart';
 import '../../../ui/dashboard/hmo/view_settlement_portal_screen.dart';
 import '../../../ui/dashboard/home_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_first_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_second_screen.dart';
 import '../../../ui/dashboard/subscribers/application_form/application_form_screen.dart';
 import '../../../ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart';
 import '../../../ui/dashboard/subscribers/family_form/family_form_screen.dart';
@@ -242,6 +245,9 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: CreateSettlementsPortalScreen),
     MaterialRoute(page: ViewHmoSettlementsPortalScreen),
     MaterialRoute(page: HmoSettlementPortalScreen),
+    MaterialRoute(page: HMOTwoFactorAuthScreen),
+    MaterialRoute(page: HmoTwoFactorAuthVerificationSecondScreen),
+    MaterialRoute(page: HmoTwoFactorAuthVerificationFirstScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,
