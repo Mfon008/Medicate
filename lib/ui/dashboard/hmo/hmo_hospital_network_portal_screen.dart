@@ -349,12 +349,16 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                           ),
                                         ),
                                         child: TextView(
-                                          text: e.isActive!? 'Active':'Not Active',
+                                          text: e.isActive!
+                                              ? 'Active'
+                                              : 'Not Active',
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
                                             fontSize: 14.2.sp,
                                             fontWeight: FontWeight.w500,
-                                            color:  e.isActive!?AppColors.app_green:AppColors.appRed,
+                                            color: e.isActive!
+                                                ? AppColors.app_green
+                                                : AppColors.appRed,
                                           ),
                                         ),
                                       ),
@@ -458,8 +462,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 15.10.h),
                                   TextView(
-                                    text:
-                                        '${e.name}',
+                                    text: '${e.name}',
                                     textStyle: TextStyle(
                                       fontFamily: 'GoogleSans',
                                       fontSize: 16.52.sp,
@@ -481,11 +484,14 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                             color: AppColors.infoGrey,
                                           ),
                                           SizedBox(width: 10.w),
-                                          SizedBox(width: 250.w,
+                                          SizedBox(
+                                            width: 250.w,
                                             child: TextView(
-                                              text: '${e.address} ${e.city}, ${e.state}',
+                                              text:
+                                                  '${e.address} ${e.city}, ${e.state}',
                                               maxLines: 4,
-                                              textOverflow: TextOverflow.ellipsis,
+                                              textOverflow:
+                                                  TextOverflow.ellipsis,
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 15.2.sp,
@@ -496,7 +502,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 10.h,),
+                                      SizedBox(height: 10.h),
                                       Row(
                                         children: [
                                           SvgPicture.asset(

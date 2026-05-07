@@ -4,7 +4,11 @@ import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model
 import 'package:medicate_app/core/connect_end/model/create_hmo_plan_reponse_model/create_hmo_plan_reponse_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_plan_detail_response_model/get_plan_detail_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_plan_hospital_network_response_model/get_plan_hospital_network_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
 
@@ -533,13 +537,15 @@ class HMOApi {
       rethrow;
     }
   }
-  
-  Future<GetListOfHospitalResponseModel> getListOfHospitals({String? page}) async {
+
+  Future<GetListOfHospitalResponseModel> getListOfHospitals({
+    String? page,
+  }) async {
     try {
       final response = await _service.call(
         UrlConfig.get_hospital_by_id,
         RequestMethod.get,
-        queryParams: {'page':page,'limit':'10'},
+        queryParams: {'page': page, 'limit': '10'},
       );
       logger.d(response.data);
       return GetListOfHospitalResponseModel.fromJson(response.data);
@@ -548,13 +554,15 @@ class HMOApi {
       rethrow;
     }
   }
-  
-  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({CreateHospitalNetworkEntityModel? createHospital}) async {
+
+  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({
+    CreateHospitalNetworkEntityModel? createHospital,
+  }) async {
     try {
       final response = await _service.call(
         UrlConfig.get_hospital_by_id,
         RequestMethod.post,
-        data:createHospital?.toJson(),
+        data: createHospital?.toJson(),
       );
       logger.d(response.data);
       return CreateHospitalNetworkResponseModel.fromJson(response.data);
@@ -564,12 +572,14 @@ class HMOApi {
     }
   }
 
-  Future<CreateHmoPlanReponseModel> createHmoPlan({CreateHmoPlanEntityModel? createPlan}) async {
+  Future<CreateHmoPlanReponseModel> createHmoPlan({
+    CreateHmoPlanEntityModel? createPlan,
+  }) async {
     try {
       final response = await _service.call(
         UrlConfig.get_user_hmos_plan,
         RequestMethod.post,
-        data:createPlan?.toJson(),
+        data: createPlan?.toJson(),
       );
       logger.d(response.data);
       return CreateHmoPlanReponseModel.fromJson(response.data);
@@ -578,13 +588,13 @@ class HMOApi {
       rethrow;
     }
   }
-  
+
   Future<dynamic> selectPlanType({String? id}) async {
     try {
       final response = await _service.call(
         UrlConfig.selects_plan_type,
         RequestMethod.post,
-        data:{'planTypeId':id},
+        data: {'planTypeId': id},
       );
       logger.d(response.data);
       return response.data;
@@ -602,6 +612,68 @@ class HMOApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetMyHmoPlanResponseModel> getMyHmoPlans() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_user_hmos_plan,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetMyHmoPlanResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetHospitalByIdResponseModel> getHospitalById(
+    String hospitalId,
+  ) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_hospital_by_id}/$hospitalId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetHospitalByIdResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetPlanHospitalNetworkResponseModel> getPlanHospitalByPlanId(
+    String planId,
+  ) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos_plan}/$planId/hospital-networks',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetPlanHospitalNetworkResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetPlanDetailResponseModel> getPlanDetails(
+    String planId,
+  ) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos_plan}/$planId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetPlanDetailResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

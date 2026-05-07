@@ -6,10 +6,12 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i117;
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as _i117;
 import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
     as _i118;
+import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart'
+    as _i119;
 import 'package:medicate_app/ui/authentication/health_care/health_care_change_no_screen.dart'
     as _i53;
 import 'package:medicate_app/ui/authentication/health_care/health_care_doctor_specialist_signup_screen.dart'
@@ -225,7 +227,7 @@ import 'package:medicate_app/ui/widget/accelerate_payment_view_wallet.dart'
 import 'package:medicate_app/ui/widget/payment_success_submit_app_screen.dart'
     as _i93;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i119;
+import 'package:stacked_services/stacked_services.dart' as _i120;
 
 class Routes {
   static const dashboard = '/';
@@ -1811,7 +1813,11 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const CreateHmoPlanArguments(),
       );
       return _i117.MaterialPageRoute<dynamic>(
-        builder: (context) => _i94.CreateHmoPlan(key: args.key),
+        builder: (context) => _i94.CreateHmoPlan(
+          key: args.key,
+          isEdited: args.isEdited,
+          plan: args.plan,
+        ),
         settings: data,
       );
     },
@@ -4344,24 +4350,28 @@ class PaymentSuccessSubmitAppScreenArguments {
 }
 
 class CreateHmoPlanArguments {
-  const CreateHmoPlanArguments({this.key});
+  const CreateHmoPlanArguments({this.key, this.isEdited = true, this.plan});
 
   final _i117.Key? key;
 
+  final bool? isEdited;
+
+  final _i119.Plan? plan;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "isEdited": "$isEdited", "plan": "$plan"}';
   }
 
   @override
   bool operator ==(covariant CreateHmoPlanArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.isEdited == isEdited && other.plan == plan;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ isEdited.hashCode ^ plan.hashCode;
   }
 }
 
@@ -4860,7 +4870,7 @@ class HMOMoreScreenArguments {
   }
 }
 
-extension NavigatorStateExtension on _i119.NavigationService {
+extension NavigatorStateExtension on _i120.NavigationService {
   Future<dynamic> navigateToDashboard({
     _i117.Key? key,
     int? index,
@@ -6654,6 +6664,8 @@ extension NavigatorStateExtension on _i119.NavigationService {
 
   Future<dynamic> navigateToCreateHmoPlan({
     _i117.Key? key,
+    bool? isEdited = true,
+    _i119.Plan? plan,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6662,7 +6674,11 @@ extension NavigatorStateExtension on _i119.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.createHmoPlan,
-      arguments: CreateHmoPlanArguments(key: key),
+      arguments: CreateHmoPlanArguments(
+        key: key,
+        isEdited: isEdited,
+        plan: plan,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -8867,6 +8883,8 @@ extension NavigatorStateExtension on _i119.NavigationService {
 
   Future<dynamic> replaceWithCreateHmoPlan({
     _i117.Key? key,
+    bool? isEdited = true,
+    _i119.Plan? plan,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8875,7 +8893,11 @@ extension NavigatorStateExtension on _i119.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.createHmoPlan,
-      arguments: CreateHmoPlanArguments(key: key),
+      arguments: CreateHmoPlanArguments(
+        key: key,
+        isEdited: isEdited,
+        plan: plan,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

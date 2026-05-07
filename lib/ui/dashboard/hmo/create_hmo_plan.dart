@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, must_be_immutable
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use, must_be_immutable
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +14,7 @@ import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/get_list_of_hospital_response_model/hospital.dart'
     as hp;
+import '../../../core/connect_end/model/get_my_hmo_plan_response_model/plan.dart';
 import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../widget/text.dart';
@@ -21,7 +22,10 @@ import '../../widget/text_form_widget.dart';
 import 'custom_checkbox_widget.dart';
 
 class CreateHmoPlan extends StatefulWidget {
-  const CreateHmoPlan({super.key});
+  CreateHmoPlan({super.key, this.isEdited = true, this.plan});
+
+  bool? isEdited;
+  Plan? plan;
 
   @override
   State<CreateHmoPlan> createState() => _CreateHmoPlanState();
@@ -37,7 +41,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
   String? selectedPlanTypeId;
   String? selectedPlanTierId;
   Set<String> selectedHospitalIds = {};
-  List<Benefit> benefitList=[];
+  List<Benefit> benefitList = [];
 
   Widget planTypeList(
     BuildContext ctx,
@@ -85,7 +89,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 Future.delayed(Duration(milliseconds: 200), () {
                   Navigator.pop(ctx, e.toString());
                 });
-                 model.selectPlanType(context: context,id: selectedPlanTypeId);
+                model.selectPlanType(context: context, id: selectedPlanTypeId);
               },
               child: Container(
                 margin: EdgeInsets.only(bottom: 12.w),
@@ -218,7 +222,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
     );
   }
 
-  void toggleSelectAll(List hospitals,HMOViewModel model) {
+  void toggleSelectAll(List hospitals, HMOViewModel model) {
     setState(() {
       if (selectedHospitalIds.length == hospitals.length) {
         // unselect all
@@ -232,7 +236,11 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
     });
   }
 
-  void toggleSingle(String id, List<hp.Hospital> hospitals,HMOViewModel model) {
+  void toggleSingle(
+    String id,
+    List<hp.Hospital> hospitals,
+    HMOViewModel model,
+  ) {
     setState(() {
       if (selectedHospitalIds.contains(id)) {
         selectedHospitalIds.remove(id);
@@ -265,6 +273,42 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
         await model.getListedPlanTypesForHMO();
         await model.getListedPlanTiersForHMO();
         model.getListOfHospital();
+        if (!widget.isEdited!) {
+          await model.getPlanDetail(context: context, planId: widget.plan?.id);
+          model.planTypeController.text =
+              model.getPlanDetailResponseModel?.data?.plan?.planType ?? '';
+          model.planTierController.text =
+              model.getPlanDetailResponseModel?.data?.plan?.planTier ?? '';
+          model.descriptionController.text =
+              model.getPlanDetailResponseModel?.data?.plan?.description ?? '';
+          model.renewalPriceController.text =
+              model.getPlanDetailResponseModel?.data?.plan?.price?.toString() ??
+              '';
+          model.priceController.text =
+              model.getPlanDetailResponseModel?.data?.plan?.price?.toString() ??
+              '';
+          model.durationController.text =
+              model.getPlanDetailResponseModel?.data?.plan?.duration
+                  ?.toString() ??
+              '';
+          selectedHospitalIds.addAll(
+            model.getPlanDetailResponseModel!.data!.plan!.hospitalNetworkIds!,
+          );
+          model.benefitController = model
+              .getPlanDetailResponseModel!
+              .data!
+              .plan!
+              .benefits!
+              .map((b) => TextEditingController(text: b.description ?? ''))
+              .toList();
+          model.limitController = model
+              .getPlanDetailResponseModel!
+              .data!
+              .plan!
+              .benefits!
+              .map((b) => TextEditingController(text: b.coverageLimit ?? ''))
+              .toList();
+        }
       },
       disposeViewModel: false,
       builder: (_, HMOViewModel model, _) {
@@ -290,7 +334,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                     child: GlobalNavigator(),
                   ),
                   TextView(
-                    text: 'Create New Plans',
+                    text: widget.isEdited! ? 'Create New Plans' : "Edit Plan",
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 18.2.sp,
@@ -463,7 +507,6 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       validator: AppValidator.validateString(),
                     ),
                     SizedBox(height: 20.h),
-
                     TextFormWidget(
                       hint: 'Renewal Price (₦)',
                       borderColor: AppColors.transparent,
@@ -662,7 +705,8 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                       model
                                           .getAllOfHospitalsResponseModel!
                                           .data!
-                                          .hospitals!,model
+                                          .hospitals!,
+                                      model,
                                     ); // 👈 fix here
                                     setState(() {});
                                   },
@@ -722,7 +766,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                         isSelected: selectedHospitalIds
                                             .contains(hospital.id),
                                         onTap: () {
-                                          toggleSingle(hospital.id!, h,model);
+                                          toggleSingle(hospital.id!, h, model);
                                         },
                                       ),
                                       SizedBox(width: 12.w),
@@ -888,15 +932,24 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                     ButtonWidget(
                       border: 100.r,
                       buttonColor: AppColors.primary,
-                      buttonText: 'Submmit for Review',
+                      buttonText: widget.isEdited! ?'Submmit for Review':'Edit Plan',
                       color: AppColors.white,
                       buttonBorderColor: AppColors.transparent,
                       isLoading: model.isLoading,
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           benefitList.clear();
-                          for(int i = 0; i<model.benefitController.length;i++){
-                            benefitList.add(Benefit(description: model.benefitController[i].text,coverageLimit: model.limitController[i].text));
+                          for (
+                            int i = 0;
+                            i < model.benefitController.length;
+                            i++
+                          ) {
+                            benefitList.add(
+                              Benefit(
+                                description: model.benefitController[i].text,
+                                coverageLimit: model.limitController[i].text,
+                              ),
+                            );
                           }
                           model.createHmoPlan(
                             context: context,
@@ -907,9 +960,11 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                               planTier: selectedPlanTierId,
                               description: model.descriptionController.text,
                               price: int.parse(model.priceController.text),
-                              duration: int.parse(model.durationController.text),
+                              duration: int.parse(
+                                model.durationController.text,
+                              ),
                               hospitalNetworkIds: selectedHospitalIds.toList(),
-                              benefits: benefitList
+                              benefits: benefitList,
                             ),
                           );
                         }

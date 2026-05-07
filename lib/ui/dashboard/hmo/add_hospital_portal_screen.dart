@@ -31,9 +31,7 @@ class HmoAddHospitalNetworkPortalScreen extends StatelessWidget {
     //     MediaQuery.of(context).size.shortestSide >= 600;
     return ViewModelBuilder<HMOViewModel>.reactive(
       viewModelBuilder: () => locator<HMOViewModel>(),
-      onViewModelReady: (model) async {
-        // await model.
-      },
+      onViewModelReady: (model) async {},
       disposeViewModel: false,
       builder: (_, HMOViewModel model, _) {
         return Scaffold(

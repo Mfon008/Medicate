@@ -69,6 +69,7 @@ class AppImage {
   static const String star = 'assets/svgs/star.svg';
   static const String pearl = 'assets/svgs/pearl.svg';
   static const String diamond = 'assets/svgs/crown.svg';
+  static const String gold = 'assets/svgs/gold.svg';
   static const String no_user_data = 'assets/svgs/no_user_data.svg';
   static const String person2 = 'assets/svgs/person2.svg';
   static const String up_stroke = 'assets/svgs/upstroke.svg';

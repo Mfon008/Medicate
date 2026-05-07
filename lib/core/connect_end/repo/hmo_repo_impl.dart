@@ -15,8 +15,12 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
+import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
+import '../model/get_plan_detail_response_model/get_plan_detail_response_model.dart';
+import '../model/get_plan_hospital_network_response_model/get_plan_hospital_network_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -242,23 +246,55 @@ class HMORepoImpl {
     return response;
   }
 
-  Future<CreateHmoPlanReponseModel> createHmoPlan({CreateHmoPlanEntityModel? createPlan}) async {
+  Future<CreateHmoPlanReponseModel> createHmoPlan({
+    CreateHmoPlanEntityModel? createPlan,
+  }) async {
     final response = await _contract.createHmoPlan(createPlan: createPlan);
     return response;
   }
 
   Future<dynamic> selectPlanType({String? id}) async {
-    final response = await _contract.selectPlanType(id:id);
+    final response = await _contract.selectPlanType(id: id);
     return response;
   }
 
   Future<dynamic> deSelectPlanType({String? id}) async {
-    final response = await _contract.deSelectPlanType(id:id);
+    final response = await _contract.deSelectPlanType(id: id);
     return response;
   }
-  
-  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({CreateHospitalNetworkEntityModel? createHospital}) async {
-    final response = await _contract.createHospitalNetwork(createHospital: createHospital);
+
+  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({
+    CreateHospitalNetworkEntityModel? createHospital,
+  }) async {
+    final response = await _contract.createHospitalNetwork(
+      createHospital: createHospital,
+    );
+    return response;
+  }
+
+  Future<GetMyHmoPlanResponseModel> getMyHmoPlans() async {
+    final response = await _contract.getMyHmoPlans();
+    return response;
+  }
+
+  Future<GetHospitalByIdResponseModel> getHospitalById(
+    String hospitalId,
+  ) async {
+    final response = await _contract.getHospitalById(hospitalId);
+    return response;
+  }
+
+  Future<GetPlanHospitalNetworkResponseModel> getPlanHospitalByPlanId(
+    String planId,
+  ) async {
+    final response = await _contract.getPlanHospitalByPlanId(planId);
+    return response;
+  }
+
+  Future<GetPlanDetailResponseModel> getPlanDetails(
+    String planId,
+  ) async {
+    final response = await _contract.getPlanDetails(planId);
     return response;
   }
 

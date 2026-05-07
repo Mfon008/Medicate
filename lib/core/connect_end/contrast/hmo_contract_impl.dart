@@ -14,8 +14,12 @@ import '../model/forgot_password_response_model/forgot_password_response_model.d
 import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
+import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
+import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
+import '../model/get_plan_detail_response_model/get_plan_detail_response_model.dart';
+import '../model/get_plan_hospital_network_response_model/get_plan_hospital_network_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -114,8 +118,25 @@ class HMOContractsImpl {
   Future<GetListOfHospitalResponseModel> getListOfHospitals({
     String? page,
   }) async => await _api.getListOfHospitals(page: page);
-  Future<CreateHmoPlanReponseModel> createHmoPlan({CreateHmoPlanEntityModel? createPlan}) async => await _api.createHmoPlan(createPlan: createPlan);
-  Future<dynamic> selectPlanType({String? id})async => await _api.selectPlanType(id: id);
-  Future<dynamic> deSelectPlanType({String? id})async => await _api.deSelectPlanType(id: id);
-  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({CreateHospitalNetworkEntityModel? createHospital}) async => await _api.createHospitalNetwork(createHospital: createHospital);
+  Future<CreateHmoPlanReponseModel> createHmoPlan({
+    CreateHmoPlanEntityModel? createPlan,
+  }) async => await _api.createHmoPlan(createPlan: createPlan);
+  Future<dynamic> selectPlanType({String? id}) async =>
+      await _api.selectPlanType(id: id);
+  Future<dynamic> deSelectPlanType({String? id}) async =>
+      await _api.deSelectPlanType(id: id);
+  Future<CreateHospitalNetworkResponseModel> createHospitalNetwork({
+    CreateHospitalNetworkEntityModel? createHospital,
+  }) async => await _api.createHospitalNetwork(createHospital: createHospital);
+  Future<GetMyHmoPlanResponseModel> getMyHmoPlans() async =>
+      await _api.getMyHmoPlans();
+  Future<GetHospitalByIdResponseModel> getHospitalById(
+    String hospitalId,
+  ) async => await _api.getHospitalById(hospitalId);
+  Future<GetPlanHospitalNetworkResponseModel> getPlanHospitalByPlanId(
+    String planId,
+  ) async => await _api.getPlanHospitalByPlanId(planId);
+  Future<GetPlanDetailResponseModel> getPlanDetails(
+    String planId,
+  ) async => await _api.getPlanDetails(planId);
 }

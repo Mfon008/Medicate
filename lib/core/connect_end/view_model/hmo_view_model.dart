@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
 import 'package:pinput/pinput.dart';
@@ -45,7 +46,10 @@ import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
+import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/kyc_document.dart';
+import '../model/get_plan_detail_response_model/get_plan_detail_response_model.dart';
+import '../model/get_plan_hospital_network_response_model/get_plan_hospital_network_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
@@ -94,6 +98,8 @@ class HMOViewModel extends BaseViewModel {
   final session = locator<SharedPreferencesService>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _isLoadingHospital = false;
+  bool get isLoadingHospital => _isLoadingHospital;
   bool get isLoadingAppForm => _isLoadingAppForm;
   bool _isLoadingAppForm = false;
   bool get isLoadingAss => _isLoadingAss;
@@ -231,6 +237,19 @@ class HMOViewModel extends BaseViewModel {
   CreateHospitalNetworkResponseModel? _createHospitalNetworkResponseModel;
   CreateHospitalNetworkResponseModel? get createHospitalNetworkResponseModel =>
       _createHospitalNetworkResponseModel;
+  GetMyHmoPlanResponseModel? _getMyHmoPlanResponseModel;
+  GetMyHmoPlanResponseModel? get getMyHmoPlanResponseModel =>
+      _getMyHmoPlanResponseModel;
+  GetHospitalByIdResponseModel? _getHospitalByIdResponseModel;
+  GetHospitalByIdResponseModel? get getHospitalByIdResponseModel =>
+      _getHospitalByIdResponseModel;
+  GetPlanHospitalNetworkResponseModel? _getPlanHospitalNetworkResponseModel;
+  GetPlanHospitalNetworkResponseModel?
+  get getPlanHospitalNetworkResponseModel =>
+      _getPlanHospitalNetworkResponseModel;
+  GetPlanDetailResponseModel? _getPlanDetailResponseModel;
+  GetPlanDetailResponseModel? get getPlanDetailResponseModel =>
+      _getPlanDetailResponseModel;
 
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
@@ -314,6 +333,65 @@ class HMOViewModel extends BaseViewModel {
   KycDocument? docKycAss;
 
   int page = 1;
+
+  String tiersSvgImage(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppImage.pearl;
+    }
+    if (planTier == 'Diamond') {
+      return AppImage.diamond;
+    }
+    if (planTier == 'Gold') {
+      return AppImage.gold;
+    }
+
+    return AppImage.star;
+  }
+
+  Color tiersColor(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppColors.lightBlue;
+    }
+
+    if (planTier == 'Diamond') {
+      return AppColors.purple;
+    }
+    if (planTier == 'Gold') {
+      return AppColors.gold;
+    }
+
+    return AppColors.appRed;
+  }
+
+  Color tiersSpeColor(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppColors.lightBlue;
+    }
+
+    if (planTier == 'Diamond') {
+      return AppColors.purple;
+    }
+    if (planTier == 'Gold') {
+      return AppColors.blendedGold;
+    }
+
+    return AppColors.appRed;
+  }
+
+  Color tiersBorderColor(String planTier) {
+    if (planTier == 'Pearl') {
+      return AppColors.faintedBlue;
+    }
+
+    if (planTier == 'Diamond') {
+      return AppColors.faintedPurple;
+    }
+    if (planTier == 'Gold') {
+      return AppColors.faintedGold;
+    }
+
+    return AppColors.faintedRed;
+  }
 
   String returnPhoneNoStructureAdd234After(String phoneNo) {
     if (phoneNo.startsWith('0')) {
@@ -1800,7 +1878,7 @@ class HMOViewModel extends BaseViewModel {
 
   Future<void> createHospitalNetwork({
     context,
-    CreateHospitalNetworkEntityModel? createHospital
+    CreateHospitalNetworkEntityModel? createHospital,
   }) async {
     try {
       _isLoading = true;
@@ -1813,11 +1891,62 @@ class HMOViewModel extends BaseViewModel {
           context,
           message: _createHospitalNetworkResponseModel?.message ?? '',
         );
-        navigate.navigateTo(Routes.hMODashboard,arguments: HMODashboardArguments(index: 1));
+        navigate.navigateTo(
+          Routes.hMODashboard,
+          arguments: HMODashboardArguments(index: 1),
+        );
       }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getHospitalNetworkById({context, String? hospitalId}) async {
+    try {
+      _isLoadingHospital = true;
+      _getHospitalByIdResponseModel = await runBusyFuture(
+        repositoryImply.getHospitalById(hospitalId!),
+        throwException: true,
+      );
+      _isLoadingHospital = false;
+    } catch (e) {
+      _isLoadingHospital = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getPlanHospitalNetworkByPlanId({context, String? planId}) async {
+    try {
+      _isLoadingHospital = true;
+      _getPlanHospitalNetworkResponseModel = await runBusyFuture(
+        repositoryImply.getPlanHospitalByPlanId(planId!),
+        throwException: true,
+      );
+      _isLoadingHospital = false;
+    } catch (e) {
+      _isLoadingHospital = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getPlanDetail({context, String? planId}) async {
+    try {
+      _isLoadingHospital = true;
+      _getPlanDetailResponseModel = await runBusyFuture(
+        repositoryImply.getPlanDetails(planId!),
+        throwException: true,
+      );
+      _isLoadingHospital = false;
+    } catch (e) {
+      _isLoadingHospital = false;
       logger.d(e);
       AppUtils.snackbar(context, message: e.toString(), error: true);
     }
@@ -1839,8 +1968,32 @@ class HMOViewModel extends BaseViewModel {
           context,
           message: _createHmoPlanReponseModel?.message ?? '',
         );
-        navigate.navigateTo(Routes.hMODashboard,arguments: HMODashboardArguments(index: 1));
+        navigate.navigateTo(
+          Routes.hMODashboard,
+          arguments: HMODashboardArguments(index: 1),
+        );
       }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getPlanHospitalNetwork(List<String>? hospitalNetworkIds) async {
+    if (hospitalNetworkIds!.isNotEmpty) {}
+    notifyListeners();
+  }
+
+  Future<void> getMyPlan(context) async {
+    try {
+      _isLoading = true;
+      _getMyHmoPlanResponseModel = await runBusyFuture(
+        repositoryImply.getMyHmoPlans(),
+        throwException: true,
+      );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
