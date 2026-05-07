@@ -345,7 +345,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                               Routes.createHmoPlan,
                               arguments: CreateHmoPlanArguments(
                                 isEdited: false,
-                                plan: e
+                                plan: e,
                               ),
                             ),
                             child: Container(

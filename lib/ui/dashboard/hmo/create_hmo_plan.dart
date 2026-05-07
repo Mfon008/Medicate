@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model/benefit.dart';
 import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/hospital_network_entity_model.dart';
 import 'package:medicate_app/ui/widget/button.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
@@ -932,43 +933,64 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                     ButtonWidget(
                       border: 100.r,
                       buttonColor: AppColors.primary,
-                      buttonText: widget.isEdited! ?'Submmit for Review':'Edit Plan',
+                      buttonText: widget.isEdited!
+                          ? 'Submit for Review'
+                          : 'Edit Plan',
                       color: AppColors.white,
                       buttonBorderColor: AppColors.transparent,
                       isLoading: model.isLoading,
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          benefitList.clear();
-                          for (
-                            int i = 0;
-                            i < model.benefitController.length;
-                            i++
-                          ) {
-                            benefitList.add(
-                              Benefit(
-                                description: model.benefitController[i].text,
-                                coverageLimit: model.limitController[i].text,
-                              ),
-                            );
-                          }
-                          model.createHmoPlan(
-                            context: context,
-                            createPlan: CreateHmoPlanEntityModel(
-                              planName:
-                                  '${model.planTierController.text} ${model.planTypeController.text} Plan',
-                              planType: selectedPlanTypeId,
-                              planTier: selectedPlanTierId,
-                              description: model.descriptionController.text,
-                              price: int.parse(model.priceController.text),
-                              duration: int.parse(
-                                model.durationController.text,
-                              ),
-                              hospitalNetworkIds: selectedHospitalIds.toList(),
-                              benefits: benefitList,
-                            ),
-                          );
-                        }
-                      },
+                      onPressed: widget.isEdited!
+                          ? () {
+                              if (formKey.currentState!.validate()) {
+                                benefitList.clear();
+                                for (
+                                  int i = 0;
+                                  i < model.benefitController.length;
+                                  i++
+                                ) {
+                                  benefitList.add(
+                                    Benefit(
+                                      description:
+                                          model.benefitController[i].text,
+                                      coverageLimit:
+                                          model.limitController[i].text,
+                                    ),
+                                  );
+                                }
+                                model.createHmoPlan(
+                                  context: context,
+                                  createPlan: CreateHmoPlanEntityModel(
+                                    planName:
+                                        '${model.planTierController.text} ${model.planTypeController.text} Plan',
+                                    planType: selectedPlanTypeId,
+                                    planTier: selectedPlanTierId,
+                                    description:
+                                        model.descriptionController.text,
+                                    price: int.parse(
+                                      model.priceController.text,
+                                    ),
+                                    duration: int.parse(
+                                      model.durationController.text,
+                                    ),
+                                    hospitalNetworkIds: selectedHospitalIds
+                                        .toList(),
+                                    benefits: benefitList,
+                                  ),
+                                );
+                              }
+                            }
+                          : () {
+                              if (formKey.currentState!.validate()) {
+                                model.editHospitalNetwork(
+                                  context: context,
+                                  planId: widget.plan!.id,
+                                  hospitalNetwork: HospitalNetworkEntityModel(
+                                    hospitalNetworkIds: selectedHospitalIds
+                                        .toList(),
+                                  ),
+                                );
+                              }
+                            },
                     ),
                     SizedBox(height: 22.h),
                   ],

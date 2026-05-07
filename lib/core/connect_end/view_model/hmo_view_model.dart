@@ -13,6 +13,7 @@ import 'package:medicate_app/core/connect_end/model/create_hospital_network_enti
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/hospital_network_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
@@ -1972,6 +1973,63 @@ class HMOViewModel extends BaseViewModel {
           Routes.hMODashboard,
           arguments: HMODashboardArguments(index: 1),
         );
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> editHmoPlan({
+    context,
+    CreateHmoPlanEntityModel? createPlan,
+  }) async {
+    try {
+      _isLoading = true;
+      _createHmoPlanReponseModel = await runBusyFuture(
+        repositoryImply.createHmoPlan(createPlan: createPlan),
+        throwException: true,
+      );
+      if (_createHmoPlanReponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _createHmoPlanReponseModel?.message ?? '',
+        );
+        navigate.navigateTo(
+          Routes.hMODashboard,
+          arguments: HMODashboardArguments(index: 1),
+        );
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> editHospitalNetwork({
+    context,
+    HospitalNetworkEntityModel? hospitalNetwork,
+    String? planId
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.editHospitalNetwork(hospitalNetwork: hospitalNetwork,planId: planId),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200) {
+        _isLoading = false;
+        await AppUtils.snackbar(
+          context,
+          message: v['message'] ?? '',
+        );
+        navigate.back();
       }
       _isLoading = false;
     } catch (e) {

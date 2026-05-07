@@ -24,6 +24,7 @@ import '../model/get_plan_hospital_network_response_model/get_plan_hospital_netw
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/hospital_network_entity_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
@@ -291,10 +292,16 @@ class HMORepoImpl {
     return response;
   }
 
-  Future<GetPlanDetailResponseModel> getPlanDetails(
-    String planId,
-  ) async {
+  Future<GetPlanDetailResponseModel> getPlanDetails(String planId) async {
     final response = await _contract.getPlanDetails(planId);
+    return response;
+  }
+
+  Future<dynamic> editHospitalNetwork({
+    HospitalNetworkEntityModel? hospitalNetwork,
+    String? planId,
+  }) async {
+    final response = await _contract.editHospitalNetwork(hospitalNetwork: hospitalNetwork,planId: planId);
     return response;
   }
 

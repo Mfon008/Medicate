@@ -21,6 +21,7 @@ import '../connect_end/model/get_listed_plan_tiers_response_model/get_listed_pla
 import '../connect_end/model/get_roles_response_model/get_roles_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../connect_end/model/hospital_network_entity_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
@@ -589,6 +590,41 @@ class HMOApi {
     }
   }
 
+  Future<CreateHmoPlanReponseModel> editHmoPlan({
+    CreateHmoPlanEntityModel? createPlan,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_user_hmos_plan,
+        RequestMethod.post,
+        data: createPlan?.toJson(),
+      );
+      logger.d(response.data);
+      return CreateHmoPlanReponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> editHospitalNetwork({
+    HospitalNetworkEntityModel? hospitalNetwork,
+    String? planId,
+  }) async {
+    try {
+      final response = await _service.call(
+        "${UrlConfig.get_user_hmos_plan}/$planId/hospital-network",
+        RequestMethod.patch,
+        data: hospitalNetwork?.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<dynamic> selectPlanType({String? id}) async {
     try {
       final response = await _service.call(
@@ -664,9 +700,7 @@ class HMOApi {
     }
   }
 
-  Future<GetPlanDetailResponseModel> getPlanDetails(
-    String planId,
-  ) async {
+  Future<GetPlanDetailResponseModel> getPlanDetails(String planId) async {
     try {
       final response = await _service.call(
         '${UrlConfig.get_user_hmos_plan}/$planId',
