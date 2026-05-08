@@ -14,8 +14,13 @@ import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
 class HmoAddHospitalNetworkPortalScreen extends StatelessWidget {
-  HmoAddHospitalNetworkPortalScreen({super.key, required this.isEditing});
+  HmoAddHospitalNetworkPortalScreen({
+    super.key,
+    required this.isEditing,
+    this.hospitalId,
+  });
   bool? isEditing;
+  String? hospitalId;
   TextEditingController nameController = TextEditingController();
   TextEditingController typeController = TextEditingController();
   TextEditingController stateController = TextEditingController();
@@ -31,7 +36,26 @@ class HmoAddHospitalNetworkPortalScreen extends StatelessWidget {
     //     MediaQuery.of(context).size.shortestSide >= 600;
     return ViewModelBuilder<HMOViewModel>.reactive(
       viewModelBuilder: () => locator<HMOViewModel>(),
-      onViewModelReady: (model) async {},
+      onViewModelReady: (model) async {
+        await model.getHospitalNetworkById(
+          context: context,
+          hospitalId: hospitalId,
+        );
+        nameController.text =
+            model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+        typeController.text =
+            model.getHospitalByIdResponseModel?.data?.hospital?.type ?? '';
+        stateController.text =
+            model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+        cityController.text =
+            model.getHospitalByIdResponseModel?.data?.hospital?.city ?? '';
+        addressController.text =
+            model.getHospitalByIdResponseModel?.data?.hospital?.address ?? '';
+        phoneController.text =
+            model.getHospitalByIdResponseModel?.data?.hospital?.phone ?? '';
+        emailController.text =
+            model.getHospitalByIdResponseModel?.data?.hospital?.email ?? '';
+      },
       disposeViewModel: false,
       builder: (_, HMOViewModel model, _) {
         return Scaffold(
@@ -183,7 +207,7 @@ class HmoAddHospitalNetworkPortalScreen extends StatelessWidget {
                           borderBottomRight: 10.r,
                           fillColor: AppColors.grey,
                           controller: phoneController,
-                          validator: AppValidator.validatePhoneNew(),
+                          validator: AppValidator.validatePhoneNewPatient(),
                           onChange: (value) {},
                           keyboardType: TextInputType.phone,
                         ),
@@ -211,7 +235,28 @@ class HmoAddHospitalNetworkPortalScreen extends StatelessWidget {
                           buttonBorderColor: AppColors.primary,
                           isLoading: model.isLoading,
                           onPressed: isEditing!
-                              ? () {}
+                              ? () {
+                                  if (formkey.currentState!.validate()) {
+                                    model.editHospital(
+                                      context: context,
+                                      hospitalId: hospitalId,
+                                      editHospital:
+                                          CreateHospitalNetworkEntityModel(
+                                            name: nameController.text.trim(),
+                                            type: typeController.text.trim(),
+                                            state: stateController.text.trim(),
+                                            city: cityController.text.trim(),
+                                            address: addressController.text
+                                                .trim(),
+                                            phone: model
+                                                .returnPhoneNoStructureAdd234After(
+                                                  phoneController.text.trim(),
+                                                ),
+                                            email: emailController.text.trim(),
+                                          ),
+                                    );
+                                  }
+                                }
                               : () {
                                   if (formkey.currentState!.validate()) {
                                     model.createHospitalNetwork(

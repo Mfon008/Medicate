@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/view_model/hmo_view_model.dart';
@@ -318,200 +317,104 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                               .hospitals!
                               .isNotEmpty)
                         ...model.getAllOfHospitalsResponseModel!.data!.hospitals!.map(
-                          (e) => GestureDetector(
-                            onTap: () => navigate.navigateTo(
-                              Routes.viewHmoApplicationPortalScreen,
+                          (e) => Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(16.w),
+                            margin: EdgeInsets.only(bottom: 10.w),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.grey),
+                              borderRadius: BorderRadius.circular(8.0.r),
                             ),
-                            child: Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(16.w),
-                              margin: EdgeInsets.only(bottom: 10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.grey),
-                                borderRadius: BorderRadius.circular(8.0.r),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12.w,
-                                          vertical: 2.2.h,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                        vertical: 2.2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          22.r,
                                         ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            22.r,
-                                          ),
-                                          border: Border.all(
-                                            color: AppColors.app_green,
-                                          ),
-                                        ),
-                                        child: TextView(
-                                          text: e.isActive!
-                                              ? 'Active'
-                                              : 'Not Active',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 14.2.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: e.isActive!
-                                                ? AppColors.app_green
-                                                : AppColors.appRed,
-                                          ),
+                                        border: Border.all(
+                                          color: AppColors.app_green,
                                         ),
                                       ),
-                                      SizedBox(width: 10.w),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12.w,
-                                          vertical: 2.2.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            22.r,
-                                          ),
-                                          border: Border.all(
-                                            color: AppColors
-                                                .searchInputFillColor
-                                                .withOpacity(.18),
-                                          ),
-                                        ),
-                                        child: TextView(
-                                          text: '${e.type}',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 14.2.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.reminder,
-                                          ),
+                                      child: TextView(
+                                        text: e.isActive!
+                                            ? 'Active'
+                                            : 'Not Active',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 14.2.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: e.isActive!
+                                              ? AppColors.app_green
+                                              : AppColors.appRed,
                                         ),
                                       ),
-                                      Spacer(),
-                                      PopupMenuButton(
-                                        color: AppColors.white,
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 20.w,
-                                          vertical: 10.w,
-                                        ),
-                                        itemBuilder: (context) => [
-                                          PopupMenuItem(
-                                            onTap: () {},
-                                            enabled: false,
-                                            child: TextView(
-                                              text: 'More Actions',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 15.2.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.infoGrey,
-                                              ),
-                                            ),
-                                          ),
-                                          PopupMenuItem(
-                                            onTap: () => navigate.navigateTo(
-                                              Routes
-                                                  .hmoAddHospitalNetworkPortalScreen,
-                                              arguments:
-                                                  HmoAddHospitalNetworkPortalScreenArguments(
-                                                    isEditing: true,
-                                                  ),
-                                            ),
-                                            child: TextView(
-                                              text: 'Edit Hospital',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 15.2.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                          ),
-                                          PopupMenuItem(
-                                            onTap: () =>
-                                                showActivationDialog(context),
-                                            child: TextView(
-                                              text: 'Deactivate',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 15.2.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                        child: Container(
-                                          padding: EdgeInsets.all(6.10.w),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: AppColors.skyBlue,
-                                            border: Border.all(
-                                              color: AppColors.skyBlue,
-                                            ),
-                                          ),
-                                          child: Icon(
-                                            Icons.more_vert,
-                                            size: 16.20.sp,
-                                            color: AppColors.primary,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 15.10.h),
-                                  TextView(
-                                    text: '${e.name}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.52.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.reminder,
                                     ),
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.locator,
-                                            height: 20.h,
-                                            width: 20.w,
-                                            color: AppColors.infoGrey,
-                                          ),
-                                          SizedBox(width: 10.w),
-                                          SizedBox(
-                                            width: 250.w,
-                                            child: TextView(
-                                              text:
-                                                  '${e.address} ${e.city}, ${e.state}',
-                                              maxLines: 4,
-                                              textOverflow:
-                                                  TextOverflow.ellipsis,
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 15.2.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.reminder,
-                                              ),
+                                    SizedBox(width: 10.w),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                        vertical: 2.2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          22.r,
+                                        ),
+                                        border: Border.all(
+                                          color: AppColors.searchInputFillColor
+                                              .withOpacity(.18),
+                                        ),
+                                      ),
+                                      child: TextView(
+                                        text: '${e.type}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 14.2.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    PopupMenuButton(
+                                      color: AppColors.white,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 20.w,
+                                        vertical: 10.w,
+                                      ),
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          onTap: () {},
+                                          enabled: false,
+                                          child: TextView(
+                                            text: 'More Actions',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.infoGrey,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10.h),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.phone,
-                                            color: AppColors.infoGrey,
+                                        ),
+                                        PopupMenuItem(
+                                          onTap: () => navigate.navigateTo(
+                                            Routes
+                                                .hmoAddHospitalNetworkPortalScreen,
+                                            arguments:
+                                                HmoAddHospitalNetworkPortalScreenArguments(
+                                                  isEditing: true,
+                                                  hospitalId: e.id,
+                                                ),
                                           ),
-                                          SizedBox(width: 10.w),
-                                          TextView(
-                                            text: '0812345678',
+                                          child: TextView(
+                                            text: 'Edit Hospital',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 15.2.sp,
@@ -519,51 +422,171 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                               color: AppColors.reminder,
                                             ),
                                           ),
-                                        ],
+                                        ),
+                                        PopupMenuItem(
+                                          onTap: () =>
+                                              showActivationDialog(context),
+                                          child: TextView(
+                                            text: 'Deactivate',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      child: Container(
+                                        padding: EdgeInsets.all(6.10.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.skyBlue,
+                                          border: Border.all(
+                                            color: AppColors.skyBlue,
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.more_vert,
+                                          size: 16.20.sp,
+                                          color: AppColors.primary,
+                                        ),
                                       ),
-                                    ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 15.10.h),
+                                TextView(
+                                  text: '${e.name}',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'GoogleSans',
+                                    fontSize: 16.52.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.reminder,
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(height: 10.h),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppImage.locator,
+                                          height: 20.h,
+                                          width: 20.w,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        SizedBox(
+                                          width: 250.w,
+                                          child: TextView(
+                                            text:
+                                                '${e.address} ${e.city}, ${e.state}',
+                                            maxLines: 4,
+                                            textOverflow: TextOverflow.ellipsis,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppImage.phone,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        TextView(
+                                          text: '${e.phone}',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 15.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       SizedBox(height: 20.h),
                       Divider(color: AppColors.grey),
                       SizedBox(height: 12.20.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.arrow_back,
-                              size: 22.sp,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          SizedBox(width: 36.0.w),
-                          TextView(
-                            text: 'Page 1 of 10',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 13.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
-                            ),
-                          ),
+                      model.getAllOfHospitalsResponseModel != null
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    if (model.page <= 1) {
+                                    } else {
+                                      model.page--;
+                                      model.getListOfHospital();
+                                      model.notifyListeners();
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.arrow_back,
+                                    size: 22.sp,
+                                    color: model.page <= 1
+                                        ? AppColors.primary.withOpacity(.3)
+                                        : AppColors.primary,
+                                  ),
+                                ),
+                                SizedBox(width: 36.0.w),
+                                TextView(
+                                  text:
+                                      'Page ${model.getAllOfHospitalsResponseModel!.data!.page} of ${model.getAllOfHospitalsResponseModel!.data!.totalPages}',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 13.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.black,
+                                  ),
+                                ),
 
-                          SizedBox(width: 36.0.w),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.arrow_forward,
-                              size: 22.sp,
-                              color: AppColors.primary1,
-                            ),
-                          ),
-                        ],
-                      ),
+                                SizedBox(width: 36.0.w),
+                                IconButton(
+                                  onPressed: () {
+                                    if (model.page >=
+                                        model
+                                            .getAllOfHospitalsResponseModel!
+                                            .data!
+                                            .totalPages!) {
+                                    } else {
+                                      model.page++;
+                                      model.getListOfHospital();
+                                      model.notifyListeners();
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.arrow_forward,
+                                    size: 22.sp,
+                                    color:
+                                        model.page >=
+                                            model
+                                                .getAllOfHospitalsResponseModel!
+                                                .data!
+                                                .totalPages!
+                                        ? AppColors.primary.withOpacity(.3)
+                                        : AppColors.primary1,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : SizedBox.shrink(),
                     ],
                   ),
                 ),

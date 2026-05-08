@@ -46,6 +46,7 @@ import '../model/get_created_user_response_model/get_created_user_response_model
 import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
+import '../model/get_list_of_hospital_response_model/hospital.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/kyc_document.dart';
@@ -64,6 +65,7 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
+import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_hmo_profile_entity_model/logo.dart';
 import '../model/update_pharmacy_kyc_entity_model/document.dart';
 import '../model/update_role_entity_model.dart';
@@ -218,6 +220,7 @@ class HMOViewModel extends BaseViewModel {
   ForgotPasswordResponseModel? get forgotPasswordResponseModel =>
       _forgotPasswordResponseModel;
 
+  List<Hospital>? getAllHospitalPage = [];
   ResendOtpResponseModel? _resendOtpResponseModel;
   ResendOtpResponseModel? get resendOtpResponseModel => _resendOtpResponseModel;
   VerifyPassOtpRespnseModel? _verifyPassOtpRespnseModel;
@@ -395,7 +398,9 @@ class HMOViewModel extends BaseViewModel {
   }
 
   String returnPhoneNoStructureAdd234After(String phoneNo) {
-    if (phoneNo.startsWith('0')) {
+    if (phoneNo.startsWith('+234')) {
+      phoneNo = phoneNo;
+    } else if (phoneNo.startsWith('0')) {
       phoneNo = '+234${phoneNo.substring(1)}';
     } else {
       phoneNo = '+234$phoneNo';
@@ -1867,7 +1872,9 @@ class HMOViewModel extends BaseViewModel {
         repositoryImply.getListOfHospitals(page: page.toString()),
         throwException: true,
       );
-
+      getAllHospitalPage!.addAll(
+        _getAllOfHospitalsResponseModel!.data!.hospitals!,
+      );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -1983,6 +1990,29 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> updateHmoPlan({
+    context,
+    UpdateHmoPlanEntityModel? updatePlan,
+    String? planId,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateHmoPlan(updatePlan: updatePlan, planId: planId),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200) {
+        await AppUtils.snackbar(context, message: v['message'] ?? '');
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> editHmoPlan({
     context,
     CreateHmoPlanEntityModel? createPlan,
@@ -2015,20 +2045,48 @@ class HMOViewModel extends BaseViewModel {
   Future<void> editHospitalNetwork({
     context,
     HospitalNetworkEntityModel? hospitalNetwork,
-    String? planId
+    String? planId,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.editHospitalNetwork(hospitalNetwork: hospitalNetwork,planId: planId),
+        repositoryImply.editHospitalNetwork(
+          hospitalNetwork: hospitalNetwork,
+          planId: planId,
+        ),
         throwException: true,
       );
       if (v['statusCode'] == 200) {
         _isLoading = false;
-        await AppUtils.snackbar(
-          context,
-          message: v['message'] ?? '',
-        );
+        await AppUtils.snackbar(context, message: v['message'] ?? '');
+        navigate.back();
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> editHospital({
+    context,
+    CreateHospitalNetworkEntityModel? editHospital,
+    String? hospitalId,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.editHospital(
+          editHospital: editHospital,
+          hospitalId: hospitalId,
+        ),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200) {
+        _isLoading = false;
+        await AppUtils.snackbar(context, message: v['message'] ?? '');
         navigate.back();
       }
       _isLoading = false;

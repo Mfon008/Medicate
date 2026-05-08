@@ -9,6 +9,7 @@ import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model
 import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/hospital_network_entity_model.dart';
 import 'package:medicate_app/ui/widget/button.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
@@ -16,6 +17,9 @@ import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/get_list_of_hospital_response_model/hospital.dart'
     as hp;
 import '../../../core/connect_end/model/get_my_hmo_plan_response_model/plan.dart';
+import '../../../core/connect_end/model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_hmo_plan_entity_model/benefit.dart'
+    as ben;
 import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../widget/text.dart';
@@ -43,6 +47,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
   String? selectedPlanTierId;
   Set<String> selectedHospitalIds = {};
   List<Benefit> benefitList = [];
+  List<ben.Benefit> benefitListUpdate = [];
 
   Widget planTypeList(
     BuildContext ctx,
@@ -252,6 +257,10 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
       selectAll = selectedHospitalIds.length == hospitals.length;
     });
   }
+
+  RefreshController refreshController = RefreshController(
+    initialRefresh: false,
+  );
 
   // @override
   // void dispose() {
@@ -703,10 +712,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                   isSelected: selectAll,
                                   onTap: () {
                                     toggleSelectAll(
-                                      model
-                                          .getAllOfHospitalsResponseModel!
-                                          .data!
-                                          .hospitals!,
+                                      model.getAllHospitalPage!,
                                       model,
                                     ); // 👈 fix here
                                     setState(() {});
@@ -728,82 +734,97 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                           SizedBox(height: 10.w),
 
                           /// 🔹 List
-                          if (model.getAllOfHospitalsResponseModel == null ||
-                              model
-                                  .getAllOfHospitalsResponseModel!
-                                  .data!
-                                  .hospitals!
-                                  .isEmpty)
+                          if (model.getAllHospitalPage == null ||
+                              model.getAllHospitalPage!.isEmpty)
                             SizedBox.shrink(),
-                          if (model.getAllOfHospitalsResponseModel != null &&
-                              model
-                                  .getAllOfHospitalsResponseModel!
-                                  .data!
-                                  .hospitals!
-                                  .isNotEmpty)
+                          if (model.getAllHospitalPage != null &&
+                              model.getAllHospitalPage!.isNotEmpty)
                             SizedBox(
                               height: 300.h,
-                              child: ListView.builder(
-                                itemCount: model
-                                    .getAllOfHospitalsResponseModel!
-                                    .data!
-                                    .hospitals!
-                                    .length,
-                                padding: EdgeInsets.only(left: 22.w),
-                                itemBuilder: (context, index) {
-                                  final hospital = model
-                                      .getAllOfHospitalsResponseModel!
-                                      .data!
-                                      .hospitals![index];
-                                  final h = model
-                                      .getAllOfHospitalsResponseModel!
-                                      .data!
-                                      .hospitals!;
-
-                                  return Row(
-                                    // crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      CustomCheckbox(
-                                        isSelected: selectedHospitalIds
-                                            .contains(hospital.id),
-                                        onTap: () {
-                                          toggleSingle(hospital.id!, h, model);
-                                        },
-                                      ),
-                                      SizedBox(width: 12.w),
-
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(height: 10.w),
-                                            TextView(
-                                              text: hospital.name ?? '',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.80.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
-                                            SizedBox(height: 4.h),
-                                            TextView(
-                                              text: hospital.address ?? '',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.80.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.infoGrey,
-                                              ),
-                                            ),
-                                            SizedBox(height: 10.w),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                              child: SmartRefresher(
+                                enablePullDown: false,
+                                enablePullUp: true,
+                                controller: refreshController,
+                                header: WaterDropHeader(),
+                                onRefresh: () async {
+                                  await Future.delayed(
+                                    Duration(milliseconds: 1000),
                                   );
+                                  // if failed,use refreshFailed()
+                                  refreshController.refreshCompleted();
                                 },
+                                onLoading: () async {
+                                  await Future.delayed(
+                                    Duration(milliseconds: 1000),
+                                  );
+                                  if (model.page >=
+                                      model
+                                          .getAllOfHospitalsResponseModel!
+                                          .data!
+                                          .totalPages!) {
+                                    refreshController.loadNoData();
+                                  } else {
+                                    model.page++;
+                                    model.getListOfHospital();
+                                    refreshController.loadComplete();
+                                  }
+                                },
+                                child: ListView.builder(
+                                  itemCount: model.getAllHospitalPage!.length,
+                                  padding: EdgeInsets.only(left: 22.w),
+                                  itemBuilder: (context, index) {
+                                    final hospital =
+                                        model.getAllHospitalPage![index];
+                                    final h = model.getAllHospitalPage!;
+
+                                    return Row(
+                                      children: [
+                                        CustomCheckbox(
+                                          isSelected: selectedHospitalIds
+                                              .contains(hospital.id),
+                                          onTap: () {
+                                            toggleSingle(
+                                              hospital.id!,
+                                              h,
+                                              model,
+                                            );
+                                          },
+                                        ),
+                                        SizedBox(width: 12.w),
+
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(height: 10.w),
+                                              TextView(
+                                                text: hospital.name ?? '',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 14.80.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4.h),
+                                              TextView(
+                                                text: hospital.address ?? '',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 14.80.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.infoGrey,
+                                                ),
+                                              ),
+                                              SizedBox(height: 10.w),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                         ],
@@ -979,8 +1000,41 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                 );
                               }
                             }
-                          : () {
+                          : () async {
                               if (formKey.currentState!.validate()) {
+                                benefitListUpdate.clear();
+                                for (
+                                  int i = 0;
+                                  i < model.benefitController.length;
+                                  i++
+                                ) {
+                                  benefitListUpdate.add(
+                                    ben.Benefit(
+                                      description:
+                                          model.benefitController[i].text,
+                                      coverageLimit:
+                                          model.limitController[i].text,
+                                    ),
+                                  );
+                                }
+                                await model.updateHmoPlan(
+                                  context: context,
+                                  planId: widget.plan!.id,
+                                  updatePlan: UpdateHmoPlanEntityModel(
+                                    planName:
+                                        '${model.planTierController.text} ${model.planTypeController.text} Plan',
+                                    description:
+                                        model.descriptionController.text,
+                                    price: int.parse(
+                                      model.priceController.text,
+                                    ),
+                                    duration: int.parse(
+                                      model.durationController.text,
+                                    ),
+
+                                    benefits: benefitListUpdate,
+                                  ),
+                                );
                                 model.editHospitalNetwork(
                                   context: context,
                                   planId: widget.plan!.id,

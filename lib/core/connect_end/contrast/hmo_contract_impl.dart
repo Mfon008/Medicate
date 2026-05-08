@@ -34,6 +34,7 @@ import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
+import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_role_entity_model.dart';
 import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
@@ -122,6 +123,10 @@ class HMOContractsImpl {
   Future<CreateHmoPlanReponseModel> createHmoPlan({
     CreateHmoPlanEntityModel? createPlan,
   }) async => await _api.createHmoPlan(createPlan: createPlan);
+  Future<dynamic> updateHmoPlan({
+    UpdateHmoPlanEntityModel? updatePlan,
+    String? planId
+  }) async => await _api.updateHmoPlan(updatePlan: updatePlan,planId: planId);
   Future<dynamic> selectPlanType({String? id}) async =>
       await _api.selectPlanType(id: id);
   Future<dynamic> deSelectPlanType({String? id}) async =>
@@ -145,5 +150,12 @@ class HMOContractsImpl {
   }) async => await _api.editHospitalNetwork(
     hospitalNetwork: hospitalNetwork,
     planId: planId,
+  );
+  Future<dynamic> editHospital({
+    CreateHospitalNetworkEntityModel? editHospital,
+    String? hospitalId,
+  }) async => await _api.editHospital(
+    editHospital: editHospital,
+    hospitalId: hospitalId,
   );
 }

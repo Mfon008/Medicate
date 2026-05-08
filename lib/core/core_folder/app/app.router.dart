@@ -1877,6 +1877,7 @@ class StackedRouter extends _i1.RouterBase {
         builder: (context) => _i100.HmoAddHospitalNetworkPortalScreen(
           key: args.key,
           isEditing: args.isEditing,
+          hospitalId: args.hospitalId,
         ),
         settings: data,
       );
@@ -4489,26 +4490,31 @@ class HmoAddHospitalNetworkPortalScreenArguments {
   const HmoAddHospitalNetworkPortalScreenArguments({
     this.key,
     required this.isEditing,
+    this.hospitalId,
   });
 
   final _i117.Key? key;
 
   final bool? isEditing;
 
+  final String? hospitalId;
+
   @override
   String toString() {
-    return '{"key": "$key", "isEditing": "$isEditing"}';
+    return '{"key": "$key", "isEditing": "$isEditing", "hospitalId": "$hospitalId"}';
   }
 
   @override
   bool operator ==(covariant HmoAddHospitalNetworkPortalScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key && other.isEditing == isEditing;
+    return other.key == key &&
+        other.isEditing == isEditing &&
+        other.hospitalId == hospitalId;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ isEditing.hashCode;
+    return key.hashCode ^ isEditing.hashCode ^ hospitalId.hashCode;
   }
 }
 
@@ -6779,6 +6785,7 @@ extension NavigatorStateExtension on _i120.NavigationService {
   Future<dynamic> navigateToHmoAddHospitalNetworkPortalScreen({
     _i117.Key? key,
     required bool? isEditing,
+    String? hospitalId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6790,6 +6797,7 @@ extension NavigatorStateExtension on _i120.NavigationService {
       arguments: HmoAddHospitalNetworkPortalScreenArguments(
         key: key,
         isEditing: isEditing,
+        hospitalId: hospitalId,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -8998,6 +9006,7 @@ extension NavigatorStateExtension on _i120.NavigationService {
   Future<dynamic> replaceWithHmoAddHospitalNetworkPortalScreen({
     _i117.Key? key,
     required bool? isEditing,
+    String? hospitalId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -9009,6 +9018,7 @@ extension NavigatorStateExtension on _i120.NavigationService {
       arguments: HmoAddHospitalNetworkPortalScreenArguments(
         key: key,
         isEditing: isEditing,
+        hospitalId: hospitalId,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,

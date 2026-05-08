@@ -32,6 +32,7 @@ import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../connect_end/model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
+import '../connect_end/model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../connect_end/model/update_role_entity_model.dart';
 import '../connect_end/model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../connect_end/model/update_user_entity_model.dart';
@@ -545,7 +546,7 @@ class HMOApi {
     try {
       final response = await _service.call(
         UrlConfig.get_hospital_by_id,
-        RequestMethod.get,
+        RequestMethod.getParams,
         queryParams: {'page': page, 'limit': '10'},
       );
       logger.d(response.data);
@@ -573,6 +574,24 @@ class HMOApi {
     }
   }
 
+  Future<dynamic> editHospital({
+    CreateHospitalNetworkEntityModel? editHospital,
+    String? hospitalId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_hospital_by_id}/$hospitalId',
+        RequestMethod.patch,
+        data: editHospital?.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<CreateHmoPlanReponseModel> createHmoPlan({
     CreateHmoPlanEntityModel? createPlan,
   }) async {
@@ -590,17 +609,18 @@ class HMOApi {
     }
   }
 
-  Future<CreateHmoPlanReponseModel> editHmoPlan({
-    CreateHmoPlanEntityModel? createPlan,
+  Future<dynamic> updateHmoPlan({
+    UpdateHmoPlanEntityModel? updatePlan,
+    String? planId
   }) async {
     try {
       final response = await _service.call(
-        UrlConfig.get_user_hmos_plan,
-        RequestMethod.post,
-        data: createPlan?.toJson(),
+        '${UrlConfig.get_user_hmos_plan}/$planId',
+        RequestMethod.patch,
+        data: updatePlan?.toJson(),
       );
       logger.d(response.data);
-      return CreateHmoPlanReponseModel.fromJson(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;
