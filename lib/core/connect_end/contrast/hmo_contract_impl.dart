@@ -125,8 +125,8 @@ class HMOContractsImpl {
   }) async => await _api.createHmoPlan(createPlan: createPlan);
   Future<dynamic> updateHmoPlan({
     UpdateHmoPlanEntityModel? updatePlan,
-    String? planId
-  }) async => await _api.updateHmoPlan(updatePlan: updatePlan,planId: planId);
+    String? planId,
+  }) async => await _api.updateHmoPlan(updatePlan: updatePlan, planId: planId);
   Future<dynamic> selectPlanType({String? id}) async =>
       await _api.selectPlanType(id: id);
   Future<dynamic> deSelectPlanType({String? id}) async =>

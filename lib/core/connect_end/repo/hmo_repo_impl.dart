@@ -257,9 +257,12 @@ class HMORepoImpl {
 
   Future<dynamic> updateHmoPlan({
     UpdateHmoPlanEntityModel? updatePlan,
-    String? planId
+    String? planId,
   }) async {
-    final response = await _contract.updateHmoPlan(updatePlan: updatePlan,planId: planId);
+    final response = await _contract.updateHmoPlan(
+      updatePlan: updatePlan,
+      planId: planId,
+    );
     return response;
   }
 

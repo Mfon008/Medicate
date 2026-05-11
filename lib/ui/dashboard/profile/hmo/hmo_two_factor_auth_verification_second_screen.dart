@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
@@ -137,7 +139,9 @@ class _HmoTwoFactorAuthVerificationSecondScreenState
                     buttonBorderColor: AppColors.transparent,
                     isLoading: model.isLoading,
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {}
+                      if (formKey.currentState!.validate()) {
+                        navigate.navigateTo(Routes.hMOSettingScreen);
+                      }
                     },
                   ),
                   SizedBox(height: 20.30.h),

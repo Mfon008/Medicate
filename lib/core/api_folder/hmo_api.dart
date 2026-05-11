@@ -611,7 +611,7 @@ class HMOApi {
 
   Future<dynamic> updateHmoPlan({
     UpdateHmoPlanEntityModel? updatePlan,
-    String? planId
+    String? planId,
   }) async {
     try {
       final response = await _service.call(

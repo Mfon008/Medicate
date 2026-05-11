@@ -73,7 +73,7 @@ class PaymentStatusScreen extends StatelessWidget {
                   TextView(
                     text: !isSuccessful
                         ? 'Payment Failed!'
-                        : 'Payment Successful!',
+                        : 'Created Successfully!',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 20.2.sp,

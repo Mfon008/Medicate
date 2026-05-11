@@ -70,6 +70,8 @@ import '../model/update_hmo_profile_entity_model/logo.dart';
 import '../model/update_pharmacy_kyc_entity_model/document.dart';
 import '../model/update_role_entity_model.dart';
 import '../model/update_third_hmo_kyc_entity_model/application_form.dart';
+import '../model/update_third_hmo_kyc_entity_model/list_of_hospitals.dart';
+import '../model/update_third_hmo_kyc_entity_model/schedule_of_plans.dart';
 import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
@@ -4826,7 +4828,7 @@ class HMOViewModel extends BaseViewModel {
                         clipBehavior: Clip.none,
                         children: [
                           SizedBox(
-                            width: 250.w,
+                            width: 220.w,
                             child: TextView(
                               text: 'List of associated clinics/hospitals ',
                               maxLines: 2,
@@ -4839,7 +4841,7 @@ class HMOViewModel extends BaseViewModel {
                             ),
                           ),
                           Positioned(
-                            right: -12.10,
+                            right: -0.10,
                             child: TextView(
                               text: '*',
                               textStyle: TextStyle(
@@ -5046,6 +5048,16 @@ class HMOViewModel extends BaseViewModel {
                                       applicationForm: ApplicationForm.fromJson(
                                         fl.File.fromJson(
                                           kycDocumentsList[0].file!.toJson(),
+                                        ).toJson(),
+                                      ),
+                                      scheduleOfPlans: ScheduleOfPlans.fromJson(
+                                        fl.File.fromJson(
+                                          kycDocumentsList[1].file!.toJson(),
+                                        ).toJson(),
+                                      ),
+                                      listOfHospitals: ListOfHospitals.fromJson(
+                                        fl.File.fromJson(
+                                          kycDocumentsList[2].file!.toJson(),
                                         ).toJson(),
                                       ),
                                     ),
