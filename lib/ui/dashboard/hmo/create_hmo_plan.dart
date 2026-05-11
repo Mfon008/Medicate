@@ -139,43 +139,71 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
   }
 
   Widget planTierList(
-    BuildContext ctx,
-    void Function(void Function()) setMenuState,
-    HMOViewModel model,
-  ) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 10.h),
-        TextView(
-          text: 'Tiers',
-          textStyle: TextStyle(
-            fontFamily: 'Arial',
-            fontSize: 16.60.sp,
-            color: AppColors.greyee,
-            fontWeight: FontWeight.w400,
+  BuildContext ctx,
+  void Function(void Function()) setMenuState,
+  HMOViewModel model,
+) {
+  final response = model.getAllListedPlanTiersResponseModel;
+
+  Widget content;
+
+  switch (true) {
+    // LOADING
+    case true when response == null:
+      content = Center(
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 100.w, top: 50.w),
+          child: SpinKitHourGlass(
+            size: 50.sp,
+            color: AppColors.primaryLight,
           ),
         ),
-        SizedBox(height: 14.h),
-        if (model.getAllListedPlanTiersResponseModel == null)
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 100.w, top: 50.w),
-              child: SpinKitHourGlass(
-                size: 50.sp,
-                color: AppColors.primaryLight,
-              ),
+      );
+      break;
+
+    // NO DATA
+    case true when response!.data == null:
+      content = Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 40.w),
+          child: TextView(
+            text: 'No available tiers',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.60.sp,
+              color: AppColors.greyee,
+              fontWeight: FontWeight.w400,
             ),
           ),
-        if (model.getAllListedPlanTiersResponseModel != null &&
-            model
-                .getAllListedPlanTiersResponseModel!
-                .data!
-                .planTiers!
-                .isNotEmpty)
-          ...model.getAllListedPlanTiersResponseModel!.data!.planTiers!.map(
-            (e) => GestureDetector(
+        ),
+      );
+      break;
+
+    // EMPTY LIST
+    case true when response!.data!.planTiers == null ||
+        response.data!.planTiers!.isEmpty:
+      content = Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20.w),
+          child: TextView(
+            text: 'No tiers found',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.60.sp,
+              color: AppColors.greyee,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      );
+      break;
+
+    // DATA AVAILABLE
+    default:
+      content = Column(
+        children: response!.data!.planTiers!.map(
+          (e) {
+            return GestureDetector(
               onTap: () {
                 setState(() {
                   model.planTierController.text = e.name ?? '';
@@ -183,13 +211,19 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                   setMenuState(() {});
                 });
 
-                Future.delayed(Duration(milliseconds: 200), () {
-                  Navigator.pop(ctx, e.toString());
-                });
+                Future.delayed(
+                  Duration(milliseconds: 200),
+                  () {
+                    Navigator.pop(ctx, e.toString());
+                  },
+                );
               },
               child: Container(
                 margin: EdgeInsets.only(bottom: 12.w),
-                padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
+                padding: EdgeInsets.symmetric(
+                  vertical: 12.w,
+                  horizontal: 12.w,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: model.planTierController.text == e.name
@@ -222,11 +256,34 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                   ],
                 ),
               ),
-            ),
-          ),
-      ],
-    );
+            );
+          },
+        ).toList(),
+      );
   }
+
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 10.h),
+
+      TextView(
+        text: 'Tiers',
+        textStyle: TextStyle(
+          fontFamily: 'Arial',
+          fontSize: 16.60.sp,
+          color: AppColors.greyee,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+
+      SizedBox(height: 14.h),
+
+      content,
+    ],
+  );
+}
 
   void toggleSelectAll(List hospitals, HMOViewModel model) {
     setState(() {

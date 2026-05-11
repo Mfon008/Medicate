@@ -3172,7 +3172,7 @@ class HMOViewModel extends BaseViewModel {
       return 'Your KYC has been successfully\nverified. You can now access all\nservices.';
     }
     if (kyc == 'REJECTED') {
-      return 'Your KYC couldn’t be verified\n. Please review your details and\nresubmit the required documents';
+      return 'Your KYC couldn’t be verified.\nPlease review your details and\nresubmit the required documents';
     }
     return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
   }
@@ -3258,6 +3258,26 @@ class HMOViewModel extends BaseViewModel {
     return AppColors.fadedyellow;
   }
 
+  dynamic getKycStatusIcon(kyc) {
+    if (kyc == 'UNDER_REVIEW') {
+      return SvgPicture.asset(AppImage.info);
+    }
+    if (kyc == 'APPROVED') {
+      return Container(
+        padding: EdgeInsets.all(3.4),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.app_green,
+        ),
+        child: Icon(Icons.check, color: AppColors.white, size: 10.sp),
+      );
+    }
+    if (kyc == 'REJECTED') {
+      return Icon(Icons.cancel, color: AppColors.appRed, size: 20.sp);
+    }
+    return SvgPicture.asset(AppImage.info);
+  }
+
   bool getKycStatusBool(kyc) {
     if (kyc == 'UNDER_REVIEW') {
       return true;
@@ -3289,7 +3309,9 @@ class HMOViewModel extends BaseViewModel {
   // }
 
   bool getKycStatusBoolSecond({kyc1, kyc2, kyc3}) {
-    if (kyc1 == 'UNDER_REVIEW' || kyc2 == 'UNDER_REVIEW' || kyc3 == 'UNDER_REVIEW') {
+    if (kyc1 == 'UNDER_REVIEW' ||
+        kyc2 == 'UNDER_REVIEW' ||
+        kyc3 == 'UNDER_REVIEW') {
       return true;
     }
     if (kyc1 == 'APPROVED' && kyc2 == 'APPROVED' && kyc3 == 'APPROVED') {
@@ -3486,7 +3508,9 @@ class HMOViewModel extends BaseViewModel {
                       ),
                       child: Row(
                         children: [
-                          SvgPicture.asset(AppImage.info),
+                          getKycStatusIcon(
+                            getHmoKycResponseModel!.data!.kycLevels![1].status,
+                          ),
                           SizedBox(width: 10.w),
                           SizedBox(
                             width: 200.w,
@@ -4347,23 +4371,28 @@ class HMOViewModel extends BaseViewModel {
                         ),
                         decoration: BoxDecoration(
                           color: getKycStatusColor(
-                          getHmoKycResponseModel!.data!.kycLevels![2].status,
-                        ),
+                            getHmoKycResponseModel!.data!.kycLevels![2].status,
+                          ),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: [
-                            SvgPicture.asset(AppImage.info),
+                            getKycStatusIcon(
+                              getHmoKycResponseModel!
+                                  .data!
+                                  .kycLevels![2]
+                                  .status,
+                            ),
                             SizedBox(width: 10.w),
                             SizedBox(
                               width: 200.w,
                               child: TextView(
                                 text: getKycStatus(
-                                getHmoKycResponseModel!
-                                    .data!
-                                    .kycLevels![2]
-                                    .status,
-                              ),
+                                  getHmoKycResponseModel!
+                                      .data!
+                                      .kycLevels![2]
+                                      .status,
+                                ),
                                 maxLines: 4,
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
@@ -5068,12 +5097,12 @@ class HMOViewModel extends BaseViewModel {
                       ButtonWidget(
                         border: 100.r,
                         buttonColor:
-                           getKycStatusBool(
-                                    getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels![2]
-                                        .status,
-                                  ) ==
+                            getKycStatusBool(
+                                      getHmoKycResponseModel!
+                                          .data!
+                                          .kycLevels![2]
+                                          .status,
+                                    ) ==
                                     true ||
                                 imageAppForm == null &&
                                     imagePlan == null &&
@@ -5087,11 +5116,11 @@ class HMOViewModel extends BaseViewModel {
                         buttonBorderColor: AppColors.transparent,
                         onPressed:
                             getKycStatusBool(
-                                    getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels![2]
-                                        .status,
-                                  ) ==
+                                      getHmoKycResponseModel!
+                                          .data!
+                                          .kycLevels![2]
+                                          .status,
+                                    ) ==
                                     false &&
                                 imageAppForm != null &&
                                 imagePlan != null &&

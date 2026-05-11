@@ -333,6 +333,10 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                         ],
                       ),
                       SizedBox(height: 12.h),
+                      if(model.getMyHmoPlanResponseModel != null &&
+                          model
+                              .getMyHmoPlanResponseModel!
+                              .data==null)
                       if (model.getMyHmoPlanResponseModel != null &&
                           model
                               .getMyHmoPlanResponseModel!
