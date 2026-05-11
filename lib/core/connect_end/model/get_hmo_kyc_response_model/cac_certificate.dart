@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'logo.g.dart';
+part 'cac_certificate.g.dart';
 
 @JsonSerializable()
-class Logo {
+class CacCertificate {
   String? url;
   String? mimeType;
   int? width;
@@ -11,7 +11,7 @@ class Logo {
   int? size;
   String? format;
 
-  Logo({
+  CacCertificate({
     this.url,
     this.mimeType,
     this.width,
@@ -20,7 +20,9 @@ class Logo {
     this.format,
   });
 
-  factory Logo.fromJson(Map<String, dynamic> json) => _$LogoFromJson(json);
+  factory CacCertificate.fromJson(Map<String, dynamic> json) {
+    return _$CacCertificateFromJson(json);
+  }
 
-  Map<String, dynamic> toJson() => _$LogoToJson(this);
+  Map<String, dynamic> toJson() => _$CacCertificateToJson(this);
 }

@@ -7,37 +7,55 @@ part of 'data.dart';
 // **************************************************************************
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-  id: json['id'] as String?,
-  tenantType: json['tenantType'] as String?,
-  name: json['name'] as String?,
-  owner: json['owner'] as String?,
-  businessAddress: json['businessAddress'] as String?,
-  businessEmail: json['businessEmail'] as String?,
-  contactPersonFirstName: json['contactPersonFirstName'] as String?,
-  contactPersonLastName: json['contactPersonLastName'] as String?,
-  contactPersonDesignation: json['contactPersonDesignation'] as String?,
-  bankDetails: (json['bankDetails'] as List<dynamic>?)
-      ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
+  hmoId: json['hmoId'] as String?,
+  kycLevels: (json['kycLevels'] as List<dynamic>?)
+      ?.map((e) => KycLevel.fromJson(e as Map<String, dynamic>))
       .toList(),
   logo: json['logo'] == null
       ? null
       : Logo.fromJson(json['logo'] as Map<String, dynamic>),
-  createdAt: json['createdAt'] as String?,
-  updatedAt: json['updatedAt'] as String?,
+  cacCertificate: json['cacCertificate'] == null
+      ? null
+      : CacCertificate.fromJson(json['cacCertificate'] as Map<String, dynamic>),
+  hmoAccreditation: json['hmoAccreditation'] == null
+      ? null
+      : HmoAccreditation.fromJson(
+          json['hmoAccreditation'] as Map<String, dynamic>,
+        ),
+  taxIdCertificate: json['taxIdCertificate'] == null
+      ? null
+      : TaxIdCertificate.fromJson(
+          json['taxIdCertificate'] as Map<String, dynamic>,
+        ),
+  applicationForm: json['applicationForm'] == null
+      ? null
+      : ApplicationForm.fromJson(
+          json['applicationForm'] as Map<String, dynamic>,
+        ),
+  scheduleOfPlans: json['scheduleOfPlans'] == null
+      ? null
+      : ScheduleOfPlans.fromJson(
+          json['scheduleOfPlans'] as Map<String, dynamic>,
+        ),
+  listOfHospitals: json['listOfHospitals'] == null
+      ? null
+      : ListOfHospitals.fromJson(
+          json['listOfHospitals'] as Map<String, dynamic>,
+        ),
+  bankDetails: (json['bankDetails'] as List<dynamic>?)
+      ?.map((e) => BankDetail.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-  'id': instance.id,
-  'tenantType': instance.tenantType,
-  'name': instance.name,
-  'owner': instance.owner,
-  'businessAddress': instance.businessAddress,
-  'businessEmail': instance.businessEmail,
-  'contactPersonFirstName': instance.contactPersonFirstName,
-  'contactPersonLastName': instance.contactPersonLastName,
-  'contactPersonDesignation': instance.contactPersonDesignation,
-  'bankDetails': instance.bankDetails,
+  'hmoId': instance.hmoId,
+  'kycLevels': instance.kycLevels,
   'logo': instance.logo,
-  'createdAt': instance.createdAt,
-  'updatedAt': instance.updatedAt,
+  'cacCertificate': instance.cacCertificate,
+  'hmoAccreditation': instance.hmoAccreditation,
+  'taxIdCertificate': instance.taxIdCertificate,
+  'applicationForm': instance.applicationForm,
+  'scheduleOfPlans': instance.scheduleOfPlans,
+  'listOfHospitals': instance.listOfHospitals,
+  'bankDetails': instance.bankDetails,
 };

@@ -24,7 +24,6 @@ class HMOProfileScreen extends StatelessWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await model.getTenant(context);
           await model.getHMOKyc(context);
-          // model.hmoKycStatus();
           model.getUserDetails(
             context: context,
             phoneNo:
@@ -151,10 +150,11 @@ class HMOProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive: !model.getKycStatusBoolSecond(
-                      form: model.formStatus,
-                      plans: model.planStatus,
-                      ass: model.assStatus,
+                    isactive:
+                     !model.getKycStatusBoolSecond(
+                      kyc1: model.getHmoKycResponseModel?.data?.kycLevels?[0].status??'',
+                      kyc2:  model.getHmoKycResponseModel?.data?.kycLevels?[1].status??'',
+                      kyc3:  model.getHmoKycResponseModel?.data?.kycLevels?[2].status??'',
                     ),
                     text: 'KYC',
                     onTap: () => navigate.navigateTo(Routes.hMOKycScreen),

@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'logo.g.dart';
+part 'list_of_hospitals.g.dart';
 
 @JsonSerializable()
-class Logo {
+class ListOfHospitals {
   String? url;
   String? mimeType;
   int? width;
@@ -11,7 +11,7 @@ class Logo {
   int? size;
   String? format;
 
-  Logo({
+  ListOfHospitals({
     this.url,
     this.mimeType,
     this.width,
@@ -20,7 +20,9 @@ class Logo {
     this.format,
   });
 
-  factory Logo.fromJson(Map<String, dynamic> json) => _$LogoFromJson(json);
+  factory ListOfHospitals.fromJson(Map<String, dynamic> json) {
+    return _$ListOfHospitalsFromJson(json);
+  }
 
-  Map<String, dynamic> toJson() => _$LogoToJson(this);
+  Map<String, dynamic> toJson() => _$ListOfHospitalsToJson(this);
 }

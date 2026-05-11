@@ -9,6 +9,8 @@ part of 'logo.dart';
 Logo _$LogoFromJson(Map<String, dynamic> json) => Logo(
   url: json['url'] as String?,
   mimeType: json['mimeType'] as String?,
+  width: (json['width'] as num?)?.toInt(),
+  height: (json['height'] as num?)?.toInt(),
   size: (json['size'] as num?)?.toInt(),
   format: json['format'] as String?,
 );
@@ -16,6 +18,8 @@ Logo _$LogoFromJson(Map<String, dynamic> json) => Logo(
 Map<String, dynamic> _$LogoToJson(Logo instance) => <String, dynamic>{
   'url': instance.url,
   'mimeType': instance.mimeType,
+  'width': instance.width,
+  'height': instance.height,
   'size': instance.size,
   'format': instance.format,
 };

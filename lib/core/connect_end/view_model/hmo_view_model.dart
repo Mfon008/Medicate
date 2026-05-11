@@ -3164,18 +3164,15 @@ class HMOViewModel extends BaseViewModel {
     }
   }
 
-  String getKycStatus({logo, cac, license, tin}) {
-    if (logo == 'PENDING' ||
-        cac == 'PENDING' ||
-        license == 'PENDING' ||
-        tin == 'PENDING') {
+  String getKycStatus(kyc) {
+    if (kyc == 'UNDER_REVIEW') {
       return 'Your KYC is submitted and under\nreview. We’ll notify you once it’s\nverified.';
     }
-    if (logo == 'APPROVED' &&
-        cac == 'APPROVED' &&
-        license == 'APPROVED' &&
-        tin == 'APPROVED') {
+    if (kyc == 'APPROVED') {
       return 'Your KYC has been successfully\nverified. You can now access all\nservices.';
+    }
+    if (kyc == 'REJECTED') {
+      return 'Your KYC couldn’t be verified\n. Please review your details and\nresubmit the required documents';
     }
     return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
   }
@@ -3248,63 +3245,54 @@ class HMOViewModel extends BaseViewModel {
   //   notifyListeners();
   // }
 
-  Color getKycStatusColor({logo, cac, license, tin}) {
-    if (logo == 'PENDING' ||
-        cac == 'PENDING' ||
-        license == 'PENDING' ||
-        tin == 'PENDING') {
+  Color getKycStatusColor(kyc) {
+    if (kyc == 'UNDER_REVIEW') {
       return AppColors.fadedyellow;
     }
-    if (logo == 'APPROVED' &&
-        cac == 'APPROVED' &&
-        license == 'APPROVED' &&
-        tin == 'APPROVED') {
+    if (kyc == 'APPROVED') {
       return AppColors.app_green_light;
+    }
+    if (kyc == 'REJECTED') {
+      return AppColors.faintedRed;
     }
     return AppColors.fadedyellow;
   }
 
-  bool getKycStatusBool({logo, cac, license, tin}) {
-    if (logo == 'PENDING' ||
-        cac == 'PENDING' ||
-        license == 'PENDING' ||
-        tin == 'PENDING') {
+  bool getKycStatusBool(kyc) {
+    if (kyc == 'UNDER_REVIEW') {
       return true;
     }
-    if (logo == 'APPROVED' &&
-        cac == 'APPROVED' &&
-        license == 'APPROVED' &&
-        tin == 'APPROVED') {
+    if (kyc == 'APPROVED') {
       return true;
     }
     return false;
   }
 
-  String getKycStatusSecond({form, plans, ass}) {
-    if (form == 'PENDING' || plans == 'PENDING' || ass == 'PENDING') {
-      return 'Your KYC is submitted and under\nreview. We’ll notify you once it’s\nverified.';
-    }
-    if (ass == 'APPROVED' && form == 'APPROVED' && plans == 'APPROVED') {
-      return 'Your KYC has been successfully\nverified. You can now access all\nservices.';
-    }
-    return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
-  }
+  // String getKycStatusSecond({form, plans, ass}) {
+  //   if (form == 'PENDING' || plans == 'PENDING' || ass == 'PENDING') {
+  //     return 'Your KYC is submitted and under\nreview. We’ll notify you once it’s\nverified.';
+  //   }
+  //   if (ass == 'APPROVED' && form == 'APPROVED' && plans == 'APPROVED') {
+  //     return 'Your KYC has been successfully\nverified. You can now access all\nservices.';
+  //   }
+  //   return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
+  // }
 
-  Color getKycStatusColorSecond({form, plans, ass}) {
-    if (form == 'PENDING' || ass == 'PENDING' || plans == 'PENDING') {
-      return AppColors.fadedyellow;
-    }
-    if (ass == 'APPROVED' && plans == 'APPROVED' && form == 'APPROVE') {
-      return AppColors.app_green_light;
-    }
-    return AppColors.fadedyellow;
-  }
+  // Color getKycStatusColorSecond({form, plans, ass}) {
+  //   if (form == 'PENDING' || ass == 'PENDING' || plans == 'PENDING') {
+  //     return AppColors.fadedyellow;
+  //   }
+  //   if (ass == 'APPROVED' && plans == 'APPROVED' && form == 'APPROVE') {
+  //     return AppColors.app_green_light;
+  //   }
+  //   return AppColors.fadedyellow;
+  // }
 
-  bool getKycStatusBoolSecond({form, plans, ass}) {
-    if (form == 'PENDING' || plans == 'PENDING' || ass == 'PENDING') {
+  bool getKycStatusBoolSecond({kyc1, kyc2, kyc3}) {
+    if (kyc1 == 'UNDER_REVIEW' || kyc2 == 'UNDER_REVIEW' || kyc3 == 'UNDER_REVIEW') {
       return true;
     }
-    if (ass == 'APPROVED' && form == 'APPROVED' && ass == 'APPROVED') {
+    if (kyc1 == 'APPROVED' && kyc2 == 'APPROVED' && kyc3 == 'APPROVED') {
       return true;
     }
     return false;
@@ -3492,10 +3480,7 @@ class HMOViewModel extends BaseViewModel {
                       ),
                       decoration: BoxDecoration(
                         color: getKycStatusColor(
-                          logo: logoStatus,
-                          cac: cacStatus,
-                          license: licenseStatus,
-                          tin: tinStatus,
+                          getHmoKycResponseModel!.data!.kycLevels![1].status,
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -3507,10 +3492,10 @@ class HMOViewModel extends BaseViewModel {
                             width: 200.w,
                             child: TextView(
                               text: getKycStatus(
-                                logo: logoStatus,
-                                cac: cacStatus,
-                                license: licenseStatus,
-                                tin: tinStatus,
+                                getHmoKycResponseModel!
+                                    .data!
+                                    .kycLevels![1]
+                                    .status,
                               ),
                               maxLines: 4,
                               textStyle: TextStyle(
@@ -3552,7 +3537,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    docKycLogo != null
+                    getHmoKycResponseModel!.data!.logo != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -3582,7 +3567,12 @@ class HMOViewModel extends BaseViewModel {
                                     contxxt!,
                                     MaterialPageRoute(
                                       builder: (_) => ImageWebViewScreen(
-                                        imageUrl: docKycLogo?.file?.url ?? '',
+                                        imageUrl:
+                                            getHmoKycResponseModel
+                                                ?.data
+                                                ?.logo
+                                                ?.url ??
+                                            '',
                                       ),
                                     ),
                                   ),
@@ -3731,7 +3721,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    docKycCac != null
+                    getHmoKycResponseModel!.data!.cacCertificate != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -3761,7 +3751,12 @@ class HMOViewModel extends BaseViewModel {
                                     contxxt!,
                                     MaterialPageRoute(
                                       builder: (_) => ImageWebViewScreen(
-                                        imageUrl: docKycCac?.file?.url ?? '',
+                                        imageUrl:
+                                            getHmoKycResponseModel!
+                                                .data!
+                                                .logo
+                                                ?.url ??
+                                            '',
                                       ),
                                     ),
                                   ),
@@ -3915,7 +3910,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    docKycLicense != null
+                    getHmoKycResponseModel!.data!.hmoAccreditation != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -3935,13 +3930,18 @@ class HMOViewModel extends BaseViewModel {
                                     color: AppColors.black,
                                   ),
                                 ),
+                                Spacer(),
                                 GestureDetector(
                                   onTap: () => Navigator.push(
                                     contxxt!,
                                     MaterialPageRoute(
                                       builder: (_) => ImageWebViewScreen(
                                         imageUrl:
-                                            docKycLicense?.file?.url ?? '',
+                                            getHmoKycResponseModel!
+                                                .data!
+                                                .listOfHospitals
+                                                ?.url ??
+                                            '',
                                       ),
                                     ),
                                   ),
@@ -4090,7 +4090,7 @@ class HMOViewModel extends BaseViewModel {
                       ],
                     ),
                     SizedBox(height: 10.20.h),
-                    docKycTin != null
+                    getHmoKycResponseModel!.data!.taxIdCertificate != null
                         ? Container(
                             padding: EdgeInsets.all(10.w),
                             decoration: BoxDecoration(
@@ -4122,7 +4122,12 @@ class HMOViewModel extends BaseViewModel {
                                     contxxt!,
                                     MaterialPageRoute(
                                       builder: (_) => ImageWebViewScreen(
-                                        imageUrl: docKycTin?.file?.url ?? '',
+                                        imageUrl:
+                                            getHmoKycResponseModel!
+                                                .data!
+                                                .taxIdCertificate
+                                                ?.url ??
+                                            '',
                                       ),
                                     ),
                                   ),
@@ -4252,10 +4257,10 @@ class HMOViewModel extends BaseViewModel {
                                   imageNHISLicense == null &&
                                   imageTIN == null ||
                               getKycStatusBool(
-                                    logo: logoStatus,
-                                    cac: cacStatus,
-                                    license: licenseStatus,
-                                    tin: tinStatus,
+                                    getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels![1]
+                                        .status,
                                   ) ==
                                   true
                           ? AppColors.infoGrey
@@ -4267,10 +4272,10 @@ class HMOViewModel extends BaseViewModel {
                       buttonBorderColor: AppColors.transparent,
                       onPressed:
                           getKycStatusBool(
-                                    logo: logoStatus,
-                                    cac: cacStatus,
-                                    license: licenseStatus,
-                                    tin: tinStatus,
+                                    getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels![1]
+                                        .status,
                                   ) ==
                                   false &&
                               imageLogo != null &&
@@ -4341,11 +4346,9 @@ class HMOViewModel extends BaseViewModel {
                           horizontal: 14.62.w,
                         ),
                         decoration: BoxDecoration(
-                          color: getKycStatusColorSecond(
-                            form: formStatus,
-                            plans: planStatus,
-                            ass: assStatus,
-                          ),
+                          color: getKycStatusColor(
+                          getHmoKycResponseModel!.data!.kycLevels![2].status,
+                        ),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -4355,11 +4358,12 @@ class HMOViewModel extends BaseViewModel {
                             SizedBox(
                               width: 200.w,
                               child: TextView(
-                                text: getKycStatusSecond(
-                                  form: formStatus,
-                                  plans: planStatus,
-                                  ass: assStatus,
-                                ),
+                                text: getKycStatus(
+                                getHmoKycResponseModel!
+                                    .data!
+                                    .kycLevels![2]
+                                    .status,
+                              ),
                                 maxLines: 4,
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
@@ -4385,73 +4389,115 @@ class HMOViewModel extends BaseViewModel {
                       SizedBox(height: 6.h),
                       Divider(color: const Color.fromARGB(255, 227, 227, 228)),
                       SizedBox(height: 6.h),
-                      TextFormWidget(
-                        hint: 'Bank Name',
-                        hintSize: 14,
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        keyboardType: TextInputType.text,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: bankNameController,
-                        validator: AppValidator.validateString(),
-                      ),
-                      SizedBox(height: 20.h),
-                      TextFormWidget(
-                        hint: 'Account Number',
-                        hintSize: 14,
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: 'Enter account number',
-                        keyboardType: TextInputType.number,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: accountNumberController,
-                        validator: AppValidator.validateString(),
-                        // ),
-                      ),
-                      SizedBox(height: 20.h),
-                      TextFormWidget(
-                        hint: 'Account Name',
-                        hintSize: 14,
-                        borderColor: AppColors.transparent,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        label: 'Enter account name',
-                        keyboardType: TextInputType.name,
-                        labelStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Arial',
-                          fontSize: 14.2.sp,
-                          color: AppColors.infoGrey,
-                        ),
-                        fillColor: AppColors.grey,
-                        isFilled: true,
-                        controller: accountNameController,
-                        validator: AppValidator.validateString(),
-                        // ),
-                      ),
-                      SizedBox(height: 20.h),
+                      getHmoKycResponseModel!.data != null &&
+                              getHmoKycResponseModel!
+                                  .data!
+                                  .bankDetails!
+                                  .isNotEmpty
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InfoItem(
+                                  title: "Bank Name",
+                                  value:
+                                      getHmoKycResponseModel!
+                                          .data!
+                                          .bankDetails![0]
+                                          .bankName ??
+                                      '',
+                                ),
+                                InfoItem(
+                                  title: "Account Number",
+                                  value:
+                                      getHmoKycResponseModel!
+                                          .data!
+                                          .bankDetails![0]
+                                          .accountNumber ??
+                                      '',
+                                ),
+                                InfoItem(
+                                  title: "Account Name",
+                                  value:
+                                      getHmoKycResponseModel!
+                                          .data!
+                                          .bankDetails![0]
+                                          .accountName ??
+                                      '',
+                                ),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormWidget(
+                                  hint: 'Bank Name',
+                                  hintSize: 14,
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  keyboardType: TextInputType.text,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  controller: bankNameController,
+                                  validator: AppValidator.validateString(),
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Account Number',
+                                  hintSize: 14,
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  label: 'Enter account number',
+                                  keyboardType: TextInputType.number,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  controller: accountNumberController,
+                                  validator: AppValidator.validateString(),
+                                  // ),
+                                ),
+                                SizedBox(height: 20.h),
+                                TextFormWidget(
+                                  hint: 'Account Name',
+                                  hintSize: 14,
+                                  borderColor: AppColors.transparent,
+                                  borderTopLeft: 10.r,
+                                  borderTopRight: 10.r,
+                                  borderBottomLeft: 10.r,
+                                  borderBottomRight: 10.r,
+                                  label: 'Enter account name',
+                                  keyboardType: TextInputType.name,
+                                  labelStyle: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                  fillColor: AppColors.grey,
+                                  isFilled: true,
+                                  controller: accountNameController,
+                                  validator: AppValidator.validateString(),
+                                  // ),
+                                ),
+                                SizedBox(height: 20.h),
+                              ],
+                            ),
                       TextView(
                         text: 'Process Documents',
                         textStyle: TextStyle(
@@ -4491,7 +4537,7 @@ class HMOViewModel extends BaseViewModel {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      docKycForm != null
+                      getHmoKycResponseModel!.data!.applicationForm != null
                           ? Container(
                               padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
@@ -4521,7 +4567,12 @@ class HMOViewModel extends BaseViewModel {
                                       contxxt!,
                                       MaterialPageRoute(
                                         builder: (_) => ImageWebViewScreen(
-                                          imageUrl: docKycForm?.file?.url ?? '',
+                                          imageUrl:
+                                              getHmoKycResponseModel!
+                                                  .data!
+                                                  .applicationForm
+                                                  ?.url ??
+                                              '',
                                         ),
                                       ),
                                     ),
@@ -4671,7 +4722,7 @@ class HMOViewModel extends BaseViewModel {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      docKycPlan != null
+                      getHmoKycResponseModel!.data!.scheduleOfPlans != null
                           ? Container(
                               padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
@@ -4701,7 +4752,12 @@ class HMOViewModel extends BaseViewModel {
                                       contxxt!,
                                       MaterialPageRoute(
                                         builder: (_) => ImageWebViewScreen(
-                                          imageUrl: docKycPlan?.file?.url ?? '',
+                                          imageUrl:
+                                              getHmoKycResponseModel!
+                                                  .data!
+                                                  .scheduleOfPlans
+                                                  ?.url ??
+                                              '',
                                         ),
                                       ),
                                     ),
@@ -4855,7 +4911,7 @@ class HMOViewModel extends BaseViewModel {
                         ],
                       ),
                       SizedBox(height: 10.20.h),
-                      docKycAss != null
+                      getHmoKycResponseModel!.data!.listOfHospitals != null
                           ? Container(
                               padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
@@ -4881,7 +4937,12 @@ class HMOViewModel extends BaseViewModel {
                                       contxxt!,
                                       MaterialPageRoute(
                                         builder: (_) => ImageWebViewScreen(
-                                          imageUrl: docKycAss?.file?.url ?? '',
+                                          imageUrl:
+                                              getHmoKycResponseModel!
+                                                  .data!
+                                                  .listOfHospitals
+                                                  ?.url ??
+                                              '',
                                         ),
                                       ),
                                     ),
@@ -5007,11 +5068,12 @@ class HMOViewModel extends BaseViewModel {
                       ButtonWidget(
                         border: 100.r,
                         buttonColor:
-                            getKycStatusBoolSecond(
-                                      form: formStatus,
-                                      plans: planStatus,
-                                      ass: assStatus,
-                                    ) ==
+                           getKycStatusBool(
+                                    getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels![2]
+                                        .status,
+                                  ) ==
                                     true ||
                                 imageAppForm == null &&
                                     imagePlan == null &&
@@ -5024,11 +5086,12 @@ class HMOViewModel extends BaseViewModel {
                         isLoading: isLoading,
                         buttonBorderColor: AppColors.transparent,
                         onPressed:
-                            getKycStatusBoolSecond(
-                                      form: formStatus,
-                                      plans: planStatus,
-                                      ass: assStatus,
-                                    ) ==
+                            getKycStatusBool(
+                                    getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels![2]
+                                        .status,
+                                  ) ==
                                     false &&
                                 imageAppForm != null &&
                                 imagePlan != null &&
