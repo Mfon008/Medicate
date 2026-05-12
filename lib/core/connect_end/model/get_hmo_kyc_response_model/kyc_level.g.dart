@@ -10,12 +10,8 @@ KycLevel _$KycLevelFromJson(Map<String, dynamic> json) => KycLevel(
   level: (json['level'] as num?)?.toInt(),
   status: json['status'] as String?,
   rejectionComment: json['rejectionComment'] as String?,
-  submittedAt: json['submittedAt'] == ""
-      ? ""
-      : DateTime.parse(json['submittedAt'] as String),
-  reviewedAt: json['reviewedAt'] == ""
-      ? ""
-      : DateTime.parse(json['reviewedAt'] as String),
+  submittedAt: json['submittedAt'],
+  reviewedAt: json['reviewedAt'],
   reviewedBy: json['reviewedBy'] as String?,
 );
 
@@ -23,7 +19,7 @@ Map<String, dynamic> _$KycLevelToJson(KycLevel instance) => <String, dynamic>{
   'level': instance.level,
   'status': instance.status,
   'rejectionComment': instance.rejectionComment,
-  'submittedAt': instance.submittedAt?.toIso8601String(),
-  'reviewedAt': instance.reviewedAt?.toIso8601String(),
+  'submittedAt': instance.submittedAt,
+  'reviewedAt': instance.reviewedAt,
   'reviewedBy': instance.reviewedBy,
 };

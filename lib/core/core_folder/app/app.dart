@@ -61,6 +61,8 @@ import '../../../ui/dashboard/hmo/view_hmo_renewal_portal_screen.dart';
 import '../../../ui/dashboard/hmo/view_hmo_subscribers_portal_screen.dart';
 import '../../../ui/dashboard/hmo/view_settlement_portal_screen.dart';
 import '../../../ui/dashboard/home_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_create_tiers_plan_management_screen.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_first_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_second_screen.dart';
@@ -248,6 +250,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HMOTwoFactorAuthScreen),
     MaterialRoute(page: HmoTwoFactorAuthVerificationSecondScreen),
     MaterialRoute(page: HmoTwoFactorAuthVerificationFirstScreen),
+    MaterialRoute(page: HmoPlanTiersManagementScreen),
+    MaterialRoute(page: HmoCreateTiersPlanManagementScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

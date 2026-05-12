@@ -18,6 +18,7 @@ import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_mo
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/hmo_add_role_modal_widget.dart';
@@ -137,6 +138,10 @@ class HMOViewModel extends BaseViewModel {
   String vdeleteErrorMessage = '';
   String vdeactivateErrorMessage = '';
   List<Document> kycDocumentsList = [];
+
+  // List<dynamic> featureList = [];
+
+  List<TextEditingController> featureListController = [TextEditingController()];
 
   File? imageAppForm;
   String? filenameAppForm;
@@ -339,6 +344,8 @@ class HMOViewModel extends BaseViewModel {
   KycDocument? docKycAss;
 
   int page = 1;
+
+  HmoTeirEntity? hmoTeirEntity;
 
   String tiersSvgImage(String planTier) {
     if (planTier == 'Pearl') {

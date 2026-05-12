@@ -130,12 +130,12 @@ class HMOSettingScreen extends StatelessWidget {
                   SizedBox(height: 20.h),
                   profileContainer(
                     icon: AppImage.med,
-                    text: 'All Plan',
+                    text: 'Plan Tiers',
                     topLeft: 12,
                     topRight: 12,
                     bottomLeft: 12,
                     bottomRight: 12,
-                    // onTap: () => navigate.navigateTo(Routes.walletScreen),
+                    onTap: () => navigate.navigateTo(Routes.hmoPlanTiersManagementScreen),
                   ),
                   SizedBox(height: 30.0.h),
 
