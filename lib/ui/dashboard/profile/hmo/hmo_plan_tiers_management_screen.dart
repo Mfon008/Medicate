@@ -131,9 +131,6 @@ class HmoPlanTiersManagementScreen extends StatelessWidget {
                                           await Future.delayed(
                                             Duration(seconds: 2),
                                           );
-                                          // model.getRoles(
-                                          //   context,
-                                          // ); // refresh roles after modal closes
                                         } else {}
                                       },
                                       child: Container(

@@ -150,12 +150,12 @@ class HMOProfileScreen extends StatelessWidget {
                   SizedBox(height: 1.0.h),
                   profileContainer(
                     icon: AppImage.key,
-                    isactive:
-                     !model.getKycStatusBoolSecond(
+                    isactive: model.getHmoKycResponseModel!=null&& model.getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
+                     model.getKycStatusBoolSecond(
                       kyc1: model.getHmoKycResponseModel?.data?.kycLevels?[0].status??'',
                       kyc2:  model.getHmoKycResponseModel?.data?.kycLevels?[1].status??'',
                       kyc3:  model.getHmoKycResponseModel?.data?.kycLevels?[2].status??'',
-                    ),
+                    ):true,
                     text: 'KYC',
                     onTap: () => navigate.navigateTo(Routes.hMOKycScreen),
                   ),

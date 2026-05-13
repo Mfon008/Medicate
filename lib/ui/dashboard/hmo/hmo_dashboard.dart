@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:medicate_app/ui/dashboard/ask_me_screen.dart';
 import 'package:medicate_app/ui/dashboard/hmo/hmo_home_screen.dart';
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_setting_screen.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/text.dart';
@@ -27,7 +27,7 @@ class _HMODashboardState extends State<HMODashboard> {
     HMOHomeScreen(),
     HmoPlanScreen(),
     HmoPortalScreen(),
-    AskMeScreen(),
+    HMOSettingScreen(),
   ];
 
   Future<bool> willPopControl() async {

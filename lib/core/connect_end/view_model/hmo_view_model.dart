@@ -18,6 +18,7 @@ import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_mo
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
+import '../../../ui/dashboard/profile/hmo/hmo_plan_teir_class.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
@@ -142,6 +143,7 @@ class HMOViewModel extends BaseViewModel {
   // List<dynamic> featureList = [];
 
   List<TextEditingController> featureListController = [TextEditingController()];
+  List<PlanTierListType> planTierListType = [PlanTierListType()];
 
   File? imageAppForm;
   String? filenameAppForm;
@@ -346,6 +348,227 @@ class HMOViewModel extends BaseViewModel {
   int page = 1;
 
   HmoTeirEntity? hmoTeirEntity;
+  Map<String, Color>? colorPairsField={'primary':Color(0XFFFF4B4B),'secondary':Color(0XFFFDE8E8)};
+
+  Future<void> showColorPickerDialog(BuildContext context) async {
+  final List<Map<String, Color>> colorPairs = [
+    {
+      "primary": Color(0XFFFF4B4B),
+      "secondary": Color(0XFFFDE8E8),
+    },
+    {
+      "primary": Color(0XFF2D9CFF),
+      "secondary": Color(0XFFE4F2FF),
+    },
+    {
+      "primary": Color(0XFF9B51E0),
+      "secondary": Color(0XFFF1E6FF),
+    },
+    {
+      "primary": Color(0XFF4F8F62),
+      "secondary": Color(0XFFDCEEE2),
+    },
+    {
+      "primary": Color(0XFFE9B63D),
+      "secondary": Color(0XFFF8EDCF),
+    },
+    {
+      "primary": Color(0XFF11B5D8),
+      "secondary": Color(0XFFD9F4FA),
+    },
+  ];
+
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (_) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 24.h,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: colorPairs.map((e) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 18.h),
+                child: GestureDetector(
+                  onTap: () {
+                     colorPairsField = e;
+                     notifyListeners();
+                     Navigator.pop(context);
+                  },
+                  child: Row(
+                    children: [
+                      /// PRIMARY COLOR
+                      Container(
+                        height: 32.h,
+                        width: 32.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: e["primary"],
+                        ),
+                      ),
+                      SizedBox(width: 12.w),
+                      /// SECONDARY COLOR
+                      Container(
+                        height: 32.h,
+                        width: 32.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: e["secondary"],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+  Future<void> showUpdateMedicationDialog({
+    BuildContext? context,
+    int? planIndex,
+  }) async {
+    return showDialog(
+      context: context!,
+      barrierDismissible: false, // Prevent dismiss when tapping outside
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top warning icon
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.appRed.withOpacity(.09),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(12.0.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.appRed,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImage.ex_error,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                TextView(
+                  text: "Are you sure?",
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.bblack,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: "This action will delete this plan tier.",
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.success,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppColors.primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32.w,
+                          vertical: 12.w,
+                        ),
+                      ),
+                      child: TextView(
+                        text: "Cancel",
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+
+                    // Continue Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          planTierListType.removeAt(planIndex!);
+                          notifyListeners();
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.appRed,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 12.w,
+                          ),
+                          elevation: 0,
+                        ),
+                        child: TextView(
+                          text: "Yes, Delete",
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.6.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   String tiersSvgImage(String planTier) {
     if (planTier == 'Pearl') {
@@ -3508,26 +3731,29 @@ class HMOViewModel extends BaseViewModel {
                         horizontal: 14.62.w,
                       ),
                       decoration: BoxDecoration(
-                        color: getKycStatusColor(
+                        color:getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
+                         getKycStatusColor(
                           getHmoKycResponseModel!.data!.kycLevels![1].status,
-                        ),
+                        ):AppColors.fadedyellow,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         children: [
+                          getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
                           getKycStatusIcon(
                             getHmoKycResponseModel!.data!.kycLevels![1].status,
-                          ),
+                          ):SvgPicture.asset(AppImage.info),
                           SizedBox(width: 10.w),
                           SizedBox(
                             width: 200.w,
                             child: TextView(
-                              text: getKycStatus(
+                              text: getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
+                               getKycStatus(
                                 getHmoKycResponseModel!
                                     .data!
                                     .kycLevels![1]
                                     .status,
-                              ),
+                              ):'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
                               maxLines: 4,
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
@@ -4287,7 +4513,9 @@ class HMOViewModel extends BaseViewModel {
                                   imageCAC == null &&
                                   imageNHISLicense == null &&
                                   imageTIN == null ||
-                              getKycStatusBool(
+                              getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels!.isNotEmpty&& getKycStatusBool(
                                     getHmoKycResponseModel!
                                         .data!
                                         .kycLevels![1]
@@ -4301,7 +4529,9 @@ class HMOViewModel extends BaseViewModel {
                       color: AppColors.white,
                       isLoading: isLoading,
                       buttonBorderColor: AppColors.transparent,
-                      onPressed:
+                      onPressed:getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels!.isNotEmpty?
                           getKycStatusBool(
                                     getHmoKycResponseModel!
                                         .data!
@@ -4354,7 +4584,48 @@ class HMOViewModel extends BaseViewModel {
                                 );
                               }
                             }
-                          : () {},
+                          : () {}:(){
+                             if (imageLogo != null &&
+                                  imageCAC != null &&
+                                  imageNHISLicense != null &&
+                                  imageTIN != null) {
+                                updateHMOKyc(
+                                  contxxt,
+                                  updateKyc: UpdateHmoKycEntityModel(
+                                    logo: lg.Logo.fromJson(
+                                      fl.File.fromJson(
+                                        kycDocumentsList[0].file!.toJson(),
+                                      ).toJson(),
+                                    ),
+                                    cacCertificate: cc.CacCertificate.fromJson(
+                                      fl.File.fromJson(
+                                        kycDocumentsList[1].file!.toJson(),
+                                      ).toJson(),
+                                    ),
+                                    hmoAccreditation:
+                                        ac.HmoAccreditation.fromJson(
+                                          fl.File.fromJson(
+                                            kycDocumentsList[2].file!.toJson(),
+                                          ).toJson(),
+                                        ),
+                                    taxIdCertificate:
+                                        tx.TaxIdCertificate.fromJson(
+                                          fl.File.fromJson(
+                                            kycDocumentsList[3].file!.toJson(),
+                                          ).toJson(),
+                                        ),
+                                  ),
+                                );
+                              } else {
+                                AppUtils.snackbar(
+                                  context,
+                                  message:
+                                      'Kindly select and upload all documents. ',
+                                  error: true,
+                                );
+                              }
+                            
+                          },
                     ),
                     SizedBox(height: 10.h),
                   ],
@@ -4377,29 +4648,32 @@ class HMOViewModel extends BaseViewModel {
                           horizontal: 14.62.w,
                         ),
                         decoration: BoxDecoration(
-                          color: getKycStatusColor(
+                          color: getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty? getKycStatusColor(
                             getHmoKycResponseModel!.data!.kycLevels![2].status,
-                          ),
+                          ):AppColors.fadedyellow,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
                           children: [
+                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
                             getKycStatusIcon(
                               getHmoKycResponseModel!
                                   .data!
                                   .kycLevels![2]
                                   .status,
-                            ),
+                            ):SvgPicture.asset(AppImage.info),
                             SizedBox(width: 10.w),
                             SizedBox(
                               width: 200.w,
                               child: TextView(
-                                text: getKycStatus(
+                                text: getHmoKycResponseModel!
+                                      .data!
+                                      .kycLevels!.isNotEmpty? getKycStatus(
                                   getHmoKycResponseModel!
                                       .data!
                                       .kycLevels![2]
                                       .status,
-                                ),
+                                ):'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
                                 maxLines: 4,
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
@@ -5103,7 +5377,9 @@ class HMOViewModel extends BaseViewModel {
                       SizedBox(height: 30.h),
                       ButtonWidget(
                         border: 100.r,
-                        buttonColor:
+                        buttonColor:  getHmoKycResponseModel!
+                                          .data!
+                                          .kycLevels!.isNotEmpty?
                             getKycStatusBool(
                                       getHmoKycResponseModel!
                                           .data!
@@ -5115,13 +5391,15 @@ class HMOViewModel extends BaseViewModel {
                                     imagePlan == null &&
                                     imageAss == null
                             ? AppColors.infoGrey
-                            : AppColors.primary,
+                            : AppColors.primary:AppColors.infoGrey,
                         fontSize: 16.sp,
                         buttonText: 'Submit for Verification',
                         color: AppColors.white,
                         isLoading: isLoading,
                         buttonBorderColor: AppColors.transparent,
-                        onPressed:
+                        onPressed: getHmoKycResponseModel!
+                                          .data!
+                                          .kycLevels!.isNotEmpty?
                             getKycStatusBool(
                                       getHmoKycResponseModel!
                                           .data!
@@ -5234,7 +5512,7 @@ class HMOViewModel extends BaseViewModel {
                                   );
                                 }
                               }
-                            : () {},
+                            : () {}:(){},
                       ),
                       SizedBox(height: 10.h),
                     ],
