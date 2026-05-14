@@ -337,9 +337,9 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
     return ViewModelBuilder<HMOViewModel>.reactive(
       viewModelBuilder: () => locator<HMOViewModel>(),
       onViewModelReady: (model) async {
-        await model.getListedPlanTypesForHMO();
-        await model.getListedPlanTiersForHMO();
-        model.getListOfHospital();
+        await model.getListedPlanTypesForHMO(context);
+        await model.getListedPlanTiersForHMO(context);
+        model.getListOfHospital(context);
         if (!widget.isEdited!) {
           await model.getPlanDetail(context: context, planId: widget.plan?.id);
           model.planTypeController.text =
@@ -822,7 +822,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                     refreshController.loadNoData();
                                   } else {
                                     model.page++;
-                                    model.getListOfHospital();
+                                    model.getListOfHospital(context);
                                     refreshController.loadComplete();
                                   }
                                 },

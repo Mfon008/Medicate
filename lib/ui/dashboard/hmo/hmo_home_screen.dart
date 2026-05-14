@@ -1,5 +1,4 @@
-// ignore_for_file: deprecated_member_use
-
+// ignore_for_file: deprecated_member_use 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -214,7 +213,7 @@ class _HMOHomeScreenState extends State<HMOHomeScreen> {
                 SizedBox(width: 7.10.w),
                 hmoPlanWidget(
                   isFinance: false,
-                  text: 'Plan Request',
+                  text: 'Renewal Request',
                   svg: AppImage.renewal_request,
                   count: '10',
                 ),

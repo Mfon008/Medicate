@@ -81,6 +81,7 @@ import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dar
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../repo/hmo_repo_impl.dart';
+import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
     as ph;
 import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/logo.dart'
@@ -94,7 +95,7 @@ import 'package:medicate_app/core/connect_end/model/update_hmo_kyc_entity_model/
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
     as fl;
 
-String startDateIso = '';
+// String startDateIso = '';
 
 class HMOViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -251,6 +252,7 @@ class HMOViewModel extends BaseViewModel {
   CreateHospitalNetworkResponseModel? get createHospitalNetworkResponseModel =>
       _createHospitalNetworkResponseModel;
   GetMyHmoPlanResponseModel? _getMyHmoPlanResponseModel;
+  GetMyHmoPlanResponseModel? getMyHmoPlanResponseModelList;
   GetMyHmoPlanResponseModel? get getMyHmoPlanResponseModel =>
       _getMyHmoPlanResponseModel;
   GetHospitalByIdResponseModel? _getHospitalByIdResponseModel;
@@ -348,96 +350,193 @@ class HMOViewModel extends BaseViewModel {
   int page = 1;
 
   HmoTeirEntity? hmoTeirEntity;
-  Map<String, Color>? colorPairsField={'primary':Color(0XFFFF4B4B),'secondary':Color(0XFFFDE8E8)};
+  Map<String, Color>? colorPairsField = {
+    'primary': Color(0XFFFF4B4B),
+    'secondary': Color(0XFFFDE8E8),
+  };
+
+  String searchHospitalName = '';
+
+  String searchHmoPlanName = '';
+
+  String filterPlanTypes = 'All';
+
+  String filterPlanTiers = 'All';
+  final groupedPlans = <String, List<Plan>>{};
+
+  groupByPlanType(context, HMOViewModel model, String selectedType) async {
+    filterPlanTypes = selectedType;
+    await getMyPlan(context);
+
+    /// Always use original data source
+    final allPlans = _getMyHmoPlanResponseModel?.data?.plans ?? [];
+
+    /// Search filter
+    if (filterPlanTypes != '') {
+      final searchedPlans = allPlans.where((plan) {
+        return (plan.planName ?? '').toLowerCase().contains(
+          model.searchHmoPlanName.toLowerCase(),
+        );
+      }).toList();
+
+      /// If ALL selected
+      if (filterPlanTypes == 'All') {
+        model.getMyHmoPlanResponseModelList?.data?.plans = searchedPlans;
+        model.notifyListeners();
+        return;
+      }
+
+      /// Filter by plan type
+      final filteredByType = searchedPlans.where((plan) {
+        return (plan.planType ?? '') == filterPlanTypes;
+      }).toList();
+
+      model.getMyHmoPlanResponseModelList?.data?.plans = filteredByType;
+    } else {
+      final searchedPlans = allPlans;
+
+      /// If ALL selected
+      if (filterPlanTypes == 'All') {
+        model.getMyHmoPlanResponseModelList?.data?.plans = searchedPlans;
+        model.notifyListeners();
+        return;
+      }
+
+      /// Filter by plan type
+      final filteredByType = searchedPlans.where((plan) {
+        return (plan.planType ?? '') == filterPlanTypes;
+      }).toList();
+
+      model.getMyHmoPlanResponseModelList?.data?.plans = filteredByType;
+    }
+    model.notifyListeners();
+  }
+
+  groupByPlanTiers(context, HMOViewModel model, String selectedTier) async {
+    filterPlanTiers = selectedTier;
+    await getMyPlan(context);
+
+    /// Always use original data source
+    final allPlans = _getMyHmoPlanResponseModel?.data?.plans ?? [];
+
+    /// Search filter
+    if (filterPlanTiers != '') {
+      final searchedPlansTiers = allPlans.where((plan) {
+        return (plan.planName ?? '').toLowerCase().contains(
+          model.searchHmoPlanName.toLowerCase(),
+        );
+      }).toList();
+
+      /// If ALL selected
+      if (filterPlanTiers == 'All') {
+        model.getMyHmoPlanResponseModelList?.data?.plans = searchedPlansTiers;
+        model.notifyListeners();
+        return;
+      }
+
+      /// Filter by plan type
+      final filteredByTier = searchedPlansTiers.where((plan) {
+        return (plan.planTier ?? '') == filterPlanTiers;
+      }).toList();
+
+      model.getMyHmoPlanResponseModelList?.data?.plans = filteredByTier;
+    } else {
+      final searchedPlans = allPlans;
+
+      /// If ALL selected
+      if (filterPlanTiers == 'All') {
+        model.getMyHmoPlanResponseModelList?.data?.plans = searchedPlans;
+        model.notifyListeners();
+        return;
+      }
+
+      /// Filter by plan type
+      final filteredByTiers = searchedPlans.where((plan) {
+        return (plan.planType ?? '') == filterPlanTypes;
+      }).toList();
+
+      model.getMyHmoPlanResponseModelList?.data?.plans = filteredByTiers;
+    }
+    model.notifyListeners();
+  }
 
   Future<void> showColorPickerDialog(BuildContext context) async {
-  final List<Map<String, Color>> colorPairs = [
-    {
-      "primary": Color(0XFFFF4B4B),
-      "secondary": Color(0XFFFDE8E8),
-    },
-    {
-      "primary": Color(0XFF2D9CFF),
-      "secondary": Color(0XFFE4F2FF),
-    },
-    {
-      "primary": Color(0XFF9B51E0),
-      "secondary": Color(0XFFF1E6FF),
-    },
-    {
-      "primary": Color(0XFF4F8F62),
-      "secondary": Color(0XFFDCEEE2),
-    },
-    {
-      "primary": Color(0XFFE9B63D),
-      "secondary": Color(0XFFF8EDCF),
-    },
-    {
-      "primary": Color(0XFF11B5D8),
-      "secondary": Color(0XFFD9F4FA),
-    },
-  ];
+    final List<Map<String, Color>> colorPairs = [
+      {"primary": Color(0XFFFF4B4B), "secondary": Color(0XFFFDE8E8)},
+      {"primary": Color(0XFF2D9CFF), "secondary": Color(0XFFE4F2FF)},
+      {"primary": Color(0XFF9B51E0), "secondary": Color(0XFFF1E6FF)},
+      {"primary": Color(0XFF4F8F62), "secondary": Color(0XFFDCEEE2)},
+      {"primary": Color(0XFFE9B63D), "secondary": Color(0XFFF8EDCF)},
+      {"primary": Color(0XFF11B5D8), "secondary": Color(0XFFD9F4FA)},
+    ];
 
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (_) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 24.h,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: colorPairs.map((e) {
-              return Padding(
-                padding: EdgeInsets.only(bottom: 18.h),
-                child: GestureDetector(
-                  onTap: () {
-                     colorPairsField = e;
-                     notifyListeners();
-                     Navigator.pop(context);
-                  },
-                  child: Row(
-                    children: [
-                      /// PRIMARY COLOR
-                      Container(
-                        height: 32.h,
-                        width: 32.w,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: e["primary"],
-                        ),
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: colorPairs.map((e) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 18.h),
+                    child: GestureDetector(
+                      onTap: () {
+                        colorPairsField = e;
+                        notifyListeners();
+                        Navigator.pop(context);
+                      },
+                      child: Row(
+                        children: [
+                          /// PRIMARY COLOR
+                          Container(
+                            height: 32.h,
+                            width: 32.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: e["primary"],
+                            ),
+                          ),
+                          SizedBox(width: 12.w),
+
+                          /// SECONDARY COLOR
+                          Container(
+                            height: 32.h,
+                            width: 32.w,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: e["secondary"],
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 12.w),
-                      /// SECONDARY COLOR
-                      Container(
-                        height: 32.h,
-                        width: 32.w,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: e["secondary"],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
+
+  String getDurationAmount(duration) {
+    if (duration > 1) {
+      return '$duration Months';
+    }
+    return '$duration Month';
+  }
 
   Future<void> showUpdateMedicationDialog({
     BuildContext? context,
@@ -2063,7 +2162,7 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getListedPlanTypesForHMO() async {
+  Future<void> getListedPlanTypesForHMO(context) async {
     try {
       _isLoading = true;
       _getAllListedPlanTypesResponseModel = await runBusyFuture(
@@ -2080,7 +2179,7 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getListedPlanTiersForHMO() async {
+  Future<void> getListedPlanTiersForHMO(context) async {
     try {
       _isLoading = true;
       _getAllListedPlanTiersResponseModel = await runBusyFuture(
@@ -2097,7 +2196,7 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getListOfHospital() async {
+  Future<void> getListOfHospital(context) async {
     try {
       _isLoading = true;
       _getAllOfHospitalsResponseModel = await runBusyFuture(
@@ -2208,10 +2307,7 @@ class HMOViewModel extends BaseViewModel {
           context,
           message: _createHmoPlanReponseModel?.message ?? '',
         );
-        navigate.navigateTo(
-          Routes.hMODashboard,
-          arguments: HMODashboardArguments(index: 1),
-        );
+        navigate.back(result: true);
       }
       _isLoading = false;
     } catch (e) {
@@ -2235,6 +2331,7 @@ class HMOViewModel extends BaseViewModel {
       );
       if (v['statusCode'] == 200) {
         await AppUtils.snackbar(context, message: v['message'] ?? '');
+        navigate.back(result: true);
       }
       _isLoading = false;
     } catch (e) {
@@ -2342,6 +2439,7 @@ class HMOViewModel extends BaseViewModel {
         repositoryImply.getMyHmoPlans(),
         throwException: true,
       );
+      getMyHmoPlanResponseModelList = _getMyHmoPlanResponseModel;
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -3064,39 +3162,39 @@ class HMOViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(), // The time initially displayed
-    );
+  // Future<void> selectTime(BuildContext context) async {
+  //   final TimeOfDay? pickedTime = await showTimePicker(
+  //     context: context,
+  //     initialTime: TimeOfDay.now(), // The time initially displayed
+  //   );
 
-    if (pickedTime != null) {
-      dateTimeController.text =
-          '${pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
-    }
-    notifyListeners();
-  }
+  //   if (pickedTime != null) {
+  //     dateTimeController.text =
+  //         '${pickedDate!} ${formatTime('${pickedTime.hour}:${pickedTime.minute}')}';
+  //   }
+  //   notifyListeners();
+  // }
 
-  Future<void> selectDate(BuildContext context) async {
-    final DateTime? pickedDated = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(), // The date initially displayed
-      firstDate: DateTime.now(), // The earliest selectable date
-      lastDate: DateTime(2101), // The latest selectable date
-    );
+  // Future<void> selectDate(BuildContext context) async {
+  //   final DateTime? pickedDated = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(), // The date initially displayed
+  //     firstDate: DateTime.now(), // The earliest selectable date
+  //     lastDate: DateTime(2101), // The latest selectable date
+  //   );
 
-    if (pickedDated != null) {
-      pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
+  //   if (pickedDated != null) {
+  //     pickedDate = DateFormat('dd MMM, yyyy').format(pickedDated);
 
-      await selectTime(context);
-      startDateIso = DateTime.utc(
-        pickedDated.year,
-        pickedDated.month,
-        pickedDated.day,
-      ).toIso8601String();
-    }
-    notifyListeners();
-  }
+  //     await selectTime(context);
+  //     startDateIso = DateTime.utc(
+  //       pickedDated.year,
+  //       pickedDated.month,
+  //       pickedDated.day,
+  //     ).toIso8601String();
+  //   }
+  //   notifyListeners();
+  // }
 
   formartFileImage(File? imageFile) {
     if (imageFile == null) return;
@@ -3407,6 +3505,18 @@ class HMOViewModel extends BaseViewModel {
     return 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.';
   }
 
+  bool getHmoIsActiveStatus(model) {
+    if (model.getHmoKycResponseModel != null &&
+        model.getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty) {
+      return model.getKycStatusBoolSecond(
+        kyc1: model.getHmoKycResponseModel?.data?.kycLevels?[0].status ?? '',
+        kyc2: model.getHmoKycResponseModel?.data?.kycLevels?[1].status ?? '',
+        kyc3: model.getHmoKycResponseModel?.data?.kycLevels?[2].status ?? '',
+      );
+    }
+    return true;
+  }
+
   // hmoKycStatus() {
   //   if (getHmoKycResponseModel!.data != {} &&
   //       getHmoKycResponseModel!.data!.kycDocuments != null &&
@@ -3545,7 +3655,7 @@ class HMOViewModel extends BaseViewModel {
       return true;
     }
     if (kyc1 == 'APPROVED' && kyc2 == 'APPROVED' && kyc3 == 'APPROVED') {
-      return true;
+      return false;
     }
     return false;
   }
@@ -3731,29 +3841,43 @@ class HMOViewModel extends BaseViewModel {
                         horizontal: 14.62.w,
                       ),
                       decoration: BoxDecoration(
-                        color:getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
-                         getKycStatusColor(
-                          getHmoKycResponseModel!.data!.kycLevels![1].status,
-                        ):AppColors.fadedyellow,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
-                          getKycStatusIcon(
-                            getHmoKycResponseModel!.data!.kycLevels![1].status,
-                          ):SvgPicture.asset(AppImage.info),
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                            width: 200.w,
-                            child: TextView(
-                              text: getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
-                               getKycStatus(
+                        color:
+                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+                            ? getKycStatusColor(
                                 getHmoKycResponseModel!
                                     .data!
                                     .kycLevels![1]
                                     .status,
-                              ):'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
+                              )
+                            : AppColors.fadedyellow,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+                              ? getKycStatusIcon(
+                                  getHmoKycResponseModel!
+                                      .data!
+                                      .kycLevels![1]
+                                      .status,
+                                )
+                              : SvgPicture.asset(AppImage.info),
+                          SizedBox(width: 10.w),
+                          SizedBox(
+                            width: 200.w,
+                            child: TextView(
+                              text:
+                                  getHmoKycResponseModel!
+                                      .data!
+                                      .kycLevels!
+                                      .isNotEmpty
+                                  ? getKycStatus(
+                                      getHmoKycResponseModel!
+                                          .data!
+                                          .kycLevels![1]
+                                          .status,
+                                    )
+                                  : 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
                               maxLines: 4,
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
@@ -4514,14 +4638,16 @@ class HMOViewModel extends BaseViewModel {
                                   imageNHISLicense == null &&
                                   imageTIN == null ||
                               getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels!.isNotEmpty&& getKycStatusBool(
-                                    getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels![1]
-                                        .status,
-                                  ) ==
-                                  true
+                                      .data!
+                                      .kycLevels!
+                                      .isNotEmpty &&
+                                  getKycStatusBool(
+                                        getHmoKycResponseModel!
+                                            .data!
+                                            .kycLevels![1]
+                                            .status,
+                                      ) ==
+                                      true
                           ? AppColors.infoGrey
                           : AppColors.primary,
                       fontSize: 16.sp,
@@ -4529,21 +4655,67 @@ class HMOViewModel extends BaseViewModel {
                       color: AppColors.white,
                       isLoading: isLoading,
                       buttonBorderColor: AppColors.transparent,
-                      onPressed:getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels!.isNotEmpty?
-                          getKycStatusBool(
-                                    getHmoKycResponseModel!
-                                        .data!
-                                        .kycLevels![1]
-                                        .status,
-                                  ) ==
-                                  false &&
-                              imageLogo != null &&
-                              imageCAC != null &&
-                              imageNHISLicense != null &&
-                              imageTIN != null
-                          ? () {
+                      onPressed:
+                          getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+                          ? getKycStatusBool(
+                                          getHmoKycResponseModel!
+                                              .data!
+                                              .kycLevels![1]
+                                              .status,
+                                        ) ==
+                                        false &&
+                                    imageLogo != null &&
+                                    imageCAC != null &&
+                                    imageNHISLicense != null &&
+                                    imageTIN != null
+                                ? () {
+                                    if (imageLogo != null &&
+                                        imageCAC != null &&
+                                        imageNHISLicense != null &&
+                                        imageTIN != null) {
+                                      updateHMOKyc(
+                                        contxxt,
+                                        updateKyc: UpdateHmoKycEntityModel(
+                                          logo: lg.Logo.fromJson(
+                                            fl.File.fromJson(
+                                              kycDocumentsList[0].file!
+                                                  .toJson(),
+                                            ).toJson(),
+                                          ),
+                                          cacCertificate:
+                                              cc.CacCertificate.fromJson(
+                                                fl.File.fromJson(
+                                                  kycDocumentsList[1].file!
+                                                      .toJson(),
+                                                ).toJson(),
+                                              ),
+                                          hmoAccreditation:
+                                              ac.HmoAccreditation.fromJson(
+                                                fl.File.fromJson(
+                                                  kycDocumentsList[2].file!
+                                                      .toJson(),
+                                                ).toJson(),
+                                              ),
+                                          taxIdCertificate:
+                                              tx.TaxIdCertificate.fromJson(
+                                                fl.File.fromJson(
+                                                  kycDocumentsList[3].file!
+                                                      .toJson(),
+                                                ).toJson(),
+                                              ),
+                                        ),
+                                      );
+                                    } else {
+                                      AppUtils.snackbar(
+                                        context,
+                                        message:
+                                            'Kindly select and upload all documents. ',
+                                        error: true,
+                                      );
+                                    }
+                                  }
+                                : () {}
+                          : () {
                               if (imageLogo != null &&
                                   imageCAC != null &&
                                   imageNHISLicense != null &&
@@ -4583,49 +4755,7 @@ class HMOViewModel extends BaseViewModel {
                                   error: true,
                                 );
                               }
-                            }
-                          : () {}:(){
-                             if (imageLogo != null &&
-                                  imageCAC != null &&
-                                  imageNHISLicense != null &&
-                                  imageTIN != null) {
-                                updateHMOKyc(
-                                  contxxt,
-                                  updateKyc: UpdateHmoKycEntityModel(
-                                    logo: lg.Logo.fromJson(
-                                      fl.File.fromJson(
-                                        kycDocumentsList[0].file!.toJson(),
-                                      ).toJson(),
-                                    ),
-                                    cacCertificate: cc.CacCertificate.fromJson(
-                                      fl.File.fromJson(
-                                        kycDocumentsList[1].file!.toJson(),
-                                      ).toJson(),
-                                    ),
-                                    hmoAccreditation:
-                                        ac.HmoAccreditation.fromJson(
-                                          fl.File.fromJson(
-                                            kycDocumentsList[2].file!.toJson(),
-                                          ).toJson(),
-                                        ),
-                                    taxIdCertificate:
-                                        tx.TaxIdCertificate.fromJson(
-                                          fl.File.fromJson(
-                                            kycDocumentsList[3].file!.toJson(),
-                                          ).toJson(),
-                                        ),
-                                  ),
-                                );
-                              } else {
-                                AppUtils.snackbar(
-                                  context,
-                                  message:
-                                      'Kindly select and upload all documents. ',
-                                  error: true,
-                                );
-                              }
-                            
-                          },
+                            },
                     ),
                     SizedBox(height: 10.h),
                   ],
@@ -4648,32 +4778,46 @@ class HMOViewModel extends BaseViewModel {
                           horizontal: 14.62.w,
                         ),
                         decoration: BoxDecoration(
-                          color: getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty? getKycStatusColor(
-                            getHmoKycResponseModel!.data!.kycLevels![2].status,
-                          ):AppColors.fadedyellow,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty?
-                            getKycStatusIcon(
+                          color:
                               getHmoKycResponseModel!
                                   .data!
-                                  .kycLevels![2]
-                                  .status,
-                            ):SvgPicture.asset(AppImage.info),
-                            SizedBox(width: 10.w),
-                            SizedBox(
-                              width: 200.w,
-                              child: TextView(
-                                text: getHmoKycResponseModel!
-                                      .data!
-                                      .kycLevels!.isNotEmpty? getKycStatus(
+                                  .kycLevels!
+                                  .isNotEmpty
+                              ? getKycStatusColor(
                                   getHmoKycResponseModel!
                                       .data!
                                       .kycLevels![2]
                                       .status,
-                                ):'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
+                                )
+                              : AppColors.fadedyellow,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+                                ? getKycStatusIcon(
+                                    getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels![2]
+                                        .status,
+                                  )
+                                : SvgPicture.asset(AppImage.info),
+                            SizedBox(width: 10.w),
+                            SizedBox(
+                              width: 200.w,
+                              child: TextView(
+                                text:
+                                    getHmoKycResponseModel!
+                                        .data!
+                                        .kycLevels!
+                                        .isNotEmpty
+                                    ? getKycStatus(
+                                        getHmoKycResponseModel!
+                                            .data!
+                                            .kycLevels![2]
+                                            .status,
+                                      )
+                                    : 'Kindly upload and submit KYC for\nverification to obtain full access to\nplatform features.',
                                 maxLines: 4,
                                 textStyle: TextStyle(
                                   fontFamily: 'Arial',
@@ -5377,142 +5521,156 @@ class HMOViewModel extends BaseViewModel {
                       SizedBox(height: 30.h),
                       ButtonWidget(
                         border: 100.r,
-                        buttonColor:  getHmoKycResponseModel!
-                                          .data!
-                                          .kycLevels!.isNotEmpty?
-                            getKycStatusBool(
-                                      getHmoKycResponseModel!
-                                          .data!
-                                          .kycLevels![2]
-                                          .status,
-                                    ) ==
-                                    true ||
-                                imageAppForm == null &&
-                                    imagePlan == null &&
-                                    imageAss == null
-                            ? AppColors.infoGrey
-                            : AppColors.primary:AppColors.infoGrey,
+                        buttonColor:
+                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+                            ? getKycStatusBool(
+                                            getHmoKycResponseModel!
+                                                .data!
+                                                .kycLevels![2]
+                                                .status,
+                                          ) ==
+                                          true ||
+                                      imageAppForm == null &&
+                                          imagePlan == null &&
+                                          imageAss == null
+                                  ? AppColors.infoGrey
+                                  : AppColors.primary
+                            : AppColors.infoGrey,
                         fontSize: 16.sp,
                         buttonText: 'Submit for Verification',
                         color: AppColors.white,
                         isLoading: isLoading,
                         buttonBorderColor: AppColors.transparent,
-                        onPressed: getHmoKycResponseModel!
-                                          .data!
-                                          .kycLevels!.isNotEmpty?
-                            getKycStatusBool(
-                                      getHmoKycResponseModel!
-                                          .data!
-                                          .kycLevels![2]
-                                          .status,
-                                    ) ==
-                                    false &&
-                                imageAppForm != null &&
-                                imagePlan != null &&
-                                imageAss != null
-                            ? () async {
-                                if (kycFormKey.currentState!.validate() &&
-                                    imageAppForm != null &&
-                                    imageAss != null &&
-                                    imagePlan != null) {
-                                  updateThirdHMOKyc(
-                                    contxxt,
-                                    updateKyc: UpdateThirdHmoKycEntityModel(
-                                      bankName: bankNameController.text.trim(),
-                                      accountName: accountNameController.text,
-                                      accountNumber:
-                                          accountNumberController.text,
-                                      applicationForm: ApplicationForm.fromJson(
-                                        fl.File.fromJson(
-                                          kycDocumentsList[0].file!.toJson(),
-                                        ).toJson(),
-                                      ),
-                                      scheduleOfPlans: ScheduleOfPlans.fromJson(
-                                        fl.File.fromJson(
-                                          kycDocumentsList[1].file!.toJson(),
-                                        ).toJson(),
-                                      ),
-                                      listOfHospitals: ListOfHospitals.fromJson(
-                                        fl.File.fromJson(
-                                          kycDocumentsList[2].file!.toJson(),
-                                        ).toJson(),
-                                      ),
-                                    ),
-                                  );
+                        onPressed:
+                            getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty
+                            ? getKycStatusBool(
+                                            getHmoKycResponseModel!
+                                                .data!
+                                                .kycLevels![2]
+                                                .status,
+                                          ) ==
+                                          false &&
+                                      imageAppForm != null &&
+                                      imagePlan != null &&
+                                      imageAss != null
+                                  ? () async {
+                                      if (kycFormKey.currentState!.validate() &&
+                                          imageAppForm != null &&
+                                          imageAss != null &&
+                                          imagePlan != null) {
+                                        updateThirdHMOKyc(
+                                          contxxt,
+                                          updateKyc:
+                                              UpdateThirdHmoKycEntityModel(
+                                                bankName: bankNameController
+                                                    .text
+                                                    .trim(),
+                                                accountName:
+                                                    accountNameController.text,
+                                                accountNumber:
+                                                    accountNumberController
+                                                        .text,
+                                                applicationForm:
+                                                    ApplicationForm.fromJson(
+                                                      fl.File.fromJson(
+                                                        kycDocumentsList[0]
+                                                            .file!
+                                                            .toJson(),
+                                                      ).toJson(),
+                                                    ),
+                                                scheduleOfPlans:
+                                                    ScheduleOfPlans.fromJson(
+                                                      fl.File.fromJson(
+                                                        kycDocumentsList[1]
+                                                            .file!
+                                                            .toJson(),
+                                                      ).toJson(),
+                                                    ),
+                                                listOfHospitals:
+                                                    ListOfHospitals.fromJson(
+                                                      fl.File.fromJson(
+                                                        kycDocumentsList[2]
+                                                            .file!
+                                                            .toJson(),
+                                                      ).toJson(),
+                                                    ),
+                                              ),
+                                        );
 
-                                  // await updateHMO(
-                                  //   contxxt,
-                                  //   update: UpdateHmoProfileEntityModel(
-                                  //     logo: null,
-                                  //     name:
-                                  //         getTetantResponseModel!.data!.name ??
-                                  //         '',
-                                  //     businessAddress:
-                                  //         getTetantResponseModel
-                                  //             ?.data
-                                  //             ?.businessAddress ??
-                                  //         '',
-                                  //     businessEmail:
-                                  //         getTetantResponseModel
-                                  //             ?.data
-                                  //             ?.businessEmail ??
-                                  //         "",
-                                  //     country:
-                                  //         getTetantResponseModel
-                                  //             ?.data
-                                  //             ?.country ??
-                                  //         '',
-                                  //     state:
-                                  //         getTetantResponseModel?.data?.state ??
-                                  //         "",
-                                  //     lga:
-                                  //         getTetantResponseModel?.data?.lga ??
-                                  //         '',
-                                  //     contactPersonFirstName:
-                                  //         getTetantResponseModel
-                                  //             ?.data
-                                  //             ?.contactPersonFirstName ??
-                                  //         '',
-                                  //     contactPersonLastName:
-                                  //         getTetantResponseModel
-                                  //             ?.data
-                                  //             ?.contactPersonLastName ??
-                                  //         '',
-                                  //     contactPersonDesignation:
-                                  //         getTetantResponseModel
-                                  //             ?.data
-                                  //             ?.contactPersonDesignation ??
-                                  //         '',
-                                  //     bankDetails: [
-                                  //       BankDetail(
-                                  //         bankName: bankNameController.text
-                                  //             .trim(),
-                                  //         accountName: accountNameController
-                                  //             .text
-                                  //             .trim(),
-                                  //         accountNumber: accountNumberController
-                                  //             .text
-                                  //             .trim(),
-                                  //       ),
-                                  //     ],
-                                  //   ),updateThirdHMOKyc
-                                  // );
-                                  // // updateHMOKyc(
-                                  //   contxxt,
-                                  //   updateKyc: UpdatePharmacyKycEntityModel(
-                                  //     documents: kycDocumentsList,
-                                  //   ),
-                                  // );
-                                } else {
-                                  AppUtils.snackbar(
-                                    context,
-                                    message:
-                                        'Kindly select and upload all documents and bank information.',
-                                    error: true,
-                                  );
-                                }
-                              }
-                            : () {}:(){},
+                                        // await updateHMO(
+                                        //   contxxt,
+                                        //   update: UpdateHmoProfileEntityModel(
+                                        //     logo: null,
+                                        //     name:
+                                        //         getTetantResponseModel!.data!.name ??
+                                        //         '',
+                                        //     businessAddress:
+                                        //         getTetantResponseModel
+                                        //             ?.data
+                                        //             ?.businessAddress ??
+                                        //         '',
+                                        //     businessEmail:
+                                        //         getTetantResponseModel
+                                        //             ?.data
+                                        //             ?.businessEmail ??
+                                        //         "",
+                                        //     country:
+                                        //         getTetantResponseModel
+                                        //             ?.data
+                                        //             ?.country ??
+                                        //         '',
+                                        //     state:
+                                        //         getTetantResponseModel?.data?.state ??
+                                        //         "",
+                                        //     lga:
+                                        //         getTetantResponseModel?.data?.lga ??
+                                        //         '',
+                                        //     contactPersonFirstName:
+                                        //         getTetantResponseModel
+                                        //             ?.data
+                                        //             ?.contactPersonFirstName ??
+                                        //         '',
+                                        //     contactPersonLastName:
+                                        //         getTetantResponseModel
+                                        //             ?.data
+                                        //             ?.contactPersonLastName ??
+                                        //         '',
+                                        //     contactPersonDesignation:
+                                        //         getTetantResponseModel
+                                        //             ?.data
+                                        //             ?.contactPersonDesignation ??
+                                        //         '',
+                                        //     bankDetails: [
+                                        //       BankDetail(
+                                        //         bankName: bankNameController.text
+                                        //             .trim(),
+                                        //         accountName: accountNameController
+                                        //             .text
+                                        //             .trim(),
+                                        //         accountNumber: accountNumberController
+                                        //             .text
+                                        //             .trim(),
+                                        //       ),
+                                        //     ],
+                                        //   ),updateThirdHMOKyc
+                                        // );
+                                        // // updateHMOKyc(
+                                        //   contxxt,
+                                        //   updateKyc: UpdatePharmacyKycEntityModel(
+                                        //     documents: kycDocumentsList,
+                                        //   ),
+                                        // );
+                                      } else {
+                                        AppUtils.snackbar(
+                                          context,
+                                          message:
+                                              'Kindly select and upload all documents and bank information.',
+                                          error: true,
+                                        );
+                                      }
+                                    }
+                                  : () {}
+                            : () {},
                       ),
                       SizedBox(height: 10.h),
                     ],

@@ -87,24 +87,9 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
-                Row(
-                  children: [
-                    moreContainer(
-                      context,
-                      icon: AppImage.cart,
-                      text: 'Order History',
-                    ),
-                    SizedBox(width: 20.w),
-                    moreContainer(
-                      context,
-                      icon: AppImage.timer,
-                      text: 'Reminder History',
-                    ),
-                  ],
-                ),
+                
 
-                SizedBox(height: 100.h),
+                SizedBox(height: 150.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

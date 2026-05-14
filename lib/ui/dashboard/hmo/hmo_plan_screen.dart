@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -32,6 +32,8 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
       viewModelBuilder: () => locator<HMOViewModel>(),
       onViewModelReady: (model) async {
         await model.getMyPlan(context);
+        await model.getListedPlanTypesForHMO(context);
+        await model.getListedPlanTiersForHMO(context);
       },
       disposeViewModel: false,
       builder: (_, HMOViewModel model, _) {
@@ -136,7 +138,14 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                       ],
                     ),
                     GestureDetector(
-                      onTap: () => navigate.navigateTo(Routes.createHmoPlan),
+                      onTap: () async {
+                        final result = await navigate.navigateTo(
+                          Routes.createHmoPlan,
+                        );
+                        if (result == true) {
+                          await model.getMyPlan(context);
+                        }
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 12.w,
@@ -247,114 +256,834 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                             color: AppColors.infoGrey,
                           ),
                         ),
-                        onChange: (value) {},
+                        onChange: (value) {
+                          model.searchHmoPlanName = value;
+                          model.notifyListeners();
+                        },
                       ),
                       SizedBox(height: 14.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
-                            child: Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(14.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.grey),
-                                borderRadius: BorderRadius.circular(8.0.r),
+                            child: PopupMenuButton<String>(
+                              position: PopupMenuPosition.under,
+                              offset: Offset(50, 10),
+                              color: AppColors.white,
+                              onSelected: (value) async{
+                                model.filterPlanTypes = value;
+                                model.groupByPlanType(context,model,value);
+                                model.notifyListeners();
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(14.w),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.grey),
+                                  borderRadius: BorderRadius.circular(8.0.r),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        TextView(
+                                          text: 'Type: ',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.82.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextView(
+                                            text: model.filterPlanTypes,
+                                            maxLines: 1,
+                                            textOverflow: TextOverflow.fade,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.60.sp,
+                                              color: AppColors.infoGrey,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // SizedBox(width: 40.w),
+                                    SvgPicture.asset(AppImage.arrow_down),
+                                  ],
+                                ),
                               ),
-                              child: Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      TextView(
-                                        text: 'Type: ',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.82.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: 'All',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.60.sp,
-                                          color: AppColors.infoGrey,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
+
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  onTap: () {
+                                    model.filterPlanTypes = 'All';
+                                    model.notifyListeners();
+                                  },
+                                  value: "All",
+                                  child: TextView(
+                                    text: "All",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 13.70.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.black,
+                                    ),
                                   ),
-                                  SizedBox(width: 40.w),
-                                  SvgPicture.asset(AppImage.arrow_down),
-                                ],
-                              ),
+                                ),
+                                if (model.getAllListedPlanTypesResponseModel !=
+                                        null &&
+                                    model
+                                            .getAllListedPlanTypesResponseModel!
+                                            .data !=
+                                        null &&
+                                    model
+                                        .getAllListedPlanTypesResponseModel!
+                                        .data!
+                                        .planTypes!
+                                        .isNotEmpty)
+                                  ...model
+                                      .getAllListedPlanTypesResponseModel!
+                                      .data!
+                                      .planTypes!
+                                      .map(
+                                        (e) => PopupMenuItem(
+                                          value: e.name!,
+                                          child: TextView(
+                                            text: e.name ?? "",
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 13.70.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                              ],
                             ),
                           ),
                           SizedBox(width: 20.w),
                           Expanded(
-                            child: Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(14.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.grey),
-                                borderRadius: BorderRadius.circular(8.0.r),
-                              ),
-                              child: Row(
-                                children: [
-                                  Row(
-                                    children: [
-                                      TextView(
-                                        text: 'Tier: ',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.82.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                      TextView(
-                                        text: 'All',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.60.sp,
-                                          color: AppColors.infoGrey,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
+                            child: PopupMenuButton<String>(
+                               position: PopupMenuPosition.under,
+                              offset: Offset(50, 10),
+                              color: AppColors.white,
+                              onSelected: (value) async{
+                                model.filterPlanTiers = value;
+                                model.groupByPlanTiers(context,model,value);
+                                model.notifyListeners();
+                              },
+
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  onTap: () {
+                                    model.filterPlanTiers = 'All';
+                                    model.notifyListeners();
+                                  },
+                                  value: "All",
+                                  child: TextView(
+                                    text: "All",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 13.70.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.black,
+                                    ),
                                   ),
-                                  SizedBox(width: 40.w),
-                                  SvgPicture.asset(AppImage.arrow_down),
-                                ],
+                                ),
+                                if (model.getAllListedPlanTiersResponseModel !=
+                                        null &&
+                                    model
+                                            .getAllListedPlanTiersResponseModel!
+                                            .data !=
+                                        null &&
+                                    model
+                                        .getAllListedPlanTiersResponseModel!
+                                        .data!
+                                        .planTiers!
+                                        .isNotEmpty)
+                                  ...model
+                                      .getAllListedPlanTiersResponseModel!
+                                      .data!
+                                      .planTiers!
+                                      .map(
+                                        (e) => PopupMenuItem(
+                                          value: e.name!,
+                                          child: TextView(
+                                            text: e.name ?? "",
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 13.70.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                              ],
+                            
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(14.w),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.grey),
+                                  borderRadius: BorderRadius.circular(8.0.r),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        TextView(
+                                          text: 'Tier: ',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.82.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                       SizedBox(
+                                          width: 80,
+                                          child: TextView(
+                                            text: model.filterPlanTiers,
+                                            maxLines: 1,
+                                            textOverflow: TextOverflow.fade,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.60.sp,
+                                              color: AppColors.infoGrey,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // SizedBox(width: 40.w),
+                                    SvgPicture.asset(AppImage.arrow_down),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
                       SizedBox(height: 12.h),
-                      if(model.getMyHmoPlanResponseModel != null &&
-                          model
-                              .getMyHmoPlanResponseModel!
-                              .data==null)
-                      if (model.getMyHmoPlanResponseModel != null &&
-                          model
-                              .getMyHmoPlanResponseModel!
-                              .data!
-                              .plans!
-                              .isNotEmpty)
+                      if (model.getMyHmoPlanResponseModel == null)
+                        const Center(child: CircularProgressIndicator())
+                      else if (model.getMyHmoPlanResponseModel?.data?.plans ==
+                              null ||
+                          model.getMyHmoPlanResponseModel!.data!.plans!.isEmpty)
+                        Center(
+                          child: Text(
+                            'No plans available',
+                            style: TextStyle(
+                              color: AppColors.fineGrey,
+                              fontFamily: 'GoogleSans',
+                              fontSize: 16.2.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        )
+                      else if (model.searchHmoPlanName != '')
+                        ...model.getMyHmoPlanResponseModelList!.data!.plans!
+                            .where(
+                              (w) => w.planName!.toLowerCase().contains(
+                                model.searchHmoPlanName.toLowerCase(),
+                              ),
+                            )
+                            .map(
+                              (e) => 
+                              GestureDetector(
+                                onTap: () async {
+                                  final result = await navigate.navigateTo(
+                                    Routes.createHmoPlan,
+                                    arguments: CreateHmoPlanArguments(
+                                      isEdited: false,
+                                      plan: e,
+                                    ),
+                                  );
+                                  if (result == true) {
+                                    await model.getMyPlan(context);
+                                  }
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.all(10.w),
+                                  margin: EdgeInsets.only(bottom: 13.20.w),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: AppColors.grey),
+                                    borderRadius: BorderRadius.circular(8.0.r),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12.w,
+                                              vertical: 2.2.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(22.r),
+                                              border: Border.all(
+                                                color:
+                                                    e.approvalStatus
+                                                            ?.toLowerCase() ==
+                                                        'pending'
+                                                    ? AppColors.yellow
+                                                    : AppColors.app_green,
+                                              ),
+                                            ),
+                                            child: TextView(
+                                              text: '${e.approvalStatus}',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 14.2.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color:
+                                                    e.approvalStatus
+                                                            ?.toLowerCase() ==
+                                                        'pending'
+                                                    ? AppColors.yellow
+                                                    : AppColors.app_green,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 12.w,
+                                              vertical: 2.2.h,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(22.r),
+                                              border: Border.all(
+                                                color: model.tiersColor(
+                                                  e.planTier!,
+                                                ),
+                                              ),
+                                              color: model.tiersBorderColor(
+                                                e.planTier!,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  model.tiersSvgImage(
+                                                    e.planTier!,
+                                                  ),
+                                                  color: model.tiersSpeColor(
+                                                    e.planTier!,
+                                                  ),
+                                                  height:
+                                                      e.planTier!
+                                                              .toLowerCase() ==
+                                                          'gold'
+                                                      ? 15.50.h
+                                                      : 14.20.h,
+                                                  width: 14.20.w,
+                                                ),
+                                                SizedBox(width: 6.w),
+                                                TextView(
+                                                  text: '${e.planTier}',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'GoogleSans',
+                                                    fontSize: 14.2.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: model.tiersSpeColor(
+                                                      e.planTier!,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          GestureDetector(
+                                            onTap: () => setState(
+                                              () => isShow = !isShow,
+                                            ),
+                                            child: TextView(
+                                              text: !isShow
+                                                  ? 'Show more'
+                                                  : 'Hide',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.2.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: !isShow
+                                                    ? AppColors.fineGrey
+                                                    : AppColors.primary,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                decorationColor: !isShow
+                                                    ? AppColors.fineGrey
+                                                    : AppColors.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      TextView(
+                                        text: '${e.planName}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.52.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Renewal Price',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.fineGrey,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4.10.h),
+                                              TextView(
+                                                text: formatNairaNoDecimal(
+                                                  e.price!,
+                                                ),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.thickGrey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 40.w),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Renewal Price',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.fineGrey,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4.10.h),
+                                              TextView(
+                                                text: formatNairaNoDecimal(
+                                                  e.price!,
+                                                ),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.thickGrey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 20.h),
+                                      Row(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Duration',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.fineGrey,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4.10.h),
+                                              TextView(
+                                                text: model.getDurationAmount(
+                                                  e.duration,
+                                                ),
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.thickGrey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 80.w),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              TextView(
+                                                text: 'Max Dependent',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.fineGrey,
+                                                ),
+                                              ),
+                                              SizedBox(height: 4.10.h),
+                                              TextView(
+                                                text: '1',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.thickGrey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: isShow ? 15.20.h : 0.h),
+                                      isShow
+                                          ? Column(
+                                              children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 16.w,
+                                                    horizontal: 12.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.skyBlue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8.r,
+                                                        ),
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColors.cool_blue,
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      TextView(
+                                                        text:
+                                                            'Basic individual health coverage',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 14.52.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 14.20.h),
+                                                      Row(
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            AppImage
+                                                                .light_check,
+                                                          ),
+                                                          SizedBox(
+                                                            width: 8.10.w,
+                                                          ),
+                                                          TextView(
+                                                            text:
+                                                                'General Consultation',
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              fontSize:
+                                                                  14.52.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 6.90.w,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      12.w,
+                                                                  vertical:
+                                                                      2.2.h,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    22.r,
+                                                                  ),
+                                                              color: AppColors
+                                                                  .white,
+                                                              border: Border.all(
+                                                                color: AppColors
+                                                                    .fineGrey
+                                                                    .withOpacity(
+                                                                      .3,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            child: TextView(
+                                                              text: 'Unlimited',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'Arial',
+                                                                fontSize:
+                                                                    13.2.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 14.20.h),
+                                                      Row(
+                                                        children: [
+                                                          SvgPicture.asset(
+                                                            AppImage
+                                                                .light_check,
+                                                          ),
+                                                          SizedBox(
+                                                            width: 8.10.w,
+                                                          ),
+                                                          TextView(
+                                                            text:
+                                                                'Emergency Care',
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              fontSize:
+                                                                  14.52.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 3.90.w,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      8.w,
+                                                                  vertical:
+                                                                      2.2.h,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    22.r,
+                                                                  ),
+                                                              color: AppColors
+                                                                  .white,
+                                                              border: Border.all(
+                                                                color: AppColors
+                                                                    .fineGrey
+                                                                    .withOpacity(
+                                                                      .3,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            child: TextView(
+                                                              text:
+                                                                  'Up to ₦500,000',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'Arial',
+                                                                fontSize:
+                                                                    13.2.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 20.h),
+
+                                                Container(
+                                                  width: double.infinity,
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 16.w,
+                                                    horizontal: 12.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.skyBlue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8.r,
+                                                        ),
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColors.cool_blue,
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      TextView(
+                                                        text:
+                                                            'Hospital Networks',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 14.52.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 14.20.h),
+                                                      ViewModelBuilder<
+                                                        HMOViewModel
+                                                      >.reactive(
+                                                        viewModelBuilder: () =>
+                                                            locator<
+                                                              HMOViewModel
+                                                            >(),
+                                                        onViewModelReady:
+                                                            (model) async {
+                                                              model
+                                                                  .getPlanHospitalNetworkByPlanId(
+                                                                    context:
+                                                                        context,
+                                                                    planId:
+                                                                        e.id!,
+                                                                  );
+                                                            },
+                                                        disposeViewModel: false,
+                                                        builder: (_, HMOViewModel model, _) {
+                                                          return Wrap(
+                                                            spacing: 10.0,
+                                                            runSpacing: 8.0,
+                                                            children: [
+                                                              if (model.getPlanHospitalNetworkResponseModel !=
+                                                                      null &&
+                                                                  model
+                                                                      .getPlanHospitalNetworkResponseModel!
+                                                                      .data!
+                                                                      .hospitals!
+                                                                      .isNotEmpty)
+                                                                ...model.getPlanHospitalNetworkResponseModel!.data!.hospitals!.map(
+                                                                  (
+                                                                    o,
+                                                                  ) => IntrinsicWidth(
+                                                                    child: Container(
+                                                                      padding: EdgeInsets.symmetric(
+                                                                        horizontal:
+                                                                            12.w,
+                                                                        vertical:
+                                                                            2.2.h,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              22.r,
+                                                                            ),
+                                                                        border: Border.all(
+                                                                          color:
+                                                                              AppColors.primary,
+                                                                        ),
+                                                                      ),
+                                                                      child: TextView(
+                                                                        text:
+                                                                            o.state ??
+                                                                            "",
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'Arial',
+                                                                          fontSize:
+                                                                              14.2.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color:
+                                                                              AppColors.primary,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              SizedBox(
+                                                                width: 10.w,
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      ),
+                                                      SizedBox(height: 20.w),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : SizedBox.shrink(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                      else
                         ...model.getMyHmoPlanResponseModel!.data!.plans!.map(
                           (e) => GestureDetector(
-                            onTap: () => navigate.navigateTo(
-                              Routes.createHmoPlan,
-                              arguments: CreateHmoPlanArguments(
-                                isEdited: false,
-                                plan: e,
-                              ),
-                            ),
+                            onTap: () async {
+                              final result = await navigate.navigateTo(
+                                Routes.createHmoPlan,
+                                arguments: CreateHmoPlanArguments(
+                                  isEdited: false,
+                                  plan: e,
+                                ),
+                              );
+                              if (result == true) {
+                                await model.getMyPlan(context);
+                              }
+                            },
                             child: Container(
                               width: double.infinity,
                               padding: EdgeInsets.all(10.w),
+                              margin: EdgeInsets.only(bottom: 13.20.w),
                               decoration: BoxDecoration(
                                 border: Border.all(color: AppColors.grey),
                                 borderRadius: BorderRadius.circular(8.0.r),
@@ -558,7 +1287,9 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                           ),
                                           SizedBox(height: 4.10.h),
                                           TextView(
-                                            text: '${e.duration}',
+                                            text: model.getDurationAmount(
+                                              e.duration,
+                                            ),
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 15.2.sp,

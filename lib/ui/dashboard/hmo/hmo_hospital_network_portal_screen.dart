@@ -23,7 +23,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
     return ViewModelBuilder<HMOViewModel>.reactive(
       viewModelBuilder: () => locator<HMOViewModel>(),
       onViewModelReady: (model) async {
-        await model.getListOfHospital();
+        await model.getListOfHospital(context);
       },
       disposeViewModel: false,
       builder: (_, HMOViewModel model, _) {
@@ -214,7 +214,11 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                   color: AppColors.infoGrey,
                                 ),
                               ),
-                              onChange: (value) {},
+                              onChange: (value) {
+                                model.searchHospitalName = value;
+                                print(model.searchHospitalName);
+                                model.notifyListeners();
+                              },
                             ),
                           ),
                           SizedBox(width: 14.w),
@@ -310,13 +314,8 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: 12.h),
-                      if (model.getAllOfHospitalsResponseModel != null &&
-                          model
-                              .getAllOfHospitalsResponseModel!
-                              .data!
-                              .hospitals!
-                              .isNotEmpty)
-                        ...model.getAllOfHospitalsResponseModel!.data!.hospitals!.map(
+                      if(model.searchHospitalName!='')
+                      ...model.getAllOfHospitalsResponseModel!.data!.hospitals!.where((w)=> w.name!.toLowerCase().contains(model.searchHospitalName.toLowerCase())).map(
                           (e) => Container(
                             width: double.infinity,
                             padding: EdgeInsets.all(16.w),
@@ -520,8 +519,228 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ),
+                        )
+                      else if (model.getAllOfHospitalsResponseModel != null &&
+                          model
+                              .getAllOfHospitalsResponseModel!
+                              .data!
+                              .hospitals!
+                              .isNotEmpty)
+                        ...model.getAllOfHospitalsResponseModel!.data!.hospitals!.map(
+
+                          (e) => Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(16.w),
+                            margin: EdgeInsets.only(bottom: 10.w),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.grey),
+                              borderRadius: BorderRadius.circular(8.0.r),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                        vertical: 2.2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          22.r,
+                                        ),
+                                        border: Border.all(
+                                          color: AppColors.app_green,
+                                        ),
+                                      ),
+                                      child: TextView(
+                                        text: e.isActive!
+                                            ? 'Active'
+                                            : 'Not Active',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 14.2.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: e.isActive!
+                                              ? AppColors.app_green
+                                              : AppColors.appRed,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                        vertical: 2.2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          22.r,
+                                        ),
+                                        border: Border.all(
+                                          color: AppColors.searchInputFillColor
+                                              .withOpacity(.18),
+                                        ),
+                                      ),
+                                      child: TextView(
+                                        text: '${e.type}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 14.2.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    PopupMenuButton(
+                                      color: AppColors.white,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 20.w,
+                                        vertical: 10.w,
+                                      ),
+                                      itemBuilder: (context) => [
+                                        PopupMenuItem(
+                                          onTap: () {},
+                                          enabled: false,
+                                          child: TextView(
+                                            text: 'More Actions',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          onTap: () => navigate.navigateTo(
+                                            Routes
+                                                .hmoAddHospitalNetworkPortalScreen,
+                                            arguments:
+                                                HmoAddHospitalNetworkPortalScreenArguments(
+                                                  isEditing: true,
+                                                  hospitalId: e.id,
+                                                ),
+                                          ),
+                                          child: TextView(
+                                            text: 'Edit Hospital',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ),
+                                        PopupMenuItem(
+                                          onTap: () =>
+                                              showActivationDialog(context),
+                                          child: TextView(
+                                            text: 'Deactivate',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      child: Container(
+                                        padding: EdgeInsets.all(6.10.w),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.skyBlue,
+                                          border: Border.all(
+                                            color: AppColors.skyBlue,
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.more_vert,
+                                          size: 16.20.sp,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 15.10.h),
+                                TextView(
+                                  text: '${e.name}',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'GoogleSans',
+                                    fontSize: 16.52.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppImage.locator,
+                                          height: 20.h,
+                                          width: 20.w,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        SizedBox(
+                                          width: 250.w,
+                                          child: TextView(
+                                            text:
+                                                '${e.address} ${e.city}, ${e.state}',
+                                            maxLines: 4,
+                                            textOverflow: TextOverflow.ellipsis,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 15.2.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          AppImage.phone,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        TextView(
+                                          text: '${e.phone}',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 15.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      else if (model.getAllOfHospitalsResponseModel != null &&
+                          model
+                              .getAllOfHospitalsResponseModel!
+                              .data!
+                              .hospitals!
+                              .isEmpty)
+                              Container(),
                       SizedBox(height: 20.h),
+
                       Divider(color: AppColors.grey),
                       SizedBox(height: 12.20.h),
                       model.getAllOfHospitalsResponseModel != null
@@ -533,7 +752,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                     if (model.page <= 1) {
                                     } else {
                                       model.page--;
-                                      model.getListOfHospital();
+                                      model.getListOfHospital(context);
                                       model.notifyListeners();
                                     }
                                   },
@@ -567,7 +786,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                             .totalPages!) {
                                     } else {
                                       model.page++;
-                                      model.getListOfHospital();
+                                      model.getListOfHospital(context);
                                       model.notifyListeners();
                                     }
                                   },
