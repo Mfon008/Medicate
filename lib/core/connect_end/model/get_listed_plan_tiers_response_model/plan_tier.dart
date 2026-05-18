@@ -10,6 +10,9 @@ class PlanTier {
   bool? isActive;
   DateTime? createdAt;
   DateTime? updatedAt;
+  String? primaryColor;
+  String? secondaryColor;
+  List<String>? features;
 
   PlanTier({
     this.id,
@@ -18,6 +21,9 @@ class PlanTier {
     this.isActive,
     this.createdAt,
     this.updatedAt,
+    this.primaryColor,
+    this.secondaryColor,
+    this.features,
   });
 
   factory PlanTier.fromJson(Map<String, dynamic> json) {

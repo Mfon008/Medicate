@@ -95,7 +95,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 Future.delayed(Duration(milliseconds: 200), () {
                   Navigator.pop(ctx, e.toString());
                 });
-                model.selectPlanType(context: context, id: selectedPlanTypeId);
+                // model.selectPlanType(context: context, id: selectedPlanTypeId);
               },
               child: Container(
                 margin: EdgeInsets.only(bottom: 12.w),
@@ -139,70 +139,67 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
   }
 
   Widget planTierList(
-  BuildContext ctx,
-  void Function(void Function()) setMenuState,
-  HMOViewModel model,
-) {
-  final response = model.getAllListedPlanTiersResponseModel;
+    BuildContext ctx,
+    void Function(void Function()) setMenuState,
+    HMOViewModel model,
+  ) {
+    final response = model.getAllListedPlanTiersResponseModel;
 
-  Widget content;
+    Widget content;
 
-  switch (true) {
-    // LOADING
-    case true when response == null:
-      content = Center(
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 100.w, top: 50.w),
-          child: SpinKitHourGlass(
-            size: 50.sp,
-            color: AppColors.primaryLight,
+    switch (true) {
+      // LOADING
+      case true when response == null:
+        content = Center(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 100.w, top: 50.w),
+            child: SpinKitHourGlass(size: 50.sp, color: AppColors.primaryLight),
           ),
-        ),
-      );
-      break;
+        );
+        break;
 
-    // NO DATA
-    case true when response!.data == null:
-      content = Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 40.w),
-          child: TextView(
-            text: 'No available tiers',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 16.60.sp,
-              color: AppColors.greyee,
-              fontWeight: FontWeight.w400,
+      // NO DATA
+      case true when response!.data == null:
+        content = Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40.w),
+            child: TextView(
+              text: 'No available tiers',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 16.60.sp,
+                color: AppColors.greyee,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
-        ),
-      );
-      break;
+        );
+        break;
 
-    // EMPTY LIST
-    case true when response!.data!.planTiers == null ||
-        response.data!.planTiers!.isEmpty:
-      content = Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.w),
-          child: TextView(
-            text: 'No tiers found',
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 16.60.sp,
-              color: AppColors.greyee,
-              fontWeight: FontWeight.w400,
+      // EMPTY LIST
+      case true
+          when response!.data!.planTiers == null ||
+              response.data!.planTiers!.isEmpty:
+        content = Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.w),
+            child: TextView(
+              text: 'No tiers found',
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 16.60.sp,
+                color: AppColors.greyee,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
-        ),
-      );
-      break;
+        );
+        break;
 
-    // DATA AVAILABLE
-    default:
-      content = Column(
-        children: response!.data!.planTiers!.map(
-          (e) {
+      // DATA AVAILABLE
+      default:
+        content = Column(
+          children: response!.data!.planTiers!.map((e) {
             return GestureDetector(
               onTap: () {
                 setState(() {
@@ -211,19 +208,13 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                   setMenuState(() {});
                 });
 
-                Future.delayed(
-                  Duration(milliseconds: 200),
-                  () {
-                    Navigator.pop(ctx, e.toString());
-                  },
-                );
+                Future.delayed(Duration(milliseconds: 200), () {
+                  Navigator.pop(ctx, e.toString());
+                });
               },
               child: Container(
                 margin: EdgeInsets.only(bottom: 12.w),
-                padding: EdgeInsets.symmetric(
-                  vertical: 12.w,
-                  horizontal: 12.w,
-                ),
+                padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: model.planTierController.text == e.name
@@ -257,33 +248,32 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                 ),
               ),
             );
-          },
-        ).toList(),
-      );
-  }
+          }).toList(),
+        );
+    }
 
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      SizedBox(height: 10.h),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10.h),
 
-      TextView(
-        text: 'Tiers',
-        textStyle: TextStyle(
-          fontFamily: 'Arial',
-          fontSize: 16.60.sp,
-          color: AppColors.greyee,
-          fontWeight: FontWeight.w400,
+        TextView(
+          text: 'Tiers',
+          textStyle: TextStyle(
+            fontFamily: 'Arial',
+            fontSize: 16.60.sp,
+            color: AppColors.greyee,
+            fontWeight: FontWeight.w400,
+          ),
         ),
-      ),
 
-      SizedBox(height: 14.h),
+        SizedBox(height: 14.h),
 
-      content,
-    ],
-  );
-}
+        content,
+      ],
+    );
+  }
 
   void toggleSelectAll(List hospitals, HMOViewModel model) {
     setState(() {
@@ -349,11 +339,15 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
           model.descriptionController.text =
               model.getPlanDetailResponseModel?.data?.plan?.description ?? '';
           model.renewalPriceController.text =
-              model.getPlanDetailResponseModel?.data?.plan?.price?.toString() ??
+              model.getPlanDetailResponseModel?.data?.plan?.renewalPrice
+                  ?.toString() ??
               '';
           model.priceController.text =
               model.getPlanDetailResponseModel?.data?.plan?.price?.toString() ??
               '';
+          // model.maxDependentsController.text =
+          //     model.getPlanDetailResponseModel?.data?.plan?.maximumDependents?.toString() ??
+          '';
           model.durationController.text =
               model.getPlanDetailResponseModel?.data?.plan?.duration
                   ?.toString() ??
@@ -581,7 +575,6 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      readOnly: true,
                       hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
                       labelStyle: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -592,11 +585,11 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: model.renewalPriceController,
-                      // validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.number,
+                      validator: AppValidator.validateString(),
                       onChange: (p0) {},
                     ),
                     SizedBox(height: 20.h),
-
                     TextFormWidget(
                       hint: 'Price (₦)',
                       borderColor: AppColors.transparent,
@@ -615,9 +608,31 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       isFilled: true,
                       controller: model.priceController,
                       validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.number,
                       onChange: (p0) {},
                     ),
-
+                    SizedBox(height: model.planTypeController.text.toLowerCase()=='family'?20.h:0.h),
+                    model.planTypeController.text.toLowerCase()=='family'?TextFormWidget(
+                      hint: 'Maximum Dependents',
+                      borderColor: AppColors.transparent,
+                      borderTopLeft: 10.r,
+                      borderTopRight: 10.r,
+                      borderBottomLeft: 10.r,
+                      borderBottomRight: 10.r,
+                      hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 14.sp,
+                        color: AppColors.infoGrey,
+                      ),
+                      fillColor: AppColors.grey,
+                      isFilled: true,
+                      controller: model.maxDependentsController,
+                      validator: AppValidator.validateString(),
+                      onChange: (p0) {},
+                      keyboardType: TextInputType.number,
+                    ):SizedBox(),
                     SizedBox(height: 20.h),
                     Row(
                       children: [
@@ -797,7 +812,9 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                           if (model.getAllHospitalPage != null &&
                               model.getAllHospitalPage!.isNotEmpty)
                             SizedBox(
-                              height: 300.h,
+                              height: model.getAllHospitalPage!.length > 3
+                                  ? 300.h
+                                  : 150.h,
                               child: SmartRefresher(
                                 enablePullDown: false,
                                 enablePullUp: true,
@@ -1046,6 +1063,12 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                         model.descriptionController.text,
                                     price: int.parse(
                                       model.priceController.text,
+                                    ),
+                                    maximumDependents: model.planTypeController.text.toLowerCase()=='family'? int.parse(
+                                      model.maxDependentsController.text,
+                                    ): null,
+                                    renewalPrice: int.parse(
+                                      model.renewalPriceController.text,
                                     ),
                                     duration: int.parse(
                                       model.durationController.text,

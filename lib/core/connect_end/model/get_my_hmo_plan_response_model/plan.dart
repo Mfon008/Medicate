@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'benefit.dart';
 import 'hospital_network.dart';
+import 'plan_tier_details.dart';
 
 part 'plan.g.dart';
 
@@ -21,6 +22,12 @@ class Plan {
   List<HospitalNetwork>? hospitalNetwork;
   String? approvalStatus;
   int? superAdminCommission;
+  int? renewalPrice;
+  int? renewalSuperAdminCommission;
+  String? planTierPrimaryColor;
+  String? planTierSecondaryColor;
+  List<String>? planTierFeatures;
+  PlanTierDetails? planTierDetails;
 
   Plan({
     this.id,
@@ -37,6 +44,12 @@ class Plan {
     this.hospitalNetwork,
     this.approvalStatus,
     this.superAdminCommission,
+    this.renewalPrice,
+    this.renewalSuperAdminCommission,
+    this.planTierPrimaryColor,
+    this.planTierSecondaryColor,
+    this.planTierFeatures,
+    this.planTierDetails,
   });
 
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);

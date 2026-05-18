@@ -21,6 +21,8 @@ class Plan {
   List<HospitalNetwork>? hospitalNetwork;
   String? approvalStatus;
   int? superAdminCommission;
+  int? renewalPrice;
+  int? renewalSuperAdminCommission;
 
   Plan({
     this.id,
@@ -37,6 +39,8 @@ class Plan {
     this.hospitalNetwork,
     this.approvalStatus,
     this.superAdminCommission,
+    this.renewalPrice,
+    this.renewalSuperAdminCommission,
   });
 
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);

@@ -37,24 +37,26 @@ class HmoAddHospitalNetworkPortalScreen extends StatelessWidget {
     return ViewModelBuilder<HMOViewModel>.reactive(
       viewModelBuilder: () => locator<HMOViewModel>(),
       onViewModelReady: (model) async {
-        await model.getHospitalNetworkById(
-          context: context,
-          hospitalId: hospitalId,
-        );
-        nameController.text =
-            model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-        typeController.text =
-            model.getHospitalByIdResponseModel?.data?.hospital?.type ?? '';
-        stateController.text =
-            model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-        cityController.text =
-            model.getHospitalByIdResponseModel?.data?.hospital?.city ?? '';
-        addressController.text =
-            model.getHospitalByIdResponseModel?.data?.hospital?.address ?? '';
-        phoneController.text =
-            model.getHospitalByIdResponseModel?.data?.hospital?.phone ?? '';
-        emailController.text =
-            model.getHospitalByIdResponseModel?.data?.hospital?.email ?? '';
+        if (isEditing!) {
+          await model.getHospitalNetworkById(
+            context: context,
+            hospitalId: hospitalId,
+          );
+          nameController.text =
+              model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+          typeController.text =
+              model.getHospitalByIdResponseModel?.data?.hospital?.type ?? '';
+          stateController.text =
+              model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+          cityController.text =
+              model.getHospitalByIdResponseModel?.data?.hospital?.city ?? '';
+          addressController.text =
+              model.getHospitalByIdResponseModel?.data?.hospital?.address ?? '';
+          phoneController.text =
+              model.getHospitalByIdResponseModel?.data?.hospital?.phone ?? '';
+          emailController.text =
+              model.getHospitalByIdResponseModel?.data?.hospital?.email ?? '';
+        }
       },
       disposeViewModel: false,
       builder: (_, HMOViewModel model, _) {
@@ -148,6 +150,38 @@ class HmoAddHospitalNetworkPortalScreen extends StatelessWidget {
                           controller: typeController,
                           fillColor: AppColors.grey,
                           validator: AppValidator.validateString(),
+                          suffixWidget: PopupMenuButton(
+                            color: AppColors.white,
+                            onSelected: (value) {},
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 20.w,
+                              vertical: 10.w,
+                            ),
+                            itemBuilder: (context) => [
+                              ...model.hospitalType.map(
+                                (e) => PopupMenuItem(
+                                  onTap: () {
+                                    typeController.text = e;
+                                    model.notifyListeners();
+                                  },
+                                  child: TextView(
+                                    text: e,
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 15.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.reminder,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            child: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                              size: 20.sp,
+                              color: AppColors.reminder,
+                            ),
+                          ),
                           onChange: (value) {},
                         ),
                         SizedBox(height: 14.h),

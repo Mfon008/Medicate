@@ -59,7 +59,6 @@ class UrlConfig {
   static const String listed_plan_types_hmo =
       'hmo/settings/plan-types/available';
   static const String listed_plan_tiers_hmo = 'hmo/settings/plan-tiers';
-
   static const String get_user_details_by_tenant =
       'auth/get-user-details-by-tenant';
   static const String register_user_by_tenant = 'auth/register-user-by-tenant';
@@ -77,4 +76,5 @@ class UrlConfig {
   static const String get_hospital_by_id = 'hmo/hospitals';
   static const String submit_hmo_plan = 'hmo/applications/submit';
   static const String my_subscription = 'hmo/applications/my-subscriptions';
+  static const String hmo_plan_teirs = 'hmo/settings/plan-tiers';
 }

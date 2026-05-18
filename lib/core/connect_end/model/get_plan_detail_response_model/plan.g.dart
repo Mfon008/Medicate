@@ -27,6 +27,9 @@ Plan _$PlanFromJson(Map<String, dynamic> json) => Plan(
       .toList(),
   approvalStatus: json['approvalStatus'] as String?,
   superAdminCommission: (json['superAdminCommission'] as num?)?.toInt(),
+  renewalPrice: (json['renewalPrice'] as num?)?.toInt(),
+  renewalSuperAdminCommission: (json['renewalSuperAdminCommission'] as num?)
+      ?.toInt(),
 );
 
 Map<String, dynamic> _$PlanToJson(Plan instance) => <String, dynamic>{
@@ -44,4 +47,6 @@ Map<String, dynamic> _$PlanToJson(Plan instance) => <String, dynamic>{
   'hospitalNetwork': instance.hospitalNetwork,
   'approvalStatus': instance.approvalStatus,
   'superAdminCommission': instance.superAdminCommission,
+  'renewalPrice': instance.renewalPrice,
+  'renewalSuperAdminCommission': instance.renewalSuperAdminCommission,
 };

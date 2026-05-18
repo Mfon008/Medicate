@@ -10,6 +10,7 @@ import '../model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart'
 import '../model/create_hmo_plan_reponse_model/create_hmo_plan_reponse_model.dart';
 import '../model/create_hospital_network_entity_model.dart';
 import '../model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
+import '../model/create_plan_tier_entity_model/create_plan_tier_entity_model.dart';
 import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
@@ -36,6 +37,7 @@ import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart'
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
 import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
+import '../model/update_plan_tiers_entity_model.dart';
 import '../model/update_role_entity_model.dart';
 import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
@@ -328,6 +330,34 @@ class HMORepoImpl {
       editHospital: editHospital,
       hospitalId: hospitalId,
     );
+    return response;
+  }
+
+  Future<dynamic> createPlanTier(
+    CreatePlanTierEntityModel creatTierEntity,
+  ) async {
+    final response = await _contract.createPlanTier(creatTierEntity);
+    return response;
+  }
+
+  Future<dynamic> deletePlanTier(String planTierId) async {
+    final response = await _contract.deletePlanTier(planTierId);
+    return response;
+  }
+
+  Future<dynamic> updatePlanTier(
+    UpdatePlanTiersEntityModel updateTierEntity,
+    String planTierId,
+  ) async {
+    final response = await _contract.updatePlanTier(
+      updateTierEntity,
+      planTierId,
+    );
+    return response;
+  }
+
+  Future<dynamic> deleteHMOPlan(String planId) async {
+    final response = await _contract.deleteHMOPlan(planId);
     return response;
   }
 

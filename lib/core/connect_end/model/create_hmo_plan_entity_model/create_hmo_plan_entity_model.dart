@@ -6,7 +6,9 @@ class CreateHmoPlanEntityModel {
   String? planTier;
   String? description;
   int? price;
+  int? renewalPrice;
   int? duration;
+  int? maximumDependents;
   List<String>? hospitalNetworkIds;
   List<Benefit>? benefits;
 
@@ -16,7 +18,9 @@ class CreateHmoPlanEntityModel {
     this.planTier,
     this.description,
     this.price,
+    this.renewalPrice,
     this.duration,
+    this.maximumDependents,
     this.hospitalNetworkIds,
     this.benefits,
   });
@@ -28,7 +32,9 @@ class CreateHmoPlanEntityModel {
       planTier: json['planTier'] as String?,
       description: json['description'] as String?,
       price: json['price'] as int?,
+      renewalPrice: json['renewalPrice'] as int?,
       duration: json['duration'] as int?,
+      maximumDependents: json['maximumDependents'] as int?,
       hospitalNetworkIds: json['hospitalNetworkIds'] as List<String>?,
       benefits: (json['benefits'] as List<dynamic>?)
           ?.map((e) => Benefit.fromJson(e as Map<String, dynamic>))
@@ -42,7 +48,9 @@ class CreateHmoPlanEntityModel {
     'planTier': planTier,
     'description': description,
     'price': price,
+    'renewalPrice': renewalPrice,
     'duration': duration,
+    'maximumDependents': maximumDependents,
     'hospitalNetworkIds': hospitalNetworkIds,
     'benefits': benefits?.map((e) => e.toJson()).toList(),
   };

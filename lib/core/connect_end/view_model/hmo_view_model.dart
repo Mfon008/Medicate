@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_plan_tier_entity_model/create_plan_tier_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/hospital_network_entity_model.dart';
@@ -19,7 +20,6 @@ import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_plan_teir_class.dart';
-import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/delete_role_modal_widget.dart';
 import '../../../ui/widget/hmo_add_role_modal_widget.dart';
@@ -50,6 +50,7 @@ import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import '../model/get_list_of_hospital_response_model/hospital.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
+import '../model/get_listed_plan_tiers_response_model/plan_tier.dart';
 import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/kyc_document.dart';
 import '../model/get_plan_detail_response_model/get_plan_detail_response_model.dart';
@@ -70,6 +71,7 @@ import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
 import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_hmo_profile_entity_model/logo.dart';
 import '../model/update_pharmacy_kyc_entity_model/document.dart';
+import '../model/update_plan_tiers_entity_model.dart';
 import '../model/update_role_entity_model.dart';
 import '../model/update_third_hmo_kyc_entity_model/application_form.dart';
 import '../model/update_third_hmo_kyc_entity_model/list_of_hospitals.dart';
@@ -141,7 +143,14 @@ class HMOViewModel extends BaseViewModel {
   String vdeactivateErrorMessage = '';
   List<Document> kycDocumentsList = [];
 
-  // List<dynamic> featureList = [];
+  List<String> hospitalType = [
+    "Teaching",
+    "General",
+    "Private",
+    "Specialist",
+    "Clinic",
+    "Government",
+  ];
 
   List<TextEditingController> featureListController = [TextEditingController()];
   List<PlanTierListType> planTierListType = [PlanTierListType()];
@@ -299,6 +308,7 @@ class HMOViewModel extends BaseViewModel {
   TextEditingController planTypeController = TextEditingController();
   TextEditingController renewalPriceController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController maxDependentsController = TextEditingController();
   TextEditingController durationController = TextEditingController();
   TextEditingController planTierController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -349,11 +359,7 @@ class HMOViewModel extends BaseViewModel {
 
   int page = 1;
 
-  HmoTeirEntity? hmoTeirEntity;
-  Map<String, Color>? colorPairsField = {
-    'primary': Color(0XFFFF4B4B),
-    'secondary': Color(0XFFFDE8E8),
-  };
+  PlanTier? planTiers;
 
   String searchHospitalName = '';
 
@@ -363,6 +369,8 @@ class HMOViewModel extends BaseViewModel {
 
   String filterPlanTiers = 'All';
   final groupedPlans = <String, List<Plan>>{};
+
+  String searchedPlansTiers = '';
 
   groupByPlanType(context, HMOViewModel model, String selectedType) async {
     filterPlanTypes = selectedType;
@@ -460,7 +468,11 @@ class HMOViewModel extends BaseViewModel {
     model.notifyListeners();
   }
 
-  Future<void> showColorPickerDialog(BuildContext context) async {
+  Future<void> showColorPickerDialog({
+    BuildContext? context,
+    model,
+    planIndex,
+  }) async {
     final List<Map<String, Color>> colorPairs = [
       {"primary": Color(0XFFFF4B4B), "secondary": Color(0XFFFDE8E8)},
       {"primary": Color(0XFF2D9CFF), "secondary": Color(0XFFE4F2FF)},
@@ -471,7 +483,7 @@ class HMOViewModel extends BaseViewModel {
     ];
 
     showDialog(
-      context: context,
+      context: context!,
       barrierDismissible: true,
       builder: (_) {
         return Dialog(
@@ -492,8 +504,16 @@ class HMOViewModel extends BaseViewModel {
                     padding: EdgeInsets.only(bottom: 18.h),
                     child: GestureDetector(
                       onTap: () {
-                        colorPairsField = e;
-                        notifyListeners();
+                        model
+                                .planTierListType[planIndex!]
+                                .colorControllerPrimary =
+                            e['primary'];
+
+                        model
+                                .planTierListType[planIndex]
+                                .colorControllerSecondary =
+                            e['secondary'];
+                        model.notifyListeners();
                         Navigator.pop(context);
                       },
                       child: Row(
@@ -634,6 +654,268 @@ class HMOViewModel extends BaseViewModel {
                       child: ElevatedButton(
                         onPressed: () async {
                           planTierListType.removeAt(planIndex!);
+                          notifyListeners();
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.appRed,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 12.w,
+                          ),
+                          elevation: 0,
+                        ),
+                        child: TextView(
+                          text: "Yes, Delete",
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.6.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> showDeleteHMOPlanDialog({
+    BuildContext? context,
+    String? planId,
+  }) async {
+    return showDialog(
+      context: context!,
+      barrierDismissible: false, // Prevent dismiss when tapping outside
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top warning icon
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.appRed.withOpacity(.09),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(12.0.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.appRed,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImage.ex_error,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                TextView(
+                  text: "Are you sure?",
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.bblack,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: "This action will delete this hmo plan.",
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.success,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppColors.primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32.w,
+                          vertical: 12.w,
+                        ),
+                      ),
+                      child: TextView(
+                        text: "Cancel",
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+
+                    // Continue Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          deleteHMOPlan(context, planId: planId);
+                          notifyListeners();
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.appRed,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 12.w,
+                          ),
+                          elevation: 0,
+                        ),
+                        child: TextView(
+                          text: "Yes, Delete",
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.6.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deletePlanTierDialog({
+    BuildContext? context,
+    String? planTierId,
+  }) async {
+    return showDialog(
+      context: context!,
+      barrierDismissible: false, // Prevent dismiss when tapping outside
+      builder: (_) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top warning icon
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.appRed.withOpacity(.09),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(12.0.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.appRed,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImage.ex_error,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                TextView(
+                  text: "Are you sure?",
+                  textStyle: TextStyle(
+                    fontFamily: 'GoogleSans',
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.bblack,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text: "This action will delete this plan tier.",
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.success,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppColors.primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32.w,
+                          vertical: 12.w,
+                        ),
+                      ),
+                      child: TextView(
+                        text: "Cancel",
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+
+                    // Continue Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          deletePlanTier(context, planTierId: planTierId!);
                           notifyListeners();
                           Navigator.pop(context);
                         },
@@ -2050,6 +2332,31 @@ class HMOViewModel extends BaseViewModel {
     // return error;
   }
 
+  Future<void> deletePlanTier(
+    BuildContext context, {
+    String? planTierId,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.deletePlanTier(planTierId!),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 200) {
+        await AppUtils.snackbar(context, message: v['message']);
+        getListedPlanTiersForHMO(context);
+      } else {
+        AppUtils.snackbar(context, message: v['message'], error: true);
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> deleteRole(BuildContext context, {String? roleId}) async {
     try {
       _isLoading = true;
@@ -2210,7 +2517,7 @@ class HMOViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }
@@ -2307,6 +2614,53 @@ class HMOViewModel extends BaseViewModel {
           context,
           message: _createHmoPlanReponseModel?.message ?? '',
         );
+        navigate.back(result: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> createHmoPlanTiers({
+    context,
+    CreatePlanTierEntityModel? createPlanTier,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.createPlanTier(createPlanTier!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message'] ?? '');
+        navigate.back(result: true);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateHmoPlanTiers({
+    context,
+    UpdatePlanTiersEntityModel? updatePlanTier,
+    String? planTierId,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updatePlanTier(updatePlanTier!, planTierId!),
+        throwException: true,
+      );
+      if (v['statusCode'] == 200) {
+        await AppUtils.snackbar(context, message: v['message'] ?? '');
         navigate.back(result: true);
       }
       _isLoading = false;
@@ -2440,6 +2794,23 @@ class HMOViewModel extends BaseViewModel {
         throwException: true,
       );
       getMyHmoPlanResponseModelList = _getMyHmoPlanResponseModel;
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<dynamic> deleteHMOPlan(context, {String? planId}) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.deleteHMOPlan(planId!),
+        throwException: true,
+      );
+      AppUtils.snackbar(context, message: v['message']);
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

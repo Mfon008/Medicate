@@ -6,6 +6,7 @@ import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/get_my_hmo_plan_response_model/plan.dart';
 import '../../../core/connect_end/view_model/hmo_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../../core/core_folder/app/app.router.dart';
@@ -21,7 +22,7 @@ class HmoPlanScreen extends StatefulWidget {
 }
 
 // make value a class variable so you can pass the index of the plan to hide and unhide
-bool isShow = false;
+Plan? isHmo;
 
 class _HmoPlanScreenState extends State<HmoPlanScreen> {
   @override
@@ -270,9 +271,9 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                               position: PopupMenuPosition.under,
                               offset: Offset(50, 10),
                               color: AppColors.white,
-                              onSelected: (value) async{
+                              onSelected: (value) async {
                                 model.filterPlanTypes = value;
-                                model.groupByPlanType(context,model,value);
+                                model.groupByPlanType(context, model, value);
                                 model.notifyListeners();
                               },
                               child: Container(
@@ -311,7 +312,6 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                         ),
                                       ],
                                     ),
-                                    // SizedBox(width: 40.w),
                                     SvgPicture.asset(AppImage.arrow_down),
                                   ],
                                 ),
@@ -369,12 +369,12 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                           SizedBox(width: 20.w),
                           Expanded(
                             child: PopupMenuButton<String>(
-                               position: PopupMenuPosition.under,
+                              position: PopupMenuPosition.under,
                               offset: Offset(50, 10),
                               color: AppColors.white,
-                              onSelected: (value) async{
+                              onSelected: (value) async {
                                 model.filterPlanTiers = value;
-                                model.groupByPlanTiers(context,model,value);
+                                model.groupByPlanTiers(context, model, value);
                                 model.notifyListeners();
                               },
 
@@ -425,7 +425,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                         ),
                                       ),
                               ],
-                            
+
                               child: Container(
                                 width: double.infinity,
                                 padding: EdgeInsets.all(14.w),
@@ -446,7 +446,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                             color: AppColors.black,
                                           ),
                                         ),
-                                       SizedBox(
+                                        SizedBox(
                                           width: 80,
                                           child: TextView(
                                             text: model.filterPlanTiers,
@@ -496,8 +496,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                               ),
                             )
                             .map(
-                              (e) => 
-                              GestureDetector(
+                              (e) => GestureDetector(
                                 onTap: () async {
                                   final result = await navigate.navigateTo(
                                     Routes.createHmoPlan,
@@ -566,13 +565,9 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(22.r),
                                               border: Border.all(
-                                                color: model.tiersColor(
-                                                  e.planTier!,
-                                                ),
+                                                color: hexToColor('${e.planTierPrimaryColor?.substring(1)}'),
                                               ),
-                                              color: model.tiersBorderColor(
-                                                e.planTier!,
-                                              ),
+                                              color: hexToColor('${e.planTierSecondaryColor?.substring(1)}'),
                                             ),
                                             child: Row(
                                               crossAxisAlignment:
@@ -610,23 +605,27 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                           ),
                                           Spacer(),
                                           GestureDetector(
-                                            onTap: () => setState(
-                                              () => isShow = !isShow,
-                                            ),
+                                            onTap: () => setState(() {
+                                              if (isHmo == e) {
+                                                isHmo = null;
+                                              } else {
+                                                isHmo = e;
+                                              }
+                                            }),
                                             child: TextView(
-                                              text: !isShow
+                                              text: isHmo == e
                                                   ? 'Show more'
                                                   : 'Hide',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 14.2.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: !isShow
+                                                color: isHmo == e
                                                     ? AppColors.fineGrey
                                                     : AppColors.primary,
                                                 decoration:
                                                     TextDecoration.underline,
-                                                decorationColor: !isShow
+                                                decorationColor: isHmo == e
                                                     ? AppColors.fineGrey
                                                     : AppColors.primary,
                                               ),
@@ -762,8 +761,10 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: isShow ? 15.20.h : 0.h),
-                                      isShow
+                                      SizedBox(
+                                        height: isHmo == e ? 15.20.h : 0.h,
+                                      ),
+                                      isHmo == e
                                           ? Column(
                                               children: [
                                                 Container(
@@ -801,141 +802,94 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                                         ),
                                                       ),
                                                       SizedBox(height: 14.20.h),
-                                                      Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                            AppImage
-                                                                .light_check,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          TextView(
-                                                            text:
-                                                                'General Consultation',
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'Arial',
-                                                              fontSize:
-                                                                  14.52.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: AppColors
-                                                                  .reminder,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 6.90.w,
-                                                          ),
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.symmetric(
-                                                                  horizontal:
-                                                                      12.w,
-                                                                  vertical:
-                                                                      2.2.h,
+                                                      ...e.benefits!.map(
+                                                        (ben) => Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                SvgPicture.asset(
+                                                                  AppImage
+                                                                      .light_check,
                                                                 ),
-                                                            decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius.circular(
-                                                                    22.r,
-                                                                  ),
-                                                              color: AppColors
-                                                                  .white,
-                                                              border: Border.all(
-                                                                color: AppColors
-                                                                    .fineGrey
-                                                                    .withOpacity(
-                                                                      .3,
-                                                                    ),
-                                                              ),
-                                                            ),
-                                                            child: TextView(
-                                                              text: 'Unlimited',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'Arial',
-                                                                fontSize:
-                                                                    13.2.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: AppColors
-                                                                    .reminder,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      SizedBox(height: 14.20.h),
-                                                      Row(
-                                                        children: [
-                                                          SvgPicture.asset(
-                                                            AppImage
-                                                                .light_check,
-                                                          ),
-                                                          SizedBox(
-                                                            width: 8.10.w,
-                                                          ),
-                                                          TextView(
-                                                            text:
-                                                                'Emergency Care',
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'Arial',
-                                                              fontSize:
-                                                                  14.52.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: AppColors
-                                                                  .reminder,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 3.90.w,
-                                                          ),
-                                                          Container(
-                                                            padding:
-                                                                EdgeInsets.symmetric(
-                                                                  horizontal:
-                                                                      8.w,
-                                                                  vertical:
-                                                                      2.2.h,
+                                                                SizedBox(
+                                                                  width: 8.10.w,
                                                                 ),
-                                                            decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius.circular(
-                                                                    22.r,
+                                                                TextView(
+                                                                  text:
+                                                                      ben.description ??
+                                                                      '',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'Arial',
+                                                                    fontSize:
+                                                                        14.52
+                                                                            .sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: AppColors
+                                                                        .reminder,
                                                                   ),
-                                                              color: AppColors
-                                                                  .white,
-                                                              border: Border.all(
-                                                                color: AppColors
-                                                                    .fineGrey
-                                                                    .withOpacity(
-                                                                      .3,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: 4.10.w,
+                                                            ),
+                                                            Container(
+                                                              padding:
+                                                                  EdgeInsets.symmetric(
+                                                                    horizontal:
+                                                                        12.w,
+                                                                    vertical:
+                                                                        2.2.h,
+                                                                  ),
+                                                              margin:
+                                                                  EdgeInsets.only(
+                                                                    left:
+                                                                        13.90.w,
+                                                                  ),
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      22.r,
                                                                     ),
-                                                              ),
-                                                            ),
-                                                            child: TextView(
-                                                              text:
-                                                                  'Up to ₦500,000',
-                                                              textStyle: TextStyle(
-                                                                fontFamily:
-                                                                    'Arial',
-                                                                fontSize:
-                                                                    13.2.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
                                                                 color: AppColors
-                                                                    .reminder,
+                                                                    .white,
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .fineGrey
+                                                                      .withOpacity(
+                                                                        .3,
+                                                                      ),
+                                                                ),
+                                                              ),
+                                                              child: TextView(
+                                                                text:
+                                                                    ben.coverageLimit ??
+                                                                    '',
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      13.2.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
+
+                                                            SizedBox(
+                                                              height: 12.20.h,
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -1137,13 +1091,9 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                             22.r,
                                           ),
                                           border: Border.all(
-                                            color: model.tiersColor(
-                                              e.planTier!,
-                                            ),
+                                            color: hexToColor('${e.planTierPrimaryColor?.substring(0)}'),
                                           ),
-                                          color: model.tiersBorderColor(
-                                            e.planTier!,
-                                          ),
+                                          color: hexToColor('${e.planTierSecondaryColor?.substring(0)}'),
                                         ),
                                         child: Row(
                                           crossAxisAlignment:
@@ -1151,9 +1101,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                           children: [
                                             SvgPicture.asset(
                                               model.tiersSvgImage(e.planTier!),
-                                              color: model.tiersSpeColor(
-                                                e.planTier!,
-                                              ),
+                                              color:hexToColor('${e.planTierPrimaryColor?.substring(0)}'),
                                               height:
                                                   e.planTier!.toLowerCase() ==
                                                       'gold'
@@ -1168,9 +1116,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                                 fontFamily: 'GoogleSans',
                                                 fontSize: 14.2.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: model.tiersSpeColor(
-                                                  e.planTier!,
-                                                ),
+                                                color: hexToColor('${e.planTierPrimaryColor?.substring(0)}'),
                                               ),
                                             ),
                                           ],
@@ -1178,20 +1124,27 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                       ),
                                       Spacer(),
                                       GestureDetector(
-                                        onTap: () =>
-                                            setState(() => isShow = !isShow),
+                                        onTap: () => setState(() {
+                                          if (isHmo == e) {
+                                            isHmo = null;
+                                          } else {
+                                            isHmo = e;
+                                          }
+                                        }),
                                         child: TextView(
-                                          text: !isShow ? 'Show more' : 'Hide',
+                                          text: isHmo == e
+                                              ? 'Hide'
+                                              : 'Show more',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
                                             fontSize: 14.2.sp,
                                             fontWeight: FontWeight.w500,
-                                            color: !isShow
+                                            color: isHmo == e
                                                 ? AppColors.fineGrey
                                                 : AppColors.primary,
                                             decoration:
                                                 TextDecoration.underline,
-                                            decorationColor: !isShow
+                                            decorationColor: isHmo == e
                                                 ? AppColors.fineGrey
                                                 : AppColors.primary,
                                           ),
@@ -1228,7 +1181,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                           SizedBox(height: 4.10.h),
                                           TextView(
                                             text: formatNairaNoDecimal(
-                                              e.price!,
+                                              e.renewalPrice!,
                                             ),
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
@@ -1245,7 +1198,7 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           TextView(
-                                            text: 'Renewal Price',
+                                            text: 'Price',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 15.2.sp,
@@ -1327,8 +1280,8 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: isShow ? 15.20.h : 0.h),
-                                  isShow
+                                  SizedBox(height: isHmo == e ? 15.20.h : 0.h),
+                                  isHmo == e
                                       ? Column(
                                           children: [
                                             Container(
@@ -1361,114 +1314,90 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                                     ),
                                                   ),
                                                   SizedBox(height: 14.20.h),
-                                                  Row(
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        AppImage.light_check,
-                                                      ),
-                                                      SizedBox(width: 8.10.w),
-                                                      TextView(
-                                                        text:
-                                                            'General Consultation',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 14.52.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 6.90.w),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal: 12.w,
-                                                              vertical: 2.2.h,
+                                                  ...e.benefits!.map(
+                                                    (ben) => Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            SvgPicture.asset(
+                                                              AppImage
+                                                                  .light_check,
                                                             ),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22.r,
-                                                              ),
-                                                          color:
-                                                              AppColors.white,
-                                                          border: Border.all(
-                                                            color: AppColors
-                                                                .fineGrey
-                                                                .withOpacity(
-                                                                  .3,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                        child: TextView(
-                                                          text: 'Unlimited',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 13.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(height: 14.20.h),
-                                                  Row(
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        AppImage.light_check,
-                                                      ),
-                                                      SizedBox(width: 8.10.w),
-                                                      TextView(
-                                                        text: 'Emergency Care',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 14.52.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 3.90.w),
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              horizontal: 8.w,
-                                                              vertical: 2.2.h,
+                                                            SizedBox(
+                                                              width: 8.10.w,
                                                             ),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22.r,
+                                                            TextView(
+                                                              text:
+                                                                  ben.description ??
+                                                                  '',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'Arial',
+                                                                fontSize:
+                                                                    14.52.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .reminder,
                                                               ),
-                                                          color:
-                                                              AppColors.white,
-                                                          border: Border.all(
-                                                            color: AppColors
-                                                                .fineGrey
-                                                                .withOpacity(
-                                                                  .3,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: 4.10.w,
+                                                        ),
+                                                        Container(
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    12.w,
+                                                                vertical: 2.2.h,
+                                                              ),
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                left: 13.90.w,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  22.r,
                                                                 ),
+                                                            color:
+                                                                AppColors.white,
+                                                            border: Border.all(
+                                                              color: AppColors
+                                                                  .fineGrey
+                                                                  .withOpacity(
+                                                                    .3,
+                                                                  ),
+                                                            ),
+                                                          ),
+                                                          child: TextView(
+                                                            text:
+                                                                ben.coverageLimit ??
+                                                                '',
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              fontSize: 13.2.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                            ),
                                                           ),
                                                         ),
-                                                        child: TextView(
-                                                          text:
-                                                              'Up to ₦500,000',
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 13.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
+
+                                                        SizedBox(
+                                                          height: 12.20.h,
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),

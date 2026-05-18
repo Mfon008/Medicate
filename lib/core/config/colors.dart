@@ -77,3 +77,9 @@ class AppColors {
     },
   );
 }
+
+Color hexToColor(String? hex) {
+  final safeHex = hex ?? '#F1E6FF';
+
+  return Color(int.parse('0XFF${safeHex.substring(1)}'));
+}

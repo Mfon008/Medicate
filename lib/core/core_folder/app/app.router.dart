@@ -10,6 +10,8 @@ import 'package:flutter/material.dart' as _i119;
 import 'package:flutter/material.dart';
 import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
     as _i120;
+import 'package:medicate_app/core/connect_end/model/get_listed_plan_tiers_response_model/plan_tier.dart'
+    as _i122;
 import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart'
     as _i121;
 import 'package:medicate_app/ui/authentication/health_care/health_care_change_no_screen.dart'
@@ -231,7 +233,7 @@ import 'package:medicate_app/ui/widget/accelerate_payment_view_wallet.dart'
 import 'package:medicate_app/ui/widget/payment_success_submit_app_screen.dart'
     as _i93;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i122;
+import 'package:stacked_services/stacked_services.dart' as _i123;
 
 class Routes {
   static const dashboard = '/';
@@ -2026,8 +2028,11 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const HmoCreateTiersPlanManagementScreenArguments(),
       );
       return _i119.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i113.HmoCreateTiersPlanManagementScreen(key: args.key),
+        builder: (context) => _i113.HmoCreateTiersPlanManagementScreen(
+          key: args.key,
+          isEditing: args.isEditing,
+          editedPlanTier: args.editedPlanTier,
+        ),
         settings: data,
       );
     },
@@ -4828,13 +4833,21 @@ class HmoPlanTiersManagementScreenArguments {
 }
 
 class HmoCreateTiersPlanManagementScreenArguments {
-  const HmoCreateTiersPlanManagementScreenArguments({this.key});
+  const HmoCreateTiersPlanManagementScreenArguments({
+    this.key,
+    this.isEditing = false,
+    this.editedPlanTier,
+  });
 
   final _i119.Key? key;
 
+  final bool? isEditing;
+
+  final _i122.PlanTier? editedPlanTier;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "isEditing": "$isEditing", "editedPlanTier": "$editedPlanTier"}';
   }
 
   @override
@@ -4842,12 +4855,14 @@ class HmoCreateTiersPlanManagementScreenArguments {
     covariant HmoCreateTiersPlanManagementScreenArguments other,
   ) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key &&
+        other.isEditing == isEditing &&
+        other.editedPlanTier == editedPlanTier;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ isEditing.hashCode ^ editedPlanTier.hashCode;
   }
 }
 
@@ -4961,7 +4976,7 @@ class HMOMoreScreenArguments {
   }
 }
 
-extension NavigatorStateExtension on _i122.NavigationService {
+extension NavigatorStateExtension on _i123.NavigationService {
   Future<dynamic> navigateToDashboard({
     _i119.Key? key,
     int? index,
@@ -7113,6 +7128,8 @@ extension NavigatorStateExtension on _i122.NavigationService {
 
   Future<dynamic> navigateToHmoCreateTiersPlanManagementScreen({
     _i119.Key? key,
+    bool? isEditing = false,
+    _i122.PlanTier? editedPlanTier,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7121,7 +7138,11 @@ extension NavigatorStateExtension on _i122.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.hmoCreateTiersPlanManagementScreen,
-      arguments: HmoCreateTiersPlanManagementScreenArguments(key: key),
+      arguments: HmoCreateTiersPlanManagementScreenArguments(
+        key: key,
+        isEditing: isEditing,
+        editedPlanTier: editedPlanTier,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -9370,6 +9391,8 @@ extension NavigatorStateExtension on _i122.NavigationService {
 
   Future<dynamic> replaceWithHmoCreateTiersPlanManagementScreen({
     _i119.Key? key,
+    bool? isEditing = false,
+    _i122.PlanTier? editedPlanTier,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -9378,7 +9401,11 @@ extension NavigatorStateExtension on _i122.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.hmoCreateTiersPlanManagementScreen,
-      arguments: HmoCreateTiersPlanManagementScreenArguments(key: key),
+      arguments: HmoCreateTiersPlanManagementScreenArguments(
+        key: key,
+        isEditing: isEditing,
+        editedPlanTier: editedPlanTier,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

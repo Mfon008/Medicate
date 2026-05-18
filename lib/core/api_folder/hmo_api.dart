@@ -4,6 +4,7 @@ import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model
 import 'package:medicate_app/core/connect_end/model/create_hmo_plan_reponse_model/create_hmo_plan_reponse_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/create_plan_tier_entity_model/create_plan_tier_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
@@ -11,7 +12,7 @@ import 'package:medicate_app/core/connect_end/model/get_plan_detail_response_mod
 import 'package:medicate_app/core/connect_end/model/get_plan_hospital_network_response_model/get_plan_hospital_network_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_sign_up_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_hmo_profile_entity_model/update_hmo_profile_entity_model.dart';
-
+import 'package:medicate_app/core/connect_end/model/update_plan_tiers_entity_model.dart';
 import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
@@ -525,6 +526,20 @@ class HMOApi {
     }
   }
 
+  Future<dynamic> deletePlanTier(String planTierId) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.hmo_plan_teirs}/$planTierId',
+        RequestMethod.delete,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<dynamic> uploadProPicture(MultipartFile file) async {
     try {
       final response = await _service.call(
@@ -728,6 +743,55 @@ class HMOApi {
       );
       logger.d(response.data);
       return GetPlanDetailResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> createPlanTier(
+    CreatePlanTierEntityModel creatTierEntity,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.hmo_plan_teirs,
+        RequestMethod.post,
+        data: creatTierEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updatePlanTier(
+    UpdatePlanTiersEntityModel updateTierEntity,
+    String planTierId,
+  ) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.hmo_plan_teirs}/$planTierId',
+        RequestMethod.patch,
+        data: updateTierEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deleteHMOPlan(String planId) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.get_user_hmos_plan}/$planId/draft',
+        RequestMethod.delete,
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

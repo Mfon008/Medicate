@@ -87,7 +87,6 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                     ),
                   ],
                 ),
-                
 
                 SizedBox(height: 150.h),
                 Row(

@@ -27,6 +27,19 @@ Plan _$PlanFromJson(Map<String, dynamic> json) => Plan(
       .toList(),
   approvalStatus: json['approvalStatus'] as String?,
   superAdminCommission: (json['superAdminCommission'] as num?)?.toInt(),
+  renewalPrice: (json['renewalPrice'] as num?)?.toInt(),
+  renewalSuperAdminCommission: (json['renewalSuperAdminCommission'] as num?)
+      ?.toInt(),
+  planTierPrimaryColor: json['planTierPrimaryColor'] as String?,
+  planTierSecondaryColor: json['planTierSecondaryColor'] as String?,
+  planTierFeatures: (json['planTierFeatures'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  planTierDetails: json['planTierDetails'] == null
+      ? null
+      : PlanTierDetails.fromJson(
+          json['planTierDetails'] as Map<String, dynamic>,
+        ),
 );
 
 Map<String, dynamic> _$PlanToJson(Plan instance) => <String, dynamic>{
@@ -44,4 +57,10 @@ Map<String, dynamic> _$PlanToJson(Plan instance) => <String, dynamic>{
   'hospitalNetwork': instance.hospitalNetwork,
   'approvalStatus': instance.approvalStatus,
   'superAdminCommission': instance.superAdminCommission,
+  'renewalPrice': instance.renewalPrice,
+  'renewalSuperAdminCommission': instance.renewalSuperAdminCommission,
+  'planTierPrimaryColor': instance.planTierPrimaryColor,
+  'planTierSecondaryColor': instance.planTierSecondaryColor,
+  'planTierFeatures': instance.planTierFeatures,
+  'planTierDetails': instance.planTierDetails,
 };
