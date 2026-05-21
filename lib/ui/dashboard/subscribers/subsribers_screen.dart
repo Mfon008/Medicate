@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:medicate_app/core/connect_end/model/active_hmo_plan_response_model/datum.dart';
 import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/constant.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/active_hmo_plan_response_model/hmo.dart';
 import '../../../core/connect_end/model/get_my_subscription_response_model/subscription.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
@@ -180,14 +180,16 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                   model
                                       .activeHmoPlanResponseModel!
                                       .data!
+                                      .hmos!
                                       .isNotEmpty)
-                                ...model.activeHmoPlanResponseModel!.data!.map(
-                                  (e) => subscriberWidget(
-                                    context: context,
-                                    data: e,
-                                    isTab: isTablet(context),
-                                  ),
-                                ),
+                                ...model.activeHmoPlanResponseModel!.data!.hmos!
+                                    .map(
+                                      (e) => subscriberWidget(
+                                        context: context,
+                                        data: e,
+                                        isTab: isTablet(context),
+                                      ),
+                                    ),
                               SizedBox(height: 20.40.h),
                               Divider(
                                 color: AppColors.buttonGrey1,
@@ -662,12 +664,12 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
   GestureDetector subscriberWidget({
     context,
     isTab,
-    Datum? data,
+    Hmo? data,
     bool isComplete = false,
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(
       Routes.proHealthSubScreen,
-      arguments: ProHealthSubScreenArguments(hmoId: data.id),
+      arguments: ProHealthSubScreenArguments(hmoId: data.hmoId),
     ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 14.w),
@@ -728,9 +730,9 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                   SvgPicture.asset(AppImage.locator, height: 10.h, width: 10.w),
                   SizedBox(width: 6.8.w),
                   TextView(
-                    text: data!.businessAddress! == ""
+                    text: data!.location!.address == ""
                         ? 'Not Available'
-                        : data.businessAddress!,
+                        : data.location!.address!,
                     textStyle: TextStyle(
                       fontFamily: 'Arial',
                       fontSize: 13.2.sp,

@@ -245,8 +245,9 @@ class HMORepoImpl {
 
   Future<GetListOfHospitalResponseModel> getListOfHospitals({
     String? page,
+    String? query,
   }) async {
-    final response = await _contract.getListOfHospitals(page: page);
+    final response = await _contract.getListOfHospitals(page: page, query: query);
     return response;
   }
 

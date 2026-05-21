@@ -48,7 +48,6 @@ import '../model/get_created_user_response_model/get_created_user_response_model
 import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_hmo_kyc_response_model/get_hmo_kyc_response_model.dart';
 import '../model/get_list_of_hospital_response_model/get_list_of_hospital_response_model.dart';
-import '../model/get_list_of_hospital_response_model/hospital.dart';
 import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_response_model.dart';
 import '../model/get_listed_plan_tiers_response_model/plan_tier.dart';
 import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
@@ -124,6 +123,7 @@ class HMOViewModel extends BaseViewModel {
   bool get isLoadingTIN => _isLoadingTIN;
   bool _isLoadingLicense = false;
   bool get isLoadingLicense => _isLoadingLicense;
+  bool isViewHmoPlans = false;
 
   bool _onTempPinTap = false;
   bool get onTempPinTap => _onTempPinTap;
@@ -239,7 +239,7 @@ class HMOViewModel extends BaseViewModel {
   ForgotPasswordResponseModel? get forgotPasswordResponseModel =>
       _forgotPasswordResponseModel;
 
-  List<Hospital>? getAllHospitalPage = [];
+  // List<Hospital>? getAllHospitalPage = [];
   ResendOtpResponseModel? _resendOtpResponseModel;
   ResendOtpResponseModel? get resendOtpResponseModel => _resendOtpResponseModel;
   VerifyPassOtpRespnseModel? _verifyPassOtpRespnseModel;
@@ -303,7 +303,7 @@ class HMOViewModel extends BaseViewModel {
   TextEditingController lgaController = TextEditingController();
   String? userRoleControllerId;
 
-  List<TextEditingController> benefitController = [TextEditingController()];
+  List<TextEditingController> benefitController = [];
   List<TextEditingController> limitController = [TextEditingController()];
   TextEditingController planTypeController = TextEditingController();
   TextEditingController renewalPriceController = TextEditingController();
@@ -2503,16 +2503,16 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getListOfHospital(context) async {
+  Future<void> getListOfHospital(context,{String? query}) async {
     try {
       _isLoading = true;
       _getAllOfHospitalsResponseModel = await runBusyFuture(
-        repositoryImply.getListOfHospitals(page: page.toString()),
+        repositoryImply.getListOfHospitals(page: page.toString(), query: query),
         throwException: true,
       );
-      getAllHospitalPage!.addAll(
-        _getAllOfHospitalsResponseModel!.data!.hospitals!,
-      );
+      // getAllHospitalPage!.addAll(
+      //   _getAllOfHospitalsResponseModel!.data!.hospitals!,
+      // );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -2537,10 +2537,7 @@ class HMOViewModel extends BaseViewModel {
           context,
           message: _createHospitalNetworkResponseModel?.message ?? '',
         );
-        navigate.navigateTo(
-          Routes.hMODashboard,
-          arguments: HMODashboardArguments(index: 1),
-        );
+         navigate.back(result: true);
       }
       _isLoading = false;
     } catch (e) {
@@ -2770,7 +2767,7 @@ class HMOViewModel extends BaseViewModel {
       if (v['statusCode'] == 200) {
         _isLoading = false;
         await AppUtils.snackbar(context, message: v['message'] ?? '');
-        navigate.back();
+        navigate.back(result: true);
       }
       _isLoading = false;
     } catch (e) {
@@ -4069,6 +4066,19 @@ class HMOViewModel extends BaseViewModel {
                               size: 10.sp,
                             ),
                           )
+                        : checkHMOKYCStatus(level)
+                        ? Container(
+                            padding: EdgeInsets.all(3.4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.app_green,
+                            ),
+                            child: Icon(
+                              Icons.check,
+                              color: AppColors.white,
+                              size: 10.sp,
+                            ),
+                          )
                         : Icon(
                             int.parse(level) == levelKyc
                                 ? Icons.keyboard_arrow_up_rounded
@@ -4080,6 +4090,18 @@ class HMOViewModel extends BaseViewModel {
                 ),
               ),
       );
+
+  checkHMOKYCStatus(level) {
+    if (getHmoKycResponseModel != null &&
+        getHmoKycResponseModel!.data!.kycLevels != null &&
+        getHmoKycResponseModel!.data!.kycLevels!.isNotEmpty &&
+        getHmoKycResponseModel!.data!.kycLevels![int.parse(level) - 1].status ==
+            'APPROVED') {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   KycWidget({String? level, BuildContext? contxxt}) => Container(
     width: double.infinity,

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'datum.dart';
+import 'data.dart';
 
 part 'active_hmo_plan_response_model.g.dart';
 
@@ -9,7 +9,7 @@ class ActiveHmoPlanResponseModel {
   bool? success;
   int? statusCode;
   String? message;
-  List<Datum>? data;
+  Data? data;
 
   ActiveHmoPlanResponseModel({
     this.success,

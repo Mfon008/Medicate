@@ -157,6 +157,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                               fontSize: 14.sp,
                               color: AppColors.infoGrey,
                             ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
+                            ),
                             fillColor: AppColors.grey,
                             isFilled: true,
                             controller: model.nameController,
@@ -177,6 +183,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                               fontFamily: 'Arial',
                               fontSize: 14.sp,
                               color: AppColors.infoGrey,
+                            ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
                             ),
                             fillColor: AppColors.grey,
                             isFilled: true,
@@ -199,6 +211,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                               fontSize: 14.sp,
                               color: AppColors.infoGrey,
                             ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
+                            ),
                             fillColor: AppColors.grey,
                             isFilled: true,
                             controller: model.userPhoneController,
@@ -214,6 +232,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                             borderBottomLeft: 10.r,
                             borderBottomRight: 10.r,
                             hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
+                            ),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
@@ -235,6 +259,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                             borderBottomLeft: 10.r,
                             borderBottomRight: 10.r,
                             hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
+                            ),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
@@ -256,6 +286,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                             borderBottomLeft: 10.r,
                             borderBottomRight: 10.r,
                             hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
+                            ),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
@@ -317,6 +353,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                             borderBottomRight: 10.r,
                             label: '--Select--',
                             readOnly: true,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
+                            ),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
@@ -347,6 +389,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                             borderTopRight: 10.r,
                             borderBottomLeft: 10.r,
                             borderBottomRight: 10.r,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: AppColors.reminder,
+                            ),
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
@@ -435,6 +483,12 @@ class HMOAddUserModalWidget extends StatelessWidget {
                                   hintSize: isTablet(context)
                                       ? 6.82.sp
                                       : 14.60.sp,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Arial',
+                                    fontSize: 16.sp,
+                                    color: AppColors.reminder,
+                                  ),
                                   labelStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Arial',

@@ -18,9 +18,9 @@ import 'package:medicate_app/core/connect_end/model/get_hmo_plan_hospital_networ
 import 'package:medicate_app/core/connect_end/model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/daily_dose_time.dart'
     as getR;
-import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/plan.dart'
     as hmo;
-import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/plan.dart'
     as d;
 import 'package:medicate_app/core/app_assets/country_code_format.dart';
 import 'package:medicate_app/core/connect_end/model/create_reminder_entity_model/create_reminder_entity_model.dart';
@@ -145,7 +145,7 @@ class AuthViewModel extends BaseViewModel {
   bool get isTogglePasswordConfirm => _isTogglePasswordConfirm;
   bool _isTogglePasswordConfirm = false;
   bool onToggleMic = false;
-  hmo.Datum? hmoPlanType;
+  hmo.Plan? hmoPlanType;
 
   File? imageDocument;
   String? fileImageDocument;
@@ -973,7 +973,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) {
     if (linSubIndex == 2) {
       return secondSubModalFlow(
@@ -1030,7 +1030,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) {
     if (linFamIndex == 2) {
       return secondFamModalFlow(
@@ -1087,7 +1087,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) {
     if (linCorpIndex == 2) {
       return secondCorpModalFlow(
@@ -5115,7 +5115,7 @@ class AuthViewModel extends BaseViewModel {
     BuildContext? context,
     String? planTier,
     String? planType,
-    d.Datum? data,
+    d.Plan? data,
   }) => Form(
     key: secondCorModalFlowKey,
     child: Column(
@@ -8104,7 +8104,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -8487,7 +8487,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -9214,7 +9214,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -9598,7 +9598,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -10325,7 +10325,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -10711,7 +10711,7 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
     String? hmoId,
-    d.Datum? data,
+    d.Plan? data,
   }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -28009,11 +28009,11 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getHMOActivePlan(context) async {
+  Future<void> getHMOActivePlan(context, {String? page}) async {
     try {
       _isLoading = true;
       _activeHmoPlanResponseModel = await runBusyFuture(
-        repositoryImply.getActiveHmoPlan(),
+        repositoryImply.getActiveHmoPlan(page: page, limit: 10.toString()),
         throwException: true,
       );
       _isLoading = false;
@@ -28029,11 +28029,18 @@ class AuthViewModel extends BaseViewModel {
     context, {
     String? hmoId,
     String? type,
+    String? page,
+    String? limit,
   }) async {
     try {
       _isLoading = true;
       _getHmosPlanResponseModel = await runBusyFuture(
-        repositoryImply.getActiveHmoPlanByType(hmodId: hmoId, type: type),
+        repositoryImply.getActiveHmoPlanByType(
+          hmodId: hmoId,
+          type: type,
+          page: page,
+          limit: limit,
+        ),
         throwException: true,
       );
       _isLoading = false;

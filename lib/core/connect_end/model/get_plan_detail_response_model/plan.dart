@@ -22,6 +22,7 @@ class Plan {
   String? approvalStatus;
   int? superAdminCommission;
   int? renewalPrice;
+  int? maximumDependents;
   int? renewalSuperAdminCommission;
 
   Plan({
@@ -39,6 +40,7 @@ class Plan {
     this.hospitalNetwork,
     this.approvalStatus,
     this.superAdminCommission,
+    this.maximumDependents,
     this.renewalPrice,
     this.renewalSuperAdminCommission,
   });

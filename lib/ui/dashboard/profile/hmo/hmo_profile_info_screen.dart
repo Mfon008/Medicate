@@ -36,6 +36,7 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
 
   bool isPhone = false;
   bool isPhoneValid = false;
+  bool isSeeId = false;
 
   @override
   Widget build(BuildContext context) {
@@ -278,6 +279,49 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                               ),
                             ),
                           ],
+                        ),
+                        SizedBox(height: 20.h),
+                        TextFormWidget(
+                          hint: 'HMO ID',
+                          hintSize: 14,
+                          borderColor: AppColors.transparent,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 14.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Arial',
+                            fontSize: 16.2.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                          fillColor: AppColors.grey,
+                          isFilled: true,
+                          readOnly: true,
+                          obscureText: isSeeId? false : true,
+                          controller: TextEditingController(
+                              text: model.getTetantResponseModel?.data?.id ??
+                                  ''),
+                          onChange: (p0) {
+                            setState(() {});
+                          },
+                          suffixWidget: Padding(
+                            padding: EdgeInsets.all(10.w),
+                            // ignore: deprecated_member_use
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isSeeId = !isSeeId;
+                                });
+                              },
+                              child: SvgPicture.asset(isSeeId? AppImage.opened_eye: AppImage.closed_eye,color: AppColors.infoGrey,)),
+                          ),
                         ),
                         SizedBox(height: 20.h),
                         TextFormWidget(

@@ -8,7 +8,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter/material.dart' as _i119;
 import 'package:flutter/material.dart';
-import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart'
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/plan.dart'
     as _i120;
 import 'package:medicate_app/core/connect_end/model/get_listed_plan_tiers_response_model/plan_tier.dart'
     as _i122;
@@ -4167,7 +4167,7 @@ class ApplicationFormScreenArguments {
 
   final String? hmoId;
 
-  final _i120.Datum? data;
+  final _i120.Plan? data;
 
   @override
   String toString() {
@@ -4248,7 +4248,7 @@ class FamilyFormScreenArguments {
 
   final String? hmoId;
 
-  final _i120.Datum? data;
+  final _i120.Plan? data;
 
   @override
   String toString() {
@@ -4297,7 +4297,7 @@ class CoorporateFormScreenArguments {
 
   final String? hmoId;
 
-  final _i120.Datum? data;
+  final _i120.Plan? data;
 
   @override
   String toString() {
@@ -6610,7 +6610,7 @@ extension NavigatorStateExtension on _i123.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i120.Datum? data,
+    required _i120.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6664,7 +6664,7 @@ extension NavigatorStateExtension on _i123.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i120.Datum? data,
+    required _i120.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6694,7 +6694,7 @@ extension NavigatorStateExtension on _i123.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i120.Datum? data,
+    required _i120.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8873,7 +8873,7 @@ extension NavigatorStateExtension on _i123.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i120.Datum? data,
+    required _i120.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8927,7 +8927,7 @@ extension NavigatorStateExtension on _i123.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i120.Datum? data,
+    required _i120.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8957,7 +8957,7 @@ extension NavigatorStateExtension on _i123.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i120.Datum? data,
+    required _i120.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,

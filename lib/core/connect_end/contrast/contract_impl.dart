@@ -179,13 +179,22 @@ class AuthContractsImpl {
   Future<GetWalletResponseModel> getWalletBalance() async =>
       await _api.getWalletBalance();
 
-  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan() async =>
-      await _api.getActiveHmoPlan();
+  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan({
+    String? page,
+    String? limit,
+  }) async => await _api.getActiveHmoPlan(page: page, limit: limit);
 
   Future<GetHmosPlanResponseModel> getActiveHmoPlanByType({
     String? hmodId,
     String? type,
-  }) async => await _api.getActiveHmoPlanByType(hmodId: hmodId, type: type);
+    String? page,
+    String? limit,
+  }) async => await _api.getActiveHmoPlanByType(
+    hmodId: hmodId,
+    type: type,
+    page: page,
+    limit: limit,
+  );
 
   Future<GetIndividualApplicationDetailsModel> getIndividualApplication({
     String? appliationId,

@@ -24,6 +24,7 @@ class Plan {
   int? superAdminCommission;
   int? renewalPrice;
   int? renewalSuperAdminCommission;
+  int? maximumDependents;
   String? planTierPrimaryColor;
   String? planTierSecondaryColor;
   List<String>? planTierFeatures;
@@ -46,6 +47,7 @@ class Plan {
     this.superAdminCommission,
     this.renewalPrice,
     this.renewalSuperAdminCommission,
+    this.maximumDependents,
     this.planTierPrimaryColor,
     this.planTierSecondaryColor,
     this.planTierFeatures,

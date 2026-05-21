@@ -557,12 +557,13 @@ class HMOApi {
 
   Future<GetListOfHospitalResponseModel> getListOfHospitals({
     String? page,
+    String? query,
   }) async {
     try {
       final response = await _service.call(
         UrlConfig.get_hospital_by_id,
         RequestMethod.getParams,
-        queryParams: {'page': page, 'limit': '10'},
+        queryParams: {'page': page, 'limit': '10','search': query},
       );
       logger.d(response.data);
       return GetListOfHospitalResponseModel.fromJson(response.data);

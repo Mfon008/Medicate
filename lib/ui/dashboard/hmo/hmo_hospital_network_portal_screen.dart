@@ -641,7 +641,8 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                           ),
                                         ),
                                         PopupMenuItem(
-                                          onTap: () => navigate.navigateTo(
+                                          onTap: () async {
+                                            final result = await navigate.navigateTo(
                                             Routes
                                                 .hmoAddHospitalNetworkPortalScreen,
                                             arguments:
@@ -649,7 +650,11 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                                   isEditing: true,
                                                   hospitalId: e.id,
                                                 ),
-                                          ),
+                                          );
+                                            if (result == true) {
+                                              await model.getListOfHospital(context);
+                                            }
+                                          },
                                           child: TextView(
                                             text: 'Edit Hospital',
                                             textStyle: TextStyle(
@@ -787,7 +792,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                 SizedBox(width: 36.0.w),
                                 TextView(
                                   text:
-                                      'Page ${model.getAllOfHospitalsResponseModel!.data!.page} of ${model.getAllOfHospitalsResponseModel!.data!.totalPages}',
+                                      'Page ${model.getAllOfHospitalsResponseModel!.data!.meta!.page} of ${model.getAllOfHospitalsResponseModel!.data!.meta!.totalPages}',
                                   textStyle: TextStyle(
                                     fontFamily: 'Arial',
                                     fontSize: 13.2.sp,
@@ -802,7 +807,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                     if (model.page >=
                                         model
                                             .getAllOfHospitalsResponseModel!
-                                            .data!
+                                            .data!.meta!
                                             .totalPages!) {
                                     } else {
                                       model.page++;
@@ -817,7 +822,7 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                         model.page >=
                                             model
                                                 .getAllOfHospitalsResponseModel!
-                                                .data!
+                                                .data!.meta!
                                                 .totalPages!
                                         ? AppColors.primary.withOpacity(.3)
                                         : AppColors.primary1,

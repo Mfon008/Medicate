@@ -121,7 +121,8 @@ class HMOContractsImpl {
       await _api.uploadProPicture(file);
   Future<GetListOfHospitalResponseModel> getListOfHospitals({
     String? page,
-  }) async => await _api.getListOfHospitals(page: page);
+    String? query,
+  }) async => await _api.getListOfHospitals(page: page, query: query);
   Future<CreateHmoPlanReponseModel> createHmoPlan({
     CreateHmoPlanEntityModel? createPlan,
   }) async => await _api.createHmoPlan(createPlan: createPlan);

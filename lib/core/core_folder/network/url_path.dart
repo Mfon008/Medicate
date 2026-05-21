@@ -68,6 +68,8 @@ class UrlConfig {
   static const String create_payment = '/payment/create';
   static const String pay_with_wallet = '/payment/pay-with-wallet';
   static const String get_user_hmos = 'hmos';
+  static const String get_user_hmos_market = 'hmo/marketplace/plans';
+  static const String get_user_hmos_market_plantype = 'hmo/marketplace/hmos';
   static const String get_user_hmos_plan = 'hmo/plans';
   static const String selects_plan_type = 'hmo/settings/plan-types/select';
   static const String get_user_hmos_application = 'hmo/applications';

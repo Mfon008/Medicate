@@ -316,18 +316,25 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan() async {
-    final response = await _contract.getActiveHmoPlan();
+  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan({
+    String? page,
+    String? limit,
+  }) async {
+    final response = await _contract.getActiveHmoPlan(page: page, limit: limit);
     return response;
   }
 
   Future<GetHmosPlanResponseModel> getActiveHmoPlanByType({
     String? hmodId,
     String? type,
+    String? page,
+    String? limit,
   }) async {
     final response = await _contract.getActiveHmoPlanByType(
       hmodId: hmodId,
       type: type,
+      page: page,
+      limit: limit,
     );
     return response;
   }

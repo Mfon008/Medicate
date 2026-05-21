@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'datum.dart';
+import 'data.dart';
 
 part 'get_hmos_plan_response_model.g.dart';
 
@@ -9,7 +9,7 @@ class GetHmosPlanResponseModel {
   bool? success;
   int? statusCode;
   String? message;
-  List<Datum>? data;
+  Data? data;
 
   GetHmosPlanResponseModel({
     this.success,

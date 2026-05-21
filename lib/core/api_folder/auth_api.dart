@@ -609,11 +609,15 @@ class AuthApi {
     }
   }
 
-  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan() async {
+  Future<ActiveHmoPlanResponseModel> getActiveHmoPlan({
+    String? page,
+    String? limit,
+  }) async {
     try {
       final response = await _service.call(
-        UrlConfig.get_user_hmos,
+        UrlConfig.get_user_hmos_market,
         RequestMethod.get,
+        data: {'page': '1', 'limit': limit},
       );
       logger.d(response.data);
       return ActiveHmoPlanResponseModel.fromJson(response.data);
@@ -626,12 +630,14 @@ class AuthApi {
   Future<GetHmosPlanResponseModel> getActiveHmoPlanByType({
     String? hmodId,
     String? type,
+    String? page,
+    String? limit,
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.get_user_hmos}/$hmodId/plans',
+        '${UrlConfig.get_user_hmos_market_plantype}/$hmodId/plans',
         RequestMethod.getParams,
-        queryParams: {'type': type},
+        queryParams: {'planType': type, 'page': page, 'limit': limit},
       );
       logger.d(response.data);
       return GetHmosPlanResponseModel.fromJson(response.data);

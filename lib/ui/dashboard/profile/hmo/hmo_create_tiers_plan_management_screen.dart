@@ -352,7 +352,11 @@ class HmoCreateTiersPlanManagementScreen extends StatelessWidget {
                                             Center(
                                               child: IconButton(
                                                 onPressed: () {
-                                                  planValue
+                                                  if (planValue
+                                                          .featureListController!
+                                                          .length <
+                                                      5) {
+                                                         planValue
                                                           .featureListController ??=
                                                       [];
                                                   planValue
@@ -360,6 +364,7 @@ class HmoCreateTiersPlanManagementScreen extends StatelessWidget {
                                                       .add(
                                                         TextEditingController(),
                                                       );
+                                                  } else {}
                                                   model.notifyListeners();
                                                 },
                                                 icon: Icon(
@@ -416,7 +421,13 @@ class HmoCreateTiersPlanManagementScreen extends StatelessWidget {
                           ),
                           child: GestureDetector(
                             onTap: () {
-                              model.planTierListType.add(PlanTierListType());
+                              if (model.planTierListType.length < 10) {
+                                model.planTierListType.add(
+                                  PlanTierListType(
+                                    planTierController: TextEditingController(),
+                                  ),
+                                );
+                              }
                               model.notifyListeners();
                             },
                             child: Padding(

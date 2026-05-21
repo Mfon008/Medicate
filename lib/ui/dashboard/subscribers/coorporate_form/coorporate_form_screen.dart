@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/plan.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/auth_view_model.dart';
@@ -23,7 +23,7 @@ class CoorporateFormScreen extends StatelessWidget {
   String? planTeirName;
   String? planId;
   String? hmoId;
-  Datum? data;
+  Plan? data;
 
   @override
   Widget build(BuildContext context) {

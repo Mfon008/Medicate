@@ -4,11 +4,13 @@ import 'package:medicate_app/core/config/colors.dart';
 
 class CustomCheckbox extends StatelessWidget {
   final bool isSelected;
+  final bool isViewModel;
   final VoidCallback onTap;
 
   const CustomCheckbox({
     super.key,
     required this.isSelected,
+    required this.isViewModel,
     required this.onTap,
   });
 
@@ -21,7 +23,7 @@ class CustomCheckbox extends StatelessWidget {
         padding: isSelected ? EdgeInsets.all(4.0.w) : EdgeInsets.all(10.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.r),
-          color: isSelected ? AppColors.primary : AppColors.transparent,
+          color: isSelected && isViewModel ? AppColors.primary :isSelected && !isViewModel? AppColors.infoGrey : AppColors.transparent,
           border: Border.all(
             color: isSelected ? AppColors.transparent : AppColors.infoGrey,
             width: .78,

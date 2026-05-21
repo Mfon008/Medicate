@@ -7,11 +7,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model/benefit.dart';
 import 'package:medicate_app/core/connect_end/model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart';
-import 'package:medicate_app/core/connect_end/model/hospital_network_entity_model.dart';
 import 'package:medicate_app/ui/widget/button.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
+import '../../../core/app_assets/decouncer_class.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/get_list_of_hospital_response_model/hospital.dart'
@@ -48,6 +48,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
   Set<String> selectedHospitalIds = {};
   List<Benefit> benefitList = [];
   List<ben.Benefit> benefitListUpdate = [];
+  final debouncer = Debouncer(milliseconds: 200);
 
   Widget planTypeList(
     BuildContext ctx,
@@ -345,9 +346,10 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
           model.priceController.text =
               model.getPlanDetailResponseModel?.data?.plan?.price?.toString() ??
               '';
-          // model.maxDependentsController.text =
-          //     model.getPlanDetailResponseModel?.data?.plan?.maximumDependents?.toString() ??
-          '';
+          model.maxDependentsController.text =
+              model.getPlanDetailResponseModel?.data?.plan?.maximumDependents
+                  ?.toString() ??
+              '';
           model.durationController.text =
               model.getPlanDetailResponseModel?.data?.plan?.duration
                   ?.toString() ??
@@ -395,7 +397,11 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                     child: GlobalNavigator(),
                   ),
                   TextView(
-                    text: widget.isEdited! ? 'Create New Plans' : "Edit Plan",
+                    text: widget.isEdited!
+                        ? 'Create New Plans'
+                        : !model.isViewHmoPlans
+                        ? "View Plan"
+                        : "Edit Plan",
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 18.2.sp,
@@ -455,6 +461,14 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                         fontSize: 14.sp,
                         color: AppColors.infoGrey,
                       ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 16.sp,
+                        color: model.isViewHmoPlans
+                            ? AppColors.bblack
+                            : AppColors.infoGrey,
+                      ),
                       fillColor: AppColors.grey,
                       isFilled: true,
                       readOnly: true,
@@ -464,30 +478,34 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       suffixWidget: Padding(
                         padding: EdgeInsets.all(12.w),
                         child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: AppColors.white,
-                              builder: (ctx) => StatefulBuilder(
-                                builder: (ctx, setMenuState) {
-                                  return Container(
-                                    width: double.infinity,
-                                    margin: EdgeInsets.all(16.w),
-                                    padding: EdgeInsets.all(10.w),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: planTypeList(
-                                      ctx,
-                                      setMenuState,
-                                      model,
+                          onTap: model.isViewHmoPlans
+                              ? () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: AppColors.white,
+                                    builder: (ctx) => StatefulBuilder(
+                                      builder: (ctx, setMenuState) {
+                                        return Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.all(16.w),
+                                          padding: EdgeInsets.all(10.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: planTypeList(
+                                            ctx,
+                                            setMenuState,
+                                            model,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   );
-                                },
-                              ),
-                            );
-                          },
+                                }
+                              : () {},
                           child: SvgPicture.asset(AppImage.arrow_down),
                         ),
                       ),
@@ -508,6 +526,14 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                         fontSize: 14.sp,
                         color: AppColors.infoGrey,
                       ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 16.sp,
+                        color: model.isViewHmoPlans
+                            ? AppColors.bblack
+                            : AppColors.infoGrey,
+                      ),
                       fillColor: AppColors.grey,
                       isFilled: true,
                       readOnly: true,
@@ -516,30 +542,34 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       suffixWidget: Padding(
                         padding: EdgeInsets.all(12.w),
                         child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              backgroundColor: AppColors.white,
-                              builder: (ctx) => StatefulBuilder(
-                                builder: (ctx, setMenuState) {
-                                  return Container(
-                                    width: double.infinity,
-                                    margin: EdgeInsets.all(16.w),
-                                    padding: EdgeInsets.all(10.w),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: planTierList(
-                                      ctx,
-                                      setMenuState,
-                                      model,
+                          onTap: model.isViewHmoPlans
+                              ? () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: AppColors.white,
+                                    builder: (ctx) => StatefulBuilder(
+                                      builder: (ctx, setMenuState) {
+                                        return Container(
+                                          width: double.infinity,
+                                          margin: EdgeInsets.all(16.w),
+                                          padding: EdgeInsets.all(10.w),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.white,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                          ),
+                                          child: planTierList(
+                                            ctx,
+                                            setMenuState,
+                                            model,
+                                          ),
+                                        );
+                                      },
                                     ),
                                   );
-                                },
-                              ),
-                            );
-                          },
+                                }
+                              : () {},
                           child: SvgPicture.asset(AppImage.arrow_down),
                         ),
                       ),
@@ -562,34 +592,22 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                         fontSize: 14.sp,
                         color: AppColors.infoGrey,
                       ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 16.sp,
+                        color: model.isViewHmoPlans
+                            ? AppColors.bblack
+                            : AppColors.infoGrey,
+                      ),
                       fillColor: AppColors.grey,
                       isFilled: true,
+                      readOnly: model.isViewHmoPlans ? false : true,
                       controller: model.descriptionController,
                       validator: AppValidator.validateString(),
                     ),
                     SizedBox(height: 20.h),
-                    TextFormWidget(
-                      hint: 'Renewal Price (₦)',
-                      borderColor: AppColors.transparent,
-                      borderTopLeft: 10.r,
-                      borderTopRight: 10.r,
-                      borderBottomLeft: 10.r,
-                      borderBottomRight: 10.r,
-                      hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.sp,
-                        color: AppColors.infoGrey,
-                      ),
-                      fillColor: AppColors.grey,
-                      isFilled: true,
-                      controller: model.renewalPriceController,
-                      keyboardType: TextInputType.number,
-                      validator: AppValidator.validateString(),
-                      onChange: (p0) {},
-                    ),
-                    SizedBox(height: 20.h),
+
                     TextFormWidget(
                       hint: 'Price (₦)',
                       borderColor: AppColors.transparent,
@@ -604,6 +622,15 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                         fontSize: 14.sp,
                         color: AppColors.infoGrey,
                       ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 16.sp,
+                        color: model.isViewHmoPlans
+                            ? AppColors.bblack
+                            : AppColors.infoGrey,
+                      ),
+                      readOnly: model.isViewHmoPlans ? false : true,
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: model.priceController,
@@ -611,41 +638,22 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       keyboardType: TextInputType.number,
                       onChange: (p0) {},
                     ),
-                    SizedBox(height: model.planTypeController.text.toLowerCase()=='family'?20.h:0.h),
-                    model.planTypeController.text.toLowerCase()=='family'?TextFormWidget(
-                      hint: 'Maximum Dependents',
-                      borderColor: AppColors.transparent,
-                      borderTopLeft: 10.r,
-                      borderTopRight: 10.r,
-                      borderBottomLeft: 10.r,
-                      borderBottomRight: 10.r,
-                      hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial',
-                        fontSize: 14.sp,
-                        color: AppColors.infoGrey,
-                      ),
-                      fillColor: AppColors.grey,
-                      isFilled: true,
-                      controller: model.maxDependentsController,
-                      validator: AppValidator.validateString(),
-                      onChange: (p0) {},
-                      keyboardType: TextInputType.number,
-                    ):SizedBox(),
                     SizedBox(height: 20.h),
+
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: () => setState(() {
-                            isTapped = !isTapped;
-                            if (isTapped) {
-                              model.renewalPriceController.text =
-                                  model.priceController.text;
-                            } else {
-                              model.renewalPriceController.clear();
-                            }
-                          }),
+                          onTap: model.isViewHmoPlans
+                              ? () => setState(() {
+                                  isTapped = !isTapped;
+                                  if (isTapped) {
+                                    model.renewalPriceController.text =
+                                        model.priceController.text;
+                                  } else {
+                                    model.renewalPriceController.clear();
+                                  }
+                                })
+                              : () {},
                           child: Container(
                             padding: isTapped
                                 ? EdgeInsets.all(4.0.w)
@@ -683,6 +691,79 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                         ),
                       ],
                     ),
+
+                    SizedBox(height: 20.h),
+                    TextFormWidget(
+                      hint: 'Renewal Price (₦)',
+                      borderColor: AppColors.transparent,
+                      borderTopLeft: 10.r,
+                      borderTopRight: 10.r,
+                      borderBottomLeft: 10.r,
+                      borderBottomRight: 10.r,
+                      hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 14.sp,
+                        color: AppColors.infoGrey,
+                      ),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 16.sp,
+                        color: model.isViewHmoPlans
+                            ? AppColors.bblack
+                            : AppColors.infoGrey,
+                      ),
+                      readOnly: model.isViewHmoPlans ? false : true,
+                      fillColor: AppColors.grey,
+                      isFilled: true,
+                      controller: model.renewalPriceController,
+                      keyboardType: TextInputType.number,
+                      validator: AppValidator.validateString(),
+                      onChange: (p0) {},
+                    ),
+
+                    SizedBox(
+                      height:
+                          model.planTypeController.text.toLowerCase() ==
+                              'family'
+                          ? 20.h
+                          : 0.h,
+                    ),
+                    model.planTypeController.text.toLowerCase() == 'family'
+                        ? TextFormWidget(
+                            hint: 'Maximum Dependents',
+                            borderColor: AppColors.transparent,
+                            borderTopLeft: 10.r,
+                            borderTopRight: 10.r,
+                            borderBottomLeft: 10.r,
+                            borderBottomRight: 10.r,
+                            hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 14.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Arial',
+                              fontSize: 16.sp,
+                              color: model.isViewHmoPlans
+                                  ? AppColors.bblack
+                                  : AppColors.infoGrey,
+                            ),
+                            readOnly: model.isViewHmoPlans ? false : true,
+                            fillColor: AppColors.grey,
+                            isFilled: true,
+                            controller: model.maxDependentsController,
+                            validator: AppValidator.validateString(),
+                            onChange: (p0) {},
+                            keyboardType: TextInputType.number,
+                          )
+                        : SizedBox(),
+
                     SizedBox(height: 20.h),
 
                     TextFormWidget(
@@ -702,13 +783,17 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       fillColor: AppColors.grey,
                       isFilled: true,
                       controller: model.durationController,
-
-                      /// ✅ Important
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Arial',
+                        fontSize: 16.sp,
+                        color: model.isViewHmoPlans
+                            ? AppColors.bblack
+                            : AppColors.infoGrey,
+                      ),
+                      readOnly: model.isViewHmoPlans ? false : true,
                       keyboardType: TextInputType.number,
-
-                      /// 🔥 THIS is what enforces numeric-only input
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Enter duration in months';
@@ -780,16 +865,33 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                             ),
                             child: Row(
                               children: [
-                                CustomCheckbox(
-                                  isSelected: selectAll,
-                                  onTap: () {
-                                    toggleSelectAll(
-                                      model.getAllHospitalPage!,
-                                      model,
-                                    ); // 👈 fix here
-                                    setState(() {});
-                                  },
-                                ),
+                                model.getAllOfHospitalsResponseModel != null &&
+                                        model
+                                                .getAllOfHospitalsResponseModel!
+                                                .data !=
+                                            null &&
+                                        model
+                                            .getAllOfHospitalsResponseModel!
+                                            .data!
+                                            .hospitals!
+                                            .isNotEmpty
+                                    ? CustomCheckbox(
+                                        isSelected: selectAll,
+                                        isViewModel: model.isViewHmoPlans,
+                                        onTap: model.isViewHmoPlans
+                                            ? () {
+                                                toggleSelectAll(
+                                                  model
+                                                      .getAllOfHospitalsResponseModel!
+                                                      .data!
+                                                      .hospitals!,
+                                                  model,
+                                                ); // 👈 fix here
+                                                setState(() {});
+                                              }
+                                            : () {},
+                                      )
+                                    : SizedBox.shrink(),
                                 SizedBox(width: 16.w),
                                 TextView(
                                   text: 'Select All Hospitals',
@@ -803,16 +905,77 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 10.w),
+                          SizedBox(height: 15.10.w),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 22.w),
+                            decoration: BoxDecoration(),
+                            width: double.infinity,
+                            child: TextFormWidget(
+                              label: 'Search Hospital',
+                              labelStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.60.sp,
+                                color: AppColors.fineGrey,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              isFilled: true,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              fillColor: AppColors.grey,
+                              prefixWidget: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 12.6.w,
+                                ),
+                                child: SvgPicture.asset(
+                                  AppImage.search,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                              onChange: (value) {
+                                debouncer.run(() {
+                                  model.getListOfHospital(
+                                    context,
+                                    query: value,
+                                  );
+                                });
+                                // model.searchHospitalName = value;
+                                // print(model.searchHospitalName);
+                                setState(() {});
+                                model.notifyListeners();
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 10.20.w),
 
                           /// 🔹 List
-                          if (model.getAllHospitalPage == null ||
-                              model.getAllHospitalPage!.isEmpty)
+                          if (model.getAllOfHospitalsResponseModel == null ||
+                              model.getAllOfHospitalsResponseModel!.data ==
+                                  null ||
+                              model
+                                  .getAllOfHospitalsResponseModel!
+                                  .data!
+                                  .hospitals!
+                                  .isEmpty)
                             SizedBox.shrink(),
-                          if (model.getAllHospitalPage != null &&
-                              model.getAllHospitalPage!.isNotEmpty)
+                          if (model.getAllOfHospitalsResponseModel != null &&
+                              model.getAllOfHospitalsResponseModel!.data !=
+                                  null &&
+                              model
+                                  .getAllOfHospitalsResponseModel!
+                                  .data!
+                                  .hospitals!
+                                  .isNotEmpty)
                             SizedBox(
-                              height: model.getAllHospitalPage!.length > 3
+                              height:
+                                  model
+                                          .getAllOfHospitalsResponseModel!
+                                          .data!
+                                          .hospitals!
+                                          .length >
+                                      3
                                   ? 300.h
                                   : 150.h,
                               child: SmartRefresher(
@@ -835,6 +998,7 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                       model
                                           .getAllOfHospitalsResponseModel!
                                           .data!
+                                          .meta!
                                           .totalPages!) {
                                     refreshController.loadNoData();
                                   } else {
@@ -844,25 +1008,37 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                   }
                                 },
                                 child: ListView.builder(
-                                  itemCount: model.getAllHospitalPage!.length,
+                                  itemCount: model
+                                      .getAllOfHospitalsResponseModel!
+                                      .data!
+                                      .hospitals!
+                                      .length,
                                   padding: EdgeInsets.only(left: 22.w),
                                   itemBuilder: (context, index) {
-                                    final hospital =
-                                        model.getAllHospitalPage![index];
-                                    final h = model.getAllHospitalPage!;
+                                    final hospital = model
+                                        .getAllOfHospitalsResponseModel!
+                                        .data!
+                                        .hospitals![index];
+                                    final h = model
+                                        .getAllOfHospitalsResponseModel!
+                                        .data!
+                                        .hospitals!;
 
                                     return Row(
                                       children: [
                                         CustomCheckbox(
+                                          isViewModel: model.isViewHmoPlans,
                                           isSelected: selectedHospitalIds
                                               .contains(hospital.id),
-                                          onTap: () {
-                                            toggleSingle(
-                                              hospital.id!,
-                                              h,
-                                              model,
-                                            );
-                                          },
+                                          onTap: model.isViewHmoPlans
+                                              ? () {
+                                                  toggleSingle(
+                                                    hospital.id!,
+                                                    h,
+                                                    model,
+                                                  );
+                                                }
+                                              : () {},
                                         ),
                                         SizedBox(width: 12.w),
 
@@ -980,6 +1156,15 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                 fontSize: 14.sp,
                                 color: AppColors.infoGrey,
                               ),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                fontSize: 16.sp,
+                                color: model.isViewHmoPlans
+                                    ? AppColors.bblack
+                                    : AppColors.infoGrey,
+                              ),
+                              readOnly: model.isViewHmoPlans ? false : true,
                               fillColor: AppColors.appWhite,
                               isFilled: true,
                               controller: model.benefitController[index],
@@ -1000,6 +1185,15 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                 fontSize: 14.sp,
                                 color: AppColors.infoGrey,
                               ),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                fontSize: 16.sp,
+                                color: model.isViewHmoPlans
+                                    ? AppColors.bblack
+                                    : AppColors.infoGrey,
+                              ),
+                              readOnly: model.isViewHmoPlans ? false : true,
                               fillColor: AppColors.appWhite,
                               isFilled: true,
                               controller: model.limitController[index],
@@ -1025,107 +1219,124 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                       ),
                     ),
                     SizedBox(height: 48.h),
-                    ButtonWidget(
-                      border: 100.r,
-                      buttonColor: AppColors.primary,
-                      buttonText: widget.isEdited!
-                          ? 'Submit for Review'
-                          : 'Edit Plan',
-                      color: AppColors.white,
-                      buttonBorderColor: AppColors.transparent,
-                      isLoading: model.isLoading,
-                      onPressed: widget.isEdited!
-                          ? () {
-                              if (formKey.currentState!.validate()) {
-                                benefitList.clear();
-                                for (
-                                  int i = 0;
-                                  i < model.benefitController.length;
-                                  i++
-                                ) {
-                                  benefitList.add(
-                                    Benefit(
-                                      description:
-                                          model.benefitController[i].text,
-                                      coverageLimit:
-                                          model.limitController[i].text,
-                                    ),
-                                  );
-                                }
-                                model.createHmoPlan(
-                                  context: context,
-                                  createPlan: CreateHmoPlanEntityModel(
-                                    planName:
-                                        '${model.planTierController.text} ${model.planTypeController.text} Plan',
-                                    planType: selectedPlanTypeId,
-                                    planTier: selectedPlanTierId,
-                                    description:
-                                        model.descriptionController.text,
-                                    price: int.parse(
-                                      model.priceController.text,
-                                    ),
-                                    maximumDependents: model.planTypeController.text.toLowerCase()=='family'? int.parse(
-                                      model.maxDependentsController.text,
-                                    ): null,
-                                    renewalPrice: int.parse(
-                                      model.renewalPriceController.text,
-                                    ),
-                                    duration: int.parse(
-                                      model.durationController.text,
-                                    ),
-                                    hospitalNetworkIds: selectedHospitalIds
-                                        .toList(),
-                                    benefits: benefitList,
-                                  ),
-                                );
-                              }
-                            }
-                          : () async {
-                              if (formKey.currentState!.validate()) {
-                                benefitListUpdate.clear();
-                                for (
-                                  int i = 0;
-                                  i < model.benefitController.length;
-                                  i++
-                                ) {
-                                  benefitListUpdate.add(
-                                    ben.Benefit(
-                                      description:
-                                          model.benefitController[i].text,
-                                      coverageLimit:
-                                          model.limitController[i].text,
-                                    ),
-                                  );
-                                }
-                                await model.updateHmoPlan(
-                                  context: context,
-                                  planId: widget.plan!.id,
-                                  updatePlan: UpdateHmoPlanEntityModel(
-                                    planName:
-                                        '${model.planTierController.text} ${model.planTypeController.text} Plan',
-                                    description:
-                                        model.descriptionController.text,
-                                    price: int.parse(
-                                      model.priceController.text,
-                                    ),
-                                    duration: int.parse(
-                                      model.durationController.text,
-                                    ),
+                    model.getPlanDetailResponseModel != null &&
+                            model.getPlanDetailResponseModel!.data != null &&
+                            model
+                                    .getPlanDetailResponseModel!
+                                    .data!
+                                    .plan!
+                                    .approvalStatus!
+                                    .toLowerCase() !=
+                                'Approved'.toLowerCase()
+                        ? ButtonWidget(
+                            border: 100.r,
+                            buttonColor: AppColors.primary,
+                            buttonText: widget.isEdited! || model.isViewHmoPlans
+                                ? 'Submit for Review'
+                                : 'Edit Plan',
+                            color: AppColors.white,
+                            buttonBorderColor: AppColors.transparent,
+                            isLoading: model.isLoading,
+                            onPressed: widget.isEdited!
+                                ? () {
+                                    if (formKey.currentState!.validate()) {
+                                      benefitList.clear();
+                                      for (
+                                        int i = 0;
+                                        i < model.benefitController.length;
+                                        i++
+                                      ) {
+                                        benefitList.add(
+                                          Benefit(
+                                            description:
+                                                model.benefitController[i].text,
+                                            coverageLimit:
+                                                model.limitController[i].text,
+                                          ),
+                                        );
+                                      }
+                                      model.createHmoPlan(
+                                        context: context,
+                                        createPlan: CreateHmoPlanEntityModel(
+                                          planName:
+                                              '${model.planTierController.text} ${model.planTypeController.text} Plan',
+                                          planType: selectedPlanTypeId,
+                                          planTier: selectedPlanTierId,
+                                          description:
+                                              model.descriptionController.text,
+                                          price: int.parse(
+                                            model.priceController.text,
+                                          ),
+                                          maximumDependents:
+                                              model.planTypeController.text
+                                                      .toLowerCase() ==
+                                                  'family'
+                                              ? int.parse(
+                                                  model
+                                                      .maxDependentsController
+                                                      .text,
+                                                )
+                                              : null,
+                                          renewalPrice: int.parse(
+                                            model.renewalPriceController.text,
+                                          ),
+                                          duration: int.parse(
+                                            model.durationController.text,
+                                          ),
+                                          hospitalNetworkIds:
+                                              selectedHospitalIds.toList(),
+                                          benefits: benefitList,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                : () async {
+                                    if (model.isViewHmoPlans) {
+                                      if (formKey.currentState!.validate()) {
+                                        benefitListUpdate.clear();
+                                        for (
+                                          int i = 0;
+                                          i < model.benefitController.length;
+                                          i++
+                                        ) {
+                                          benefitListUpdate.add(
+                                            ben.Benefit(
+                                              description: model
+                                                  .benefitController[i]
+                                                  .text,
+                                              coverageLimit:
+                                                  model.limitController[i].text,
+                                            ),
+                                          );
+                                        }
+                                        await model.updateHmoPlan(
+                                          context: context,
+                                          planId: widget.plan!.id,
+                                          updatePlan: UpdateHmoPlanEntityModel(
+                                            planName:
+                                                '${model.planTierController.text} ${model.planTypeController.text} Plan',
+                                            description: model
+                                                .descriptionController
+                                                .text,
+                                            price: int.parse(
+                                              model.priceController.text,
+                                            ),
+                                            duration: int.parse(
+                                              model.durationController.text,
+                                            ),
 
-                                    benefits: benefitListUpdate,
-                                  ),
-                                );
-                                model.editHospitalNetwork(
-                                  context: context,
-                                  planId: widget.plan!.id,
-                                  hospitalNetwork: HospitalNetworkEntityModel(
-                                    hospitalNetworkIds: selectedHospitalIds
-                                        .toList(),
-                                  ),
-                                );
-                              }
-                            },
-                    ),
+                                            benefits: benefitListUpdate,
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      model.isViewHmoPlans = true;
+                                    }
+
+                                    model.notifyListeners();
+                                  },
+                          )
+                        : SizedBox.shrink(),
                     SizedBox(height: 22.h),
                   ],
                 ),

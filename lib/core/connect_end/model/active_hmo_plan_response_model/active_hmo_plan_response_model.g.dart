@@ -12,9 +12,9 @@ ActiveHmoPlanResponseModel _$ActiveHmoPlanResponseModelFromJson(
   success: json['success'] as bool?,
   statusCode: (json['statusCode'] as num?)?.toInt(),
   message: json['message'] as String?,
-  data: (json['data'] as List<dynamic>?)
-      ?.map((e) => Datum.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  data: json['data'] == null
+      ? null
+      : Data.fromJson(json['data'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ActiveHmoPlanResponseModelToJson(

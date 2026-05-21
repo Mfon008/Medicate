@@ -564,39 +564,22 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(22.r),
-                                              border: Border.all(
-                                                color: hexToColor('${e.planTierPrimaryColor?.substring(1)}'),
+                                              color: hexToColor(
+                                                '${e.planTierSecondaryColor?.substring(0)}',
                                               ),
-                                              color: hexToColor('${e.planTierSecondaryColor?.substring(1)}'),
                                             ),
                                             child: Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: [
-                                                SvgPicture.asset(
-                                                  model.tiersSvgImage(
-                                                    e.planTier!,
-                                                  ),
-                                                  color: model.tiersSpeColor(
-                                                    e.planTier!,
-                                                  ),
-                                                  height:
-                                                      e.planTier!
-                                                              .toLowerCase() ==
-                                                          'gold'
-                                                      ? 15.50.h
-                                                      : 14.20.h,
-                                                  width: 14.20.w,
-                                                ),
-                                                SizedBox(width: 6.w),
                                                 TextView(
                                                   text: '${e.planTier}',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'GoogleSans',
                                                     fontSize: 14.2.sp,
                                                     fontWeight: FontWeight.w500,
-                                                    color: model.tiersSpeColor(
-                                                      e.planTier!,
+                                                    color: hexToColor(
+                                                      '${e.planTierPrimaryColor?.substring(0)}',
                                                     ),
                                                   ),
                                                 ),
@@ -749,7 +732,10 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                               ),
                                               SizedBox(height: 4.10.h),
                                               TextView(
-                                                text: '1',
+                                                text:
+                                                    e.maximumDependents != null
+                                                    ? '${e.maximumDependents}'
+                                                    : 'No Dependent',
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
                                                   fontSize: 15.2.sp,
@@ -1090,33 +1076,23 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                           borderRadius: BorderRadius.circular(
                                             22.r,
                                           ),
-                                          border: Border.all(
-                                            color: hexToColor('${e.planTierPrimaryColor?.substring(0)}'),
+                                          color: hexToColor(
+                                            '${e.planTierSecondaryColor?.substring(0)}',
                                           ),
-                                          color: hexToColor('${e.planTierSecondaryColor?.substring(0)}'),
                                         ),
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            SvgPicture.asset(
-                                              model.tiersSvgImage(e.planTier!),
-                                              color:hexToColor('${e.planTierPrimaryColor?.substring(0)}'),
-                                              height:
-                                                  e.planTier!.toLowerCase() ==
-                                                      'gold'
-                                                  ? 15.50.h
-                                                  : 14.20.h,
-                                              width: 14.20.w,
-                                            ),
-                                            SizedBox(width: 6.w),
                                             TextView(
                                               text: '${e.planTier}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'GoogleSans',
                                                 fontSize: 14.2.sp,
                                                 fontWeight: FontWeight.w500,
-                                                color: hexToColor('${e.planTierPrimaryColor?.substring(0)}'),
+                                                color: hexToColor(
+                                                  '${e.planTierPrimaryColor?.substring(0)}',
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -1268,7 +1244,9 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                           ),
                                           SizedBox(height: 4.10.h),
                                           TextView(
-                                            text: '1',
+                                            text: e.maximumDependents != null
+                                                ? '${e.maximumDependents}'
+                                                : 'No Dependent',
                                             textStyle: TextStyle(
                                               fontFamily: 'Arial',
                                               fontSize: 15.2.sp,

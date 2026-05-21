@@ -75,54 +75,36 @@ class HmoPlanTiersManagementScreen extends StatelessWidget {
                                       null &&
                                   model
                                           .getAllListedPlanTiersResponseModel!
-                                          .data !=
-                                      null &&
-                                  model
-                                      .getAllListedPlanTiersResponseModel!
-                                      .data!
-                                      .planTiers!
-                                      .isEmpty
-                              ? Column(
-                                  children: [
-                                    SvgPicture.asset(AppImage.no_user_data),
-                                    SizedBox(height: 20.h),
-                                    TextView(
-                                      text: 'Create a Tier',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.20.h),
-                                    TextView(
-                                      text:
-                                          'Tap on the plus button to create one',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.faintedGrey,
-                                      ),
-                                    ),
-                                    SizedBox(height: 26.0.h),
-                                    GestureDetector(
-                                      onTap: () {},
-                                      child: Container(
-                                        padding: EdgeInsets.all(8.10.w),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.primary,
-                                        ),
-                                        child: Icon(
-                                          Icons.add,
-                                          color: AppColors.white,
-                                          size: 24.30.sp,
+                                          .data ==
+                                      null
+                              ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(AppImage.no_user_data),
+                                      SizedBox(height: 20.h),
+                                      TextView(
+                                        text: 'Create a Tier',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 15.2.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(height: 4.20.h),
+                                      TextView(
+                                        text:
+                                            'Tap on the plus button to create one',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 13.2.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.faintedGrey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 )
                               : Padding(
                                   padding: EdgeInsets.all(22.0),
@@ -506,40 +488,47 @@ class HmoPlanTiersManagementScreen extends StatelessWidget {
                                                         MainAxisAlignment
                                                             .spaceBetween,
                                                     children: [
-                                                      Container(
-                                                        padding:
-                                                            EdgeInsets.symmetric(
-                                                              vertical: 4.w,
-                                                              horizontal: 12.w,
+                                                      ConstrainedBox(
+                                                        constraints:
+                                                            BoxConstraints(
+                                                              maxWidth: 160.w,
                                                             ),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                22,
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                vertical: 4.w,
+                                                                horizontal:
+                                                                    12.w,
                                                               ),
-                                                          color: hexToColor(
-                                                            e.secondaryColor,
-                                                          ),
-                                                        ),
-                                                        child: TextView(
-                                                          text: e.name!,
-                                                          maxLines: 1,
-                                                          textOverflow:
-                                                              TextOverflow
-                                                                  .ellipsis,
-                                                          textStyle: TextStyle(
-                                                            fontFamily:
-                                                                'GoogleSans',
-                                                            fontSize: 14.2.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  22,
+                                                                ),
                                                             color: hexToColor(
-                                                              e.primaryColor,
+                                                              e.secondaryColor,
+                                                            ),
+                                                          ),
+                                                          child: TextView(
+                                                            text: e.name!,
+                                                            maxLines: 1,
+                                                            textOverflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize: 14.2.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: hexToColor(
+                                                                e.primaryColor,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
-
                                                       Row(
                                                         children: [
                                                           GestureDetector(

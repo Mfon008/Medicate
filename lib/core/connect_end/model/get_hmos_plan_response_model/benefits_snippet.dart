@@ -1,18 +1,17 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'benefits_snippet.g.dart';
+
+@JsonSerializable()
 class BenefitsSnippet {
   String? description;
   String? coverageLimit;
 
   BenefitsSnippet({this.description, this.coverageLimit});
 
-  BenefitsSnippet.fromJson(Map<String, dynamic> json) {
-    description = json['description'];
-    coverageLimit = json['coverageLimit'];
+  factory BenefitsSnippet.fromJson(Map<String, dynamic> json) {
+    return _$BenefitsSnippetFromJson(json);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['description'] = description;
-    data['coverageLimit'] = coverageLimit;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$BenefitsSnippetToJson(this);
 }

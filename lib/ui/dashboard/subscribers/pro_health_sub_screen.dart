@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/app_assets/image.dart';
-import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/datum.dart';
+import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/plan.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
@@ -101,7 +101,10 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                         model.isProSubStatus = 'Individual';
                                         if (model.getHmosPlanResponseModel !=
                                             null) {
-                                          model.getHmosPlanResponseModel!.data!
+                                          model
+                                              .getHmosPlanResponseModel!
+                                              .data!
+                                              .plans!
                                               .clear();
                                         }
                                         model.getHMOActivePlanByType(
@@ -147,7 +150,10 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                         model.isProSubStatus = 'Family';
                                         if (model.getHmosPlanResponseModel !=
                                             null) {
-                                          model.getHmosPlanResponseModel!.data!
+                                          model
+                                              .getHmosPlanResponseModel!
+                                              .data!
+                                              .plans!
                                               .clear();
                                         }
                                         model.getHMOActivePlanByType(
@@ -192,7 +198,10 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                         model.isProSubStatus = 'Corporate';
                                         if (model.getHmosPlanResponseModel !=
                                             null) {
-                                          model.getHmosPlanResponseModel!.data!
+                                          model
+                                              .getHmosPlanResponseModel!
+                                              .data!
+                                              .plans!
                                               .clear();
                                         }
                                         model.getHMOActivePlanByType(
@@ -238,23 +247,30 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                                 model
                                     .getHmosPlanResponseModel!
                                     .data!
+                                    .plans!
                                     .isNotEmpty)
                               model.isProSubStatus == 'Individual'
                                   ? individualWidget(
                                       model: model,
-                                      data:
-                                          model.getHmosPlanResponseModel!.data,
+                                      data: model
+                                          .getHmosPlanResponseModel!
+                                          .data!
+                                          .plans!,
                                     )
                                   : model.isProSubStatus == 'Family'
                                   ? familyWidget(
                                       model: model,
-                                      data:
-                                          model.getHmosPlanResponseModel!.data,
+                                      data: model
+                                          .getHmosPlanResponseModel!
+                                          .data!
+                                          .plans!,
                                     )
                                   : coorporateWidget(
                                       model: model,
-                                      data:
-                                          model.getHmosPlanResponseModel!.data,
+                                      data: model
+                                          .getHmosPlanResponseModel!
+                                          .data!
+                                          .plans!,
                                     ),
                           ],
                         ),
@@ -698,7 +714,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     );
   }
 
-  Column individualWidget({AuthViewModel? model, List<Datum>? data}) => Column(
+  Column individualWidget({AuthViewModel? model, List<Plan>? data}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(height: 20.h),
@@ -990,7 +1006,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     return 'Basic Plan';
   }
 
-  Color tiersColor(Datum e) {
+  Color tiersColor(Plan e) {
     if (e.planTier == 'Pearl') {
       return AppColors.lightBlue;
     }
@@ -1002,7 +1018,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     return AppColors.appRed;
   }
 
-  Color tiersBorderColor(Datum e) {
+  Color tiersBorderColor(Plan e) {
     if (e.planTier == 'Pearl') {
       return AppColors.faintedBlue;
     }
@@ -1014,7 +1030,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     return AppColors.faintedRed;
   }
 
-  String tiersSvgImage(Datum e) {
+  String tiersSvgImage(Plan e) {
     if (e.planTier == 'Pearl') {
       return AppImage.pearl;
     }
@@ -1025,7 +1041,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     return AppImage.star;
   }
 
-  Column coorporateWidget({AuthViewModel? model, List<Datum>? data}) => Column(
+  Column coorporateWidget({AuthViewModel? model, List<Plan>? data}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(height: 20.h),
@@ -1287,7 +1303,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
     ],
   );
 
-  Column familyWidget({AuthViewModel? model, List<Datum>? data}) => Column(
+  Column familyWidget({AuthViewModel? model, List<Plan>? data}) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       SizedBox(height: 20.h),

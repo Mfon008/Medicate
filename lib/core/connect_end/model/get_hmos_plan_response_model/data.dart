@@ -1,16 +1,18 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'hospital.dart';
+import 'hmo.dart';
 import 'meta.dart';
+import 'plan.dart';
 
 part 'data.g.dart';
 
 @JsonSerializable()
 class Data {
-  List<Hospital>? hospitals;
+  Hmo? hmo;
+  List<Plan>? plans;
   Meta? meta;
 
-  Data({this.hospitals, this.meta});
+  Data({this.hmo, this.plans, this.meta});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

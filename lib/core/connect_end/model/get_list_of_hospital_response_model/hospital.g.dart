@@ -16,6 +16,7 @@ Hospital _$HospitalFromJson(Map<String, dynamic> json) => Hospital(
   phone: json['phone'] as String?,
   email: json['email'] as String?,
   isActive: json['isActive'] as bool?,
+  hmoId: json['hmoId'] as String?,
 );
 
 Map<String, dynamic> _$HospitalToJson(Hospital instance) => <String, dynamic>{
@@ -28,4 +29,5 @@ Map<String, dynamic> _$HospitalToJson(Hospital instance) => <String, dynamic>{
   'phone': instance.phone,
   'email': instance.email,
   'isActive': instance.isActive,
+  'hmoId': instance.hmoId,
 };

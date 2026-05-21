@@ -30,6 +30,7 @@ Plan _$PlanFromJson(Map<String, dynamic> json) => Plan(
   renewalPrice: (json['renewalPrice'] as num?)?.toInt(),
   renewalSuperAdminCommission: (json['renewalSuperAdminCommission'] as num?)
       ?.toInt(),
+  maximumDependents: (json['maximumDependents'] as num?)?.toInt(),
   planTierPrimaryColor: json['planTierPrimaryColor'] as String?,
   planTierSecondaryColor: json['planTierSecondaryColor'] as String?,
   planTierFeatures: (json['planTierFeatures'] as List<dynamic>?)
@@ -59,6 +60,7 @@ Map<String, dynamic> _$PlanToJson(Plan instance) => <String, dynamic>{
   'superAdminCommission': instance.superAdminCommission,
   'renewalPrice': instance.renewalPrice,
   'renewalSuperAdminCommission': instance.renewalSuperAdminCommission,
+  'maximumDependents': instance.maximumDependents,
   'planTierPrimaryColor': instance.planTierPrimaryColor,
   'planTierSecondaryColor': instance.planTierSecondaryColor,
   'planTierFeatures': instance.planTierFeatures,

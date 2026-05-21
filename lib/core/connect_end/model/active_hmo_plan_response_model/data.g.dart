@@ -7,8 +7,8 @@ part of 'data.dart';
 // **************************************************************************
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-  hospitals: (json['hospitals'] as List<dynamic>?)
-      ?.map((e) => Hospital.fromJson(e as Map<String, dynamic>))
+  hmos: (json['hmos'] as List<dynamic>?)
+      ?.map((e) => Hmo.fromJson(e as Map<String, dynamic>))
       .toList(),
   meta: json['meta'] == null
       ? null
@@ -16,6 +16,6 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-  'hospitals': instance.hospitals,
+  'hmos': instance.hmos,
   'meta': instance.meta,
 };
