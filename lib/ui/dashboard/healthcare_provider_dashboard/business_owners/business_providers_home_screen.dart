@@ -492,10 +492,7 @@ class _BusinessProvidersHomeScreenState
                 horizontal: 18.22.w,
                 vertical: 12.w,
               ),
-              // onTap: () => model
-              //                       .showCreateAddPhoneDialog(
-              //                         context,
-              //                       ),
+             onTap: () => model.showReminderModal(context),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

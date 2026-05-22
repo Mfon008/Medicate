@@ -6,7 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/health_care_view_model.dart';
@@ -90,11 +89,7 @@ class HealthcareViewMedicationScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        model
-                                    .getReminderByIdModel!
-                                    .data
-                                    ?.medication
-                                    ?.medicationStatus ==
+                        model.getReminderByIdModel!.data?.medication?.medicationStatus ==
                                 'ONGOING'
                             ? Row(
                                 children: [

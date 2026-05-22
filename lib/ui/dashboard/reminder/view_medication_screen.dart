@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, deprecated_member_use
+// ignore_for_file: strict_top_level_inference, prefer_typing_uninitialized_variables, must_be_immutable, deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -499,7 +499,6 @@ class ViewMedicationScreen extends StatelessWidget {
                                                 uniqueTimes.add(dose.time!);
                                               }
                                             }
-
                                             return uniqueTimes.map((time) {
                                               return Container(
                                                 width: 100.w,
