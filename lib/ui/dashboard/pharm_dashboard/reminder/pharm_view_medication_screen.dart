@@ -852,19 +852,19 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                 ],
                               ),
                         SizedBox(height: 30.0.h),
-                        ButtonWidget(
-                          border: 100.r,
-                          buttonColor: AppColors.primary,
-                          buttonText: 'Repeat Medication',
-                          color: AppColors.white,
-                          buttonBorderColor: AppColors.transparent,
-                          onPressed: () {},
-                          // model.showUpdateMedicationDialog(
-                          //   context: context,
-                          //   data: model.getReminderByIdModel!.data,
-                          // ),
-                          fontSize: 14.sp,
-                        ),
+                        // ButtonWidget(
+                        //   border: 100.r,
+                        //   buttonColor: AppColors.primary,
+                        //   buttonText: 'Repeat Medication',
+                        //   color: AppColors.white,
+                        //   buttonBorderColor: AppColors.transparent,
+                        //   onPressed: () {},
+                        //   // model.showUpdateMedicationDialog(
+                        //   //   context: context,
+                        //   //   data: model.getReminderByIdModel!.data,
+                        //   // ),
+                        //   fontSize: 14.sp,
+                        // ),
                       ],
                     ),
                   )
