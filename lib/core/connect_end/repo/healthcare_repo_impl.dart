@@ -5,14 +5,27 @@ import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/healthcare_contract_impl.dart';
+import '../model/create_payment_wallet_entity_model.dart';
+import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
+import '../model/create_reminder_response_model/create_reminder_response_model.dart';
+import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
+import '../model/get_reminder_by_id/get_reminder_by_id.dart';
+import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
+import '../model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
+import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/login_entity_model.dart';
+import '../model/pay_with_wallet_entity_model.dart';
+import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -23,10 +36,13 @@ import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart'
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
 import '../model/update_business_owner_profile_entity_model/update_business_owner_profile_entity_model.dart';
 import '../model/update_business_owner_profile_response_model/update_business_owner_profile_response_model.dart';
+import '../model/update_doses_status_model/update_doses_status_model.dart';
 import '../model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import '../model/update_practitioner_profile_entity_model/update_practitioner_profile_entity_model.dart';
+import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_role_entity_model.dart';
 import '../model/update_user_entity_model.dart';
+import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -229,6 +245,179 @@ class HealthcareRepoImpl {
     final response = await _contract.deleteDoctor(id);
     return response;
   }
+
+    Future<CreateReminderResponseModel> createReminder(
+    CreateTenantReminderEntityModel createReminderEntityModel,
+  ) async {
+    final response = await _contract.createReminder(createReminderEntityModel);
+    return response;
+  }
+
+  Future<UploadImageReminderResponseModel> uploadImageReminder(
+    MultipartFile file,
+  ) async {
+    final response = await _contract.uploadImageReminder(file);
+    return response;
+  }
+
+  Future<dynamic> uploadImageReminderUpdate({
+    MultipartFile? file,
+    String? id,
+  }) async {
+    final response = await _contract.uploadImageReminderUpdate(
+      file: file,
+      id: id,
+    );
+    return response;
+  }
+
+  Future<GetTodayReminderModel> getTodaysReminder({
+    String? period,
+    String? date,
+  }) async {
+    final response = await _contract.getTodaysReminder(
+      period: period,
+      date: date,
+    );
+    return response;
+  }
+
+  Future<UpdateDosesStatusModel> updateDosesStatusModel({
+    String? reminderId,
+    String? doseId,
+    String? status,
+  }) async {
+    final response = await _contract.updateDosesStatusModel(
+      status: status,
+      reminderId: reminderId,
+      doseId: doseId,
+    );
+    return response;
+  }
+
+  Future<dynamic> updateReminder({
+    String? reminderId,
+    UpdateReminderEntityModel? updateReminder,
+  }) async {
+    final response = await _contract.updateReminder(
+      reminderId: reminderId,
+      updateReminder: updateReminder,
+    );
+    return response;
+  }
+
+  Future<InitiatePaymentResponseModel> initiatePayment({
+    String? reference,
+  }) async {
+    final response = await _contract.initiatePayment(reference: reference);
+    return response;
+  }
+
+  Future<dynamic> getUserDetailsByTenant({String? phone}) async {
+    final response = await _contract.getUserDetailsByTenant(phone: phone);
+    return response;
+  }
+
+  Future<dynamic> registerUserByTenant({String? phone}) async {
+    final response = await _contract.registerUserByTenant(phone: phone);
+    return response;
+  }
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenant({
+    String? status,
+    String? page,
+    String? limit,
+  }) async {
+    final response = await _contract.getReminderForTenant(
+      status: status,
+      page: page,
+      limit: limit,
+    );
+    return response;
+  }
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantAll({
+    String? page,
+    String? limit,
+  }) async {
+    final response = await _contract.getReminderForTenantAll(
+      page: page,
+      limit: limit,
+    );
+    return response;
+  }
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserIdAll({
+    String? page,
+    String? limit,
+    String? userId,
+  }) async {
+    final response = await _contract.getReminderForTenantByUserIdAll(
+      page: page,
+      limit: limit,
+      userId: userId,
+    );
+    return response;
+  }
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserId({
+    String? status,
+    String? page,
+    String? limit,
+    String? userId,
+  }) async {
+    final response = await _contract.getReminderForTenantByUserId(
+      status: status,
+      page: page,
+      limit: limit,
+      userId: userId,
+    );
+    return response;
+  }
+
+  Future<GetReminderById> getReminderByUserId({String? userId}) async {
+    final response = await _contract.getReminderByUserId(userId: userId);
+
+    return response;
+  }
+
+  Future<CreatePaymentWalletModel> createWalletPayment({
+    CreatePaymentWalletEntityModel? createPaymentWalletEntityModel,
+  }) async {
+    final response = await _contract.createWalletPayment(
+      createPaymentWalletEntityModel: createPaymentWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<InitiatePaymentResponseModel> initiateWalletPayment({
+    InitiatePaymentWalletEntityModel? initiatePaymentWalletEntityModel,
+  }) async {
+    final response = await _contract.initiateWalletPayment(
+      initiatePaymentWalletEntityModel: initiatePaymentWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<PayWithWalletResponseModel> payWithWallet({
+    PayWithWalletEntityModel? payWithWalletEntityModel,
+  }) async {
+    final response = await _contract.payWithWallet(
+      payWithWalletEntityModel: payWithWalletEntityModel,
+    );
+    return response;
+  }
+
+  Future<GetTransactionWalletResponseModel> getTransactionWallet() async {
+    final response = await _contract.getTransactionWallet();
+    return response;
+  }
+
+  Future<GetWalletResponseModel> getWalletBalance() async {
+    final response = await _contract.getWalletBalance();
+    return response;
+  }
+
 
   void _chache(data) {
     print('print me lemme helath see ${data.data.toJson()}');

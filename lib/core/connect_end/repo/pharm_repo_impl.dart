@@ -117,10 +117,10 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<dynamic> refreshToken() async {
-    final response = await _contract.refreshToken();
-    return response;
-  }
+  // Future<dynamic> refreshToken() async {
+  //   final response = await _contract.refreshToken();
+  //   return response;
+  // }
 
   Future<dynamic> sendOtp(String phone) async {
     final response = await _contract.sendOtp(phone);

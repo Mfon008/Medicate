@@ -42,7 +42,7 @@ import '../connect_end/model/get_user_details_no_phone_model/get_user_details_no
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
-import '../connect_end/model/refresh_token_response_model/refresh_token_response_model.dart';
+// import '../connect_end/model/refresh_token_response_model/refresh_token_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
@@ -235,20 +235,20 @@ class AuthApi {
     }
   }
 
-  Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async {
-    try {
-      final response = await _service.call(
-        UrlConfig.refresh_token,
-        data: {'refreshToken': refreshToken},
-        RequestMethod.post,
-      );
-      logger.d(response.data);
-      return RefreshTokenResponseModel.fromJson(response.data);
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
+  // Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async {
+  //   try {
+  //     final response = await _service.call(
+  //       UrlConfig.refresh_token,
+  //       data: {'refreshToken': refreshToken},
+  //       RequestMethod.post,
+  //     );
+  //     logger.d(response.data);
+  //     return RefreshTokenResponseModel.fromJson(response.data);
+  //   } catch (e) {
+  //     logger.d("response:$e");
+  //     rethrow;
+  //   }
+  // }
 
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
     try {

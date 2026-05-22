@@ -40,6 +40,7 @@ import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_dashboard.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_home_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/reminder/healthcare_view_medication_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart';
 import '../../../ui/dashboard/hmo/add_hospital_portal_screen.dart';
@@ -252,6 +253,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HmoTwoFactorAuthVerificationFirstScreen),
     MaterialRoute(page: HmoPlanTiersManagementScreen),
     MaterialRoute(page: HmoCreateTiersPlanManagementScreen),
+    MaterialRoute(page: HealthcareViewMedicationScreen),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

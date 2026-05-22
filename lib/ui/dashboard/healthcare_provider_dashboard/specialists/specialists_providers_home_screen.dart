@@ -497,6 +497,7 @@ class _SpecialistsProvidersHomeScreenState
                 horizontal: 18.22.w,
                 vertical: 12.w,
               ),
+              onTap: () => model.showReminderModal(context),
               // onTap: () => model
               //     .showCreateAddPhoneDialog(
               //       context,

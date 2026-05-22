@@ -77,7 +77,7 @@ class PharmContractsImpl {
       await _api.getUserDetails(phoneNo);
   Future<dynamic> changePhoneNo({String? changePhoneNo, String? id}) async =>
       await _api.changePhoneNo(phone: changePhoneNo, id: id);
-  Future<dynamic> refreshToken() async => await _api.refreshToken();
+  // Future<dynamic> refreshToken() async => await _api.refreshToken();
   Future<dynamic> sendOtp(String phone) async => await _api.sendOtp(phone);
   Future<dynamic> verifyChangePhoneOtp(
     VerifyPhoneEntityModel verifyPhoneEntity,

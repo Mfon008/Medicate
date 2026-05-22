@@ -15710,20 +15710,20 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void refreshToken(String? refreshToken) async {
-    try {
-      _isLoading = true;
-      await runBusyFuture(
-        repositoryImply.refreshToken(refreshToken!),
-        throwException: true,
-      );
-      _isLoading = false;
-    } catch (e) {
-      _isLoading = false;
-      logger.d(e);
-    }
-    notifyListeners();
-  }
+  // void refreshToken(String? refreshToken) async {
+  //   try {
+  //     _isLoading = true;
+  //     await runBusyFuture(
+  //       repositoryImply.refreshToken(refreshToken!),
+  //       throwException: true,
+  //     );
+  //     _isLoading = false;
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     logger.d(e);
+  //   }
+  //   notifyListeners();
+  // }
 
   void signUp(context, {SignUpEntityModel? signUpEntity}) async {
     try {
@@ -28038,8 +28038,8 @@ class AuthViewModel extends BaseViewModel {
         repositoryImply.getActiveHmoPlanByType(
           hmodId: hmoId,
           type: type,
-          page: page,
-          limit: limit,
+          page: 1.toString(),
+          limit: 10.toString(),
         ),
         throwException: true,
       );

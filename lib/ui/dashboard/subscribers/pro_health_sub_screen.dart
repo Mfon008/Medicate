@@ -931,7 +931,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                       child: TextView(
                         text: model.hmoPlanType == o
                             ? 'Show less'
-                            : '+${o.benefitsSnippet!.length - 4} more benefits',
+                            : '+${o.benefitsSnippet!.length > 4 ? o.benefitsSnippet!.length - 4 : 0} more benefits',
                         textStyle: TextStyle(
                           fontFamily: 'GoogleSans',
                           fontSize: 15.2.sp,

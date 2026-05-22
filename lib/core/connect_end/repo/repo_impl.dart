@@ -30,7 +30,7 @@ import '../model/hmo_plan_payment_response_model/hmo_plan_payment_response_model
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
-import '../model/refresh_token_response_model/refresh_token_response_model.dart';
+// import '../model/refresh_token_response_model/refresh_token_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -140,11 +140,11 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async {
-    final response = await _contract.refreshToken(refreshToken);
-    _chacheRefresh(response);
-    return response;
-  }
+  // Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async {
+  //   final response = await _contract.refreshToken(refreshToken);
+  //   _chacheRefresh(response);
+  //   return response;
+  // }
 
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
     final response = await _contract.getUserDetails(phoneNo);
@@ -459,12 +459,12 @@ class AuthRepoImpl {
     }
   }
 
-  void _chacheRefresh(data) {
-    if (data != null) {
-      _session.authToken = data.data.accessToken;
-      _session.authRefreshToken = data.data.refreshToken;
-    }
-  }
+  // void _chacheRefresh(data) {
+  //   if (data != null) {
+  //     _session.authToken = data.data.accessToken;
+  //     _session.authRefreshToken = data.data.refreshToken;
+  //   }
+  // }
 
   void _chacheUser(data) {
     if (data != null) {

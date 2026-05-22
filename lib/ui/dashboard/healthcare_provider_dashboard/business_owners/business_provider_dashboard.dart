@@ -7,6 +7,7 @@ import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../widget/text.dart';
 import '../../ask_me_screen.dart';
+import '../reminder/healthcare_reminder_screen.dart';
 import 'business_providers_home_screen.dart';
 
 class BusinessProviderDashboard extends StatefulWidget {
@@ -23,8 +24,7 @@ class _BusinessProviderDashboardState extends State<BusinessProviderDashboard> {
 
   final List<Widget> _body = [
     BusinessProvidersHomeScreen(),
-    // BusinessProviderDashboardReminderScreen(),
-    Container(),
+    HealthCareReminderScreen(),
     Container(),
     AskMeScreen(),
   ];

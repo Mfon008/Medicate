@@ -263,19 +263,19 @@ class PharmApi {
     }
   }
 
-  Future<dynamic> refreshToken() async {
-    try {
-      final response = await _service.call(
-        UrlConfig.refresh_token,
-        RequestMethod.post,
-      );
-      logger.d(response.data);
-      return response.data;
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
+  // Future<dynamic> refreshToken() async {
+  //   try {
+  //     final response = await _service.call(
+  //       UrlConfig.refresh_token,
+  //       RequestMethod.post,
+  //     );
+  //     logger.d(response.data);
+  //     return response.data;
+  //   } catch (e) {
+  //     logger.d("response:$e");
+  //     rethrow;
+  //   }
+  // }
 
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
     try {
@@ -553,6 +553,7 @@ class PharmApi {
     }
   }
 
+////
   Future<CreateReminderResponseModel> createReminder(
     CreateTenantReminderEntityModel createReminderEntityModel,
   ) async {

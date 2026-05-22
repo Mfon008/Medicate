@@ -9,7 +9,11 @@ import '../model/create_hmo_plan_entity_model/create_hmo_plan_entity_model.dart'
 import '../model/create_hmo_plan_reponse_model/create_hmo_plan_reponse_model.dart';
 import '../model/create_hospital_network_entity_model.dart';
 import '../model/create_hospital_network_response_model/create_hospital_network_response_model.dart';
+import '../model/create_payment_wallet_entity_model.dart';
+import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_plan_tier_entity_model/create_plan_tier_entity_model.dart';
+import '../model/create_reminder_response_model/create_reminder_response_model.dart';
+import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_listed_plan_types_response_model/get_all_listed_plan_types_response_model.dart';
@@ -21,11 +25,20 @@ import '../model/get_listed_plan_tiers_response_model/get_listed_plan_tiers_resp
 import '../model/get_my_hmo_plan_response_model/get_my_hmo_plan_response_model.dart';
 import '../model/get_plan_detail_response_model/get_plan_detail_response_model.dart';
 import '../model/get_plan_hospital_network_response_model/get_plan_hospital_network_response_model.dart';
+import '../model/get_reminder_by_id/get_reminder_by_id.dart';
+import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
+import '../model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/hospital_network_entity_model.dart';
+import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
+import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/login_entity_model.dart';
+import '../model/pay_with_wallet_entity_model.dart';
+import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
@@ -34,12 +47,15 @@ import '../model/roles_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_doses_status_model/update_doses_status_model.dart';
 import '../model/update_hmo_kyc_entity_model/update_hmo_kyc_entity_model.dart';
 import '../model/update_hmo_plan_entity_model/update_hmo_plan_entity_model.dart';
 import '../model/update_plan_tiers_entity_model.dart';
+import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
 import '../model/update_role_entity_model.dart';
 import '../model/update_third_hmo_kyc_entity_model/update_third_hmo_kyc_entity_model.dart';
 import '../model/update_user_entity_model.dart';
+import '../model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -172,4 +188,106 @@ class HMOContractsImpl {
   ) async => await _api.updatePlanTier(updateTierEntity, planTierId);
   Future<dynamic> deleteHMOPlan(String planId) async =>
       await _api.deleteHMOPlan(planId);
+  
+  Future<CreateReminderResponseModel> createReminder(
+    CreateTenantReminderEntityModel createReminderEntityModel,
+  ) async => await _api.createReminder(createReminderEntityModel);
+  Future<UploadImageReminderResponseModel> uploadImageReminder(
+    MultipartFile file,
+  ) async => await _api.uploadImageReminder(file);
+  Future<dynamic> uploadImageReminderUpdate({
+    MultipartFile? file,
+    String? id,
+  }) async => await _api.uploadImageReminderUpdate(file: file, id: id);
+
+  Future<GetTodayReminderModel> getTodaysReminder({
+    String? period,
+    String? date,
+  }) async => await _api.getTodaysReminder(period: period, date: date);
+
+  Future<UpdateDosesStatusModel> updateDosesStatusModel({
+    String? reminderId,
+    String? doseId,
+    String? status,
+  }) async => await _api.updateDoseStatus(
+    reminerId: reminderId,
+    doseId: doseId,
+    status: status,
+  );
+
+  Future<dynamic> updateReminder({
+    String? reminderId,
+    UpdateReminderEntityModel? updateReminder,
+  }) async => await _api.updateReminder(
+    reminderId: reminderId,
+    updateReminder: updateReminder,
+  );
+
+  Future<InitiatePaymentResponseModel> initiatePayment({
+    String? reference,
+  }) async => await _api.initiatePayment(reference: reference);
+
+  Future<dynamic> getUserDetailsByTenant({String? phone}) async =>
+      await _api.getUserDetailsByTenant(phone: phone);
+  Future<dynamic> registerUserByTenant({String? phone}) async =>
+      await _api.registerUserByTenant(phone: phone);
+  Future<GetReminderForTenantResponseModel> getReminderForTenant({
+    String? status,
+    String? page,
+    String? limit,
+  }) async =>
+      await _api.getReminderForTenant(status: status, page: page, limit: limit);
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantAll({
+    String? status,
+    String? page,
+    String? limit,
+  }) async => await _api.getReminderForTenantAll(page: page, limit: limit);
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserIdAll({
+    String? page,
+    String? limit,
+    String? userId,
+  }) async => await _api.getReminderForTenantByUserIdAll(
+    page: page,
+    limit: limit,
+    userId: userId,
+  );
+
+  Future<GetReminderForTenantResponseModel> getReminderForTenantByUserId({
+    String? status,
+    String? page,
+    String? limit,
+    String? userId,
+  }) async => await _api.getReminderForTenantByUserId(
+    status: status,
+    page: page,
+    limit: limit,
+    userId: userId,
+  );
+
+  Future<GetReminderById> getReminderByUserId({String? userId}) async =>
+      await _api.getReminderByUserId(userId: userId);
+
+  Future<CreatePaymentWalletModel> createWalletPayment({
+    CreatePaymentWalletEntityModel? createPaymentWalletEntityModel,
+  }) async => await _api.createWalletPayment(
+    createPaymentWalletEntityModel: createPaymentWalletEntityModel,
+  );
+  Future<InitiatePaymentResponseModel> initiateWalletPayment({
+    InitiatePaymentWalletEntityModel? initiatePaymentWalletEntityModel,
+  }) async => await _api.initiateWalletPayment(
+    initiatePaymentWalletEntityModel: initiatePaymentWalletEntityModel,
+  );
+  Future<PayWithWalletResponseModel> payWithWallet({
+    PayWithWalletEntityModel? payWithWalletEntityModel,
+  }) async => await _api.payWithWallet(
+    payWithWalletEntityModel: payWithWalletEntityModel,
+  );
+  Future<GetTransactionWalletResponseModel> getTransactionWallet() async =>
+      await _api.getTransactionWallet();
+  Future<GetWalletResponseModel> getWalletBalance() async =>
+      await _api.getWalletBalance();
+
+
 }
