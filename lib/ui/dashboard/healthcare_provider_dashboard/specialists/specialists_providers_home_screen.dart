@@ -29,7 +29,6 @@ class _SpecialistsProvidersHomeScreenState
     extends State<SpecialistsProvidersHomeScreen> {
   bool isTappToChat = false;
 
-  // bool isTapOnScreenOrChatButt = false;
   String chatText = '';
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -419,7 +418,6 @@ class _SpecialistsProvidersHomeScreenState
                     ),
                   ),
                 ),
-                // SizedBox(height: 20.h),
               ],
             ),
     );
@@ -498,10 +496,6 @@ class _SpecialistsProvidersHomeScreenState
                 vertical: 12.w,
               ),
               onTap: () => model.showReminderModal(context),
-              // onTap: () => model
-              //     .showCreateAddPhoneDialog(
-              //       context,
-              //     ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
