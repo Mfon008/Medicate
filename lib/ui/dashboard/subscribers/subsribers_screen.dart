@@ -162,7 +162,10 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                           AppImage.search,
                                         ),
                                       ),
-                                      onChange: (value) {},
+                                      onChange: (value) {
+                                        model.searchHMOName = value;
+                                        model.notifyListeners();
+                                      },
                                     ),
                                   ),
                                   SizedBox(width: 22.40.w),
@@ -182,32 +185,59 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                       .data!
                                       .hmos!
                                       .isNotEmpty)
-                                ...model.activeHmoPlanResponseModel!.data!.hmos!
-                                    .map(
-                                      (e) => subscriberWidget(
-                                        context: context,
-                                        data: e,
-                                        isTab: isTablet(context),
+                                if (model.searchHMOName != '')
+                                  ...model
+                                      .activeHmoPlanResponseModel!
+                                      .data!
+                                      .hmos!
+                                      .where(
+                                        (hmo) =>
+                                            hmo.name!.toLowerCase().contains(
+                                              model.searchHMOName.toLowerCase(),
+                                            ),
+                                      )
+                                      .map(
+                                        (e) => subscriberWidget(
+                                          context: context,
+                                          data: e,
+                                          isTab: isTablet(context),
+                                        ),
+                                      )
+                                else
+                                  ...model
+                                      .activeHmoPlanResponseModel!
+                                      .data!
+                                      .hmos!
+                                      .map(
+                                        (e) => subscriberWidget(
+                                          context: context,
+                                          data: e,
+                                          isTab: isTablet(context),
+                                        ),
                                       ),
-                                    ),
                               SizedBox(height: 20.40.h),
                               Divider(
                                 color: AppColors.buttonGrey1,
                                 thickness: .4,
                               ),
                               SizedBox(height: 4.0.h),
+                              model.activeHmoPlanResponseModel == null
+                                      ? SizedBox.shrink()
+                                      : 
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
                                     onPressed:
-                                        model
-                                                .activeHmoPlanResponseModel!
-                                                .data!
-                                                .meta!
-                                                .totalPages! <
-                                            1
+                                        model.activeHmoPlanResponseModel !=
+                                                null &&
+                                            model
+                                                    .activeHmoPlanResponseModel!
+                                                    .data!
+                                                    .meta!
+                                                    .totalPages! <
+                                                1
                                         ? () {
                                             model.pageAll--;
                                             model.getHMOActivePlan(
@@ -219,25 +249,30 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                         : () {},
                                     icon: Icon(
                                       Icons.arrow_back,
-                                      color:model
-                                                .activeHmoPlanResponseModel!
-                                                .data!
-                                                .meta!
-                                                .totalPages! <
-                                            1? AppColors.primary1:AppColors.primary1.withOpacity(.4),
+                                      color:
+                                          model.activeHmoPlanResponseModel !=
+                                                  null &&
+                                              model
+                                                      .activeHmoPlanResponseModel!
+                                                      .data!
+                                                      .meta!
+                                                      .totalPages! <
+                                                  1
+                                          ? AppColors.primary1
+                                          : AppColors.primary1.withOpacity(.4),
                                       size: 20.sp,
                                     ),
                                   ),
                                   TextView(
-                                    text:
-                                        'Page ${model.activeHmoPlanResponseModel!.data!.meta!.page} of ${model.activeHmoPlanResponseModel!.data!.meta!.totalPages}',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 15.2.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.black,
-                                    ),
-                                  ),
+                                          text:
+                                              'Page ${model.activeHmoPlanResponseModel!.data!.meta!.page} of ${model.activeHmoPlanResponseModel!.data!.meta!.totalPages}',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 15.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
                                   IconButton(
                                     onPressed:
                                         model
@@ -261,16 +296,19 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                         : () {},
                                     icon: Icon(
                                       Icons.arrow_forward,
-                                      color:model
-                                                .activeHmoPlanResponseModel!
-                                                .data!
-                                                .meta!
-                                                .page !=
-                                            model
-                                                .activeHmoPlanResponseModel!
-                                                .data!
-                                                .meta!
-                                                .totalPages? AppColors.primary1:AppColors.primary1.withOpacity(.4),
+                                      color:
+                                          model
+                                                  .activeHmoPlanResponseModel!
+                                                  .data!
+                                                  .meta!
+                                                  .page !=
+                                              model
+                                                  .activeHmoPlanResponseModel!
+                                                  .data!
+                                                  .meta!
+                                                  .totalPages
+                                          ? AppColors.primary1
+                                          : AppColors.primary1.withOpacity(.4),
                                       size: 20.sp,
                                     ),
                                   ),
@@ -642,7 +680,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
 
                                             TextView(
                                               text:
-                                                  'Pageooo ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.items!.length ~/ 10 + 1}',
+                                                  'Page ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.items!.length ~/ 10 + 1}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 15.2.sp,

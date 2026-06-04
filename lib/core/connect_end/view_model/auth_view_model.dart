@@ -305,6 +305,7 @@ class AuthViewModel extends BaseViewModel {
   String? pickedEndDate;
   String endDateIso = '';
   String _dosageLabel = '';
+  String searchHMOName = '';
 
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
