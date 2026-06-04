@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/ui/widget/text_form_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -378,6 +379,10 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                           model.getMySubscriptionDetails(
                                             context,
                                             appStatus: model.mySubPlans,
+                                            subStatus: model
+                                                .getSubscriptionText(
+                                                  model.selectStatus,
+                                                ),
                                           );
                                           model.notifyListeners();
                                         },
@@ -404,6 +409,10 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                           model.getMySubscriptionDetails(
                                             context,
                                             appStatus: 'under_review',
+                                            subStatus: model
+                                                .getSubscriptionText(
+                                                  model.selectStatus,
+                                                ),
                                           );
                                           model.notifyListeners();
                                         },
@@ -437,6 +446,10 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                           model.getMySubscriptionDetails(
                                             context,
                                             appStatus: model.mySubPlans,
+                                            subStatus: model
+                                                .getSubscriptionText(
+                                                  model.selectStatus,
+                                                ),
                                           );
                                           model.notifyListeners();
                                         },
@@ -463,6 +476,10 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                           model.getMySubscriptionDetails(
                                             context,
                                             appStatus: model.mySubPlans,
+                                            subStatus: model
+                                                .getSubscriptionText(
+                                                  model.selectStatus,
+                                                ),
                                           );
                                           model.notifyListeners();
                                         },
@@ -492,14 +509,14 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                               color: AppColors.white,
                                               onSelected: (value) {
                                                 model.selectStatus = value;
-                                                 model.getMySubscriptionDetails(
-                                                        context,
-                                                        subStatus: model
-                                                            .getSubscriptionText(
-                                                              model
-                                                                  .selectStatus,
-                                                            ),
-                                                      );
+                                                model.getMySubscriptionDetails(
+                                                  context,
+                                                  appStatus: model.mySubPlans,
+                                                  subStatus: model
+                                                      .getSubscriptionText(
+                                                        model.selectStatus,
+                                                      ),
+                                                );
                                                 model.notifyListeners();
                                               },
                                               child: Container(
@@ -561,9 +578,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                 ].map(
                                                   (e) => PopupMenuItem(
                                                     value: e,
-                                                    onTap: () {
-                                                     
-                                                    },
+                                                    onTap: () {},
                                                     child: TextView(
                                                       text: e,
                                                       textStyle: TextStyle(
@@ -634,7 +649,18 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 16.20.h),
-                                  if (model.getMySubscriptionResponseModel !=
+                                  if (model.getMySubscriptionResponseModel ==
+                                          null ||
+                                      model.isLoading)
+                                    Center(
+                                      child: SpinKitDualRing(
+                                        size: 40.50.sp,
+                                        lineWidth: 4,
+                                        color: AppColors.primary1,
+                                      ),
+                                    )
+                                  else if (model
+                                              .getMySubscriptionResponseModel !=
                                           null &&
                                       model
                                           .getMySubscriptionResponseModel!
@@ -645,9 +671,9 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                         .getMySubscriptionResponseModel!
                                         .data!
                                         .items!
-                                        .skip(model.mySubscriptionIndex)
-                                        .take(10)
-                                        .toList()
+                                        // .skip(model.mySubscriptionIndex)
+                                        // .take(10)
+                                        // .toList()
                                         .map(
                                           (e) => plansSubWidget(subscriber: e),
                                         ),
