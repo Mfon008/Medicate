@@ -28586,15 +28586,12 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // String? addAllStatusCount(Summary sum) {
-  //   int? allCount =
-  //       (sum.activeCount! +
-  //       sum.draftCount! +
-  //       sum.rejectedCount! +
-  //       sum.reviewPendingCount!);
-  //   if (allCount != null) {
-  //     return allCount.toString();
-  //   }
-  //   return '0';
-  // }
+  String getSubscriptionText(String selectStatus) {
+    if(selectStatus == 'Expiring'){
+      return 'Expiring_Soon';
+    }
+    return selectStatus;
+    
+  }
+
 }
