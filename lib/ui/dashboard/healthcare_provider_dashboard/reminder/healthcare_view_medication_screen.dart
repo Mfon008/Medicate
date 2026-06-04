@@ -89,7 +89,11 @@ class HealthcareViewMedicationScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        model.getReminderByIdModel!.data?.medication?.medicationStatus ==
+                        model
+                                    .getReminderByIdModel!
+                                    .data
+                                    ?.medication
+                                    ?.medicationStatus ==
                                 'ONGOING'
                             ? Row(
                                 children: [

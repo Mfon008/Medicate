@@ -13,7 +13,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import '../../../core/connect_end/model/get_my_subscription_response_model/summary.dart';
 import 'package:medicate_app/core/connect_end/model/get_hmo_plan_hospital_network_response_model/hospital.dart';
 import 'package:medicate_app/core/connect_end/model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/daily_dose_time.dart'
@@ -28557,11 +28556,22 @@ class AuthViewModel extends BaseViewModel {
     return 'hospital in network';
   }
 
-  void getMySubscriptionDetails(context, {String? status}) async {
+  void getMySubscriptionDetails(
+    context, {
+    String page = '1',
+    String limit = '10',
+    String? subStatus,
+    String? appStatus,
+  }) async {
     try {
       _isLoading = true;
       _getMySubscriptionResponseModel = await runBusyFuture(
-        repositoryImply.getMySubscriptions(status: status),
+        repositoryImply.getMySubscriptions(
+          page: page,
+          limit: limit,
+          subStatus: subStatus,
+          appStatus: appStatus,
+        ),
         throwException: true,
       );
       _isLoading = false;
@@ -28575,15 +28585,15 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String? addAllStatusCount(Summary sum) {
-    int? allCount =
-        (sum.activeCount! +
-        sum.draftCount! +
-        sum.rejectedCount! +
-        sum.reviewPendingCount!);
-    if (allCount != null) {
-      return allCount.toString();
-    }
-    return '0';
-  }
+  // String? addAllStatusCount(Summary sum) {
+  //   int? allCount =
+  //       (sum.activeCount! +
+  //       sum.draftCount! +
+  //       sum.rejectedCount! +
+  //       sum.reviewPendingCount!);
+  //   if (allCount != null) {
+  //     return allCount.toString();
+  //   }
+  //   return '0';
+  // }
 }

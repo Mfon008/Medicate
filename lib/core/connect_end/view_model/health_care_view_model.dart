@@ -230,11 +230,10 @@ class HealthCareViewModel extends BaseViewModel {
   PayWithWalletResponseModel? _payWithWalletResponseModel;
   PayWithWalletResponseModel? get payWithWalletResponseModel =>
       _payWithWalletResponseModel;
-  
+
   CreateReminderResponseModel? _createReminderResponseModel;
   CreateReminderResponseModel? get createReminderResponseModel =>
       _createReminderResponseModel;
-
 
   int linIndex = 1;
   int linIndexUpdate = 1;
@@ -457,7 +456,8 @@ class HealthCareViewModel extends BaseViewModel {
   List<Staff> checkOwnerRole = [];
 
   bool _onTempPinTap = false;
-  bool get onTempPinTap => _onTempPinTap;bool isTapped = false;
+  bool get onTempPinTap => _onTempPinTap;
+  bool isTapped = false;
   bool isPhoneValid = false;
   bool isLoadNoMore = false;
   bool onTapViewSingleReminder = false;
@@ -755,7 +755,7 @@ class HealthCareViewModel extends BaseViewModel {
     }
     return 18.w;
   }
- 
+
   String querySignUpCountry = '';
   String? searchRoles = '';
 
@@ -808,8 +808,8 @@ class HealthCareViewModel extends BaseViewModel {
   List<EducationalExperience> educationalExperienceList = [];
 
   /// reminder flow for health care
-  /// 
-   void pickDrugImage(BuildContext context) {
+  ///
+  void pickDrugImage(BuildContext context) {
     try {
       _pickImage.pickImage(
         context: context,
@@ -830,7 +830,7 @@ class HealthCareViewModel extends BaseViewModel {
       logger.e(e);
     }
   }
-  
+
   String formatTime(String timeString) {
     DateTime dateTime = DateFormat("HH:mm").parse(timeString);
     return DateFormat("hh:mm a").format(dateTime);
@@ -1419,7 +1419,7 @@ class HealthCareViewModel extends BaseViewModel {
                         ),
                       ),
                     ),
-                    ],
+                  ],
                 ),
               ),
             );
@@ -9771,7 +9771,7 @@ class HealthCareViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         SizedBox(height: 24.0.h),
-                                        
+
                                         model.isCusSchedule
                                             ? Column(
                                                 crossAxisAlignment:
@@ -16226,7 +16226,7 @@ class HealthCareViewModel extends BaseViewModel {
     );
   }
 
-   Widget chooseNotChannelWidgetWithSvg(
+  Widget chooseNotChannelWidgetWithSvg(
     context, {
     required String text,
     String? svgIcon,

@@ -23,7 +23,11 @@ class CustomCheckbox extends StatelessWidget {
         padding: isSelected ? EdgeInsets.all(4.0.w) : EdgeInsets.all(10.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.r),
-          color: isSelected && isViewModel ? AppColors.primary :isSelected && !isViewModel? AppColors.infoGrey : AppColors.transparent,
+          color: isSelected && isViewModel
+              ? AppColors.primary
+              : isSelected && !isViewModel
+              ? AppColors.infoGrey
+              : AppColors.transparent,
           border: Border.all(
             color: isSelected ? AppColors.transparent : AppColors.infoGrey,
             width: .78,

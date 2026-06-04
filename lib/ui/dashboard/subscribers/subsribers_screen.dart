@@ -9,7 +9,7 @@ import '../../../core/app_assets/constant.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../../core/connect_end/model/active_hmo_plan_response_model/hmo.dart';
-import '../../../core/connect_end/model/get_my_subscription_response_model/subscription.dart';
+import '../../../core/connect_end/model/get_my_subscription_response_model/item.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
@@ -37,9 +37,9 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
         }
         if (widget.mySubPlans != '') {
           model.mySubPlans = widget.mySubPlans ?? '';
-          model.getMySubscriptionDetails(context, status: model.mySubPlans);
+          model.getMySubscriptionDetails(context, subStatus: model.mySubPlans);
         } else {
-          model.getMySubscriptionDetails(context, status: 'All');
+          model.getMySubscriptionDetails(context, subStatus: 'All');
         }
         model.getHMOActivePlan(context);
       },
@@ -97,7 +97,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                             model.isSubStatus = 'subscribers';
                             model.getMySubscriptionDetails(
                               context,
-                              status: 'All',
+                              subStatus: 'All',
                             );
                             model.notifyListeners();
                           },
@@ -201,16 +201,36 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed:
+                                        model
+                                                .activeHmoPlanResponseModel!
+                                                .data!
+                                                .meta!
+                                                .totalPages! <
+                                            1
+                                        ? () {
+                                            model.pageAll--;
+                                            model.getHMOActivePlan(
+                                              context,
+                                              page: model.pageAll.toString(),
+                                            );
+                                            model.notifyListeners();
+                                          }
+                                        : () {},
                                     icon: Icon(
                                       Icons.arrow_back,
-                                      color: AppColors.primary1,
+                                      color:model
+                                                .activeHmoPlanResponseModel!
+                                                .data!
+                                                .meta!
+                                                .totalPages! <
+                                            1? AppColors.primary1:AppColors.primary1.withOpacity(.4),
                                       size: 20.sp,
                                     ),
                                   ),
-
                                   TextView(
-                                    text: 'Page 1 of 10',
+                                    text:
+                                        'Page ${model.activeHmoPlanResponseModel!.data!.meta!.page} of ${model.activeHmoPlanResponseModel!.data!.meta!.totalPages}',
                                     textStyle: TextStyle(
                                       fontFamily: 'Arial',
                                       fontSize: 15.2.sp,
@@ -219,10 +239,38 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {},
+                                    onPressed:
+                                        model
+                                                .activeHmoPlanResponseModel!
+                                                .data!
+                                                .meta!
+                                                .page !=
+                                            model
+                                                .activeHmoPlanResponseModel!
+                                                .data!
+                                                .meta!
+                                                .totalPages
+                                        ? () {
+                                            model.pageAll++;
+                                            model.getHMOActivePlan(
+                                              context,
+                                              page: model.pageAll.toString(),
+                                            );
+                                            model.notifyListeners();
+                                          }
+                                        : () {},
                                     icon: Icon(
                                       Icons.arrow_forward,
-                                      color: AppColors.primary1,
+                                      color:model
+                                                .activeHmoPlanResponseModel!
+                                                .data!
+                                                .meta!
+                                                .page !=
+                                            model
+                                                .activeHmoPlanResponseModel!
+                                                .data!
+                                                .meta!
+                                                .totalPages? AppColors.primary1:AppColors.primary1.withOpacity(.4),
                                       size: 20.sp,
                                     ),
                                   ),
@@ -278,17 +326,17 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                             model.getMySubscriptionResponseModel ==
                                                 null
                                             ? '0'
-                                            : model.addAllStatusCount(
-                                                model
-                                                    .getMySubscriptionResponseModel!
-                                                    .data!
-                                                    .summary!,
-                                              )!,
+                                            : model
+                                                  .getMySubscriptionResponseModel!
+                                                  .data!
+                                                  .summary!
+                                                  .all
+                                                  .toString(),
                                         onTap: () async {
                                           model.mySubPlans = 'All';
                                           model.getMySubscriptionDetails(
                                             context,
-                                            status: model.mySubPlans,
+                                            subStatus: model.mySubPlans,
                                           );
                                           model.notifyListeners();
                                         },
@@ -307,14 +355,14 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                   .getMySubscriptionResponseModel!
                                                   .data!
                                                   .summary!
-                                                  .reviewPendingCount
+                                                  .underReview
                                                   .toString()
                                             : '0',
                                         onTap: () async {
                                           model.mySubPlans = 'Under Review';
                                           model.getMySubscriptionDetails(
                                             context,
-                                            status: 'ReviewPending',
+                                            subStatus: 'ReviewPending',
                                           );
                                           model.notifyListeners();
                                         },
@@ -340,14 +388,14 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                   .getMySubscriptionResponseModel!
                                                   .data!
                                                   .summary!
-                                                  .draftCount
+                                                  .draft
                                                   .toString()
                                             : '0',
                                         onTap: () async {
                                           model.mySubPlans = 'Draft';
                                           model.getMySubscriptionDetails(
                                             context,
-                                            status: model.mySubPlans,
+                                            subStatus: model.mySubPlans,
                                           );
                                           model.notifyListeners();
                                         },
@@ -366,14 +414,14 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                   .getMySubscriptionResponseModel!
                                                   .data!
                                                   .summary!
-                                                  .rejectedCount
+                                                  .rejected
                                                   .toString()
                                             : '0',
                                         onTap: () async {
                                           model.mySubPlans = 'Rejected';
                                           model.getMySubscriptionDetails(
                                             context,
-                                            status: model.mySubPlans,
+                                            subStatus: model.mySubPlans,
                                           );
                                           model.notifyListeners();
                                         },
@@ -539,12 +587,12 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                       model
                                           .getMySubscriptionResponseModel!
                                           .data!
-                                          .subscriptions!
+                                          .items!
                                           .isNotEmpty)
                                     ...model
                                         .getMySubscriptionResponseModel!
                                         .data!
-                                        .subscriptions!
+                                        .items!
                                         .skip(model.mySubscriptionIndex)
                                         .take(10)
                                         .toList()
@@ -594,7 +642,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
 
                                             TextView(
                                               text:
-                                                  'Page ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.subscriptions!.length ~/ 10 + 1}',
+                                                  'Pageooo ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.items!.length ~/ 10 + 1}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 15.2.sp,
@@ -609,7 +657,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                       model
                                                           .getMySubscriptionResponseModel!
                                                           .data!
-                                                          .subscriptions!
+                                                          .items!
                                                           .length
                                                   ? () {
                                                       if (model.mySubscriptionIndex +
@@ -617,7 +665,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                           model
                                                               .getMySubscriptionResponseModel!
                                                               .data!
-                                                              .subscriptions!
+                                                              .items!
                                                               .length) {
                                                         model.mySubscriptionIndex +=
                                                             10;
@@ -635,7 +683,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                         model
                                                             .getMySubscriptionResponseModel!
                                                             .data!
-                                                            .subscriptions!
+                                                            .items!
                                                             .length
                                                     ? AppColors.primary1
                                                     : AppColors.primary1
@@ -838,7 +886,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
     ),
   );
 
-  plansSubWidget({required Subscription subscriber}) => Container(
+  plansSubWidget({required Item subscriber}) => Container(
     width: double.infinity,
     padding: EdgeInsets.all(16.w),
     margin: EdgeInsets.only(bottom: 10.w),
@@ -903,7 +951,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: TextView(
-                  text: 'ID: ${subscriber.id}',
+                  text: 'ID: ${subscriber.applicationId}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 15.2.sp,
@@ -989,7 +1037,7 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                 ),
 
                 TextView(
-                  text: formatNairaNoDecimal(subscriber.totalAmount!),
+                  text: formatNairaNoDecimal(subscriber.amount!),
                   textStyle: TextStyle(
                     fontSize: 15.8.sp,
                     fontWeight: FontWeight.w400,

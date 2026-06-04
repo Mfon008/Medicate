@@ -4,16 +4,22 @@ part 'summary.g.dart';
 
 @JsonSerializable()
 class Summary {
-  int? activeCount;
-  int? reviewPendingCount;
-  int? draftCount;
-  int? rejectedCount;
+  int? all;
+  int? active;
+  int? expiringSoon;
+  int? expired;
+  int? underReview;
+  int? draft;
+  int? rejected;
 
   Summary({
-    this.activeCount,
-    this.reviewPendingCount,
-    this.draftCount,
-    this.rejectedCount,
+    this.all,
+    this.active,
+    this.expiringSoon,
+    this.expired,
+    this.underReview,
+    this.draft,
+    this.rejected,
   });
 
   factory Summary.fromJson(Map<String, dynamic> json) {

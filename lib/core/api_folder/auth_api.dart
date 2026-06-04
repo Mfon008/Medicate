@@ -839,7 +839,7 @@ class AuthApi {
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.get_user_hmos_plan}/$planId/hospital-networks',
+        '${UrlConfig.get_user_hmos_plan_marketplace}/$planId/hospital-networks',
         RequestMethod.get,
       );
       logger.d(response.data);
@@ -851,13 +851,21 @@ class AuthApi {
   }
 
   Future<GetMySubscriptionResponseModel> getMySubscriptions({
-    String? status,
+    String? page,
+    String? limit,
+    String? subStatus,
+    String? appStatus,
   }) async {
     try {
       final response = await _service.call(
         UrlConfig.my_subscription,
         RequestMethod.getParams,
-        queryParams: {'statusFilter': status},
+        queryParams: {
+          'page': page,
+          'limit': limit,
+          'subscriptionStatus': subStatus,
+          'applicationStatus': appStatus,
+        },
       );
       logger.d(response.data);
       return GetMySubscriptionResponseModel.fromJson(response.data);

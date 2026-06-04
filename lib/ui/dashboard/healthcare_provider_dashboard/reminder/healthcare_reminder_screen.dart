@@ -21,7 +21,8 @@ class HealthCareReminderScreen extends StatefulWidget {
   const HealthCareReminderScreen({super.key});
 
   @override
-  State<HealthCareReminderScreen> createState() => _HealthCareReminderScreenState();
+  State<HealthCareReminderScreen> createState() =>
+      _HealthCareReminderScreenState();
 }
 
 class _HealthCareReminderScreenState extends State<HealthCareReminderScreen> {
@@ -139,8 +140,17 @@ class _HealthCareReminderScreenState extends State<HealthCareReminderScreen> {
                         height: isTablet(context) ? 34.h : 14.h,
                         width: isTablet(context) ? 34.w : 14.w,
                       ),
-                      onPressed: () => SharedPreferencesService.instance.usersData['memberships'][0]['tenantType']=='HEALTHCARE_PRACTITIONER'?
-                          navigate.navigateTo(Routes.specialistsProvidersMoreScreen):navigate.navigateTo(Routes.businessProvidersMoreScreen),
+                      onPressed: () =>
+                          SharedPreferencesService
+                                  .instance
+                                  .usersData['memberships'][0]['tenantType'] ==
+                              'HEALTHCARE_PRACTITIONER'
+                          ? navigate.navigateTo(
+                              Routes.specialistsProvidersMoreScreen,
+                            )
+                          : navigate.navigateTo(
+                              Routes.businessProvidersMoreScreen,
+                            ),
                     ),
                   ),
                   TextView(
@@ -182,7 +192,6 @@ class _HealthCareReminderScreenState extends State<HealthCareReminderScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                
                 Center(
                   child:
                       model.getReminderResponseModel != null &&
@@ -357,7 +366,8 @@ class _HealthCareReminderScreenState extends State<HealthCareReminderScreen> {
                                       ),
                                       SizedBox(height: 20.h),
                                       if (model.isReminderStatus == 'all')
-                                        if (model.searchuserByHealthCareReminder !=
+                                        if (model
+                                                .searchuserByHealthCareReminder !=
                                             '')
                                           ...model
                                               .getReminderResponseModel!
@@ -397,7 +407,8 @@ class _HealthCareReminderScreenState extends State<HealthCareReminderScreen> {
                                               ),
 
                                       if (model.isReminderStatus == 'ongoing')
-                                        if (model.searchuserByHealthCareReminder !=
+                                        if (model
+                                                .searchuserByHealthCareReminder !=
                                             '')
                                           ...model
                                               .getReminderResponseModel!
@@ -435,7 +446,8 @@ class _HealthCareReminderScreenState extends State<HealthCareReminderScreen> {
                                               ),
 
                                       if (model.isReminderStatus == 'completed')
-                                        if (model.searchuserByHealthCareReminder !=
+                                        if (model
+                                                .searchuserByHealthCareReminder !=
                                             '')
                                           ...model
                                               .getReminderResponseModel!

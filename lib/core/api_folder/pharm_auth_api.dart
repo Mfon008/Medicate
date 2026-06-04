@@ -553,7 +553,7 @@ class PharmApi {
     }
   }
 
-////
+  ////
   Future<CreateReminderResponseModel> createReminder(
     CreateTenantReminderEntityModel createReminderEntityModel,
   ) async {

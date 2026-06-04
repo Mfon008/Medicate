@@ -1292,30 +1292,80 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                                     ),
                                                   ),
                                                   SizedBox(height: 14.20.h),
-                                                  ...e.benefits!.map(
-                                                    (ben) => Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              AppImage
-                                                                  .light_check,
+                                                  if (e.benefits != null &&
+                                                      e.benefits!.isNotEmpty)
+                                                    ...e.benefits!.map(
+                                                      (ben) => Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              SvgPicture.asset(
+                                                                AppImage
+                                                                    .light_check,
+                                                              ),
+                                                              SizedBox(
+                                                                width: 8.10.w,
+                                                              ),
+                                                              TextView(
+                                                                text:
+                                                                    ben.description ??
+                                                                    '',
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      14.52.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 4.10.w,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.symmetric(
+                                                                  horizontal:
+                                                                      12.w,
+                                                                  vertical:
+                                                                      2.2.h,
+                                                                ),
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                  left: 13.90.w,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    22.r,
+                                                                  ),
+                                                              color: AppColors
+                                                                  .white,
+                                                              border: Border.all(
+                                                                color: AppColors
+                                                                    .fineGrey
+                                                                    .withOpacity(
+                                                                      .3,
+                                                                    ),
+                                                              ),
                                                             ),
-                                                            SizedBox(
-                                                              width: 8.10.w,
-                                                            ),
-                                                            TextView(
+                                                            child: TextView(
                                                               text:
-                                                                  ben.description ??
+                                                                  ben.coverageLimit ??
                                                                   '',
                                                               textStyle: TextStyle(
                                                                 fontFamily:
                                                                     'Arial',
                                                                 fontSize:
-                                                                    14.52.sp,
+                                                                    13.2.sp,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
@@ -1323,60 +1373,14 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                                                     .reminder,
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: 4.10.w,
-                                                        ),
-                                                        Container(
-                                                          padding:
-                                                              EdgeInsets.symmetric(
-                                                                horizontal:
-                                                                    12.w,
-                                                                vertical: 2.2.h,
-                                                              ),
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                left: 13.90.w,
-                                                              ),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  22.r,
-                                                                ),
-                                                            color:
-                                                                AppColors.white,
-                                                            border: Border.all(
-                                                              color: AppColors
-                                                                  .fineGrey
-                                                                  .withOpacity(
-                                                                    .3,
-                                                                  ),
-                                                            ),
                                                           ),
-                                                          child: TextView(
-                                                            text:
-                                                                ben.coverageLimit ??
-                                                                '',
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'Arial',
-                                                              fontSize: 13.2.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: AppColors
-                                                                  .reminder,
-                                                            ),
-                                                          ),
-                                                        ),
 
-                                                        SizedBox(
-                                                          height: 12.20.h,
-                                                        ),
-                                                      ],
+                                                          SizedBox(
+                                                            height: 12.20.h,
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
                                                 ],
                                               ),
                                             ),

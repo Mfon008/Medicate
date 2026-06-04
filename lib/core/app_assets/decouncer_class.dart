@@ -10,10 +10,7 @@ class Debouncer {
   run(VoidCallback action) {
     _timer?.cancel();
 
-    _timer = Timer(
-      Duration(milliseconds: milliseconds),
-      action,
-    );
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 
   dispose() {

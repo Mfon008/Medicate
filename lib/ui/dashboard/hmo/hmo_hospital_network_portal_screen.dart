@@ -643,16 +643,18 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                         PopupMenuItem(
                                           onTap: () async {
                                             final result = await navigate.navigateTo(
-                                            Routes
-                                                .hmoAddHospitalNetworkPortalScreen,
-                                            arguments:
-                                                HmoAddHospitalNetworkPortalScreenArguments(
-                                                  isEditing: true,
-                                                  hospitalId: e.id,
-                                                ),
-                                          );
+                                              Routes
+                                                  .hmoAddHospitalNetworkPortalScreen,
+                                              arguments:
+                                                  HmoAddHospitalNetworkPortalScreenArguments(
+                                                    isEditing: true,
+                                                    hospitalId: e.id,
+                                                  ),
+                                            );
                                             if (result == true) {
-                                              await model.getListOfHospital(context);
+                                              await model.getListOfHospital(
+                                                context,
+                                              );
                                             }
                                           },
                                           child: TextView(
@@ -807,7 +809,8 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                     if (model.page >=
                                         model
                                             .getAllOfHospitalsResponseModel!
-                                            .data!.meta!
+                                            .data!
+                                            .meta!
                                             .totalPages!) {
                                     } else {
                                       model.page++;
@@ -822,7 +825,8 @@ class HmoHospitalNetworkPortalScreen extends StatelessWidget {
                                         model.page >=
                                             model
                                                 .getAllOfHospitalsResponseModel!
-                                                .data!.meta!
+                                                .data!
+                                                .meta!
                                                 .totalPages!
                                         ? AppColors.primary.withOpacity(.3)
                                         : AppColors.primary1,

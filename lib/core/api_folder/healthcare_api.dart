@@ -521,8 +521,8 @@ class HealthcareApi {
     }
   }
 
-///
-/// reminder flow
+  ///
+  /// reminder flow
   Future<CreateReminderResponseModel> createReminder(
     CreateTenantReminderEntityModel createReminderEntityModel,
   ) async {
@@ -845,5 +845,4 @@ class HealthcareApi {
       rethrow;
     }
   }
-
 }

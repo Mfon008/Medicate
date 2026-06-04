@@ -246,7 +246,7 @@ class HealthcareRepoImpl {
     return response;
   }
 
-    Future<CreateReminderResponseModel> createReminder(
+  Future<CreateReminderResponseModel> createReminder(
     CreateTenantReminderEntityModel createReminderEntityModel,
   ) async {
     final response = await _contract.createReminder(createReminderEntityModel);
@@ -417,7 +417,6 @@ class HealthcareRepoImpl {
     final response = await _contract.getWalletBalance();
     return response;
   }
-
 
   void _chache(data) {
     print('print me lemme helath see ${data.data.toJson()}');

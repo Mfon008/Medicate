@@ -240,5 +240,4 @@ class HealthcareContractsImpl {
       await _api.getTransactionWallet();
   Future<GetWalletResponseModel> getWalletBalance() async =>
       await _api.getWalletBalance();
-
 }

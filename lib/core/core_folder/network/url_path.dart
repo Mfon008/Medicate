@@ -71,6 +71,7 @@ class UrlConfig {
   static const String get_user_hmos_market = 'hmo/marketplace/plans';
   static const String get_user_hmos_market_plantype = 'hmo/marketplace/hmos';
   static const String get_user_hmos_plan = 'hmo/plans';
+  static const String get_user_hmos_plan_marketplace = 'hmo/marketplace/plans';
   static const String selects_plan_type = 'hmo/settings/plan-types/select';
   static const String get_user_hmos_application = 'hmo/applications';
   static const String start_application = 'hmo/applications/start';

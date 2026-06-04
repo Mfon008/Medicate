@@ -837,31 +837,24 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                         Container(
                           padding: EdgeInsets.symmetric(
                             vertical: 4.w,
-                            horizontal: 10.w,
+                            horizontal: 14.w,
                           ),
                           decoration: BoxDecoration(
-                            border: Border.all(color: tiersColor(o)),
-                            color: tiersBorderColor(o),
+                            color: hexToColor(
+                              o.planTierDetails!.secondaryColor,
+                            ),
                             borderRadius: BorderRadius.circular(100.r),
                           ),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                tiersSvgImage(o),
-                                // ignore: deprecated_member_use
-                                color: tiersColor(o),
+                          child: TextView(
+                            text: o.planTier ?? '',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 15.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: hexToColor(
+                                o.planTierDetails!.primaryColor,
                               ),
-                              SizedBox(width: 6.w),
-                              TextView(
-                                text: o.planTier ?? '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 15.2.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: tiersColor(o),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
@@ -1163,30 +1156,24 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                         Container(
                           padding: EdgeInsets.symmetric(
                             vertical: 4.w,
-                            horizontal: 10.w,
+                            horizontal: 14.w,
                           ),
                           decoration: BoxDecoration(
-                            border: Border.all(color: tiersColor(o)),
-                            color: tiersBorderColor(o),
+                            color: hexToColor(
+                              o.planTierDetails!.secondaryColor,
+                            ),
                             borderRadius: BorderRadius.circular(100.r),
                           ),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                tiersSvgImage(o),
-                                color: tiersColor(o),
+                          child: TextView(
+                            text: o.planTier ?? '',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 15.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: hexToColor(
+                                o.planTierDetails!.primaryColor,
                               ),
-                              SizedBox(width: 6.w),
-                              TextView(
-                                text: o.planTier ?? '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 15.2.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: tiersColor(o),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
@@ -1425,30 +1412,24 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                         Container(
                           padding: EdgeInsets.symmetric(
                             vertical: 4.w,
-                            horizontal: 10.w,
+                            horizontal: 14.w,
                           ),
                           decoration: BoxDecoration(
-                            border: Border.all(color: tiersColor(o)),
-                            color: tiersBorderColor(o),
+                            color: hexToColor(
+                              o.planTierDetails!.secondaryColor,
+                            ),
                             borderRadius: BorderRadius.circular(100.r),
                           ),
-                          child: Row(
-                            children: [
-                              SvgPicture.asset(
-                                tiersSvgImage(o),
-                                color: tiersColor(o),
+                          child: TextView(
+                            text: o.planTier ?? '',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 15.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: hexToColor(
+                                o.planTierDetails!.primaryColor,
                               ),
-                              SizedBox(width: 6.w),
-                              TextView(
-                                text: o.planTier ?? '',
-                                textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
-                                  fontSize: 15.2.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: tiersColor(o),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],

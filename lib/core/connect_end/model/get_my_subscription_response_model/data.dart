@@ -1,16 +1,18 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'subscription.dart';
+import 'item.dart';
+import 'meta.dart';
 import 'summary.dart';
 
 part 'data.g.dart';
 
 @JsonSerializable()
 class Data {
+  List<Item>? items;
   Summary? summary;
-  List<Subscription>? subscriptions;
+  Meta? meta;
 
-  Data({this.summary, this.subscriptions});
+  Data({this.items, this.summary, this.meta});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

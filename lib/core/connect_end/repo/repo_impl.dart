@@ -444,9 +444,17 @@ class AuthRepoImpl {
   }
 
   Future<GetMySubscriptionResponseModel> getMySubscriptions({
-    String? status,
+    String? page,
+    String? limit,
+    String? subStatus,
+    String? appStatus,
   }) async {
-    final response = await _contract.getMySubscriptions(status: status);
+    final response = await _contract.getMySubscriptions(
+      page: page,
+      limit: limit,
+      subStatus: subStatus,
+      appStatus: appStatus,
+    );
     return response;
   }
 

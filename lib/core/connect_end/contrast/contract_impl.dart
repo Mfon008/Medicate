@@ -245,6 +245,14 @@ class AuthContractsImpl {
     String? planId,
   }) async => await _api.getHospitalNetworkPlan(planId: planId);
   Future<GetMySubscriptionResponseModel> getMySubscriptions({
-    String? status,
-  }) async => await _api.getMySubscriptions(status: status);
+    String? page,
+    String? limit,
+    String? subStatus,
+    String? appStatus,
+  }) async => await _api.getMySubscriptions(
+    page: page,
+    limit: limit,
+    subStatus: subStatus,
+    appStatus: appStatus,
+  );
 }

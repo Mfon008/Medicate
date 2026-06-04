@@ -2503,7 +2503,7 @@ class HMOViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getListOfHospital(context,{String? query}) async {
+  Future<void> getListOfHospital(context, {String? query}) async {
     try {
       _isLoading = true;
       _getAllOfHospitalsResponseModel = await runBusyFuture(
@@ -2537,7 +2537,7 @@ class HMOViewModel extends BaseViewModel {
           context,
           message: _createHospitalNetworkResponseModel?.message ?? '',
         );
-         navigate.back(result: true);
+        navigate.back(result: true);
       }
       _isLoading = false;
     } catch (e) {

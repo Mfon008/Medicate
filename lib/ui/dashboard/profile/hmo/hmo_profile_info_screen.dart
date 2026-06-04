@@ -304,10 +304,10 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                           fillColor: AppColors.grey,
                           isFilled: true,
                           readOnly: true,
-                          obscureText: isSeeId? false : true,
+                          obscureText: isSeeId ? false : true,
                           controller: TextEditingController(
-                              text: model.getTetantResponseModel?.data?.id ??
-                                  ''),
+                            text: model.getTetantResponseModel?.data?.id ?? '',
+                          ),
                           onChange: (p0) {
                             setState(() {});
                           },
@@ -320,7 +320,13 @@ class _HMOProfileInfoScreenState extends State<HMOProfileInfoScreen> {
                                   isSeeId = !isSeeId;
                                 });
                               },
-                              child: SvgPicture.asset(isSeeId? AppImage.opened_eye: AppImage.closed_eye,color: AppColors.infoGrey,)),
+                              child: SvgPicture.asset(
+                                isSeeId
+                                    ? AppImage.opened_eye
+                                    : AppImage.closed_eye,
+                                color: AppColors.infoGrey,
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(height: 20.h),
