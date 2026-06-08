@@ -87,6 +87,24 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                     ),
                   ],
                 ),
+                // SizedBox(height: 20.h),
+                // Row(
+                //   children: [
+                //     moreContainer(
+                //       context,
+                //       icon: AppImage.cart,
+                //       text: 'Order History',
+                //       // onTap: () => navigate.navigateTo(Routes.hMOProfileScreen),
+                //     ),
+                //     SizedBox(width: 20.w),
+                //     moreContainer(
+                //       context,
+                //       icon: AppImage.timer,
+                //       text: 'Reminder History',
+                //       // onTap: () => navigate.navigateTo(Routes.hMOSettingScreen),
+                //     ),
+                //   ],
+                // ),
 
                 SizedBox(height: 150.h),
                 Row(

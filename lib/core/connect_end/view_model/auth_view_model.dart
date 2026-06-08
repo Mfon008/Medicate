@@ -533,11 +533,6 @@ class AuthViewModel extends BaseViewModel {
 
   bool get updateControllersInitialized => _updateControllersInitialized;
 
-  bool _isEmailFlagged = false;
-  bool get isEmailFlagged => _isEmailFlagged;
-  bool _isPhoneFlagged = false;
-  bool get isPhoneFlagged => _isPhoneFlagged;
-
   List<dynamic>? formatSelectedTimeAndPeriodList = [];
   String? formattedSelectedTimeAndPeriod;
   String? numberOfDurationsInDays;
@@ -920,7 +915,7 @@ class AuthViewModel extends BaseViewModel {
   }
 
   String returnPhoneNoStructureWith234(String phoneNo) {
-    if (phoneNo.substring(4).contains('0')) {
+    if (phoneNo.substring(4)=='0') {
       phoneNo = phoneNo.substring(4);
     } else {
       phoneNo = phoneNo;
@@ -930,6 +925,7 @@ class AuthViewModel extends BaseViewModel {
     });
     return phoneNo;
   }
+
 
   String tiersSvgImage(String planTier) {
     if (planTier == 'Pearl') {
@@ -1145,326 +1141,319 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
   }) async {
-    if (planType == 'Individual' && planTier == 'Ruby') {
-      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
-      await model.getIndividualApplicationDetails(
-        context,
-        applicationId: session.applicationIdIndividualRuby,
-      );
-      await model.getHospitalById(
-        context,
-        hospitalId: model
+    // if (planType == 'Individual' && planTier == 'Ruby') {
+    await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+    await model.getIndividualApplicationDetails(
+      context,
+      applicationId: session.applicationGlobalId['$planType:$planTier'],
+    );
+    await model.getHospitalById(
+      context,
+      hospitalId: model
+          .getIndividualApplicationDetailsModel
+          ?.data
+          ?.personalInfo
+          ?.preferredHospitalId,
+    );
+    model.fullNameController.text =
+        model
             .getIndividualApplicationDetailsModel
             ?.data
             ?.personalInfo
-            ?.preferredHospitalId,
-      );
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+            ?.fullName ??
+        '';
+    model.emailAddsController.text =
+        model.getIndividualApplicationDetailsModel?.data?.personalInfo?.email ??
+        '';
+    model.dobController.text =
+        model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+            .toString()
+            .substring(0, 10) ??
+        '';
+    model.genderController.text =
+        model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.gender ??
+        '';
+    model.phoneNoController.text =
+        model.getIndividualApplicationDetailsModel?.data?.personalInfo?.phone ??
+        '';
+    model.resAddressController.text =
+        model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.personalInfo
+            ?.residentialAddress ??
+        '';
+    model.filterStateController.text =
+        model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+    model.hospitalController.text =
+        model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+    model.linSubIndex =
+        model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+    model.medicalHistoryController.text =
+        model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.planSpecific
+            ?.medicalHistory ??
+        '';
+    model.medicalHistoryDetailsController.text =
+        model
+            .getIndividualApplicationDetailsModel
+            ?.data
+            ?.planSpecific
+            ?.chronicAilmentDetails ??
+        '';
+    model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
 
-      if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel?.data?.documents ??
-                []) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadDocumentsApplication!.insert(
-              0,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          } else if (e.documentType == 'NATIONAL_ID') {
-            if (model.uploadDocumentsApplication!.isEmpty) {
-              model.uploadDocumentsApplication!.add(
-                sv.Document(),
-              ); // fill index 0 if missing
-            }
-            model.uploadDocumentsApplication!.insert(
-              1,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
+    if (model.getIndividualApplicationDetailsModel != null) {
+      for (var e
+          in model.getIndividualApplicationDetailsModel?.data?.documents ??
+              []) {
+        if (e.documentType == 'BIRTH_CERTIFICATE') {
+          model.uploadDocumentsApplication!.insert(
+            0,
+            sv.Document(
+              docName: e.originalName,
+              documentType: e.documentType,
+              uploadId: '',
+            ),
+          );
+        } else if (e.documentType == 'NATIONAL_ID') {
+          if (model.uploadDocumentsApplication!.isEmpty) {
+            model.uploadDocumentsApplication!.add(
+              sv.Document(),
+            ); // fill index 0 if missing
           }
+          model.uploadDocumentsApplication!.insert(
+            1,
+            sv.Document(
+              docName: e.originalName,
+              documentType: e.documentType,
+              uploadId: '',
+            ),
+          );
         }
       }
     }
-    if (planType == 'Individual' && planTier == 'Pearl') {
-      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
-      await model.getIndividualApplicationDetails(
-        context,
-        applicationId: session.applicationIdIndividualPearl,
-      );
-      await model.getHospitalById(
-        context,
-        hospitalId: model
-            .getIndividualApplicationDetailsModel
-            ?.data
-            ?.personalInfo
-            ?.preferredHospitalId,
-      );
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+    // }
 
-      if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel!.data!.documents!) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadDocumentsApplication!.insert(
-              0,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          } else if (e.documentType == 'NATIONAL_ID') {
-            if (model.uploadDocumentsApplication!.isEmpty) {
-              model.uploadDocumentsApplication!.add(
-                sv.Document(),
-              ); // fill index 0 if missing
-            }
-            model.uploadDocumentsApplication!.insert(
-              1,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          }
-        }
-      }
-    }
-    if (planType == 'Individual' && planTier == 'Diamond') {
-      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
-      await model.getIndividualApplicationDetails(
-        context,
-        applicationId: session.applicationIdIndividualDiamond,
-      );
-      await model.getHospitalById(
-        context,
-        hospitalId: model
-            .getIndividualApplicationDetailsModel
-            ?.data
-            ?.personalInfo
-            ?.preferredHospitalId,
-      );
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
-      if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel?.data?.documents ??
-                []) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadDocumentsApplication!.insert(
-              0,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          } else if (e.documentType == 'NATIONAL_ID') {
-            if (model.uploadDocumentsApplication!.isEmpty) {
-              model.uploadDocumentsApplication!.add(
-                sv.Document(),
-              ); // fill index 0 if missing
-            }
-            model.uploadDocumentsApplication!.insert(
-              1,
-              sv.Document(
-                docName: e.originalName,
-                documentType: e.documentType,
-                uploadId: '',
-              ),
-            );
-          }
-        }
-      }
-    }
-    model!.notifyListeners();
+    // if (planType == 'Individual' && planTier == 'Pearl') {
+    //   await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+    //   await model.getIndividualApplicationDetails(
+    //     context,
+    //     applicationId: session.applicationIdIndividualPearl,
+    //   );
+    //   await model.getHospitalById(
+    //     context,
+    //     hospitalId: model
+    //         .getIndividualApplicationDetailsModel
+    //         ?.data
+    //         ?.personalInfo
+    //         ?.preferredHospitalId,
+    //   );
+    //   model.fullNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.fullName ??
+    //       '';
+    //   model.emailAddsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.email ??
+    //       '';
+    //   model.dobController.text =
+    //       model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+    //           .toString()
+    //           .substring(0, 10) ??
+    //       '';
+    //   model.genderController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.gender ??
+    //       '';
+    //   model.phoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.phone ??
+    //       '';
+    //   model.resAddressController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.residentialAddress ??
+    //       '';
+    //   model.filterStateController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+    //   model.hospitalController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+    //   model.linSubIndex =
+    //       model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+    //   model.medicalHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.medicalHistory ??
+    //       '';
+    //   model.medicalHistoryDetailsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.chronicAilmentDetails ??
+    //       '';
+    //   model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+
+    //   if (model.getIndividualApplicationDetailsModel != null) {
+    //     for (var e
+    //         in model.getIndividualApplicationDetailsModel!.data!.documents!) {
+    //       if (e.documentType == 'BIRTH_CERTIFICATE') {
+    //         model.uploadDocumentsApplication!.insert(
+    //           0,
+    //           sv.Document(
+    //             docName: e.originalName,
+    //             documentType: e.documentType,
+    //             uploadId: '',
+    //           ),
+    //         );
+    //       } else if (e.documentType == 'NATIONAL_ID') {
+    //         if (model.uploadDocumentsApplication!.isEmpty) {
+    //           model.uploadDocumentsApplication!.add(
+    //             sv.Document(),
+    //           ); // fill index 0 if missing
+    //         }
+    //         model.uploadDocumentsApplication!.insert(
+    //           1,
+    //           sv.Document(
+    //             docName: e.originalName,
+    //             documentType: e.documentType,
+    //             uploadId: '',
+    //           ),
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
+    // if (planType == 'Individual' && planTier == 'Diamond') {
+    //   await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+    //   await model.getIndividualApplicationDetails(
+    //     context,
+    //     applicationId: session.applicationIdIndividualDiamond,
+    //   );
+    //   await model.getHospitalById(
+    //     context,
+    //     hospitalId: model
+    //         .getIndividualApplicationDetailsModel
+    //         ?.data
+    //         ?.personalInfo
+    //         ?.preferredHospitalId,
+    //   );
+    //   model.fullNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.fullName ??
+    //       '';
+    //   model.emailAddsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.email ??
+    //       '';
+    //   model.dobController.text =
+    //       model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+    //           .toString()
+    //           .substring(0, 10) ??
+    //       '';
+    //   model.genderController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.gender ??
+    //       '';
+    //   model.phoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.phone ??
+    //       '';
+    //   model.resAddressController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.residentialAddress ??
+    //       '';
+    //   model.filterStateController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+    //   model.hospitalController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+    //   model.linSubIndex =
+    //       model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+    //   model.medicalHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.medicalHistory ??
+    //       '';
+    //   model.medicalHistoryDetailsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.chronicAilmentDetails ??
+    //       '';
+    //   model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+    //   if (model.getIndividualApplicationDetailsModel != null) {
+    //     for (var e
+    //         in model.getIndividualApplicationDetailsModel?.data?.documents ??
+    //             []) {
+    //       if (e.documentType == 'BIRTH_CERTIFICATE') {
+    //         model.uploadDocumentsApplication!.insert(
+    //           0,
+    //           sv.Document(
+    //             docName: e.originalName,
+    //             documentType: e.documentType,
+    //             uploadId: '',
+    //           ),
+    //         );
+    //       } else if (e.documentType == 'NATIONAL_ID') {
+    //         if (model.uploadDocumentsApplication!.isEmpty) {
+    //           model.uploadDocumentsApplication!.add(
+    //             sv.Document(),
+    //           ); // fill index 0 if missing
+    //         }
+    //         model.uploadDocumentsApplication!.insert(
+    //           1,
+    //           sv.Document(
+    //             docName: e.originalName,
+    //             documentType: e.documentType,
+    //             uploadId: '',
+    //           ),
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
+    model.notifyListeners();
   }
 
   checkFamPlanTypeAndTier({
@@ -2840,6 +2829,9 @@ class AuthViewModel extends BaseViewModel {
                 planTeir: planTier,
                 planType: planType,
               );
+              print(
+                'Application ID: ${session.applicationGlobalId['$planType:$planTier']}',
+              );
               await model.saveFirstStepPersonalInfo(
                 context,
                 planTeir: planTier,
@@ -2847,10 +2839,8 @@ class AuthViewModel extends BaseViewModel {
                 isSavedDraft: false,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId:
+                          session.applicationGlobalId['$planType:$planTier'],
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
@@ -2896,10 +2886,8 @@ class AuthViewModel extends BaseViewModel {
                 isSavedDraft: true,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId:
+                          session.applicationGlobalId['$planType:$planTier'],
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
@@ -8455,10 +8443,8 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
-                    applicationId: returnSavedApplicationType(
-                      planTeir: planTier,
-                      planType: planType,
-                    ),
+                    applicationId:
+                        session.applicationGlobalId['$planType:$planTier'],
                   );
                   model.notifyListeners();
                 }
@@ -18127,7 +18113,6 @@ class AuthViewModel extends BaseViewModel {
                           ),
                         ),
                         SizedBox(height: 24.0.h),
-
                         TextFormWidget(
                           hint: 'End Date',
                           label: '18 Feb, 2026',
@@ -19014,7 +18999,6 @@ class AuthViewModel extends BaseViewModel {
                               if (selectedIndexes.contains(index)) {
                                 // unselect
                                 selectedIndexes.remove(index);
-                                selectedIndexes.remove(index);
                                 if (!selectedIndexes.contains(0) &&
                                     !selectedIndexes.contains(1)) {
                                   isTappedEmailAdded = false;
@@ -19024,6 +19008,7 @@ class AuthViewModel extends BaseViewModel {
                                     !selectedIndexes.contains(3) &&
                                     !selectedIndexes.contains(4)) {
                                   isTappedPhoneAdded = false;
+
                                   model.notifyListeners();
                                 }
                               } else {
@@ -19038,6 +19023,18 @@ class AuthViewModel extends BaseViewModel {
                                   // Phone-related channels
                                   isTappedPhoneAdded = true;
                                   isPhoneValid = false;
+                                  if (addedPhoneReminderList.contains(
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['phone'],
+                                  )) {
+                                  } else {
+                                    addedPhoneReminderList.add(
+                                      SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['phone'],
+                                    );
+                                  }
                                   model.notifyListeners();
                                 }
                               }
@@ -19057,7 +19054,7 @@ class AuthViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isEmailFlagged
+                                        color: addedEmailReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -19094,7 +19091,8 @@ class AuthViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isEmailFlagged
+                                                          addedEmailReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -19220,8 +19218,6 @@ class AuthViewModel extends BaseViewModel {
                                                               .add(o);
                                                         }
 
-                                                        model._isEmailFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -19350,6 +19346,8 @@ class AuthViewModel extends BaseViewModel {
                                                                 .removeAt(
                                                                   index,
                                                                 );
+                                                            addedEmailReminderList
+                                                                .remove(o);
                                                             model
                                                                 .notifyListeners();
                                                           },
@@ -19376,7 +19374,7 @@ class AuthViewModel extends BaseViewModel {
                                       ],
                                     ),
                                   ),
-                                  !model.isEmailFlagged
+                                  addedEmailReminderList.isEmpty
                                       ? TextView(
                                           text: 'Atleast one email is required',
                                           textStyle: TextStyle(
@@ -19400,7 +19398,7 @@ class AuthViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isPhoneFlagged
+                                        color: addedPhoneReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -19438,7 +19436,8 @@ class AuthViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isPhoneFlagged
+                                                          addedPhoneReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -19565,7 +19564,6 @@ class AuthViewModel extends BaseViewModel {
                                                           .usersData['user']['phone'],
                                                     );
                                                   }
-                                                  model._isPhoneFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -19713,9 +19711,6 @@ class AuthViewModel extends BaseViewModel {
                                                                 ),
                                                               );
                                                         }
-
-                                                        model._isPhoneFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -19830,8 +19825,10 @@ class AuthViewModel extends BaseViewModel {
                                                                   index,
                                                                 );
                                                             addedPhoneReminderList
-                                                                .removeAt(
-                                                                  index,
+                                                                .remove(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    o,
+                                                                  ),
                                                                 );
                                                             model
                                                                 .notifyListeners();
@@ -19860,7 +19857,7 @@ class AuthViewModel extends BaseViewModel {
                                     ),
                                   ),
 
-                                  !model.isPhoneFlagged
+                                  addedPhoneReminderList.isEmpty
                                       ? TextView(
                                           text:
                                               'Atleast one phone number is required',
@@ -19931,18 +19928,12 @@ class AuthViewModel extends BaseViewModel {
                                   isTappedPhoneAdded &&
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty) {
-                                  model._isEmailFlagged = false;
-                                }
+                                    addedEmailReminderList.isEmpty) {}
                                 if (isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {
-                                  model._isPhoneFlagged = false;
-                                }
+                                    addedPhoneReminderList.isEmpty) {}
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                model._isEmailFlagged = true;
-                                model._isPhoneFlagged = true;
                               }
                               setModalState!(() {});
                               model.notifyListeners();
@@ -23147,11 +23138,13 @@ class AuthViewModel extends BaseViewModel {
                               if (!selectedIndexes.contains(0) &&
                                   !selectedIndexes.contains(1)) {
                                 isTappedEmailAdded = false;
+                                addedEmailReminderList.clear();
                                 model.notifyListeners();
                               }
                               if (!selectedIndexes.contains(2) &&
                                   !selectedIndexes.contains(3) &&
                                   !selectedIndexes.contains(4)) {
+                                addedPhoneReminderList.clear();
                                 isTappedPhoneAdded = false;
                                 model.notifyListeners();
                               }
@@ -23167,6 +23160,7 @@ class AuthViewModel extends BaseViewModel {
                                 // Phone-related channels
                                 isTappedPhoneAdded = true;
                                 isPhoneValid = false;
+
                                 model.notifyListeners();
                               } else {
                                 isTappedEmailAdded = false;
@@ -23188,7 +23182,7 @@ class AuthViewModel extends BaseViewModel {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12.r),
                                     border: Border.all(
-                                      color: !model.isEmailFlagged
+                                      color: addedEmailReminderList.isEmpty
                                           ? AppColors.red
                                           : AppColors.infoGrey1,
                                     ),
@@ -23223,7 +23217,9 @@ class AuthViewModel extends BaseViewModel {
                                                     fontFamily: 'Arial',
                                                     fontSize: 16.2.sp,
                                                     fontWeight: FontWeight.w400,
-                                                    color: !model.isEmailFlagged
+                                                    color:
+                                                        addedEmailReminderList
+                                                            .isEmpty
                                                         ? AppColors.red
                                                         : AppColors.deep,
                                                   ),
@@ -23345,8 +23341,6 @@ class AuthViewModel extends BaseViewModel {
                                                         addedEmailReminderList
                                                             .add(o);
                                                       }
-                                                      model._isEmailFlagged =
-                                                          true;
                                                       setModalState!(() {});
                                                       model.notifyListeners();
                                                     },
@@ -23438,6 +23432,8 @@ class AuthViewModel extends BaseViewModel {
                                                         onTap: () {
                                                           emailReminderList
                                                               .removeAt(index);
+                                                          addedEmailReminderList
+                                                              .remove(o);
                                                           model
                                                               .notifyListeners();
                                                         },
@@ -23464,7 +23460,7 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                 ),
                                 SizedBox(height: 4.0.h),
-                                !model.isEmailFlagged
+                                addedEmailReminderList.isEmpty
                                     ? TextView(
                                         text: 'Atleast one email is required',
                                         textStyle: TextStyle(
@@ -23489,7 +23485,7 @@ class AuthViewModel extends BaseViewModel {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12.r),
                                     border: Border.all(
-                                      color: !model.isPhoneFlagged
+                                      color: addedPhoneReminderList.isEmpty
                                           ? AppColors.red
                                           : AppColors.infoGrey1,
                                     ),
@@ -23525,7 +23521,9 @@ class AuthViewModel extends BaseViewModel {
                                                     fontFamily: 'Arial',
                                                     fontSize: 15.8.sp,
                                                     fontWeight: FontWeight.w400,
-                                                    color: !model.isPhoneFlagged
+                                                    color:
+                                                        addedPhoneReminderList
+                                                            .isEmpty
                                                         ? AppColors.red
                                                         : AppColors.deep,
                                                   ),
@@ -23606,7 +23604,6 @@ class AuthViewModel extends BaseViewModel {
                                                       context,
                                                       model: model,
                                                     );
-
                                                     isPhoneValid = false;
                                                     model.notifyListeners();
                                                   },
@@ -23648,7 +23645,6 @@ class AuthViewModel extends BaseViewModel {
                                                         .usersData['user']['phone'],
                                                   );
                                                 }
-                                                model._isPhoneFlagged = true;
                                                 setModalState!(() {});
                                                 model.notifyListeners();
                                               },
@@ -23741,7 +23737,6 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                       SizedBox(height: 2.0.h),
                                       Divider(color: AppColors.infoGrey1),
-
                                       ...phoneReminderList.asMap().entries.map((
                                         entry,
                                       ) {
@@ -23765,22 +23760,35 @@ class AuthViewModel extends BaseViewModel {
                                                   GestureDetector(
                                                     onTap: () {
                                                       if (addedPhoneReminderList
-                                                          .contains(o)) {
+                                                          .contains(
+                                                            returnPhoneNoStructureWith234(
+                                                              o,
+                                                            ),
+                                                          )) {
                                                         addedPhoneReminderList
-                                                            .remove(o);
+                                                            .remove(
+                                                              returnPhoneNoStructureWith234(
+                                                                o,
+                                                              ),
+                                                            );
                                                       } else {
-                                                        addedPhoneReminderList
-                                                            .add(o);
+                                                        addedPhoneReminderList.add(
+                                                          returnPhoneNoStructureWith234(
+                                                            o,
+                                                          ),
+                                                        );
                                                       }
-                                                      model._isPhoneFlagged =
-                                                          true;
                                                       setModalState!(() {});
                                                       model.notifyListeners();
                                                     },
                                                     child: Container(
                                                       padding:
                                                           addedPhoneReminderList
-                                                              .contains(o)
+                                                              .contains(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              )
                                                           ? EdgeInsets.all(
                                                               4.0.w,
                                                             )
@@ -23794,14 +23802,22 @@ class AuthViewModel extends BaseViewModel {
                                                             ),
                                                         color:
                                                             addedPhoneReminderList
-                                                                .contains(o)
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    o,
+                                                                  ),
+                                                                )
                                                             ? AppColors.primary
                                                             : AppColors
                                                                   .transparent,
                                                         border: Border.all(
                                                           color:
                                                               addedPhoneReminderList
-                                                                  .contains(o)
+                                                                  .contains(
+                                                                    returnPhoneNoStructureWith234(
+                                                                      o,
+                                                                    ),
+                                                                  )
                                                               ? AppColors
                                                                     .transparent
                                                               : AppColors
@@ -23811,7 +23827,11 @@ class AuthViewModel extends BaseViewModel {
                                                       ),
                                                       child:
                                                           addedPhoneReminderList
-                                                              .contains(o)
+                                                              .contains(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              )
                                                           ? Icon(
                                                               Icons.check,
                                                               size: 12.sp,
@@ -23860,6 +23880,12 @@ class AuthViewModel extends BaseViewModel {
                                                         onTap: () {
                                                           phoneReminderList
                                                               .removeAt(index);
+                                                          addedPhoneReminderList
+                                                              .remove(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              );
                                                           model
                                                               .notifyListeners();
                                                         },
@@ -23886,7 +23912,7 @@ class AuthViewModel extends BaseViewModel {
                                   ),
                                 ),
                                 SizedBox(height: 4.0.h),
-                                !model.isPhoneFlagged
+                                addedPhoneReminderList.isEmpty
                                     ? TextView(
                                         text:
                                             'Atleast one phone number is required',
@@ -23967,18 +23993,12 @@ class AuthViewModel extends BaseViewModel {
                                   isTappedPhoneAdded &&
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty) {
-                                  model._isEmailFlagged = false;
-                                }
+                                    addedEmailReminderList.isEmpty) {}
                                 if (isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {
-                                  model._isPhoneFlagged = false;
-                                }
+                                    addedPhoneReminderList.isEmpty) {}
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                model._isEmailFlagged = true;
-                                model._isPhoneFlagged = true;
                               }
                             }
                           } else {
@@ -23988,18 +24008,12 @@ class AuthViewModel extends BaseViewModel {
                                 isTappedPhoneAdded &&
                                     addedPhoneReminderList.isEmpty) {
                               if (isTappedEmailAdded &&
-                                  addedEmailReminderList.isEmpty) {
-                                model._isEmailFlagged = false;
-                              }
+                                  addedEmailReminderList.isEmpty) {}
                               if (isTappedPhoneAdded &&
-                                  addedPhoneReminderList.isEmpty) {
-                                model._isPhoneFlagged = false;
-                              }
+                                  addedPhoneReminderList.isEmpty) {}
                             } else {
                               linIndex++;
                               addCostTotal(model);
-                              model._isEmailFlagged = true;
-                              model._isPhoneFlagged = true;
                             }
                             _isLoading = false;
                           }
@@ -26338,6 +26352,10 @@ class AuthViewModel extends BaseViewModel {
                                   emailReminderList.add(
                                     emailController.text.trim(),
                                   );
+
+                                  addedEmailReminderList.add(
+                                    emailController.text.trim(),
+                                  );
                                 }
                               } else {
                                 emailReminderList[index!] =
@@ -26548,6 +26566,11 @@ class AuthViewModel extends BaseViewModel {
                                         phoneController.text.trim(),
                                       ),
                                     );
+                                    addedPhoneReminderList.add(
+                                      returnPhoneNoStructureAdd234After(
+                                        phoneController.text.trim(),
+                                      ),
+                                    );
                                   }
                                 } else {
                                   phoneReminderList[index!] =
@@ -26555,6 +26578,9 @@ class AuthViewModel extends BaseViewModel {
                                         phoneController.text.trim(),
                                       );
                                 }
+                                print(
+                                  'ooooooooo8888880000::::$addedPhoneReminderList',
+                                );
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }
@@ -28066,7 +28092,6 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      // AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }
@@ -28129,42 +28154,53 @@ class AuthViewModel extends BaseViewModel {
         repositoryImply.startApplication(startApplication: startApplication),
         throwException: true,
       );
-      if (planType == 'Individual' && planTeir == 'Ruby') {
-        session.applicationIdIndividualRuby =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Individual' && planTeir == 'Pearl') {
-        session.applicationIdIndividualPearl =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Individual' && planTeir == 'Diamond') {
-        session.applicationIdIndividualDiamond =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Family' && planTeir == 'Ruby') {
-        session.applicationIdFamilyRuby =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Family' && planTeir == 'Pearl') {
-        session.applicationIdFamilyPearl =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Family' && planTeir == 'Diamond') {
-        session.applicationIdFamilyDiamond =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Corporate' && planTeir == 'Ruby') {
-        session.applicationIdCorporateRuby =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Corporate' && planTeir == 'Pearl') {
-        session.applicationIdCorporatePearl =
-            _startApplicationResponseModel!.data!.id!;
-      }
-      if (planType == 'Corporate' && planTeir == 'Diamond') {
-        session.applicationIdCorporateDiamond =
-            _startApplicationResponseModel!.data!.id!;
-      }
+
+      final applicationIds = session.applicationGlobalId;
+
+      applicationIds['$planType:$planTeir'] =
+          _startApplicationResponseModel!.data!.id!;
+
+      session.applicationGlobalId = applicationIds;
+      // session.applicationGlobalId['$planType:$planTeir'] =  _startApplicationResponseModel!.data!.id!;
+      print('Global ID: ${session.applicationGlobalId}');
+      print('Global ID22222: ${_startApplicationResponseModel!.data!.id!}');
+
+      // if (planType == 'Individual' && planTeir == 'Ruby') {
+      // session.applicationIdIndividualRuby =
+      //     _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Individual' && planTeir == 'Pearl') {
+      //   session.applicationIdIndividualPearl =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Individual' && planTeir == 'Diamond') {
+      //   session.applicationIdIndividualDiamond =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Family' && planTeir == 'Ruby') {
+      //   session.applicationIdFamilyRuby =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Family' && planTeir == 'Pearl') {
+      //   session.applicationIdFamilyPearl =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Family' && planTeir == 'Diamond') {
+      //   session.applicationIdFamilyDiamond =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Corporate' && planTeir == 'Ruby') {
+      //   session.applicationIdCorporateRuby =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Corporate' && planTeir == 'Pearl') {
+      //   session.applicationIdCorporatePearl =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
+      // if (planType == 'Corporate' && planTeir == 'Diamond') {
+      //   session.applicationIdCorporateDiamond =
+      //       _startApplicationResponseModel!.data!.id!;
+      // }
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -28587,11 +28623,9 @@ class AuthViewModel extends BaseViewModel {
   }
 
   String getSubscriptionText(String selectStatus) {
-    if(selectStatus == 'Expiring'){
+    if (selectStatus == 'Expiring') {
       return 'Expiring_Soon';
     }
     return selectStatus;
-    
   }
-
 }

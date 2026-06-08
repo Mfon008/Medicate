@@ -912,7 +912,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                               rowlightCheckWidget(benefit.description!),
                         )),
                     SizedBox(height: 10.h),
-                    GestureDetector(
+                    o.benefitsSnippet!.length > 4?GestureDetector(
                       onTap: () {
                         if (model.hmoPlanType == o) {
                           model.hmoPlanType = null;
@@ -932,7 +932,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                           color: AppColors.primary,
                         ),
                       ),
-                    ),
+                    ):SizedBox.shrink(),
                     SizedBox(height: 20.h),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 12.w),
@@ -1231,7 +1231,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                               rowlightCheckWidget(benefit.description!),
                         )),
                     SizedBox(height: 10.h),
-                    GestureDetector(
+                    o.benefitsSnippet!.length > 4?GestureDetector(
                       onTap: () {
                         if (model.hmoPlanType == o) {
                           model.hmoPlanType = null;
@@ -1253,7 +1253,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                           color: AppColors.primary,
                         ),
                       ),
-                    ),
+                    ):SizedBox.shrink(),
                     SizedBox(height: 20.h),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 12.w),
@@ -1497,7 +1497,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                               rowlightCheckWidget(benefit.description!),
                         )),
                     SizedBox(height: 10.h),
-                    GestureDetector(
+                    o.benefitsSnippet!.length > 4?GestureDetector(
                       onTap: () {
                         if (model.hmoPlanType == o) {
                           model.hmoPlanType = null;
@@ -1517,7 +1517,7 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                           color: AppColors.primary,
                         ),
                       ),
-                    ),
+                    ):SizedBox.shrink(),
                     SizedBox(height: 20.h),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 12.w),

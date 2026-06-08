@@ -193,8 +193,8 @@ class _SpecialistsProvidersMoreScreenState
     child: GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width / 2,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 34.w),
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(horizontal:2.0.w, vertical: 34.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
           color: AppColors.dashboard,
