@@ -258,11 +258,6 @@ class PharmViewModel extends BaseViewModel {
   bool isTappedPhoneAdded = false;
   bool isTappedEmailAdded = false;
 
-  bool _isEmailFlagged = false;
-  bool get isEmailFlagged => _isEmailFlagged;
-  bool _isPhoneFlagged = false;
-  bool get isPhoneFlagged => _isPhoneFlagged;
-
   String startDateIso = '';
 
   List<MedicationClass> medicationClassList = [];
@@ -7201,7 +7196,6 @@ class PharmViewModel extends BaseViewModel {
                                     linIndex++;
                                     setModalState!(() {});
                                     model.notifyListeners();
-                                    print('objectmeee');
                                   },
                                 ),
                                 SizedBox(height: 16.h),
@@ -8879,11 +8873,17 @@ class PharmViewModel extends BaseViewModel {
                                 if (index == 0 || index == 1) {
                                   // Email
                                   isTappedEmailAdded = true;
+                                  addedEmailReminderList.add(
+                                    model.emailController.text,
+                                  );
                                   model.notifyListeners();
                                 } else if ([2, 3, 4].contains(index)) {
                                   // Phone-related channels
                                   isTappedPhoneAdded = true;
                                   isPhoneValid = false;
+                                  addedPhoneReminderList.add(
+                                    returnAddingPhoneNoStructureWith234(model.phoneNumberController.text)
+                                  );
                                   model.notifyListeners();
                                 }
                               }
@@ -8902,7 +8902,7 @@ class PharmViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isEmailFlagged
+                                        color: addedEmailReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -8939,7 +8939,8 @@ class PharmViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isEmailFlagged
+                                                          addedEmailReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -9064,7 +9065,6 @@ class PharmViewModel extends BaseViewModel {
                                                           .text,
                                                     );
                                                   }
-                                                  model._isEmailFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -9192,8 +9192,6 @@ class PharmViewModel extends BaseViewModel {
                                                           addedEmailReminderList
                                                               .add(o);
                                                         }
-                                                        model._isEmailFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -9292,6 +9290,8 @@ class PharmViewModel extends BaseViewModel {
                                                                 .removeAt(
                                                                   index,
                                                                 );
+                                                            addedEmailReminderList
+                                                                .remove(o);
                                                             model
                                                                 .notifyListeners();
                                                           },
@@ -9319,7 +9319,7 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   SizedBox.shrink(),
-                                  !model.isEmailFlagged
+                                  addedEmailReminderList.isEmpty
                                       ? TextView(
                                           text: 'Atleast one email is required',
                                           textStyle: TextStyle(
@@ -9342,7 +9342,7 @@ class PharmViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isPhoneFlagged
+                                        color: addedEmailReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -9380,7 +9380,8 @@ class PharmViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isPhoneFlagged
+                                                          addedPhoneReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -9514,7 +9515,6 @@ class PharmViewModel extends BaseViewModel {
                                                       ),
                                                     );
                                                   }
-                                                  model._isPhoneFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -9660,9 +9660,6 @@ class PharmViewModel extends BaseViewModel {
                                                                 ),
                                                               );
                                                         }
-
-                                                        model._isPhoneFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -9776,6 +9773,7 @@ class PharmViewModel extends BaseViewModel {
                                                                 .removeAt(
                                                                   index,
                                                                 );
+                                                            addedPhoneReminderList.remove(o);
                                                             model
                                                                 .notifyListeners();
                                                           },
@@ -9803,7 +9801,7 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   SizedBox(height: 4.0.h),
-                                  !model.isPhoneFlagged
+                                  addedPhoneReminderList.isEmpty
                                       ? TextView(
                                           text:
                                               'Atleast one phone number is required',
@@ -9874,18 +9872,12 @@ class PharmViewModel extends BaseViewModel {
                                   isTappedPhoneAdded &&
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty) {
-                                  model._isEmailFlagged = false;
-                                }
+                                    addedEmailReminderList.isEmpty) {}
                                 if (isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {
-                                  model._isPhoneFlagged = false;
-                                }
+                                    addedPhoneReminderList.isEmpty) {}
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                model._isEmailFlagged = true;
-                                model._isPhoneFlagged = true;
                               }
                               setModalState!(() {});
                               model.notifyListeners();
@@ -13064,7 +13056,7 @@ class PharmViewModel extends BaseViewModel {
                               ),
                         SizedBox(height: 24.0.h),
                         TextView(
-                          text: 'NOTIFICATION CHANNELS',
+                          text: 'NOTIFICATION CHANNELSmmm',
                           textStyle: TextStyle(
                             fontFamily: 'GoogleSans',
                             fontSize: 14.80.sp,
@@ -13089,12 +13081,14 @@ class PharmViewModel extends BaseViewModel {
                                 selectedIndexes.remove(index);
                                 if (!selectedIndexes.contains(0) &&
                                     !selectedIndexes.contains(1)) {
+                                  addedEmailReminderList.clear();
                                   isTappedEmailAdded = false;
                                   model.notifyListeners();
                                 }
                                 if (!selectedIndexes.contains(2) &&
                                     !selectedIndexes.contains(3) &&
                                     !selectedIndexes.contains(4)) {
+                                  addedPhoneReminderList.clear();
                                   isTappedPhoneAdded = false;
                                   model.notifyListeners();
                                 }
@@ -13135,7 +13129,7 @@ class PharmViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isEmailFlagged
+                                        color: addedEmailReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -13172,7 +13166,8 @@ class PharmViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isEmailFlagged
+                                                          addedEmailReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -13300,7 +13295,6 @@ class PharmViewModel extends BaseViewModel {
                                                           .text,
                                                     );
                                                   }
-                                                  model._isEmailFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -13428,8 +13422,6 @@ class PharmViewModel extends BaseViewModel {
                                                           addedEmailReminderList
                                                               .add(o);
                                                         }
-                                                        model._isEmailFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -13528,6 +13520,8 @@ class PharmViewModel extends BaseViewModel {
                                                                 .removeAt(
                                                                   index,
                                                                 );
+                                                            addedEmailReminderList
+                                                                .remove(o);
                                                             model
                                                                 .notifyListeners();
                                                           },
@@ -13555,7 +13549,7 @@ class PharmViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   SizedBox(height: 4.0.h),
-                                  !model.isEmailFlagged
+                                  addedEmailReminderList.isEmpty
                                       ? TextView(
                                           text: 'Atleast one email is required',
                                           textStyle: TextStyle(
@@ -13578,7 +13572,7 @@ class PharmViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isPhoneFlagged
+                                        color: addedPhoneReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -13616,7 +13610,8 @@ class PharmViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isPhoneFlagged
+                                                          addedPhoneReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -13700,7 +13695,6 @@ class PharmViewModel extends BaseViewModel {
                                                         context,
                                                         model: model,
                                                       );
-
                                                       isPhoneValid = false;
                                                       model.notifyListeners();
                                                     },
@@ -13750,8 +13744,6 @@ class PharmViewModel extends BaseViewModel {
                                                       ),
                                                     );
                                                   }
-
-                                                  model._isPhoneFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -13854,7 +13846,6 @@ class PharmViewModel extends BaseViewModel {
                                         ),
                                         SizedBox(height: 2.0.h),
                                         Divider(color: AppColors.infoGrey1),
-
                                         ...phoneReminderList.asMap().entries.map((
                                           entry,
                                         ) {
@@ -13863,7 +13854,6 @@ class PharmViewModel extends BaseViewModel {
                                           final isLast =
                                               index ==
                                               phoneReminderList.length - 1;
-
                                           return Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -13898,8 +13888,6 @@ class PharmViewModel extends BaseViewModel {
                                                                 ),
                                                               );
                                                         }
-                                                        model._isPhoneFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -14013,6 +14001,8 @@ class PharmViewModel extends BaseViewModel {
                                                                 .removeAt(
                                                                   index,
                                                                 );
+                                                            
+                                                            addedPhoneReminderList.remove(o);
                                                             model
                                                                 .notifyListeners();
                                                           },
@@ -14039,7 +14029,7 @@ class PharmViewModel extends BaseViewModel {
                                       ],
                                     ),
                                   ),
-                                  !model.isPhoneFlagged
+                                  addedPhoneReminderList.isEmpty
                                       ? TextView(
                                           text:
                                               'Atleast one phone number is required',
@@ -14125,18 +14115,12 @@ class PharmViewModel extends BaseViewModel {
                                     isTappedPhoneAdded &&
                                         addedPhoneReminderList.isEmpty) {
                                   if (isTappedEmailAdded &&
-                                      addedEmailReminderList.isEmpty) {
-                                    model._isEmailFlagged = false;
-                                  }
+                                      addedEmailReminderList.isEmpty) {}
                                   if (isTappedPhoneAdded &&
-                                      addedPhoneReminderList.isEmpty) {
-                                    model._isPhoneFlagged = false;
-                                  }
+                                      addedPhoneReminderList.isEmpty) {}
                                 } else {
                                   linIndex++;
                                   addCostTotal(model);
-                                  model._isEmailFlagged = true;
-                                  model._isPhoneFlagged = true;
                                 }
                               }
                             } else {
@@ -14147,18 +14131,12 @@ class PharmViewModel extends BaseViewModel {
                                   isTappedPhoneAdded &&
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty) {
-                                  model._isEmailFlagged = false;
-                                }
+                                    addedEmailReminderList.isEmpty) {}
                                 if (isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {
-                                  model._isPhoneFlagged = false;
-                                }
+                                    addedPhoneReminderList.isEmpty) {}
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                model._isEmailFlagged = true;
-                                model._isPhoneFlagged = true;
                               }
                               _isLoading = false;
                             }
@@ -15040,74 +15018,102 @@ class PharmViewModel extends BaseViewModel {
                       ),
                     ],
                   ),
-                  SizedBox(height: 6.0.h),
-                  Divider(color: AppColors.infoGrey1),
-                  SizedBox(height: 6.0.h),
-                  TextView(
-                    text: 'Phone numbers',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 15.8.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.infoGrey,
-                    ),
+                  SizedBox(
+                    height: addedPhoneReminderList.isEmpty ? 0.h : 6.0.h,
                   ),
-                  SizedBox(height: 6.0.h),
-                  Wrap(
-                    spacing: 4.10,
-                    runSpacing: 6,
-                    children: List.generate(addedPhoneReminderList.length, (
-                      index,
-                    ) {
-                      final isLast = index == addedPhoneReminderList.length - 1;
-                      final phone = addedPhoneReminderList[index];
-
-                      return TextView(
-                        text: isLast
-                            ? formatPhoneNumber(phone)
-                            : '${formatPhoneNumber(phone)}, ',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.8.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.reminder,
+                  addedPhoneReminderList.isEmpty
+                      ? SizedBox.shrink()
+                      : Divider(color: AppColors.infoGrey1),
+                  SizedBox(
+                    height: addedPhoneReminderList.isEmpty ? 0.h : 6.0.h,
+                  ),
+                  addedPhoneReminderList.isEmpty
+                      ? SizedBox.shrink()
+                      : TextView(
+                          text: 'Phone numbers',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.8.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.infoGrey,
+                          ),
                         ),
-                      );
-                    }),
+                  SizedBox(
+                    height: addedPhoneReminderList.isEmpty ? 0.h : 6.0.h,
                   ),
-                  SizedBox(height: 6.0.h),
-                  Divider(color: AppColors.infoGrey1),
-                  SizedBox(height: 6.0.h),
-                  TextView(
-                    text: 'Email',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 15.8.sp,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.infoGrey,
-                    ),
-                  ),
-                  SizedBox(height: 6.0.h),
-                  Wrap(
-                    spacing: 4.10,
-                    runSpacing: 6,
-                    children: List.generate(addedEmailReminderList.length, (
-                      index,
-                    ) {
-                      final isLast = index == addedEmailReminderList.length - 1;
-                      final email = addedEmailReminderList[index];
+                  addedPhoneReminderList.isEmpty
+                      ? SizedBox.shrink()
+                      : Wrap(
+                          spacing: 4.10,
+                          runSpacing: 6,
+                          children: List.generate(
+                            addedPhoneReminderList.length,
+                            (index) {
+                              final isLast =
+                                  index == addedPhoneReminderList.length - 1;
+                              final phone = addedPhoneReminderList[index];
 
-                      return TextView(
-                        text: isLast ? email : '$email, ',
-                        textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 14.8.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.reminder,
+                              return TextView(
+                                text: isLast
+                                    ? formatPhoneNumber(phone)
+                                    : '${formatPhoneNumber(phone)}, ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      );
-                    }),
+                  SizedBox(
+                    height: addedEmailReminderList.isEmpty ? 0.h : 6.0.h,
                   ),
+                  addedEmailReminderList.isEmpty
+                      ? SizedBox.shrink()
+                      : Divider(color: AppColors.infoGrey1),
+                  SizedBox(
+                    height: addedEmailReminderList.isEmpty ? 0.h : 6.0.h,
+                  ),
+                  addedEmailReminderList.isEmpty
+                      ? SizedBox.shrink()
+                      : TextView(
+                          text: 'Email',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.8.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.infoGrey,
+                          ),
+                        ),
+                  SizedBox(
+                    height: addedEmailReminderList.isEmpty ? 0.h : 6.0.h,
+                  ),
+                  addedEmailReminderList.isEmpty
+                      ? SizedBox.shrink()
+                      : Wrap(
+                          spacing: 4.10,
+                          runSpacing: 6,
+                          children: List.generate(
+                            addedEmailReminderList.length,
+                            (index) {
+                              final isLast =
+                                  index == addedEmailReminderList.length - 1;
+                              final email = addedEmailReminderList[index];
+
+                              return TextView(
+                                text: isLast ? email : '$email, ',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 14.8.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.reminder,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                   SizedBox(height: 6.0.h),
                 ],
               ),
@@ -16752,6 +16758,9 @@ class PharmViewModel extends BaseViewModel {
                                   emailReminderList.add(
                                     emailController.text.trim(),
                                   );
+                                  addedEmailReminderList.add(
+                                    emailController.text.trim(),
+                                  );
                                 }
                               } else {
                                 emailReminderList[index!] =
@@ -17301,6 +17310,11 @@ class PharmViewModel extends BaseViewModel {
                                         phoneController.text.trim(),
                                       ),
                                     );
+                                    addedPhoneReminderList.add(
+                                      returnAddingPhoneNoStructureWith234(
+                                        phoneController.text.trim(),
+                                      ),
+                                    );
                                   }
                                 } else {
                                   phoneReminderList[index!] =
@@ -17353,7 +17367,7 @@ class PharmViewModel extends BaseViewModel {
   }
 
   String returnPhoneNoStructureWith234(String phoneNo) {
-    if (phoneNo.substring(4).contains('0')) {
+    if (phoneNo.substring(4) == '0') {
       phoneNo = phoneNo.substring(4);
     } else {
       phoneNo = phoneNo;

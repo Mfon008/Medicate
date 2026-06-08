@@ -915,7 +915,7 @@ class AuthViewModel extends BaseViewModel {
   }
 
   String returnPhoneNoStructureWith234(String phoneNo) {
-    if (phoneNo.substring(4)=='0') {
+    if (phoneNo.substring(4) == '0') {
       phoneNo = phoneNo.substring(4);
     } else {
       phoneNo = phoneNo;
@@ -925,7 +925,6 @@ class AuthViewModel extends BaseViewModel {
     });
     return phoneNo;
   }
-
 
   String tiersSvgImage(String planTier) {
     if (planTier == 'Pearl') {
@@ -24883,73 +24882,95 @@ class AuthViewModel extends BaseViewModel {
                   ],
                 ),
                 SizedBox(height: 6.0.h),
-                Divider(color: AppColors.infoGrey1),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: 'Phone numbers',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Wrap(
-                  spacing: 4.10,
-                  runSpacing: 6,
-                  children: List.generate(addedPhoneReminderList.length, (
-                    index,
-                  ) {
-                    final isLast = index == addedPhoneReminderList.length - 1;
-                    final phone = addedPhoneReminderList[index];
-
-                    return TextView(
-                      text: isLast
-                          ? formatPhoneNumber(phone)
-                          : '${formatPhoneNumber(phone)}, ',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.8.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.reminder,
+                addedPhoneReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : Divider(color: AppColors.infoGrey1),
+                SizedBox(height: addedPhoneReminderList.isEmpty ? 0.h : 6.0.h),
+                addedPhoneReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : TextView(
+                        text: 'Phone numbers',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.8.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                        ),
                       ),
-                    );
-                  }),
-                ),
-                SizedBox(height: 6.0.h),
-                Divider(color: AppColors.infoGrey1),
-                SizedBox(height: 6.0.h),
-                TextView(
-                  text: 'Email',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 15.8.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 6.0.h),
-                Wrap(
-                  spacing: 4.10,
-                  runSpacing: 6,
-                  children: List.generate(addedEmailReminderList.length, (
-                    index,
-                  ) {
-                    final isLast = index == addedEmailReminderList.length - 1;
-                    final email = addedEmailReminderList[index];
+                SizedBox(height: addedPhoneReminderList.isEmpty ? 0.h : 6.0.h),
+                addedPhoneReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : Wrap(
+                        spacing: 4.10,
+                        runSpacing: 6,
+                        children: List.generate(addedPhoneReminderList.length, (
+                          index,
+                        ) {
+                          final isLast =
+                              index == addedPhoneReminderList.length - 1;
+                          final phone = addedPhoneReminderList[index];
 
-                    return TextView(
-                      text: isLast ? email : '$email, ',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.8.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.reminder,
+                          return TextView(
+                            text: isLast
+                                ? formatPhoneNumber(phone)
+                                : '${formatPhoneNumber(phone)}, ',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.8.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.reminder,
+                            ),
+                          );
+                        }),
                       ),
-                    );
-                  }),
-                ),
+                addedEmailReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : SizedBox(
+                        height: addedEmailReminderList.isEmpty ? 0.h : 6.0.h,
+                      ),
+                addedEmailReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : Divider(color: AppColors.infoGrey1),
+                addedEmailReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : SizedBox(height: 6.0.h),
+                addedEmailReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : TextView(
+                        text: 'Email',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.8.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                addedEmailReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : SizedBox(height: 6.0.h),
+                addedEmailReminderList.isEmpty
+                    ? SizedBox.shrink()
+                    : Wrap(
+                        spacing: 4.10,
+                        runSpacing: 6,
+                        children: List.generate(addedEmailReminderList.length, (
+                          index,
+                        ) {
+                          final isLast =
+                              index == addedEmailReminderList.length - 1;
+                          final email = addedEmailReminderList[index];
+
+                          return TextView(
+                            text: isLast ? email : '$email, ',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.8.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.reminder,
+                            ),
+                          );
+                        }),
+                      ),
                 SizedBox(height: 6.0.h),
               ],
             ),
@@ -26578,9 +26599,6 @@ class AuthViewModel extends BaseViewModel {
                                         phoneController.text.trim(),
                                       );
                                 }
-                                print(
-                                  'ooooooooo8888880000::::$addedPhoneReminderList',
-                                );
                                 Navigator.pop(context);
                                 phoneController.clear();
                               }

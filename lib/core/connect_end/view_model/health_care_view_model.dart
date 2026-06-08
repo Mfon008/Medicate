@@ -248,11 +248,6 @@ class HealthCareViewModel extends BaseViewModel {
   bool isTappedPhoneAdded = false;
   bool isTappedEmailAdded = false;
 
-  bool _isEmailFlagged = false;
-  bool get isEmailFlagged => _isEmailFlagged;
-  bool _isPhoneFlagged = false;
-  bool get isPhoneFlagged => _isPhoneFlagged;
-
   String startDateIso = '';
 
   List<MedicationClass> medicationClassList = [];
@@ -5107,6 +5102,11 @@ class HealthCareViewModel extends BaseViewModel {
                                         phoneController.text.trim(),
                                       ),
                                     );
+                                    addedPhoneReminderList.add(
+                                      returnAddingPhoneNoStructureWith234(
+                                        phoneController.text.trim(),
+                                      ),
+                                    );
                                   }
                                 } else {
                                   phoneReminderList[index!] =
@@ -6605,11 +6605,15 @@ class HealthCareViewModel extends BaseViewModel {
                                 if (index == 0 || index == 1) {
                                   // Email
                                   isTappedEmailAdded = true;
+                                  addedEmailReminderList.add(model.emailController.text);
                                   model.notifyListeners();
                                 } else if ([2, 3, 4].contains(index)) {
                                   // Phone-related channels
                                   isTappedPhoneAdded = true;
                                   isPhoneValid = false;
+                                  addedPhoneReminderList.add(
+                                    returnAddingPhoneNoStructureWith234(model.phoneNumberController.text)
+                                  );
                                   model.notifyListeners();
                                 }
                               }
@@ -6628,7 +6632,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isEmailFlagged
+                                        color: addedEmailReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -6665,7 +6669,8 @@ class HealthCareViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isEmailFlagged
+                                                          addedEmailReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -6790,7 +6795,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                           .text,
                                                     );
                                                   }
-                                                  model._isEmailFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -6918,8 +6922,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                           addedEmailReminderList
                                                               .add(o);
                                                         }
-                                                        model._isEmailFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -7045,7 +7047,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   SizedBox.shrink(),
-                                  !model.isEmailFlagged
+                                  addedEmailReminderList.isEmpty
                                       ? TextView(
                                           text: 'Atleast one email is required',
                                           textStyle: TextStyle(
@@ -7068,7 +7070,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isPhoneFlagged
+                                        color: addedPhoneReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -7106,7 +7108,8 @@ class HealthCareViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isPhoneFlagged
+                                                          addedPhoneReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -7240,7 +7243,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                       ),
                                                     );
                                                   }
-                                                  model._isPhoneFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -7386,9 +7388,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                                 ),
                                                               );
                                                         }
-
-                                                        model._isPhoneFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -7529,7 +7528,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   SizedBox(height: 4.0.h),
-                                  !model.isPhoneFlagged
+                                  addedPhoneReminderList.isEmpty
                                       ? TextView(
                                           text:
                                               'Atleast one phone number is required',
@@ -7599,19 +7598,16 @@ class HealthCareViewModel extends BaseViewModel {
                                       addedEmailReminderList.isEmpty ||
                                   isTappedPhoneAdded &&
                                       addedPhoneReminderList.isEmpty) {
-                                if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty) {
-                                  model._isEmailFlagged = false;
-                                }
-                                if (isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {
-                                  model._isPhoneFlagged = false;
-                                }
+                                // if (isTappedEmailAdded &&
+                                //     addedEmailReminderList.isEmpty) {
+                                // }
+                                // if (isTappedPhoneAdded &&
+                                //     addedPhoneReminderList.isEmpty) {
+                                //   model._isPhoneFlagged = false;
+                                // }
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                model._isEmailFlagged = true;
-                                model._isPhoneFlagged = true;
                               }
                               setModalState!(() {});
                               model.notifyListeners();
@@ -10660,12 +10656,14 @@ class HealthCareViewModel extends BaseViewModel {
                                 selectedIndexes.remove(index);
                                 if (!selectedIndexes.contains(0) &&
                                     !selectedIndexes.contains(1)) {
+                                  addedEmailReminderList.clear();
                                   isTappedEmailAdded = false;
                                   model.notifyListeners();
                                 }
                                 if (!selectedIndexes.contains(2) &&
                                     !selectedIndexes.contains(3) &&
                                     !selectedIndexes.contains(4)) {
+                                  addedPhoneReminderList.clear();
                                   isTappedPhoneAdded = false;
                                   model.notifyListeners();
                                 }
@@ -10706,7 +10704,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isEmailFlagged
+                                        color: addedEmailReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -10743,7 +10741,8 @@ class HealthCareViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isEmailFlagged
+                                                          addedEmailReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -10871,7 +10870,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                           .text,
                                                     );
                                                   }
-                                                  model._isEmailFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -10924,7 +10922,6 @@ class HealthCareViewModel extends BaseViewModel {
                                               TextView(
                                                 text:
                                                     model.emailController.text,
-
                                                 textStyle: TextStyle(
                                                   fontFamily: 'Arial',
                                                   fontSize: 16.2.sp,
@@ -10999,8 +10996,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                           addedEmailReminderList
                                                               .add(o);
                                                         }
-                                                        model._isEmailFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -11126,7 +11121,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     ),
                                   ),
                                   SizedBox(height: 4.0.h),
-                                  !model.isEmailFlagged
+                                  addedEmailReminderList.isEmpty
                                       ? TextView(
                                           text: 'Atleast one email is required',
                                           textStyle: TextStyle(
@@ -11149,7 +11144,7 @@ class HealthCareViewModel extends BaseViewModel {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: !model.isPhoneFlagged
+                                        color: addedPhoneReminderList.isEmpty
                                             ? AppColors.red
                                             : AppColors.infoGrey1,
                                       ),
@@ -11187,7 +11182,8 @@ class HealthCareViewModel extends BaseViewModel {
                                                       fontWeight:
                                                           FontWeight.w400,
                                                       color:
-                                                          !model.isPhoneFlagged
+                                                          addedPhoneReminderList
+                                                              .isEmpty
                                                           ? AppColors.red
                                                           : AppColors.deep,
                                                     ),
@@ -11321,8 +11317,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                       ),
                                                     );
                                                   }
-
-                                                  model._isPhoneFlagged = true;
                                                   setModalState!(() {});
                                                   model.notifyListeners();
                                                 },
@@ -11469,8 +11463,6 @@ class HealthCareViewModel extends BaseViewModel {
                                                                 ),
                                                               );
                                                         }
-                                                        model._isPhoneFlagged =
-                                                            true;
                                                         setModalState!(() {});
                                                         model.notifyListeners();
                                                       },
@@ -11610,7 +11602,7 @@ class HealthCareViewModel extends BaseViewModel {
                                       ],
                                     ),
                                   ),
-                                  !model.isPhoneFlagged
+                                  addedPhoneReminderList.isEmpty
                                       ? TextView(
                                           text:
                                               'Atleast one phone number is required',
@@ -11696,18 +11688,12 @@ class HealthCareViewModel extends BaseViewModel {
                                     isTappedPhoneAdded &&
                                         addedPhoneReminderList.isEmpty) {
                                   if (isTappedEmailAdded &&
-                                      addedEmailReminderList.isEmpty) {
-                                    model._isEmailFlagged = false;
-                                  }
+                                      addedEmailReminderList.isEmpty) {}
                                   if (isTappedPhoneAdded &&
-                                      addedPhoneReminderList.isEmpty) {
-                                    model._isPhoneFlagged = false;
-                                  }
+                                      addedPhoneReminderList.isEmpty) {}
                                 } else {
                                   linIndex++;
                                   addCostTotal(model);
-                                  model._isEmailFlagged = true;
-                                  model._isPhoneFlagged = true;
                                 }
                               }
                             } else {
@@ -11718,18 +11704,12 @@ class HealthCareViewModel extends BaseViewModel {
                                   isTappedPhoneAdded &&
                                       addedPhoneReminderList.isEmpty) {
                                 if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty) {
-                                  model._isEmailFlagged = false;
-                                }
+                                    addedEmailReminderList.isEmpty) {}
                                 if (isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {
-                                  model._isPhoneFlagged = false;
-                                }
+                                    addedPhoneReminderList.isEmpty) {}
                               } else {
                                 linIndex++;
                                 addCostTotal(model);
-                                model._isEmailFlagged = true;
-                                model._isPhoneFlagged = true;
                               }
                               _isLoading = false;
                             }
@@ -15698,6 +15678,9 @@ class HealthCareViewModel extends BaseViewModel {
                                 )) {
                                 } else {
                                   emailReminderList.add(
+                                    emailController.text.trim(),
+                                  );
+                                  addedEmailReminderList.add(
                                     emailController.text.trim(),
                                   );
                                 }
