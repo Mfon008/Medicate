@@ -92,10 +92,7 @@ class PaymentSuccessSubmitAppScreen extends StatelessWidget {
                         context,
                         planTier: planTiers,
                         planType: planType,
-                        applicationId: model.returnSavedApplicationType(
-                          planTeir: planTiers,
-                          planType: planType,
-                        ),
+                        applicationId: model.session.applicationGlobalId['$planType:$planTiers'],
                       );
                     },
                   ),

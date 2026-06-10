@@ -14,6 +14,7 @@ class AppImage {
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';
   static const String two_fa_ui = 'assets/svgs/2fa_ui.svg';
+  static const String camera = 'assets/svgs/camera.svg';
   static const String users = 'assets/svgs/users.svg';
   static const String active_patients = 'assets/svgs/active_patients.svg';
   static const String month_order = 'assets/svgs/month_order.svg';
@@ -23,8 +24,11 @@ class AppImage {
   static const String kyc_file = 'assets/svgs/file_kyc.svg';
   static const String kyc_eye = 'assets/svgs/kyc_eye.svg';
   static const String tablet = 'assets/svgs/tablet.svg';
+  static const String square_edit = 'assets/svgs/square_edit.svg';
+  static const String pending = 'assets/svgs/pending.svg';
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
+  static const String upload_icon = 'assets/svgs/upload_icon.svg';
   static const String subscription = 'assets/svgs/subscription.svg';
   static const String hospital_net = 'assets/svgs/hospital_net.svg';
   static const String renew = 'assets/svgs/renew.svg';

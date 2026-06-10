@@ -391,7 +391,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                                                   .start,
                                                           children: [
                                                             SizedBox(
-                                                              width: 304.h,
+                                                              width: 254.h,
                                                               child: Wrap(
                                                                 spacing: 2.10,
                                                                 runSpacing: 6,

@@ -510,6 +510,7 @@ class AuthViewModel extends BaseViewModel {
   List<FocusNode> noteUpdateFocusNodes = [];
   List<dynamic> allNotificationChannels = [];
   String isReminderStatus = 'today';
+  String isPendingReminderStatus = 'all';
   String timePeriod = 'morning';
   var totalCount;
   var takenCount;
@@ -1462,11 +1463,11 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
   }) async {
-    if (planType == 'Family' && planTier == 'Ruby') {
+    // if (planType == 'Family' && planTier == 'Ruby') {
       await model!.getHmoPlanHospitalNetwork(context, planId: planId);
       await model.getIndividualApplicationDetails(
         context,
-        applicationId: session.applicationIdFamilyRuby,
+      applicationId: session.applicationGlobalId['$planType:$planTier'],
       );
       await model.getHospitalById(
         context,
@@ -1623,302 +1624,303 @@ class AuthViewModel extends BaseViewModel {
           }
         }
       }
-    }
-    if (planType == 'Family' && planTier == 'Pearl') {
-      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
-      await model.getIndividualApplicationDetails(
-        context,
-        applicationId: session.applicationIdFamilyPearl,
-      );
-      await model.getHospitalById(
-        context,
-        hospitalId: model
-            .getIndividualApplicationDetailsModel
-            ?.data
-            ?.personalInfo
-            ?.preferredHospitalId,
-      );
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linFamIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+    // }
+    // if (planType == 'Family' && planTier == 'Pearl') {
+    //   await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+    //   await model.getIndividualApplicationDetails(
+    //     context,
+    //     applicationId: session.applicationIdFamilyPearl,
+    //   );
+    //   await model.getHospitalById(
+    //     context,
+    //     hospitalId: model
+    //         .getIndividualApplicationDetailsModel
+    //         ?.data
+    //         ?.personalInfo
+    //         ?.preferredHospitalId,
+    //   );
+    //   model.fullNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.fullName ??
+    //       '';
+    //   model.emailAddsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.email ??
+    //       '';
+    //   model.dobController.text =
+    //       model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+    //           .toString()
+    //           .substring(0, 10) ??
+    //       '';
+    //   model.genderController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.gender ??
+    //       '';
+    //   model.phoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.phone ??
+    //       '';
+    //   model.resAddressController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.residentialAddress ??
+    //       '';
+    //   model.filterStateController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+    //   model.hospitalController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+    //   model.linFamIndex =
+    //       model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+    //   model.medicalHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.medicalHistory ??
+    //       '';
+    //   model.medicalHistoryDetailsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.chronicAilmentDetails ??
+    //       '';
+    //   model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
 
-      model.famMedsHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.familyMedicalHistory ??
-          '';
-      model.dependentModelList = model
-          .getIndividualApplicationDetailsModel!
-          .data!
-          .planSpecific!
-          .dependent!
-          .map(
-            (e) => DependentModelClass(
-              fullNameController: TextEditingController(text: e.fullName),
-              relationshipController: TextEditingController(
-                text: e.relationship,
-              ),
-              dobController: TextEditingController(
-                text: DateFormat(
-                  'yyyy-MM-dd',
-                ).format(DateTime.parse(e.dob.toString())),
-              ),
-              genderController: TextEditingController(text: e.gender),
-            ),
-          )
-          .toList();
-      getChildCount(model);
-      getSpouseCount(model);
-      getTotalSpouseAndChildCount(model);
+    //   model.famMedsHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.familyMedicalHistory ??
+    //       '';
+    //   model.dependentModelList = model
+    //       .getIndividualApplicationDetailsModel!
+    //       .data!
+    //       .planSpecific!
+    //       .dependent!
+    //       .map(
+    //         (e) => DependentModelClass(
+    //           fullNameController: TextEditingController(text: e.fullName),
+    //           relationshipController: TextEditingController(
+    //             text: e.relationship,
+    //           ),
+    //           dobController: TextEditingController(
+    //             text: DateFormat(
+    //               'yyyy-MM-dd',
+    //             ).format(DateTime.parse(e.dob.toString())),
+    //           ),
+    //           genderController: TextEditingController(text: e.gender),
+    //         ),
+    //       )
+    //       .toList();
+    //   getChildCount(model);
+    //   getSpouseCount(model);
+    //   getTotalSpouseAndChildCount(model);
 
-      if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel!.data!.documents ??
-                []) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadFamDocumentsApplication1 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'NATIONAL_ID') {
-            model.uploadFamDocumentsApplication2 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'MARRIAGE_CERTIFICATE') {
-            model.uploadFamDocumentsApplication6 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'ADOPTION_CERTIFICATE') {
-            model.uploadFamDocumentsApplication7 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_1') {
-            model.uploadFamDocumentsApplication3 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_2') {
-            model.uploadFamDocumentsApplication4 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_3') {
-            model.uploadFamDocumentsApplication5 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-        }
-      }
-    }
-    if (planType == 'Family' && planTier == 'Diamond') {
-      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
-      await model.getIndividualApplicationDetails(
-        context,
-        applicationId: session.applicationIdFamilyDiamond,
-      );
-      await model.getHospitalById(
-        context,
-        hospitalId: model
-            .getIndividualApplicationDetailsModel
-            ?.data
-            ?.personalInfo
-            ?.preferredHospitalId,
-      );
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
-      if (model.getIndividualApplicationDetailsModel != null) {
-        for (var e
-            in model.getIndividualApplicationDetailsModel!.data!.documents ??
-                []) {
-          if (e.documentType == 'BIRTH_CERTIFICATE') {
-            model.uploadFamDocumentsApplication1 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'NATIONAL_ID') {
-            model.uploadFamDocumentsApplication2 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'MARRIAGE_CERTIFICATE') {
-            model.uploadFamDocumentsApplication6 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'ADOPTION_CERTIFICATE') {
-            model.uploadFamDocumentsApplication7 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_1') {
-            model.uploadFamDocumentsApplication3 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_2') {
-            model.uploadFamDocumentsApplication4 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-          if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_3') {
-            model.uploadFamDocumentsApplication5 = sv.Document(
-              docName: e.originalName,
-              documentType: e.documentType,
-              uploadId: '',
-            );
-          }
-        }
-      }
-    }
-    model!.notifyListeners();
+    //   if (model.getIndividualApplicationDetailsModel != null) {
+    //     for (var e
+    //         in model.getIndividualApplicationDetailsModel!.data!.documents ??
+    //             []) {
+    //       if (e.documentType == 'BIRTH_CERTIFICATE') {
+    //         model.uploadFamDocumentsApplication1 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'NATIONAL_ID') {
+    //         model.uploadFamDocumentsApplication2 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'MARRIAGE_CERTIFICATE') {
+    //         model.uploadFamDocumentsApplication6 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'ADOPTION_CERTIFICATE') {
+    //         model.uploadFamDocumentsApplication7 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_1') {
+    //         model.uploadFamDocumentsApplication3 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_2') {
+    //         model.uploadFamDocumentsApplication4 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_3') {
+    //         model.uploadFamDocumentsApplication5 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
+    // if (planType == 'Family' && planTier == 'Diamond') {
+    //   await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+    //   await model.getIndividualApplicationDetails(
+    //     context,
+    //     applicationId: session.applicationIdFamilyDiamond,
+    //   );
+    //   await model.getHospitalById(
+    //     context,
+    //     hospitalId: model
+    //         .getIndividualApplicationDetailsModel
+    //         ?.data
+    //         ?.personalInfo
+    //         ?.preferredHospitalId,
+    //   );
+    //   model.fullNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.fullName ??
+    //       '';
+    //   model.emailAddsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.email ??
+    //       '';
+    //   model.dobController.text =
+    //       model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+    //           .toString()
+    //           .substring(0, 10) ??
+    //       '';
+    //   model.genderController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.gender ??
+    //       '';
+    //   model.phoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.phone ??
+    //       '';
+    //   model.resAddressController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.residentialAddress ??
+    //       '';
+    //   model.filterStateController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+    //   model.hospitalController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+    //   model.linSubIndex =
+    //       model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+    //   model.medicalHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.medicalHistory ??
+    //       '';
+    //   model.medicalHistoryDetailsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.chronicAilmentDetails ??
+    //       '';
+    //   model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+    //   if (model.getIndividualApplicationDetailsModel != null) {
+    //     for (var e
+    //         in model.getIndividualApplicationDetailsModel!.data!.documents ??
+    //             []) {
+    //       if (e.documentType == 'BIRTH_CERTIFICATE') {
+    //         model.uploadFamDocumentsApplication1 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'NATIONAL_ID') {
+    //         model.uploadFamDocumentsApplication2 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'MARRIAGE_CERTIFICATE') {
+    //         model.uploadFamDocumentsApplication6 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'ADOPTION_CERTIFICATE') {
+    //         model.uploadFamDocumentsApplication7 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_1') {
+    //         model.uploadFamDocumentsApplication3 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_2') {
+    //         model.uploadFamDocumentsApplication4 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //       if (e.documentType == 'DEPENDENT_BIRTH_CERTIFICATE_3') {
+    //         model.uploadFamDocumentsApplication5 = sv.Document(
+    //           docName: e.originalName,
+    //           documentType: e.documentType,
+    //           uploadId: '',
+    //         );
+    //       }
+    //     }
+    //   }
+    // }
+   
+    model.notifyListeners();
   }
 
   checkCorpPlanTypeAndTier({
@@ -1928,11 +1930,11 @@ class AuthViewModel extends BaseViewModel {
     String? planTier,
     String? planId,
   }) async {
-    if (planType == 'Corporate' && planTier == 'Ruby') {
+    // if (planType == 'Corporate' && planTier == 'Ruby') {
       await model!.getHmoPlanHospitalNetwork(context, planId: planId);
       await model.getIndividualApplicationDetails(
         context,
-        applicationId: session.applicationIdCorporateRuby,
+      applicationId: session.applicationGlobalId['$planType:$planTier'],
       );
       await model.getHospitalById(
         context,
@@ -2086,318 +2088,319 @@ class AuthViewModel extends BaseViewModel {
           ),
         );
       }
-    }
-    if (planType == 'Corporate' && planTier == 'Pearl') {
-      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
-      await model.getIndividualApplicationDetails(
-        context,
-        applicationId: session.applicationIdCorporatePearl,
-      );
-      await model.getHospitalById(
-        context,
-        hospitalId: model
-            .getIndividualApplicationDetailsModel
-            ?.data
-            ?.personalInfo
-            ?.preferredHospitalId,
-      );
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linFamIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+    // }
+    // if (planType == 'Corporate' && planTier == 'Pearl') {
+    //   await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+    //   await model.getIndividualApplicationDetails(
+    //     context,
+    //     applicationId: session.applicationIdCorporatePearl,
+    //   );
+    //   await model.getHospitalById(
+    //     context,
+    //     hospitalId: model
+    //         .getIndividualApplicationDetailsModel
+    //         ?.data
+    //         ?.personalInfo
+    //         ?.preferredHospitalId,
+    //   );
+    //   model.fullNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.fullName ??
+    //       '';
+    //   model.emailAddsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.email ??
+    //       '';
+    //   model.dobController.text =
+    //       model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+    //           .toString()
+    //           .substring(0, 10) ??
+    //       '';
+    //   model.genderController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.gender ??
+    //       '';
+    //   model.phoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.phone ??
+    //       '';
+    //   model.resAddressController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.residentialAddress ??
+    //       '';
+    //   model.filterStateController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+    //   model.hospitalController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+    //   model.linFamIndex =
+    //       model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+    //   model.medicalHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.medicalHistory ??
+    //       '';
+    //   model.medicalHistoryDetailsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.chronicAilmentDetails ??
+    //       '';
+    //   model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
 
-      model.famMedsHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.familyMedicalHistory ??
-          '';
-      model.cacRegNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.cacNumber ??
-          '';
-      model.orgNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.organizationName ??
-          '';
-      model.hrNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.hrContactName ??
-          '';
-      model.hrPhoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.hrContactPhone ??
-          '';
-      model.hrEmailController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.hrContactEmail ??
-          '';
-      model.staffCountController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.staffCount
-              .toString() ??
-          '';
+    //   model.famMedsHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.familyMedicalHistory ??
+    //       '';
+    //   model.cacRegNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.cacNumber ??
+    //       '';
+    //   model.orgNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.organizationName ??
+    //       '';
+    //   model.hrNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.hrContactName ??
+    //       '';
+    //   model.hrPhoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.hrContactPhone ??
+    //       '';
+    //   model.hrEmailController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.hrContactEmail ??
+    //       '';
+    //   model.staffCountController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.staffCount
+    //           .toString() ??
+    //       '';
 
-      if (model.getIndividualApplicationDetailsModel != null) {
-        if (model.getIndividualApplicationDetailsModel != null &&
-            model
-                    .getIndividualApplicationDetailsModel!
-                    .data!
-                    .planSpecific!
-                    .staffListFile !=
-                null) {
-          model.uploadDocumentsApplication!.insert(
-            0,
-            sv.Document(
-              docName:
-                  model
-                      .getIndividualApplicationDetailsModel!
-                      .data!
-                      .planSpecific!
-                      .staffListFile!
-                      .originalName ??
-                  '',
-              documentType:
-                  model
-                      .getIndividualApplicationDetailsModel!
-                      .data!
-                      .planSpecific!
-                      .staffListFile
-                      ?.documentType ??
-                  '',
-              uploadId: '',
-            ),
-          );
-        }
-      }
-    }
-    if (planType == 'Corporate' && planTier == 'Diamond') {
-      await model!.getHmoPlanHospitalNetwork(context, planId: planId);
-      await model.getIndividualApplicationDetails(
-        context,
-        applicationId: session.applicationIdCorporateDiamond,
-      );
-      await model.getHospitalById(
-        context,
-        hospitalId: model
-            .getIndividualApplicationDetailsModel
-            ?.data
-            ?.personalInfo
-            ?.preferredHospitalId,
-      );
-      model.fullNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.fullName ??
-          '';
-      model.emailAddsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.email ??
-          '';
-      model.dobController.text =
-          model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
-              .toString()
-              .substring(0, 10) ??
-          '';
-      model.genderController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.gender ??
-          '';
-      model.phoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.phone ??
-          '';
-      model.resAddressController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.personalInfo
-              ?.residentialAddress ??
-          '';
-      model.filterStateController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
-      model.hospitalController.text =
-          model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
-      model.linSubIndex =
-          model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
-      model.medicalHistoryController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.medicalHistory ??
-          '';
-      model.medicalHistoryDetailsController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.chronicAilmentDetails ??
-          '';
-      model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
+    //   if (model.getIndividualApplicationDetailsModel != null) {
+    //     if (model.getIndividualApplicationDetailsModel != null &&
+    //         model
+    //                 .getIndividualApplicationDetailsModel!
+    //                 .data!
+    //                 .planSpecific!
+    //                 .staffListFile !=
+    //             null) {
+    //       model.uploadDocumentsApplication!.insert(
+    //         0,
+    //         sv.Document(
+    //           docName:
+    //               model
+    //                   .getIndividualApplicationDetailsModel!
+    //                   .data!
+    //                   .planSpecific!
+    //                   .staffListFile!
+    //                   .originalName ??
+    //               '',
+    //           documentType:
+    //               model
+    //                   .getIndividualApplicationDetailsModel!
+    //                   .data!
+    //                   .planSpecific!
+    //                   .staffListFile
+    //                   ?.documentType ??
+    //               '',
+    //           uploadId: '',
+    //         ),
+    //       );
+    //     }
+    //   }
+    // }
+    // if (planType == 'Corporate' && planTier == 'Diamond') {
+    //   await model!.getHmoPlanHospitalNetwork(context, planId: planId);
+    //   await model.getIndividualApplicationDetails(
+    //     context,
+    //     applicationId: session.applicationIdCorporateDiamond,
+    //   );
+    //   await model.getHospitalById(
+    //     context,
+    //     hospitalId: model
+    //         .getIndividualApplicationDetailsModel
+    //         ?.data
+    //         ?.personalInfo
+    //         ?.preferredHospitalId,
+    //   );
+    //   model.fullNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.fullName ??
+    //       '';
+    //   model.emailAddsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.email ??
+    //       '';
+    //   model.dobController.text =
+    //       model.getIndividualApplicationDetailsModel?.data?.personalInfo?.dob
+    //           .toString()
+    //           .substring(0, 10) ??
+    //       '';
+    //   model.genderController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.gender ??
+    //       '';
+    //   model.phoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.phone ??
+    //       '';
+    //   model.resAddressController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.personalInfo
+    //           ?.residentialAddress ??
+    //       '';
+    //   model.filterStateController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.state ?? '';
+    //   model.hospitalController.text =
+    //       model.getHospitalByIdResponseModel?.data?.hospital?.name ?? '';
+    //   model.linSubIndex =
+    //       model.getIndividualApplicationDetailsModel?.data?.currentStep ?? 1;
+    //   model.medicalHistoryController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.medicalHistory ??
+    //       '';
+    //   model.medicalHistoryDetailsController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.chronicAilmentDetails ??
+    //       '';
+    //   model.hospitalId = model.getHospitalByIdResponseModel?.data?.hospital?.id;
 
-      model.cacRegNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.cacNumber ??
-          '';
-      model.orgNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.organizationName ??
-          '';
-      model.hrNameController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.hrContactName ??
-          '';
-      model.hrPhoneNoController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.hrContactPhone ??
-          '';
-      model.hrEmailController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.hrContactEmail ??
-          '';
-      model.staffCountController.text =
-          model
-              .getIndividualApplicationDetailsModel
-              ?.data
-              ?.planSpecific
-              ?.staffCount
-              .toString() ??
-          '';
-      if (model.getIndividualApplicationDetailsModel != null &&
-          model
-                  .getIndividualApplicationDetailsModel!
-                  .data!
-                  .planSpecific!
-                  .staffListFile !=
-              null) {
-        model.uploadDocumentsApplication!.insert(
-          0,
-          sv.Document(
-            docName:
-                model
-                    .getIndividualApplicationDetailsModel!
-                    .data!
-                    .planSpecific!
-                    .staffListFile!
-                    .originalName ??
-                '',
-            documentType:
-                model
-                    .getIndividualApplicationDetailsModel!
-                    .data!
-                    .planSpecific!
-                    .staffListFile
-                    ?.documentType ??
-                '',
-            uploadId: '',
-          ),
-        );
-      }
-    }
-    model!.notifyListeners();
+    //   model.cacRegNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.cacNumber ??
+    //       '';
+    //   model.orgNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.organizationName ??
+    //       '';
+    //   model.hrNameController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.hrContactName ??
+    //       '';
+    //   model.hrPhoneNoController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.hrContactPhone ??
+    //       '';
+    //   model.hrEmailController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.hrContactEmail ??
+    //       '';
+    //   model.staffCountController.text =
+    //       model
+    //           .getIndividualApplicationDetailsModel
+    //           ?.data
+    //           ?.planSpecific
+    //           ?.staffCount
+    //           .toString() ??
+    //       '';
+    //   if (model.getIndividualApplicationDetailsModel != null &&
+    //       model
+    //               .getIndividualApplicationDetailsModel!
+    //               .data!
+    //               .planSpecific!
+    //               .staffListFile !=
+    //           null) {
+    //     model.uploadDocumentsApplication!.insert(
+    //       0,
+    //       sv.Document(
+    //         docName:
+    //             model
+    //                 .getIndividualApplicationDetailsModel!
+    //                 .data!
+    //                 .planSpecific!
+    //                 .staffListFile!
+    //                 .originalName ??
+    //             '',
+    //         documentType:
+    //             model
+    //                 .getIndividualApplicationDetailsModel!
+    //                 .data!
+    //                 .planSpecific!
+    //                 .staffListFile
+    //                 ?.documentType ??
+    //             '',
+    //         uploadId: '',
+    //       ),
+    //     );
+    //   }
+    // }
+    
+    model.notifyListeners();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -3309,10 +3312,8 @@ class AuthViewModel extends BaseViewModel {
                 isSavedDraft: false,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId: 
+                          session.applicationGlobalId['$planType:$planTier'],
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
@@ -3363,10 +3364,8 @@ class AuthViewModel extends BaseViewModel {
                 isSavedDraft: true,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId: 
+                          session.applicationGlobalId['$planType:$planTier'],
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
@@ -3798,10 +3797,8 @@ class AuthViewModel extends BaseViewModel {
                 isSavedDraft: false,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId:
+                          session.applicationGlobalId['$planType:$planTier'],
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
@@ -3852,10 +3849,8 @@ class AuthViewModel extends BaseViewModel {
                 isSavedDraft: true,
                 saveFirstStepPersonalInfoEntityModel:
                     SaveFirstStepPersonalInfoEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId: 
+                          session.applicationGlobalId['$planType:$planTier'],
                       step: 1,
                       personalInfo: PersonalInfo(
                         fullName: fullNameController.text.trim(),
@@ -4126,10 +4121,8 @@ class AuthViewModel extends BaseViewModel {
                       planType: planType,
                       isSavedDraft: false,
                       saveSecondIndividualStep: SaveSecondStepEntityModel(
-                        applicationId: returnSavedApplicationType(
-                          planType: planType,
-                          planTeir: planTier,
-                        ),
+                        applicationId: 
+                          session.applicationGlobalId['$planType:$planTier'],
                         step: 2,
                         planSpecific: PlanSpecific(
                           medicalHistory: medicalHistoryController.text.trim(),
@@ -4162,10 +4155,8 @@ class AuthViewModel extends BaseViewModel {
                 planType: planType,
                 isSavedDraft: true,
                 saveSecondIndividualStep: SaveSecondStepEntityModel(
-                  applicationId: returnSavedApplicationType(
-                    planType: planType,
-                    planTeir: planTier,
-                  ),
+                  applicationId: 
+                          session.applicationGlobalId['$planType:$planTier'],
                   step: 2,
                   planSpecific: PlanSpecific(
                     medicalHistory: medicalHistoryController.text.trim(),
@@ -5020,10 +5011,8 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     isSavedDraft: false,
                     saveSecondFamStep: SaveSecondFamStepEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId:
+                          session.applicationGlobalId['$planType:$planTier'],
                       step: 2,
                       planSpecific: pl.PlanSpecific(
                         familyMedicalHistory: famMedsHistoryController.text
@@ -5066,10 +5055,7 @@ class AuthViewModel extends BaseViewModel {
               context,
               isSavedDraft: true,
               saveSecondFamStep: SaveSecondFamStepEntityModel(
-                applicationId: returnSavedApplicationType(
-                  planType: planType,
-                  planTeir: planTier,
-                ),
+                applicationId:session.applicationGlobalId['$planType:$planTier'],
                 step: 2,
                 planSpecific: pl.PlanSpecific(
                   familyMedicalHistory: famMedsHistoryController.text.trim(),
@@ -5567,10 +5553,8 @@ class AuthViewModel extends BaseViewModel {
                       planType: planType,
                       isSavedDraft: false,
                       saveSecondCorpEntityModel: SaveSecondCorpEntityModel(
-                        applicationId: returnSavedApplicationType(
-                          planType: planType,
-                          planTeir: planTier,
-                        ),
+                        applicationId: 
+                          session.applicationGlobalId['$planType:$planTier'],
                         step: 2,
                         planSpecific: p.PlanSpecific(
                           organizationName: model.orgNameController.text.trim(),
@@ -5612,10 +5596,7 @@ class AuthViewModel extends BaseViewModel {
                 planType: planType,
                 isSavedDraft: true,
                 saveSecondCorpEntityModel: SaveSecondCorpEntityModel(
-                  applicationId: returnSavedApplicationType(
-                    planType: planType,
-                    planTeir: planTier,
-                  ),
+                  applicationId: session.applicationGlobalId['$planType:$planTier'],
                   step: 2,
                   planSpecific: p.PlanSpecific(
                     organizationName: model.orgNameController.text.trim(),
@@ -6113,10 +6094,7 @@ class AuthViewModel extends BaseViewModel {
                       planType: planType,
                       isSavedDraft: false,
                       saveThirdIndividualStep: SaveThirdStepEntityModel(
-                        applicationId: returnSavedApplicationType(
-                          planType: planType,
-                          planTeir: planTier,
-                        ),
+                        applicationId:session.applicationGlobalId['$planType:$planTier'],
                         step: 3,
                         documents: model.uploadDocumentsApplication,
                       ),
@@ -6145,10 +6123,7 @@ class AuthViewModel extends BaseViewModel {
                 planType: planType,
                 isSavedDraft: true,
                 saveThirdIndividualStep: SaveThirdStepEntityModel(
-                  applicationId: returnSavedApplicationType(
-                    planType: planType,
-                    planTeir: planTier,
-                  ),
+                  applicationId:session.applicationGlobalId['$planType:$planTier'],
                   step: 3,
                   documents: model.uploadDocumentsApplication,
                 ),
@@ -7377,10 +7352,7 @@ class AuthViewModel extends BaseViewModel {
                     planType: planType,
                     isSavedDraft: false,
                     saveThirdIndividualStep: SaveThirdStepEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId:session.applicationGlobalId['$planType:$planTier'],
                       step: 3,
                       documents: model.uploadDocumentsApplication,
                     ),
@@ -7409,10 +7381,7 @@ class AuthViewModel extends BaseViewModel {
               planType: planType,
               isSavedDraft: true,
               saveThirdIndividualStep: SaveThirdStepEntityModel(
-                applicationId: returnSavedApplicationType(
-                  planType: planType,
-                  planTeir: planTier,
-                ),
+                applicationId:session.applicationGlobalId['$planType:$planTier'],
                 step: 3,
                 documents: model.uploadDocumentsApplication,
               ),
@@ -8035,10 +8004,7 @@ class AuthViewModel extends BaseViewModel {
                     planType: planType,
                     isSavedDraft: false,
                     saveThirdIndividualStep: SaveThirdStepEntityModel(
-                      applicationId: returnSavedApplicationType(
-                        planType: planType,
-                        planTeir: planTier,
-                      ),
+                      applicationId: session.applicationGlobalId['$planType:$planTier'],
                       step: 3,
                       documents: model.uploadDocumentsApplication,
                     ),
@@ -8068,10 +8034,7 @@ class AuthViewModel extends BaseViewModel {
               planType: planType,
               isSavedDraft: true,
               saveThirdIndividualStep: SaveThirdStepEntityModel(
-                applicationId: returnSavedApplicationType(
-                  planType: planType,
-                  planTeir: planTier,
-                ),
+                applicationId:session.applicationGlobalId['$planType:$planTier'],
                 step: 3,
                 documents: model.uploadDocumentsApplication,
               ),
@@ -9175,10 +9138,7 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
-                    applicationId: model.returnSavedApplicationType(
-                      planTeir: planTier,
-                      planType: planType,
-                    ),
+                    applicationId:session.applicationGlobalId['$planType:$planTier'],
                   );
                 }
                 model.notifyListeners();
@@ -9551,10 +9511,7 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
-                    applicationId: returnSavedApplicationType(
-                      planTeir: planTier,
-                      planType: planType,
-                    ),
+                    applicationId:session.applicationGlobalId['$planType:$planTier'],
                   );
                   model.notifyListeners();
                 }
@@ -10287,10 +10244,7 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
-                    applicationId: returnSavedApplicationType(
-                      planTeir: planTier,
-                      planType: planType,
-                    ),
+                    applicationId:session.applicationGlobalId['$planType:$planTier'],
                   );
                 }
                 model.notifyListeners();
@@ -10664,10 +10618,7 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
-                    applicationId: returnSavedApplicationType(
-                      planTeir: planTier,
-                      planType: planType,
-                    ),
+                    applicationId: session.applicationGlobalId['$planType:$planTier'],
                   );
                   model.notifyListeners();
                 }
@@ -11401,10 +11352,7 @@ class AuthViewModel extends BaseViewModel {
                     context,
                     planTier: planTier,
                     planType: planType,
-                    applicationId: returnSavedApplicationType(
-                      planTeir: planTier,
-                      planType: planType,
-                    ),
+                    applicationId:session.applicationGlobalId['$planType:$planTier'],
                   );
                 }
                 model.notifyListeners();
@@ -11413,7 +11361,6 @@ class AuthViewModel extends BaseViewModel {
           ),
         ],
       ),
-
       SizedBox(height: 20.60.h),
     ],
   );
@@ -28130,35 +28077,35 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  returnSavedApplicationType({String? planType, String? planTeir}) {
-    if (planType == 'Individual' && planTeir == 'Ruby') {
-      return session.applicationIdIndividualRuby;
-    }
-    if (planType == 'Individual' && planTeir == 'Pearl') {
-      return session.applicationIdIndividualPearl;
-    }
-    if (planType == 'Individual' && planTeir == 'Diamond') {
-      return session.applicationIdIndividualDiamond;
-    }
-    if (planType == 'Family' && planTeir == 'Ruby') {
-      return session.applicationIdFamilyRuby;
-    }
-    if (planType == 'Family' && planTeir == 'Pearl') {
-      return session.applicationIdFamilyPearl;
-    }
-    if (planType == 'Family' && planTeir == 'Diamond') {
-      return session.applicationIdFamilyDiamond;
-    }
-    if (planType == 'Corporate' && planTeir == 'Ruby') {
-      return session.applicationIdCorporateRuby;
-    }
-    if (planType == 'Corporate' && planTeir == 'Pearl') {
-      return session.applicationIdCorporatePearl;
-    }
-    if (planType == 'Corporate' && planTeir == 'Diamond') {
-      return session.applicationIdCorporateDiamond;
-    }
-  }
+  // returnSavedApplicationType({String? planType, String? planTeir}) {
+  //   if (planType == 'Individual' && planTeir == 'Ruby') {
+  //     return session.applicationIdIndividualRuby;
+  //   }
+  //   if (planType == 'Individual' && planTeir == 'Pearl') {
+  //     return session.applicationIdIndividualPearl;
+  //   }
+  //   if (planType == 'Individual' && planTeir == 'Diamond') {
+  //     return session.applicationIdIndividualDiamond;
+  //   }
+  //   if (planType == 'Family' && planTeir == 'Ruby') {
+  //     return session.applicationIdFamilyRuby;
+  //   }
+  //   if (planType == 'Family' && planTeir == 'Pearl') {
+  //     return session.applicationIdFamilyPearl;
+  //   }
+  //   if (planType == 'Family' && planTeir == 'Diamond') {
+  //     return session.applicationIdFamilyDiamond;
+  //   }
+  //   if (planType == 'Corporate' && planTeir == 'Ruby') {
+  //     return session.applicationIdCorporateRuby;
+  //   }
+  //   if (planType == 'Corporate' && planTeir == 'Pearl') {
+  //     return session.applicationIdCorporatePearl;
+  //   }
+  //   if (planType == 'Corporate' && planTeir == 'Diamond') {
+  //     return session.applicationIdCorporateDiamond;
+  //   }
+  // }
 
   Future<void> startApplication(
     context, {
@@ -28245,19 +28192,13 @@ class AuthViewModel extends BaseViewModel {
       );
       if (_saveFirstStepPersonalResponseModel?.statusCode == 201) {
         if (!isSavedDraft!) {
-          if (planType == 'Individual' && planTeir == 'Ruby' ||
-              planTeir == 'Pearl' ||
-              planTeir == 'Diamond') {
+          if (planType == 'Individual' && planTeir != null) {
             linSubIndex++;
           }
-          if (planType == 'Family' && planTeir == 'Ruby' ||
-              planTeir == 'Pearl' ||
-              planTeir == 'Diamond') {
+          if (planType == 'Family' && planTeir != null) {
             linFamIndex++;
           }
-          if (planType == 'Corporate' && planTeir == 'Ruby' ||
-              planTeir == 'Pearl' ||
-              planTeir == 'Diamond') {
+          if (planType == 'Corporate' &&planTeir != null) {
             linCorpIndex++;
           }
         } else {
@@ -28297,9 +28238,7 @@ class AuthViewModel extends BaseViewModel {
       );
       if (_saveSecondStepResponseModel?.statusCode == 201) {
         if (!isSavedDraft!) {
-          if (planType == 'Individual' && planTier == 'Ruby' ||
-              planTier == 'Pearl' ||
-              planTier == 'Diamond') {
+          if (planType == 'Individual' && planTier != null) {
             linSubIndex++;
           }
         } else {
@@ -28339,9 +28278,7 @@ class AuthViewModel extends BaseViewModel {
       );
       if (_saveSecondStepResponseModel?.statusCode == 201) {
         if (!isSavedDraft!) {
-          if (planType == 'Corporate' && planTier == 'Ruby' ||
-              planTier == 'Pearl' ||
-              planTier == 'Diamond') {
+          if (planType == 'Corporate' && planTier != null) {
             linCorpIndex++;
           }
         } else {
@@ -28416,19 +28353,13 @@ class AuthViewModel extends BaseViewModel {
       );
       if (_saveThirdStepResponseModel?.statusCode == 201) {
         if (!isSavedDraft!) {
-          if (planType == 'Individual' && planTier == 'Ruby' ||
-              planTier == 'Pearl' ||
-              planTier == 'Diamond') {
+          if (planType == 'Individual' && planTier != null) {
             linSubIndex++;
           }
-          if (planType == 'Family' && planTier == 'Ruby' ||
-              planTier == 'Pearl' ||
-              planTier == 'Diamond') {
+          if (planType == 'Family' && planTier != null) {
             linFamIndex++;
           }
-          if (planType == 'Corporate' && planTier == 'Ruby' ||
-              planTier == 'Pearl' ||
-              planTier == 'Diamond') {
+          if (planType == 'Corporate' && planTier != null) {
             linCorpIndex++;
           }
         } else {
@@ -28467,10 +28398,7 @@ class AuthViewModel extends BaseViewModel {
           _isLoadingDoc1 = true;
           await uploadDocument(
             context: context,
-            applicationId: returnSavedApplicationType(
-              planType: planType,
-              planTeir: planTier,
-            ),
+            applicationId:session.applicationGlobalId['$planType:$planTier'],
             file: MultipartFile.fromBytes(
               formartFileImage(imageDocument).readAsBytesSync(),
               filename: imageDocument!.path.split("/").last,
@@ -28504,10 +28432,7 @@ class AuthViewModel extends BaseViewModel {
           _isLoadingDoc1 = true;
           await uploadFamPlanDocument(
             context: context,
-            applicationId: returnSavedApplicationType(
-              planType: planType,
-              planTeir: planTier,
-            ),
+            applicationId:session.applicationGlobalId['$planType:$planTier'],
             file: MultipartFile.fromBytes(
               formartFileImage(imageDocument).readAsBytesSync(),
               filename: imageDocument!.path.split("/").last,
@@ -28577,10 +28502,7 @@ class AuthViewModel extends BaseViewModel {
       _isLoadingDoc1 = true;
       await uploadDocument(
         context: context,
-        applicationId: returnSavedApplicationType(
-          planType: planType,
-          planTeir: planTier,
-        ),
+        applicationId:session.applicationGlobalId['$planType:$planTier'],
         file: MultipartFile.fromBytes(
           formartFileImage(imageDocument).readAsBytesSync(),
           filename: imageDocument!.path.split("/").last,

@@ -1205,10 +1205,9 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    if (model.benefitController.length > 1) {
                                       model.benefitController.removeAt(index);
                                       model.limitController.removeAt(index);
-                                    }
+                                  
                                   });
                                 },
                                 child: SvgPicture.asset(AppImage.delete),
@@ -1325,7 +1324,9 @@ class _CreateHmoPlanState extends State<CreateHmoPlan> {
                                               model.durationController.text,
                                             ),
 
-                                            benefits: benefitListUpdate,
+                                          hospitalNetworkIds:
+                                              selectedHospitalIds.toList(),
+                                            benefits: benefitListUpdate.isEmpty? null:benefitListUpdate,
                                           ),
                                         );
                                       }

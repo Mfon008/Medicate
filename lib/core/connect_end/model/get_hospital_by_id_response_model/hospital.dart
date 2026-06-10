@@ -13,6 +13,7 @@ class Hospital {
   String? phone;
   String? email;
   bool? isActive;
+  String? hmoId;
 
   Hospital({
     this.id,
@@ -24,6 +25,7 @@ class Hospital {
     this.phone,
     this.email,
     this.isActive,
+    this.hmoId,
   });
 
   factory Hospital.fromJson(Map<String, dynamic> json) {

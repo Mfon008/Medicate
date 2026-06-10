@@ -77,6 +77,7 @@ class UrlConfig {
   static const String start_application = 'hmo/applications/start';
   static const String save_first_step = 'hmo/applications/save-step';
   static const String get_hospital_by_id = 'hmo/hospitals';
+  static const String get_hospital_by_id_user = 'hmo/marketplace/hospitals';
   static const String submit_hmo_plan = 'hmo/applications/submit';
   static const String my_subscription = 'hmo/applications/my-subscriptions';
   static const String hmo_plan_teirs = 'hmo/settings/plan-tiers';

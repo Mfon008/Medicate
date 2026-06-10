@@ -42,7 +42,6 @@ import '../connect_end/model/get_user_details_no_phone_model/get_user_details_no
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
-// import '../connect_end/model/refresh_token_response_model/refresh_token_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
@@ -686,7 +685,7 @@ class AuthApi {
   }) async {
     try {
       final response = await _service.call(
-        '${UrlConfig.get_hospital_by_id}/$hospitalId',
+        '${UrlConfig.get_hospital_by_id_user}/$hospitalId',
         RequestMethod.get,
       );
       logger.d(response.data);

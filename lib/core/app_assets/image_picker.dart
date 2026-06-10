@@ -4,8 +4,10 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medicate_app/core/app_assets/image.dart';
 import '../../ui/widget/text.dart';
 import '../config/colors.dart';
 
@@ -19,56 +21,126 @@ class ImagePickerHandler {
     Function(File file)? file,
   }) async {
     ProfileOptionAction? action;
-
     action = await showModalBottomSheet(
       context: context!,
+      backgroundColor: AppColors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
       ),
       builder: (context) => BottomSheet(
         backgroundColor: AppColors.white,
         onClosing: () {},
-        builder: (context) => Wrap(
-          children: <Widget>[
-            ListTile(
-              title: Center(
-                child: TextView(
-                  text: 'Pick from library',
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
+        builder: (context) => SizedBox(
+          height: MediaQuery.of(context).size.height * 0.33,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 30.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextView(
+                      text: 'Choose Upload Type',
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.deep,
+                      ),
+                    ),
+                    SizedBox(width: 80.w),
+                    InkWell(
+                      onTap: () =>
+                          Navigator.pop(context, ProfileOptionAction.remove),
+                      child: SvgPicture.asset(
+                        AppImage.cancel,
+                        height: 18.2.h,
+                        width: 18.2.w,
+                        color: AppColors.deep,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              onTap: () => Navigator.pop(context, ProfileOptionAction.library),
-            ),
-            const Divider(),
-            ListTile(
-              title: Center(
-                child: TextView(
-                  text: 'Take a photo',
-                  fontSize: 17.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              onTap: () =>
-                  Navigator.pop(context, ProfileOptionAction.profileCamera),
-            ),
-            InkWell(
-              onTap: () => Navigator.pop(context, ProfileOptionAction.remove),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.all(12.0),
-                color: Colors.grey[200],
-                child: Center(
-                  child: TextView(
-                    text: 'Cancel',
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w600,
+
+                SizedBox(height: 30.h),
+                InkWell(
+                  onTap: () =>
+                      Navigator.pop(context, ProfileOptionAction.profileCamera),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.w,
+                      horizontal: 16.20.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22.r),
+                      color: AppColors.grey,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          AppImage.camera,
+                          height: 18.2.h,
+                          width: 18.2.w,
+                          color: AppColors.deep,
+                        ),
+                        SizedBox(width: 6.w),
+                        TextView(
+                          text: 'Take a Photo',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.6.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.deep,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+
+                SizedBox(height: 20.h),
+                InkWell(
+                  onTap: () =>
+                       Navigator.pop(context, ProfileOptionAction.library),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.w,
+                      horizontal: 16.20.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22.r),
+                      color: AppColors.grey,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          AppImage.upload_icon,
+                          height: 18.2.h,
+                          width: 18.2.w,
+                          color: AppColors.deep,
+                        ),
+                        SizedBox(width: 6.w),
+                        TextView(
+                          text: 'Upload Photo',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 15.6.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.deep,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 40.h),
-          ],
+          ),
         ),
       ),
     );
