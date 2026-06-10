@@ -690,37 +690,48 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                           children: [
                                             IconButton(
                                               onPressed:
-                                                  model.mySubscriptionIndex -
-                                                          10 >=
-                                                      0
-                                                  ? () {
-                                                      if (model.mySubscriptionIndex -
-                                                              10 >=
-                                                          0) {
-                                                        model.mySubscriptionIndex -=
-                                                            10;
-                                                      }
+                                                  model
+                                                          .getMySubscriptionResponseModel!
+                                                          .data!
+                                                          .meta!
+                                                          .page! <=
+                                                      1
+                                                  ? () {}
+                                                  : () async {
+                                                      model.pageAll--;
+                                                      await Future.delayed(
+                                                        Duration(milliseconds: 10),
+                                                      );
                                                       model
-                                                          .mySubscriptionIndexIncrement--;
-                                                      model.notifyListeners();
-                                                    }
-                                                  : () {},
+                                                          .getMySubscriptionDetails(
+                                                            context,
+                                                            subStatus: model
+                                                                .mySubPlans,
+                                                            page: model.pageAll
+                                                                .toString(),
+                                                            appStatus: model
+                                                                .selectStatus,
+                                                          );
+                                                    },
                                               icon: Icon(
                                                 Icons.arrow_back,
                                                 color:
-                                                    model.mySubscriptionIndex -
-                                                            10 >=
-                                                        0
+                                                    model
+                                                            .getMySubscriptionResponseModel!
+                                                            .data!
+                                                            .meta!
+                                                            .page! <=
+                                                        1
                                                     ? AppColors.primary1
-                                                    : AppColors.primary1
-                                                          .withOpacity(.4),
+                                                          .withOpacity(.4)
+                                                    : AppColors.primary1,
                                                 size: 20.sp,
                                               ),
                                             ),
 
                                             TextView(
                                               text:
-                                                  'Page ${model.mySubscriptionIndexIncrement} of ${model.getMySubscriptionResponseModel!.data!.items!.length ~/ 10 + 1}',
+                                                  'Page ${model.getMySubscriptionResponseModel!.data!.meta!.page} of ${model.getMySubscriptionResponseModel!.data!.meta!.totalPages}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 15.2.sp,
@@ -730,42 +741,44 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                             ),
                                             IconButton(
                                               onPressed:
-                                                  model.mySubscriptionIndex +
-                                                          10 <
+                                                  model
+                                                          .getMySubscriptionResponseModel!
+                                                          .data!
+                                                          .meta!
+                                                          .page! ==
                                                       model
                                                           .getMySubscriptionResponseModel!
                                                           .data!
-                                                          .items!
-                                                          .length
-                                                  ? () {
-                                                      if (model.mySubscriptionIndex +
-                                                              10 <
-                                                          model
-                                                              .getMySubscriptionResponseModel!
-                                                              .data!
-                                                              .items!
-                                                              .length) {
-                                                        model.mySubscriptionIndex +=
-                                                            10;
-                                                      }
-                                                      model
-                                                          .mySubscriptionIndexIncrement++;
-                                                      model.notifyListeners();
-                                                    }
-                                                  : () {},
+                                                          .meta!
+                                                          .totalPages
+                                                  ? () {}
+                                                  : () async {
+                                                      model.pageAll++;
+                                                      await Future.delayed(
+                                                        Duration(milliseconds: 10),
+                                                      );
+                                                      model.getMySubscriptionDetails(
+                                                        context,
+                                                        page: model.pageAll.toString(),
+                                                        subStatus: model.mySubPlans,
+                                                        appStatus: model.selectStatus);
+                                                  },
                                               icon: Icon(
                                                 Icons.arrow_forward,
                                                 color:
-                                                    model.mySubscriptionIndex +
-                                                            10 <
-                                                        model
-                                                            .getMySubscriptionResponseModel!
-                                                            .data!
-                                                            .items!
-                                                            .length
-                                                    ? AppColors.primary1
-                                                    : AppColors.primary1
-                                                          .withOpacity(.4),
+                                                    model
+                                                          .getMySubscriptionResponseModel!
+                                                          .data!
+                                                          .meta!
+                                                          .page! ==
+                                                      model
+                                                          .getMySubscriptionResponseModel!
+                                                          .data!
+                                                          .meta!
+                                                          .totalPages
+                                                  
+                                                    ? AppColors.primary1.withOpacity(.4)
+                                                    : AppColors.primary1,
                                                 size: 20.sp,
                                               ),
                                             ),
