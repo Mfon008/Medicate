@@ -2609,7 +2609,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         ), // Adjust radius as needed
                         child: LinearProgressIndicator(
                           minHeight: 4.0, // Adjust height as needed
-                          value: 2,
+                          value: 0,
                           color: AppColors.lightBlue, // Progress bar color
                           backgroundColor:
                               Colors.grey[300], // Background track color
