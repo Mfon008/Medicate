@@ -1536,93 +1536,99 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                             ),
                                       child: Container(
                                         color: AppColors.transparent,
-                                        child: Row(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              padding: EdgeInsets.all(14.w),
-                                              decoration: BoxDecoration(
-                                                color: AppColors.skyBlue,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: SvgPicture.asset(
-                                                model.isMedTypeView(
-                                                  o.medicationType,
-                                                ),
-                                                color: AppColors.primary,
-                                                height: 18.h,
-                                                width: 18.w,
-                                              ),
-                                            ),
-                                            SizedBox(width: 20.w),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                TextView(
-                                                  text:
-                                                      o.medicationType
-                                                          ?.capitalize() ??
-                                                      '',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 13.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.grey1,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 120.w,
-                                                  child: TextView(
-                                                    text:
-                                                        o.medicationName
-                                                            ?.capitalize() ??
-                                                        '',
-                                                    textOverflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'GoogleSans',
-                                                      fontSize: 15.2.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: AppColors.deep,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Spacer(),
                                             Row(
                                               children: [
-                                                TextView(
-                                                  text:
-                                                      '${o.time} ${model.checkTimePeriod(o.time)}',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'GoogleSans',
-                                                    fontSize: 18.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 10.w),
                                                 Container(
-                                                  padding: EdgeInsets.all(
-                                                    1.2.w,
-                                                  ),
+                                                  padding: EdgeInsets.all(14.w),
                                                   decoration: BoxDecoration(
-                                                    color: model
-                                                        .checkMedsStatusColor(
-                                                          o.status,
-                                                        ),
+                                                    color: AppColors.skyBlue,
                                                     shape: BoxShape.circle,
                                                   ),
-                                                  child: model
-                                                      .checkMedsStatusWidget(
-                                                        o.status,
+                                                  child: SvgPicture.asset(
+                                                    model.isMedTypeView(
+                                                      o.medicationType,
+                                                    ),
+                                                    color: AppColors.primary,
+                                                    height: 18.h,
+                                                    width: 18.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 20.w),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    TextView(
+                                                      text:
+                                                          o.medicationType
+                                                              ?.capitalize() ??
+                                                          '',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 13.2.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: AppColors.grey1,
                                                       ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 120.w,
+                                                      child: TextView(
+                                                        text:
+                                                            o.medicationName
+                                                                ?.capitalize() ??
+                                                            '',
+                                                        textOverflow:
+                                                            TextOverflow.ellipsis,
+                                                        maxLines: 1,
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'GoogleSans',
+                                                          fontSize: 15.2.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors.deep,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Spacer(),
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text:
+                                                          '${o.time} ${model.checkTimePeriod(o.time)}',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'GoogleSans',
+                                                        fontSize: 18.2.sp,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 10.w),
+                                                    Container(
+                                                      padding: EdgeInsets.all(
+                                                        1.2.w,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        color: model
+                                                            .checkMedsStatusColor(
+                                                              o.status,
+                                                            ),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: model
+                                                          .checkMedsStatusWidget(
+                                                            o.status,
+                                                          ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ],
                                             ),
+                                            SizedBox(height: 4.h,),
                                           ],
                                         ),
                                       ),

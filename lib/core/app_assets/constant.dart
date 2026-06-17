@@ -27,3 +27,9 @@ String formatNairaNoDecimal(num amount) {
   );
   return formatter.format(amount);
 }
+
+
+String convertTo12HourFormat(String time) {
+  final parsedTime = DateFormat('HH:mm').parse(time);
+  return DateFormat('hh:mm a').format(parsedTime);
+}

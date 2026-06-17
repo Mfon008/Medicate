@@ -94,7 +94,15 @@ class ViewMedicationScreen extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.all(4.w),
                                   decoration: BoxDecoration(
-                                    color: AppColors.yellow,
+                                    color:
+                                        model
+                                                .getReminderByIdModel
+                                                ?.data
+                                                ?.medication
+                                                ?.medicationStatus ==
+                                            'COMPLETED'
+                                        ? AppColors.app_green
+                                        : AppColors.yellow,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -702,19 +710,37 @@ class ViewMedicationScreen extends StatelessWidget {
                                 ],
                               ),
                         SizedBox(height: 30.0.h),
-                        ButtonWidget(
-                          border: 100.r,
-                          buttonColor: AppColors.primary,
-                          buttonText: 'Edit Medication',
-                          color: AppColors.white,
-                          buttonBorderColor: AppColors.transparent,
-                          onPressed: () =>
-                          model.showUpdateMedicationDialog(
-                            context: context,
-                            data: model.getReminderByIdModel!.data,
-                          ),
-                          fontSize: 14.sp,
-                        ),
+                        model
+                                        .getReminderByIdModel!
+                                        .data!
+                                        .payments!
+                                        .isNotEmpty &&
+                                    model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .payments![0]
+                                            .status ==
+                                        'SUCCESS' ||
+                                model
+                                    .getReminderByIdModel!
+                                    .data!
+                                    .payments!
+                                    .isEmpty
+                            ? ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary,
+                                buttonText: 'Edit Medication',
+                                color: AppColors.white,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: () =>
+                                    model.showUpdateMedicationDialog(
+                                      context: context,
+                                      data: model.getReminderByIdModel!.data,
+                                      model:model
+                                    ),
+                                fontSize: 14.sp,
+                              )
+                            : SizedBox.shrink(),
                         SizedBox(height: 14.0.h),
                       ],
                     ),
