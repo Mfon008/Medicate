@@ -30,6 +30,8 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/daily_dos
     as getId;
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/data.dart'
     as getReminderId;
+import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/medication.dart'
+    as meds;
 import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_response_model/login_response_model.dart';
@@ -11630,7 +11632,7 @@ class AuthViewModel extends BaseViewModel {
             data!.medication!.medicationName;
         model.durationEditControllers.text = data.medication!.durationInDays
             .toString();
-        model.noteEditController.text = data.medication!.note;
+        model.noteEditController.text = data.medication?.note ?? '';
         for (var t in data.medication!.dailyDoseTimes![0]) {
           model.formattedSelectedTimeAndPeriodList.add(
             convertTo12HourFormat(t.time!),
@@ -14668,7 +14670,6 @@ class AuthViewModel extends BaseViewModel {
                           0,
                           0,
                         ); // hour=0, minute=0
-
                         formattedSelectedTimeAndPeriod = DateFormat(
                           'h:mm a',
                         ).format(defaultTime);
@@ -25213,6 +25214,7 @@ class AuthViewModel extends BaseViewModel {
         padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
         controller: scrollController,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -25562,6 +25564,8 @@ class AuthViewModel extends BaseViewModel {
                                     .toLowerCase() ==
                                 'custom schedule'
                           ? data.medication!.timesPerDay.toString()
+                          : data.medication!.timesPerDay == null
+                          ? 'Custom Schedule'
                           : showNoTimesMode(
                               int.parse(
                                 data.medication!.timesPerDay.toString(),
@@ -25671,13 +25675,20 @@ class AuthViewModel extends BaseViewModel {
                       fontFamily: 'GoogleSans',
                     ),
                     onChange: (p0) {
-                      data.medication!.durationInDays = int.tryParse(p0) ?? 0;
+                      final duration = int.tryParse(p0);
+
+                      if (duration == null) return;
+
+                      updateEditDuration(
+                        newDuration: duration,
+                        medication: data.medication!,
+                      );
                       _calculateEndDateEdit(
                         setModalState: setModalState,
                         model: model,
                         data: data,
                       );
-
+                      setModalState!(() {});
                       model.notifyListeners();
                     },
                   ),
@@ -25818,7 +25829,6 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                     ),
                                     SizedBox(width: 8.w),
-
                                     GestureDetector(
                                       onTap: () {
                                         isTappedCopyall = !isTappedCopyall;
@@ -25872,8 +25882,13 @@ class AuthViewModel extends BaseViewModel {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ...data.medication!.dailyDoseTimes!.map(
-                                      (e) => Container(
+                                    ...List.generate(data.medication!.dailyDoseTimes!.length, (
+                                      index,
+                                    ) {
+                                      final e = data
+                                          .medication!
+                                          .dailyDoseTimes![index];
+                                      return Container(
                                         padding: EdgeInsets.all(10.w),
                                         margin: EdgeInsets.only(bottom: 12.w),
                                         decoration: BoxDecoration(
@@ -25927,7 +25942,7 @@ class AuthViewModel extends BaseViewModel {
                                                         ),
                                                       ),
                                                       TextView(
-                                                        text: '${e.length}',
+                                                        text: '${index + 1}',
                                                         textStyle: TextStyle(
                                                           fontFamily:
                                                               'GoogleSans',
@@ -25942,7 +25957,6 @@ class AuthViewModel extends BaseViewModel {
                                                   ),
                                                 ),
                                                 SizedBox(width: 4.0.w),
-
                                                 Expanded(
                                                   child: Container(
                                                     padding:
@@ -25973,7 +25987,7 @@ class AuthViewModel extends BaseViewModel {
                                                         TextView(
                                                           text:
                                                               getTimeFreqCustom(
-                                                                e.length,
+                                                                index,
                                                               ),
                                                           textStyle: TextStyle(
                                                             fontFamily: 'Arial',
@@ -25988,8 +26002,7 @@ class AuthViewModel extends BaseViewModel {
                                                           onPressed: () {
                                                             selectTimeFreqCustom(
                                                               context: context,
-                                                              dayIndex:
-                                                                  e.length,
+                                                              dayIndex: index,
                                                               setModalState:
                                                                   setModalState,
                                                               model: model,
@@ -26016,7 +26029,7 @@ class AuthViewModel extends BaseViewModel {
                                                             .length] =
                                                         null;
                                                     model.addTimeForDay(
-                                                      e.length,
+                                                      index,
                                                       setModalState!,
                                                     );
                                                   },
@@ -26080,7 +26093,7 @@ class AuthViewModel extends BaseViewModel {
                                               ],
                                             ),
                                             SizedBox(height: 10.h),
-                                            data.medication!.timesPerDay == null
+                                            data.medication!.timesPerDay == null ||  data.medication!.timesPerDay == 0 || data.medication!.timesPerDay! > 4
                                                 ? Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
@@ -26094,19 +26107,21 @@ class AuthViewModel extends BaseViewModel {
                                                               top: 2.w,
                                                             ),
                                                         child: TextView(
-                                                          text: DateFormat('MMM dd').format(
-                                                            DateTime.parse(
-                                                              model.pickedDatedStartString !=
-                                                                      null
-                                                                  ? model
-                                                                        .pickedDatedStartString!
-                                                                  : '2026-04-28T13:07:54.737Z',
-                                                            ).add(
-                                                              Duration(
-                                                                days: e.length,
+                                                          text:
+                                                              DateFormat(
+                                                                'MMM dd',
+                                                              ).format(
+                                                                DateTime.parse(
+                                                                  data
+                                                                      .medication!
+                                                                      .startDateTime!
+                                                                      .toString(),
+                                                                ).add(
+                                                                  Duration(
+                                                                    days: index,
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
                                                           textStyle: TextStyle(
                                                             fontFamily: 'Arial',
                                                             fontSize: 12.sp,
@@ -26168,8 +26183,9 @@ class AuthViewModel extends BaseViewModel {
                                                                   child: Row(
                                                                     children: [
                                                                       TextView(
-                                                                        text: time
-                                                                            .time!,
+                                                                        text: convertTo12HourFormat(
+                                                                          time.time!,
+                                                                        ),
                                                                         textStyle: TextStyle(
                                                                           fontFamily:
                                                                               'GoogleSans',
@@ -26191,7 +26207,7 @@ class AuthViewModel extends BaseViewModel {
                                                                       GestureDetector(
                                                                         onTap: () {
                                                                           model.removeTimeForDay(
-                                                                            e.length,
+                                                                            index,
                                                                             time.time!,
                                                                             setModalState!,
                                                                           );
@@ -26223,8 +26239,8 @@ class AuthViewModel extends BaseViewModel {
                                                 : SizedBox.shrink(),
                                           ],
                                         ),
-                                      ),
-                                    ),
+                                      );
+                                    }),
                                   ],
                                 ),
                               ),
@@ -26400,7 +26416,7 @@ class AuthViewModel extends BaseViewModel {
                                             // width: 120.w,
                                             constraints: BoxConstraints(
                                               // minWidth: 120.w,
-                                              maxWidth: 120.0.w,
+                                              maxWidth: 110.0.w,
                                             ),
                                             padding: EdgeInsets.symmetric(
                                               vertical: 4.w,
@@ -31564,6 +31580,31 @@ class AuthViewModel extends BaseViewModel {
   //     notifyListeners();
   //   }
   // }
+
+  void updateEditDuration({
+    required int newDuration,
+    required meds.Medication medication,
+  }) {
+    medication.durationInDays = newDuration;
+
+    medication.dailyDoseTimes ??= [];
+
+    final currentLength = medication.dailyDoseTimes!.length;
+
+    if (newDuration > currentLength) {
+      // Add new days
+      for (int i = currentLength; i < newDuration; i++) {
+        medication.dailyDoseTimes!.add([]);
+      }
+    } 
+    else if (newDuration < currentLength) {
+      // Remove excess days
+      medication.dailyDoseTimes = medication.dailyDoseTimes!.sublist(
+        0,
+        newDuration,
+      );
+    }
+  }
 
   secondModalFlow({
     AuthViewModel? model,

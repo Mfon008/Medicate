@@ -28,8 +28,21 @@ String formatNairaNoDecimal(num amount) {
   return formatter.format(amount);
 }
 
-
 String convertTo12HourFormat(String time) {
-  final parsedTime = DateFormat('HH:mm').parse(time);
-  return DateFormat('hh:mm a').format(parsedTime);
+  final parts = time.split(':');
+  int hour = int.parse(parts[0]);
+  final minute = parts[1];
+
+  final period = hour >= 12 ? 'PM' : 'AM';
+
+  hour = hour % 12;
+  if (hour == 0) hour = 12;
+
+  return '${hour.toString().padLeft(2, '0')}:$minute $period';
 }
+
+
+// String convertTo12HourFormat(String time) {
+//   final parsedTime = DateFormat('HH:mm').parse(time);
+//   return DateFormat('hh:mm a').format(parsedTime);
+// }

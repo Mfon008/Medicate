@@ -420,7 +420,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                                                   ) {
                                                                     return Container(
                                                                       width:
-                                                                          90.w,
+                                                                          100.w,
                                                                       margin: EdgeInsets.only(
                                                                         right:
                                                                             5.10.w,
@@ -460,7 +460,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                                                           ),
                                                                           TextView(
                                                                             text:
-                                                                                time,
+                                                                                convertTo12HourFormat(time),
                                                                             textStyle: TextStyle(
                                                                               fontFamily: 'GoogleSans',
                                                                               fontSize: 12.8.sp,
@@ -536,7 +536,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                                     ),
                                                     SizedBox(width: 5.10.w),
                                                     TextView(
-                                                      text: time,
+                                                      text: convertTo12HourFormat(time),
                                                       textStyle: TextStyle(
                                                         fontFamily:
                                                             'GoogleSans',
