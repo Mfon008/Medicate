@@ -41,6 +41,11 @@ String convertTo12HourFormat(String time) {
   return '${hour.toString().padLeft(2, '0')}:$minute $period';
 }
 
+String convertTo24Hour(String time) {
+  final parsedTime = DateFormat('hh:mm a').parse(time);
+  return DateFormat('HH:mm').format(parsedTime);
+}
+
 
 // String convertTo12HourFormat(String time) {
 //   final parsedTime = DateFormat('HH:mm').parse(time);

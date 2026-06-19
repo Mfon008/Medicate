@@ -47,6 +47,8 @@ import 'package:medicate_app/core/connect_end/model/update_user_profile_entity/p
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/upload_image_reminder_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/daily_dose_time.dart'
     as upReminder;
+import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/daily_dose_time.dart'
+    as dose;
 import 'package:medicate_app/ui/dashboard/reminder/medication_class.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
@@ -16137,6 +16139,63 @@ class AuthViewModel extends BaseViewModel {
     setModalState?.call(() {});
   }
 
+  Future<void> selectTimeFreqCustomEdit({
+    BuildContext? context,
+    int? dayIndex,
+    StateSetter? setModalState,
+    AuthViewModel? model,
+    List<dose.DailyDoseTime>? dailyDoseTimes,
+  }) async {
+    if (context == null || dayIndex == null || model == null) return;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime == null) return;
+
+    final formatted = formatTimeFreq(pickedTime);
+
+    // Ensure list exists
+    model.timesPerDay[dayIndex] ??= [];
+
+    final times = model.timesPerDay[dayIndex]!;
+    final timesEdit = dailyDoseTimes ?? [];
+
+    // Safe previous selected time
+    final prevTime = selectedTimePerDay[dayIndex];
+
+    if (prevTime != null) {
+      // final existingIndex = times.indexOf(prevTime);
+      final existingIndex = timesEdit.indexWhere(
+        (item) => item.time == convertTo24Hour(prevTime),
+      );
+
+      if (existingIndex != -1) {
+        // ✅ UPDATE existing
+        print('qwerty $existingIndex andndndn $formatted');
+        timesEdit[existingIndex].time = convertTo24Hour(formatted);
+        selectedTimePerDay[dayIndex] = null;
+      } else {
+        // ✅ Add new
+        if (!times.contains(formatted)) times.add(formatted);
+        selectedTimePerDay[dayIndex] = formatted;
+      }
+    } else {
+      // First time adding
+      if (!times.contains(formatted)) times.add(formatted);
+      selectedTimePerDay[dayIndex] = formatted;
+    }
+
+    // Update selected map
+    // selectedTimePerDay[dayIndex] = formatted;
+
+    model.setSelectedTimeForDay(dayIndex, formatted, model);
+    model.notifyListeners();
+    setModalState?.call(() {});
+  }
+
   Future<void> selectTimeFreqCustomUpdate({
     required BuildContext context,
     required AuthViewModel model,
@@ -16591,6 +16650,20 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void removeTimeForDayUpdate({
+    String? date,
+    String? time,
+    StateSetter? setModalState,
+    List<dose.DailyDoseTime>? dailyDoseTimes,
+  }) {
+    dailyDoseTimes!.removeWhere(
+      (item) => item.time == time && item.date == date,
+    );
+
+    setModalState!(() {});
+    notifyListeners();
+  }
+
   void addTimeForDay(int day, StateSetter setModalState) {
     final time = selectedTimePerDay[day];
 
@@ -16605,6 +16678,35 @@ class AuthViewModel extends BaseViewModel {
     }
 
     setModalState(() {});
+    notifyListeners();
+  }
+
+  void addTimeForDayUpdate({
+    StateSetter? setModalState,
+    List<dose.DailyDoseTime>? dailyDoseTimes,
+    String? time,
+    String? date,
+  }) {
+    if (dailyDoseTimes == null) return;
+
+    if (dailyDoseTimes.length >= 100) {
+      return;
+    }
+    final parsedDate = DateTime.parse(date!);
+
+    dailyDoseTimes.add(
+      dose.DailyDoseTime(
+        time: time,
+        date: date,
+        isoDate: DateTime.utc(
+          parsedDate.year,
+          parsedDate.month,
+          parsedDate.day,
+        ).toUtc(),
+        status: "PENDING",
+      ),
+    );
+    setModalState!(() {});
     notifyListeners();
   }
 
@@ -26000,12 +26102,13 @@ class AuthViewModel extends BaseViewModel {
                                                         ),
                                                         IconButton(
                                                           onPressed: () {
-                                                            selectTimeFreqCustom(
+                                                            selectTimeFreqCustomEdit(
                                                               context: context,
                                                               dayIndex: index,
                                                               setModalState:
                                                                   setModalState,
                                                               model: model,
+                                                              dailyDoseTimes: e,
                                                             );
                                                             model
                                                                 .notifyListeners();
@@ -26025,13 +26128,31 @@ class AuthViewModel extends BaseViewModel {
                                                 SizedBox(width: 4.0.w),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    selectedTimePerDay[e
-                                                            .length] =
-                                                        null;
-                                                    model.addTimeForDay(
-                                                      index,
-                                                      setModalState!,
+                                                    model.addTimeForDayUpdate(
+                                                      setModalState:
+                                                          setModalState!,
+                                                      dailyDoseTimes: e,
+                                                      time: convertTo24Hour(
+                                                        selectedTimePerDay[index]!,
+                                                      ),
+                                                      date:
+                                                          DateFormat(
+                                                            'yyyy-MM-dd',
+                                                          ).format(
+                                                            DateTime.parse(
+                                                              data
+                                                                  .medication!
+                                                                  .startDateTime!
+                                                                  .toString(),
+                                                            ).add(
+                                                              Duration(
+                                                                days: index,
+                                                              ),
+                                                            ),
+                                                          ),
                                                     );
+                                                    selectedTimePerDay[index] =
+                                                        null;
                                                   },
                                                   child: Container(
                                                     padding:
@@ -26093,7 +26214,16 @@ class AuthViewModel extends BaseViewModel {
                                               ],
                                             ),
                                             SizedBox(height: 10.h),
-                                            data.medication!.timesPerDay == null ||  data.medication!.timesPerDay == 0 || data.medication!.timesPerDay! > 4
+                                            data.medication!.timesPerDay ==
+                                                        null ||
+                                                    data
+                                                            .medication!
+                                                            .timesPerDay ==
+                                                        0 ||
+                                                    data
+                                                            .medication!
+                                                            .timesPerDay! >
+                                                        4
                                                 ? Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
@@ -26143,9 +26273,10 @@ class AuthViewModel extends BaseViewModel {
                                                                 time,
                                                               ) => GestureDetector(
                                                                 onTap: () {
-                                                                  selectedTimePerDay[e
-                                                                          .length] =
-                                                                      time.time;
+                                                                  selectedTimePerDay[index] =
+                                                                      convertTo12HourFormat(
+                                                                        time.time!,
+                                                                      );
                                                                   setModalState!(
                                                                     () {},
                                                                   );
@@ -26167,14 +26298,18 @@ class AuthViewModel extends BaseViewModel {
                                                                         ),
                                                                     border: Border.all(
                                                                       color:
-                                                                          selectedTimePerDay[e.length] ==
-                                                                              time.time
+                                                                          selectedTimePerDay[index] ==
+                                                                              convertTo12HourFormat(
+                                                                                time.time!,
+                                                                              )
                                                                           ? AppColors.transparent
                                                                           : AppColors.app_green,
                                                                     ),
                                                                     color:
-                                                                        selectedTimePerDay[e.length] ==
-                                                                            time.time
+                                                                        selectedTimePerDay[index] ==
+                                                                            convertTo12HourFormat(
+                                                                              time.time!,
+                                                                            )
                                                                         ? AppColors
                                                                               .app_green
                                                                         : AppColors
@@ -26194,8 +26329,10 @@ class AuthViewModel extends BaseViewModel {
                                                                           fontWeight:
                                                                               FontWeight.w500,
                                                                           color:
-                                                                              selectedTimePerDay[e.length] ==
-                                                                                  time.time
+                                                                              selectedTimePerDay[index] ==
+                                                                                  convertTo12HourFormat(
+                                                                                    time.time!,
+                                                                                  )
                                                                               ? AppColors.white
                                                                               : AppColors.app_green,
                                                                         ),
@@ -26206,18 +26343,35 @@ class AuthViewModel extends BaseViewModel {
                                                                       ),
                                                                       GestureDetector(
                                                                         onTap: () {
-                                                                          model.removeTimeForDay(
-                                                                            index,
-                                                                            time.time!,
-                                                                            setModalState!,
+                                                                          model.removeTimeForDayUpdate(
+                                                                            date:
+                                                                                DateFormat(
+                                                                                  'yyyy-MM-dd',
+                                                                                ).format(
+                                                                                  DateTime.parse(
+                                                                                    data.medication!.startDateTime!.toString(),
+                                                                                  ).add(
+                                                                                    Duration(
+                                                                                      days: index,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                            time:
+                                                                                time.time!,
+                                                                            setModalState:
+                                                                                setModalState!,
+                                                                            dailyDoseTimes:
+                                                                                e,
                                                                           );
                                                                         },
                                                                         child: SvgPicture.asset(
                                                                           AppImage
                                                                               .x,
                                                                           color:
-                                                                              selectedTimePerDay[e.length] ==
-                                                                                  time.time!
+                                                                              selectedTimePerDay[index] ==
+                                                                                  convertTo12HourFormat(
+                                                                                    time.time!,
+                                                                                  )
                                                                               ? AppColors.white
                                                                               : AppColors.app_green,
                                                                           height:
@@ -31596,8 +31750,7 @@ class AuthViewModel extends BaseViewModel {
       for (int i = currentLength; i < newDuration; i++) {
         medication.dailyDoseTimes!.add([]);
       }
-    } 
-    else if (newDuration < currentLength) {
+    } else if (newDuration < currentLength) {
       // Remove excess days
       medication.dailyDoseTimes = medication.dailyDoseTimes!.sublist(
         0,
