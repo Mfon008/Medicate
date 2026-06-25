@@ -24,20 +24,20 @@ class ViewMedicationScreen extends StatelessWidget {
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await model.getReminderById(context, id);
-          medication = model.getReminderByIdModel?.data?.medication;
+          // medication = model.getReminderByIdModel?.data?.medication;
           imageUrl = model.sanitizeImageUrl(medication?.medicationImage?.url);
           model.allNotificationChannels.addAll(
             model.getReminderByIdModel!.data!.notificationChannels!,
           );
-          if (model.getReminderByIdModel!.data!.payments!.isNotEmpty) {
-            model.allNotificationChannels.addAll(
-              model
-                  .getReminderByIdModel!
-                  .data!
-                  .payments![0]
-                  .notificationChannelsPaidFor!,
-            );
-          }
+          // if (model.getReminderByIdModel!.data!.payments!.isNotEmpty) {
+          //   model.allNotificationChannels.addAll(
+          //     model
+          //         .getReminderByIdModel!
+          //         .data!
+          //         .payments![0]
+          //         .notificationChannelsPaidFor!,
+          //   );
+          // }
         });
       },
       disposeViewModel: false,

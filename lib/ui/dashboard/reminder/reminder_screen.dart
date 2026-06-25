@@ -2504,14 +2504,20 @@ class _ReminderScreenState extends State<ReminderScreen> {
                         ),
                       ],
                     ),
-                    Container(
-                      padding: EdgeInsets.all(5.2.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.skyBlue,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.skyBlue),
+                    GestureDetector(
+                      onTap: () => model.showUpdateReminderModalReminder(
+                            context: context,
+                            data: reminder,
+                          ),
+                      child: Container(
+                        padding: EdgeInsets.all(5.2.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.skyBlue,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.skyBlue),
+                        ),
+                        child: SvgPicture.asset(AppImage.square_edit),
                       ),
-                      child: SvgPicture.asset(AppImage.square_edit),
                     ),
                   ],
                 ),
