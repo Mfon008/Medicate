@@ -189,6 +189,13 @@ class AuthRepoImpl {
     return response;
   }
 
+  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder(
+    {MultipartFile? file,String? id}
+  ) async {
+    final response = await _contract.uploadUpdatedImageReminder(file:file,id:id);
+    return response;
+  }
+
   Future<dynamic> uploadImageReminderUpdate({
     MultipartFile? file,
     String? id,

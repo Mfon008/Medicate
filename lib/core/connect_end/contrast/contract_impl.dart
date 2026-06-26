@@ -112,6 +112,9 @@ class AuthContractsImpl {
   Future<UploadImageReminderResponseModel> uploadImageReminder(
     MultipartFile file,
   ) async => await _api.uploadImageReminder(file);
+  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder(
+   {MultipartFile? file,String? id}
+  ) async => await _api.uploadUpdatedImageReminder(file: file,id: id);
   Future<dynamic> uploadImageReminderUpdate({
     MultipartFile? file,
     String? id,

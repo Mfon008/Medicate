@@ -339,6 +339,23 @@ class AuthApi {
     }
   }
 
+  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder(
+   {MultipartFile? file, String? id}
+  ) async {
+    try {
+      final response = await _service.call(
+       '${UrlConfig.upload_updated_image_reminder}/$id/image',
+        RequestMethod.patchUpdate,
+        formData: FormData.fromMap({'image': file}),
+      );
+      logger.d(response.data);
+      return UploadImageReminderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<dynamic> uploadImageReminderUpdate({
     MultipartFile? file,
     String? id,

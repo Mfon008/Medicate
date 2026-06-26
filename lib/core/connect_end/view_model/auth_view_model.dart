@@ -11640,6 +11640,10 @@ class AuthViewModel extends BaseViewModel {
             convertTo12HourFormat(t.time!),
           );
         }
+        emailReminderList.clear();
+        addedEmailReminderList.clear();
+        phoneReminderList.clear();
+        addedPhoneReminderList.clear();
 
         emailReminderList.addAll(data.emails!);
         addedEmailReminderList.addAll(data.emails!);
@@ -11674,6 +11678,10 @@ class AuthViewModel extends BaseViewModel {
             convertTo12HourFormat(t.time!),
           );
         }
+        emailReminderList.clear();
+        addedEmailReminderList.clear();
+        phoneReminderList.clear();
+        addedPhoneReminderList.clear();
 
         emailReminderList.addAll(data.emails!);
         addedEmailReminderList.addAll(data.emails!);
@@ -18943,6 +18951,30 @@ class AuthViewModel extends BaseViewModel {
           drugFilename = imageDrug!.path.split("/").last;
           uploadImageReminder(
             context: context,
+            file: MultipartFile.fromBytes(
+              formartFileImage(imageDrug).readAsBytesSync(),
+              filename: imageDrug!.path.split("/").last,
+            ),
+          );
+          notifyListeners();
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void pickUpdatedDrugImage({BuildContext? context, String? id}) {
+    try {
+      _pickImage.pickImage(
+        context: context,
+        file: (file) {
+          imageDrug = file;
+          drugFilename = imageDrug!.path.split("/").last;
+          logger.d(imageDrug);
+          uploadUpdatedImageReminder(
+            context: context,
+            id: id,
             file: MultipartFile.fromBytes(
               formartFileImage(imageDrug).readAsBytesSync(),
               filename: imageDrug!.path.split("/").last,
@@ -26646,32 +26678,61 @@ class AuthViewModel extends BaseViewModel {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: 140.w,
-                              height: 84.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child:
-                                    data.medication!.medicationImage != null &&
-                                        data.medication!.medicationImage!.url!
-                                            .contains('https')
-                                    ? Image.asset(
-                                        data.medication!.medicationImage!.url!,
+                            model.imageDrug != null
+                                ? Container(
+                                    width: 140.w,
+                                    height: 84.h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Image.file(
+                                        model.imageDrug!,
                                         height: 75.80.h,
-                                        width: 70.80.w,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                SvgPicture.asset(
-                                                  AppImage.image_icon,
-                                                ),
-                                      )
-                                    : SvgPicture.asset(AppImage.image_icon),
-                              ),
-                            ),
-                            data.medication!.medicationImage != null
+                                        width: 80.80.w,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    width: 140.w,
+                                    height: 84.h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child:
+                                          data.medication!.medicationImage !=
+                                                  null &&
+                                              data
+                                                  .medication!
+                                                  .medicationImage!
+                                                  .url!
+                                                  .contains('https')
+                                          ? Image.asset(
+                                              data
+                                                  .medication!
+                                                  .medicationImage!
+                                                  .url!,
+                                              height: 75.80.h,
+                                              width: 70.80.w,
+                                              errorBuilder:
+                                                  (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) => SvgPicture.asset(
+                                                    AppImage.image_icon,
+                                                  ),
+                                            )
+                                          : SvgPicture.asset(
+                                              AppImage.image_icon,
+                                            ),
+                                    ),
+                                  ),
+                            data.medication!.medicationImage != null ||
+                                    model.imageDrug != null
                                 ? Row(
                                     children: [
                                       GestureDetector(
@@ -26688,7 +26749,10 @@ class AuthViewModel extends BaseViewModel {
                                       SizedBox(width: 18.30.w),
                                       GestureDetector(
                                         onTap: () {
-                                          model.pickDrugImage(context);
+                                          model.pickUpdatedDrugImage(
+                                            context: context,
+                                            id: data.id,
+                                          );
                                         },
                                         child: SvgPicture.asset(
                                           AppImage.upload,
@@ -26700,7 +26764,10 @@ class AuthViewModel extends BaseViewModel {
                                   )
                                 : GestureDetector(
                                     onTap: () {
-                                      model.pickDrugImage(context);
+                                      model.pickUpdatedDrugImage(
+                                        context: context,
+                                        id: data.id,
+                                      );
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -32990,32 +33057,61 @@ class AuthViewModel extends BaseViewModel {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: 140.w,
-                              height: 84.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.grey,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child:
-                                    data.medication!.medicationImage != null &&
-                                        data.medication!.medicationImage!.url!
-                                            .contains('https')
-                                    ? Image.asset(
-                                        data.medication!.medicationImage!.url!,
+                            model.imageDrug != null
+                                ? Container(
+                                    width: 140.w,
+                                    height: 84.h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Image.file(
+                                        model.imageDrug!,
                                         height: 75.80.h,
-                                        width: 70.80.w,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                SvgPicture.asset(
-                                                  AppImage.image_icon,
-                                                ),
-                                      )
-                                    : SvgPicture.asset(AppImage.image_icon),
-                              ),
-                            ),
-                            data.medication!.medicationImage != null
+                                        width: 80.80.w,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    width: 140.w,
+                                    height: 84.h,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.grey,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child:
+                                          data.medication!.medicationImage !=
+                                                  null &&
+                                              data
+                                                  .medication!
+                                                  .medicationImage!
+                                                  .url!
+                                                  .contains('https')
+                                          ? Image.asset(
+                                              data
+                                                  .medication!
+                                                  .medicationImage!
+                                                  .url!,
+                                              height: 75.80.h,
+                                              width: 70.80.w,
+                                              errorBuilder:
+                                                  (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) => SvgPicture.asset(
+                                                    AppImage.image_icon,
+                                                  ),
+                                            )
+                                          : SvgPicture.asset(
+                                              AppImage.image_icon,
+                                            ),
+                                    ),
+                                  ),
+                            data.medication!.medicationImage != null ||
+                                    model.imageDrug != null
                                 ? Row(
                                     children: [
                                       GestureDetector(
@@ -33032,7 +33128,10 @@ class AuthViewModel extends BaseViewModel {
                                       SizedBox(width: 18.30.w),
                                       GestureDetector(
                                         onTap: () {
-                                          model.pickDrugImage(context);
+                                          model.pickUpdatedDrugImage(
+                                            context: context,
+                                            id: data.id,
+                                          );
                                         },
                                         child: SvgPicture.asset(
                                           AppImage.upload,
@@ -33044,7 +33143,10 @@ class AuthViewModel extends BaseViewModel {
                                   )
                                 : GestureDetector(
                                     onTap: () {
-                                      model.pickDrugImage(context);
+                                      model.pickUpdatedDrugImage(
+                                        context: context,
+                                        id: data.id,
+                                      );
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -40564,7 +40666,6 @@ class AuthViewModel extends BaseViewModel {
                 padding: EdgeInsets.only(top: 4.w),
                 child: GestureDetector(
                   onTap: () {
-                    print('meeee');
                     Navigator.pop(context!);
                     setModalState!(() {});
                     model!.notifyListeners();
@@ -40652,34 +40753,50 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    // vertical: 24.w,
-                    // horizontal: 108.0.w,
-                  ),
-                  width: 220.w,
-                  height: 180.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: data.medication?.medicationImage != null
-                      ? Image.asset(
-                          data.medication?.medicationImage?.url ?? '',
-                          errorBuilder: (context, error, stackTrace) =>
-                              Image.asset(AppImage.vaccines),
-                        )
-                      : Center(
-                          child: SvgPicture.asset(
-                            model!.isMedTypeView(
-                              data.medication!.medicationType!.toUpperCase(),
-                            ),
+                model!.imageDrug != null
+                    ? Container(
+                        padding: EdgeInsets.symmetric(),
+                        width: 220.w,
+                        height: 180.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Center(
+                          child: Image.file(
+                            model.imageDrug!,
                             height: 140.h,
-                            width: 100.w,
-                            color: AppColors.primary,
+                            width: 140.80.w,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.symmetric(),
+                        width: 220.w,
+                        height: 180.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: data.medication?.medicationImage != null
+                            ? Image.asset(
+                                data.medication?.medicationImage?.url ?? '',
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(AppImage.vaccines),
+                              )
+                            : Center(
+                                child: SvgPicture.asset(
+                                  model.isMedTypeView(
+                                    data.medication!.medicationType!
+                                        .toUpperCase(),
+                                  ),
+                                  height: 140.h,
+                                  width: 100.w,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                      ),
                 SizedBox(height: 10.h),
                 Divider(
                   color: AppColors.infoGrey.withOpacity(.2),
@@ -40700,7 +40817,7 @@ class AuthViewModel extends BaseViewModel {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SvgPicture.asset(
-                      model!.isMedTypeView(
+                      model.isMedTypeView(
                         data.medication!.medicationType!.toUpperCase(),
                       ),
                       color: AppColors.primary,
@@ -41778,34 +41895,50 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    // vertical: 24.w,
-                    // horizontal: 108.0.w,
-                  ),
-                  width: 220.w,
-                  height: 180.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: data.medication?.medicationImage != null
-                      ? Image.asset(
-                          data.medication?.medicationImage?.url ?? '',
-                          errorBuilder: (context, error, stackTrace) =>
-                              Image.asset(AppImage.vaccines),
-                        )
-                      : Center(
-                          child: SvgPicture.asset(
-                            model!.isMedTypeView(
-                              data.medication!.medicationType!.toUpperCase(),
-                            ),
+                model!.imageDrug != null
+                    ? Container(
+                        padding: EdgeInsets.symmetric(),
+                        width: 220.w,
+                        height: 180.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: Center(
+                          child: Image.file(
+                            model.imageDrug!,
                             height: 140.h,
-                            width: 100.w,
-                            color: AppColors.primary,
+                            width: 140.80.w,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.symmetric(),
+                        width: 220.w,
+                        height: 180.h,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        child: data.medication?.medicationImage != null
+                            ? Image.asset(
+                                data.medication?.medicationImage?.url ?? '',
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Image.asset(AppImage.vaccines),
+                              )
+                            : Center(
+                                child: SvgPicture.asset(
+                                  model.isMedTypeView(
+                                    data.medication!.medicationType!
+                                        .toUpperCase(),
+                                  ),
+                                  height: 140.h,
+                                  width: 100.w,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                      ),
                 SizedBox(height: 10.h),
                 Divider(
                   color: AppColors.infoGrey.withOpacity(.2),
@@ -41826,7 +41959,7 @@ class AuthViewModel extends BaseViewModel {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SvgPicture.asset(
-                      model!.isMedTypeView(
+                      model.isMedTypeView(
                         data.medication!.medicationType!.toUpperCase(),
                       ),
                       color: AppColors.primary,
@@ -45342,6 +45475,33 @@ class AuthViewModel extends BaseViewModel {
         );
       }
       logger.d(_uploadImageReminderResponseModel?.toJson());
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> uploadUpdatedImageReminder({
+    context,
+    MultipartFile? file,
+    String? id,
+  }) async {
+    try {
+      _isLoading = true;
+      _uploadImageReminderResponseModel = await runBusyFuture(
+        repositoryImply.uploadUpdatedImageReminder(file: file, id: id),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (_uploadImageReminderResponseModel?.statusCode == 200) {
+        await AppUtils.snackbar(
+          context,
+          message: 'Image uploaded successfully..!',
+        );
+      }
+      logger.d(v);
     } catch (e) {
       _isLoading = false;
       logger.d(e);
