@@ -46,8 +46,17 @@ String convertTo24Hour(String time) {
   return DateFormat('HH:mm').format(parsedTime);
 }
 
+String convertDateToIso(String date) {
+  final parsedDate = DateFormat('dd MMM, yyyy').parse(date);
 
-// String convertTo12HourFormat(String time) {
-//   final parsedTime = DateFormat('HH:mm').parse(time);
-//   return DateFormat('hh:mm a').format(parsedTime);
-// }
+  final dateTime = DateTime(
+    parsedDate.year,
+    parsedDate.month,
+    parsedDate.day,
+    7, // add your time
+    0,
+    0,
+  );
+
+  return dateTime.toUtc().toIso8601String();
+}

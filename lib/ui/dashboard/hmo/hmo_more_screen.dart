@@ -87,6 +87,7 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                     ),
                   ],
                 ),
+
                 // SizedBox(height: 20.h),
                 // Row(
                 //   children: [
@@ -105,7 +106,6 @@ class _HMOMoreScreenState extends State<HMOMoreScreen> {
                 //     ),
                 //   ],
                 // ),
-
                 SizedBox(height: 150.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

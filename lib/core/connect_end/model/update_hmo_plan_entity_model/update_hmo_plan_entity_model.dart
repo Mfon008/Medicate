@@ -14,7 +14,7 @@ class UpdateHmoPlanEntityModel {
     this.price,
     this.duration,
     this.benefits,
-    this.hospitalNetworkIds
+    this.hospitalNetworkIds,
   });
 
   factory UpdateHmoPlanEntityModel.fromJson(Map<String, dynamic> json) {

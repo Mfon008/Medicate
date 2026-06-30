@@ -8882,7 +8882,9 @@ class PharmViewModel extends BaseViewModel {
                                   isTappedPhoneAdded = true;
                                   isPhoneValid = false;
                                   addedPhoneReminderList.add(
-                                    returnAddingPhoneNoStructureWith234(model.phoneNumberController.text)
+                                    returnAddingPhoneNoStructureWith234(
+                                      model.phoneNumberController.text,
+                                    ),
                                   );
                                   model.notifyListeners();
                                 }
@@ -9773,7 +9775,8 @@ class PharmViewModel extends BaseViewModel {
                                                                 .removeAt(
                                                                   index,
                                                                 );
-                                                            addedPhoneReminderList.remove(o);
+                                                            addedPhoneReminderList
+                                                                .remove(o);
                                                             model
                                                                 .notifyListeners();
                                                           },
@@ -14001,8 +14004,9 @@ class PharmViewModel extends BaseViewModel {
                                                                 .removeAt(
                                                                   index,
                                                                 );
-                                                            
-                                                            addedPhoneReminderList.remove(o);
+
+                                                            addedPhoneReminderList
+                                                                .remove(o);
                                                             model
                                                                 .notifyListeners();
                                                           },

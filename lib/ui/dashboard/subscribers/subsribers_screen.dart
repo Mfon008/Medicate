@@ -700,7 +700,9 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                   : () async {
                                                       model.pageAll--;
                                                       await Future.delayed(
-                                                        Duration(milliseconds: 10),
+                                                        Duration(
+                                                          milliseconds: 10,
+                                                        ),
                                                       );
                                                       model
                                                           .getMySubscriptionDetails(
@@ -755,29 +757,36 @@ class _SubsribersScreenState extends State<SubsribersScreen> {
                                                   : () async {
                                                       model.pageAll++;
                                                       await Future.delayed(
-                                                        Duration(milliseconds: 10),
+                                                        Duration(
+                                                          milliseconds: 10,
+                                                        ),
                                                       );
-                                                      model.getMySubscriptionDetails(
-                                                        context,
-                                                        page: model.pageAll.toString(),
-                                                        subStatus: model.mySubPlans,
-                                                        appStatus: model.selectStatus);
-                                                  },
+                                                      model
+                                                          .getMySubscriptionDetails(
+                                                            context,
+                                                            page: model.pageAll
+                                                                .toString(),
+                                                            subStatus: model
+                                                                .mySubPlans,
+                                                            appStatus: model
+                                                                .selectStatus,
+                                                          );
+                                                    },
                                               icon: Icon(
                                                 Icons.arrow_forward,
                                                 color:
                                                     model
-                                                          .getMySubscriptionResponseModel!
-                                                          .data!
-                                                          .meta!
-                                                          .page! ==
-                                                      model
-                                                          .getMySubscriptionResponseModel!
-                                                          .data!
-                                                          .meta!
-                                                          .totalPages
-                                                  
-                                                    ? AppColors.primary1.withOpacity(.4)
+                                                            .getMySubscriptionResponseModel!
+                                                            .data!
+                                                            .meta!
+                                                            .page! ==
+                                                        model
+                                                            .getMySubscriptionResponseModel!
+                                                            .data!
+                                                            .meta!
+                                                            .totalPages
+                                                    ? AppColors.primary1
+                                                          .withOpacity(.4)
                                                     : AppColors.primary1,
                                                 size: 20.sp,
                                               ),

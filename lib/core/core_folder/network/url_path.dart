@@ -45,6 +45,8 @@ class UrlConfig {
   static const String update_healthcare_practitioner_profile =
       'auth/update-healthcare-practitioner-profile';
   static const String reminder = 'reminders';
+  static const String payment_retry = 'payment/retry';
+  static const String payment_retry_quote = 'payment/retry-quote';
   static const String today_reminder = 'reminders/daily';
   static const String upload_image_reminder = 'reminders/image';
   static const String upload_updated_image_reminder = 'reminders';
@@ -82,4 +84,5 @@ class UrlConfig {
   static const String submit_hmo_plan = 'hmo/applications/submit';
   static const String my_subscription = 'hmo/applications/my-subscriptions';
   static const String hmo_plan_teirs = 'hmo/settings/plan-tiers';
+  static const String save_reminder_draft = 'reminders/drafts';
 }

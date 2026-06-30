@@ -35,9 +35,7 @@ class SharedPreferencesService {
   static const String userType = 'user_type';
   static const String pin_set = 'pin';
 
-  static const String application_global_id =
-      'application_global_id';
-
+  static const String application_global_id = 'application_global_id';
 
   // static const String application_id_individual_ruby =
   //     'application_id_individual_ruby';
@@ -113,7 +111,6 @@ class SharedPreferencesService {
   // String get currentStateCorporateDiamond =>
   //     sharedPreferences?.getString(current_state_corporate_diamond) ?? '';
 
-
   String get authType => sharedPreferences?.getString(userType) ?? '';
   String get pinSet => sharedPreferences?.getString(pin_set) ?? '';
   String get authRefreshToken =>
@@ -124,7 +121,9 @@ class SharedPreferencesService {
   bool get isKycVerified => sharedPreferences?.getBool(kycVerified) ?? false;
 
   Map<String, dynamic> get applicationGlobalId {
-    final applicationGlobalString = sharedPreferences?.getString(application_global_id);
+    final applicationGlobalString = sharedPreferences?.getString(
+      application_global_id,
+    );
     if (applicationGlobalString != null && applicationGlobalString.isNotEmpty) {
       return json.decode(applicationGlobalString);
     }
@@ -163,7 +162,7 @@ class SharedPreferencesService {
 
   set applicationGlobalId(Map<String, dynamic>? map) =>
       sharedPreferences?.setString(application_global_id, json.encode(map));
-      
+
   set usersData(Map<String, dynamic>? map) =>
       sharedPreferences?.setString(userData, json.encode(map));
   set usersData1(Map<String, dynamic>? map) =>

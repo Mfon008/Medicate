@@ -6605,14 +6605,18 @@ class HealthCareViewModel extends BaseViewModel {
                                 if (index == 0 || index == 1) {
                                   // Email
                                   isTappedEmailAdded = true;
-                                  addedEmailReminderList.add(model.emailController.text);
+                                  addedEmailReminderList.add(
+                                    model.emailController.text,
+                                  );
                                   model.notifyListeners();
                                 } else if ([2, 3, 4].contains(index)) {
                                   // Phone-related channels
                                   isTappedPhoneAdded = true;
                                   isPhoneValid = false;
                                   addedPhoneReminderList.add(
-                                    returnAddingPhoneNoStructureWith234(model.phoneNumberController.text)
+                                    returnAddingPhoneNoStructureWith234(
+                                      model.phoneNumberController.text,
+                                    ),
                                   );
                                   model.notifyListeners();
                                 }

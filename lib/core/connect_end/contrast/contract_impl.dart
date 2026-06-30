@@ -17,7 +17,9 @@ import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart'
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
 import '../model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
+import '../model/get_pending_reminder_response_model/get_pending_reminder_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
+import '../model/get_reminder_draft_response_model/get_reminder_draft_response_model.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -33,6 +35,7 @@ import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.d
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/save_draft_reminder_entity_model/save_draft_reminder_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
 import '../model/save_second_corp_entity_model/save_second_corp_entity_model.dart';
@@ -112,9 +115,10 @@ class AuthContractsImpl {
   Future<UploadImageReminderResponseModel> uploadImageReminder(
     MultipartFile file,
   ) async => await _api.uploadImageReminder(file);
-  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder(
-   {MultipartFile? file,String? id}
-  ) async => await _api.uploadUpdatedImageReminder(file: file,id: id);
+  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder({
+    MultipartFile? file,
+    String? id,
+  }) async => await _api.uploadUpdatedImageReminder(file: file, id: id);
   Future<dynamic> uploadImageReminderUpdate({
     MultipartFile? file,
     String? id,
@@ -212,41 +216,51 @@ class AuthContractsImpl {
   }) async => await _api.saveFirstIndividualStep(
     saveFirstIndividualStep: saveFirstIndividualStep,
   );
+
   Future<SaveSecondStepResponseModel> saveSecondIndividualStep({
     SaveSecondStepEntityModel? saveSecondIndividualStep,
   }) async => await _api.saveSecondIndividualStep(
     saveSecondIndividualStep: saveSecondIndividualStep,
   );
+
   Future<SaveSecondStepResponseModel> saveSecondFamStep({
     SaveSecondFamStepEntityModel? saveSecondFamStep,
   }) async =>
       await _api.saveSecondFamStep(saveSecondFamStep: saveSecondFamStep);
+
   Future<SaveSecondStepResponseModel> saveSecondCorporateStep({
     SaveSecondCorpEntityModel? saveSecondCorporateStep,
   }) async => await _api.saveSecondCorporateStep(
     saveSecondCorporateStep: saveSecondCorporateStep,
   );
+
   Future<SaveThirdStepResponseModel> saveThirdIndividualStep({
     SaveThirdStepEntityModel? saveThirdIndividualStep,
   }) async => await _api.saveThirdIndividualStep(
     saveThirdIndividualStep: saveThirdIndividualStep,
   );
+
   Future<GetHospitalByIdResponseModel> getHospitalById({
     String? hospitalId,
   }) async => await _api.getHospitalById(hospitalId: hospitalId);
+
   Future<UploadApplicationDocumentResponseModel> uploadAppDocument({
     String? appliationId,
     MultipartFile? file,
   }) async =>
       await _api.uploadAppDocument(appliationId: appliationId, file: file);
+
   Future<HmoPlanPaymentResponseModel> hmoPlanPayment({
     String? applicationID,
   }) async => await _api.hmoPlanPayment(applicationID: applicationID);
+
   Future<dynamic> submitHmoPlan({String? applicationID}) async =>
       await _api.submitHmoPlan(applicationID: applicationID);
+
   Future<GetHmoPlanHospitalNetworkResponseModel> getHospitalNetworkPlan({
     String? planId,
   }) async => await _api.getHospitalNetworkPlan(planId: planId);
+
   Future<GetMySubscriptionResponseModel> getMySubscriptions({
     String? page,
     String? limit,
@@ -258,4 +272,16 @@ class AuthContractsImpl {
     subStatus: subStatus,
     appStatus: appStatus,
   );
+
+  Future<GetReminderDraftResponseModel> getDraftedReminder({
+    String? page,
+  }) async => await _api.getDraftedReminder(page: page);
+  Future<GetPendingReminderResponseModel> getPendingReminder({
+    String? page,
+  }) async => await _api.getPendingReminder(page: page);
+   Future<dynamic> saveReminderDraft(SaveDraftReminderEntityModel savedraft) async => await _api.saveReminderDraft(savedraft);
+   Future<dynamic> updateSaveReminderDraft({SaveDraftReminderEntityModel? savedraft, String? reminderId}) async => await _api.updateSaveReminderDraft(savedraft: savedraft,reminderId: reminderId);
+   Future<dynamic> deleteDraftedReminder({
+    String? reminderID,
+  }) async => await _api.deleteDraftedReminder(reminderID: reminderID);
 }

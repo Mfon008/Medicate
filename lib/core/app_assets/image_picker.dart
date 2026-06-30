@@ -104,7 +104,7 @@ class ImagePickerHandler {
                 SizedBox(height: 20.h),
                 InkWell(
                   onTap: () =>
-                       Navigator.pop(context, ProfileOptionAction.library),
+                      Navigator.pop(context, ProfileOptionAction.library),
                   child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(

@@ -1,36 +1,57 @@
 import 'daily_dose_time.dart';
-import 'medication_image.dart';
+import 'patient_details.dart';
 import 'payment.dart';
 
 class UpdateReminderEntityModel {
+  PatientDetails? patientDetails;
+  String? medicationName;
+  String? medicationType;
+  String? description;
+  String? dosage;
   DateTime? startDateTime;
   DateTime? endDateTime;
   int? durationInDays;
-  List<List<DailyDoseTime>>? dailyDoseTimes;
-  MedicationImage? medicationImage;
-  String? dosage;
+  String? scheduleType;
   int? timesPerDay;
+  String? note;
+  String? timeZone;
+  List<List<DailyDoseTime>>? dailyDoseTimes;
+  List<String>? notificationChannels;
   List<String>? phoneNumbers;
   List<String>? emails;
-  List<String>? notificationChannels;
   Payment? payment;
 
   UpdateReminderEntityModel({
+    this.patientDetails,
+    this.medicationName,
+    this.medicationType,
+    this.description,
+    this.dosage,
     this.startDateTime,
     this.endDateTime,
     this.durationInDays,
-    this.dailyDoseTimes,
-    this.medicationImage,
-    this.dosage,
+    this.scheduleType,
     this.timesPerDay,
+    this.note,
+    this.timeZone,
+    this.dailyDoseTimes,
+    this.notificationChannels,
     this.phoneNumbers,
     this.emails,
-    this.notificationChannels,
     this.payment,
   });
 
   factory UpdateReminderEntityModel.fromJson(Map<String, dynamic> json) {
     return UpdateReminderEntityModel(
+      patientDetails: json['patientDetails'] == null
+          ? null
+          : PatientDetails.fromJson(
+              json['patientDetails'] as Map<String, dynamic>,
+            ),
+      medicationName: json['medicationName'] as String?,
+      medicationType: json['medicationType'] as String?,
+      description: json['description'] as String?,
+      dosage: json['dosage'] as String?,
       startDateTime: json['startDateTime'] == null
           ? null
           : DateTime.parse(json['startDateTime'] as String),
@@ -38,6 +59,10 @@ class UpdateReminderEntityModel {
           ? null
           : DateTime.parse(json['endDateTime'] as String),
       durationInDays: json['durationInDays'] as int?,
+      scheduleType: json['scheduleType'] as String?,
+      timesPerDay: json['timesPerDay'] as int?,
+      note: json['note'] as String?,
+      timeZone: json['timeZone'] as String?,
       dailyDoseTimes: (json['dailyDoseTimes'] as List<dynamic>?)
           ?.map(
             (e) => (e as List<dynamic>)
@@ -45,16 +70,9 @@ class UpdateReminderEntityModel {
                 .toList(),
           )
           .toList(),
-      medicationImage: json['medicationImage'] == null
-          ? null
-          : MedicationImage.fromJson(
-              json['medicationImage'] as Map<String, dynamic>,
-            ),
-      dosage: json['dosage'] as String?,
-      timesPerDay: json['timesPerDay'] as int?,
+      notificationChannels: json['notificationChannels'] as List<String>?,
       phoneNumbers: json['phoneNumbers'] as List<String>?,
       emails: json['emails'] as List<String>?,
-      notificationChannels: json['notificationChannels'] as List<String>?,
       payment: json['payment'] == null
           ? null
           : Payment.fromJson(json['payment'] as Map<String, dynamic>),
@@ -62,18 +80,24 @@ class UpdateReminderEntityModel {
   }
 
   Map<String, dynamic> toJson() => {
+    'patientDetails': patientDetails?.toJson(),
+    'medicationName': medicationName,
+    'medicationType': medicationType,
+    'description': description,
+    'dosage': dosage,
     'startDateTime': startDateTime?.toIso8601String(),
     'endDateTime': endDateTime?.toIso8601String(),
     'durationInDays': durationInDays,
+    'scheduleType': scheduleType,
+    'timesPerDay': timesPerDay,
+    'note': note,
+    'timeZone': timeZone,
     'dailyDoseTimes': dailyDoseTimes
         ?.map((e) => e.map((e) => e.toJson()).toList())
         .toList(),
-    'medicationImage': medicationImage?.toJson(),
-    'dosage': dosage,
-    'timesPerDay': timesPerDay,
+    'notificationChannels': notificationChannels,
     'phoneNumbers': phoneNumbers,
     'emails': emails,
-    'notificationChannels': notificationChannels,
     'payment': payment?.toJson(),
   };
 }

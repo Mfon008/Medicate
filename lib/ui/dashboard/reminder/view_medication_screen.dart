@@ -29,15 +29,41 @@ class ViewMedicationScreen extends StatelessWidget {
           model.allNotificationChannels.addAll(
             model.getReminderByIdModel!.data!.notificationChannels!,
           );
-          // if (model.getReminderByIdModel!.data!.payments!.isNotEmpty) {
-          //   model.allNotificationChannels.addAll(
-          //     model
-          //         .getReminderByIdModel!
-          //         .data!
-          //         .payments![0]
-          //         .notificationChannelsPaidFor!,
-          //   );
-          // }
+          if (model.getReminderByIdModel!.data!.payments!.isNotEmpty &&
+              model
+                  .getReminderByIdModel!
+                  .data!
+                  .payments![0]
+                  .notificationChannelsPaidFor!
+                  .isNotEmpty) {
+            bool hasList = model.allNotificationChannels.any(
+              (item) => model
+                  .getReminderByIdModel!
+                  .data!
+                  .payments![0]
+                  .notificationChannelsPaidFor!
+                  .contains(item),
+            );
+            if (hasList == true) {
+            } else {
+              model.allNotificationChannels.addAll(
+                model
+                    .getReminderByIdModel!
+                    .data!
+                    .payments![0]
+                    .notificationChannelsPaidFor!,
+              );
+            }
+            if (model.allNotificationChannels.isEmpty) {
+              model.allNotificationChannels.addAll(
+                model
+                    .getReminderByIdModel!
+                    .data!
+                    .payments![0]
+                    .notificationChannelsPaidFor!,
+              );
+            }
+          }
         });
       },
       disposeViewModel: false,
@@ -459,8 +485,9 @@ class ViewMedicationScreen extends StatelessWidget {
                                                                                 4.10.w,
                                                                           ),
                                                                           TextView(
-                                                                            text:
-                                                                                convertTo12HourFormat(time),
+                                                                            text: convertTo12HourFormat(
+                                                                              time,
+                                                                            ),
                                                                             textStyle: TextStyle(
                                                                               fontFamily: 'GoogleSans',
                                                                               fontSize: 12.8.sp,
@@ -536,7 +563,10 @@ class ViewMedicationScreen extends StatelessWidget {
                                                     ),
                                                     SizedBox(width: 5.10.w),
                                                     TextView(
-                                                      text: convertTo12HourFormat(time),
+                                                      text:
+                                                          convertTo12HourFormat(
+                                                            time,
+                                                          ),
                                                       textStyle: TextStyle(
                                                         fontFamily:
                                                             'GoogleSans',
@@ -647,100 +677,181 @@ class ViewMedicationScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 20.h),
-                        model.allNotificationChannels.isEmpty
-                            ? SizedBox.shrink()
-                            : Column(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextView(
+                              text: 'NOTIFICATION CHANNEL',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.deep,
+                              ),
+                            ),
+                            SizedBox(height: 5.10.h),
+                            Divider(color: AppColors.infoGrey, thickness: .2),
+                            SizedBox(height: 5.10.h),
+                            Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10.w,
+                                horizontal: 14.0.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.dashboard,
+                                borderRadius: BorderRadius.circular(8.2),
+                              ),
+                              child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  SizedBox(height: 5.0.h),
                                   TextView(
-                                    text: 'NOTIFICATION CHANNEL',
+                                    text: 'Selected Channels',
                                     textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.deep,
+                                      fontFamily: 'Arial',
+                                      fontSize: 13.4.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
                                     ),
                                   ),
-                                  SizedBox(height: 5.10.h),
-                                  Divider(
-                                    color: AppColors.infoGrey,
-                                    thickness: .2,
+                                  SizedBox(height: 5.0.h),
+                                  Wrap(
+                                    spacing: 4.10,
+                                    runSpacing: 6,
+                                    children: [
+                                      ...model.allNotificationChannels.map(
+                                        (e) =>
+                                            model.notificationChannelFlowWidget(
+                                              notificationType: e,
+                                            ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: 5.10.h),
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10.w,
-                                      horizontal: 14.0.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.dashboard,
-                                      borderRadius: BorderRadius.circular(8.2),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 5.0.h),
-                                        TextView(
-                                          text: 'Selected Channels',
+                                  SizedBox(height: 5.0.h),
+                                  model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .phoneNumbers!
+                                          .isEmpty
+                                      ? SizedBox.shrink()
+                                      : Divider(
+                                          color: AppColors.infoGrey,
+                                          thickness: .14,
+                                        ),
+                                  SizedBox(
+                                    height:
+                                        model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .phoneNumbers!
+                                            .isEmpty
+                                        ? 0.h
+                                        : 5.10.h,
+                                  ),
+                                  model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .phoneNumbers!
+                                          .isEmpty
+                                      ? SizedBox.shrink()
+                                      : TextView(
+                                          text: 'Phone Numbers',
                                           textStyle: TextStyle(
                                             fontFamily: 'Arial',
-                                            fontSize: 13.4.sp,
+                                            fontSize: 13.8.sp,
                                             fontWeight: FontWeight.w400,
                                             color: AppColors.infoGrey,
                                           ),
                                         ),
-                                        SizedBox(height: 5.0.h),
-                                        Wrap(
-                                          spacing: 4.10,
-                                          runSpacing: 6,
-                                          children: [
-                                            ...model.allNotificationChannels.map(
-                                              (e) => model
-                                                  .notificationChannelFlowWidget(
-                                                    notificationType: e,
-                                                  ),
-                                            ),
-                                          ],
+                                  SizedBox(
+                                    height:
+                                        model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .phoneNumbers!
+                                            .isEmpty
+                                        ? 0.h
+                                        : 5.0.h,
+                                  ),
+                                  Wrap(
+                                    spacing: 4.10,
+                                    runSpacing: 6,
+                                    children: [
+                                      ...model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .phoneNumbers!
+                                          .map((e) => model.convert234To0(e)),
+                                    ],
+                                  ),
+                                  model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .emails!
+                                          .isEmpty
+                                      ? SizedBox.shrink()
+                                      : Divider(
+                                          color: AppColors.infoGrey,
+                                          thickness: .14,
                                         ),
-                                      ],
-                                    ),
+                                  SizedBox(
+                                    height:
+                                        model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .emails!
+                                            .isEmpty
+                                        ? 0.h
+                                        : 5.10.h,
+                                  ),
+                                  model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .emails!
+                                          .isEmpty
+                                      ? SizedBox.shrink()
+                                      : TextView(
+                                          text: 'Email',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 13.8.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.infoGrey,
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    height:
+                                        model
+                                            .getReminderByIdModel!
+                                            .data!
+                                            .emails!
+                                            .isEmpty
+                                        ? 0.h
+                                        : 5.0.h,
+                                  ),
+                                  Wrap(
+                                    spacing: 4.10,
+                                    runSpacing: 6,
+                                    children: [
+                                      ...model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .emails!
+                                          .map(
+                                            (e) =>
+                                                model.convertToProperEmail(e),
+                                          ),
+                                    ],
                                   ),
                                 ],
                               ),
+                            ),
+                          ],
+                        ),
                         SizedBox(height: 30.0.h),
-                        model
-                                        .getReminderByIdModel!
-                                        .data!
-                                        .payments!
-                                        .isNotEmpty &&
-                                    model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .payments![0]
-                                            .status ==
-                                        'SUCCESS' ||
-                                model
-                                    .getReminderByIdModel!
-                                    .data!
-                                    .payments!
-                                    .isEmpty
-                            ? ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.primary,
-                                buttonText: 'Edit Medication',
-                                color: AppColors.white,
-                                buttonBorderColor: AppColors.transparent,
-                                onPressed: () =>
-                                    model.showUpdateMedicationDialog(
-                                      context: context,
-                                      data: model.getReminderByIdModel!.data,
-                                      model:model
-                                    ),
-                                fontSize: 14.sp,
-                              )
-                            : SizedBox.shrink(),
+                        buttonMedication(context: context, model: model),
+
                         SizedBox(height: 14.0.h),
                       ],
                     ),
@@ -750,5 +861,41 @@ class ViewMedicationScreen extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget buttonMedication({context, AuthViewModel? model}) {
+    if (model!.getReminderByIdModel!.data!.payments!.isNotEmpty &&
+            model.getReminderByIdModel!.data!.payments![0].status ==
+                'SUCCESS' ||
+        model.getReminderByIdModel!.data!.payments!.isEmpty) {
+      return ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.primary,
+        buttonText: 'Edit Medication',
+        color: AppColors.white,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () => model.showUpdateMedicationDialog(
+          context: context,
+          data: model.getReminderByIdModel!.data,
+          model: model,
+        ),
+        fontSize: 14.sp,
+      );
+    }
+    if (model.getReminderByIdModel!.data!.payments!.isNotEmpty &&
+            model.getReminderByIdModel!.data!.payments![0].status ==
+                'PENDING' ||
+        model.getReminderByIdModel!.data!.payments!.isEmpty) {
+      return ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.primary,
+        buttonText: 'Make Payment',
+        color: AppColors.white,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () {},
+        fontSize: 14.sp,
+      );
+    }
+    return SizedBox.shrink();
   }
 }

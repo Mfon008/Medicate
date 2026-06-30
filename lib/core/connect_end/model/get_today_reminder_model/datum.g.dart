@@ -16,6 +16,7 @@ Datum _$DatumFromJson(Map<String, dynamic> json) => Datum(
   note: json['note'] as String?,
   doseId: json['doseId'] as String?,
   reminderId: json['reminderId'] as String?,
+  notificationChannels: json['notificationChannels'] as List<dynamic>?,
 );
 
 Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
@@ -28,4 +29,5 @@ Map<String, dynamic> _$DatumToJson(Datum instance) => <String, dynamic>{
   'note': instance.note,
   'doseId': instance.doseId,
   'reminderId': instance.reminderId,
+  'notificationChannels': instance.notificationChannels,
 };

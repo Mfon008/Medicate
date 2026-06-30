@@ -912,27 +912,29 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                               rowlightCheckWidget(benefit.description!),
                         )),
                     SizedBox(height: 10.h),
-                    o.benefitsSnippet!.length > 4?GestureDetector(
-                      onTap: () {
-                        if (model.hmoPlanType == o) {
-                          model.hmoPlanType = null;
-                        } else {
-                          model.hmoPlanType = o;
-                        }
-                        model.notifyListeners();
-                      },
-                      child: TextView(
-                        text: model.hmoPlanType == o
-                            ? 'Show less'
-                            : '+${o.benefitsSnippet!.length > 4 ? o.benefitsSnippet!.length - 4 : 0} more benefits',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 15.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ):SizedBox.shrink(),
+                    o.benefitsSnippet!.length > 4
+                        ? GestureDetector(
+                            onTap: () {
+                              if (model.hmoPlanType == o) {
+                                model.hmoPlanType = null;
+                              } else {
+                                model.hmoPlanType = o;
+                              }
+                              model.notifyListeners();
+                            },
+                            child: TextView(
+                              text: model.hmoPlanType == o
+                                  ? 'Show less'
+                                  : '+${o.benefitsSnippet!.length > 4 ? o.benefitsSnippet!.length - 4 : 0} more benefits',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 15.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink(),
                     SizedBox(height: 20.h),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 12.w),
@@ -1231,29 +1233,31 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                               rowlightCheckWidget(benefit.description!),
                         )),
                     SizedBox(height: 10.h),
-                    o.benefitsSnippet!.length > 4?GestureDetector(
-                      onTap: () {
-                        if (model.hmoPlanType == o) {
-                          model.hmoPlanType = null;
-                        } else {
-                          model.hmoPlanType = o;
-                        }
-                        model.notifyListeners();
-                      },
-                      child: TextView(
-                        text: model.hmoPlanType == o
-                            ? 'Show less'
-                            : o.benefitsSnippet!.length < 4
-                            ? ''
-                            : '+${o.benefitsSnippet!.length - 4} more benefits',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 15.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ):SizedBox.shrink(),
+                    o.benefitsSnippet!.length > 4
+                        ? GestureDetector(
+                            onTap: () {
+                              if (model.hmoPlanType == o) {
+                                model.hmoPlanType = null;
+                              } else {
+                                model.hmoPlanType = o;
+                              }
+                              model.notifyListeners();
+                            },
+                            child: TextView(
+                              text: model.hmoPlanType == o
+                                  ? 'Show less'
+                                  : o.benefitsSnippet!.length < 4
+                                  ? ''
+                                  : '+${o.benefitsSnippet!.length - 4} more benefits',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 15.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink(),
                     SizedBox(height: 20.h),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 12.w),
@@ -1497,27 +1501,29 @@ class _ProHealthSubScreenState extends State<ProHealthSubScreen> {
                               rowlightCheckWidget(benefit.description!),
                         )),
                     SizedBox(height: 10.h),
-                    o.benefitsSnippet!.length > 4?GestureDetector(
-                      onTap: () {
-                        if (model.hmoPlanType == o) {
-                          model.hmoPlanType = null;
-                        } else {
-                          model.hmoPlanType = o;
-                        }
-                        model.notifyListeners();
-                      },
-                      child: TextView(
-                        text: model.hmoPlanType == o
-                            ? 'Show less'
-                            : '+${o.benefitsSnippet!.length - 4} more benefits',
-                        textStyle: TextStyle(
-                          fontFamily: 'GoogleSans',
-                          fontSize: 15.2.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ):SizedBox.shrink(),
+                    o.benefitsSnippet!.length > 4
+                        ? GestureDetector(
+                            onTap: () {
+                              if (model.hmoPlanType == o) {
+                                model.hmoPlanType = null;
+                              } else {
+                                model.hmoPlanType = o;
+                              }
+                              model.notifyListeners();
+                            },
+                            child: TextView(
+                              text: model.hmoPlanType == o
+                                  ? 'Show less'
+                                  : '+${o.benefitsSnippet!.length - 4} more benefits',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 15.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink(),
                     SizedBox(height: 20.h),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 12.w),

@@ -14,6 +14,7 @@ class Datum {
   String? note;
   String? doseId;
   String? reminderId;
+  List<dynamic>? notificationChannels;
 
   Datum({
     this.id,
@@ -25,6 +26,7 @@ class Datum {
     this.note,
     this.doseId,
     this.reminderId,
+    this.notificationChannels,
   });
 
   factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);

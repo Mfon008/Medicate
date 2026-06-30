@@ -11,13 +11,16 @@ import 'package:medicate_app/core/connect_end/model/get_hospital_by_id_response_
 import 'package:medicate_app/core/connect_end/model/get_individual_application_details_model/get_individual_application_details_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_draft_response_model/get_reminder_draft_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/get_reminder_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_reminder_retry_payment_model/get_reminder_retry_payment_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_wallet_response_model/get_wallet_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/login_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/pay_with_wallet_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/reset_password_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/save_draft_reminder_entity_model/save_draft_reminder_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/save_second_corp_entity_model/save_second_corp_entity_model.dart';
@@ -36,6 +39,7 @@ import 'package:medicate_app/core/core_folder/network/support_network_service.da
     as sup;
 import '../connect_end/model/active_hmo_plan_response_model/active_hmo_plan_response_model.dart';
 import '../connect_end/model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
+import '../connect_end/model/get_pending_reminder_response_model/get_pending_reminder_response_model.dart';
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../connect_end/model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../connect_end/model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
@@ -234,21 +238,6 @@ class AuthApi {
     }
   }
 
-  // Future<RefreshTokenResponseModel> refreshToken(String refreshToken) async {
-  //   try {
-  //     final response = await _service.call(
-  //       UrlConfig.refresh_token,
-  //       data: {'refreshToken': refreshToken},
-  //       RequestMethod.post,
-  //     );
-  //     logger.d(response.data);
-  //     return RefreshTokenResponseModel.fromJson(response.data);
-  //   } catch (e) {
-  //     logger.d("response:$e");
-  //     rethrow;
-  //   }
-  // }
-
   Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
     try {
       final response = await _service.call(
@@ -339,12 +328,13 @@ class AuthApi {
     }
   }
 
-  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder(
-   {MultipartFile? file, String? id}
-  ) async {
+  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder({
+    MultipartFile? file,
+    String? id,
+  }) async {
     try {
       final response = await _service.call(
-       '${UrlConfig.upload_updated_image_reminder}/$id/image',
+        '${UrlConfig.upload_updated_image_reminder}/$id/image',
         RequestMethod.patchUpdate,
         formData: FormData.fromMap({'image': file}),
       );
@@ -523,6 +513,134 @@ class AuthApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetReminderRetryPaymentModel> getReminderRetryPayment({
+    String? reminderId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminder}/$reminderId/${UrlConfig.payment_retry_quote}',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetReminderRetryPaymentModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> reminderRetryPayment({String? reminderId}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.reminder}/$reminderId/${UrlConfig.payment_retry}',
+        RequestMethod.post,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetReminderDraftResponseModel> getDraftedReminder({
+    String? page,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.save_reminder_draft,
+        RequestMethod.getParams,
+        queryParams: {'page': page, 'limit': '10'},
+      );
+      logger.d(response.data);
+      return GetReminderDraftResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<dynamic> deleteDraftedReminder({
+    String? reminderID,
+  }) async {
+    try {
+      final response = await _service.call(
+       '${UrlConfig.save_reminder_draft}/$reminderID',
+        RequestMethod.delete,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetPendingReminderResponseModel> getPendingReminderOnly({
+    String? page,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminder,
+        RequestMethod.getParams,
+        queryParams: {
+          'filter': 'pending_payments',
+          'pendingPaymentStatus': 'pending',
+          'page': page,
+          'limit': '10',
+        },
+      );
+      logger.d(response.data);
+      return GetPendingReminderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetPendingReminderResponseModel> getPendingReminder({
+    String? page,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminder,
+        RequestMethod.getParams,
+        queryParams: {
+          'filter': 'pending_payments',
+          'page': page,
+          'limit': '10',
+        },
+      );
+      logger.d(response.data);
+      return GetPendingReminderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetPendingReminderResponseModel> getFailedReminder({
+    String? page,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.reminder,
+        RequestMethod.getParams,
+        queryParams: {
+          'filter': 'pending_payments',
+          'pendingPaymentStatus': 'failed',
+          'page': page,
+          'limit': '10',
+        },
+      );
+      logger.d(response.data);
+      return GetPendingReminderResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -885,6 +1003,36 @@ class AuthApi {
       );
       logger.d(response.data);
       return GetMySubscriptionResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> saveReminderDraft(SaveDraftReminderEntityModel savedraft) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.save_reminder_draft,
+        RequestMethod.post,
+        data: savedraft.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> updateSaveReminderDraft({SaveDraftReminderEntityModel? savedraft, String? reminderId}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.save_reminder_draft}/$reminderId',
+        RequestMethod.patch,
+        data: savedraft!.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

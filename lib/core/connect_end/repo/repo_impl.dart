@@ -20,7 +20,9 @@ import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart'
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
 import '../model/get_individual_application_details_model/get_individual_application_details_model.dart';
 import '../model/get_my_subscription_response_model/get_my_subscription_response_model.dart';
+import '../model/get_pending_reminder_response_model/get_pending_reminder_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
+import '../model/get_reminder_draft_response_model/get_reminder_draft_response_model.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
@@ -34,6 +36,7 @@ import '../model/pay_with_wallet_entity_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/save_draft_reminder_entity_model/save_draft_reminder_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
 import '../model/save_second_corp_entity_model/save_second_corp_entity_model.dart';
@@ -189,10 +192,14 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder(
-    {MultipartFile? file,String? id}
-  ) async {
-    final response = await _contract.uploadUpdatedImageReminder(file:file,id:id);
+  Future<UploadImageReminderResponseModel> uploadUpdatedImageReminder({
+    MultipartFile? file,
+    String? id,
+  }) async {
+    final response = await _contract.uploadUpdatedImageReminder(
+      file: file,
+      id: id,
+    );
     return response;
   }
 
@@ -465,6 +472,39 @@ class AuthRepoImpl {
     return response;
   }
 
+  Future<GetReminderDraftResponseModel> getDraftedReminder({
+    String? page,
+  }) async {
+    final response = await _contract.getDraftedReminder(page: page);
+    return response;
+  }
+
+  Future<GetPendingReminderResponseModel> getPendingReminder({
+    String? page,
+  }) async {
+    final response = await _contract.getPendingReminder(page: page);
+    return response;
+  }
+
+  Future<dynamic> saveReminderDraft(
+    SaveDraftReminderEntityModel savedraft,
+  ) async {
+    final response = await _contract.saveReminderDraft(savedraft);
+    return response;
+  }
+
+ Future<dynamic> updateSaveReminderDraft({SaveDraftReminderEntityModel? savedraft, String? reminderId}) async {
+    final response = await _contract.updateSaveReminderDraft(savedraft: savedraft,reminderId: reminderId);
+    return response;
+  }
+
+  Future<dynamic> deleteDraftedReminder({String? reminderID}) async {
+    final response = await _contract.deleteDraftedReminder(
+      reminderID: reminderID,
+    );
+    return response;
+  }
+
   void _chache(data) {
     if (data != null) {
       _session.authToken = data.data.accessToken;
@@ -473,13 +513,6 @@ class AuthRepoImpl {
       _session.authType = 'everyday_user';
     }
   }
-
-  // void _chacheRefresh(data) {
-  //   if (data != null) {
-  //     _session.authToken = data.data.accessToken;
-  //     _session.authRefreshToken = data.data.refreshToken;
-  //   }
-  // }
 
   void _chacheUser(data) {
     if (data != null) {

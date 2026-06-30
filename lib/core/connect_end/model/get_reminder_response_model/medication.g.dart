@@ -11,11 +11,11 @@ Medication _$MedicationFromJson(Map<String, dynamic> json) => Medication(
   drugName: json['drugName'] as String?,
   medicationType: json['medicationType'] as String?,
   dosage: json['dosage'] as String?,
-  scheduleType:json['scheduleType'] as String,
   startDateTime: json['startDateTime'] == null
       ? null
       : DateTime.parse(json['startDateTime'] as String),
   durationInDays: (json['durationInDays'] as num?)?.toInt(),
+  scheduleType: json['scheduleType'] as String?,
   endDateTime: json['endDateTime'] == null
       ? null
       : DateTime.parse(json['endDateTime'] as String),
@@ -43,11 +43,11 @@ Map<String, dynamic> _$MedicationToJson(Medication instance) =>
       'drugName': instance.drugName,
       'medicationType': instance.medicationType,
       'dosage': instance.dosage,
-      'scheduleType':instance.scheduleType,
       'startDateTime': instance.startDateTime?.toIso8601String(),
       'durationInDays': instance.durationInDays,
       'endDateTime': instance.endDateTime?.toIso8601String(),
       'timesPerDay': instance.timesPerDay,
+      'scheduleType': instance.scheduleType,
       'note': instance.note,
       'dailyDoseTimes': instance.dailyDoseTimes,
       'medicationStatus': instance.medicationStatus,
