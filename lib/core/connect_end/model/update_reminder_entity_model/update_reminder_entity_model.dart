@@ -1,3 +1,5 @@
+import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/medication_image.dart';
+
 import 'daily_dose_time.dart';
 import 'patient_details.dart';
 import 'payment.dart';
@@ -20,6 +22,7 @@ class UpdateReminderEntityModel {
   List<String>? phoneNumbers;
   List<String>? emails;
   Payment? payment;
+  MedicationImage? medicationImage;
 
   UpdateReminderEntityModel({
     this.patientDetails,
@@ -39,6 +42,7 @@ class UpdateReminderEntityModel {
     this.phoneNumbers,
     this.emails,
     this.payment,
+    this.medicationImage,
   });
 
   factory UpdateReminderEntityModel.fromJson(Map<String, dynamic> json) {
@@ -76,6 +80,11 @@ class UpdateReminderEntityModel {
       payment: json['payment'] == null
           ? null
           : Payment.fromJson(json['payment'] as Map<String, dynamic>),
+      medicationImage: json['medicationImage'] == null
+          ? null
+          : MedicationImage.fromJson(
+              json['medicationImage'] as Map<String, dynamic>,
+            ),
     );
   }
 
@@ -99,5 +108,6 @@ class UpdateReminderEntityModel {
     'phoneNumbers': phoneNumbers,
     'emails': emails,
     'payment': payment?.toJson(),
+    'medicationImage': medicationImage?.toJson(),
   };
 }

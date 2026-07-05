@@ -46,5 +46,5 @@ Map<String, dynamic> _$MedicationToJson(Medication instance) =>
       'timesPerDay': instance.timesPerDay,
       'dailyDoseTimes': instance.dailyDoseTimes,
       'note': instance.note,
-      'medicationImage': instance.medicationImage?.toJson(),
+      'medicationImage': instance.medicationImage,
     };

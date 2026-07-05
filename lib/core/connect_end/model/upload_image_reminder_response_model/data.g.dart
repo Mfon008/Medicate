@@ -13,6 +13,7 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   height: (json['height'] as num?)?.toInt(),
   size: (json['size'] as num?)?.toInt(),
   format: json['format'] as String?,
+  key: json['key'] as String?,
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
@@ -22,4 +23,5 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'height': instance.height,
   'size': instance.size,
   'format': instance.format,
+  'key': instance.key,
 };

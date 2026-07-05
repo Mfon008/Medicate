@@ -24,7 +24,6 @@ class ViewMedicationScreen extends StatelessWidget {
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
           await model.getReminderById(context, id);
-          // medication = model.getReminderByIdModel?.data?.medication;
           imageUrl = model.sanitizeImageUrl(medication?.medicationImage?.url);
           model.allNotificationChannels.addAll(
             model.getReminderByIdModel!.data!.notificationChannels!,
@@ -865,7 +864,7 @@ class ViewMedicationScreen extends StatelessWidget {
 
   Widget buttonMedication({context, AuthViewModel? model}) {
     if (model!.getReminderByIdModel!.data!.payments!.isNotEmpty &&
-            model.getReminderByIdModel!.data!.payments![0].status ==
+            model.getReminderByIdModel!.data!.payments!.last.status ==
                 'SUCCESS' ||
         model.getReminderByIdModel!.data!.payments!.isEmpty) {
       return ButtonWidget(
@@ -883,7 +882,7 @@ class ViewMedicationScreen extends StatelessWidget {
       );
     }
     if (model.getReminderByIdModel!.data!.payments!.isNotEmpty &&
-            model.getReminderByIdModel!.data!.payments![0].status ==
+            model.getReminderByIdModel!.data!.payments!.last.status ==
                 'PENDING' ||
         model.getReminderByIdModel!.data!.payments!.isEmpty) {
       return ButtonWidget(
@@ -891,8 +890,14 @@ class ViewMedicationScreen extends StatelessWidget {
         buttonColor: AppColors.primary,
         buttonText: 'Make Payment',
         color: AppColors.white,
+        isLoading: model.isLoading,
         buttonBorderColor: AppColors.transparent,
-        onPressed: () {},
+        onPressed: () {
+          model.reminderRetryPayment(
+            context: context,
+            reminderId: model.getReminderByIdModel!.data!.id,
+          );
+        },
         fontSize: 14.sp,
       );
     }

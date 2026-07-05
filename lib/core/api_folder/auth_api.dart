@@ -13,7 +13,6 @@ import 'package:medicate_app/core/connect_end/model/get_my_subscription_response
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_draft_response_model/get_reminder_draft_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/get_reminder_response_model.dart';
-import 'package:medicate_app/core/connect_end/model/get_reminder_retry_payment_model/get_reminder_retry_payment_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_wallet_response_model/get_wallet_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
@@ -45,13 +44,16 @@ import '../connect_end/model/get_transaction_wallet_response_model/get_transacti
 import '../connect_end/model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
+import '../connect_end/model/notification_channel_pricing_response_model/notification_channel_pricing_response_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
+import '../connect_end/model/retry_payment_reminder_response_model/retry_payment_reminder_response_model.dart';
 import '../connect_end/model/save_second_fam_step_entity_model/save_second_fam_step_entity_model.dart';
 import '../connect_end/model/save_second_step_response_model/save_second_step_response_model.dart';
 import '../connect_end/model/sign_up_response_model/sign_up_response_model.dart';
 import '../connect_end/model/update_doses_status_model/update_doses_status_model.dart';
+import '../connect_end/model/update_reminder_response_model/update_reminder_response_model.dart';
 import '../connect_end/model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../connect_end/model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../connect_end/model/upload_application_document_response_model/upload_application_document_response_model.dart';
@@ -501,7 +503,7 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> updateReminder({
+  Future<UpdateReminderResponseModel> updateReminder({
     String? reminderId,
     UpdateReminderEntityModel? updateReminder,
   }) async {
@@ -512,37 +514,39 @@ class AuthApi {
         data: updateReminder?.toJson(),
       );
       logger.d(response.data);
-      return response.data;
+      return UpdateReminderResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<GetReminderRetryPaymentModel> getReminderRetryPayment({
+  // Future<GetReminderRetryPaymentModel> getReminderRetryPayment({
+  //   String? reminderId,
+  // }) async {
+  //   try {
+  //     final response = await _service.call(
+  //       '${UrlConfig.reminder}/$reminderId/${UrlConfig.payment_retry_quote}',
+  //       RequestMethod.get,
+  //     );
+  //     logger.d(response.data);
+  //     return GetReminderRetryPaymentModel.fromJson(response.data);
+  //   } catch (e) {
+  //     logger.d("response:$e");
+  //     rethrow;
+  //   }
+  // }
+
+  Future<RetryPaymentReminderResponseModel> reminderRetryPayment({
     String? reminderId,
   }) async {
-    try {
-      final response = await _service.call(
-        '${UrlConfig.reminder}/$reminderId/${UrlConfig.payment_retry_quote}',
-        RequestMethod.get,
-      );
-      logger.d(response.data);
-      return GetReminderRetryPaymentModel.fromJson(response.data);
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
-
-  Future<dynamic> reminderRetryPayment({String? reminderId}) async {
     try {
       final response = await _service.call(
         '${UrlConfig.reminder}/$reminderId/${UrlConfig.payment_retry}',
         RequestMethod.post,
       );
       logger.d(response.data);
-      return response.data;
+      return RetryPaymentReminderResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
@@ -565,13 +569,11 @@ class AuthApi {
       rethrow;
     }
   }
-  
-  Future<dynamic> deleteDraftedReminder({
-    String? reminderID,
-  }) async {
+
+  Future<dynamic> deleteDraftedReminder({String? reminderID}) async {
     try {
       final response = await _service.call(
-       '${UrlConfig.save_reminder_draft}/$reminderID',
+        '${UrlConfig.save_reminder_draft}/$reminderID',
         RequestMethod.delete,
       );
       logger.d(response.data);
@@ -1009,7 +1011,9 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> saveReminderDraft(SaveDraftReminderEntityModel savedraft) async {
+  Future<dynamic> saveReminderDraft(
+    SaveDraftReminderEntityModel savedraft,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.save_reminder_draft,
@@ -1024,7 +1028,10 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> updateSaveReminderDraft({SaveDraftReminderEntityModel? savedraft, String? reminderId}) async {
+  Future<dynamic> updateSaveReminderDraft({
+    SaveDraftReminderEntityModel? savedraft,
+    String? reminderId,
+  }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.save_reminder_draft}/$reminderId',
@@ -1033,6 +1040,21 @@ class AuthApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<NotificationChannelPricingResponseModel>
+  getNotificationPricing() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.notification_pricing,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return NotificationChannelPricingResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

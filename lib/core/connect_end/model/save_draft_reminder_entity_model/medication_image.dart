@@ -5,6 +5,7 @@ class MedicationImage {
   int? height;
   int? size;
   String? format;
+  String? key;
 
   MedicationImage({
     this.url,
@@ -13,6 +14,7 @@ class MedicationImage {
     this.height,
     this.size,
     this.format,
+    this.key,
   });
 
   factory MedicationImage.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class MedicationImage {
       height: json['height'] as int?,
       size: json['size'] as int?,
       format: json['format'] as String?,
+      key: json['key'] as String?,
     );
   }
 
@@ -33,5 +36,6 @@ class MedicationImage {
     'height': height,
     'size': size,
     'format': format,
+    'key': key,
   };
 }

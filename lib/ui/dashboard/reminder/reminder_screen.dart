@@ -2060,7 +2060,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     ),
                     SizedBox(width: 4.6.w),
                     TextView(
-                      text: 'x${reminder.medication?.timesPerDay} daily',
+                      text:
+                          reminder.medication?.timesPerDay == null ||
+                              reminder.medication?.timesPerDay == 0
+                          ? 'Custom'
+                          : 'x${reminder.medication?.timesPerDay} daily',
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 12.sp,
@@ -2096,7 +2100,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                     ),
                     reminder.payments != null &&
                             reminder.payments!.isNotEmpty &&
-                            reminder.payments?[0].status == 'PENDING'
+                            reminder.payments?.last.status == 'PENDING'
                         ? Container(
                             padding: EdgeInsets.all(5.2.w),
                             decoration: BoxDecoration(
@@ -2216,16 +2220,20 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   ),
                 ),
                 SizedBox(height: 4.h),
-                TextView(
-                  text:
-                      '${DateFormat('MMM d').format(medication!.startDateTime!)} - ${DateFormat('MMM d').format(medication.endDateTime!)}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.grey1,
-                  ),
-                ),
+                medication!.startDateTime == null ||
+                        medication.startDateTime!.isEmpty
+                    ? const SizedBox()
+                    : TextView(
+                        text:
+                            '${DateFormat('MMM d').format(DateTime.parse(medication.startDateTime!))} - '
+                            '${DateFormat('MMM d').format(DateTime.parse(medication.endDateTime!))}',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.grey1,
+                        ),
+                      ),
                 SizedBox(height: 6.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -2554,20 +2562,20 @@ class _ReminderScreenState extends State<ReminderScreen> {
   );
 
   payStatus(List<Payment>? payments) {
-    if (payments!.isNotEmpty && payments[0].status == 'SUCCESS') {
+    if (payments!.isNotEmpty && payments.last.status == 'SUCCESS') {
       return 'Paid';
     }
-    if (payments.isNotEmpty && payments[0].status == 'PENDING') {
+    if (payments.isNotEmpty && payments.last.status == 'PENDING') {
       return 'Pending';
     }
     return 'Free';
   }
 
   payStatusColor(List<Payment>? payments) {
-    if (payments!.isNotEmpty && payments[0].status == 'SUCCESS') {
+    if (payments!.isNotEmpty && payments.last.status == 'SUCCESS') {
       return AppColors.app_green;
     }
-    if (payments.isNotEmpty && payments[0].status == 'PENDING') {
+    if (payments.isNotEmpty && payments.last.status == 'PENDING') {
       return AppColors.yellow;
     }
     return AppColors.greygrey;

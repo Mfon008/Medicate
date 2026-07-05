@@ -11,11 +11,11 @@ class Medication {
   String? medicationType;
   MedicationImage? medicationImage;
   String? dosage;
-  DateTime? startDateTime;
-  int? durationInDays;
-  DateTime? endDateTime;
-  int? timesPerDay;
-  String? scheduleType;
+  dynamic startDateTime;
+  dynamic durationInDays;
+  dynamic endDateTime;
+  dynamic timesPerDay;
+  dynamic scheduleType;
   List<List<DailyDoseTime>>? dailyDoseTimes;
   String? note;
 
@@ -30,7 +30,7 @@ class Medication {
     this.scheduleType,
     this.dailyDoseTimes,
     this.note,
-    this.medicationImage
+    this.medicationImage,
   });
 
   factory Medication.fromJson(Map<String, dynamic> json) {

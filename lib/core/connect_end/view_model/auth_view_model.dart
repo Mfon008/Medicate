@@ -41,8 +41,12 @@ import 'package:medicate_app/core/connect_end/model/save_draft_reminder_entity_m
     as saveDraft;
 import 'package:medicate_app/core/connect_end/model/save_draft_reminder_entity_model/daily_dose_time.dart'
     as saveDraftDose;
+import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/daily_dose_time.dart'
+    as updateRemDose;
 import 'package:medicate_app/core/connect_end/model/save_draft_reminder_entity_model/medication_image.dart'
     as saveDraftImage;
+import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/medication_image.dart'
+    as updateRemImage;
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/reminder.dart';
 import 'package:medicate_app/core/connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import 'package:medicate_app/core/connect_end/model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
@@ -64,6 +68,8 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/daily_dos
     as dose;
 import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/daily_dose_time.dart'
     as remDose;
+import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model/payment.dart'
+    as updateRemPay;
 import 'package:medicate_app/ui/dashboard/reminder/medication_class.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
@@ -110,11 +116,13 @@ import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/login_entity_model.dart';
+import '../model/notification_channel_pricing_response_model/notification_channel_pricing_response_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/retry_payment_reminder_response_model/retry_payment_reminder_response_model.dart';
 import '../model/save_draft_reminder_entity_model/save_draft_reminder_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
@@ -131,6 +139,7 @@ import '../model/sign_up_response_model/sign_up_response_model.dart';
 import '../model/start_application_entity_model.dart';
 import '../model/start_application_rsponse_model/start_application_rsponse_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
+import '../model/update_reminder_response_model/update_reminder_response_model.dart';
 import '../model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/upload_application_document_response_model/upload_application_document_response_model.dart';
@@ -195,6 +204,11 @@ class AuthViewModel extends BaseViewModel {
   CreatePaymentWalletModel? _createPaymentWalletModel;
   CreatePaymentWalletModel? get createPaymentWalletModel =>
       _createPaymentWalletModel;
+  NotificationChannelPricingResponseModel?
+  _notificationChannelPricingResponseModel;
+  NotificationChannelPricingResponseModel?
+  get notificationChannelPricingResponseModel =>
+      _notificationChannelPricingResponseModel;
   GetWalletResponseModel? _getWalletBalanceResponseModel;
   GetWalletResponseModel? get getWalletBalanceResponseModel =>
       _getWalletBalanceResponseModel;
@@ -222,6 +236,9 @@ class AuthViewModel extends BaseViewModel {
   GetHmosPlanResponseModel? _getHmosPlanResponseModel;
   GetHmosPlanResponseModel? get getHmosPlanResponseModel =>
       _getHmosPlanResponseModel;
+  UpdateReminderResponseModel? _updateReminderResponseModel;
+  UpdateReminderResponseModel? get updateReminderResponseModell =>
+      _updateReminderResponseModel;
 
   GetHospitalByIdResponseModel? _getHospitalByIdResponseModel;
   GetHospitalByIdResponseModel? get getHospitalByIdResponseModel =>
@@ -298,6 +315,9 @@ class AuthViewModel extends BaseViewModel {
   int indexOfMedicationClassList = 0;
   bool isNotTapped = false;
 
+  RetryPaymentReminderResponseModel? get retryPaymentReminderResponseModel =>
+      _retryPaymentReminderResponseModel;
+  RetryPaymentReminderResponseModel? _retryPaymentReminderResponseModel;
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPhoneReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyFundWallet = GlobalKey<FormState>();
@@ -359,7 +379,7 @@ class AuthViewModel extends BaseViewModel {
   List<List<DailyDoseTime>> dailyDoseTimeList = [];
   List<List<TextEditingController>> doseControllers = [];
   List<List<TextEditingController>> doseControllersUpdate = [];
-  // List<List<TextEditingController>> doseAfterControllers = [];
+
   bool isChecked = false;
   bool isCheckedUp = false;
   int? totalDuration;
@@ -503,28 +523,28 @@ class AuthViewModel extends BaseViewModel {
   List<int> intList = [];
   List<int> intListCustom = [];
   final List<int> selectedIndexes = [];
-  final List<NotificationChannel> channels = [
-    NotificationChannel(
-      notification: 'Email (Free)',
-      notificationIcon: AppImage.channel_email,
-    ),
-    NotificationChannel(
-      notification: 'Push (Free)',
-      notificationIcon: AppImage.bell,
-    ),
-    NotificationChannel(
-      notification: 'SMS (₦15.00)',
-      notificationIcon: AppImage.sms,
-    ),
-    NotificationChannel(
-      notification: 'Whatsapp (₦20.00)',
-      notificationIcon: AppImage.whatsapp,
-    ),
-    NotificationChannel(
-      notification: 'Phone Call (₦50.00)',
-      notificationIcon: AppImage.phone,
-    ),
-  ];
+  // final List<NotificationChannel> channels = [
+  //   NotificationChannel(
+  //     notification: 'Email (Free)',
+  //     notificationIcon: AppImage.channel_email,
+  //   ),
+  //   NotificationChannel(
+  //     notification: 'Push (Free)',
+  //     notificationIcon: AppImage.bell,
+  //   ),
+  //   NotificationChannel(
+  //     notification: 'SMS (₦15.00)',
+  //     notificationIcon: AppImage.sms,
+  //   ),
+  //   NotificationChannel(
+  //     notification: 'Whatsapp (₦20.00)',
+  //     notificationIcon: AppImage.whatsapp,
+  //   ),
+  //   NotificationChannel(
+  //     notification: 'Phone Call (₦50.00)',
+  //     notificationIcon: AppImage.phone,
+  //   ),
+  // ];
 
   List<TextEditingController> medicationNameUpdateControllers = [];
   List<TextEditingController> drugNameUpdateControllers = [];
@@ -11520,6 +11540,7 @@ class AuthViewModel extends BaseViewModel {
 
   bool checkReminderEmpty() {
     final reminders = getReminderResponseModel?.data?.reminders;
+    final remindersDraft = getReminderDraftResponseModel?.data?.data;
 
     if (reminders == null || reminders.isEmpty) return true;
 
@@ -11527,6 +11548,7 @@ class AuthViewModel extends BaseViewModel {
     if (isReminderStatus == 'ongoing' && reminders.isNotEmpty) return true;
     if (isReminderStatus == 'completed' && reminders.isNotEmpty) return true;
     if (isReminderStatus == 'today' && reminders.isNotEmpty) return true;
+    if (isReminderStatus == 'draft' && remindersDraft!.isNotEmpty) return true;
 
     return false;
   }
@@ -11656,6 +11678,7 @@ class AuthViewModel extends BaseViewModel {
     model.markUpdateControllersInitialized();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setModalState(() {
+        model.formattedSelectedTimeAndPeriodList.clear();
         model.medicationNameEditControllers.text =
             data!.medication!.medicationName;
         model.durationEditControllers.text = data.medication!.durationInDays
@@ -14984,7 +15007,8 @@ class AuthViewModel extends BaseViewModel {
     model,
     draftPay.Medication? data,
   }) {
-    if (type == 'Tablet') {
+    // print('dosageTypeUpdateListDraft: $type ..........${data!.dosage}');
+    if (type == 'Tablet' || type == 'TABLET') {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -15004,10 +15028,9 @@ class AuthViewModel extends BaseViewModel {
             (e) => GestureDetector(
               onTap: () {
                 setMenuState(() {
-                  data.dosage = e;
-                  model.notifyListeners();
+                  data?.dosage = e;
+                  notifyListeners();
                 });
-
                 Future.delayed(Duration(milliseconds: 200), () {
                   Navigator.pop(ctx, e.toString());
                 });
@@ -15017,11 +15040,11 @@ class AuthViewModel extends BaseViewModel {
                 padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: data!.dosage == e
+                  color: data?.dosage == e
                       ? AppColors.skyBlue
                       : AppColors.white,
                   border: Border.all(
-                    color: data.dosage == e
+                    color: data?.dosage == e
                         ? AppColors.primary1
                         : Colors.transparent,
                   ),
@@ -15038,7 +15061,7 @@ class AuthViewModel extends BaseViewModel {
                       ),
                     ),
                     const Spacer(),
-                    if (data.dosage == e)
+                    if (data?.dosage == e)
                       Icon(
                         Icons.check,
                         color: AppColors.primary1,
@@ -15049,15 +15072,13 @@ class AuthViewModel extends BaseViewModel {
               ),
             ),
           ),
-
           GestureDetector(
             onTap: () {
               setMenuState(() {
-                data.dosage = '';
+                data!.dosage = '';
                 index = 0;
                 notifyListeners();
               });
-
               Future.delayed(Duration(milliseconds: 200), () {
                 Navigator.pop(ctx, index.toString());
               });
@@ -15067,9 +15088,9 @@ class AuthViewModel extends BaseViewModel {
               padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: data!.dosage == '' ? AppColors.skyBlue : AppColors.white,
+                color: data?.dosage == '' ? AppColors.skyBlue : AppColors.white,
                 border: Border.all(
-                  color: data.dosage == ''
+                  color: data?.dosage == ''
                       ? AppColors.primary1
                       : Colors.transparent,
                 ),
@@ -15078,7 +15099,6 @@ class AuthViewModel extends BaseViewModel {
                 children: [
                   Icon(Icons.add, color: AppColors.lightBlue, size: 16.sp),
                   SizedBox(width: 4.w),
-
                   TextView(
                     text: 'Enter custom dosage',
                     textStyle: TextStyle(
@@ -15089,7 +15109,7 @@ class AuthViewModel extends BaseViewModel {
                     ),
                   ),
                   const Spacer(),
-                  if (data.dosage == '')
+                  if (data?.dosage == '')
                     Icon(
                       Icons.check,
                       color: AppColors.primary1,
@@ -15102,7 +15122,7 @@ class AuthViewModel extends BaseViewModel {
         ],
       );
     }
-    if (type == 'Syrup') {
+    if (type == 'Syrup' || type == 'SYRUP') {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -15125,7 +15145,6 @@ class AuthViewModel extends BaseViewModel {
                   data.dosage = e;
                   notifyListeners();
                 });
-
                 Future.delayed(Duration(milliseconds: 200), () {
                   Navigator.pop(ctx, index.toString());
                 });
@@ -15218,7 +15237,7 @@ class AuthViewModel extends BaseViewModel {
         ],
       );
     }
-    if (type == 'Injection') {
+    if (type == 'Injection' || type == 'INJECTION') {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -15234,7 +15253,6 @@ class AuthViewModel extends BaseViewModel {
             ),
           ),
           SizedBox(height: 14.h),
-
           ...injectionDosageList!.map(
             (e) => GestureDetector(
               onTap: () {
@@ -15242,7 +15260,6 @@ class AuthViewModel extends BaseViewModel {
                   data.dosage = e;
                   notifyListeners();
                 });
-
                 Future.delayed(Duration(milliseconds: 200), () {
                   Navigator.pop(ctx, index.toString());
                 });
@@ -15284,7 +15301,6 @@ class AuthViewModel extends BaseViewModel {
               ),
             ),
           ),
-
           GestureDetector(
             onTap: () {
               setMenuState(() {
@@ -15335,7 +15351,7 @@ class AuthViewModel extends BaseViewModel {
         ],
       );
     }
-    if (type == 'Ointment') {
+    if (type == 'Ointment' || type == 'OINTMENT') {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -15449,7 +15465,7 @@ class AuthViewModel extends BaseViewModel {
         ],
       );
     }
-    if (type == 'Inhaler') {
+    if (type == 'Inhaler' || type == 'INHALER') {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -15470,7 +15486,7 @@ class AuthViewModel extends BaseViewModel {
               onTap: () {
                 setMenuState(() {
                   data.dosage = e;
-                  model.notifyListeners();
+                  notifyListeners();
                 });
                 Future.delayed(Duration(milliseconds: 200), () {
                   Navigator.pop(ctx, index.toString());
@@ -15562,7 +15578,7 @@ class AuthViewModel extends BaseViewModel {
         ],
       );
     }
-    if (type == 'Capsule') {
+    if (type == 'Capsule' || type == 'CAPSULE') {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -15582,10 +15598,9 @@ class AuthViewModel extends BaseViewModel {
             (e) => GestureDetector(
               onTap: () {
                 setMenuState(() {
-                  data.dosage = e;
-                  model.notifyListeners();
+                  data?.dosage = e;
+                  notifyListeners();
                 });
-
                 Future.delayed(Duration(milliseconds: 200), () {
                   Navigator.pop(ctx, index.toString());
                 });
@@ -15595,11 +15610,11 @@ class AuthViewModel extends BaseViewModel {
                 padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: data!.dosage == e
+                  color: data?.dosage == e
                       ? AppColors.skyBlue
                       : AppColors.white,
                   border: Border.all(
-                    color: data.dosage == e
+                    color: data?.dosage == e
                         ? AppColors.primary1
                         : Colors.transparent,
                   ),
@@ -15616,7 +15631,7 @@ class AuthViewModel extends BaseViewModel {
                       ),
                     ),
                     const Spacer(),
-                    if (data.dosage == e)
+                    if (data?.dosage == e)
                       Icon(
                         Icons.check,
                         color: AppColors.primary1,
@@ -15630,7 +15645,7 @@ class AuthViewModel extends BaseViewModel {
           GestureDetector(
             onTap: () {
               setMenuState(() {
-                data.dosage = '';
+                data?.dosage = '';
                 notifyListeners();
               });
               Future.delayed(Duration(milliseconds: 200), () {
@@ -15642,9 +15657,9 @@ class AuthViewModel extends BaseViewModel {
               padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 12.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: data!.dosage == '' ? AppColors.skyBlue : AppColors.white,
+                color: data?.dosage == '' ? AppColors.skyBlue : AppColors.white,
                 border: Border.all(
-                  color: data.dosage == ''
+                  color: data?.dosage == ''
                       ? AppColors.primary1
                       : Colors.transparent,
                 ),
@@ -15663,7 +15678,7 @@ class AuthViewModel extends BaseViewModel {
                     ),
                   ),
                   const Spacer(),
-                  if (data.dosage == '')
+                  if (data?.dosage == '')
                     Icon(
                       Icons.check,
                       color: AppColors.primary1,
@@ -16419,6 +16434,59 @@ class AuthViewModel extends BaseViewModel {
     return 'Edit Medication';
   }
 
+  Future<bool?> showRetryPaymentReminderModal(context) => showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: AppColors.transparent,
+    constraints: BoxConstraints(maxWidth: double.infinity),
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setModalState) {
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.88, // Initial height as percentage of screen
+              minChildSize: 0.7, // Minimum height
+              maxChildSize: 0.89, // Maximum height
+              expand: false, // Set to true for full height initially
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                    return ViewModelBuilder<AuthViewModel>.reactive(
+                      viewModelBuilder: () => locator<AuthViewModel>(),
+                      onViewModelReady: (model) {
+                        final defaultTime = DateTime(
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                        ); // hour=0, minute=0
+
+                        formattedSelectedTimeAndPeriod = DateFormat(
+                          'h:mm a',
+                        ).format(defaultTime);
+                      },
+                      disposeViewModel: false,
+                      onDispose: (viewModel) {},
+                      builder: (_, AuthViewModel model, _) {
+                        return retryPaymentModalFlow(
+                          model: model,
+                          context: context,
+                          setModalState: setModalState,
+                          scrollController: scrollController,
+                        );
+                      },
+                    );
+                  },
+            ),
+          );
+        },
+      );
+    },
+  );
+
   Future<bool?> showReminderModal(context) => showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -16441,6 +16509,7 @@ class AuthViewModel extends BaseViewModel {
                     return ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => locator<AuthViewModel>(),
                       onViewModelReady: (model) {
+                        model.getNotificationChannelPricing();
                         final defaultTime = DateTime(
                           0,
                           1,
@@ -16494,6 +16563,7 @@ class AuthViewModel extends BaseViewModel {
                     return ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => AuthViewModel(),
                       onViewModelReady: (model) {
+                        model.getNotificationChannelPricing();
                         final defaultTime = DateTime(
                           0,
                           1,
@@ -16550,6 +16620,7 @@ class AuthViewModel extends BaseViewModel {
                     return ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => AuthViewModel(),
                       onViewModelReady: (model) {
+                        model.getNotificationChannelPricing();
                         final defaultTime = DateTime(
                           0,
                           1,
@@ -16612,6 +16683,7 @@ class AuthViewModel extends BaseViewModel {
                     return ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => AuthViewModel(),
                       onViewModelReady: (model) {
+                        model.getNotificationChannelPricing();
                         final defaultTime = DateTime(
                           0,
                           1,
@@ -16714,6 +16786,176 @@ class AuthViewModel extends BaseViewModel {
         endDate: endDateController.text,
         startDateIso: DateTime.parse(startDateIso),
         endDateIso: DateTime.parse(endDateIso),
+        timesToTake: medDailyInTakenController.text,
+        note: model.noteController.text,
+        dosageMap: addTimePeriod,
+      ),
+    );
+
+    await Future.delayed(Duration(seconds: 2), () {});
+    model.markUpdateControllersInitializedFalse();
+    clearReminderMedsVaraibles(model);
+    _isLoading = false;
+    model.notifyListeners();
+    AppUtils.snackbar(context, message: 'Medication has been added.');
+    setModalState!(() {});
+    model.notifyListeners();
+  }
+
+  addReminderToUpdate({
+    AuthViewModel? model,
+    StateSetter? setModalState,
+    BuildContext? context,
+    getReminderId.Data? data,
+  }) async {
+    List<Map<String, dynamic>> addTimePeriod = [];
+    String startDateIsoWithin = data!.medication!.startDateTime!
+        .toIso8601String();
+    _isLoading = true;
+    model!.notifyListeners();
+
+    if (data.medication!.scheduleType == 'CUSTOM') {
+      for (int day = 0; day < data.medication!.durationInDays!; day++) {
+        List<Map<String, String>> dayDoses = [];
+        for (int i = 0; i < data.medication!.dailyDoseTimes![day].length; i++) {
+          dayDoses.add({
+            "time": data.medication!.dailyDoseTimes![day][i].time!,
+            "date": startDateIsoWithin.substring(0, 10),
+            "isoDate": startDateIsoWithin.toString(),
+          });
+        }
+
+        addTimePeriod.add({
+          'day': day + 1, // so Day 1, Day 2, etc.
+          'doses': dayDoses,
+        });
+        startDateIsoWithin = DateTime.parse(
+          startDateIsoWithin,
+        ).add(Duration(days: 0 + 1)).toString();
+      }
+    } else {
+      for (int day = 0; day < data.medication!.durationInDays!; day++) {
+        List<Map<String, String>> dayDoses = [];
+        for (
+          int i = 0;
+          i < model.formattedSelectedTimeAndPeriodList!.length;
+          i++
+        ) {
+          dayDoses.add({
+            "time": convertTo24Hour(
+              model.formattedSelectedTimeAndPeriodList![i],
+            ),
+            "date": startDateIsoWithin.substring(0, 10),
+            "isoDate": startDateIsoWithin.toString(),
+          });
+        }
+
+        addTimePeriod.add({
+          'day': day + 1, // so Day 1, Day 2, etc.
+          'doses': dayDoses,
+        });
+        startDateIsoWithin = DateTime.parse(
+          startDateIsoWithin,
+        ).add(Duration(days: 0 + 1)).toString();
+      }
+    }
+
+    await Future.delayed(Duration(seconds: 1), () {});
+
+    data.medication!.dailyDoseTimes = addTimePeriod
+        .map<List<doses.DailyDoseTime>>((day) {
+          final dosesMap = day['doses'] as List;
+
+          return dosesMap
+              .map((dose) => doses.DailyDoseTime.fromJson(dose))
+              .toList();
+        })
+        .toList();
+    await Future.delayed(Duration(seconds: 1), () {});
+    model.markUpdateControllersInitializedFalse();
+    _isLoading = false;
+    setModalState!(() {});
+    model.notifyListeners();
+  }
+
+  addReminderToListSaveAsDraft({
+    AuthViewModel? model,
+    StateSetter? setModalState,
+    BuildContext? context,
+  }) async {
+    List<Map<String, dynamic>> addTimePeriod = [];
+    String startDateIsoWithin = startDateIso;
+    _isLoading = true;
+    if (model!.returnNoDays == null) {
+      model.returnNoDays = 1;
+    }
+    model.notifyListeners();
+
+    if (model.isCusSchedule) {
+      for (int day = 0; day < model.returnNoDays!; day++) {
+        List<Map<String, String>> dayDoses = [];
+        for (int i = 0; i < model.timesPerDay[day]!.length; i++) {
+          dayDoses.add({
+            'time': model.timesPerDay[day]![i],
+            'date': startDateIsoWithin.substring(0, 10),
+            'isoDate': startDateIsoWithin,
+          });
+        }
+        startDateIsoWithin = DateTime.parse(
+          startDateIsoWithin,
+        ).add(Duration(days: 0 + 1)).toString();
+
+        addTimePeriod.add({
+          'day': day + 1, // so Day 1, Day 2, etc.
+          'doses': dayDoses,
+        });
+      }
+    } else {
+      for (int day = 0; day < model.returnNoDays!; day++) {
+        List<Map<String, String>> dayDoses = [];
+        for (int i = 0; i < formattedSelectedTimeAndPeriodList!.length; i++) {
+          dayDoses.add({
+            'time': formattedSelectedTimeAndPeriodList![i],
+            'date': startDateIsoWithin.substring(0, 10),
+            'isoDate': startDateIsoWithin,
+          });
+        }
+        final date = DateTime.tryParse(startDateIsoWithin);
+
+        if (date != null) {
+          startDateIsoWithin = date
+              .add(const Duration(days: 1))
+              .toIso8601String();
+        } else {
+          print('Invalid date: $startDateIsoWithin');
+        }
+
+        addTimePeriod.add({
+          'day': day + 1, // so Day 1, Day 2, etc.
+          'doses': dayDoses,
+        });
+      }
+    }
+
+    await Future.delayed(Duration(seconds: 1), () {});
+    model.medicationClassList.add(
+      MedicationClass(
+        medicationName: model.medNameController.text,
+        medicationType: model.medTypeController.text,
+        medicationTypeIcon: model.medTypeResultImage,
+        medicationFile: model.imageDrug,
+        dosage: medDosageController.text,
+        isCusSchedule: model.isCusSchedule,
+        imageData: model.uploadImageReminderResponseModel?.data ?? Data(),
+        dateAndTime: model.dateTimeController.text,
+        duration: returnNoDays.toString(),
+        endDate: endDateController.text,
+        startDateIso: startDateIso != ''
+            ? DateTime.parse(startDateIso)
+            : DateTime.now(),
+        endDateIso: endDateIso != ''
+            ? DateTime.parse(endDateIso)
+            : DateTime.now(),
         timesToTake: medDailyInTakenController.text,
         note: model.noteController.text,
         dosageMap: addTimePeriod,
@@ -21267,6 +21509,42 @@ class AuthViewModel extends BaseViewModel {
     model.notifyListeners();
   }
 
+  String notificationChannelSvgIcon(notification) {
+    if (notification == 'EMAIL') {
+      return AppImage.channel_email;
+    }
+    if (notification == 'PUSH') {
+      return AppImage.bell;
+    }
+    if (notification == 'SMS') {
+      return AppImage.sms;
+    }
+    if (notification == 'WHATSAPP') {
+      return AppImage.whatsapp;
+    }
+    if (notification == 'PHONE_CALL') {
+      return AppImage.phone;
+    }
+    return AppImage.channel_email;
+  }
+
+  String notificationChannelName(String notification) {
+    if (notification == 'PHONE_CALL') {
+      return 'Phone Call';
+    }
+    if (notification == 'SMS') {
+      return 'SMS';
+    }
+    return notification.capitalize();
+  }
+
+  String notificationChannelPrice(notificationPrice) {
+    if (notificationPrice == 0) {
+      return '(Free)';
+    }
+    return '(${formatNaira(notificationPrice)})';
+  }
+
   firstModalFLow({
     AuthViewModel? model,
     BuildContext? context,
@@ -22659,64 +22937,80 @@ class AuthViewModel extends BaseViewModel {
                         SizedBox(height: 12.h),
                         Divider(color: AppColors.grey),
                         SizedBox(height: 12.h),
-                        ...List.generate(channels.length, (index) {
-                          return chooseNotChannelWidget(
-                            context,
-                            svgIcon: channels[index].notificationIcon!,
-                            text: channels[index].notification!,
-                            isTapped: selectedIndexes.contains(
-                              index,
-                            ), // ✅ reflect state
-                            onTap: () {
-                              if (selectedIndexes.contains(index)) {
-                                // unselect
-                                selectedIndexes.remove(index);
-                                if (!selectedIndexes.contains(0) &&
-                                    !selectedIndexes.contains(1)) {
-                                  isTappedEmailAdded = false;
-                                  model.notifyListeners();
-                                }
-                                if (!selectedIndexes.contains(2) &&
-                                    !selectedIndexes.contains(3) &&
-                                    !selectedIndexes.contains(4)) {
-                                  isTappedPhoneAdded = false;
+                        ...List.generate(
+                          model.notificationChannelPricingResponseModel != null
+                              ? model
+                                    .notificationChannelPricingResponseModel!
+                                    .data!
+                                    .data!
+                                    .length
+                              : 0,
+                          (index) {
+                            return chooseNotChannelWidget(
+                              context,
+                              svgIcon: notificationChannelSvgIcon(
+                                model
+                                    .notificationChannelPricingResponseModel!
+                                    .data!
+                                    .data![index]
+                                    .channel,
+                              ),
+                              text:
+                                  "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
+                              isTapped: selectedIndexes.contains(
+                                index,
+                              ), // ✅ reflect state
+                              onTap: () {
+                                if (selectedIndexes.contains(index)) {
+                                  // unselect
+                                  selectedIndexes.remove(index);
+                                  if (!selectedIndexes.contains(0) &&
+                                      !selectedIndexes.contains(1)) {
+                                    isTappedEmailAdded = false;
+                                    model.notifyListeners();
+                                  }
+                                  if (!selectedIndexes.contains(2) &&
+                                      !selectedIndexes.contains(3) &&
+                                      !selectedIndexes.contains(4)) {
+                                    isTappedPhoneAdded = false;
 
-                                  model.notifyListeners();
-                                }
-                              } else {
-                                // select
-                                selectedIndexes.add(index);
-                                // ✅ Show specific dialogs
-                                if (index == 0 || index == 1) {
-                                  // Email
-                                  isTappedEmailAdded = true;
-                                  model.notifyListeners();
-                                } else if ([2, 3, 4].contains(index)) {
-                                  // Phone-related channels
-                                  isTappedPhoneAdded = true;
-                                  isPhoneValid = false;
-                                  if (addedPhoneReminderList.contains(
-                                    SharedPreferencesService
-                                        .instance
-                                        .usersData['user']['phone'],
-                                  )) {
-                                  } else {
-                                    addedPhoneReminderList.add(
+                                    model.notifyListeners();
+                                  }
+                                } else {
+                                  // select
+                                  selectedIndexes.add(index);
+                                  // ✅ Show specific dialogs
+                                  if (index == 0 || index == 1) {
+                                    // Email
+                                    isTappedEmailAdded = true;
+                                    model.notifyListeners();
+                                  } else if ([2, 3, 4].contains(index)) {
+                                    // Phone-related channels
+                                    isTappedPhoneAdded = true;
+                                    isPhoneValid = false;
+                                    if (addedPhoneReminderList.contains(
                                       SharedPreferencesService
                                           .instance
                                           .usersData['user']['phone'],
-                                    );
+                                    )) {
+                                    } else {
+                                      addedPhoneReminderList.add(
+                                        SharedPreferencesService
+                                            .instance
+                                            .usersData['user']['phone'],
+                                      );
+                                    }
+                                    model.notifyListeners();
                                   }
-                                  model.notifyListeners();
                                 }
-                              }
-                              // ✅ update selection
-                              buildChannelList(selectedIndexes);
-                              // addCostTotal(model);
-                              model.notifyListeners();
-                            },
-                          );
-                        }),
+                                // ✅ update selection
+                                buildChannelList(selectedIndexes);
+                                // addCostTotal(model);
+                                model.notifyListeners();
+                              },
+                            );
+                          },
+                        ),
                         SizedBox(height: 12.h),
                         isTappedEmailAdded
                             ? Column(
@@ -23592,91 +23886,92 @@ class AuthViewModel extends BaseViewModel {
                                 buttonBorderColor: AppColors.primary,
                                 isLoading: model.isLoading,
                                 onPressed: () async {
-                                  if (firstFormReminderKey.currentState!
-                                      .validate()) {
-                                    await model.addReminderToList(
-                                      model: model,
-                                      setModalState: setModalState,
-                                      context: context,
-                                    );
+                                  await model.addReminderToListSaveAsDraft(
+                                    model: model,
+                                    setModalState: setModalState,
+                                    context: context,
+                                  );
+                                  if (isTappedEmailAdded &&
+                                          addedEmailReminderList.isEmpty ||
+                                      isTappedPhoneAdded &&
+                                          addedPhoneReminderList.isEmpty) {
                                     if (isTappedEmailAdded &&
-                                            addedEmailReminderList.isEmpty ||
-                                        isTappedPhoneAdded &&
-                                            addedPhoneReminderList.isEmpty) {
-                                      if (isTappedEmailAdded &&
-                                          addedEmailReminderList.isEmpty) {}
-                                      if (isTappedPhoneAdded &&
-                                          addedPhoneReminderList.isEmpty) {}
-                                    } else {
-                                      model.saveReminderToDraft(
-                                        context: context,
-                                        savedraft: SaveDraftReminderEntityModel(
-                                          title: '',
-                                          payload: Payload(
-                                            medications: model.medicationClassList.map((
-                                              m,
-                                            ) {
-                                              return saveDraft.Medication(
-                                                medicationName:
-                                                    m.medicationName,
-                                                scheduleType: m.isCusSchedule!
-                                                    ? 'CUSTOM'
-                                                    : 'FIXED',
-                                                dosage: m.dosage,
-                                                medicationType: m
-                                                    .medicationType!
-                                                    .toUpperCase(),
-                                                startDateTime: m.startDateIso,
-                                                endDateTime: m.endDateIso,
-                                                durationInDays: int.parse(
-                                                  m.duration!,
-                                                ),
-                                                timesPerDay: m.isCusSchedule!
-                                                    ? 0
-                                                    : int.parse(m.timesToTake!),
-                                                dailyDoseTimes: (m.dosageMap as List)
-                                                    .map(
-                                                      (
-                                                        dayData,
-                                                      ) => (dayData['doses'] as List)
-                                                          .map(
-                                                            (dose) =>
-                                                                saveDraftDose
-                                                                    .DailyDoseTime.fromJson(
-                                                                  dose
-                                                                      as Map<
-                                                                        String,
-                                                                        dynamic
-                                                                      >,
-                                                                ),
-                                                          )
-                                                          .toList(),
-                                                    )
-                                                    .toList(),
-                                                note: m.note,
-                                                medicationImage:
-                                                    m.imageData!.url == null
-                                                    ? null
-                                                    : saveDraftImage
-                                                          .MedicationImage.fromJson(
-                                                        m.imageData!.toJson(),
-                                                      ),
-                                              );
-                                            }).toList(),
-                                            timeZone: "Africa/Lagos",
-                                            notificationChannels:
-                                                notificationChannel,
-                                            emails: addedEmailReminderList,
-                                            phoneNumbers:
-                                                addedPhoneReminderList,
-                                          ),
+                                        addedEmailReminderList.isEmpty) {}
+                                    if (isTappedPhoneAdded &&
+                                        addedPhoneReminderList.isEmpty) {}
+                                  } else {
+                                    model.saveReminderToDraft(
+                                      context: context,
+                                      savedraft: SaveDraftReminderEntityModel(
+                                        title: '',
+                                        payload: Payload(
+                                          medications: model.medicationClassList.map((
+                                            m,
+                                          ) {
+                                            return saveDraft.Medication(
+                                              medicationName: m.medicationName,
+                                              scheduleType: m.isCusSchedule!
+                                                  ? 'CUSTOM'
+                                                  : 'FIXED',
+                                              dosage: m.dosage,
+                                              medicationType: m.medicationType!
+                                                  .toUpperCase(),
+                                              startDateTime:
+                                                  m.startDateIso ??
+                                                  DateTime.parse(''),
+                                              endDateTime:
+                                                  m.endDateIso ??
+                                                  DateTime.parse(''),
+                                              durationInDays: m.duration == null
+                                                  ? 0
+                                                  : int.parse(m.duration!),
+                                              timesPerDay: m.isCusSchedule!
+                                                  ? 0
+                                                  : m.timesToTake != ''
+                                                  ? int.parse(m.timesToTake!)
+                                                  : 0,
+                                              dailyDoseTimes: (m.dosageMap as List)
+                                                  .map(
+                                                    (
+                                                      dayData,
+                                                    ) => (dayData['doses'] as List)
+                                                        .map(
+                                                          (dose) =>
+                                                              saveDraftDose
+                                                                  .DailyDoseTime.fromJson(
+                                                                dose
+                                                                    as Map<
+                                                                      String,
+                                                                      dynamic
+                                                                    >,
+                                                              ),
+                                                        )
+                                                        .toList(),
+                                                  )
+                                                  .toList(),
+                                              note: m.note,
+                                              medicationImage:
+                                                  m.imageData!.url == null
+                                                  ? null
+                                                  : saveDraftImage
+                                                        .MedicationImage.fromJson(
+                                                      m.imageData!.toJson(),
+                                                    ),
+                                            );
+                                          }).toList(),
+                                          timeZone: "Africa/Lagos",
+                                          notificationChannels:
+                                              notificationChannel,
+                                          emails: addedEmailReminderList,
+                                          phoneNumbers: addedPhoneReminderList,
                                         ),
-                                        model: model,
-                                      );
-                                    }
-                                    setModalState!(() {});
-                                    model.notifyListeners();
+                                      ),
+                                      model: model,
+                                    );
                                   }
+                                  setModalState!(() {});
+                                  model.notifyListeners();
+                                  // }
                                 },
                               ),
                             ),
@@ -26900,56 +27195,71 @@ class AuthViewModel extends BaseViewModel {
                       SizedBox(height: 12.h),
                       Divider(color: AppColors.grey),
                       SizedBox(height: 8.2.h),
-                      ...List.generate(channels.length, (index) {
-                        return chooseNotChannelWidget(
-                          context,
-                          svgIcon: channels[index].notificationIcon!,
-                          text: channels[index].notification!,
-                          isTapped: selectedIndexes.contains(
-                            index,
-                          ), // ✅ reflect state
-                          onTap: () {
-                            if (selectedIndexes.contains(index)) {
-                              // unselect
-                              selectedIndexes.remove(index);
-                              if (!selectedIndexes.contains(0) &&
-                                  !selectedIndexes.contains(1)) {
-                                isTappedEmailAdded = false;
-                                addedEmailReminderList.clear();
-                                model.notifyListeners();
-                              }
-                              if (!selectedIndexes.contains(2) &&
-                                  !selectedIndexes.contains(3) &&
-                                  !selectedIndexes.contains(4)) {
-                                addedPhoneReminderList.clear();
-                                isTappedPhoneAdded = false;
-                                model.notifyListeners();
-                              }
-                            } else {
-                              // select
-                              selectedIndexes.add(index);
-                              // ✅ Show specific dialogs
-                              if (index == 0 || index == 1) {
-                                // Email
-                                isTappedEmailAdded = true;
-                                model.notifyListeners();
-                              } else if ([2, 3, 4].contains(index)) {
-                                // Phone-related channels
-                                isTappedPhoneAdded = true;
-                                isPhoneValid = false;
+                      ...List.generate(
+                        model
+                            .notificationChannelPricingResponseModel!
+                            .data!
+                            .data!
+                            .length,
+                        (index) {
+                          return chooseNotChannelWidget(
+                            context,
+                            svgIcon: notificationChannelSvgIcon(
+                              model
+                                  .notificationChannelPricingResponseModel!
+                                  .data!
+                                  .data![index]
+                                  .channel,
+                            ),
+                            text:
+                                "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
 
-                                model.notifyListeners();
+                            isTapped: selectedIndexes.contains(
+                              index,
+                            ), // ✅ reflect state
+                            onTap: () {
+                              if (selectedIndexes.contains(index)) {
+                                // unselect
+                                selectedIndexes.remove(index);
+                                if (!selectedIndexes.contains(0) &&
+                                    !selectedIndexes.contains(1)) {
+                                  isTappedEmailAdded = false;
+                                  addedEmailReminderList.clear();
+                                  model.notifyListeners();
+                                }
+                                if (!selectedIndexes.contains(2) &&
+                                    !selectedIndexes.contains(3) &&
+                                    !selectedIndexes.contains(4)) {
+                                  addedPhoneReminderList.clear();
+                                  isTappedPhoneAdded = false;
+                                  model.notifyListeners();
+                                }
                               } else {
-                                isTappedEmailAdded = false;
-                                isTappedPhoneAdded = false;
-                                model.notifyListeners();
-                              }
-                            } // ✅ update selection
-                            buildChannelList(selectedIndexes);
-                            model.notifyListeners();
-                          },
-                        );
-                      }),
+                                // select
+                                selectedIndexes.add(index);
+                                // ✅ Show specific dialogs
+                                if (index == 0 || index == 1) {
+                                  // Email
+                                  isTappedEmailAdded = true;
+                                  model.notifyListeners();
+                                } else if ([2, 3, 4].contains(index)) {
+                                  // Phone-related channels
+                                  isTappedPhoneAdded = true;
+                                  isPhoneValid = false;
+
+                                  model.notifyListeners();
+                                } else {
+                                  isTappedEmailAdded = false;
+                                  isTappedPhoneAdded = false;
+                                  model.notifyListeners();
+                                }
+                              } // ✅ update selection
+                              buildChannelList(selectedIndexes);
+                              model.notifyListeners();
+                            },
+                          );
+                        },
+                      ),
                       SizedBox(height: 12.h),
                       isTappedEmailAdded
                           ? Column(
@@ -27749,54 +28059,160 @@ class AuthViewModel extends BaseViewModel {
                         ),
                       ),
                       SizedBox(height: 30.h),
-                      ButtonWidget(
-                        border: 100.r,
-                        buttonColor: AppColors.primary,
-                        buttonText: 'Continue',
-                        color: AppColors.white,
-                        buttonBorderColor: AppColors.transparent,
-                        isLoading: model.isLoading,
-                        onPressed: () async {
-                          if (secondFormReminderKey.currentState != null) {
-                            if (secondFormReminderKey.currentState!
-                                .validate()) {
-                              await model.addReminderToList(
-                                model: model,
-                                setModalState: setModalState,
-                                context: context,
-                              );
-                              if (isTappedEmailAdded &&
-                                      addedEmailReminderList.isEmpty ||
-                                  isTappedPhoneAdded &&
-                                      addedPhoneReminderList.isEmpty) {
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.white,
+                              buttonText: 'Save as Draft',
+                              color: AppColors.primary,
+                              buttonBorderColor: AppColors.primary,
+                              isLoading: model.isLoading,
+                              onPressed: () async {
+                                await model.addReminderToListSaveAsDraft(
+                                  model: model,
+                                  setModalState: setModalState,
+                                  context: context,
+                                );
                                 if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty) {}
-                                if (isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {}
-                              } else {
-                                linIndex++;
-                                addCostTotal(model);
-                              }
-                            }
-                          } else {
-                            _isLoading = true;
-                            if (isTappedEmailAdded &&
-                                    addedEmailReminderList.isEmpty ||
-                                isTappedPhoneAdded &&
-                                    addedPhoneReminderList.isEmpty) {
-                              if (isTappedEmailAdded &&
-                                  addedEmailReminderList.isEmpty) {}
-                              if (isTappedPhoneAdded &&
-                                  addedPhoneReminderList.isEmpty) {}
-                            } else {
-                              linIndex++;
-                              addCostTotal(model);
-                            }
-                            _isLoading = false;
-                          }
-                          setModalState!(() {});
-                          model.notifyListeners();
-                        },
+                                        addedEmailReminderList.isEmpty ||
+                                    isTappedPhoneAdded &&
+                                        addedPhoneReminderList.isEmpty) {
+                                  if (isTappedEmailAdded &&
+                                      addedEmailReminderList.isEmpty) {}
+                                  if (isTappedPhoneAdded &&
+                                      addedPhoneReminderList.isEmpty) {}
+                                } else {
+                                  model.saveReminderToDraft(
+                                    context: context,
+                                    savedraft: SaveDraftReminderEntityModel(
+                                      title: '',
+                                      payload: Payload(
+                                        medications: model.medicationClassList.map((
+                                          m,
+                                        ) {
+                                          return saveDraft.Medication(
+                                            medicationName: m.medicationName,
+                                            scheduleType: m.isCusSchedule!
+                                                ? 'CUSTOM'
+                                                : 'FIXED',
+                                            dosage: m.dosage,
+                                            medicationType: m.medicationType!
+                                                .toUpperCase(),
+                                            startDateTime:
+                                                m.startDateIso ??
+                                                DateTime.parse(''),
+                                            endDateTime:
+                                                m.endDateIso ??
+                                                DateTime.parse(''),
+                                            durationInDays: m.duration == null
+                                                ? 0
+                                                : int.parse(m.duration!),
+                                            timesPerDay: m.isCusSchedule!
+                                                ? 0
+                                                : m.timesToTake != ''
+                                                ? int.parse(m.timesToTake!)
+                                                : 0,
+                                            dailyDoseTimes: (m.dosageMap as List)
+                                                .map(
+                                                  (
+                                                    dayData,
+                                                  ) => (dayData['doses'] as List)
+                                                      .map(
+                                                        (dose) =>
+                                                            saveDraftDose
+                                                                .DailyDoseTime.fromJson(
+                                                              dose
+                                                                  as Map<
+                                                                    String,
+                                                                    dynamic
+                                                                  >,
+                                                            ),
+                                                      )
+                                                      .toList(),
+                                                )
+                                                .toList(),
+                                            note: m.note,
+                                            medicationImage:
+                                                m.imageData!.url == null
+                                                ? null
+                                                : saveDraftImage
+                                                      .MedicationImage.fromJson(
+                                                    m.imageData!.toJson(),
+                                                  ),
+                                          );
+                                        }).toList(),
+                                        timeZone: "Africa/Lagos",
+                                        notificationChannels:
+                                            notificationChannel,
+                                        emails: addedEmailReminderList,
+                                        phoneNumbers: addedPhoneReminderList,
+                                      ),
+                                    ),
+                                    model: model,
+                                  );
+                                }
+                                setModalState!(() {});
+                                model.notifyListeners();
+                                // }
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 20.h),
+                          Expanded(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.primary,
+                              buttonText: 'Continue',
+                              color: AppColors.white,
+                              buttonBorderColor: AppColors.transparent,
+                              isLoading: model.isLoading,
+                              onPressed: () async {
+                                if (secondFormReminderKey.currentState !=
+                                    null) {
+                                  if (secondFormReminderKey.currentState!
+                                      .validate()) {
+                                    await model.addReminderToList(
+                                      model: model,
+                                      setModalState: setModalState,
+                                      context: context,
+                                    );
+                                    if (isTappedEmailAdded &&
+                                            addedEmailReminderList.isEmpty ||
+                                        isTappedPhoneAdded &&
+                                            addedPhoneReminderList.isEmpty) {
+                                      if (isTappedEmailAdded &&
+                                          addedEmailReminderList.isEmpty) {}
+                                      if (isTappedPhoneAdded &&
+                                          addedPhoneReminderList.isEmpty) {}
+                                    } else {
+                                      linIndex++;
+                                      addCostTotal(model);
+                                    }
+                                  }
+                                } else {
+                                  _isLoading = true;
+                                  if (isTappedEmailAdded &&
+                                          addedEmailReminderList.isEmpty ||
+                                      isTappedPhoneAdded &&
+                                          addedPhoneReminderList.isEmpty) {
+                                    if (isTappedEmailAdded &&
+                                        addedEmailReminderList.isEmpty) {}
+                                    if (isTappedPhoneAdded &&
+                                        addedPhoneReminderList.isEmpty) {}
+                                  } else {
+                                    linIndex++;
+                                    addCostTotal(model);
+                                  }
+                                  _isLoading = false;
+                                }
+                                setModalState!(() {});
+                                model.notifyListeners();
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 50.h),
                     ],
@@ -28044,7 +28460,7 @@ class AuthViewModel extends BaseViewModel {
                                                   .medicationImage!
                                                   .url!
                                                   .contains('https')
-                                          ? Image.asset(
+                                          ? Image.network(
                                               data
                                                   .medication!
                                                   .medicationImage!
@@ -28057,11 +28473,19 @@ class AuthViewModel extends BaseViewModel {
                                                     error,
                                                     stackTrace,
                                                   ) => SvgPicture.asset(
-                                                    AppImage.image_icon,
+                                                    model.isMedTypeView(
+                                                      data
+                                                          .medication!
+                                                          .medicationType!
+                                                          .toUpperCase(),
+                                                    ),
                                                   ),
                                             )
                                           : SvgPicture.asset(
-                                              AppImage.image_icon,
+                                              model.isMedTypeView(
+                                                data.medication!.medicationType!
+                                                    .toUpperCase(),
+                                              ),
                                             ),
                                     ),
                                   ),
@@ -28152,7 +28576,9 @@ class AuthViewModel extends BaseViewModel {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     controller: TextEditingController(
-                      text: data.medication!.dosage!.capitalizeWords(),
+                      text: data.medication?.dosage != ''
+                          ? data.medication?.dosage?.capitalizeWords()
+                          : '',
                     ),
                     fillColor: AppColors.white,
                     isFilled: true,
@@ -29243,60 +29669,77 @@ class AuthViewModel extends BaseViewModel {
             SizedBox(height: 12.h),
             Divider(color: AppColors.grey),
             SizedBox(height: 12.h),
-            ...List.generate(channels.length, (index) {
-              return chooseNotChannelWidget(
-                context,
-                svgIcon: channels[index].notificationIcon!,
-                text: channels[index].notification!,
-                isTapped: selectedIndexes.contains(index), // ✅ reflect state
-                onTap: () {
-                  if (selectedIndexes.contains(index)) {
-                    // unselect
-                    selectedIndexes.remove(index);
-                    if (!selectedIndexes.contains(0) &&
-                        !selectedIndexes.contains(1)) {
-                      isTappedEmailAdded = false;
-                      model.notifyListeners();
-                    }
-                    if (!selectedIndexes.contains(2) &&
-                        !selectedIndexes.contains(3) &&
-                        !selectedIndexes.contains(4)) {
-                      isTappedPhoneAdded = false;
-                      model.notifyListeners();
-                    }
-                  } else {
-                    // select
-                    selectedIndexes.add(index);
-                    // ✅ Show specific dialogs
-                    if (index == 0 || index == 1) {
-                      // Email
-                      isTappedEmailAdded = true;
-                      model.notifyListeners();
-                    } else if ([2, 3, 4].contains(index)) {
-                      // Phone-related channels
-                      isTappedPhoneAdded = true;
-                      isPhoneValid = false;
-                      if (addedPhoneReminderList.contains(
-                        SharedPreferencesService
-                            .instance
-                            .usersData['user']['phone'],
-                      )) {
-                      } else {
-                        addedPhoneReminderList.add(
-                          SharedPreferencesService
-                              .instance
-                              .usersData['user']['phone'],
-                        );
+            ...List.generate(
+              model.notificationChannelPricingResponseModel != null
+                  ? model
+                        .notificationChannelPricingResponseModel!
+                        .data!
+                        .data!
+                        .length
+                  : 0,
+              (index) {
+                return chooseNotChannelWidget(
+                  context,
+                  svgIcon: notificationChannelSvgIcon(
+                    model
+                        .notificationChannelPricingResponseModel!
+                        .data!
+                        .data![index]
+                        .channel,
+                  ),
+                  text:
+                      "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
+
+                  isTapped: selectedIndexes.contains(index), // ✅ reflect state
+                  onTap: () {
+                    if (selectedIndexes.contains(index)) {
+                      // unselect
+                      selectedIndexes.remove(index);
+                      if (!selectedIndexes.contains(0) &&
+                          !selectedIndexes.contains(1)) {
+                        isTappedEmailAdded = false;
+                        model.notifyListeners();
                       }
-                      model.notifyListeners();
+                      if (!selectedIndexes.contains(2) &&
+                          !selectedIndexes.contains(3) &&
+                          !selectedIndexes.contains(4)) {
+                        isTappedPhoneAdded = false;
+                        model.notifyListeners();
+                      }
+                    } else {
+                      // select
+                      selectedIndexes.add(index);
+                      // ✅ Show specific dialogs
+                      if (index == 0 || index == 1) {
+                        // Email
+                        isTappedEmailAdded = true;
+                        model.notifyListeners();
+                      } else if ([2, 3, 4].contains(index)) {
+                        // Phone-related channels
+                        isTappedPhoneAdded = true;
+                        isPhoneValid = false;
+                        // if (addedPhoneReminderList.contains(
+                        //   SharedPreferencesService
+                        //       .instance
+                        //       .usersData['user']['phone'],
+                        // )) {
+                        // } else {
+                        //   addedPhoneReminderList.add(
+                        //     SharedPreferencesService
+                        //         .instance
+                        //         .usersData['user']['phone'],
+                        //   );
+                        // }
+                        model.notifyListeners();
+                      }
                     }
-                  }
-                  // ✅ update selection
-                  // buildChannelList(selectedIndexes);
-                  model.notifyListeners();
-                },
-              );
-            }),
+                    // ✅ update selection
+                    buildChannelList(selectedIndexes);
+                    model.notifyListeners();
+                  },
+                );
+              },
+            ),
             SizedBox(height: 12.h),
             isTappedEmailAdded
                 ? Column(
@@ -29676,7 +30119,7 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                             child: TextView(
                                               text:
-                                                  '${phoneReminderList.length + 1}',
+                                                  '${phoneReminderList.length}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 11.8.sp,
@@ -30044,55 +30487,58 @@ class AuthViewModel extends BaseViewModel {
             //   ),
             // ),
             // SizedBox(height: 30.h),
-            Row(
-              children: [
-                Expanded(
-                  child: ButtonWidget(
-                    border: 100.r,
-                    buttonColor: AppColors.white,
-                    buttonText: 'Save as Draft',
-                    color: AppColors.primary,
-                    buttonBorderColor: AppColors.primary,
-                    isLoading: model.isLoading,
-                    onPressed: () async {
-                      if (firstFormReminderKey.currentState!.validate()) {
-                        setModalState!(() {});
-                        model.notifyListeners();
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(width: 22.w),
-                Expanded(
-                  child: ButtonWidget(
-                    border: 100.r,
-                    buttonColor: AppColors.primary,
-                    buttonText: 'Continue',
-                    color: AppColors.white,
-                    buttonBorderColor: AppColors.transparent,
-                    isLoading: model.isLoading,
-                    onPressed: () async {
-                      if (firstFormReminderKey.currentState!.validate()) {
-                        if (isTappedEmailAdded &&
-                                addedEmailReminderList.isEmpty ||
-                            isTappedPhoneAdded &&
-                                addedPhoneReminderList.isEmpty) {
-                          if (isTappedEmailAdded &&
-                              addedEmailReminderList.isEmpty) {}
-                          if (isTappedPhoneAdded &&
-                              addedPhoneReminderList.isEmpty) {}
-                        } else {
-                          addCostTotalUpdate(data);
-                          Future.delayed(Duration(milliseconds: 1400));
-                          linIndexEditUpdate++;
-                        }
-                        setModalState!(() {});
-                        model.notifyListeners();
-                      }
-                    },
-                  ),
-                ),
-              ],
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: ButtonWidget(
+            //         border: 100.r,
+            //         buttonColor: AppColors.white,
+            //         buttonText: 'Save as Draft',
+            //         color: AppColors.primary,
+            //         buttonBorderColor: AppColors.primary,
+            //         isLoading: model.isLoading,
+            //         onPressed: () async {
+            //           if (firstFormReminderKey.currentState!.validate()) {
+            //             setModalState!(() {});
+            //             model.notifyListeners();
+            //           }
+            //         },
+            //       ),
+            //     ),
+            //     SizedBox(width: 22.w),
+            //     Expanded(
+            //       child:
+            //     ),
+            //   ],
+            // ),
+            ButtonWidget(
+              border: 100.r,
+              buttonColor: AppColors.primary,
+              buttonText: 'Continue',
+              color: AppColors.white,
+              buttonBorderColor: AppColors.transparent,
+              isLoading: model.isLoading,
+              onPressed: () async {
+                if (firstFormReminderKey.currentState!.validate()) {
+                  if (isTappedEmailAdded && addedEmailReminderList.isEmpty ||
+                      isTappedPhoneAdded && addedPhoneReminderList.isEmpty) {
+                    if (isTappedEmailAdded && addedEmailReminderList.isEmpty) {}
+                    if (isTappedPhoneAdded && addedPhoneReminderList.isEmpty) {}
+                  } else {
+                    await addReminderToUpdate(
+                      model: model,
+                      setModalState: setModalState,
+                      context: context,
+                      data: data,
+                    );
+                    addCostTotalUpdate(data: data, model: model);
+                    linIndexEditUpdate++;
+                  }
+                }
+
+                setModalState!(() {});
+                model.notifyListeners();
+              },
             ),
             SizedBox(height: 50.h),
           ],
@@ -35621,60 +36067,77 @@ class AuthViewModel extends BaseViewModel {
             SizedBox(height: 12.h),
             Divider(color: AppColors.grey),
             SizedBox(height: 12.h),
-            ...List.generate(channels.length, (index) {
-              return chooseNotChannelWidget(
-                context,
-                svgIcon: channels[index].notificationIcon!,
-                text: channels[index].notification!,
-                isTapped: selectedIndexes.contains(index), // ✅ reflect state
-                onTap: () {
-                  if (selectedIndexes.contains(index)) {
-                    // unselect
-                    selectedIndexes.remove(index);
-                    if (!selectedIndexes.contains(0) &&
-                        !selectedIndexes.contains(1)) {
-                      isTappedEmailAdded = false;
-                      model.notifyListeners();
-                    }
-                    if (!selectedIndexes.contains(2) &&
-                        !selectedIndexes.contains(3) &&
-                        !selectedIndexes.contains(4)) {
-                      isTappedPhoneAdded = false;
-                      model.notifyListeners();
-                    }
-                  } else {
-                    // select
-                    selectedIndexes.add(index);
-                    // ✅ Show specific dialogs
-                    if (index == 0 || index == 1) {
-                      // Email
-                      isTappedEmailAdded = true;
-                      model.notifyListeners();
-                    } else if ([2, 3, 4].contains(index)) {
-                      // Phone-related channels
-                      isTappedPhoneAdded = true;
-                      isPhoneValid = false;
-                      if (addedPhoneReminderList.contains(
-                        SharedPreferencesService
-                            .instance
-                            .usersData['user']['phone'],
-                      )) {
-                      } else {
-                        addedPhoneReminderList.add(
+            ...List.generate(
+              model.notificationChannelPricingResponseModel != null
+                  ? model
+                        .notificationChannelPricingResponseModel!
+                        .data!
+                        .data!
+                        .length
+                  : 0,
+              (index) {
+                return chooseNotChannelWidget(
+                  context,
+                  svgIcon: notificationChannelSvgIcon(
+                    model
+                        .notificationChannelPricingResponseModel!
+                        .data!
+                        .data![index]
+                        .channel,
+                  ),
+                  text:
+                      "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
+
+                  isTapped: selectedIndexes.contains(index), // ✅ reflect state
+                  onTap: () {
+                    if (selectedIndexes.contains(index)) {
+                      // unselect
+                      selectedIndexes.remove(index);
+                      if (!selectedIndexes.contains(0) &&
+                          !selectedIndexes.contains(1)) {
+                        isTappedEmailAdded = false;
+                        model.notifyListeners();
+                      }
+                      if (!selectedIndexes.contains(2) &&
+                          !selectedIndexes.contains(3) &&
+                          !selectedIndexes.contains(4)) {
+                        isTappedPhoneAdded = false;
+                        model.notifyListeners();
+                      }
+                    } else {
+                      // select
+                      selectedIndexes.add(index);
+                      // ✅ Show specific dialogs
+                      if (index == 0 || index == 1) {
+                        // Email
+                        isTappedEmailAdded = true;
+                        model.notifyListeners();
+                      } else if ([2, 3, 4].contains(index)) {
+                        // Phone-related channels
+                        isTappedPhoneAdded = true;
+                        isPhoneValid = false;
+                        if (addedPhoneReminderList.contains(
                           SharedPreferencesService
                               .instance
                               .usersData['user']['phone'],
-                        );
+                        )) {
+                        } else {
+                          addedPhoneReminderList.add(
+                            SharedPreferencesService
+                                .instance
+                                .usersData['user']['phone'],
+                          );
+                        }
+                        model.notifyListeners();
                       }
-                      model.notifyListeners();
                     }
-                  }
-                  // ✅ update selection
-                  // buildChannelList(selectedIndexes);
-                  model.notifyListeners();
-                },
-              );
-            }),
+                    // ✅ update selection
+                    // buildChannelList(selectedIndexes);
+                    model.notifyListeners();
+                  },
+                );
+              },
+            ),
             SizedBox(height: 12.h),
             isTappedEmailAdded
                 ? Column(
@@ -36054,7 +36517,7 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                             child: TextView(
                                               text:
-                                                  '${phoneReminderList.length + 1}',
+                                                  '${phoneReminderList.length}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 11.8.sp,
@@ -36460,7 +36923,7 @@ class AuthViewModel extends BaseViewModel {
                           if (isTappedPhoneAdded &&
                               addedPhoneReminderList.isEmpty) {}
                         } else {
-                          addCostTotalUpdateReminder(data);
+                          addCostTotalUpdateReminder(data: data, model: model);
                           Future.delayed(Duration(milliseconds: 1400));
                           linIndexEditUpdate++;
                         }
@@ -40560,6 +41023,27 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
+  String formatDateTextController(dynamic value) {
+    if (value == null) return '';
+
+    if (value is DateTime) {
+      return DateFormat('d MMM, yyyy').format(value);
+    }
+
+    if (value is String) {
+      final date = DateTime.tryParse(value);
+
+      if (date != null) {
+        return DateFormat('d MMM, yyyy').format(date);
+      }
+
+      // If it's already a formatted string or invalid, return it as-is
+      return value;
+    }
+
+    return '';
+  }
+
   firstUpdateModalFLowDraft({
     AuthViewModel? model,
     BuildContext? context,
@@ -40723,6 +41207,7 @@ class AuthViewModel extends BaseViewModel {
                         if (result != null) {
                           setModalState!(() {
                             data.medicationType = result["type"];
+                            model.notifyListeners();
                           });
                         }
                       },
@@ -40808,11 +41293,17 @@ class AuthViewModel extends BaseViewModel {
                                                     error,
                                                     stackTrace,
                                                   ) => SvgPicture.asset(
-                                                    AppImage.image_icon,
+                                                    model.isMedTypeView(
+                                                      data.medicationType!
+                                                          .toUpperCase(),
+                                                    ),
                                                   ),
                                             )
                                           : SvgPicture.asset(
-                                              AppImage.image_icon,
+                                              model.isMedTypeView(
+                                                data.medicationType!
+                                                    .toUpperCase(),
+                                              ),
                                             ),
                                     ),
                                   ),
@@ -40903,7 +41394,9 @@ class AuthViewModel extends BaseViewModel {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     controller: TextEditingController(
-                      text: data.dosage!.capitalizeWords(),
+                      text: data.dosage != ''
+                          ? data.dosage!.capitalizeWords()
+                          : '',
                     ),
                     fillColor: AppColors.white,
                     isFilled: true,
@@ -40921,6 +41414,7 @@ class AuthViewModel extends BaseViewModel {
                                 context: context,
                                 type: data.medicationType,
                                 model: model,
+                                med: data,
                                 data: reminder,
                               );
                             },
@@ -41007,9 +41501,7 @@ class AuthViewModel extends BaseViewModel {
                     fillColor: AppColors.white,
                     isFilled: true,
                     controller: TextEditingController(
-                      text: DateFormat(
-                        'd MMM, yyyy',
-                      ).format(data.startDateTime!),
+                      text: formatDateTextController(data.startDateTime),
                     ),
                     suffixWidget: Padding(
                       padding: EdgeInsets.all(8.w),
@@ -41096,9 +41588,7 @@ class AuthViewModel extends BaseViewModel {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     controller: TextEditingController(
-                      text: DateFormat(
-                        'dd MMM, yyyy',
-                      ).format(data.endDateTime!),
+                      text: formatDateTextController(data.endDateTime),
                     ),
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
@@ -41925,59 +42415,76 @@ class AuthViewModel extends BaseViewModel {
             SizedBox(height: 12.h),
             Divider(color: AppColors.grey),
             SizedBox(height: 12.h),
-            ...List.generate(channels.length, (index) {
-              return chooseNotChannelWidget(
-                context,
-                svgIcon: channels[index].notificationIcon!,
-                text: channels[index].notification!,
-                isTapped: selectedIndexes.contains(index), // ✅ reflect state
-                onTap: () {
-                  if (selectedIndexes.contains(index)) {
-                    // unselect
-                    selectedIndexes.remove(index);
-                    if (!selectedIndexes.contains(0) &&
-                        !selectedIndexes.contains(1)) {
-                      isTappedEmailAdded = false;
-                      model.notifyListeners();
-                    }
-                    if (!selectedIndexes.contains(2) &&
-                        !selectedIndexes.contains(3) &&
-                        !selectedIndexes.contains(4)) {
-                      isTappedPhoneAdded = false;
-                      model.notifyListeners();
-                    }
-                  } else {
-                    // select
-                    selectedIndexes.add(index);
-                    // ✅ Show specific dialogs
-                    if (index == 0 || index == 1) {
-                      // Email
-                      isTappedEmailAdded = true;
-                      model.notifyListeners();
-                    } else if ([2, 3, 4].contains(index)) {
-                      // Phone-related channels
-                      isTappedPhoneAdded = true;
-                      isPhoneValid = false;
-                      if (addedPhoneReminderList.contains(
-                        SharedPreferencesService
-                            .instance
-                            .usersData['user']['phone'],
-                      )) {
-                      } else {
-                        addedPhoneReminderList.add(
+            ...List.generate(
+              model.notificationChannelPricingResponseModel != null
+                  ? model
+                        .notificationChannelPricingResponseModel!
+                        .data!
+                        .data!
+                        .length
+                  : 0,
+              (index) {
+                return chooseNotChannelWidget(
+                  context,
+                  svgIcon: notificationChannelSvgIcon(
+                    model
+                        .notificationChannelPricingResponseModel!
+                        .data!
+                        .data![index]
+                        .channel,
+                  ),
+                  text:
+                      "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
+
+                  isTapped: selectedIndexes.contains(index), // ✅ reflect state
+                  onTap: () {
+                    if (selectedIndexes.contains(index)) {
+                      // unselect
+                      selectedIndexes.remove(index);
+                      if (!selectedIndexes.contains(0) &&
+                          !selectedIndexes.contains(1)) {
+                        isTappedEmailAdded = false;
+                        model.notifyListeners();
+                      }
+                      if (!selectedIndexes.contains(2) &&
+                          !selectedIndexes.contains(3) &&
+                          !selectedIndexes.contains(4)) {
+                        isTappedPhoneAdded = false;
+                        model.notifyListeners();
+                      }
+                    } else {
+                      // select
+                      selectedIndexes.add(index);
+                      // ✅ Show specific dialogs
+                      if (index == 0 || index == 1) {
+                        // Email
+                        isTappedEmailAdded = true;
+                        model.notifyListeners();
+                      } else if ([2, 3, 4].contains(index)) {
+                        // Phone-related channels
+                        isTappedPhoneAdded = true;
+                        isPhoneValid = false;
+                        if (addedPhoneReminderList.contains(
                           SharedPreferencesService
                               .instance
                               .usersData['user']['phone'],
-                        );
+                        )) {
+                        } else {
+                          addedPhoneReminderList.add(
+                            SharedPreferencesService
+                                .instance
+                                .usersData['user']['phone'],
+                          );
+                        }
+                        model.notifyListeners();
                       }
-                      model.notifyListeners();
                     }
-                  }
-                  // ✅ update selection
-                  model.notifyListeners();
-                },
-              );
-            }),
+                    // ✅ update selection
+                    model.notifyListeners();
+                  },
+                );
+              },
+            ),
             SizedBox(height: 12.h),
             isTappedEmailAdded
                 ? Column(
@@ -42554,7 +43061,6 @@ class AuthViewModel extends BaseViewModel {
                       if (firstFormReminderKey.currentState!.validate()) {
                         buildChannelList(selectedIndexes);
                         await Future.delayed(Duration(seconds: 1));
-                        
                         model.updateSaveReminderAsDraft(
                           context: context,
                           model: model,
@@ -42569,8 +43075,12 @@ class AuthViewModel extends BaseViewModel {
                                   dosage: data.dosage,
                                   medicationType: data.medicationType!
                                       .toUpperCase(),
-                                  startDateTime: data.startDateTime,
-                                  endDateTime: data.endDateTime,
+                                  startDateTime: DateTime.parse(
+                                    data.startDateTime.toString(),
+                                  ),
+                                  endDateTime: DateTime.parse(
+                                    data.endDateTime.toString(),
+                                  ),
                                   durationInDays: data.durationInDays,
                                   timesPerDay: data.scheduleType == 'CUSTOM'
                                       ? 0
@@ -42649,7 +43159,7 @@ class AuthViewModel extends BaseViewModel {
                           if (isTappedPhoneAdded &&
                               addedPhoneReminderList.isEmpty) {}
                         } else {
-                          addCostTotalUpdateDraft(data);
+                          addCostTotalUpdateDraft(data: data, model: model);
                           Future.delayed(Duration(milliseconds: 1400));
                           linIndexEditUpdate++;
                         }
@@ -43800,7 +44310,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${20 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'WHATSAPP').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -43835,7 +44346,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${15 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'SMS').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -43870,7 +44382,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${50 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'PHONE_CALL').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -44170,10 +44683,15 @@ class AuthViewModel extends BaseViewModel {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: data.medication?.medicationImage != null
-                            ? Image.asset(
+                            ? Image.network(
                                 data.medication?.medicationImage?.url ?? '',
                                 errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(AppImage.vaccines),
+                                    SvgPicture.asset(
+                                      model.isMedTypeView(
+                                        data.medication!.medicationType!
+                                            .toUpperCase(),
+                                      ),
+                                    ),
                               )
                             : Center(
                                 child: SvgPicture.asset(
@@ -44616,7 +45134,6 @@ class AuthViewModel extends BaseViewModel {
               ],
             ),
           ),
-
           SizedBox(height: 24.20.h),
           TextView(
             text: 'NOTIFICATION CHANNELS',
@@ -44945,7 +45462,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${20 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'WHATSAPP').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -44980,7 +45498,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${15 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'SMS').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -45015,7 +45534,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${50 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'PHONE_CALL').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -45105,50 +45625,59 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     if (addedPhoneReminderList.isNotEmpty) {
-                      //   linIndex++;
-                      // } else {
-                      // model.createReminder(
-                      //   context,
-                      //   model: model,
-                      //   createReminderEntityModel: CreateReminderEntityModel(
-                      //     medications: model.medicationClassList.map((m) {
-                      //       return Medication(
-                      //         medicationName: m.medicationName,
-                      //         scheduleType: m.isCusSchedule!
-                      //             ? 'CUSTOM'
-                      //             : 'FIXED',
-                      //         dosage: m.dosage,
-                      //         medicationType: m.medicationType!.toUpperCase(),
-                      //         startDateTime: m.startDateIso,
-                      //         endDateTime: m.endDateIso,
-                      //         durationInDays: int.parse(m.duration!),
-                      //         timesPerDay: m.isCusSchedule!
-                      //             ? ''
-                      //             : int.parse(m.timesToTake!),
-                      //         dailyDoseTimes: (m.dosageMap as List)
-                      //             .map(
-                      //               (dayData) => (dayData['doses'] as List)
-                      //                   .map(
-                      //                     (dose) => DailyDoseTime.fromJson(
-                      //                       dose as Map<String, dynamic>,
-                      //                     ),
-                      //                   )
-                      //                   .toList(),
-                      //             )
-                      //             .toList(),
-                      //         note: m.note,
-                      //         medicationImage: m.imageData!.url == null
-                      //             ? null
-                      //             : MedicationImage.fromJson(
-                      //                 m.imageData!.toJson(),
-                      //               ),
-                      //       );
-                      //     }).toList(),
-                      //     timeZone: "Africa/Lagos",
-                      //     notificationChannels: notificationChannel,
-                      //     emails: addedEmailReminderList,
-                      //   ),
-                      // );
+                      linIndexEditUpdate++;
+                    } else {
+                      model.updateReminder(
+                        context,
+                        reminderId: data.id!,
+                        updateReminder: UpdateReminderEntityModel(
+                          medicationName: data.medication!.medicationName,
+                          scheduleType: data.medication!.scheduleType!,
+                          medicationType: data.medication!.medicationType!
+                              .toUpperCase(),
+                          dosage: data.medication!.dosage,
+                          startDateTime: data.medication!.startDateTime!,
+                          endDateTime: data.medication!.endDateTime!,
+                          durationInDays: data.medication!.durationInDays!,
+                          timesPerDay: data.medication!.scheduleType != 'CUSTOM'
+                              ? data.medication!.timesPerDay!
+                              : 0,
+                          note: data.medication!.note,
+                          timeZone: "Africa/Lagos",
+                          notificationChannels: notificationChannel,
+                          emails: addedEmailReminderList,
+                          medicationImage:
+                              model.uploadImageReminderResponseModel == null &&
+                                  data.medication!.medicationImage == null
+                              ? null
+                              : updateRemImage.MedicationImage.fromJson(
+                                  model.uploadImageReminderResponseModel != null
+                                      ? model
+                                            .uploadImageReminderResponseModel!
+                                            .data!
+                                            .toJson()
+                                      : data.medication!.medicationImage!
+                                            .toJson(),
+                                ),
+                          dailyDoseTimes: data.medication!.dailyDoseTimes!
+                              .map(
+                                (day) => day
+                                    .map(
+                                      (time) => updateRemDose.DailyDoseTime(
+                                        time:
+                                            time.time!.contains('AM') ||
+                                                time.time!.contains('PM')
+                                            ? convertTo24Hour(time.time!)
+                                            : time.time!,
+                                        date: time.date,
+                                        isoDate: time.isoDate,
+                                      ),
+                                    )
+                                    .toList(),
+                              )
+                              .toList(),
+                        ),
+                      );
                     }
                     setModalState!(() {});
                     model.notifyListeners();
@@ -45157,7 +45686,7 @@ class AuthViewModel extends BaseViewModel {
               ),
             ],
           ),
-          // SizedBox(height: 26.h),
+          SizedBox(height: 16.h),
         ],
       ),
     ),
@@ -46088,7 +46617,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${20 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'WHATSAPP').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -46123,7 +46653,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${15 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'SMS').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -46158,7 +46689,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${50 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'PHONE_CALL').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -46456,10 +46988,15 @@ class AuthViewModel extends BaseViewModel {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                         child: data.medicationImage != null
-                            ? Image.asset(
+                            ? Image.network(
                                 data.medicationImage?.url ?? '',
+                                width: 180.w,
                                 errorBuilder: (context, error, stackTrace) =>
-                                    Image.asset(AppImage.vaccines),
+                                    SvgPicture.asset(
+                                      model.isMedTypeView(
+                                        data.medicationType!.toUpperCase(),
+                                      ),
+                                    ),
                               )
                             : Center(
                                 child: SvgPicture.asset(
@@ -46803,7 +47340,9 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: DateFormat('d MMM, yyyy').format(data.startDateTime!),
+                  text: DateFormat(
+                    'dd MMMM, yyyy',
+                  ).format(DateTime.parse(data.startDateTime!.toString())),
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -46853,7 +47392,9 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: DateFormat('d MMM, yyyy').format(data.endDateTime!),
+                  text: DateFormat(
+                    'dd MMMM, yyyy',
+                  ).format(DateTime.parse(data.endDateTime!.toString())),
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -47220,7 +47761,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${20 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'WHATSAPP').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -47255,7 +47797,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${15 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'SMS').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -47290,7 +47833,8 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           TextView(
-                                            text: '₦${50 * returnPhoneTimes()}',
+                                            text:
+                                                '₦${int.parse(model.notificationChannelPricingResponseModel!.data!.data!.firstWhere((element) => element.channel == 'PHONE_CALL').unitPrice!.toString()) * returnPhoneTimes()}',
                                             textStyle: TextStyle(
                                               fontSize: 16.80.sp,
                                               color: AppColors.black,
@@ -47722,6 +48266,218 @@ class AuthViewModel extends BaseViewModel {
     ),
   );
 
+  retryPaymentModalFlow({
+    AuthViewModel? model,
+    BuildContext? context,
+    StateSetter? setModalState,
+    ScrollController? scrollController,
+  }) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22.r),
+      color: AppColors.white,
+    ),
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20, width: 20),
+              TextView(
+                text: modalName(),
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.70.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 4.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context!);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.cancel,
+                    height: 14.20,
+                    width: 14.20,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 13.60.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context!).size.width * .82,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: linIndex / 3,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              TextView(
+                text: '$linIndex/3',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          TextView(
+            text: 'Amount',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.90.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 14.2.h),
+          Container(
+            height: 70.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.skyBlue,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Center(
+              child: TextView(
+                text:
+                    '₦${_retryPaymentReminderResponseModel?.datum?.data?.totalAmount ?? 0}.00',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 20.90.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 22.h),
+          TextView(
+            text: 'Select Payment Method',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.90.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.deep,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          paymentWidget(
+            context: context,
+            isWallet: true,
+            text: 'Pay with Wallet',
+            icon: AppImage.wallet_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Wallet';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Card',
+            icon: AppImage.card_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Card';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Bank Transfer',
+            icon: AppImage.bank_transfer,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Bank Transfer';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Mobile Money',
+            icon: AppImage.online_mobile,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Mobile Money';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with USSD',
+            icon: AppImage.ussd_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with USSD';
+              model!.notifyListeners();
+            },
+          ),
+          SizedBox(height: _isLoading ? 20.h : 0.h),
+          _isLoading
+              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+              : SizedBox.shrink(),
+          SizedBox(height: 50.h),
+          ButtonWidget(
+            border: 100.r,
+            fontSize: 14.sp,
+            buttonColor: onTapPaymentMeth != ''
+                ? AppColors.primary
+                : AppColors.infoGrey,
+            buttonText: 'Continue',
+            color: AppColors.white,
+            isLoading: model!.isLoading,
+            buttonBorderColor: AppColors.transparent,
+            onPressed: onTapPaymentMeth == 'Pay with Wallet'
+                ? () async {
+                    await payWithWalletAPI(
+                      context: context,
+                      reference: _retryPaymentReminderResponseModel
+                          ?.datum
+                          ?.data
+                          ?.transactionReference,
+                      model: model,
+                    );
+                    model.notifyListeners();
+                  }
+                : onTapPaymentMeth != ''
+                ? () {
+                    initiatePayment(
+                      context,
+                      reference: _retryPaymentReminderResponseModel
+                          ?.datum
+                          ?.data
+                          ?.transactionReference,
+                      model: model,
+                    );
+                    model.notifyListeners();
+                  }
+                : () {},
+          ),
+          SizedBox(height: 26.h),
+        ],
+      ),
+    ),
+  );
+
   fourthUpdateModalFlow({
     AuthViewModel? model,
     BuildContext? context,
@@ -47904,7 +48660,7 @@ class AuthViewModel extends BaseViewModel {
                   fontSize: 14.sp,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
-                    linIndex--;
+                    linIndexEditUpdate--;
                     model!.notifyListeners();
                   },
                 ),
@@ -47922,122 +48678,143 @@ class AuthViewModel extends BaseViewModel {
                   isLoading: model!.isLoading,
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth == 'Pay with Wallet'
-                      ? () {
-                          model.createReminderPaidWallet(
+                      ? () async {
+                          await model.updateReminder(
                             context,
-                            model: model,
-                            createReminderEntityModel:
-                                CreateReminderEntityModel(
-                                  medications: model.medicationClassList.map((
-                                    m,
-                                  ) {
-                                    return Medication(
-                                      medicationName: m.medicationName,
-                                      scheduleType: m.isCusSchedule!
-                                          ? 'CUSTOM'
-                                          : 'FIXED',
-                                      dosage: m.dosage,
-                                      medicationType: m.medicationType!
-                                          .toUpperCase(),
-                                      startDateTime: m.startDateIso,
-                                      endDateTime: m.endDateIso,
-                                      durationInDays: int.parse(m.duration!),
-                                      timesPerDay: m.isCusSchedule!
-                                          ? ''
-                                          : int.parse(m.timesToTake!),
-                                      dailyDoseTimes: (m.dosageMap as List)
-                                          .map(
-                                            (
-                                              dayData,
-                                            ) => (dayData['doses'] as List)
-                                                .map(
-                                                  (
-                                                    dose,
-                                                  ) => DailyDoseTime.fromJson(
-                                                    dose
-                                                        as Map<String, dynamic>,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          )
-                                          .toList(),
-                                      note: m.note,
-                                      medicationImage: m.imageData!.url == null
-                                          ? null
-                                          : MedicationImage.fromJson(
-                                              m.imageData!.toJson(),
-                                            ),
-                                    );
-                                  }).toList(),
-                                  timeZone: "Africa/Lagos",
-                                  notificationChannels: notificationChannel,
-                                  emails: addedEmailReminderList,
-                                  phoneNumbers: addedPhoneReminderList,
-                                  payment: Payment(
-                                    amount: costTotal,
-                                    currency: "NGN",
-                                  ),
-                                ),
+                            reminderId: data!.medication!.id!,
+                            updateReminder: UpdateReminderEntityModel(
+                              medicationName: data.medication!.medicationName,
+                              scheduleType: data.medication!.scheduleType!,
+                              medicationType: data.medication!.medicationType!
+                                  .toUpperCase(),
+                              dosage: data.medication!.dosage,
+                              startDateTime: data.medication!.startDateTime!,
+                              endDateTime: data.medication!.endDateTime!,
+                              durationInDays: data.medication!.durationInDays!,
+                              timesPerDay:
+                                  data.medication!.scheduleType != 'CUSTOM'
+                                  ? data.medication!.timesPerDay!
+                                  : 0,
+                              note: data.medication!.note,
+                              timeZone: "Africa/Lagos",
+                              notificationChannels: notificationChannel,
+                              emails: addedEmailReminderList,
+                              phoneNumbers: addedPhoneReminderList,
+                              payment: updateRemPay.Payment(
+                                amount: costTotal,
+                                currency: "NGN",
+                              ),
+                              medicationImage:
+                                  model.uploadImageReminderResponseModel ==
+                                          null &&
+                                      data.medication!.medicationImage == null
+                                  ? null
+                                  : updateRemImage.MedicationImage.fromJson(
+                                      model.uploadImageReminderResponseModel !=
+                                              null
+                                          ? model
+                                                .uploadImageReminderResponseModel!
+                                                .data!
+                                                .toJson()
+                                          : data.medication!.medicationImage!
+                                                .toJson(),
+                                    ),
+                              dailyDoseTimes: data.medication!.dailyDoseTimes!
+                                  .map(
+                                    (day) => day
+                                        .map(
+                                          (time) => updateRemDose.DailyDoseTime(
+                                            time:
+                                                time.time!.contains('AM') ||
+                                                    time.time!.contains('PM')
+                                                ? convertTo24Hour(time.time!)
+                                                : time.time!,
+                                            date: time.date,
+                                            isoDate: time.isoDate,
+                                          ),
+                                        )
+                                        .toList(),
+                                  )
+                                  .toList(),
+                            ),
                           );
+                          payWithWalletAPI(
+                            context: context,
+                            reference: _updateReminderResponseModel
+                                ?.data
+                                ?.transactionReference,
+                            model: model,
+                          );
+
                           model.notifyListeners();
                         }
                       : onTapPaymentMeth != ''
-                      ? () {
-                          model.createReminderPaid(
+                      ? () async {
+                          await model.updateReminder(
                             context,
+                            reminderId: data!.medication!.id!,
+                            updateReminder: UpdateReminderEntityModel(
+                              medicationName: data.medication!.medicationName,
+                              scheduleType: data.medication!.scheduleType!,
+                              medicationType: data.medication!.medicationType!
+                                  .toUpperCase(),
+                              dosage: data.medication!.dosage,
+                              startDateTime: data.medication!.startDateTime!,
+                              endDateTime: data.medication!.endDateTime!,
+                              durationInDays: data.medication!.durationInDays!,
+                              timesPerDay:
+                                  data.medication!.scheduleType != 'CUSTOM'
+                                  ? data.medication!.timesPerDay!
+                                  : 0,
+                              note: data.medication!.note,
+                              timeZone: "Africa/Lagos",
+                              notificationChannels: notificationChannel,
+                              emails: addedEmailReminderList,
+                              phoneNumbers: addedPhoneReminderList,
+                              payment: updateRemPay.Payment(
+                                amount: costTotal,
+                                currency: "NGN",
+                              ),
+                              medicationImage:
+                                  model.uploadImageReminderResponseModel ==
+                                          null &&
+                                      data.medication!.medicationImage == null
+                                  ? null
+                                  : updateRemImage.MedicationImage.fromJson(
+                                      model.uploadImageReminderResponseModel !=
+                                              null
+                                          ? model
+                                                .uploadImageReminderResponseModel!
+                                                .data!
+                                                .toJson()
+                                          : data.medication!.medicationImage!
+                                                .toJson(),
+                                    ),
+                              dailyDoseTimes: data.medication!.dailyDoseTimes!
+                                  .map(
+                                    (day) => day
+                                        .map(
+                                          (time) => updateRemDose.DailyDoseTime(
+                                            time:
+                                                time.time!.contains('AM') ||
+                                                    time.time!.contains('PM')
+                                                ? convertTo24Hour(time.time!)
+                                                : time.time!,
+                                            date: time.date,
+                                            isoDate: time.isoDate,
+                                          ),
+                                        )
+                                        .toList(),
+                                  )
+                                  .toList(),
+                            ),
+                          );
+                          initiatePayment(
+                            context,
+                            reference: _updateReminderResponseModel
+                                ?.data
+                                ?.transactionReference,
                             model: model,
-                            createReminderEntityModel:
-                                CreateReminderEntityModel(
-                                  medications: model.medicationClassList.map((
-                                    m,
-                                  ) {
-                                    return Medication(
-                                      medicationName: m.medicationName,
-                                      scheduleType: m.isCusSchedule!
-                                          ? 'CUSTOM'
-                                          : 'FIXED',
-                                      dosage: m.dosage,
-                                      medicationType: m.medicationType!
-                                          .toUpperCase(),
-                                      startDateTime: m.startDateIso,
-                                      endDateTime: m.endDateIso,
-                                      durationInDays: int.parse(m.duration!),
-                                      timesPerDay: m.isCusSchedule!
-                                          ? ''
-                                          : int.parse(m.timesToTake!),
-                                      dailyDoseTimes: (m.dosageMap as List)
-                                          .map(
-                                            (
-                                              dayData,
-                                            ) => (dayData['doses'] as List)
-                                                .map(
-                                                  (
-                                                    dose,
-                                                  ) => DailyDoseTime.fromJson(
-                                                    dose
-                                                        as Map<String, dynamic>,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          )
-                                          .toList(),
-                                      note: m.note,
-                                      medicationImage: m.imageData!.url == null
-                                          ? null
-                                          : MedicationImage.fromJson(
-                                              m.imageData!.toJson(),
-                                            ),
-                                    );
-                                  }).toList(),
-                                  timeZone: "Africa/Lagos",
-                                  notificationChannels: notificationChannel,
-                                  emails: addedEmailReminderList,
-                                  phoneNumbers: addedPhoneReminderList,
-                                  payment: Payment(
-                                    amount: costTotal,
-                                    currency: "NGN",
-                                  ),
-                                ),
                           );
                           model.notifyListeners();
                         }
@@ -49109,9 +49886,30 @@ class AuthViewModel extends BaseViewModel {
       final times = getTotalTimesForReminder(item);
 
       int basePrice = 0;
-      if (selectedIndexes.contains(2)) basePrice += 15;
-      if (selectedIndexes.contains(3)) basePrice += 20;
-      if (selectedIndexes.contains(4)) basePrice += 50;
+      if (selectedIndexes.contains(2)) {
+        basePrice += int.parse(
+          model.notificationChannelPricingResponseModel!.data!.data!
+              .firstWhere((element) => element.channel == 'SMS')
+              .unitPrice!
+              .toString(),
+        );
+      }
+      if (selectedIndexes.contains(3)) {
+        basePrice += int.parse(
+          model.notificationChannelPricingResponseModel!.data!.data!
+              .firstWhere((element) => element.channel == 'WHATSAPP')
+              .unitPrice!
+              .toString(),
+        );
+      }
+      if (selectedIndexes.contains(4)) {
+        basePrice += int.parse(
+          model.notificationChannelPricingResponseModel!.data!.data!
+              .firstWhere((element) => element.channel == 'PHONE_CALL')
+              .unitPrice!
+              .toString(),
+        );
+      }
 
       if (item.isCusSchedule) {
         costTotal += basePrice * times;
@@ -49128,15 +49926,36 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void addCostTotalUpdate(getReminderId.Data data) {
+  void addCostTotalUpdate({getReminderId.Data? data, model}) {
     costTotal = 0;
-    final days = data.medication?.durationInDays ?? 0;
-    final times = getTotalTimesForReminderUpdate(data);
+    final days = data?.medication?.durationInDays ?? 0;
+    final times = getTotalTimesForReminderUpdate(data!);
 
     int basePrice = 0;
-    if (selectedIndexes.contains(2)) basePrice += 15;
-    if (selectedIndexes.contains(3)) basePrice += 20;
-    if (selectedIndexes.contains(4)) basePrice += 50;
+    if (selectedIndexes.contains(2)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'SMS')
+            .unitPrice!
+            .toString(),
+      );
+    }
+    if (selectedIndexes.contains(3)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'WHATSAPP')
+            .unitPrice!
+            .toString(),
+      );
+    }
+    if (selectedIndexes.contains(4)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'PHONE_CALL')
+            .unitPrice!
+            .toString(),
+      );
+    }
 
     if (data.medication?.scheduleType == 'FIXED') {
       costTotal += basePrice * times * days;
@@ -49153,15 +49972,36 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void addCostTotalUpdateReminder(Reminder data) {
+  void addCostTotalUpdateReminder({Reminder? data, model}) {
     costTotal = 0;
-    final days = data.medication?.durationInDays ?? 0;
-    final times = getTotalTimesForReminderUpdateReminder(data);
+    final days = data?.medication?.durationInDays ?? 0;
+    final times = getTotalTimesForReminderUpdateReminder(data!);
 
     int basePrice = 0;
-    if (selectedIndexes.contains(2)) basePrice += 15;
-    if (selectedIndexes.contains(3)) basePrice += 20;
-    if (selectedIndexes.contains(4)) basePrice += 50;
+    if (selectedIndexes.contains(2)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'SMS')
+            .unitPrice!
+            .toString(),
+      );
+    }
+    if (selectedIndexes.contains(3)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'WHATSAPP')
+            .unitPrice!
+            .toString(),
+      );
+    }
+    if (selectedIndexes.contains(4)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'PHONE_CALL')
+            .unitPrice!
+            .toString(),
+      );
+    }
 
     if (data.medication?.scheduleType == 'FIXED') {
       costTotal += basePrice * times * days;
@@ -49178,15 +50018,38 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void addCostTotalUpdateDraft(draftPay.Medication? data) {
+  void addCostTotalUpdateDraft({draftPay.Medication? data, model}) {
     costTotal = 0;
-    final days = data!.durationInDays ?? 0;
+    final days = data!.durationInDays != null || data.durationInDays != ''
+        ? int.parse('${data.durationInDays}')
+        : 0;
     final times = getTotalTimesForReminderUpdateDraft(data);
 
     int basePrice = 0;
-    if (selectedIndexes.contains(2)) basePrice += 15;
-    if (selectedIndexes.contains(3)) basePrice += 20;
-    if (selectedIndexes.contains(4)) basePrice += 50;
+    if (selectedIndexes.contains(2)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'SMS')
+            .unitPrice!
+            .toString(),
+      );
+    }
+    if (selectedIndexes.contains(3)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'WHATSAPP')
+            .unitPrice!
+            .toString(),
+      );
+    }
+    if (selectedIndexes.contains(4)) {
+      basePrice += int.parse(
+        model.notificationChannelPricingResponseModel!.data!.data!
+            .firstWhere((element) => element.channel == 'PHONE_CALL')
+            .unitPrice!
+            .toString(),
+      );
+    }
 
     if (data.scheduleType == 'FIXED') {
       costTotal += basePrice * times * days;
@@ -49730,6 +50593,29 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> reminderRetryPayment({context, String? reminderId}) async {
+    try {
+      _isLoading = true;
+      _retryPaymentReminderResponseModel = await runBusyFuture(
+        repositoryImply.reminderRetryPayment(reminderId: reminderId),
+        throwException: true,
+      );
+      if (_retryPaymentReminderResponseModel?.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _retryPaymentReminderResponseModel?.datum?.message ?? '',
+        );
+        showRetryPaymentReminderModal(context);
+      }
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   void createReminderPaid(
     context, {
     CreateReminderEntityModel? createReminderEntityModel,
@@ -49936,21 +50822,24 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
-  void updateReminder(
+  Future<void> updateReminder(
     context, {
     String? reminderId,
     UpdateReminderEntityModel? updateReminder,
   }) async {
     try {
       _isLoading = true;
-      var v = await runBusyFuture(
+      _updateReminderResponseModel = await runBusyFuture(
         repositoryImply.updateReminder(
           reminderId: reminderId,
           updateReminder: updateReminder,
         ),
         throwException: true,
       );
-      await AppUtils.snackbar(context, message: v['data']['message']);
+      await AppUtils.snackbar(
+        context,
+        message: _updateReminderResponseModel?.data?.message ?? '',
+      );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
@@ -50594,6 +51483,22 @@ class AuthViewModel extends BaseViewModel {
           ),
         );
       }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getNotificationChannelPricing() async {
+    try {
+      _isLoading = true;
+      _notificationChannelPricingResponseModel = await runBusyFuture(
+        repositoryImply.getNotificationPricing(),
+        throwException: true,
+      );
+      _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);

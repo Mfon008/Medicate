@@ -31,11 +31,13 @@ import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/hmo_plan_payment_response_model/hmo_plan_payment_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
+import '../model/notification_channel_pricing_response_model/notification_channel_pricing_response_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 // import '../model/refresh_token_response_model/refresh_token_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
+import '../model/retry_payment_reminder_response_model/retry_payment_reminder_response_model.dart';
 import '../model/save_draft_reminder_entity_model/save_draft_reminder_entity_model.dart';
 import '../model/save_first_step_personal_info_entity_model/save_first_step_personal_info_entity_model.dart';
 import '../model/save_first_step_personal_response_model/save_first_step_personal_response_model.dart';
@@ -54,6 +56,7 @@ import '../model/start_application_rsponse_model/start_application_rsponse_model
 import '../model/support_entity_model.dart';
 import '../model/update_doses_status_model/update_doses_status_model.dart';
 import '../model/update_reminder_entity_model/update_reminder_entity_model.dart';
+import '../model/update_reminder_response_model/update_reminder_response_model.dart';
 import '../model/update_user_profile_entity/update_user_profile_entity.dart';
 import '../model/update_user_profile_response_model/update_user_profile_response_model.dart';
 import '../model/upload_application_document_response_model/upload_application_document_response_model.dart';
@@ -264,7 +267,7 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<dynamic> updateReminder({
+  Future<UpdateReminderResponseModel> updateReminder({
     String? reminderId,
     UpdateReminderEntityModel? updateReminder,
   }) async {
@@ -493,14 +496,35 @@ class AuthRepoImpl {
     return response;
   }
 
- Future<dynamic> updateSaveReminderDraft({SaveDraftReminderEntityModel? savedraft, String? reminderId}) async {
-    final response = await _contract.updateSaveReminderDraft(savedraft: savedraft,reminderId: reminderId);
+  Future<dynamic> updateSaveReminderDraft({
+    SaveDraftReminderEntityModel? savedraft,
+    String? reminderId,
+  }) async {
+    final response = await _contract.updateSaveReminderDraft(
+      savedraft: savedraft,
+      reminderId: reminderId,
+    );
     return response;
   }
 
   Future<dynamic> deleteDraftedReminder({String? reminderID}) async {
     final response = await _contract.deleteDraftedReminder(
       reminderID: reminderID,
+    );
+    return response;
+  }
+
+  Future<NotificationChannelPricingResponseModel>
+  getNotificationPricing() async {
+    final response = await _contract.getNotificationPricing();
+    return response;
+  }
+
+  Future<RetryPaymentReminderResponseModel> reminderRetryPayment({
+    String? reminderId,
+  }) async {
+    final response = await _contract.reminderRetryPayment(
+      reminderId: reminderId,
     );
     return response;
   }
