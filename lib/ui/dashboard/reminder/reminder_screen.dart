@@ -645,11 +645,15 @@ class _ReminderScreenState extends State<ReminderScreen> {
               onSelected: (String result) async {
                 model.isPendingReminderStatus = result;
                 await Future.delayed(Duration(milliseconds: 400));
-                // model.getReminder(
-                //   context,
-                //   status: model.isPendingReminderStatus,
-                //   page: model.pageOngoing.toString(),
-                // );
+                if (result == 'all') {
+                  await model.getPendingReminder(context);
+                }
+                if (result == 'pending') {
+                  await model.getPendingReminderOnly(context);
+                }
+                if (result == 'failed') {
+                  await model.getPendingFailedReminder(context);
+                }
                 setState(() {});
                 model.notifyListeners();
               },
@@ -754,10 +758,32 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                               1
                                           ? () {}
                                           : () async {
-                                              model.pagePending--;
-                                              await model.getPendingReminder(
-                                                context,
-                                              );
+                                              if (model
+                                                      .isPendingReminderStatus ==
+                                                  'all') {
+                                                model.pagePending--;
+                                                await model.getPendingReminder(
+                                                  context,
+                                                );
+                                              }
+                                              if (model
+                                                      .isPendingReminderStatus ==
+                                                  'pending') {
+                                                model.pagePendingOnly--;
+                                                await model
+                                                    .getPendingReminderOnly(
+                                                      context,
+                                                    );
+                                              }
+                                              if (model
+                                                      .isPendingReminderStatus ==
+                                                  'failed') {
+                                                model.pagePendingFailed--;
+                                                await model
+                                                    .getPendingFailedReminder(
+                                                      context,
+                                                    );
+                                              }
                                             },
                                       icon: Icon(
                                         Icons.arrow_back,
@@ -803,10 +829,32 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                                   .totalPages
                                           ? () {}
                                           : () async {
-                                              model.pagePending++;
-                                              await model.getPendingReminder(
-                                                context,
-                                              );
+                                              if (model
+                                                      .isPendingReminderStatus ==
+                                                  'all') {
+                                                model.pagePending++;
+                                                await model.getPendingReminder(
+                                                  context,
+                                                );
+                                              }
+                                              if (model
+                                                      .isPendingReminderStatus ==
+                                                  'pending') {
+                                                model.pagePendingOnly++;
+                                                await model
+                                                    .getPendingReminderOnly(
+                                                      context,
+                                                    );
+                                              }
+                                              if (model
+                                                      .isPendingReminderStatus ==
+                                                  'failed') {
+                                                model.pagePendingFailed++;
+                                                await model
+                                                    .getPendingFailedReminder(
+                                                      context,
+                                                    );
+                                              }
                                             },
                                       icon: Icon(
                                         Icons.arrow_forward,
@@ -1931,7 +1979,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id),
+      arguments: ViewMedicationScreenArguments(id: reminder.id,reminder: reminder),
     ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),
@@ -2373,11 +2421,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
     String? pendingDraft,
     pen.Reminder? reminder,
     AuthViewModel? model,
-    // bool isComplete = false,
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id),
+      arguments: ViewMedicationScreenArguments(id: reminder.id,penReminder: reminder),
     ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),

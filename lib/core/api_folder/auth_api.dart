@@ -1046,8 +1046,7 @@ class AuthApi {
     }
   }
 
-  Future<NotificationChannelPricingResponseModel>
-  getNotificationPricing() async {
+  Future<NotificationChannelPricingResponseModel> getNotificationPricing() async {
     try {
       final response = await _service.call(
         UrlConfig.notification_pricing,

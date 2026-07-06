@@ -489,6 +489,19 @@ class AuthRepoImpl {
     return response;
   }
 
+  Future<GetPendingReminderResponseModel> getPendingReminderOnly({
+    String? page,
+  }) async {
+    final response = await _contract.getOnlyPendingReminder(page: page);
+    return response;
+  }
+  Future<GetPendingReminderResponseModel> getFailedReminder({
+    String? page,
+  }) async {
+    final response = await _contract.getFailedPendingReminder(page: page);
+    return response;
+  }
+
   Future<dynamic> saveReminderDraft(
     SaveDraftReminderEntityModel savedraft,
   ) async {
@@ -514,8 +527,7 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<NotificationChannelPricingResponseModel>
-  getNotificationPricing() async {
+  Future<NotificationChannelPricingResponseModel> getNotificationPricing() async {
     final response = await _contract.getNotificationPricing();
     return response;
   }

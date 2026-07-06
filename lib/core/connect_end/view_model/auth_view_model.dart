@@ -237,7 +237,7 @@ class AuthViewModel extends BaseViewModel {
   GetHmosPlanResponseModel? get getHmosPlanResponseModel =>
       _getHmosPlanResponseModel;
   UpdateReminderResponseModel? _updateReminderResponseModel;
-  UpdateReminderResponseModel? get updateReminderResponseModell =>
+  UpdateReminderResponseModel? get updateReminderResponseModel =>
       _updateReminderResponseModel;
 
   GetHospitalByIdResponseModel? _getHospitalByIdResponseModel;
@@ -436,6 +436,8 @@ class AuthViewModel extends BaseViewModel {
   int linIndexEditUpdate = 1;
   int pageAll = 1;
   int pagePending = 1;
+  int pagePendingOnly = 1;
+  int pagePendingFailed = 1;
   int pageDraft = 1;
   int pageOngoing = 1;
   int pageCompleted = 1;
@@ -11700,7 +11702,7 @@ class AuthViewModel extends BaseViewModel {
         addedPhoneReminderList.addAll(data.phoneNumbers!);
       });
 
-      addNotificationChannels(data: data, model: model);
+      addNotificationChannelsUpdate(data: data, model: model);
       model.notifyListeners();
     });
   }
@@ -11796,6 +11798,26 @@ class AuthViewModel extends BaseViewModel {
       notificationChannel.add('PHONE_CALL');
     }
     notifyListeners();
+  }
+
+  buildChannelListUpdate({selectedIndexes, model}) {
+    notificationChannel.clear();
+    if (selectedIndexes.contains(0)) {
+      notificationChannel.add('EMAIL');
+    }
+    if (selectedIndexes.contains(1)) {
+      notificationChannel.add('PUSH');
+    }
+    if (selectedIndexes.contains(2)) {
+      notificationChannel.add('SMS');
+    }
+    if (selectedIndexes.contains(3)) {
+      notificationChannel.add('WHATSAPP');
+    }
+    if (selectedIndexes.contains(4)) {
+      notificationChannel.add('PHONE_CALL');
+    }
+    model.notifyListeners();
   }
 
   Future<String?> showDailyInTakeMenu({
@@ -29718,23 +29740,11 @@ class AuthViewModel extends BaseViewModel {
                         // Phone-related channels
                         isTappedPhoneAdded = true;
                         isPhoneValid = false;
-                        // if (addedPhoneReminderList.contains(
-                        //   SharedPreferencesService
-                        //       .instance
-                        //       .usersData['user']['phone'],
-                        // )) {
-                        // } else {
-                        //   addedPhoneReminderList.add(
-                        //     SharedPreferencesService
-                        //         .instance
-                        //         .usersData['user']['phone'],
-                        //   );
-                        // }
                         model.notifyListeners();
                       }
                     }
                     // ✅ update selection
-                    buildChannelList(selectedIndexes);
+
                     model.notifyListeners();
                   },
                 );
@@ -30525,6 +30535,10 @@ class AuthViewModel extends BaseViewModel {
                     if (isTappedEmailAdded && addedEmailReminderList.isEmpty) {}
                     if (isTappedPhoneAdded && addedPhoneReminderList.isEmpty) {}
                   } else {
+                    await buildChannelListUpdate(
+                      selectedIndexes: selectedIndexes,
+                      model: model,
+                    );
                     await addReminderToUpdate(
                       model: model,
                       setModalState: setModalState,
@@ -48681,7 +48695,7 @@ class AuthViewModel extends BaseViewModel {
                       ? () async {
                           await model.updateReminder(
                             context,
-                            reminderId: data!.medication!.id!,
+                            reminderId: data!.id!,
                             updateReminder: UpdateReminderEntityModel(
                               medicationName: data.medication!.medicationName,
                               scheduleType: data.medication!.scheduleType!,
@@ -48738,13 +48752,19 @@ class AuthViewModel extends BaseViewModel {
                                   .toList(),
                             ),
                           );
-                          payWithWalletAPI(
-                            context: context,
-                            reference: _updateReminderResponseModel
-                                ?.data
-                                ?.transactionReference,
-                            model: model,
-                          );
+                          if (model.updateReminderResponseModel!.statusCode ==
+                                  200 ||
+                              model.updateReminderResponseModel!.statusCode ==
+                                  201) {
+                            payWithWalletAPI(
+                              context: context,
+                              reference: model
+                                  .updateReminderResponseModel
+                                  ?.data
+                                  ?.transactionReference,
+                              model: model,
+                            );
+                          }
 
                           model.notifyListeners();
                         }
@@ -48752,7 +48772,7 @@ class AuthViewModel extends BaseViewModel {
                       ? () async {
                           await model.updateReminder(
                             context,
-                            reminderId: data!.medication!.id!,
+                            reminderId: data!.id,
                             updateReminder: UpdateReminderEntityModel(
                               medicationName: data.medication!.medicationName,
                               scheduleType: data.medication!.scheduleType!,
@@ -48809,13 +48829,19 @@ class AuthViewModel extends BaseViewModel {
                                   .toList(),
                             ),
                           );
-                          initiatePayment(
-                            context,
-                            reference: _updateReminderResponseModel
-                                ?.data
-                                ?.transactionReference,
-                            model: model,
-                          );
+                          if (model.updateReminderResponseModel!.statusCode ==
+                                  200 ||
+                              model.updateReminderResponseModel!.statusCode ==
+                                  201) {
+                            initiatePayment(
+                              context,
+                              reference: model
+                                  .updateReminderResponseModel
+                                  ?.data
+                                  ?.transactionReference,
+                              model: model,
+                            );
+                          }
                           model.notifyListeners();
                         }
                       : () {},
@@ -49843,16 +49869,20 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
+  // int getTotalTimesForReminderUpdate(getReminderId.Data data) {
+  //   if (data.medication!.scheduleType != 'FIXED') {
+  //     _getTotalTimesForReminder = getTotalCustomDosesUpdate(
+  //       data.medication?.dailyDoseTimes ?? [],
+  //     );
+  //     return _getTotalTimesForReminder!;
+  //   } else {
+  //     _getTotalTimesForReminder = data.medication?.timesPerDay ?? 0;
+  //     return _getTotalTimesForReminder!;
+  //   }
+  // }
+
   int getTotalTimesForReminderUpdate(getReminderId.Data data) {
-    if (data.medication!.scheduleType != 'FIXED') {
-      _getTotalTimesForReminder = getTotalCustomDosesUpdate(
-        data.medication?.dailyDoseTimes ?? [],
-      );
-      return _getTotalTimesForReminder!;
-    } else {
-      _getTotalTimesForReminder = data.medication?.timesPerDay ?? 0;
-      return _getTotalTimesForReminder!;
-    }
+    return getFutureCustomDoses(data.medication?.dailyDoseTimes ?? []);
   }
 
   int getTotalTimesForReminderUpdateReminder(Reminder data) {
@@ -49928,48 +49958,62 @@ class AuthViewModel extends BaseViewModel {
 
   void addCostTotalUpdate({getReminderId.Data? data, model}) {
     costTotal = 0;
-    final days = data?.medication?.durationInDays ?? 0;
-    final times = getTotalTimesForReminderUpdate(data!);
 
-    int basePrice = 0;
-    if (selectedIndexes.contains(2)) {
-      basePrice += int.parse(
-        model.notificationChannelPricingResponseModel!.data!.data!
-            .firstWhere((element) => element.channel == 'SMS')
-            .unitPrice!
-            .toString(),
-      );
+    if (data == null) return;
+
+    final basePrice = getSelectedPhoneChannelPrice(model);
+
+    int reminderCount = 0;
+
+    reminderCount = getFutureCustomDoses(data.medication?.dailyDoseTimes ?? []);
+
+    costTotal = reminderCount * basePrice;
+
+    if (addedPhoneReminderList.isNotEmpty) {
+      costTotal *= addedPhoneReminderList.length;
     }
-    if (selectedIndexes.contains(3)) {
-      basePrice += int.parse(
-        model.notificationChannelPricingResponseModel!.data!.data!
-            .firstWhere((element) => element.channel == 'WHATSAPP')
-            .unitPrice!
-            .toString(),
+    if (data.payments!.isNotEmpty) {
+      final totalAmount = data.payments!.fold<int>(
+        0,
+        (sum, payment) => sum + (payment.amount ?? 0),
       );
-    }
-    if (selectedIndexes.contains(4)) {
-      basePrice += int.parse(
-        model.notificationChannelPricingResponseModel!.data!.data!
-            .firstWhere((element) => element.channel == 'PHONE_CALL')
-            .unitPrice!
-            .toString(),
-      );
+      costTotal = costTotal - totalAmount;
     }
 
-    if (data.medication?.scheduleType == 'FIXED') {
-      costTotal += basePrice * times * days;
-    } else {
-      costTotal += basePrice * times;
-    }
-
-    if (selectedIndexes.contains(2) ||
-        selectedIndexes.contains(3) ||
-        selectedIndexes.contains(4)) {
-      costTotal = costTotal * addedPhoneReminderList.length;
-    }
     calculateTotalRemindersUpdate(data);
+
     notifyListeners();
+  }
+
+  int getSelectedPhoneChannelPrice(AuthViewModel model) {
+    int total = 0;
+
+    final pricing =
+        model.notificationChannelPricingResponseModel?.data?.data ?? [];
+
+    for (final channel in pricing) {
+      switch (channel.channel) {
+        case 'SMS':
+          if (selectedIndexes.contains(2)) {
+            total += (channel.unitPrice ?? 0).toInt();
+          }
+          break;
+
+        case 'WHATSAPP':
+          if (selectedIndexes.contains(3)) {
+            total += (channel.unitPrice ?? 0).toInt();
+          }
+          break;
+
+        case 'PHONE_CALL':
+          if (selectedIndexes.contains(4)) {
+            total += (channel.unitPrice ?? 0).toInt();
+          }
+          break;
+      }
+    }
+
+    return total;
   }
 
   void addCostTotalUpdateReminder({Reminder? data, model}) {
@@ -50072,24 +50116,10 @@ class AuthViewModel extends BaseViewModel {
 
     int frequencyPerDay0 = 0;
 
-    final bool isCustom = data!.medication!.scheduleType == 'FIXED'
-        ? false
-        : true;
-    final int durationInDays = data.medication!.durationInDays!;
-    final int timesPerDay = data.medication!.scheduleType == 'FIXED'
-        ? data.medication!.timesPerDay!
-        : 0;
-
     int frequencyPerDay = 0;
-
-    if (isCustom == false) {
-      frequencyPerDay = timesPerDay * durationInDays;
-    } else if (isCustom == true) {
-      // Flatten all daily times and divide by number of days
-      frequencyPerDay = (getTotalCustomDosesUpdate(
-        data.medication!.dailyDoseTimes ?? [],
-      ));
-    }
+    frequencyPerDay = getFutureCustomDoses(
+      data!.medication!.dailyDoseTimes ?? [],
+    );
 
     frequencyPerDay0 = frequencyPerDay;
 
@@ -50123,6 +50153,27 @@ class AuthViewModel extends BaseViewModel {
     }
 
     notifyListeners();
+  }
+
+  int getFutureCustomDoses(List<List<getId.DailyDoseTime>> dailyDoseTimes) {
+    final now = DateTime.now();
+    int total = 0;
+
+    for (final day in dailyDoseTimes) {
+      for (final dose in day) {
+        try {
+          final reminderTime = DateTime.parse('${dose.date} ${dose.time}:00');
+
+          if (reminderTime.isAfter(now)) {
+            total++;
+          }
+        } catch (_) {
+          // Ignore invalid dates
+        }
+      }
+    }
+
+    return total;
   }
 
   calculateTotalRemindersUpdateReminder(Reminder? data) {
@@ -52188,6 +52239,40 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> getPendingReminderOnly(context) async {
+    try {
+      _isLoading = true;
+      _getPendingReminderResponseModel = await runBusyFuture(
+        repositoryImply.getPendingReminderOnly(
+          page: pagePendingOnly.toString(),
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getPendingFailedReminder(context) async {
+    try {
+      _isLoading = true;
+      _getPendingReminderResponseModel = await runBusyFuture(
+        repositoryImply.getFailedReminder(page: pagePendingFailed.toString()),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
   Future<void> saveReminderToDraft({
     context,
     SaveDraftReminderEntityModel? savedraft,
@@ -52293,6 +52378,38 @@ class AuthViewModel extends BaseViewModel {
       isTappedPhoneAdded = true;
     }
     if (data.notificationChannels!.contains('PHONE_CALL')) {
+      selectedIndexes.add(4);
+      isTappedPhoneAdded = true;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifyListeners();
+    });
+  }
+
+  void addNotificationChannelsUpdate({
+    getReminderId.Data? data,
+    AuthViewModel? model,
+  }) {
+    selectedIndexes.clear();
+
+    if (data!.notificationChannels!.contains('EMAIL')) {
+      selectedIndexes.add(0);
+      isTappedEmailAdded = true;
+    }
+    if (data.notificationChannels!.contains('PUSH')) {
+      selectedIndexes.add(1);
+      isTappedEmailAdded = true;
+    }
+    if (data.notificationChannels!.contains('SMS')) {
+      selectedIndexes.add(2);
+      isTappedPhoneAdded = true;
+    }
+    if (data.notificationChannels!.contains('WHATSAPP')) {
+      selectedIndexes.add(3);
+      isTappedPhoneAdded = true;
+    }
+    if (data.notificationChannels!.contains('PHONE_CALL')) {
+      //  || data.payments!.any((p) => p.notificationChannelsPaidFor!.contains('PHONE_CALL'))
       selectedIndexes.add(4);
       isTappedPhoneAdded = true;
     }

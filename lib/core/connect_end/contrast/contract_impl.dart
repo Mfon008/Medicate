@@ -276,9 +276,19 @@ class AuthContractsImpl {
   Future<GetReminderDraftResponseModel> getDraftedReminder({
     String? page,
   }) async => await _api.getDraftedReminder(page: page);
+  
   Future<GetPendingReminderResponseModel> getPendingReminder({
     String? page,
   }) async => await _api.getPendingReminder(page: page);
+  
+  Future<GetPendingReminderResponseModel> getOnlyPendingReminder({
+    String? page,
+  }) async => await _api.getPendingReminderOnly(page: page);
+  
+  Future<GetPendingReminderResponseModel> getFailedPendingReminder({
+    String? page,
+  }) async => await _api.getFailedReminder(page: page);
+  
   Future<dynamic> saveReminderDraft(
     SaveDraftReminderEntityModel savedraft,
   ) async => await _api.saveReminderDraft(savedraft);
@@ -296,7 +306,4 @@ class AuthContractsImpl {
   Future<RetryPaymentReminderResponseModel> reminderRetryPayment({
     String? reminderId,
   }) async => _api.reminderRetryPayment(reminderId: reminderId);
-  // Future<GetReminderRetryPaymentModel> getReminderRetryPayment({
-  //   String? reminderId,
-  // }) async  =>_api.getReminderRetryPayment(reminderId: reminderId);
 }
