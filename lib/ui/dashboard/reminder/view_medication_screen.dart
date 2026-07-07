@@ -5,20 +5,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/config/colors.dart';
-import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/reminder.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
-import 'package:medicate_app/core/connect_end/model/get_pending_reminder_response_model/reminder.dart'
-    as pen;
 
 class ViewMedicationScreen extends StatelessWidget {
-  ViewMedicationScreen({super.key, required this.id, this.reminder, this.penReminder});
+  ViewMedicationScreen({super.key, required this.id});
   String? id;
-  Reminder? reminder;
-  pen.Reminder? penReminder;
   var medication;
   var imageUrl;
 
@@ -28,7 +23,6 @@ class ViewMedicationScreen extends StatelessWidget {
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
-          print('Pending Reminder:::${reminder!.id}');
           await model.getReminderById(context, id);
           imageUrl = model.sanitizeImageUrl(medication?.medicationImage?.url);
           model.allNotificationChannels.addAll(

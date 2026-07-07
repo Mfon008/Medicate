@@ -651,12 +651,13 @@ class AuthApi {
 
   Future<InitiatePaymentResponseModel> initiatePayment({
     String? reference,
+    String? paymentId,
   }) async {
     try {
       final response = await _service.call(
         UrlConfig.initiate_payment,
         RequestMethod.post,
-        data: {"reference": reference},
+        data: {"reference": reference, "paymentId": paymentId},
       );
       logger.d(response.data);
       return InitiatePaymentResponseModel.fromJson(response.data);

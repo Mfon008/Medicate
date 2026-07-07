@@ -7,8 +7,9 @@ class Data {
   String? message;
   String? reminderGroupId;
   String? transactionReference;
+  String? paymentId;
 
-  Data({this.message, this.reminderGroupId, this.transactionReference});
+  Data({this.message, this.reminderGroupId, this.transactionReference, this.paymentId});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

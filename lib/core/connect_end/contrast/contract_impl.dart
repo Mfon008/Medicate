@@ -159,7 +159,7 @@ class AuthContractsImpl {
   );
 
   Future<InitiatePaymentResponseModel> initiatePayment({
-    String? reference,
+    String? reference, String? paymentId,
   }) async => await _api.initiatePayment(reference: reference);
 
   Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>

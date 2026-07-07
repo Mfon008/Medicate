@@ -6,18 +6,14 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as _i120;
+import 'package:flutter/material.dart';
 import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/plan.dart'
-    as _i123;
-import 'package:medicate_app/core/connect_end/model/get_listed_plan_tiers_response_model/plan_tier.dart'
-    as _i125;
-import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart'
-    as _i124;
-import 'package:medicate_app/core/connect_end/model/get_pending_reminder_response_model/reminder.dart'
-    as _i122;
-import 'package:medicate_app/core/connect_end/model/get_reminder_response_model/reminder.dart'
     as _i121;
+import 'package:medicate_app/core/connect_end/model/get_listed_plan_tiers_response_model/plan_tier.dart'
+    as _i123;
+import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart'
+    as _i122;
 import 'package:medicate_app/ui/authentication/health_care/health_care_change_no_screen.dart'
     as _i53;
 import 'package:medicate_app/ui/authentication/health_care/health_care_doctor_specialist_signup_screen.dart'
@@ -239,7 +235,7 @@ import 'package:medicate_app/ui/widget/accelerate_payment_view_wallet.dart'
 import 'package:medicate_app/ui/widget/payment_success_submit_app_screen.dart'
     as _i93;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i126;
+import 'package:stacked_services/stacked_services.dart' as _i124;
 
 class Routes {
   static const dashboard = '/';
@@ -1228,12 +1224,8 @@ class StackedRouter extends _i1.RouterBase {
     _i32.ViewMedicationScreen: (data) {
       final args = data.getArgs<ViewMedicationScreenArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i32.ViewMedicationScreen(
-          key: args.key,
-          id: args.id,
-          reminder: args.reminder,
-          penReminder: args.penReminder,
-        ),
+        builder: (context) =>
+            _i32.ViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
       );
     },
@@ -2868,41 +2860,26 @@ class PaymentStatusScreenArguments {
 }
 
 class ViewMedicationScreenArguments {
-  const ViewMedicationScreenArguments({
-    this.key,
-    required this.id,
-    this.reminder,
-    this.penReminder,
-  });
+  const ViewMedicationScreenArguments({this.key, required this.id});
 
   final _i120.Key? key;
 
   final String? id;
 
-  final _i121.Reminder? reminder;
-
-  final _i122.Reminder? penReminder;
-
   @override
   String toString() {
-    return '{"key": "$key", "id": "$id", "reminder": "$reminder", "penReminder": "$penReminder"}';
+    return '{"key": "$key", "id": "$id"}';
   }
 
   @override
   bool operator ==(covariant ViewMedicationScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key &&
-        other.id == id &&
-        other.reminder == reminder &&
-        other.penReminder == penReminder;
+    return other.key == key && other.id == id;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^
-        id.hashCode ^
-        reminder.hashCode ^
-        penReminder.hashCode;
+    return key.hashCode ^ id.hashCode;
   }
 }
 
@@ -4210,7 +4187,7 @@ class ApplicationFormScreenArguments {
 
   final String? hmoId;
 
-  final _i123.Plan? data;
+  final _i121.Plan? data;
 
   @override
   String toString() {
@@ -4291,7 +4268,7 @@ class FamilyFormScreenArguments {
 
   final String? hmoId;
 
-  final _i123.Plan? data;
+  final _i121.Plan? data;
 
   @override
   String toString() {
@@ -4340,7 +4317,7 @@ class CoorporateFormScreenArguments {
 
   final String? hmoId;
 
-  final _i123.Plan? data;
+  final _i121.Plan? data;
 
   @override
   String toString() {
@@ -4444,7 +4421,7 @@ class CreateHmoPlanArguments {
 
   final bool? isEdited;
 
-  final _i124.Plan? plan;
+  final _i122.Plan? plan;
 
   @override
   String toString() {
@@ -4886,7 +4863,7 @@ class HmoCreateTiersPlanManagementScreenArguments {
 
   final bool? isEditing;
 
-  final _i125.PlanTier? editedPlanTier;
+  final _i123.PlanTier? editedPlanTier;
 
   @override
   String toString() {
@@ -5043,7 +5020,7 @@ class HMOMoreScreenArguments {
   }
 }
 
-extension NavigatorStateExtension on _i126.NavigationService {
+extension NavigatorStateExtension on _i124.NavigationService {
   Future<dynamic> navigateToDashboard({
     _i120.Key? key,
     int? index,
@@ -5627,8 +5604,6 @@ extension NavigatorStateExtension on _i126.NavigationService {
   Future<dynamic> navigateToViewMedicationScreen({
     _i120.Key? key,
     required String? id,
-    _i121.Reminder? reminder,
-    _i122.Reminder? penReminder,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -5637,12 +5612,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(
-        key: key,
-        id: id,
-        reminder: reminder,
-        penReminder: penReminder,
-      ),
+      arguments: ViewMedicationScreenArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -6684,7 +6654,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i123.Plan? data,
+    required _i121.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6738,7 +6708,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i123.Plan? data,
+    required _i121.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6768,7 +6738,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i123.Plan? data,
+    required _i121.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -6845,7 +6815,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
   Future<dynamic> navigateToCreateHmoPlan({
     _i120.Key? key,
     bool? isEdited = true,
-    _i124.Plan? plan,
+    _i122.Plan? plan,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7203,7 +7173,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
   Future<dynamic> navigateToHmoCreateTiersPlanManagementScreen({
     _i120.Key? key,
     bool? isEditing = false,
-    _i125.PlanTier? editedPlanTier,
+    _i123.PlanTier? editedPlanTier,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7916,8 +7886,6 @@ extension NavigatorStateExtension on _i126.NavigationService {
   Future<dynamic> replaceWithViewMedicationScreen({
     _i120.Key? key,
     required String? id,
-    _i121.Reminder? reminder,
-    _i122.Reminder? penReminder,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -7926,12 +7894,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(
-        key: key,
-        id: id,
-        reminder: reminder,
-        penReminder: penReminder,
-      ),
+      arguments: ViewMedicationScreenArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -8973,7 +8936,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i123.Plan? data,
+    required _i121.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -9027,7 +8990,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i123.Plan? data,
+    required _i121.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -9057,7 +9020,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
     required String? planTeirName,
     required String? planId,
     required String? hmoId,
-    required _i123.Plan? data,
+    required _i121.Plan? data,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -9134,7 +9097,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
   Future<dynamic> replaceWithCreateHmoPlan({
     _i120.Key? key,
     bool? isEdited = true,
-    _i124.Plan? plan,
+    _i122.Plan? plan,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -9492,7 +9455,7 @@ extension NavigatorStateExtension on _i126.NavigationService {
   Future<dynamic> replaceWithHmoCreateTiersPlanManagementScreen({
     _i120.Key? key,
     bool? isEditing = false,
-    _i125.PlanTier? editedPlanTier,
+    _i123.PlanTier? editedPlanTier,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,

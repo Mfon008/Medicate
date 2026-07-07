@@ -11800,7 +11800,7 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  buildChannelListUpdate({selectedIndexes, model}) {
+  buildChannelListUpdate(selectedIndexes) {
     notificationChannel.clear();
     if (selectedIndexes.contains(0)) {
       notificationChannel.add('EMAIL');
@@ -11817,7 +11817,7 @@ class AuthViewModel extends BaseViewModel {
     if (selectedIndexes.contains(4)) {
       notificationChannel.add('PHONE_CALL');
     }
-    model.notifyListeners();
+    notifyListeners();
   }
 
   Future<String?> showDailyInTakeMenu({
@@ -16758,7 +16758,7 @@ class AuthViewModel extends BaseViewModel {
         List<Map<String, String>> dayDoses = [];
         for (int i = 0; i < model.timesPerDay[day]!.length; i++) {
           dayDoses.add({
-            'time': model.timesPerDay[day]![i],
+            'time': convertTo24Hour(model.timesPerDay[day]![i]),
             'date': startDateIsoWithin.substring(0, 10),
             'isoDate': startDateIsoWithin,
           });
@@ -16777,7 +16777,7 @@ class AuthViewModel extends BaseViewModel {
         List<Map<String, String>> dayDoses = [];
         for (int i = 0; i < formattedSelectedTimeAndPeriodList!.length; i++) {
           dayDoses.add({
-            'time': formattedSelectedTimeAndPeriodList![i],
+            'time': convertTo24Hour(formattedSelectedTimeAndPeriodList![i]),
             'date': startDateIsoWithin.substring(0, 10),
             'isoDate': startDateIsoWithin,
           });
@@ -16846,7 +16846,6 @@ class AuthViewModel extends BaseViewModel {
             "isoDate": startDateIsoWithin.toString(),
           });
         }
-
         addTimePeriod.add({
           'day': day + 1, // so Day 1, Day 2, etc.
           'doses': dayDoses,
@@ -16887,14 +16886,13 @@ class AuthViewModel extends BaseViewModel {
     data.medication!.dailyDoseTimes = addTimePeriod
         .map<List<doses.DailyDoseTime>>((day) {
           final dosesMap = day['doses'] as List;
-
           return dosesMap
               .map((dose) => doses.DailyDoseTime.fromJson(dose))
               .toList();
         })
         .toList();
     await Future.delayed(Duration(seconds: 1), () {});
-    model.markUpdateControllersInitializedFalse();
+    // model.markUpdateControllersInitializedFalse();
     _isLoading = false;
     setModalState!(() {});
     model.notifyListeners();
@@ -19145,6 +19143,23 @@ class AuthViewModel extends BaseViewModel {
     setModalState!(() {});
   }
 
+  void copyDayOneToAllUpdateReminder({
+    StateSetter? setModalState,
+    AuthViewModel? viewModel,
+    getReminderId.Data? data,
+  }) {
+    final dayOneTimes = data!.medication!.dailyDoseTimes![0];
+
+    if (dayOneTimes == null || dayOneTimes.isEmpty) return;
+
+    for (final day in data.medication!.dailyDoseTimes![0]) {
+      if (day != null) {
+        //  data.medication!.dailyDoseTimes![0][day] = List.from(dayOneTimes);
+      }
+    }
+    setModalState!(() {});
+  }
+
   void copyDayOneToAllUpdate({
     StateSetter? setModalState,
     AuthViewModel? viewModel,
@@ -21313,7 +21328,7 @@ class AuthViewModel extends BaseViewModel {
       for (final time in model.selectedTimes) {
         final combined = combineDateAndTime(date: currentDate, time: time);
         doses.add({
-          'time': time,
+          'time': convertTo24Hour(time),
           'date': DateFormat('yyyy-MM-dd').format(currentDate),
           'isoDate': combined.toUtc().toIso8601String(),
         });
@@ -23005,6 +23020,21 @@ class AuthViewModel extends BaseViewModel {
                                   if (index == 0 || index == 1) {
                                     // Email
                                     isTappedEmailAdded = true;
+                                    print('object');
+                                     if (addedEmailReminderList.contains(
+                                      SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['email'],
+                                    )) {
+                                       print('object ifffff');
+                                    } else {
+                                      addedEmailReminderList.add(
+                                        SharedPreferencesService
+                                            .instance
+                                            .usersData['user']['email'],
+                                      );
+                                       print('object elseeee');
+                                    }
                                     model.notifyListeners();
                                   } else if ([2, 3, 4].contains(index)) {
                                     // Phone-related channels
@@ -23127,7 +23157,7 @@ class AuthViewModel extends BaseViewModel {
                                                         ),
                                                         child: TextView(
                                                           text:
-                                                              '${emailReminderList.length}',
+                                                              '${emailReminderList.length+1}',
                                                           textStyle: TextStyle(
                                                             fontFamily: 'Arial',
                                                             fontSize: 11.8.sp,
@@ -23175,6 +23205,136 @@ class AuthViewModel extends BaseViewModel {
                                           ),
                                         ),
                                         SizedBox(height: 15.20.h),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 12.w,
+                                            right: 20.w,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  if (addedEmailReminderList
+                                                      .contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['email'],
+                                                      )) {
+                                                    addedEmailReminderList.remove(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['email'],
+                                                    );
+                                                  } else {
+                                                    addedEmailReminderList.add(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['email'],
+                                                    );
+                                                  }
+                                                  setModalState!(() {});
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding:
+                                                      addedEmailReminderList.contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['email'],
+                                                      )
+                                                      ? EdgeInsets.all(4.0.w)
+                                                      : EdgeInsets.all(10.w),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          6.r,
+                                                        ),
+                                                    color:
+                                                        addedEmailReminderList.contains(
+                                                          SharedPreferencesService
+                                                              .instance
+                                                              .usersData['user']['email'],
+                                                        )
+                                                        ? AppColors.primary
+                                                        : AppColors.transparent,
+                                                    border: Border.all(
+                                                      color:
+                                                          addedEmailReminderList
+                                                              .contains(
+                                                                SharedPreferencesService
+                                                                    .instance
+                                                                    .usersData['user']['email'],
+                                                              )
+                                                          ? AppColors
+                                                                .transparent
+                                                          : AppColors.infoGrey,
+                                                      width: .78,
+                                                    ),
+                                                  ),
+                                                  child:
+                                                      addedEmailReminderList.contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['email'],
+                                                      )
+                                                      ? Icon(
+                                                          Icons.check,
+                                                          size: 12.sp,
+                                                          color:
+                                                              AppColors.white,
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                ),
+                                              ),
+                                              SizedBox(width: 9.10.w),
+                                              TextView(
+                                                text: 
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['email'],
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 16.2.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    padding: EdgeInsets.all(
+                                                      1.2.w,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          AppColors.app_green,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.check,
+                                                      size: 13.4.sp,
+                                                      color: AppColors.white,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 10.w),
+                                                  TextView(
+                                                    text: 'Primary',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 13.72.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 2.0.h),
+                                        Divider(color: AppColors.infoGrey1),
                                         ...emailReminderList.asMap().entries.map((
                                           entry,
                                         ) {
@@ -25280,7 +25440,7 @@ class AuthViewModel extends BaseViewModel {
                                                                                               child: Row(
                                                                                                 children: [
                                                                                                   TextView(
-                                                                                                    text: time['time'],
+                                                                                                    text:time['time'].contains("PM") || time['time'].contains('AM')?time['time']: convertTo12HourFormat(time['time']),
                                                                                                     textStyle: TextStyle(
                                                                                                       fontFamily: 'GoogleSans',
                                                                                                       fontSize: 13.2.sp,
@@ -25597,7 +25757,7 @@ class AuthViewModel extends BaseViewModel {
                                                                     children: [
                                                                       TextView(
                                                                         text:
-                                                                            time['time'],
+                                                                            convertTo12HourFormat(time['time']),
                                                                         textStyle: TextStyle(
                                                                           fontFamily:
                                                                               'GoogleSans',
@@ -28926,7 +29086,7 @@ class AuthViewModel extends BaseViewModel {
                                       onTap: () {
                                         isTappedCopyall = !isTappedCopyall;
                                         if (isTappedCopyall) {
-                                          copyDayOneToAll(
+                                          copyDayOneToAllUpdateReminder(
                                             setModalState: setModalState!,
                                             viewModel: model,
                                           );
@@ -30527,7 +30687,7 @@ class AuthViewModel extends BaseViewModel {
               buttonText: 'Continue',
               color: AppColors.white,
               buttonBorderColor: AppColors.transparent,
-              isLoading: model.isLoading,
+              isLoading: _isLoading,
               onPressed: () async {
                 if (firstFormReminderKey.currentState!.validate()) {
                   if (isTappedEmailAdded && addedEmailReminderList.isEmpty ||
@@ -30535,10 +30695,7 @@ class AuthViewModel extends BaseViewModel {
                     if (isTappedEmailAdded && addedEmailReminderList.isEmpty) {}
                     if (isTappedPhoneAdded && addedPhoneReminderList.isEmpty) {}
                   } else {
-                    await buildChannelListUpdate(
-                      selectedIndexes: selectedIndexes,
-                      model: model,
-                    );
+                    await buildChannelListUpdate(selectedIndexes);
                     await addReminderToUpdate(
                       model: model,
                       setModalState: setModalState,
@@ -43801,7 +43958,7 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                       SizedBox(width: 5.10.w),
                                       TextView(
-                                        text: time,
+                                        text: convertTo12HourFormat(time),
                                         textStyle: TextStyle(
                                           fontFamily: 'GoogleSans',
                                           fontSize: 12.8.sp,
@@ -44486,9 +44643,56 @@ class AuthViewModel extends BaseViewModel {
                       : 'Proceed to Pay',
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
+                  onPressed: () async {
                     if (addedPhoneReminderList.isNotEmpty) {
+                      
+                      await model.createReminderPaid(
+                        context,
+                        model: model,
+                        createReminderEntityModel: CreateReminderEntityModel(
+                          medications: model.medicationClassList.map((m) {
+                            return Medication(
+                              medicationName: m.medicationName,
+                              scheduleType: m.isCusSchedule!
+                                  ? 'CUSTOM'
+                                  : 'FIXED',
+                              dosage: m.dosage,
+                              medicationType: m.medicationType!.toUpperCase(),
+                              startDateTime: m.startDateIso,
+                              endDateTime: m.endDateIso,
+                              durationInDays: int.parse(m.duration!),
+                              timesPerDay: m.isCusSchedule!
+                                  ? ''
+                                  : int.parse(m.timesToTake!),
+                              dailyDoseTimes: (m.dosageMap as List)
+                                  .map(
+                                    (dayData) => (dayData['doses'] as List)
+                                        .map(
+                                          (dose) => DailyDoseTime.fromJson(
+                                            dose as Map<String, dynamic>,
+                                          ),
+                                        )
+                                        .toList(),
+                                  )
+                                  .toList(),
+                              note: m.note,
+                              medicationImage: m.imageData!.url == null
+                                  ? null
+                                  : MedicationImage.fromJson(
+                                      m.imageData!.toJson(),
+                                    ),
+                            );
+                          }).toList(),
+                          timeZone: "Africa/Lagos",
+                          notificationChannels: notificationChannel,
+                          emails: addedEmailReminderList,
+                          phoneNumbers: addedPhoneReminderList,
+                          payment: Payment(amount: costTotal, currency: "NGN"),
+                        ),
+                      );
+                      if(model.createReminderResponseModel!.statusCode == 201){
                       linIndex++;
+                      }
                     } else {
                       model.createReminder(
                         context,
@@ -48211,62 +48415,74 @@ class AuthViewModel extends BaseViewModel {
                         }
                       : onTapPaymentMeth != ''
                       ? () {
-                          model.createReminderPaid(
+                          initiatePayment(
                             context,
+                            reference: model
+                                .createReminderResponseModel
+                                ?.data
+                                ?.transactionReference,
+                             paymentId:model
+                                .createReminderResponseModel
+                                ?.data
+                                ?.paymentId,
                             model: model,
-                            createReminderEntityModel:
-                                CreateReminderEntityModel(
-                                  medications: model.medicationClassList.map((
-                                    m,
-                                  ) {
-                                    return Medication(
-                                      medicationName: m.medicationName,
-                                      scheduleType: m.isCusSchedule!
-                                          ? 'CUSTOM'
-                                          : 'FIXED',
-                                      dosage: m.dosage,
-                                      medicationType: m.medicationType!
-                                          .toUpperCase(),
-                                      startDateTime: m.startDateIso,
-                                      endDateTime: m.endDateIso,
-                                      durationInDays: int.parse(m.duration!),
-                                      timesPerDay: m.isCusSchedule!
-                                          ? ''
-                                          : int.parse(m.timesToTake!),
-                                      dailyDoseTimes: (m.dosageMap as List)
-                                          .map(
-                                            (
-                                              dayData,
-                                            ) => (dayData['doses'] as List)
-                                                .map(
-                                                  (
-                                                    dose,
-                                                  ) => DailyDoseTime.fromJson(
-                                                    dose
-                                                        as Map<String, dynamic>,
-                                                  ),
-                                                )
-                                                .toList(),
-                                          )
-                                          .toList(),
-                                      note: m.note,
-                                      medicationImage: m.imageData!.url == null
-                                          ? null
-                                          : MedicationImage.fromJson(
-                                              m.imageData!.toJson(),
-                                            ),
-                                    );
-                                  }).toList(),
-                                  timeZone: "Africa/Lagos",
-                                  notificationChannels: notificationChannel,
-                                  emails: addedEmailReminderList,
-                                  phoneNumbers: addedPhoneReminderList,
-                                  payment: Payment(
-                                    amount: costTotal,
-                                    currency: "NGN",
-                                  ),
-                                ),
                           );
+                          // model.createReminderPaid(
+                          //   context,
+                          //   model: model,
+                          //   createReminderEntityModel:
+                          //       CreateReminderEntityModel(
+                          //         medications: model.medicationClassList.map((
+                          //           m,
+                          //         ) {
+                          //           return Medication(
+                          //             medicationName: m.medicationName,
+                          //             scheduleType: m.isCusSchedule!
+                          //                 ? 'CUSTOM'
+                          //                 : 'FIXED',
+                          //             dosage: m.dosage,
+                          //             medicationType: m.medicationType!
+                          //                 .toUpperCase(),
+                          //             startDateTime: m.startDateIso,
+                          //             endDateTime: m.endDateIso,
+                          //             durationInDays: int.parse(m.duration!),
+                          //             timesPerDay: m.isCusSchedule!
+                          //                 ? ''
+                          //                 : int.parse(m.timesToTake!),
+                          //             dailyDoseTimes: (m.dosageMap as List)
+                          //                 .map(
+                          //                   (
+                          //                     dayData,
+                          //                   ) => (dayData['doses'] as List)
+                          //                       .map(
+                          //                         (
+                          //                           dose,
+                          //                         ) => DailyDoseTime.fromJson(
+                          //                           dose
+                          //                               as Map<String, dynamic>,
+                          //                         ),
+                          //                       )
+                          //                       .toList(),
+                          //                 )
+                          //                 .toList(),
+                          //             note: m.note,
+                          //             medicationImage: m.imageData!.url == null
+                          //                 ? null
+                          //                 : MedicationImage.fromJson(
+                          //                     m.imageData!.toJson(),
+                          //                   ),
+                          //           );
+                          //         }).toList(),
+                          //         timeZone: "Africa/Lagos",
+                          //         notificationChannels: notificationChannel,
+                          //         emails: addedEmailReminderList,
+                          //         phoneNumbers: addedPhoneReminderList,
+                          //         payment: Payment(
+                          //           amount: costTotal,
+                          //           currency: "NGN",
+                          //         ),
+                          //       ),
+                          // );
                           model.notifyListeners();
                         }
                       : () {},
@@ -48480,6 +48696,10 @@ class AuthViewModel extends BaseViewModel {
                           ?.datum
                           ?.data
                           ?.transactionReference,
+                       paymentId:model
+                                .createReminderResponseModel
+                                ?.data
+                                ?.paymentId,
                       model: model,
                     );
                     model.notifyListeners();
@@ -48839,6 +49059,10 @@ class AuthViewModel extends BaseViewModel {
                                   .updateReminderResponseModel
                                   ?.data
                                   ?.transactionReference,
+                               paymentId:model
+                                .createReminderResponseModel
+                                ?.data
+                                ?.paymentId,
                               model: model,
                             );
                           }
@@ -49869,18 +50093,6 @@ class AuthViewModel extends BaseViewModel {
     }
   }
 
-  // int getTotalTimesForReminderUpdate(getReminderId.Data data) {
-  //   if (data.medication!.scheduleType != 'FIXED') {
-  //     _getTotalTimesForReminder = getTotalCustomDosesUpdate(
-  //       data.medication?.dailyDoseTimes ?? [],
-  //     );
-  //     return _getTotalTimesForReminder!;
-  //   } else {
-  //     _getTotalTimesForReminder = data.medication?.timesPerDay ?? 0;
-  //     return _getTotalTimesForReminder!;
-  //   }
-  // }
-
   int getTotalTimesForReminderUpdate(getReminderId.Data data) {
     return getFutureCustomDoses(data.medication?.dailyDoseTimes ?? []);
   }
@@ -50514,6 +50726,7 @@ class AuthViewModel extends BaseViewModel {
   void initiatePayment(
     context, {
     String? reference,
+    String? paymentId,
     AuthViewModel? model,
   }) async {
     try {
@@ -50667,7 +50880,7 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void createReminderPaid(
+  Future<void> createReminderPaid(
     context, {
     CreateReminderEntityModel? createReminderEntityModel,
     AuthViewModel? model,
@@ -50683,11 +50896,6 @@ class AuthViewModel extends BaseViewModel {
         await AppUtils.snackbar(
           context,
           message: _createReminderResponseModel?.message ?? '',
-        );
-        initiatePayment(
-          context,
-          reference: _createReminderResponseModel?.data?.transactionReference,
-          model: model,
         );
       } else {
         navigate.navigateTo(
@@ -51553,7 +51761,7 @@ class AuthViewModel extends BaseViewModel {
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      // AppUtils.snackbar(context, message: e.toString(), error: true);
     }
     notifyListeners();
   }

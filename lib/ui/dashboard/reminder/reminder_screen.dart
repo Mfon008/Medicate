@@ -1979,7 +1979,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id,reminder: reminder),
+      arguments: ViewMedicationScreenArguments(id: reminder.id),
     ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),
@@ -2424,7 +2424,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id,penReminder: reminder),
+      arguments: ViewMedicationScreenArguments(id: reminder.id,),
     ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),
