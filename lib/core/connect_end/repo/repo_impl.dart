@@ -281,7 +281,7 @@ class AuthRepoImpl {
   Future<InitiatePaymentResponseModel> initiatePayment({
     String? reference, String? paymentId,
   }) async {
-    final response = await _contract.initiatePayment(reference: reference);
+    final response = await _contract.initiatePayment(reference: reference,paymentId: paymentId);
     return response;
   }
 

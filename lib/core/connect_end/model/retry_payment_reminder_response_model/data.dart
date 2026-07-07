@@ -9,6 +9,7 @@ class Data {
   String? reminderId;
   String? reminderGroupId;
   String? transactionReference;
+  String? paymentId;
   String? currency;
   int? totalAmount;
   String? status;
@@ -20,6 +21,7 @@ class Data {
     this.reminderId,
     this.reminderGroupId,
     this.transactionReference,
+    this.paymentId,
     this.currency,
     this.totalAmount,
     this.status,

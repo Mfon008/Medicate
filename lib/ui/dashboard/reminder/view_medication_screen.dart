@@ -781,7 +781,7 @@ class ViewMedicationScreen extends StatelessWidget {
                                           .getReminderByIdModel!
                                           .data!
                                           .phoneNumbers!
-                                          .map((e) => model.convert234To0(e)),
+                                          .map((e) => model.convert234To0(e:e,model:model)),
                                     ],
                                   ),
                                   model
@@ -863,7 +863,27 @@ class ViewMedicationScreen extends StatelessWidget {
   }
 
   Widget buttonMedication({context, AuthViewModel? model}) {
-    if (model!.getReminderByIdModel!.data!.payments!.isNotEmpty &&
+    if (model!.getReminderByIdModel!.data!.medication!.medicationStatus!
+                .toLowerCase() ==
+            'completed' ||
+        DateTime.parse(
+          model.getReminderByIdModel!.data!.medication!.endDateTime!.toString(),
+        ).isBefore(DateTime.now())) {
+      return ButtonWidget(
+        border: 100.r,
+        buttonColor: AppColors.primary,
+        buttonText: 'Repeat Medication',
+        color: AppColors.white,
+        buttonBorderColor: AppColors.transparent,
+        onPressed: () => model.showRepeatMedicationDialog(
+          context: context,
+          data: model.getReminderByIdModel!.data,
+          model: model,
+        ),
+        fontSize: 14.sp,
+      );
+    }
+    if (model.getReminderByIdModel!.data!.payments!.isNotEmpty &&
             model.getReminderByIdModel!.data!.payments!.last.status ==
                 'SUCCESS' ||
         model.getReminderByIdModel!.data!.payments!.isEmpty) {
