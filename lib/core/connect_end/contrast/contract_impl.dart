@@ -306,4 +306,5 @@ class AuthContractsImpl {
   Future<RetryPaymentReminderResponseModel> reminderRetryPayment({
     String? reminderId,
   }) async => _api.reminderRetryPayment(reminderId: reminderId);
+  Future<dynamic> sendNotificaitonDevice({String? token, String? deviceType}) async => _api.sendNotificaitonDevice(token: token, deviceType: deviceType);
 }

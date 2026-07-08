@@ -773,17 +773,8 @@ class ViewMedicationScreen extends StatelessWidget {
                                         ? 0.h
                                         : 5.0.h,
                                   ),
-                                  Wrap(
-                                    spacing: 4.10,
-                                    runSpacing: 6,
-                                    children: [
-                                      ...model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .phoneNumbers!
-                                          .map((e) => model.convert234To0(e:e,model:model)),
-                                    ],
-                                  ),
+                                  model.convert234To0(model) ,
+                                  
                                   model
                                           .getReminderByIdModel!
                                           .data!
@@ -819,30 +810,8 @@ class ViewMedicationScreen extends StatelessWidget {
                                             color: AppColors.infoGrey,
                                           ),
                                         ),
-                                  SizedBox(
-                                    height:
-                                        model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .emails!
-                                            .isEmpty
-                                        ? 0.h
-                                        : 5.0.h,
-                                  ),
-                                  Wrap(
-                                    spacing: 4.10,
-                                    runSpacing: 6,
-                                    children: [
-                                      ...model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .emails!
-                                          .map(
-                                            (e) =>
-                                                model.convertToProperEmail(e),
-                                          ),
-                                    ],
-                                  ),
+                                 
+                                  model.convertToProperEmail(model)
                                 ],
                               ),
                             ),

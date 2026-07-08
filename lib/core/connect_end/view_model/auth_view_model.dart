@@ -11677,7 +11677,7 @@ class AuthViewModel extends BaseViewModel {
     if (model.updateControllersInitialized) {
       return; // ✅ RUNS ONLY ONCE
     }
-   
+
     model.markUpdateControllersInitialized();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       setModalState(() {
@@ -11722,11 +11722,7 @@ class AuthViewModel extends BaseViewModel {
           }
         }
 
-        print(notificationPaidList);
-         print('ooooookkkoo:::::$notificationChannel');
       });
-
-
 
       addNotificationChannelsRepeat();
       data!.medication!.startDateTime = DateTime.now();
@@ -19270,16 +19266,21 @@ class AuthViewModel extends BaseViewModel {
     AuthViewModel? viewModel,
     getReminderId.Data? data,
   }) {
-    final dayOneTimes = data!.medication!.dailyDoseTimes![0];
+    if (data?.medication?.dailyDoseTimes == null ||
+        data!.medication!.dailyDoseTimes!.isEmpty) {
+      return;
+    }
+    final dailyDoseTimes = data.medication!.dailyDoseTimes!;
+
+    final dayOneTimes = List<doses.DailyDoseTime>.from(dailyDoseTimes.first);
 
     if (dayOneTimes == null || dayOneTimes.isEmpty) return;
 
-    for (final day in data.medication!.dailyDoseTimes![0]) {
-      if (day != null) {
-        //  data.medication!.dailyDoseTimes![0][day] = List.from(dayOneTimes);
-      }
+    for (int i = 1; i < dailyDoseTimes.length; i++) {
+      dailyDoseTimes[i] = List<doses.DailyDoseTime>.from(dayOneTimes);
     }
     setModalState!(() {});
+    viewModel?.notifyListeners();
   }
 
   void copyDayOneToAllUpdate({
@@ -19672,6 +19673,7 @@ class AuthViewModel extends BaseViewModel {
                 'HEALTHCARE_PRACTITIONER') {
           navigate.navigateTo(Routes.specialistsProviderDashboard);
         }
+        sendDeviceToken(token:globalfCMToken,deviceType: Platform.isAndroid?'ANDROID':'IOS');
       }
     } catch (e) {
       _isLoading = false;
@@ -19681,6 +19683,22 @@ class AuthViewModel extends BaseViewModel {
         message: 'Unable to login please try again.',
         error: true,
       );
+    }
+    notifyListeners();
+  }
+
+  void sendDeviceToken({String? token, String? deviceType}) async {
+    try {
+      _isLoading = true;
+       await runBusyFuture(
+        repositoryImply.sendNotificaitonDevice(token:token!, deviceType:deviceType),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      
     }
     notifyListeners();
   }
@@ -29258,6 +29276,7 @@ class AuthViewModel extends BaseViewModel {
                                           copyDayOneToAllUpdateReminder(
                                             setModalState: setModalState!,
                                             viewModel: model,
+                                            data: data,
                                           );
                                         }
                                         model.notifyListeners();
@@ -35005,7 +35024,6 @@ class AuthViewModel extends BaseViewModel {
                   padding: EdgeInsets.only(top: 4.w, right: 10.w),
                   child: GestureDetector(
                     onTap: () {
-                      print('meeee');
                       Navigator.pop(context!);
                       setModalState!(() {});
                     },
@@ -35648,10 +35666,15 @@ class AuthViewModel extends BaseViewModel {
                                     GestureDetector(
                                       onTap: () {
                                         isTappedCopyall = !isTappedCopyall;
+                                        setModalState!(() {});
+                                        print(
+                                          'isTappedCopyall::$isTappedCopyall',
+                                        );
                                         if (isTappedCopyall) {
                                           copyDayOneToAllUpdateReminder(
-                                            setModalState: setModalState!,
+                                            setModalState: setModalState,
                                             viewModel: model,
+                                            data: data,
                                           );
                                         }
                                         model.notifyListeners();
@@ -56706,70 +56729,70 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: onTapPaymentMeth == 'Pay with Wallet'
                       ? () async {
-                          await model.updateReminder(
-                            context,
-                            reminderId: data!.id!,
-                            updateReminder: UpdateReminderEntityModel(
-                              medicationName: data.medication!.medicationName,
-                              scheduleType: data.medication!.scheduleType!,
-                              medicationType: data.medication!.medicationType!
-                                  .toUpperCase(),
-                              dosage: data.medication!.dosage,
-                              startDateTime: data.medication!.startDateTime!,
-                              endDateTime: data.medication!.endDateTime!,
-                              durationInDays: data.medication!.durationInDays!,
-                              timesPerDay:
-                                  data.medication!.scheduleType != 'CUSTOM'
-                                  ? data.medication!.timesPerDay!
-                                  : 0,
-                              note: data.medication!.note,
-                              timeZone: "Africa/Lagos",
-                              notificationChannels: notificationChannel,
-                              emails: addedEmailReminderList,
-                              phoneNumbers: addedPhoneReminderList,
-                              payment: updateRemPay.Payment(
-                                amount: costTotal,
-                                currency: "NGN",
-                              ),
-                              medicationImage:
-                                  model.uploadImageReminderResponseModel ==
-                                          null &&
-                                      data.medication!.medicationImage == null
-                                  ? null
-                                  : data.medication!.medicationImage != null
-                                  ? updateRemImage.MedicationImage.fromJson(
-                                      data.medication!.medicationImage!
-                                          .toJson(),
-                                    )
-                                  : updateRemImage.MedicationImage.fromJson(
-                                      model.uploadImageReminderResponseModel !=
-                                              null
-                                          ? model
-                                                .uploadImageReminderResponseModel!
-                                                .data!
-                                                .toJson()
-                                          : data.medication!.medicationImage!
-                                                .toJson(),
-                                    ),
-                              dailyDoseTimes: data.medication!.dailyDoseTimes!
-                                  .map(
-                                    (day) => day
-                                        .map(
-                                          (time) => updateRemDose.DailyDoseTime(
-                                            time:
-                                                time.time!.contains('AM') ||
-                                                    time.time!.contains('PM')
-                                                ? convertTo24Hour(time.time!)
-                                                : time.time!,
-                                            date: time.date,
-                                            isoDate: time.isoDate,
-                                          ),
-                                        )
-                                        .toList(),
-                                  )
-                                  .toList(),
-                            ),
-                          );
+                          // await model.updateReminder(
+                          //   context,
+                          //   reminderId: data!.id!,
+                          //   updateReminder: UpdateReminderEntityModel(
+                          //     medicationName: data.medication!.medicationName,
+                          //     scheduleType: data.medication!.scheduleType!,
+                          //     medicationType: data.medication!.medicationType!
+                          //         .toUpperCase(),
+                          //     dosage: data.medication!.dosage,
+                          //     startDateTime: data.medication!.startDateTime!,
+                          //     endDateTime: data.medication!.endDateTime!,
+                          //     durationInDays: data.medication!.durationInDays!,
+                          //     timesPerDay:
+                          //         data.medication!.scheduleType != 'CUSTOM'
+                          //         ? data.medication!.timesPerDay!
+                          //         : 0,
+                          //     note: data.medication!.note,
+                          //     timeZone: "Africa/Lagos",
+                          //     notificationChannels: notificationChannel,
+                          //     emails: addedEmailReminderList,
+                          //     phoneNumbers: addedPhoneReminderList,
+                          //     payment: updateRemPay.Payment(
+                          //       amount: costTotal,
+                          //       currency: "NGN",
+                          //     ),
+                          //     medicationImage:
+                          //         model.uploadImageReminderResponseModel ==
+                          //                 null &&
+                          //             data.medication!.medicationImage == null
+                          //         ? null
+                          //         : data.medication!.medicationImage != null
+                          //         ? updateRemImage.MedicationImage.fromJson(
+                          //             data.medication!.medicationImage!
+                          //                 .toJson(),
+                          //           )
+                          //         : updateRemImage.MedicationImage.fromJson(
+                          //             model.uploadImageReminderResponseModel !=
+                          //                     null
+                          //                 ? model
+                          //                       .uploadImageReminderResponseModel!
+                          //                       .data!
+                          //                       .toJson()
+                          //                 : data.medication!.medicationImage!
+                          //                       .toJson(),
+                          //           ),
+                          //     dailyDoseTimes: data.medication!.dailyDoseTimes!
+                          //         .map(
+                          //           (day) => day
+                          //               .map(
+                          //                 (time) => updateRemDose.DailyDoseTime(
+                          //                   time:
+                          //                       time.time!.contains('AM') ||
+                          //                           time.time!.contains('PM')
+                          //                       ? convertTo24Hour(time.time!)
+                          //                       : time.time!,
+                          //                   date: time.date,
+                          //                   isoDate: time.isoDate,
+                          //                 ),
+                          //               )
+                          //               .toList(),
+                          //         )
+                          //         .toList(),
+                          //   ),
+                          // );
                           if (model.createReminderResponseModel!.statusCode ==
                               201) {
                             payWithWalletAPI(
@@ -60972,10 +60995,10 @@ class AuthViewModel extends BaseViewModel {
     });
   }
 
-  convert234To0({String? e, AuthViewModel? model}) {
+  convert234To0(AuthViewModel? model) {
     final phones = model!.getReminderByIdModel!.data!.phoneNumbers!
-    .map((e) => '0${e.substring(4)}')
-    .join(', ');
+        .map((e) => '0${e.substring(4)}')
+        .join(', ');
     return TextView(
       text: phones,
       textStyle: TextStyle(
@@ -60987,9 +61010,12 @@ class AuthViewModel extends BaseViewModel {
     );
   }
 
-  convertToProperEmail(String e) {
+  convertToProperEmail(AuthViewModel? model) {
+    final emails = model!.getReminderByIdModel!.data!.emails!
+        .map((e) => e)
+        .join(', ');
     return TextView(
-      text: '$e, ',
+      text: emails,
       textStyle: TextStyle(
         fontFamily: 'Arial',
         fontSize: 15.4.sp,

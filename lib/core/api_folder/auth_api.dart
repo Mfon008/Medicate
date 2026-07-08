@@ -1047,7 +1047,8 @@ class AuthApi {
     }
   }
 
-  Future<NotificationChannelPricingResponseModel> getNotificationPricing() async {
+  Future<NotificationChannelPricingResponseModel>
+  getNotificationPricing() async {
     try {
       final response = await _service.call(
         UrlConfig.notification_pricing,
@@ -1055,6 +1056,21 @@ class AuthApi {
       );
       logger.d(response.data);
       return NotificationChannelPricingResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> sendNotificaitonDevice({String? token, String? deviceType}) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.notification_device,
+        RequestMethod.post,
+        data: {"token": token, "platform": deviceType},
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

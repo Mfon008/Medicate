@@ -86,4 +86,5 @@ class UrlConfig {
   static const String hmo_plan_teirs = 'hmo/settings/plan-tiers';
   static const String save_reminder_draft = 'reminders/drafts';
   static const String notification_pricing = 'reminders/notification-prices';
+  static const String notification_device = 'notifications/devices';
 }

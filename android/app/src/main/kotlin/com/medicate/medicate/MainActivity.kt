@@ -1,4 +1,4 @@
-package com.example.medicate_app
+package com.medicate.medicate
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

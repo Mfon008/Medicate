@@ -541,6 +541,11 @@ class AuthRepoImpl {
     return response;
   }
 
+ Future<dynamic> sendNotificaitonDevice({String? token, String? deviceType}) async {
+    final response = await _contract.sendNotificaitonDevice(token:token, deviceType:deviceType);
+    return response;
+  }
+
   void _chache(data) {
     if (data != null) {
       _session.authToken = data.data.accessToken;
