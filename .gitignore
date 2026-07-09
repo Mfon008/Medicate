@@ -33,6 +33,24 @@ migrate_working_dir/
 .pub/
 /build/
 
+
+# Flutter/Dart
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# iOS
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# macOS build
+macos/Flutter/ephemeral/
+
+# Android
+android/.gradle/
+
+
 # Symbolication related
 app.*.symbols
 
@@ -43,4 +61,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-ios/build/

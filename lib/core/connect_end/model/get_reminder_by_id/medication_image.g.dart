@@ -15,6 +15,7 @@ MedicationImage _$MedicationImageFromJson(Map<String, dynamic> json) =>
       size: (json['size'] as num?)?.toInt(),
       format: json['format'] as String?,
       id: json['_id'] as String?,
+      key: json['key'] as String?,
     );
 
 Map<String, dynamic> _$MedicationImageToJson(MedicationImage instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$MedicationImageToJson(MedicationImage instance) =>
       'size': instance.size,
       'format': instance.format,
       '_id': instance.id,
+      'key': instance.key,
     };

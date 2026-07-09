@@ -12,6 +12,7 @@ class MedicationImage {
   String? format;
   @JsonKey(name: '_id')
   String? id;
+  String? key;
 
   MedicationImage({
     this.url,
@@ -20,6 +21,7 @@ class MedicationImage {
     this.height,
     this.size,
     this.format,
+    this.key,
     this.id,
   });
 

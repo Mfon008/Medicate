@@ -659,6 +659,10 @@ class AuthViewModel extends BaseViewModel {
   int? getChildCountValue;
   int? getTotalCountValue;
 
+  bool _validateDoseTimes = false;
+  bool allTrue = false;
+  List<bool> allTrueList = [];
+
   returnTypeOfCertificate(String relationship) {
     if (relationship.toLowerCase() == 'spouse') {
       return 'Marriage Certificate';
@@ -11721,7 +11725,6 @@ class AuthViewModel extends BaseViewModel {
             existingChannels.add(channel); // Keep the set in sync
           }
         }
-
       });
 
       addNotificationChannelsRepeat();
@@ -19673,7 +19676,10 @@ class AuthViewModel extends BaseViewModel {
                 'HEALTHCARE_PRACTITIONER') {
           navigate.navigateTo(Routes.specialistsProviderDashboard);
         }
-        sendDeviceToken(token:globalfCMToken,deviceType: Platform.isAndroid?'ANDROID':'IOS');
+        sendDeviceToken(
+          token: globalfCMToken,
+          deviceType: Platform.isAndroid ? 'ANDROID' : 'IOS',
+        );
       }
     } catch (e) {
       _isLoading = false;
@@ -19690,15 +19696,17 @@ class AuthViewModel extends BaseViewModel {
   void sendDeviceToken({String? token, String? deviceType}) async {
     try {
       _isLoading = true;
-       await runBusyFuture(
-        repositoryImply.sendNotificaitonDevice(token:token!, deviceType:deviceType),
+      await runBusyFuture(
+        repositoryImply.sendNotificaitonDevice(
+          token: token!,
+          deviceType: deviceType,
+        ),
         throwException: true,
       );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);
-      
     }
     notifyListeners();
   }
@@ -21600,18 +21608,40 @@ class AuthViewModel extends BaseViewModel {
   //   model.notifyListeners();
   // }
 
+  // void removeTimeAt({
+  //   required int medicationIndex,
+  //   required int timeIndex,
+  //   required AuthViewModel model,
+  // }) {
+  //   for (final day in model.medicationClassList[medicationIndex].dosageMap) {
+  //     if (timeIndex < day['doses'].length) {
+  //       day['doses'].removeAt(timeIndex);
+  //     }
+  //   }
+
+  //   model.selectedTimes.removeAt(timeIndex);
+  //
+  // }
+
   void removeTimeAt({
     required int medicationIndex,
     required int timeIndex,
     required AuthViewModel model,
   }) {
+    // Remove from each day's doses
     for (final day in model.medicationClassList[medicationIndex].dosageMap) {
-      if (timeIndex < day['doses'].length) {
-        day['doses'].removeAt(timeIndex);
+      final doses = day['doses'] as List?;
+
+      if (doses != null && timeIndex < doses.length) {
+        doses.removeAt(timeIndex);
       }
     }
 
-    model.selectedTimes.removeAt(timeIndex);
+    // Remove from selectedTimes only if the index exists
+    if (timeIndex < model.selectedTimes.length) {
+      model.selectedTimes.removeAt(timeIndex);
+    }
+
     model.notifyListeners();
   }
 
@@ -21793,6 +21823,7 @@ class AuthViewModel extends BaseViewModel {
                     onTap: () async {
                       await model.clearReminderMedsVaraibles(model);
                       model.medicationClassList.clear();
+                      _validateDoseTimes = false;
                       Navigator.pop(context!);
                     },
                     child: SvgPicture.asset(
@@ -22850,7 +22881,9 @@ class AuthViewModel extends BaseViewModel {
                                           fontFamily: 'Arial',
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w400,
-                                          color: AppColors.reminder,
+                                          color: _validateDoseTimes
+                                              ? AppColors.red
+                                              : AppColors.reminder,
                                         ),
                                       ),
                                       Positioned(
@@ -22891,7 +22924,9 @@ class AuthViewModel extends BaseViewModel {
                                               borderRadius:
                                                   BorderRadius.circular(10.r),
                                               border: Border.all(
-                                                color: AppColors.infoGrey1,
+                                                color: _validateDoseTimes
+                                                    ? AppColors.red
+                                                    : AppColors.infoGrey1,
                                               ),
                                               color: AppColors.white,
                                             ),
@@ -22958,6 +22993,18 @@ class AuthViewModel extends BaseViewModel {
                                                     formattedSelectedTimeAndPeriod!,
                                                   );
                                             }
+                                            if (int.parse(
+                                                  model
+                                                      .medDailyInTakenController
+                                                      .text,
+                                                ) ==
+                                                model
+                                                    .formattedSelectedTimeAndPeriodList!
+                                                    .length) {
+                                              _validateDoseTimes = false;
+                                            } else {
+                                              _validateDoseTimes = true;
+                                            }
                                           } else {}
                                           setModalState!(() {});
                                           model.notifyListeners();
@@ -22989,6 +23036,21 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                     ],
                                   ),
+                                  SizedBox(
+                                    height: _validateDoseTimes ? 4.0.h : 0.h,
+                                  ),
+                                  _validateDoseTimes
+                                      ? TextView(
+                                          text:
+                                              'Day must have exactly ${int.parse(model.medDailyInTakenController.text)} dose time(s)',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 12.06.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.red,
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
                                   SizedBox(height: 24.0.h),
                                   model
                                           .formattedSelectedTimeAndPeriodList!
@@ -24198,12 +24260,45 @@ class AuthViewModel extends BaseViewModel {
                             onTap: () async {
                               if (firstFormReminderKey.currentState!
                                   .validate()) {
-                                model.addReminderToList(
-                                  model: model,
-                                  setModalState: setModalState,
-                                  context: context,
-                                );
-                                onTapToAddAnotherReminder = true;
+                                if (!model.isCusSchedule) {
+                                  if (int.parse(
+                                        model.medDailyInTakenController.text,
+                                      ) ==
+                                      model
+                                          .formattedSelectedTimeAndPeriodList!
+                                          .length) {
+                                    model.addReminderToList(
+                                      model: model,
+                                      setModalState: setModalState,
+                                      context: context,
+                                    );
+                                    onTapToAddAnotherReminder = true;
+                                    _validateDoseTimes = false;
+                                    allTrueList.insert(0, false);
+                                  } else {
+                                    _validateDoseTimes = true;
+                                    allTrueList.insert(0, true);
+                                  }
+                                } else {
+                                  await model.addReminderToList(
+                                    model: model,
+                                    setModalState: setModalState,
+                                    context: context,
+                                  );
+                                  if (isTappedEmailAdded &&
+                                          addedEmailReminderList.isEmpty ||
+                                      isTappedPhoneAdded &&
+                                          addedPhoneReminderList.isEmpty) {
+                                    if (isTappedEmailAdded &&
+                                        addedEmailReminderList.isEmpty) {}
+                                    if (isTappedPhoneAdded &&
+                                        addedPhoneReminderList.isEmpty) {}
+                                  } else {
+                                    // linIndex++;
+                                    // addCostTotal(model);
+                                  }
+                                }
+                                setModalState!(() {});
                                 model.notifyListeners();
                               } else {
                                 AppUtils.snackbar(
@@ -24325,7 +24420,6 @@ class AuthViewModel extends BaseViewModel {
                                   }
                                   setModalState!(() {});
                                   model.notifyListeners();
-                                  // }
                                 },
                               ),
                             ),
@@ -24341,22 +24435,56 @@ class AuthViewModel extends BaseViewModel {
                                 onPressed: () async {
                                   if (firstFormReminderKey.currentState!
                                       .validate()) {
-                                    await model.addReminderToList(
-                                      model: model,
-                                      setModalState: setModalState,
-                                      context: context,
-                                    );
-                                    if (isTappedEmailAdded &&
-                                            addedEmailReminderList.isEmpty ||
-                                        isTappedPhoneAdded &&
-                                            addedPhoneReminderList.isEmpty) {
-                                      if (isTappedEmailAdded &&
-                                          addedEmailReminderList.isEmpty) {}
-                                      if (isTappedPhoneAdded &&
-                                          addedPhoneReminderList.isEmpty) {}
+                                    if (!model.isCusSchedule) {
+                                      if (int.parse(
+                                            model
+                                                .medDailyInTakenController
+                                                .text,
+                                          ) ==
+                                          model
+                                              .formattedSelectedTimeAndPeriodList!
+                                              .length) {
+                                        await model.addReminderToList(
+                                          model: model,
+                                          setModalState: setModalState,
+                                          context: context,
+                                        );
+                                        if (isTappedEmailAdded &&
+                                                addedEmailReminderList
+                                                    .isEmpty ||
+                                            isTappedPhoneAdded &&
+                                                addedPhoneReminderList
+                                                    .isEmpty) {
+                                          if (isTappedEmailAdded &&
+                                              addedEmailReminderList.isEmpty) {}
+                                          if (isTappedPhoneAdded &&
+                                              addedPhoneReminderList.isEmpty) {}
+                                        } else {
+                                          linIndex++;
+                                          addCostTotal(model);
+                                        }
+                                        _validateDoseTimes = false;
+                                      } else {
+                                        _validateDoseTimes = true;
+                                      }
                                     } else {
-                                      linIndex++;
-                                      addCostTotal(model);
+                                      await model.addReminderToList(
+                                        model: model,
+                                        setModalState: setModalState,
+                                        context: context,
+                                      );
+                                      if (isTappedEmailAdded &&
+                                              addedEmailReminderList.isEmpty ||
+                                          isTappedPhoneAdded &&
+                                              addedPhoneReminderList.isEmpty) {
+                                        if (isTappedEmailAdded &&
+                                            addedEmailReminderList.isEmpty) {}
+                                        if (isTappedPhoneAdded &&
+                                            addedPhoneReminderList.isEmpty) {}
+                                      } else {
+                                        linIndex++;
+                                        addCostTotal(model);
+                                      }
                                     }
                                     setModalState!(() {});
                                     model.notifyListeners();
@@ -24374,7 +24502,6 @@ class AuthViewModel extends BaseViewModel {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 20.h),
-
                       ...model.medicationClassList.asMap().entries.map((entry) {
                         MedicationClass e = entry.value;
                         int index = entry.key;
@@ -25700,8 +25827,15 @@ class AuthViewModel extends BaseViewModel {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w400,
-                                                              color: AppColors
-                                                                  .reminder,
+                                                              color:
+                                                                  allTrueList
+                                                                          .isNotEmpty &&
+                                                                      allTrueList[index] ==
+                                                                          true
+                                                                  ? AppColors
+                                                                        .red
+                                                                  : AppColors
+                                                                        .reminder,
                                                             ),
                                                           ),
                                                           Positioned(
@@ -25743,8 +25877,15 @@ class AuthViewModel extends BaseViewModel {
                                                                       10.r,
                                                                     ),
                                                                 border: Border.all(
-                                                                  color: AppColors
-                                                                      .infoGrey1,
+                                                                  color:
+                                                                      allTrueList
+                                                                              .isNotEmpty &&
+                                                                          allTrueList[index] ==
+                                                                              true
+                                                                      ? AppColors
+                                                                            .red
+                                                                      : AppColors
+                                                                            .infoGrey1,
                                                                 ),
                                                                 color: AppColors
                                                                     .white,
@@ -25840,6 +25981,39 @@ class AuthViewModel extends BaseViewModel {
                                                                 //           model,
                                                                 //     );
                                                               }
+                                                              allTrueList
+                                                                  .clear();
+                                                              for (
+                                                                int indx = 0;
+                                                                indx <
+                                                                    model
+                                                                        .medicationClassList
+                                                                        .length;
+                                                                indx++
+                                                              ) {
+                                                                if (int.parse(
+                                                                      model
+                                                                          .medicationClassList[indx]
+                                                                          .timesToTake!,
+                                                                    ) ==
+                                                                    model
+                                                                        .medicationClassList[indx]
+                                                                        .dosageMap[0]['doses']
+                                                                        .length) {
+                                                                  allTrueList
+                                                                      .insert(
+                                                                        indx,
+                                                                        false,
+                                                                      );
+                                                                } else {
+                                                                  allTrueList
+                                                                      .insert(
+                                                                        indx,
+                                                                        true,
+                                                                      );
+                                                                }
+                                                              }
+
                                                               setModalState!(
                                                                 () {},
                                                               );
@@ -25878,7 +26052,36 @@ class AuthViewModel extends BaseViewModel {
                                                           ),
                                                         ],
                                                       ),
-                                                      SizedBox(height: 24.0.h),
+
+                                                      SizedBox(
+                                                        height:
+                                                            allTrueList
+                                                                    .isNotEmpty &&
+                                                                allTrueList[index] ==
+                                                                    true
+                                                            ? 4.0.h
+                                                            : 0.h,
+                                                      ),
+                                                      allTrueList.isNotEmpty &&
+                                                              allTrueList[index] ==
+                                                                  true
+                                                          ? TextView(
+                                                              text:
+                                                                  'Day must have exactly ${int.parse(model.medicationClassList[index].timesToTake!)} dose time(s)',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'Arial',
+                                                                fontSize:
+                                                                    12.06.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .red,
+                                                              ),
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                      SizedBox(height: 20.h),
 
                                                       if (doses != null &&
                                                           doses.isNotEmpty)
@@ -26124,6 +26327,17 @@ class AuthViewModel extends BaseViewModel {
                                           child: GestureDetector(
                                             onTap: () {
                                               onTapToAddAnotherReminder = false;
+
+                                              clearReminderMedsVaraibles(model);
+                                              if (allTrueList.isNotEmpty) {
+                                                allTrueList.removeAt(
+                                                  model
+                                                          .medicationClassList
+                                                          .length -
+                                                      1,
+                                                );
+                                              }
+
                                               model.notifyListeners();
                                             },
                                             child: SvgPicture.asset(
@@ -27203,7 +27417,10 @@ class AuthViewModel extends BaseViewModel {
                                                         fontWeight:
                                                             FontWeight.w400,
                                                         color:
-                                                            AppColors.reminder,
+                                                            _validateDoseTimes
+                                                            ? AppColors.red
+                                                            : AppColors
+                                                                  .reminder,
                                                       ),
                                                     ),
                                                     Positioned(
@@ -27251,8 +27468,12 @@ class AuthViewModel extends BaseViewModel {
                                                                   10.r,
                                                                 ),
                                                             border: Border.all(
-                                                              color: AppColors
-                                                                  .infoGrey1,
+                                                              color:
+                                                                  _validateDoseTimes
+                                                                  ? AppColors
+                                                                        .red
+                                                                  : AppColors
+                                                                        .infoGrey1,
                                                             ),
                                                             color:
                                                                 AppColors.white,
@@ -27335,6 +27556,20 @@ class AuthViewModel extends BaseViewModel {
                                                                   formattedSelectedTimeAndPeriod!,
                                                                 );
                                                           }
+                                                          if (int.parse(
+                                                                model
+                                                                    .medDailyInTakenController
+                                                                    .text,
+                                                              ) ==
+                                                              model
+                                                                  .formattedSelectedTimeAndPeriodList!
+                                                                  .length) {
+                                                            _validateDoseTimes =
+                                                                false;
+                                                          } else {
+                                                            _validateDoseTimes =
+                                                                true;
+                                                          }
                                                         } else {}
                                                         setModalState!(() {});
                                                         model.notifyListeners();
@@ -27371,7 +27606,25 @@ class AuthViewModel extends BaseViewModel {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(height: 24.0.h),
+                                                SizedBox(
+                                                  height: _validateDoseTimes
+                                                      ? 4.0.h
+                                                      : 0.h,
+                                                ),
+                                                _validateDoseTimes
+                                                    ? TextView(
+                                                        text:
+                                                            'Day must have exactly ${int.parse(model.medDailyInTakenController.text)} dose time(s)',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 12.06.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors.red,
+                                                        ),
+                                                      )
+                                                    : SizedBox.shrink(),
+                                                SizedBox(height: 20.h),
                                                 model
                                                         .formattedSelectedTimeAndPeriodList!
                                                         .isNotEmpty
@@ -27715,7 +27968,7 @@ class AuthViewModel extends BaseViewModel {
                                                       ),
                                                       child: TextView(
                                                         text:
-                                                            '${emailReminderList.length}',
+                                                            '${emailReminderList.length + 1}',
                                                         textStyle: TextStyle(
                                                           fontFamily: 'Arial',
                                                           fontSize: 11.8.sp,
@@ -27763,6 +28016,129 @@ class AuthViewModel extends BaseViewModel {
                                         ),
                                       ),
                                       SizedBox(height: 15.20.h),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 12.w,
+                                          right: 20.w,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (addedEmailReminderList.contains(
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['email'],
+                                                )) {
+                                                  addedEmailReminderList.remove(
+                                                    SharedPreferencesService
+                                                        .instance
+                                                        .usersData['user']['email'],
+                                                  );
+                                                } else {
+                                                  addedEmailReminderList.add(
+                                                    SharedPreferencesService
+                                                        .instance
+                                                        .usersData['user']['email'],
+                                                  );
+                                                }
+                                                setModalState!(() {});
+                                                model.notifyListeners();
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    addedEmailReminderList.contains(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['email'],
+                                                    )
+                                                    ? EdgeInsets.all(4.0.w)
+                                                    : EdgeInsets.all(10.w),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        6.r,
+                                                      ),
+                                                  color:
+                                                      addedEmailReminderList.contains(
+                                                        SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['email'],
+                                                      )
+                                                      ? AppColors.primary
+                                                      : AppColors.transparent,
+                                                  border: Border.all(
+                                                    color:
+                                                        addedEmailReminderList.contains(
+                                                          SharedPreferencesService
+                                                              .instance
+                                                              .usersData['user']['email'],
+                                                        )
+                                                        ? AppColors.transparent
+                                                        : AppColors.infoGrey,
+                                                    width: .78,
+                                                  ),
+                                                ),
+                                                child:
+                                                    addedEmailReminderList.contains(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['email'],
+                                                    )
+                                                    ? Icon(
+                                                        Icons.check,
+                                                        size: 12.sp,
+                                                        color: AppColors.white,
+                                                      )
+                                                    : SizedBox.shrink(),
+                                              ),
+                                            ),
+                                            SizedBox(width: 9.10.w),
+                                            TextView(
+                                              text: SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['email'],
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.2.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  padding: EdgeInsets.all(
+                                                    1.2.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.app_green,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 13.4.sp,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                TextView(
+                                                  text: 'Primary',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 13.72.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.reminder,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 2.0.h),
+                                      Divider(color: AppColors.infoGrey1),
                                       ...emailReminderList.asMap().entries.map((
                                         entry,
                                       ) {
@@ -28389,13 +28765,71 @@ class AuthViewModel extends BaseViewModel {
                             if (secondFormReminderKey.currentState != null) {
                               if (secondFormReminderKey.currentState!
                                   .validate()) {
-                                await model.addReminderToList(
-                                  model: model,
-                                  setModalState: setModalState,
-                                  context: context,
+                                allTrueList.clear();
+                                for (
+                                  int indx = 0;
+                                  indx < model.medicationClassList.length;
+                                  indx++
+                                ) {
+                                  if (model
+                                              .medicationClassList[indx]
+                                              .timesToTake ==
+                                          '0' ||
+                                      model
+                                              .medicationClassList[indx]
+                                              .timesToTake ==
+                                          'null' ||
+                                      model
+                                              .medicationClassList[indx]
+                                              .timesToTake ==
+                                          '5' ||
+                                      int.parse(
+                                            model
+                                                .medicationClassList[indx]
+                                                .timesToTake!,
+                                          ) ==
+                                          model
+                                              .medicationClassList[indx]
+                                              .dosageMap[0]['doses']
+                                              .length) {
+                                    allTrueList.insert(indx, false);
+                                  } else {
+                                    allTrueList.insert(indx, true);
+                                  }
+                                }
+                                if (model.medDailyInTakenController.text ==
+                                        '0' ||
+                                    model.medDailyInTakenController.text ==
+                                        'null' ||
+                                    model.medDailyInTakenController.text ==
+                                        '5' ||
+                                    int.parse(
+                                          model.medDailyInTakenController.text,
+                                        ) ==
+                                        model
+                                            .formattedSelectedTimeAndPeriodList
+                                            ?.length) {
+                                  _validateDoseTimes = false;
+                                  allTrueList.insert(
+                                    model.medicationClassList.length,
+                                    false,
+                                  );
+                                } else {
+                                  _validateDoseTimes = true;
+                                }
+                                allTrue = allTrueList.every(
+                                  (value) => value == false,
                                 );
 
-                                onTapToAddAnotherReminder = true;
+                                if (!_validateDoseTimes && allTrue) {
+                                  await model.addReminderToList(
+                                    model: model,
+                                    setModalState: setModalState,
+                                    context: context,
+                                  );
+
+                                  onTapToAddAnotherReminder = true;
+                                }
                               } else {
                                 AppUtils.snackbar(
                                   context,
@@ -28406,6 +28840,7 @@ class AuthViewModel extends BaseViewModel {
                             } else {
                               onTapToAddAnotherReminder = true;
                             }
+                            setModalState!(() {});
                             model.notifyListeners();
                           },
                           child: TextView(
@@ -28538,22 +28973,157 @@ class AuthViewModel extends BaseViewModel {
                                     null) {
                                   if (secondFormReminderKey.currentState!
                                       .validate()) {
-                                    await model.addReminderToList(
-                                      model: model,
-                                      setModalState: setModalState,
-                                      context: context,
-                                    );
-                                    if (isTappedEmailAdded &&
-                                            addedEmailReminderList.isEmpty ||
-                                        isTappedPhoneAdded &&
-                                            addedPhoneReminderList.isEmpty) {
-                                      if (isTappedEmailAdded &&
-                                          addedEmailReminderList.isEmpty) {}
-                                      if (isTappedPhoneAdded &&
-                                          addedPhoneReminderList.isEmpty) {}
+                                    allTrueList.clear();
+                                    for (
+                                      int indx = 0;
+                                      indx < model.medicationClassList.length;
+                                      indx++
+                                    ) {
+                                      if (model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '0' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              'null' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '5' ||
+                                          int.parse(
+                                                model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake!,
+                                              ) ==
+                                              model
+                                                  .medicationClassList[indx]
+                                                  .dosageMap[0]['doses']
+                                                  .length) {
+                                        allTrueList.insert(indx, false);
+                                      } else {
+                                        allTrueList.insert(indx, true);
+                                      }
+                                    }
+
+                                    if (model.medDailyInTakenController.text ==
+                                            '0' ||
+                                        model.medDailyInTakenController.text ==
+                                            'null' ||
+                                        model.medDailyInTakenController.text ==
+                                            '5' ||
+                                        int.parse(
+                                              model
+                                                  .medDailyInTakenController
+                                                  .text,
+                                            ) ==
+                                            model
+                                                .formattedSelectedTimeAndPeriodList
+                                                ?.length) {
+                                      _validateDoseTimes = false;
+                                      allTrueList.insert(
+                                        model.medicationClassList.length,
+                                        false,
+                                      );
                                     } else {
-                                      linIndex++;
-                                      addCostTotal(model);
+                                      _validateDoseTimes = true;
+                                      allTrueList.insert(
+                                        model.medicationClassList.length,
+                                        false,
+                                      );
+                                    }
+                                    allTrue = allTrueList.every(
+                                      (value) => value == false,
+                                    );
+
+                                    if (!_validateDoseTimes && allTrue) {
+                                      await model.addReminderToList(
+                                        model: model,
+                                        setModalState: setModalState,
+                                        context: context,
+                                      );
+                                      if (isTappedEmailAdded &&
+                                              addedEmailReminderList.isEmpty ||
+                                          isTappedPhoneAdded &&
+                                              addedPhoneReminderList.isEmpty) {
+                                        if (isTappedEmailAdded &&
+                                            addedEmailReminderList.isEmpty) {}
+                                        if (isTappedPhoneAdded &&
+                                            addedPhoneReminderList.isEmpty) {}
+                                      }
+                                    } else {
+                                      for (
+                                        int indx = 0;
+                                        indx < model.medicationClassList.length;
+                                        indx++
+                                      ) {
+                                        if (model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake ==
+                                                '0' ||
+                                            model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake ==
+                                                'null' ||
+                                            model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake ==
+                                                '5' ||
+                                            int.parse(
+                                                  model
+                                                      .medicationClassList[indx]
+                                                      .timesToTake!,
+                                                ) ==
+                                                model
+                                                    .medicationClassList[indx]
+                                                    .dosageMap[0]['doses']
+                                                    .length) {
+                                          allTrueList.insert(indx, false);
+                                        } else {
+                                          allTrueList.insert(indx, true);
+                                        }
+                                      }
+
+                                      if (model
+                                                  .medDailyInTakenController
+                                                  .text ==
+                                              '0' ||
+                                          model
+                                                  .medDailyInTakenController
+                                                  .text ==
+                                              'null' ||
+                                          model
+                                                  .medDailyInTakenController
+                                                  .text ==
+                                              '5' ||
+                                          int.parse(
+                                                model
+                                                    .medDailyInTakenController
+                                                    .text,
+                                              ) ==
+                                              model
+                                                  .formattedSelectedTimeAndPeriodList
+                                                  ?.length) {
+                                        _validateDoseTimes = false;
+                                        allTrueList.insert(
+                                          model.medicationClassList.length,
+                                          false,
+                                        );
+                                      } else {
+                                        _validateDoseTimes = true;
+                                        allTrueList.insert(
+                                          model.medicationClassList.length,
+                                          false,
+                                        );
+                                      }
+                                      allTrue = allTrueList.every(
+                                        (value) => value == false,
+                                      );
+
+                                      if (!_validateDoseTimes && allTrue) {
+                                        linIndex++;
+                                        addCostTotal(model);
+                                      }
                                     }
                                   }
                                 } else {
@@ -28567,11 +29137,50 @@ class AuthViewModel extends BaseViewModel {
                                     if (isTappedPhoneAdded &&
                                         addedPhoneReminderList.isEmpty) {}
                                   } else {
-                                    linIndex++;
-                                    addCostTotal(model);
+                                    for (
+                                      int indx = 0;
+                                      indx < model.medicationClassList.length;
+                                      indx++
+                                    ) {
+                                      if (model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '0' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              'null' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '5' ||
+                                          int.parse(
+                                                model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake!,
+                                              ) ==
+                                              model
+                                                  .medicationClassList[indx]
+                                                  .dosageMap[0]['doses']
+                                                  .length) {
+                                        allTrueList.insert(indx, false);
+                                      } else {
+                                        allTrueList.insert(indx, true);
+                                      }
+                                    }
+
+                                    allTrue = allTrueList.every(
+                                      (value) => value == false,
+                                    );
+
+                                    if (!_validateDoseTimes && allTrue) {
+                                      linIndex++;
+                                      addCostTotal(model);
+                                    }
                                   }
                                   _isLoading = false;
                                 }
+
                                 setModalState!(() {});
                                 model.notifyListeners();
                               },
@@ -50451,7 +51060,10 @@ class AuthViewModel extends BaseViewModel {
                                                               width: 4.10.w,
                                                             ),
                                                             TextView(
-                                                              text: time,
+                                                              text:
+                                                                  convertTo12HourFormat(
+                                                                    time,
+                                                                  ),
                                                               textStyle: TextStyle(
                                                                 fontFamily:
                                                                     'GoogleSans',
@@ -51231,54 +51843,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () async {
                     if (addedPhoneReminderList.isNotEmpty) {
-                      await model.createReminderPaid(
-                        context,
-                        model: model,
-                        createReminderEntityModel: CreateReminderEntityModel(
-                          medications: model.medicationClassList.map((m) {
-                            return Medication(
-                              medicationName: m.medicationName,
-                              scheduleType: m.isCusSchedule!
-                                  ? 'CUSTOM'
-                                  : 'FIXED',
-                              dosage: m.dosage,
-                              medicationType: m.medicationType!.toUpperCase(),
-                              startDateTime: m.startDateIso,
-                              endDateTime: m.endDateIso,
-                              durationInDays: int.parse(m.duration!),
-                              timesPerDay: m.isCusSchedule!
-                                  ? ''
-                                  : int.parse(m.timesToTake!),
-                              dailyDoseTimes: (m.dosageMap as List)
-                                  .map(
-                                    (dayData) => (dayData['doses'] as List)
-                                        .map(
-                                          (dose) => DailyDoseTime.fromJson(
-                                            dose as Map<String, dynamic>,
-                                          ),
-                                        )
-                                        .toList(),
-                                  )
-                                  .toList(),
-                              note: m.note,
-                              medicationImage: m.imageData!.url == null
-                                  ? null
-                                  : MedicationImage.fromJson(
-                                      m.imageData!.toJson(),
-                                    ),
-                            );
-                          }).toList(),
-                          timeZone: "Africa/Lagos",
-                          notificationChannels: notificationChannel,
-                          emails: addedEmailReminderList,
-                          phoneNumbers: addedPhoneReminderList,
-                          payment: Payment(amount: costTotal, currency: "NGN"),
-                        ),
-                      );
-                      if (model.createReminderResponseModel!.statusCode ==
-                          201) {
-                        linIndex++;
-                      }
+                      linIndex++;
                     } else {
                       model.createReminder(
                         context,
@@ -56230,19 +56795,80 @@ class AuthViewModel extends BaseViewModel {
                           model.notifyListeners();
                         }
                       : onTapPaymentMeth != ''
-                      ? () {
-                          initiatePayment(
+                      ? () async {
+                          await model.createReminderPaid(
                             context,
-                            reference: model
-                                .createReminderResponseModel
-                                ?.data
-                                ?.transactionReference,
-                            paymentId: model
-                                .createReminderResponseModel
-                                ?.data
-                                ?.paymentId,
                             model: model,
+                            createReminderEntityModel:
+                                CreateReminderEntityModel(
+                                  medications: model.medicationClassList.map((
+                                    m,
+                                  ) {
+                                    return Medication(
+                                      medicationName: m.medicationName,
+                                      scheduleType: m.isCusSchedule!
+                                          ? 'CUSTOM'
+                                          : 'FIXED',
+                                      dosage: m.dosage,
+                                      medicationType: m.medicationType!
+                                          .toUpperCase(),
+                                      startDateTime: m.startDateIso,
+                                      endDateTime: m.endDateIso,
+                                      durationInDays: int.parse(m.duration!),
+                                      timesPerDay: m.isCusSchedule!
+                                          ? ''
+                                          : int.parse(m.timesToTake!),
+                                      dailyDoseTimes: (m.dosageMap as List)
+                                          .map(
+                                            (
+                                              dayData,
+                                            ) => (dayData['doses'] as List)
+                                                .map(
+                                                  (
+                                                    dose,
+                                                  ) => DailyDoseTime.fromJson(
+                                                    dose
+                                                        as Map<String, dynamic>,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          )
+                                          .toList(),
+                                      note: m.note,
+                                      medicationImage: m.imageData!.url == null
+                                          ? null
+                                          : MedicationImage.fromJson(
+                                              m.imageData!.toJson(),
+                                            ),
+                                    );
+                                  }).toList(),
+                                  timeZone: "Africa/Lagos",
+                                  notificationChannels: notificationChannel,
+                                  emails: addedEmailReminderList,
+                                  phoneNumbers: addedPhoneReminderList,
+                                  payment: Payment(
+                                    amount: costTotal,
+                                    currency: "NGN",
+                                  ),
+                                ),
                           );
+                          if (model.createReminderResponseModel?.statusCode ==
+                                  200 ||
+                              model.createReminderResponseModel?.statusCode ==
+                                  201) {
+                            initiatePayment(
+                              context,
+                              reference: model
+                                  .createReminderResponseModel
+                                  ?.data
+                                  ?.transactionReference,
+                              paymentId: model
+                                  .createReminderResponseModel
+                                  ?.data
+                                  ?.paymentId,
+                              model: model,
+                            );
+                          }
                           // model.createReminderPaid(
                           //   context,
                           //   model: model,
