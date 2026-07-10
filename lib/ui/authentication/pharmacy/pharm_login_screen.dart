@@ -52,7 +52,7 @@ class _PharmacyLoginScreenState extends State<PharmacyLoginScreen> {
       viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, __) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.white,
           body: SingleChildScrollView(

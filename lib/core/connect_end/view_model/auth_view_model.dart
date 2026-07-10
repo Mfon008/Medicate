@@ -29238,7 +29238,6 @@ class AuthViewModel extends BaseViewModel {
                   padding: EdgeInsets.only(top: 4.w, right: 10.w),
                   child: GestureDetector(
                     onTap: () {
-                      print('meeee');
                       Navigator.pop(context!);
                       setModalState!(() {});
                     },

@@ -21,7 +21,7 @@ class PharmacySettingScreen extends StatelessWidget {
       viewModelBuilder: () => locator<PharmViewModel>(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
-      builder: (_, PharmViewModel model, __) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -143,7 +143,7 @@ class PharmacySettingScreen extends StatelessWidget {
             width: 42.0.w,
             padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
-              color: AppColors.primaryLight.withOpacity(.1),
+              color: AppColors.primaryLight.withValues(alpha: .1),
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: SvgPicture.asset(icon!, height: 20.2.h, width: 20.2.w),

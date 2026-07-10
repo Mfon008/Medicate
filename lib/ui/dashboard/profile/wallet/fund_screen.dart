@@ -231,8 +231,8 @@ class _FundScreenState extends State<FundScreen> {
                                               WidgetState.selected,
                                             )) {
                                               return AppColors.primary
-                                                  .withOpacity(
-                                                    0.7,
+                                                  .withValues(
+                                                    alpha: 0.7,
                                                   ); // active color (a bit faint)
                                             }
                                             return AppColors
@@ -317,8 +317,8 @@ class _FundScreenState extends State<FundScreen> {
                                               WidgetState.selected,
                                             )) {
                                               return AppColors.primary
-                                                  .withOpacity(
-                                                    0.7,
+                                                  .withValues(
+                                                    alpha: 0.7,
                                                   ); // active color (a bit faint)
                                             }
                                             return AppColors
@@ -403,8 +403,8 @@ class _FundScreenState extends State<FundScreen> {
                                               WidgetState.selected,
                                             )) {
                                               return AppColors.primary
-                                                  .withOpacity(
-                                                    0.7,
+                                                  .withValues(
+                                                    alpha: 0.7,
                                                   ); // active color (a bit faint)
                                             }
                                             return AppColors
@@ -488,8 +488,8 @@ class _FundScreenState extends State<FundScreen> {
                                               WidgetState.selected,
                                             )) {
                                               return AppColors.primary
-                                                  .withOpacity(
-                                                    0.7,
+                                                  .withValues(
+                                                    alpha: 0.7,
                                                   ); // active color (a bit faint)
                                             }
                                             return AppColors

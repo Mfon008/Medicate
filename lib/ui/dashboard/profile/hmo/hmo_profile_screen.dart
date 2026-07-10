@@ -32,7 +32,7 @@ class HMOProfileScreen extends StatelessWidget {
         });
       },
       disposeViewModel: false,
-      builder: (_, HMOViewModel model, __) {
+      builder: (_, HMOViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(

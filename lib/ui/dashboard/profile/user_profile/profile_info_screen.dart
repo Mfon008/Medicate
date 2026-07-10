@@ -153,7 +153,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
             });
           },
           disposeViewModel: false,
-          builder: (_, AuthViewModel model, __) {
+          builder: (_, AuthViewModel model, _) {
             return Form(
               key: formKey,
               child: Column(

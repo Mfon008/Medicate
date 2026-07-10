@@ -132,7 +132,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
             });
           },
           disposeViewModel: false,
-          builder: (_, PharmViewModel model, __) {
+          builder: (_, PharmViewModel model, _) {
             return Form(
               key: formKey,
               child: Column(

@@ -486,7 +486,7 @@ class PharmViewMedicationScreen extends StatelessWidget {
                                                     color: AppColors.f1,
                                                   ),
                                                   color: AppColors.white
-                                                      .withOpacity(.8),
+                                                      .withValues(alpha: .8),
                                                   borderRadius:
                                                       BorderRadius.circular(12),
                                                 ),

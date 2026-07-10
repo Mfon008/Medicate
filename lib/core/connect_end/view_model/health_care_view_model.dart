@@ -3420,7 +3420,7 @@ class HealthCareViewModel extends BaseViewModel {
                         model.getWalletBalance(context);
                       },
                       disposeViewModel: false,
-                      builder: (_, HealthCareViewModel model, __) {
+                      builder: (_, HealthCareViewModel model, _) {
                         return SizedBox(
                           width: 90.w,
                           child: TextView(
@@ -14136,7 +14136,7 @@ class HealthCareViewModel extends BaseViewModel {
           viewModelBuilder: () => HealthCareViewModel(),
           onViewModelReady: (model) {},
           disposeViewModel: false,
-          builder: (_, HealthCareViewModel model, __) {
+          builder: (_, HealthCareViewModel model, _) {
             return Container(
               color: AppColors.transparent,
               child: Column(

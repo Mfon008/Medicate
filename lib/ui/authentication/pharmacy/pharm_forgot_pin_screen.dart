@@ -47,7 +47,7 @@ class _PharmacyForgotPinScreenState extends State<PharmacyForgotPinScreen> {
         viewModelBuilder: () => locator<PharmViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, PharmViewModel model, __) {
+        builder: (_, PharmViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,

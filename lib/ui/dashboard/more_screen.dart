@@ -45,7 +45,7 @@ class _MoreScreenState extends State<MoreScreen> {
           // model.getUserDetails(context: context, phoneNo: widget.phoneNumber);
         },
         disposeViewModel: false,
-        builder: (_, AuthViewModel model, __) {
+        builder: (_, AuthViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(vertical: 50.w, horizontal: 16.20.w),
             child: Column(

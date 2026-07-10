@@ -72,7 +72,7 @@ class _PharmacyWelcomeScreenState extends State<PharmacyWelcomeScreen> {
           });
         },
         disposeViewModel: false,
-        builder: (_, PharmViewModel model, __) {
+        builder: (_, PharmViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,

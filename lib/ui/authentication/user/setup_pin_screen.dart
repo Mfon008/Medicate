@@ -55,7 +55,7 @@ class _SetupPinScreenState extends State<SetupPinScreen> {
         viewModelBuilder: () => locator<AuthViewModel>(),
         onViewModelReady: (model) {},
         disposeViewModel: false,
-        builder: (_, AuthViewModel model, __) {
+        builder: (_, AuthViewModel model, _) {
           return SingleChildScrollView(
             padding: EdgeInsetsGeometry.symmetric(
               vertical: 60.w,

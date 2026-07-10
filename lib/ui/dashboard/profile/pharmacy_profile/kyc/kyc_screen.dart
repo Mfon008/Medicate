@@ -59,7 +59,7 @@ class KycScreen extends StatelessWidget {
             });
           },
           disposeViewModel: false,
-          builder: (_, PharmViewModel model, __) {
+          builder: (_, PharmViewModel model, _) {
             return Column(
               children: [
                 Container(

@@ -7,28 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:923921841429:android:e19e43d6bfa1efc4ad3d1c",
+        "mobilesdk_app_id": "1:923921841429:android:f0ad62d592cc5636ad3d1c",
         "android_client_info": {
-          "package_name": "com.medicate.medicate"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCueQIs5ikQfwV3eWcAa4EVLQ3CC6ef6xA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:923921841429:android:9c9a3ff2d2516159ad3d1c",
-        "android_client_info": {
-          "package_name": "com.medicate.medicate"
+          "package_name": "com.medicate"
         }
       },
       "oauth_client": [],

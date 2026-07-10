@@ -28,7 +28,7 @@ class WalletScreen extends StatelessWidget {
         model.getWalletTransactionHistory(context);
       },
       disposeViewModel: false,
-      builder: (_, AuthViewModel model, __) {
+      builder: (_, AuthViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(

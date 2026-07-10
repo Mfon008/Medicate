@@ -1,11 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/core/route_class.dart';
-import 'package:medicate_app/fire_base.dart';
 import 'package:medicate_app/firebase_options.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'core/core_folder/app/app.locator.dart';
@@ -18,9 +18,12 @@ var globalfCMToken;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseMessaging.onBackgroundMessage(firebaseBackgroundHandler);
-  NotificationService().initNotification();
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await NotificationService().initNotification();
+  }
 
   setupLocator();
   await SystemChrome.setPreferredOrientations([

@@ -52,15 +52,14 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCueQIs5ikQfwV3eWcAa4EVLQ3CC6ef6xA',
-    appId: '1:923921841429:android:e19e43d6bfa1efc4ad3d1c',
+    appId: '1:923921841429:android:f0ad62d592cc5636ad3d1c',
     messagingSenderId: '923921841429',
     projectId: 'medicate-c26dd',
     storageBucket: 'medicate-c26dd.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAy_wzISvZL8ZvZMw-_CAMXLUJOF_GWAOA',
-    appId: '1:923921841429:ios:c06a6d6c0c7d37a3ad3d1c',
+    appId: '1:923921841429:ios:915433c372e2cc39ad3d1c',
     messagingSenderId: '923921841429',
     projectId: 'medicate-c26dd',
     storageBucket: 'medicate-c26dd.firebasestorage.app',
@@ -69,7 +68,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAy_wzISvZL8ZvZMw-_CAMXLUJOF_GWAOA',
-    appId: '1:923921841429:ios:c06a6d6c0c7d37a3ad3d1c',
+    appId: '1:923921841429:ios:915433c372e2cc39ad3d1c',
     messagingSenderId: '923921841429',
     projectId: 'medicate-c26dd',
     storageBucket: 'medicate-c26dd.firebasestorage.app',

@@ -5772,7 +5772,7 @@ class PharmViewModel extends BaseViewModel {
                         model.getWalletBalance(context);
                       },
                       disposeViewModel: false,
-                      builder: (_, PharmViewModel model, __) {
+                      builder: (_, PharmViewModel model, _) {
                         return SizedBox(
                           width: 90.w,
                           child: TextView(
@@ -18460,7 +18460,7 @@ class PharmViewModel extends BaseViewModel {
           viewModelBuilder: () => PharmViewModel(),
           onViewModelReady: (model) {},
           disposeViewModel: false,
-          builder: (_, PharmViewModel model, __) {
+          builder: (_, PharmViewModel model, _) {
             return Container(
               color: AppColors.transparent,
               child: Column(

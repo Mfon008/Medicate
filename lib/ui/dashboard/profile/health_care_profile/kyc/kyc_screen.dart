@@ -49,7 +49,7 @@ class HealthCareKycScreen extends StatelessWidget {
             });
           },
           disposeViewModel: false,
-          builder: (_, HealthCareViewModel model, __) {
+          builder: (_, HealthCareViewModel model, _) {
             return Column(
               children: [
                 Container(
