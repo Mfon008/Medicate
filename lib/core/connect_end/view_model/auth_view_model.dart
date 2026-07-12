@@ -11845,6 +11845,78 @@ class AuthViewModel extends BaseViewModel {
         addedPhoneReminderList.addAll(payload.phoneNumbers!);
       });
 
+      model.medNameUpdateFocusNodes.add(FocusNode());
+      model.medicationNameUpdateControllers = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.medicationName),
+          )
+          .toList();
+
+      model.numberOfDurationsInDaysList = model.medicationClassList
+          .map(
+            (e) => getReturnDurationNumberOfDays(
+              int.parse(e.duration.toString().substring(0, 1)),
+            ),
+          )
+          .toList();
+      model.timesToTakeUpdateController = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.timesToTake),
+          )
+          .toList();
+      model.medTypeUpdateControllers = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.medicationType),
+          )
+          .toList();
+      model.medTypeUpdateIcon = model.medicationClassList
+          .map((e) => e.medicationTypeIcon!)
+          .toList();
+      model.dosageUpdateControllers = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.dosage),
+          )
+          .toList();
+      model.startDateUpdateControllers = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.dateAndTime),
+          )
+          .toList();
+      model.durationUpdateControllers = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.duration.toString()),
+          )
+          .toList();
+      model.endDateUpdateController = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.endDate),
+          )
+          .toList();
+      model.timesToTakeUpdateController = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.timesToTake),
+          )
+          .toList();
+      model.timesToTakeUpdateFocusNodes.add(FocusNode());
+      model.noteUpdateController = model.medicationClassList
+          .map<TextEditingController>(
+            (e) => TextEditingController(text: e.note),
+          )
+          .toList();
+      model.noteUpdateFocusNodes.add(FocusNode());
+      model.medicationFileUpdate = model.medicationClassList
+          .map((e) => e.medicationFile ?? File(''))
+          .toList();
+      model.isCusScheduleUpdate = model.medicationClassList.map<bool>((e) {
+        final v = e.isCusSchedule;
+
+        if (v is bool) return v;
+        if (v is String) return v.toLowerCase() == 'true';
+        if (v is int) return v == 1;
+
+        return false;
+      }).toList();
+
       addNotificationChannelsDraft(data: payload, model: model);
       model.notifyListeners();
     });
@@ -17116,6 +17188,108 @@ class AuthViewModel extends BaseViewModel {
     model.notifyListeners();
   }
 
+  addReminderToListSaveAsDraftDraft({
+    AuthViewModel? model,
+    StateSetter? setModalState,
+    BuildContext? context,
+    draftPay.Medication? data,
+  }) async {
+    List<Map<String, dynamic>> addTimePeriod = [];
+    String startDateIsoWithin = data!.startDateTime.toString();
+    _isLoading = true;
+    data.durationInDays ??= 1;
+    model!.notifyListeners();
+
+    if (data.scheduleType == 'CUSTOM') {
+      for (int day = 0; day < data.durationInDays!; day++) {
+        List<Map<String, String>> dayDoses = [];
+        for (int i = 0; i < data.dailyDoseTimes![day].length; i++) {
+          dayDoses.add({
+            'time': data.dailyDoseTimes![day][i].time!,
+            'date': startDateIsoWithin.substring(0, 10),
+            'isoDate': startDateIsoWithin,
+          });
+        }
+        startDateIsoWithin = DateTime.parse(
+          startDateIsoWithin,
+        ).add(Duration(days: 0 + 1)).toString();
+
+        addTimePeriod.add({
+          'day': day + 1, // so Day 1, Day 2, etc.
+          'doses': dayDoses,
+        });
+      }
+    } else {
+      for (int day = 0; day < data.durationInDays!; day++) {
+        List<Map<String, String>> dayDoses = [];
+        for (int i = 0; i < formattedSelectedTimeAndPeriodList!.length; i++) {
+          dayDoses.add({
+            'time': formattedSelectedTimeAndPeriodList![i],
+            'date': startDateIsoWithin.substring(0, 10),
+            'isoDate': startDateIsoWithin,
+          });
+        }
+        final date = DateTime.tryParse(startDateIsoWithin);
+
+        if (date != null) {
+          startDateIsoWithin = date
+              .add(const Duration(days: 1))
+              .toIso8601String();
+        } else {
+          print('Invalid date: $startDateIsoWithin');
+        }
+
+        addTimePeriod.add({
+          'day': day + 1, // so Day 1, Day 2, etc.
+          'doses': dayDoses,
+        });
+      }
+    }
+
+    await Future.delayed(Duration(seconds: 1), () {});
+    model.medicationClassList.add(
+      MedicationClass(
+        medicationName: data.medicationName,
+        medicationType: data.medicationType,
+        medicationTypeIcon: data.medicationType,
+        // medicationFile: data.imageDrug,
+        dosage: data.dosage,
+        isCusSchedule: data.scheduleType == 'FIXED' ? false : true,
+        imageData:
+            model.uploadImageReminderResponseModel?.data ??
+            (data.medicationImage != null
+                ? Data.fromJson(data.medicationImage!.toJson())
+                : null),
+        dateAndTime: DateFormat(
+          'dd MMM, yyyy',
+        ).format(DateTime.parse(data.startDateTime.toString())),
+        duration: data.durationInDays.toString(),
+        endDate: DateFormat(
+          'dd MMM, yyyy',
+        ).format(DateTime.parse(data.endDateTime.toString())),
+        startDateIso: startDateIso != ''
+            ? DateTime.parse(startDateIso)
+            : DateTime.now(),
+        endDateIso: endDateIso != ''
+            ? DateTime.parse(endDateIso)
+            : DateTime.now(),
+        timesToTake: data.timesPerDay.toString(),
+        note: data.note,
+        dosageMap: addTimePeriod,
+      ),
+    );
+
+    await Future.delayed(Duration(seconds: 2), () {});
+    model.markUpdateControllersInitializedFalse();
+    // clearReminderMedsVaraibles(model);
+    _isLoading = false;
+    model.notifyListeners();
+    AppUtils.snackbar(context, message: 'Medication has been added.');
+    logger.d(model.medicationClassList[0].toJson());
+    setModalState!(() {});
+    model.notifyListeners();
+  }
+
   clearReminderMedsVaraibles(model) {
     medTypeResultImage = '';
     model.imageDrug = null;
@@ -18914,6 +19088,7 @@ class AuthViewModel extends BaseViewModel {
       data!.startDateTime = pickedDatedStart;
       // dateTimeController.text = pickedDate!;
       // await selectTime(context);
+
       startDateIso = DateTime.utc(
         pickedDatedStart!.year,
         pickedDatedStart!.month,
@@ -21461,6 +21636,13 @@ class AuthViewModel extends BaseViewModel {
         data: data,
         payload: payload,
       );
+    } else if (linIndexEditUpdate == 3) {
+      return thirdUpdateModalFlowDraft(
+        model: model,
+        context: context,
+        setModalState: setModalState,
+        scrollController: scrollController,
+      );
     }
     return firstUpdateModalFLowDraft(
       model: model,
@@ -23255,20 +23437,17 @@ class AuthViewModel extends BaseViewModel {
                                   if (index == 0 || index == 1) {
                                     // Email
                                     isTappedEmailAdded = true;
-                                    print('object');
                                     if (addedEmailReminderList.contains(
                                       SharedPreferencesService
                                           .instance
                                           .usersData['user']['email'],
                                     )) {
-                                      print('object ifffff');
                                     } else {
                                       addedEmailReminderList.add(
                                         SharedPreferencesService
                                             .instance
                                             .usersData['user']['email'],
                                       );
-                                      print('object elseeee');
                                     }
                                     model.notifyListeners();
                                   } else if ([2, 3, 4].contains(index)) {
@@ -48424,6 +48603,7 @@ class AuthViewModel extends BaseViewModel {
       payload: payload,
       data: data,
     );
+    model!.initDayTimes(model.intListCustom);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22.r),
@@ -48433,7 +48613,6 @@ class AuthViewModel extends BaseViewModel {
         padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
         controller: scrollController,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -48453,8 +48632,10 @@ class AuthViewModel extends BaseViewModel {
                   padding: EdgeInsets.only(top: 4.w, right: 10.w),
                   child: GestureDetector(
                     onTap: () {
+                      model!.medicationClassList.clear();
                       Navigator.pop(context!);
                       setModalState!(() {});
+                      model.notifyListeners();
                     },
                     child: SvgPicture.asset(
                       AppImage.cancel,
@@ -48479,7 +48660,7 @@ class AuthViewModel extends BaseViewModel {
                     ), // Adjust radius as needed
                     child: LinearProgressIndicator(
                       minHeight: 5.0, // Adjust height as needed
-                      value: linIndex / 2,
+                      value: linIndexEditUpdate / 2,
                       color: AppColors.primary, // Progress bar color
                       backgroundColor:
                           Colors.grey[300], // Background track color
@@ -48488,7 +48669,7 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(width: 10.w),
                 TextView(
-                  text: '$linIndex/2',
+                  text: '$linIndexEditUpdate/2',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 13.2.sp,
@@ -48500,859 +48681,4217 @@ class AuthViewModel extends BaseViewModel {
               ],
             ),
             SizedBox(height: 20.h),
-            Form(
-              key: firstFormReminderKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextView(
-                    text: 'MEDICATION DETAILS',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 14.80.sp,
-                      color: AppColors.deep,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Divider(color: AppColors.grey),
-                  SizedBox(height: 12.h),
-                  TextFormWidget(
-                    hint: 'Medication Name',
-                    hintWeight: FontWeight.w400,
-                    hintColor: AppColors.reminder,
-                    borderColor: AppColors.infoGrey1,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                    fillColor: AppColors.white,
-                    isFilled: true,
-                    controller: model!.medicationNameEditControllers,
-                    onChange: (p0) {
-                      data!.medicationName = p0;
-                      setModalState!(() {});
-                      model.notifyListeners();
-                    },
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 15.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  TextFormWidget(
-                    hint: 'Medication Type',
-                    hintWeight: FontWeight.w400,
-                    hintColor: AppColors.reminder,
-                    borderColor: AppColors.infoGrey1,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                    readOnly: true,
-                    fillColor: AppColors.white,
-                    isFilled: true,
-                    prefixWidget: Padding(
-                      padding: EdgeInsets.all(10.w),
-                      child: SvgPicture.asset(
-                        model.getMedTypeIcon(data!.medicationType!),
-                      ),
-                    ),
-                    suffixWidget: IconButton(
-                      icon: Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: AppColors.faintedGrey,
-                      ),
-                      onPressed: () async {
-                        final result = await model.showMedTypeMenu(context);
-                        if (result != null) {
-                          setModalState!(() {
-                            data.medicationType = result["type"];
-                            model.notifyListeners();
-                          });
-                        }
-                      },
-                    ),
-                    controller: TextEditingController(
-                      text: data.medicationType,
-                    ),
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 15.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  TextView(
-                    text: 'Medication picture upload',
-                    textStyle: TextStyle(
-                      fontFamily: 'Arial',
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.reminder,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: DottedBorder(
-                      options: RoundedRectDottedBorderOptions(
-                        dashPattern: [3, 3],
-                        strokeWidth: .94,
-                        radius: Radius.circular(10),
-                        color: AppColors.infoGrey1,
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 16.20.w,
-                          horizontal: 16.0.w,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          color: AppColors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            model!.medicationClassList.isEmpty
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Form(
+                        key: firstFormReminderKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            model.imageDrug != null
-                                ? Container(
-                                    width: 140.w,
-                                    height: 84.h,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.grey,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Center(
-                                      child: Image.file(
-                                        model.imageDrug!,
-                                        height: 75.80.h,
-                                        width: 80.80.w,
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    width: 140.w,
-                                    height: 84.h,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.grey,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Center(
-                                      child:
-                                          data.medicationImage != null &&
-                                              data.medicationImage!.url!
-                                                  .contains('https')
-                                          ? Image.network(
-                                              data.medicationImage!.url!,
-                                              height: 75.80.h,
-                                              width: 70.80.w,
-                                              errorBuilder:
-                                                  (
-                                                    context,
-                                                    error,
-                                                    stackTrace,
-                                                  ) => SvgPicture.asset(
-                                                    model.isMedTypeView(
-                                                      data.medicationType!
-                                                          .toUpperCase(),
-                                                    ),
-                                                  ),
+                            TextView(
+                              text: 'MEDICATION DETAILS',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.80.sp,
+                                color: AppColors.deep,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            Divider(color: AppColors.grey),
+                            SizedBox(height: 12.h),
+                            TextFormWidget(
+                              hint: 'Medication Name',
+                              hintWeight: FontWeight.w400,
+                              hintColor: AppColors.reminder,
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                              fillColor: AppColors.white,
+                              isFilled: true,
+                              controller: model.medicationNameEditControllers,
+                              onChange: (p0) {
+                                data!.medicationName = p0;
+                                setModalState!(() {});
+                                model.notifyListeners();
+                              },
+                              validator: AppValidator.validateString(),
+                              style: TextStyle(
+                                fontSize: 15.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'GoogleSans',
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            TextFormWidget(
+                              hint: 'Medication Type',
+                              hintWeight: FontWeight.w400,
+                              hintColor: AppColors.reminder,
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                              readOnly: true,
+                              fillColor: AppColors.white,
+                              isFilled: true,
+                              prefixWidget: Padding(
+                                padding: EdgeInsets.all(10.w),
+                                child: SvgPicture.asset(
+                                  model.isMedTypeView(data!.medicationType!),
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              suffixWidget: IconButton(
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down_outlined,
+                                  color: AppColors.faintedGrey,
+                                ),
+                                onPressed: () async {
+                                  final result = await model.showMedTypeMenu(
+                                    context,
+                                  );
+                                  if (result != null) {
+                                    setModalState!(() {
+                                      data.medicationType = result["type"];
+                                      model.notifyListeners();
+                                    });
+                                  }
+                                },
+                              ),
+                              controller: TextEditingController(
+                                text: data.medicationType,
+                              ),
+                              validator: AppValidator.validateString(),
+                              style: TextStyle(
+                                fontSize: 15.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'GoogleSans',
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            TextView(
+                              text: 'Medication picture upload',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            SizedBox(
+                              width: double.infinity,
+                              child: DottedBorder(
+                                options: RoundedRectDottedBorderOptions(
+                                  dashPattern: [3, 3],
+                                  strokeWidth: .94,
+                                  radius: Radius.circular(10),
+                                  color: AppColors.infoGrey1,
+                                ),
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 16.20.w,
+                                    horizontal: 16.0.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                    color: AppColors.white,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      model.imageDrug != null
+                                          ? Container(
+                                              width: 140.w,
+                                              height: 84.h,
+                                              decoration: BoxDecoration(
+                                                color: AppColors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Center(
+                                                child: Image.file(
+                                                  model.imageDrug!,
+                                                  height: 75.80.h,
+                                                  width: 80.80.w,
+                                                ),
+                                              ),
                                             )
-                                          : SvgPicture.asset(
-                                              model.isMedTypeView(
-                                                data.medicationType!
-                                                    .toUpperCase(),
+                                          : Container(
+                                              width: 140.w,
+                                              height: 84.h,
+                                              decoration: BoxDecoration(
+                                                color: AppColors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Center(
+                                                child:
+                                                    data.medicationImage !=
+                                                            null &&
+                                                        data
+                                                            .medicationImage!
+                                                            .url!
+                                                            .contains('https')
+                                                    ? Image.network(
+                                                        data
+                                                            .medicationImage!
+                                                            .url!,
+                                                        height: 75.80.h,
+                                                        width: 70.80.w,
+                                                        errorBuilder:
+                                                            (
+                                                              context,
+                                                              error,
+                                                              stackTrace,
+                                                            ) => SvgPicture.asset(
+                                                              model.isMedTypeView(
+                                                                data.medicationType!
+                                                                    .toUpperCase(),
+                                                              ),
+                                                            ),
+                                                      )
+                                                    : SvgPicture.asset(
+                                                        model.isMedTypeView(
+                                                          data.medicationType!
+                                                              .toUpperCase(),
+                                                        ),
+                                                      ),
                                               ),
                                             ),
-                                    ),
+                                      data.medicationImage != null ||
+                                              model.imageDrug != null
+                                          ? Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    model.imageDrug = null;
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.delete,
+                                                    height: 16.68.h,
+                                                    width: 15.2.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 18.30.w),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    model.pickUpdatedDrugImage(
+                                                      context: context,
+                                                      id: reminder!.id,
+                                                    );
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.upload,
+                                                    height: 17.0.h,
+                                                    width: 16.68.w,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                model.pickUpdatedDrugImage(
+                                                  context: context,
+                                                  id: reminder!.id,
+                                                );
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 22.w,
+                                                  vertical: 10.10.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(32),
+                                                  color: AppColors.grey,
+                                                ),
+                                                child: TextView(
+                                                  text: 'Upload',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 14.40.sp,
+                                                    color: AppColors.deep,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                    ],
                                   ),
-                            data.medicationImage != null ||
-                                    model.imageDrug != null
-                                ? Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          model.imageDrug = null;
-                                          model.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.delete,
-                                          height: 16.68.h,
-                                          width: 15.2.w,
-                                        ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 24.0.h),
+                            TextView(
+                              text: 'SET SCHEDULE AND DOSAGE',
+                              textStyle: TextStyle(
+                                fontFamily: 'GoogleSans',
+                                fontSize: 14.80.sp,
+                                color: AppColors.deep,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            Divider(color: AppColors.grey),
+                            SizedBox(height: 12.h),
+                            TextFormWidget(
+                              hint: 'Dosage',
+                              hintWeight: FontWeight.w400,
+                              hintColor: AppColors.reminder,
+                              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              controller: TextEditingController(
+                                text: data.dosage != ''
+                                    ? data.dosage!.capitalizeWords()
+                                    : '',
+                              ),
+                              fillColor: AppColors.white,
+                              isFilled: true,
+                              readOnly:
+                                  data.medicationType == 'Others' ||
+                                      data.dosage == ''
+                                  ? false
+                                  : true,
+                              suffixWidget: IconButton(
+                                onPressed:
+                                    data.medicationType == 'Others' ||
+                                        data.medicationType == ''
+                                    ? () {}
+                                    : () async {
+                                        showMedUpdateDosageMenuDraft(
+                                          context: context,
+                                          type: data.medicationType,
+                                          model: model,
+                                          med: data,
+                                          data: reminder,
+                                        );
+                                      },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.faintedGrey,
+                                  size: 20.sp,
+                                ),
+                              ),
+                              style: TextStyle(
+                                fontSize: 15.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                color: AppColors.reminder,
+                              ),
+                            ),
+                            SizedBox(height: 24.0.h),
+                            TextFormWidget(
+                              hint: 'Frequency',
+                              hintWeight: FontWeight.w400,
+                              hintColor: AppColors.reminder,
+                              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              fillColor: AppColors.white,
+                              isFilled: true,
+                              readOnly: true,
+                              controller: TextEditingController(
+                                text: data.timesPerDay.toString() == ''
+                                    ? ''
+                                    : data.timesPerDay
+                                              .toString()
+                                              .toLowerCase() ==
+                                          'custom schedule'
+                                    ? data.timesPerDay.toString()
+                                    : data.timesPerDay == null
+                                    ? 'Custom Schedule'
+                                    : showNoTimesMode(
+                                        int.parse(data.timesPerDay.toString()),
                                       ),
-                                      SizedBox(width: 18.30.w),
-                                      GestureDetector(
-                                        onTap: () {
-                                          model.pickUpdatedDrugImage(
-                                            context: context,
-                                            id: reminder!.id,
-                                          );
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.upload,
-                                          height: 17.0.h,
-                                          width: 16.68.w,
+                              ),
+                              suffixWidget: IconButton(
+                                onPressed: () async {
+                                  final result =
+                                      await showDailyInTakeUpdateMenuDraft(
+                                        context: context,
+                                        setModalState: setModalState,
+                                        model: model,
+                                        data: data,
+                                      );
+                                  if (result != null) {
+                                    setModalState!(() {
+                                      data.timesPerDay = int.parse(result);
+                                      model.notifyListeners();
+                                    });
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.faintedGrey,
+                                  size: 20.sp,
+                                ),
+                              ),
+                              validator: AppValidator.validateString(),
+                              style: TextStyle(
+                                fontSize: 15.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'GoogleSans',
+                              ),
+                            ),
+                            SizedBox(height: 24.0.h),
+                            TextFormWidget(
+                              hint: 'Start Date',
+                              label: '13 Feb, 2026',
+                              hintWeight: FontWeight.w400,
+                              hintColor: AppColors.reminder,
+                              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              readOnly: true,
+                              fillColor: AppColors.white,
+                              isFilled: true,
+                              controller: TextEditingController(
+                                text: formatDateTextController(
+                                  data.startDateTime,
+                                ),
+                              ),
+                              suffixWidget: Padding(
+                                padding: EdgeInsets.all(8.w),
+                                child: GestureDetector(
+                                  onTap: () => model.selectDateEditDraft(
+                                    context: context,
+                                    setModalState: setModalState,
+                                    model: model,
+                                    data: data,
+                                  ),
+                                  child: SvgPicture.asset(
+                                    AppImage.calendar,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              validator: AppValidator.validateString(),
+                              style: TextStyle(
+                                fontSize: 15.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'GoogleSans',
+                              ),
+                              labelStyle: TextStyle(
+                                fontSize: 15.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'GoogleSans',
+                                color: AppColors.faintedGrey,
+                              ),
+                            ),
+                            SizedBox(height: 24.0.h),
+                            TextFormWidget(
+                              hint: 'Duration',
+                              label: 'E.g, 13 days',
+                              hintWeight: FontWeight.w400,
+                              hintColor: AppColors.reminder,
+                              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              controller: model.durationEditControllers,
+                              labelStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                fontSize: 16.2.sp,
+                                color: AppColors.infoGrey,
+                              ),
+                              fillColor: AppColors.appWhite,
+                              isFilled: true,
+                              style: TextStyle(
+                                fontSize: 16.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'GoogleSans',
+                              ),
+                              onChange: (p0) {
+                                final duration = int.tryParse(p0);
+
+                                if (duration == null) return;
+
+                                updateEditDurationDraft(
+                                  newDuration: duration,
+                                  medication: data,
+                                );
+                                _calculateEndDateEditDraft(
+                                  setModalState: setModalState,
+                                  model: model,
+                                  data: data,
+                                );
+                                setModalState!(() {});
+                                model.notifyListeners();
+                              },
+                            ),
+                            SizedBox(height: 24.0.h),
+                            TextFormWidget(
+                              hint: 'End Date',
+                              label: '18 Feb, 2026',
+                              hintWeight: FontWeight.w400,
+                              hintColor: AppColors.reminder,
+                              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                              borderColor: AppColors.infoGrey1,
+                              borderTopLeft: 10.r,
+                              borderTopRight: 10.r,
+                              borderBottomLeft: 10.r,
+                              borderBottomRight: 10.r,
+                              controller: TextEditingController(
+                                text: formatDateTextController(
+                                  data.endDateTime,
+                                ),
+                              ),
+                              labelStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Arial',
+                                fontSize: 16.2.sp,
+                                color: AppColors.infoGrey,
+                              ),
+                              fillColor: AppColors.grey,
+                              isFilled: true,
+                              readOnly: true,
+                              style: TextStyle(
+                                fontSize: 16.20.sp,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'GoogleSans',
+                              ),
+                            ),
+                            SizedBox(height: 24.0.h),
+                            data.scheduleType != 'FIXED'
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Stack(
+                                            clipBehavior: Clip.none,
+                                            children: [
+                                              TextView(
+                                                text: 'Configure Times Per Day',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                              Positioned(
+                                                right: -12.10,
+                                                child: TextView(
+                                                  text: '*',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: AppColors.red,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              TextView(
+                                                text: 'Copy Day 1 to All',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'Arial',
+                                                  fontSize: 13.74.sp,
+                                                  color: AppColors.reminder,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              SizedBox(width: 8.w),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  isTappedCopyall =
+                                                      !isTappedCopyall;
+                                                  if (isTappedCopyall) {
+                                                    copyDayOneToAll(
+                                                      setModalState:
+                                                          setModalState!,
+                                                      viewModel: model,
+                                                    );
+                                                  }
+                                                  model.notifyListeners();
+                                                },
+                                                child: Container(
+                                                  padding: isTappedCopyall
+                                                      ? EdgeInsets.all(0.w)
+                                                      : EdgeInsets.all(8.0.w),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          4.r,
+                                                        ),
+                                                    color: isTappedCopyall
+                                                        ? AppColors.primary
+                                                        : AppColors.transparent,
+                                                    border: Border.all(
+                                                      color: isTappedCopyall
+                                                          ? AppColors
+                                                                .transparent
+                                                          : AppColors.infoGrey,
+                                                      width: .78,
+                                                    ),
+                                                  ),
+                                                  child: isTappedCopyall
+                                                      ? Icon(
+                                                          Icons.check,
+                                                          size: 14.sp,
+                                                          color:
+                                                              AppColors.white,
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 14.h),
+                                      SizedBox(
+                                        height: data.dailyDoseTimes!.isEmpty
+                                            ? 0.h
+                                            : data.dailyDoseTimes!.length > 1
+                                            ? 208.h
+                                            : 110.h,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ...List.generate(data.dailyDoseTimes!.length, (
+                                                index,
+                                              ) {
+                                                final e =
+                                                    data.dailyDoseTimes![index];
+                                                return Container(
+                                                  padding: EdgeInsets.all(10.w),
+                                                  margin: EdgeInsets.only(
+                                                    bottom: 12.w,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: AppColors.f1,
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.fromLTRB(
+                                                                  12.w,
+                                                                  3.84.w,
+                                                                  12.0.w,
+                                                                  3.84.w,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    8.r,
+                                                                  ),
+                                                              border: Border.all(
+                                                                color: AppColors
+                                                                    .primaryLight
+                                                                    .withOpacity(
+                                                                      .3,
+                                                                    ),
+                                                              ),
+                                                              color: AppColors
+                                                                  .primaryLight
+                                                                  .withOpacity(
+                                                                    .1,
+                                                                  ),
+                                                            ),
+                                                            child: Column(
+                                                              children: [
+                                                                TextView(
+                                                                  text: 'Day',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'Arial',
+                                                                    fontSize:
+                                                                        12.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: AppColors
+                                                                        .fineGrey,
+                                                                  ),
+                                                                ),
+                                                                TextView(
+                                                                  text:
+                                                                      '${index + 1}',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'GoogleSans',
+                                                                    fontSize:
+                                                                        16.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 4.0.w,
+                                                          ),
+                                                          Expanded(
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets.fromLTRB(
+                                                                    16.w,
+                                                                    8.0.w,
+                                                                    16.0.w,
+                                                                    8.0.w,
+                                                                  ),
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 50.h,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      10.r,
+                                                                    ),
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .infoGrey1,
+                                                                ),
+                                                                color: AppColors
+                                                                    .white,
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  TextView(
+                                                                    text:
+                                                                        getTimeFreqCustom(
+                                                                          index,
+                                                                        ),
+                                                                    textStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'Arial',
+                                                                      fontSize:
+                                                                          14.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: AppColors
+                                                                          .reminder,
+                                                                    ),
+                                                                  ),
+                                                                  IconButton(
+                                                                    onPressed: () {
+                                                                      selectTimeFreqCustomEditDraft(
+                                                                        context:
+                                                                            context,
+                                                                        dayIndex:
+                                                                            index,
+                                                                        setModalState:
+                                                                            setModalState,
+                                                                        model:
+                                                                            model,
+                                                                        dailyDoseTimes:
+                                                                            e,
+                                                                      );
+                                                                      model
+                                                                          .notifyListeners();
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .access_time_rounded,
+                                                                      color: AppColors
+                                                                          .fineGrey,
+                                                                      size:
+                                                                          20.sp,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 4.0.w,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              model.addTimeForDayUpdateDraft(
+                                                                setModalState:
+                                                                    setModalState!,
+                                                                dailyDoseTimes:
+                                                                    e,
+                                                                time: convertTo24Hour(
+                                                                  selectedTimePerDay[index]!,
+                                                                ),
+                                                                date:
+                                                                    DateFormat(
+                                                                      'yyyy-MM-dd',
+                                                                    ).format(
+                                                                      DateTime.parse(
+                                                                        data.startDateTime!
+                                                                            .toString(),
+                                                                      ).add(
+                                                                        Duration(
+                                                                          days:
+                                                                              index,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                              );
+                                                              selectedTimePerDay[index] =
+                                                                  null;
+                                                            },
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets.fromLTRB(
+                                                                    14.w,
+                                                                    8.0.w,
+                                                                    16.0.w,
+                                                                    8.0.w,
+                                                                  ),
+                                                              width: 56.2,
+                                                              height: 50.h,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      10.r,
+                                                                    ),
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .infoGrey1,
+                                                                ),
+                                                                color: AppColors
+                                                                    .white,
+                                                              ),
+                                                              child: Center(
+                                                                child: Icon(
+                                                                  Icons.add,
+                                                                  color: AppColors
+                                                                      .fineGrey,
+                                                                  size: 20.sp,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 4.w),
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.fromLTRB(
+                                                                  7.8.w,
+                                                                  1.0.w,
+                                                                  7.8.w,
+                                                                  1.0.w,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    22,
+                                                                  ),
+                                                              color: AppColors
+                                                                  .lightBlue,
+                                                            ),
+                                                            child: TextView(
+                                                              text:
+                                                                  '${e.length}x',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'GoogleSans',
+                                                                fontSize: 12.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      data.timesPerDay ==
+                                                                  null ||
+                                                              data.timesPerDay ==
+                                                                  0 ||
+                                                              data.timesPerDay! >
+                                                                  4
+                                                          ? Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Padding(
+                                                                  padding:
+                                                                      EdgeInsets.only(
+                                                                        top:
+                                                                            2.w,
+                                                                      ),
+                                                                  child: TextView(
+                                                                    text: DateFormat('MMM dd').format(
+                                                                      DateTime.parse(
+                                                                        data.startDateTime!
+                                                                            .toString(),
+                                                                      ).add(
+                                                                        Duration(
+                                                                          days:
+                                                                              index,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    textStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'Arial',
+                                                                      fontSize:
+                                                                          12.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: AppColors
+                                                                          .fineGrey,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10.w,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Wrap(
+                                                                    spacing:
+                                                                        10.0,
+                                                                    runSpacing:
+                                                                        10.0,
+                                                                    children: [
+                                                                      ...e.map(
+                                                                        (
+                                                                          time,
+                                                                        ) => GestureDetector(
+                                                                          onTap: () {
+                                                                            selectedTimePerDay[index] = convertTo12HourFormat(
+                                                                              time.time!,
+                                                                            );
+                                                                            setModalState!(
+                                                                              () {},
+                                                                            );
+                                                                            model.notifyListeners();
+                                                                          },
+                                                                          child: Container(
+                                                                            width:
+                                                                                110.w,
+                                                                            padding: EdgeInsets.symmetric(
+                                                                              vertical: 4.w,
+                                                                              horizontal: 10.w,
+                                                                            ),
+                                                                            decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(
+                                                                                22.r,
+                                                                              ),
+                                                                              border: Border.all(
+                                                                                color:
+                                                                                    selectedTimePerDay[index] ==
+                                                                                        convertTo12HourFormat(
+                                                                                          time.time!,
+                                                                                        )
+                                                                                    ? AppColors.transparent
+                                                                                    : AppColors.app_green,
+                                                                              ),
+                                                                              color:
+                                                                                  selectedTimePerDay[index] ==
+                                                                                      convertTo12HourFormat(
+                                                                                        time.time!,
+                                                                                      )
+                                                                                  ? AppColors.app_green
+                                                                                  : AppColors.white,
+                                                                            ),
+                                                                            child: Row(
+                                                                              children: [
+                                                                                TextView(
+                                                                                  text:
+                                                                                      time.time!.contains(
+                                                                                            'AM',
+                                                                                          ) ||
+                                                                                          time.time!.contains(
+                                                                                            'PM',
+                                                                                          )
+                                                                                      ? time.time!
+                                                                                      : convertTo12HourFormat(
+                                                                                          time.time!,
+                                                                                        ),
+                                                                                  textStyle: TextStyle(
+                                                                                    fontFamily: 'GoogleSans',
+                                                                                    fontSize: 13.2.sp,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                    color:
+                                                                                        selectedTimePerDay[index] ==
+                                                                                            convertTo12HourFormat(
+                                                                                              time.time!,
+                                                                                            )
+                                                                                        ? AppColors.white
+                                                                                        : AppColors.app_green,
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 6.w,
+                                                                                ),
+                                                                                GestureDetector(
+                                                                                  onTap: () {
+                                                                                    model.removeTimeForDayUpdateDraft(
+                                                                                      date:
+                                                                                          DateFormat(
+                                                                                            'yyyy-MM-dd',
+                                                                                          ).format(
+                                                                                            DateTime.parse(
+                                                                                              data.startDateTime!.toString(),
+                                                                                            ).add(
+                                                                                              Duration(
+                                                                                                days: index,
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                      time: time.time!,
+                                                                                      setModalState: setModalState!,
+                                                                                      dailyDoseTimes: e,
+                                                                                    );
+                                                                                  },
+                                                                                  child: SvgPicture.asset(
+                                                                                    AppImage.x,
+                                                                                    color:
+                                                                                        selectedTimePerDay[index] ==
+                                                                                            convertTo12HourFormat(
+                                                                                              time.time!,
+                                                                                            )
+                                                                                        ? AppColors.white
+                                                                                        : AppColors.app_green,
+                                                                                    height: 16.20.h,
+                                                                                    width: 16.w,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                    ],
+                                                  ),
+                                                );
+                                              }),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
                                   )
-                                : GestureDetector(
-                                    onTap: () {
-                                      model.pickUpdatedDrugImage(
-                                        context: context,
-                                        id: reminder!.id,
-                                      );
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 22.w,
-                                        vertical: 10.10.w,
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          TextView(
+                                            text: 'Time',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            right: -12.10,
+                                            child: TextView(
+                                              text: '*',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 18.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.red,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(32),
-                                        color: AppColors.grey,
+                                      SizedBox(height: 14.h),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                formattedSelectedTimeAndPeriod =
+                                                    '--:--';
+                                                model.globalTimeIndex = null;
+                                                model.notifyListeners();
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.fromLTRB(
+                                                  16.w,
+                                                  8.0.w,
+                                                  16.0.w,
+                                                  8.0.w,
+                                                ),
+                                                width: double.infinity,
+                                                height: 50.h,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        10.r,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: AppColors.infoGrey1,
+                                                  ),
+                                                  color: AppColors.white,
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    TextView(
+                                                      text: getTimeFreq(),
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 14.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        selectTimeFreqEditDraft(
+                                                          context: context,
+                                                          model: model,
+                                                        );
+                                                        setModalState!(() {});
+                                                      },
+                                                      icon: Icon(
+                                                        Icons
+                                                            .access_time_rounded,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                        size: 20.sp,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 4.0.w),
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (data.timesPerDay != null &&
+                                                  model
+                                                          .formattedSelectedTimeAndPeriodList!
+                                                          .length <
+                                                      data.timesPerDay!) {
+                                                if (model
+                                                    .formattedSelectedTimeAndPeriodList!
+                                                    .contains(
+                                                      formattedSelectedTimeAndPeriod,
+                                                    )) {
+                                                  formattedSelectedTimeAndPeriod =
+                                                      '--:--';
+                                                  model.globalTimeIndex = null;
+                                                } else {
+                                                  model
+                                                      .formattedSelectedTimeAndPeriodList!
+                                                      .add(
+                                                        formattedSelectedTimeAndPeriod!,
+                                                      );
+                                                }
+                                              } else {}
+                                              setModalState!(() {});
+                                              model.notifyListeners();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                16.w,
+                                                8.0.w,
+                                                16.0.w,
+                                                8.0.w,
+                                              ),
+                                              width: 62,
+                                              height: 50.h,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.r),
+                                                border: Border.all(
+                                                  color: AppColors.infoGrey1,
+                                                ),
+                                                color: AppColors.white,
+                                              ),
+                                              child: Icon(
+                                                Icons.add,
+                                                color: AppColors.fineGrey,
+                                                size: 20.sp,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      child: TextView(
-                                        text: 'Upload',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 14.40.sp,
-                                          color: AppColors.deep,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
+                                      SizedBox(height: 24.0.h),
+                                      model
+                                              .formattedSelectedTimeAndPeriodList!
+                                              .isNotEmpty
+                                          ? Wrap(
+                                              spacing: 10.0,
+                                              runSpacing: 10.0,
+                                              children: [
+                                                ...model.formattedSelectedTimeAndPeriodList!.asMap().entries.map((
+                                                  entry,
+                                                ) {
+                                                  final index =
+                                                      entry.key; // ✅ index
+                                                  final value = entry
+                                                      .value; // ✅ time string
+
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      formattedSelectedTimeAndPeriod =
+                                                          value;
+                                                      model.formattedSelectedTimeAndPeriod =
+                                                          value;
+                                                      model.globalTimeIndex =
+                                                          index;
+                                                      setModalState!(() {});
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: Container(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                            maxWidth: 110.0.w,
+                                                          ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            vertical: 4.w,
+                                                            horizontal: 10.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              22.r,
+                                                            ),
+                                                        border: Border.all(
+                                                          color:
+                                                              formattedSelectedTimeAndPeriod ==
+                                                                  value
+                                                              ? AppColors
+                                                                    .transparent
+                                                              : AppColors
+                                                                    .app_green,
+                                                        ),
+                                                        color:
+                                                            formattedSelectedTimeAndPeriod ==
+                                                                value
+                                                            ? AppColors
+                                                                  .app_green
+                                                            : AppColors.white,
+                                                      ),
+                                                      child: Row(
+                                                        children: [
+                                                          TextView(
+                                                            text:
+                                                                value.contains(
+                                                                      'AM',
+                                                                    ) ||
+                                                                    value
+                                                                        .contains(
+                                                                          'PM',
+                                                                        )
+                                                                ? value
+                                                                : convertTo12HourFormat(
+                                                                    value,
+                                                                  ),
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'GoogleSans',
+                                                              fontSize: 13.2.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color:
+                                                                  formattedSelectedTimeAndPeriod ==
+                                                                      value
+                                                                  ? AppColors
+                                                                        .white
+                                                                  : AppColors
+                                                                        .app_green,
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 6.w),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              model
+                                                                  .formattedSelectedTimeAndPeriodList!
+                                                                  .remove(
+                                                                    value,
+                                                                  );
+                                                              setModalState!(
+                                                                () {},
+                                                              );
+                                                              model
+                                                                  .notifyListeners();
+                                                            },
+                                                            child: SvgPicture.asset(
+                                                              AppImage.x,
+                                                              color:
+                                                                  formattedSelectedTimeAndPeriod ==
+                                                                      value
+                                                                  ? AppColors
+                                                                        .white
+                                                                  : AppColors
+                                                                        .app_green,
+                                                              height: 16.20.h,
+                                                              width: 16.w,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                              ],
+                                            )
+                                          : SizedBox.shrink(),
+                                    ],
                                   ),
                           ],
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextView(
-                    text: 'SET SCHEDULE AND DOSAGE',
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 14.80.sp,
-                      color: AppColors.deep,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Divider(color: AppColors.grey),
-                  SizedBox(height: 12.h),
-                  TextFormWidget(
-                    hint: 'Dosage',
-                    hintWeight: FontWeight.w400,
-                    hintColor: AppColors.reminder,
-                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                    borderColor: AppColors.infoGrey1,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    controller: TextEditingController(
-                      text: data.dosage != ''
-                          ? data.dosage!.capitalizeWords()
-                          : '',
-                    ),
-                    fillColor: AppColors.white,
-                    isFilled: true,
-                    readOnly:
-                        data.medicationType == 'Others' || data.dosage == ''
-                        ? false
-                        : true,
-                    suffixWidget: IconButton(
-                      onPressed:
-                          data.medicationType == 'Others' ||
-                              data.medicationType == ''
-                          ? () {}
-                          : () async {
-                              showMedUpdateDosageMenuDraft(
-                                context: context,
-                                type: data.medicationType,
-                                model: model,
-                                med: data,
-                                data: reminder,
-                              );
+                      SizedBox(height: 20.h),
+                      TextFormWidget(
+                        hint: 'Notes & Instructions',
+                        hintWeight: FontWeight.w400,
+                        hintColor: AppColors.reminder,
+                        hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                        borderColor: AppColors.infoGrey1,
+                        label: 'e.g. Take with food, avoid grapefruit juice',
+                        labelStyle: TextStyle(
+                          fontSize: 14.0.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                          fontFamily: 'Arial',
+                        ),
+                        isShowHint: true,
+                        borderTopLeft: 10.r,
+                        borderTopRight: 10.r,
+                        borderBottomLeft: 10.r,
+                        borderBottomRight: 10.r,
+                        controller: model.noteEditController,
+                        onChange: (p0) {
+                          data.note = p0;
+                          setModalState!(() {});
+                          model.notifyListeners();
+                        },
+                        fillColor: AppColors.white,
+                        isFilled: true, // Minimum number of lines visible
+                        maxline:
+                            3, // Maximum number of lines visible before scrolling
+                        keyboardType: TextInputType.multiline,
+                        validator: AppValidator.validateString(),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        style: TextStyle(
+                          fontSize: 16.20.sp,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'GoogleSans',
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      TextView(
+                        text:
+                            'These notes will be included in notification messages',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12.4.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                      SizedBox(height: 24.0.h),
+                      TextView(
+                        text: 'NOTIFICATION CHANNELS',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 14.80.sp,
+                          color: AppColors.deep,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Divider(color: AppColors.grey),
+                      SizedBox(height: 12.h),
+                      ...List.generate(
+                        model.notificationChannelPricingResponseModel != null
+                            ? model
+                                  .notificationChannelPricingResponseModel!
+                                  .data!
+                                  .data!
+                                  .length
+                            : 0,
+                        (index) {
+                          return chooseNotChannelWidget(
+                            context,
+                            svgIcon: notificationChannelSvgIcon(
+                              model
+                                  .notificationChannelPricingResponseModel!
+                                  .data!
+                                  .data![index]
+                                  .channel,
+                            ),
+                            text:
+                                "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
+
+                            isTapped: selectedIndexes.contains(
+                              index,
+                            ), // ✅ reflect state
+                            onTap: () {
+                              if (selectedIndexes.contains(index)) {
+                                // unselect
+                                selectedIndexes.remove(index);
+                                if (!selectedIndexes.contains(0) &&
+                                    !selectedIndexes.contains(1)) {
+                                  isTappedEmailAdded = false;
+                                  model.notifyListeners();
+                                }
+                                if (!selectedIndexes.contains(2) &&
+                                    !selectedIndexes.contains(3) &&
+                                    !selectedIndexes.contains(4)) {
+                                  isTappedPhoneAdded = false;
+                                  model.notifyListeners();
+                                }
+                              } else {
+                                // select
+                                selectedIndexes.add(index);
+                                // ✅ Show specific dialogs
+                                if (index == 0 || index == 1) {
+                                  // Email
+                                  isTappedEmailAdded = true;
+                                  model.notifyListeners();
+                                } else if ([2, 3, 4].contains(index)) {
+                                  // Phone-related channels
+                                  isTappedPhoneAdded = true;
+                                  isPhoneValid = false;
+                                  if (addedPhoneReminderList.contains(
+                                    SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['phone'],
+                                  )) {
+                                  } else {
+                                    addedPhoneReminderList.add(
+                                      SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['phone'],
+                                    );
+                                  }
+                                  model.notifyListeners();
+                                }
+                              }
+                              // ✅ update selection
+                              model.notifyListeners();
                             },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.faintedGrey,
-                        size: 20.sp,
+                          );
+                        },
                       ),
-                    ),
-                    style: TextStyle(
-                      fontSize: 15.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      color: AppColors.reminder,
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextFormWidget(
-                    hint: 'Frequency',
-                    hintWeight: FontWeight.w400,
-                    hintColor: AppColors.reminder,
-                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                    borderColor: AppColors.infoGrey1,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    fillColor: AppColors.white,
-                    isFilled: true,
-                    readOnly: true,
-                    controller: TextEditingController(
-                      text: data.timesPerDay.toString() == ''
-                          ? ''
-                          : data.timesPerDay.toString().toLowerCase() ==
-                                'custom schedule'
-                          ? data.timesPerDay.toString()
-                          : data.timesPerDay == null
-                          ? 'Custom Schedule'
-                          : showNoTimesMode(
-                              int.parse(data.timesPerDay.toString()),
-                            ),
-                    ),
-                    suffixWidget: IconButton(
-                      onPressed: () async {
-                        final result = await showDailyInTakeUpdateMenuDraft(
-                          context: context,
-                          setModalState: setModalState,
-                          model: model,
-                          data: data,
-                        );
-                        if (result != null) {
-                          setModalState!(() {
-                            data.timesPerDay = int.parse(result);
-                            model.notifyListeners();
-                          });
-                        }
-                      },
-                      icon: Icon(
-                        Icons.keyboard_arrow_down,
-                        color: AppColors.faintedGrey,
-                        size: 20.sp,
-                      ),
-                    ),
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 15.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextFormWidget(
-                    hint: 'Start Date',
-                    label: '13 Feb, 2026',
-                    hintWeight: FontWeight.w400,
-                    hintColor: AppColors.reminder,
-                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                    borderColor: AppColors.infoGrey1,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    readOnly: true,
-                    fillColor: AppColors.white,
-                    isFilled: true,
-                    controller: TextEditingController(
-                      text: formatDateTextController(data.startDateTime),
-                    ),
-                    suffixWidget: Padding(
-                      padding: EdgeInsets.all(8.w),
-                      child: GestureDetector(
-                        onTap: () => model.selectDateEditDraft(
-                          context: context,
-                          setModalState: setModalState,
-                          model: model,
-                          data: data,
-                        ),
-                        child: SvgPicture.asset(
-                          AppImage.calendar,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    validator: AppValidator.validateString(),
-                    style: TextStyle(
-                      fontSize: 15.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                    labelStyle: TextStyle(
-                      fontSize: 15.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                      color: AppColors.faintedGrey,
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextFormWidget(
-                    hint: 'Duration',
-                    label: 'E.g, 13 days',
-                    hintWeight: FontWeight.w400,
-                    hintColor: AppColors.reminder,
-                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                    borderColor: AppColors.infoGrey1,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    controller: model.durationEditControllers,
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 16.2.sp,
-                      color: AppColors.infoGrey,
-                    ),
-                    fillColor: AppColors.appWhite,
-                    isFilled: true,
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                    onChange: (p0) {
-                      final duration = int.tryParse(p0);
-
-                      if (duration == null) return;
-
-                      updateEditDurationDraft(
-                        newDuration: duration,
-                        medication: data,
-                      );
-                      _calculateEndDateEditDraft(
-                        setModalState: setModalState,
-                        model: model,
-                        data: data,
-                      );
-                      setModalState!(() {});
-                      model.notifyListeners();
-                    },
-                  ),
-                  SizedBox(height: 24.0.h),
-                  TextFormWidget(
-                    hint: 'End Date',
-                    label: '18 Feb, 2026',
-                    hintWeight: FontWeight.w400,
-                    hintColor: AppColors.reminder,
-                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                    borderColor: AppColors.infoGrey1,
-                    borderTopLeft: 10.r,
-                    borderTopRight: 10.r,
-                    borderBottomLeft: 10.r,
-                    borderBottomRight: 10.r,
-                    controller: TextEditingController(
-                      text: formatDateTextController(data.endDateTime),
-                    ),
-                    labelStyle: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      fontSize: 16.2.sp,
-                      color: AppColors.infoGrey,
-                    ),
-                    fillColor: AppColors.grey,
-                    isFilled: true,
-                    readOnly: true,
-                    style: TextStyle(
-                      fontSize: 16.20.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'GoogleSans',
-                    ),
-                  ),
-                  SizedBox(height: 24.0.h),
-                  data.scheduleType != 'FIXED'
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      SizedBox(height: 12.h),
+                      isTappedEmailAdded
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    TextView(
-                                      text: 'Configure Times Per Day',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.reminder,
-                                      ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: addedEmailReminderList.isEmpty
+                                          ? AppColors.red
+                                          : AppColors.infoGrey1,
                                     ),
-                                    Positioned(
-                                      right: -12.10,
-                                      child: TextView(
-                                        text: '*',
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.r),
+                                            topRight: Radius.circular(12.r),
+                                          ),
+                                          color: AppColors.dashboard,
+                                        ),
+                                        padding: EdgeInsets.all(12.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Add Email Address',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 16.2.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color:
+                                                        addedEmailReminderList
+                                                            .isEmpty
+                                                        ? AppColors.red
+                                                        : AppColors.deep,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Emails available',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 14.8.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 6.w),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 10.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              223,
+                                                              233,
+                                                              247,
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12.r,
+                                                            ),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .primary
+                                                              .withOpacity(.4),
+                                                        ),
+                                                      ),
+                                                      child: TextView(
+                                                        text:
+                                                            '${emailReminderList.length}',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 11.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    isTappedEmailAdded =
+                                                        !isTappedEmailAdded;
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.drop_up,
+                                                    height: 22.0.h,
+                                                    width: 22.0.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                IconButton(
+                                                  onPressed: () =>
+                                                      showEmailDialog(
+                                                        context,
+                                                        model: model,
+                                                      ),
+                                                  icon: Icon(
+                                                    Icons.add_circle,
+                                                    color: AppColors.primary1,
+                                                    size: 24.sp,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 15.20.h),
+                                      emailReminderList.isEmpty
+                                          ? Column(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 12.w,
+                                                    right: 20.w,
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          if (addedEmailReminderList
+                                                              .contains(
+                                                                SharedPreferencesService
+                                                                    .instance
+                                                                    .usersData['user']['email'],
+                                                              )) {
+                                                            addedEmailReminderList.remove(
+                                                              SharedPreferencesService
+                                                                  .instance
+                                                                  .usersData['user']['email'],
+                                                            );
+                                                          } else {
+                                                            addedEmailReminderList.add(
+                                                              SharedPreferencesService
+                                                                  .instance
+                                                                  .usersData['user']['email'],
+                                                            );
+                                                          }
+                                                          setModalState!(() {});
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              addedEmailReminderList
+                                                                  .contains(
+                                                                    SharedPreferencesService
+                                                                        .instance
+                                                                        .usersData['user']['email'],
+                                                                  )
+                                                              ? EdgeInsets.all(
+                                                                  4.0.w,
+                                                                )
+                                                              : EdgeInsets.all(
+                                                                  10.w,
+                                                                ),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  6.r,
+                                                                ),
+                                                            color:
+                                                                addedEmailReminderList.contains(
+                                                                  SharedPreferencesService
+                                                                      .instance
+                                                                      .usersData['user']['email'],
+                                                                )
+                                                                ? AppColors
+                                                                      .primary
+                                                                : AppColors
+                                                                      .transparent,
+                                                            border: Border.all(
+                                                              color:
+                                                                  addedEmailReminderList.contains(
+                                                                    SharedPreferencesService
+                                                                        .instance
+                                                                        .usersData['user']['email'],
+                                                                  )
+                                                                  ? AppColors
+                                                                        .transparent
+                                                                  : AppColors
+                                                                        .infoGrey,
+                                                              width: .78,
+                                                            ),
+                                                          ),
+                                                          child:
+                                                              addedEmailReminderList
+                                                                  .contains(
+                                                                    SharedPreferencesService
+                                                                        .instance
+                                                                        .usersData['user']['email'],
+                                                                  )
+                                                              ? Icon(
+                                                                  Icons.check,
+                                                                  size: 12.sp,
+                                                                  color:
+                                                                      AppColors
+                                                                          .white,
+                                                                )
+                                                              : SizedBox.shrink(),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 9.10.w),
+                                                      TextView(
+                                                        text: SharedPreferencesService
+                                                            .instance
+                                                            .usersData['user']['email'],
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 16.2.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  1.2.w,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color: AppColors
+                                                                      .app_green,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                            child: Icon(
+                                                              Icons.check,
+                                                              size: 13.4.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10.w),
+                                                          TextView(
+                                                            text: 'Primary',
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              fontSize:
+                                                                  13.72.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                SizedBox(height: 2.0.h),
+                                                Divider(
+                                                  color: AppColors.infoGrey1,
+                                                ),
+                                              ],
+                                            )
+                                          : SizedBox.shrink(),
+                                      ...emailReminderList.asMap().entries.map((
+                                        entry,
+                                      ) {
+                                        final index = entry.key;
+                                        final o = entry.value;
+                                        final isLast =
+                                            index ==
+                                            emailReminderList.length - 1;
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 12.20.w,
+                                                right: 20.w,
+                                                bottom: 12.w,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      if (addedEmailReminderList
+                                                          .contains(o)) {
+                                                        addedEmailReminderList
+                                                            .remove(o);
+                                                      } else {
+                                                        addedEmailReminderList
+                                                            .add(o);
+                                                      }
+                                                      setModalState!(() {});
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? EdgeInsets.all(
+                                                              4.0.w,
+                                                            )
+                                                          : EdgeInsets.all(
+                                                              10.w,
+                                                            ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              6.r,
+                                                            ),
+                                                        color:
+                                                            addedEmailReminderList
+                                                                .contains(o)
+                                                            ? AppColors.primary
+                                                            : AppColors
+                                                                  .transparent,
+                                                        border: Border.all(
+                                                          color:
+                                                              addedEmailReminderList
+                                                                  .contains(o)
+                                                              ? AppColors
+                                                                    .transparent
+                                                              : AppColors
+                                                                    .infoGrey,
+                                                          width: .78,
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 12.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 9.10.w),
+                                                  SizedBox(
+                                                    width: 220.w,
+                                                    child: TextView(
+                                                      text: o,
+                                                      maxLines: 1,
+                                                      textOverflow:
+                                                          TextOverflow.ellipsis,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 16.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showEmailDialog(
+                                                            context,
+                                                            isEdit: true,
+                                                            index: index,
+                                                            email:
+                                                                emailReminderList[index],
+                                                          );
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.edit_pen,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10.w),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          emailReminderList
+                                                              .removeAt(index);
+                                                          addedEmailReminderList
+                                                              .remove(o);
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.delete,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            if (!isLast)
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                            SizedBox(height: 5.10.h),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+                                addedEmailReminderList.isEmpty
+                                    ? TextView(
+                                        text: 'Atleast one email is required',
                                         textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 12.80.sp,
                                           color: AppColors.red,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    TextView(
-                                      text: 'Copy Day 1 to All',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 13.74.sp,
-                                        color: AppColors.reminder,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    GestureDetector(
-                                      onTap: () {
-                                        isTappedCopyall = !isTappedCopyall;
-                                        if (isTappedCopyall) {
-                                          copyDayOneToAll(
-                                            setModalState: setModalState!,
-                                            viewModel: model,
-                                          );
-                                        }
-                                        model.notifyListeners();
-                                      },
-                                      child: Container(
-                                        padding: isTappedCopyall
-                                            ? EdgeInsets.all(0.w)
-                                            : EdgeInsets.all(8.0.w),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            4.r,
-                                          ),
-                                          color: isTappedCopyall
-                                              ? AppColors.primary
-                                              : AppColors.transparent,
-                                          border: Border.all(
-                                            color: isTappedCopyall
-                                                ? AppColors.transparent
-                                                : AppColors.infoGrey,
-                                            width: .78,
-                                          ),
-                                        ),
-                                        child: isTappedCopyall
-                                            ? Icon(
-                                                Icons.check,
-                                                size: 14.sp,
-                                                color: AppColors.white,
-                                              )
-                                            : SizedBox.shrink(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                      )
+                                    : SizedBox.shrink(),
                               ],
-                            ),
-                            SizedBox(height: 14.h),
-                            SizedBox(
-                              height: data.dailyDoseTimes!.isEmpty
-                                  ? 0.h
-                                  : data.dailyDoseTimes!.length > 1
-                                  ? 208.h
-                                  : 110.h,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ...List.generate(data.dailyDoseTimes!.length, (
-                                      index,
-                                    ) {
-                                      final e = data.dailyDoseTimes![index];
-                                      return Container(
-                                        padding: EdgeInsets.all(10.w),
-                                        margin: EdgeInsets.only(bottom: 12.w),
+                            )
+                          : SizedBox.shrink(),
+                      SizedBox(height: 20.h),
+
+                      isTappedPhoneAdded
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: addedPhoneReminderList.isEmpty
+                                          ? AppColors.red
+                                          : AppColors.infoGrey1,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                            color: AppColors.f1,
+                                            color: AppColors.infoGrey1,
                                           ),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.r),
+                                            topRight: Radius.circular(12.r),
+                                          ),
+                                          color: AppColors.dashboard,
+                                        ),
+
+                                        padding: EdgeInsets.all(12.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Add Phone Number',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 15.8.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color:
+                                                        addedPhoneReminderList
+                                                            .isEmpty
+                                                        ? AppColors.red
+                                                        : AppColors.deep,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Numbers available',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 15.8.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 6.w),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 10.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              223,
+                                                              233,
+                                                              247,
+                                                            ),
+
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12.r,
+                                                            ),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .primary
+                                                              .withOpacity(.4),
+                                                        ),
+                                                      ),
+                                                      child: TextView(
+                                                        text:
+                                                            '${phoneReminderList.length}',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 11.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    isTappedPhoneAdded =
+                                                        !isTappedPhoneAdded;
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.drop_up,
+                                                    height: 22.0.h,
+                                                    width: 22.0.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    showPhoneDialog(
+                                                      context,
+                                                      model: model,
+                                                    );
+
+                                                    isPhoneValid = false;
+                                                    model.notifyListeners();
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.add_circle,
+                                                    color: AppColors.primary1,
+                                                    size: 24.sp,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 15.20.h),
+                                      phoneReminderList.isEmpty
+                                          ? Column(
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 12.w,
+                                                    right: 20.w,
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          if (addedPhoneReminderList
+                                                              .contains(
+                                                                SharedPreferencesService
+                                                                    .instance
+                                                                    .usersData['user']['phone'],
+                                                              )) {
+                                                            addedPhoneReminderList.remove(
+                                                              SharedPreferencesService
+                                                                  .instance
+                                                                  .usersData['user']['phone'],
+                                                            );
+                                                          } else {
+                                                            addedPhoneReminderList.add(
+                                                              SharedPreferencesService
+                                                                  .instance
+                                                                  .usersData['user']['phone'],
+                                                            );
+                                                          }
+                                                          setModalState!(() {});
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              addedPhoneReminderList
+                                                                  .contains(
+                                                                    SharedPreferencesService
+                                                                        .instance
+                                                                        .usersData['user']['phone'],
+                                                                  )
+                                                              ? EdgeInsets.all(
+                                                                  4.0.w,
+                                                                )
+                                                              : EdgeInsets.all(
+                                                                  10.w,
+                                                                ),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  6.r,
+                                                                ),
+                                                            color:
+                                                                addedPhoneReminderList.contains(
+                                                                  SharedPreferencesService
+                                                                      .instance
+                                                                      .usersData['user']['phone'],
+                                                                )
+                                                                ? AppColors
+                                                                      .primary
+                                                                : AppColors
+                                                                      .transparent,
+                                                            border: Border.all(
+                                                              color:
+                                                                  addedPhoneReminderList.contains(
+                                                                    SharedPreferencesService
+                                                                        .instance
+                                                                        .usersData['user']['phone'],
+                                                                  )
+                                                                  ? AppColors
+                                                                        .transparent
+                                                                  : AppColors
+                                                                        .infoGrey,
+                                                              width: .78,
+                                                            ),
+                                                          ),
+                                                          child:
+                                                              addedPhoneReminderList
+                                                                  .contains(
+                                                                    SharedPreferencesService
+                                                                        .instance
+                                                                        .usersData['user']['phone'],
+                                                                  )
+                                                              ? Icon(
+                                                                  Icons.check,
+                                                                  size: 12.sp,
+                                                                  color:
+                                                                      AppColors
+                                                                          .white,
+                                                                )
+                                                              : SizedBox.shrink(),
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 9.10.w),
+                                                      TextView(
+                                                        text: formatPhoneNumber(
+                                                          SharedPreferencesService
+                                                              .instance
+                                                              .usersData['user']['phone'],
+                                                        ),
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 16.2.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors
+                                                              .reminder,
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  1.2.w,
+                                                                ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                  color: AppColors
+                                                                      .app_green,
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                ),
+                                                            child: Icon(
+                                                              Icons.check,
+                                                              size: 13.4.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            ),
+                                                          ),
+                                                          SizedBox(width: 10.w),
+                                                          TextView(
+                                                            text: 'Primary',
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              fontSize:
+                                                                  13.72.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: AppColors
+                                                                  .reminder,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+
+                                                SizedBox(height: 2.0.h),
+                                                Divider(
+                                                  color: AppColors.infoGrey1,
+                                                ),
+                                              ],
+                                            )
+                                          : SizedBox.shrink(),
+                                      ...phoneReminderList.asMap().entries.map((
+                                        entry,
+                                      ) {
+                                        final index = entry.key;
+                                        final o = entry.value;
+                                        final isLast =
+                                            index ==
+                                            phoneReminderList.length - 1;
+
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 12.w,
+                                                right: 20.w,
+                                                bottom: 12.w,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      if (addedPhoneReminderList
+                                                          .contains(
+                                                            returnPhoneNoStructureWith234(
+                                                              o,
+                                                            ),
+                                                          )) {
+                                                        addedPhoneReminderList
+                                                            .remove(
+                                                              returnPhoneNoStructureWith234(
+                                                                o,
+                                                              ),
+                                                            );
+                                                      } else {
+                                                        addedPhoneReminderList.add(
+                                                          returnPhoneNoStructureWith234(
+                                                            o,
+                                                          ),
+                                                        );
+                                                      }
+                                                      setModalState!(() {});
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          addedPhoneReminderList
+                                                              .contains(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              )
+                                                          ? EdgeInsets.all(
+                                                              4.0.w,
+                                                            )
+                                                          : EdgeInsets.all(
+                                                              10.w,
+                                                            ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              6.r,
+                                                            ),
+                                                        color:
+                                                            addedPhoneReminderList
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    o,
+                                                                  ),
+                                                                )
+                                                            ? AppColors.primary
+                                                            : AppColors
+                                                                  .transparent,
+                                                        border: Border.all(
+                                                          color:
+                                                              addedPhoneReminderList
+                                                                  .contains(
+                                                                    returnPhoneNoStructureWith234(
+                                                                      o,
+                                                                    ),
+                                                                  )
+                                                              ? AppColors
+                                                                    .transparent
+                                                              : AppColors
+                                                                    .infoGrey,
+                                                          width: .78,
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          addedPhoneReminderList
+                                                              .contains(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              )
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 12.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 9.10.w),
+                                                  TextView(
+                                                    text: formatPhoneNumber(o),
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 16.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showPhoneDialog(
+                                                            context,
+                                                            isEdit: true,
+                                                            index: index,
+                                                            phoneNumber:
+                                                                phoneReminderList[index],
+                                                            model: model,
+                                                          );
+                                                          isPhoneValid = false;
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.edit_pen,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 16.10.w),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          phoneReminderList
+                                                              .removeAt(index);
+                                                          addedPhoneReminderList
+                                                              .remove(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              );
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.delete,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            if (!isLast)
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                            SizedBox(height: 5.10.h),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+
+                                addedPhoneReminderList.isEmpty
+                                    ? TextView(
+                                        text:
+                                            'Atleast one phone number is required',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 12.80.sp,
+                                          color: AppColors.red,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
+                            )
+                          : SizedBox.shrink(),
+                      SizedBox(height: 32.20.h),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () async {
+                            if (firstFormReminderKey.currentState!.validate()) {
+                              if (data.scheduleType == 'FIXED') {
+                                if (int.parse(data.timesPerDay.toString()) ==
+                                    model
+                                        .formattedSelectedTimeAndPeriodList!
+                                        .length) {
+                                  model.addReminderToListSaveAsDraftDraft(
+                                    model: model,
+                                    setModalState: setModalState,
+                                    context: context,
+                                    data: data,
+                                  );
+                                  onTapToAddAnotherReminder = true;
+                                  _validateDoseTimes = false;
+                                  allTrueList.insert(0, false);
+                                } else {
+                                  _validateDoseTimes = true;
+                                  allTrueList.insert(0, true);
+                                }
+                              } else {
+                                await model.addReminderToListSaveAsDraftDraft(
+                                  model: model,
+                                  setModalState: setModalState,
+                                  context: context,
+                                  data: data,
+                                );
+                                if (isTappedEmailAdded &&
+                                        addedEmailReminderList.isEmpty ||
+                                    isTappedPhoneAdded &&
+                                        addedPhoneReminderList.isEmpty) {
+                                  if (isTappedEmailAdded &&
+                                      addedEmailReminderList.isEmpty) {}
+                                  if (isTappedPhoneAdded &&
+                                      addedPhoneReminderList.isEmpty) {}
+                                }
+                              }
+                              setModalState!(() {});
+                              model.notifyListeners();
+                            } else {
+                              AppUtils.snackbar(
+                                context,
+                                message: 'Kindly input all required fields.',
+                                error: true,
+                              );
+                            }
+                          },
+                          child: TextView(
+                            text: 'Add Another Medication',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 17.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primary,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decorationThickness: 1.4,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 30.h),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.white,
+                              buttonText: 'Save as Draft',
+                              color: AppColors.primary,
+                              buttonBorderColor: AppColors.primary,
+                              isLoading: model.isLoading,
+                              onPressed: () async {
+                                if (firstFormReminderKey.currentState!
+                                    .validate()) {
+                                  buildChannelList(selectedIndexes);
+                                  await Future.delayed(Duration(seconds: 1));
+                                  model.updateSaveReminderAsDraft(
+                                    context: context,
+                                    model: model,
+                                    reminderId: reminder!.id,
+                                    saveDraft: SaveDraftReminderEntityModel(
+                                      title: '',
+                                      payload: Payload(
+                                        medications: [
+                                          saveDraft.Medication(
+                                            medicationName: data.medicationName,
+                                            scheduleType: data.scheduleType,
+                                            dosage: data.dosage,
+                                            medicationType: data.medicationType!
+                                                .toUpperCase(),
+                                            startDateTime: DateTime.parse(
+                                              data.startDateTime.toString(),
+                                            ),
+                                            endDateTime: DateTime.parse(
+                                              data.endDateTime.toString(),
+                                            ),
+                                            durationInDays: data.durationInDays,
+                                            timesPerDay:
+                                                data.scheduleType == 'CUSTOM'
+                                                ? 0
+                                                : data.timesPerDay,
+                                            dailyDoseTimes: data.dailyDoseTimes!
+                                                .map(
+                                                  (day) => day
+                                                      .map(
+                                                        (
+                                                          time,
+                                                        ) => saveDraftDose.DailyDoseTime(
+                                                          time:
+                                                              time.time!
+                                                                      .contains(
+                                                                        'AM',
+                                                                      ) ||
+                                                                  time.time!
+                                                                      .contains(
+                                                                        'PM',
+                                                                      )
+                                                              ? convertTo24Hour(
+                                                                  time.time!,
+                                                                )
+                                                              : time.time!,
+                                                          date: time.date,
+                                                          isoDate: time.isoDate,
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                )
+                                                .toList(),
+                                            note: data.note,
+                                            medicationImage:
+                                                model.uploadImageReminderResponseModel ==
+                                                        null &&
+                                                    data.medicationImage == null
+                                                ? null
+                                                : saveDraftImage
+                                                      .MedicationImage.fromJson(
+                                                    model.uploadImageReminderResponseModel !=
+                                                            null
+                                                        ? model
+                                                              .uploadImageReminderResponseModel!
+                                                              .data!
+                                                              .toJson()
+                                                        : data.medicationImage!
+                                                              .toJson(),
+                                                  ),
+                                          ),
+                                        ],
+                                        timeZone: "Africa/Lagos",
+                                        notificationChannels:
+                                            notificationChannel,
+                                        emails: addedEmailReminderList,
+                                        phoneNumbers: addedPhoneReminderList,
+                                      ),
+                                    ),
+                                  );
+                                  setModalState!(() {});
+                                  model.notifyListeners();
+                                }
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 22.w),
+                          Expanded(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.primary,
+                              buttonText: 'Continue',
+                              color: AppColors.white,
+                              buttonBorderColor: AppColors.transparent,
+                              isLoading: model.isLoading,
+                              onPressed: () async {
+                                if (firstFormReminderKey.currentState!
+                                    .validate()) {
+                                  if (!model.isCusSchedule) {
+                                    if (int.parse(
+                                          data.timesPerDay.toString(),
+                                        ) ==
+                                        model
+                                            .formattedSelectedTimeAndPeriodList!
+                                            .length) {
+                                      await model
+                                          .addReminderToListSaveAsDraftDraft(
+                                            model: model,
+                                            setModalState: setModalState,
+                                            context: context,
+                                            data: data,
+                                          );
+                                      if (isTappedEmailAdded &&
+                                              addedEmailReminderList.isEmpty ||
+                                          isTappedPhoneAdded &&
+                                              addedPhoneReminderList.isEmpty) {
+                                        if (isTappedEmailAdded &&
+                                            addedEmailReminderList.isEmpty) {}
+                                        if (isTappedPhoneAdded &&
+                                            addedPhoneReminderList.isEmpty) {}
+                                      } else {
+                                        addCostTotal(model);
+                                        Future.delayed(
+                                          Duration(milliseconds: 1400),
+                                        );
+                                        linIndexEditUpdate++;
+                                      }
+                                      setModalState!(() {});
+                                      model.notifyListeners();
+                                    }
+                                  } else {
+                                    await model
+                                        .addReminderToListSaveAsDraftDraft(
+                                          model: model,
+                                          setModalState: setModalState,
+                                          context: context,
+                                          data: data,
+                                        );
+                                    if (isTappedEmailAdded &&
+                                            addedEmailReminderList.isEmpty ||
+                                        isTappedPhoneAdded &&
+                                            addedPhoneReminderList.isEmpty) {
+                                      if (isTappedEmailAdded &&
+                                          addedEmailReminderList.isEmpty) {}
+                                      if (isTappedPhoneAdded &&
+                                          addedPhoneReminderList.isEmpty) {}
+                                    } else {
+                                      addCostTotal(model);
+                                      Future.delayed(
+                                        Duration(milliseconds: 1400),
+                                      );
+                                      linIndexEditUpdate++;
+                                    }
+                                  }
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 50.h),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20.h),
+                      ...model.medicationClassList.asMap().entries.map((entry) {
+                        MedicationClass e = entry.value;
+                        int index = entry.key;
+                        final doseItem = e.dosageMap.isNotEmpty
+                            ? e.dosageMap[0] // ✅ ALWAYS 0 for fixed schedule
+                            : e.dosageMap[index];
+                        // final doseItem = index < e.dosageMap.length
+                        //     ? e.dosageMap[index]
+                        //     : null;
+                        final doses = doseItem['doses'];
+                        return Card(
+                          color: AppColors.white,
+                          elevation: .78,
+                          margin: EdgeInsets.only(bottom: 18.w),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 15.8.w,
+                              horizontal: 10.w,
+                            ),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.buttonGrey1),
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 5.0.w,
+                                    right: 5.0.w,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          TextView(
+                                            text: medCard == e
+                                                ? ''
+                                                : 'Medication Name',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'Arial',
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                          medCard == e
+                                              ? SizedBox.shrink()
+                                              : Positioned(
+                                                  right: -12.10,
+                                                  child: TextView(
+                                                    text: '*',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: AppColors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              model.medicationClassList.remove(
+                                                e,
+                                              );
+                                              model.notifyListeners();
+                                            },
+                                            child: SvgPicture.asset(
+                                              AppImage.delete,
+                                              height: 16.68.h,
+                                              width: 15.2.w,
+                                            ),
+                                          ),
+                                          SizedBox(width: 12.30.w),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              if (medCard == e) {
+                                                medCard = null;
+                                              } else {
+                                                medCard = e;
+                                              }
+                                              model.notifyListeners();
+                                            },
+                                            child: TextView(
+                                              text: medCard == e
+                                                  ? 'Hide'
+                                                  : 'Show',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.2.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: medCard == e
+                                                    ? AppColors.red
+                                                    : AppColors.primary,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                decorationColor: medCard == e
+                                                    ? AppColors.red
+                                                    : AppColors.primary,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                medCard == e
+                                    ? Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 14.w,
+                                          horizontal: 4.8.w,
+                                        ),
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.white,
                                           borderRadius: BorderRadius.circular(
-                                            12,
+                                            10.r,
                                           ),
                                         ),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                    12.w,
-                                                    3.84.w,
-                                                    12.0.w,
-                                                    3.84.w,
+                                            TextFormWidget(
+                                              hint: 'Medication Name',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              fillColor: AppColors.white,
+                                              isFilled: true,
+                                              focusNode: model
+                                                  .medNameUpdateFocusNodes[index],
+                                              controller: model
+                                                  .medicationNameUpdateControllers[index],
+                                              validator:
+                                                  AppValidator.validateString(),
+                                              style: TextStyle(
+                                                fontSize: 15.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                              onChange: (val) {
+                                                model
+                                                        .medicationClassList[index]
+                                                        .medicationName =
+                                                    val;
+                                                WidgetsBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                      final controller = model
+                                                          .medicationNameUpdateControllers[index];
+                                                      final focusNode = model
+                                                          .medNameUpdateFocusNodes[index];
+                                                      controller.selection =
+                                                          TextSelection.fromPosition(
+                                                            TextPosition(
+                                                              offset: controller
+                                                                  .text
+                                                                  .length,
+                                                            ),
+                                                          );
+                                                      focusNode.requestFocus();
+                                                    });
+                                                model.notifyListeners();
+                                              },
+                                            ),
+                                            SizedBox(height: 16.h),
+                                            TextFormWidget(
+                                              hint: 'Medication Type',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              readOnly: true,
+                                              fillColor: AppColors.white,
+                                              isFilled: true,
+                                              prefixWidget:
+                                                  model
+                                                      .medTypeUpdateIcon[index]
+                                                      .isNotEmpty
+                                                  ? Padding(
+                                                      padding: EdgeInsets.all(
+                                                        10.w,
+                                                      ),
+                                                      child: SvgPicture.asset(
+                                                        model.medTypeUpdateIcon[index]
+                                                                .contains('svg')
+                                                            ? model
+                                                                  .medTypeUpdateIcon[index]
+                                                            : isMedTypeView(
+                                                                model
+                                                                    .medTypeUpdateIcon[index]
+                                                                    .toUpperCase(),
+                                                              ),
+                                                        color:
+                                                            AppColors.primary,
+                                                      ),
+                                                    )
+                                                  : SizedBox.shrink(),
+                                              suffixWidget: IconButton(
+                                                icon: Icon(
+                                                  Icons
+                                                      .keyboard_arrow_down_outlined,
+                                                  color: AppColors.greyee,
+                                                ),
+                                                onPressed: () async {
+                                                  final result =
+                                                      await showMedTypeMenu(
+                                                        context,
+                                                      );
+
+                                                  if (result != null) {
+                                                    setModalState!(() {
+                                                      model
+                                                              .medicationClassList[index]
+                                                              .medicationTypeIcon =
+                                                          result["icon"] ?? '';
+                                                      model
+                                                              .medicationClassList[index]
+                                                              .medicationType =
+                                                          result["type"] ?? '';
+                                                      final controller = model
+                                                          .medTypeUpdateControllers[index];
+                                                      final focusNode = model
+                                                          .medNameUpdateFocusNodes[index]; // create a list of FocusNodes if you haven’t
+
+                                                      controller.text =
+                                                          result["type"] ?? '';
+                                                      controller.selection =
+                                                          TextSelection.fromPosition(
+                                                            TextPosition(
+                                                              offset: controller
+                                                                  .text
+                                                                  .length,
+                                                            ),
+                                                          );
+
+                                                      // Re-request focus so user stays in the same field
+                                                      focusNode.requestFocus();
+                                                    });
+                                                  }
+                                                  model.notifyListeners();
+                                                },
+                                              ),
+                                              controller: model
+                                                  .medTypeUpdateControllers[index],
+                                              validator:
+                                                  AppValidator.validateString(),
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                            ),
+                                            SizedBox(height: 16.h),
+                                            TextView(
+                                              text: 'Medication picture upload',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            SizedBox(height: 10.h),
+                                            SizedBox(
+                                              width: double.infinity,
+                                              child: DottedBorder(
+                                                options:
+                                                    RoundedRectDottedBorderOptions(
+                                                      dashPattern: [3, 3],
+                                                      strokeWidth: .94,
+                                                      radius: Radius.circular(
+                                                        10,
+                                                      ),
+                                                      color:
+                                                          AppColors.infoGrey1,
+                                                    ),
+                                                child: Container(
+                                                  width: double.infinity,
+                                                  padding: EdgeInsets.symmetric(
+                                                    vertical: 16.20.w,
+                                                    horizontal: 16.0.w,
                                                   ),
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                          8.r,
+                                                          10.r,
                                                         ),
-                                                    border: Border.all(
-                                                      color: AppColors
-                                                          .primaryLight
-                                                          .withOpacity(.3),
-                                                    ),
-                                                    color: AppColors
-                                                        .primaryLight
-                                                        .withOpacity(.1),
+                                                    color: AppColors.white,
                                                   ),
-                                                  child: Column(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
-                                                      TextView(
-                                                        text: 'Day',
-                                                        textStyle: TextStyle(
-                                                          fontFamily: 'Arial',
-                                                          fontSize: 12.sp,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: AppColors
-                                                              .fineGrey,
+                                                      Container(
+                                                        width: 140.w,
+                                                        height: 84.h,
+                                                        decoration: BoxDecoration(
+                                                          color: AppColors.grey,
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10,
+                                                              ),
+                                                        ),
+                                                        child: Center(
+                                                          child:
+                                                              e.imageData ==
+                                                                      null ||
+                                                                  e.imageData!.url ==
+                                                                      null
+                                                              ? SvgPicture.asset(
+                                                                  model.isMedTypeView(
+                                                                    e.medicationType!
+                                                                        .toUpperCase(),
+                                                                  ),
+                                                                )
+                                                              : Image.network(
+                                                                  e.imageData!.url ??
+                                                                      '',
+                                                                  height:
+                                                                      75.80.h,
+                                                                  width:
+                                                                      70.80.w,
+                                                                  errorBuilder:
+                                                                      (
+                                                                        context,
+                                                                        error,
+                                                                        stackTrace,
+                                                                      ) => SvgPicture.asset(
+                                                                        model.isMedTypeView(
+                                                                          e.medicationType!
+                                                                              .toUpperCase(),
+                                                                        ),
+                                                                      ),
+                                                                ),
                                                         ),
                                                       ),
-                                                      TextView(
-                                                        text: '${index + 1}',
-                                                        textStyle: TextStyle(
-                                                          fontFamily:
-                                                              'GoogleSans',
-                                                          fontSize: 16.sp,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: AppColors
-                                                              .reminder,
-                                                        ),
+                                                      Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              medicationClassList[index]
+                                                                      .medicationFile =
+                                                                  null;
+                                                              model
+                                                                  .notifyListeners();
+                                                            },
+                                                            child:
+                                                                SvgPicture.asset(
+                                                                  AppImage
+                                                                      .delete,
+                                                                  height:
+                                                                      16.68.h,
+                                                                  width: 15.2.w,
+                                                                ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 18.30.w,
+                                                          ),
+                                                          model.isLoading
+                                                              ? SpinKitCircle(
+                                                                  size: 20.sp,
+                                                                  color: AppColors
+                                                                      .infoGrey,
+                                                                )
+                                                              : GestureDetector(
+                                                                  onTap: () => model
+                                                                      .pickDrugUpdateImage(
+                                                                        context:
+                                                                            context,
+                                                                        index:
+                                                                            index,
+                                                                      ),
+                                                                  child: SvgPicture.asset(
+                                                                    AppImage
+                                                                        .upload,
+                                                                    height:
+                                                                        17.0.h,
+                                                                    width:
+                                                                        16.68.w,
+                                                                  ),
+                                                                ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                                SizedBox(width: 4.0.w),
-                                                Expanded(
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                          16.w,
-                                                          8.0.w,
-                                                          16.0.w,
-                                                          8.0.w,
-                                                        ),
-                                                    width: double.infinity,
-                                                    height: 50.h,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            10.r,
-                                                          ),
-                                                      border: Border.all(
-                                                        color:
-                                                            AppColors.infoGrey1,
-                                                      ),
-                                                      color: AppColors.white,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        TextView(
-                                                          text:
-                                                              getTimeFreqCustom(
-                                                                index,
-                                                              ),
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 14.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                          ),
-                                                        ),
-                                                        IconButton(
-                                                          onPressed: () {
-                                                            selectTimeFreqCustomEditDraft(
-                                                              context: context,
-                                                              dayIndex: index,
-                                                              setModalState:
-                                                                  setModalState,
-                                                              model: model,
-                                                              dailyDoseTimes: e,
-                                                            );
-                                                            model
-                                                                .notifyListeners();
-                                                          },
-                                                          icon: Icon(
-                                                            Icons
-                                                                .access_time_rounded,
-                                                            color: AppColors
-                                                                .fineGrey,
-                                                            size: 20.sp,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 4.0.w),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    model.addTimeForDayUpdateDraft(
-                                                      setModalState:
-                                                          setModalState!,
-                                                      dailyDoseTimes: e,
-                                                      time: convertTo24Hour(
-                                                        selectedTimePerDay[index]!,
-                                                      ),
-                                                      date:
-                                                          DateFormat(
-                                                            'yyyy-MM-dd',
-                                                          ).format(
-                                                            DateTime.parse(
-                                                              data.startDateTime!
-                                                                  .toString(),
-                                                            ).add(
-                                                              Duration(
-                                                                days: index,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                    );
-                                                    selectedTimePerDay[index] =
-                                                        null;
-                                                  },
-                                                  child: Container(
-                                                    padding:
-                                                        EdgeInsets.fromLTRB(
-                                                          14.w,
-                                                          8.0.w,
-                                                          16.0.w,
-                                                          8.0.w,
-                                                        ),
-                                                    width: 56.2,
-                                                    height: 50.h,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            10.r,
-                                                          ),
-                                                      border: Border.all(
-                                                        color:
-                                                            AppColors.infoGrey1,
-                                                      ),
-                                                      color: AppColors.white,
-                                                    ),
-                                                    child: Center(
-                                                      child: Icon(
-                                                        Icons.add,
-                                                        color:
-                                                            AppColors.fineGrey,
-                                                        size: 20.sp,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(width: 4.w),
-                                                Container(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                    7.8.w,
-                                                    1.0.w,
-                                                    7.8.w,
-                                                    1.0.w,
-                                                  ),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          22,
-                                                        ),
-                                                    color: AppColors.lightBlue,
-                                                  ),
-                                                  child: TextView(
-                                                    text: '${e.length}x',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'GoogleSans',
-                                                      fontSize: 12.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: AppColors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                            SizedBox(height: 10.h),
-                                            data.timesPerDay == null ||
-                                                    data.timesPerDay == 0 ||
-                                                    data.timesPerDay! > 4
-                                                ? Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                            SizedBox(height: 24.0.h),
+                                            TextView(
+                                              text: 'SET SCHEDULE AND DOSAGE',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 14.80.sp,
+                                                color: AppColors.deep,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            SizedBox(height: 12.h),
+                                            Divider(color: AppColors.grey),
+                                            SizedBox(height: 12.h),
+                                            TextFormWidget(
+                                              hint: 'Dosage',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              controller: model
+                                                  .dosageUpdateControllers[index],
+                                              fillColor: AppColors.white,
+                                              isFilled: true,
+                                              readOnly:
+                                                  model
+                                                              .medicationClassList[index]
+                                                              .medicationType ==
+                                                          'Others' ||
+                                                      model
+                                                              .medicationClassList[index]
+                                                              .medicationType ==
+                                                          ''
+                                                  ? false
+                                                  : true,
+                                              suffixWidget: IconButton(
+                                                onPressed:
+                                                    model
+                                                                .medicationClassList[index]
+                                                                .medicationType ==
+                                                            'Others' ||
+                                                        model
+                                                                .medicationClassList[index]
+                                                                .medicationType ==
+                                                            ''
+                                                    ? () {}
+                                                    : () async {
+                                                        model.showMedDosageMenuUpdate(
+                                                          context: context,
+                                                          type: model
+                                                              .medicationClassList[index]
+                                                              .medicationType,
+                                                          model: model,
+                                                          index: index,
+                                                        );
+                                                      },
+                                                icon: Icon(
+                                                  Icons.keyboard_arrow_down,
+                                                  color: AppColors.grey1,
+                                                  size: 20.sp,
+                                                ),
+                                              ),
+                                              validator:
+                                                  AppValidator.validateString(),
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                            ),
+                                            SizedBox(height: 24.0.h),
+                                            TextFormWidget(
+                                              hint: 'Frequency',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              fillColor: AppColors.white,
+                                              isFilled: true,
+                                              readOnly: true,
+                                              controller: TextEditingController(
+                                                text:
+                                                    model
+                                                            .medicationClassList[index]
+                                                            .timesToTake ==
+                                                        ''
+                                                    ? ''
+                                                    : model
+                                                              .medicationClassList[index]
+                                                              .timesToTake!
+                                                              .toLowerCase() ==
+                                                          'custom schedule'
+                                                    ? model
+                                                          .medicationClassList[index]
+                                                          .timesToTake
+                                                    : model.showNoTimesMode(
+                                                        int.parse(
+                                                          model
+                                                              .medicationClassList[index]
+                                                              .timesToTake!,
+                                                        ),
+                                                      ),
+                                              ),
+                                              suffixWidget: IconButton(
+                                                onPressed: () async {
+                                                  final result = await model
+                                                      .showDailyInTakeMenuUpdate(
+                                                        context: context,
+                                                        setModalState:
+                                                            setModalState,
+                                                        model: model,
+                                                        index: index,
+                                                      );
+                                                  if (result != null) {
+                                                    if (result == '0') {
+                                                      model
+                                                              .medicationClassList[index]
+                                                              .isCusSchedule =
+                                                          true;
+                                                    } else {
+                                                      model
+                                                              .medicationClassList[index]
+                                                              .isCusSchedule =
+                                                          false;
+                                                    }
+                                                    model
+                                                            .medicationClassList[index]
+                                                            .timesToTake =
+                                                        result;
+                                                    setModalState!(() {});
+                                                    model.notifyListeners();
+                                                  }
+                                                },
+                                                icon: Icon(
+                                                  Icons.keyboard_arrow_down,
+                                                  color: AppColors.grey1,
+                                                  size: 20.sp,
+                                                ),
+                                              ),
+                                              validator:
+                                                  AppValidator.validateString(),
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                            ),
+                                            SizedBox(height: 24.0.h),
+                                            TextFormWidget(
+                                              hint: 'Start Date',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              readOnly: true,
+                                              fillColor: AppColors.white,
+                                              isFilled: true,
+                                              controller: model
+                                                  .startDateUpdateControllers[index],
+                                              suffixWidget: Padding(
+                                                padding: EdgeInsets.all(8.w),
+                                                child: GestureDetector(
+                                                  onTap: () =>
+                                                      model.selectDateUPDATE(
+                                                        context: context,
+                                                        index: index,
+                                                        model: model,
+                                                        setModalState:
+                                                            setModalState,
+                                                      ),
+                                                  child: SvgPicture.asset(
+                                                    AppImage.calendar,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              validator:
+                                                  AppValidator.validateString(),
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                            ),
+                                            SizedBox(height: 24.0.h),
+                                            TextFormWidget(
+                                              hint: 'Duration',
+                                              label: '',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              controller: model
+                                                  .durationUpdateControllers[index],
+                                              labelStyle: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.2.sp,
+                                                color: AppColors.infoGrey,
+                                              ),
+                                              fillColor: AppColors.appWhite,
+                                              isFilled: true,
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                              onChange: (p0) =>
+                                                  _calculateEndDateUpdate(
+                                                    setModalState:
+                                                        setModalState,
+                                                    model: model,
+                                                    index: index,
+                                                  ),
+                                            ),
+                                            SizedBox(height: 24.0.h),
+
+                                            TextFormWidget(
+                                              hint: 'End Date',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              borderColor: AppColors.infoGrey1,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              controller: model
+                                                  .endDateUpdateController[index],
+                                              labelStyle: TextStyle(
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'Arial',
+                                                fontSize: 16.2.sp,
+                                                color: AppColors.infoGrey,
+                                              ),
+                                              fillColor: AppColors.grey,
+                                              isFilled: true,
+                                              readOnly: true,
+                                              validator:
+                                                  AppValidator.validateString(),
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                            ),
+
+                                            SizedBox(height: 24.0.h),
+                                            model
+                                                    .medicationClassList[index]
+                                                    .isCusSchedule!
+                                                ? Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                              top: 2.w,
-                                                            ),
-                                                        child: TextView(
-                                                          text:
-                                                              DateFormat(
-                                                                'MMM dd',
-                                                              ).format(
-                                                                DateTime.parse(
-                                                                  data.startDateTime!
-                                                                      .toString(),
-                                                                ).add(
-                                                                  Duration(
-                                                                    days: index,
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Stack(
+                                                            clipBehavior:
+                                                                Clip.none,
+                                                            children: [
+                                                              TextView(
+                                                                text:
+                                                                    'Configure Times Per Day',
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      14.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
+                                                              ),
+                                                              Positioned(
+                                                                right: -12.10,
+                                                                child: TextView(
+                                                                  text: '*',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'Arial',
+                                                                    fontSize:
+                                                                        18.sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    color:
+                                                                        AppColors
+                                                                            .red,
                                                                   ),
                                                                 ),
                                                               ),
-                                                          textStyle: TextStyle(
-                                                            fontFamily: 'Arial',
-                                                            fontSize: 12.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .fineGrey,
+                                                            ],
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              TextView(
+                                                                text:
+                                                                    'Copy Day 1 to All',
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      13.74.sp,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 8.w,
+                                                              ),
+
+                                                              GestureDetector(
+                                                                onTap: () {
+                                                                  isTappedCopyall =
+                                                                      !isTappedCopyall;
+                                                                  if (isTappedCopyall) {
+                                                                    copyDayOneToAllUpdate(
+                                                                      setModalState:
+                                                                          setModalState,
+                                                                      viewModel:
+                                                                          model,
+                                                                      timePerDay:
+                                                                          e.dosageMap[0]['doses'],
+                                                                      index:
+                                                                          index,
+                                                                    );
+                                                                  }
+                                                                  model
+                                                                      .notifyListeners();
+                                                                },
+                                                                child: Container(
+                                                                  padding:
+                                                                      isTappedCopyall
+                                                                      ? EdgeInsets.all(
+                                                                          0.w,
+                                                                        )
+                                                                      : EdgeInsets.all(
+                                                                          8.0.w,
+                                                                        ),
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          4.r,
+                                                                        ),
+                                                                    color:
+                                                                        isTappedCopyall
+                                                                        ? AppColors
+                                                                              .primary
+                                                                        : AppColors
+                                                                              .transparent,
+                                                                    border: Border.all(
+                                                                      color:
+                                                                          isTappedCopyall
+                                                                          ? AppColors.transparent
+                                                                          : AppColors.infoGrey,
+                                                                      width:
+                                                                          .78,
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      isTappedCopyall
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .check,
+                                                                          size:
+                                                                              14.sp,
+                                                                          color:
+                                                                              AppColors.white,
+                                                                        )
+                                                                      : SizedBox.shrink(),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 14.h),
+                                                      SizedBox(
+                                                        height:
+                                                            List.generate(
+                                                              int.parse(
+                                                                model
+                                                                    .medicationClassList[index]
+                                                                    .duration!,
+                                                              ),
+                                                              (index) => index,
+                                                            ).isEmpty
+                                                            ? 0
+                                                            : List.generate(
+                                                                    int.parse(
+                                                                      model
+                                                                          .medicationClassList[index]
+                                                                          .duration!,
+                                                                    ),
+                                                                    (index) =>
+                                                                        index,
+                                                                  ).length >
+                                                                  1
+                                                            ? 208.h
+                                                            : 110.h,
+                                                        child: SingleChildScrollView(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              ...List.generate(
+                                                                int.parse(
+                                                                  model
+                                                                      .medicationClassList[index]
+                                                                      .duration!,
+                                                                ),
+                                                                (index) =>
+                                                                    index,
+                                                              ).map((list) {
+                                                                if (list >=
+                                                                    e
+                                                                        .dosageMap
+                                                                        .length) {
+                                                                  model.buildEmptyCustomDosageMap(
+                                                                    duration: int.parse(
+                                                                      model
+                                                                          .medicationClassList[index]
+                                                                          .duration!,
+                                                                    ),
+                                                                    medicationIndex:
+                                                                        index,
+                                                                  );
+                                                                  return const SizedBox.shrink();
+                                                                }
+                                                                return Container(
+                                                                  padding:
+                                                                      EdgeInsets.all(
+                                                                        10.w,
+                                                                      ),
+                                                                  margin:
+                                                                      EdgeInsets.only(
+                                                                        bottom:
+                                                                            12.w,
+                                                                      ),
+                                                                  decoration: BoxDecoration(
+                                                                    border: Border.all(
+                                                                      color:
+                                                                          AppColors
+                                                                              .f1,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          12,
+                                                                        ),
+                                                                  ),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.end,
+                                                                        children: [
+                                                                          Container(
+                                                                            padding: EdgeInsets.fromLTRB(
+                                                                              12.w,
+                                                                              3.84.w,
+                                                                              12.0.w,
+                                                                              3.84.w,
+                                                                            ),
+                                                                            decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(
+                                                                                8.r,
+                                                                              ),
+                                                                              border: Border.all(
+                                                                                color: AppColors.primaryLight.withOpacity(
+                                                                                  .3,
+                                                                                ),
+                                                                              ),
+                                                                              color: AppColors.primaryLight.withOpacity(
+                                                                                .1,
+                                                                              ),
+                                                                            ),
+                                                                            child: Column(
+                                                                              children: [
+                                                                                TextView(
+                                                                                  text: 'Day',
+                                                                                  textStyle: TextStyle(
+                                                                                    fontFamily: 'Arial',
+                                                                                    fontSize: 12.sp,
+                                                                                    fontWeight: FontWeight.w400,
+                                                                                    color: AppColors.fineGrey,
+                                                                                  ),
+                                                                                ),
+                                                                                TextView(
+                                                                                  text: '${list + 1}',
+                                                                                  textStyle: TextStyle(
+                                                                                    fontFamily: 'GoogleSans',
+                                                                                    fontSize: 16.sp,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                    color: AppColors.reminder,
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                4.0.w,
+                                                                          ),
+
+                                                                          Expanded(
+                                                                            child: Container(
+                                                                              padding: EdgeInsets.fromLTRB(
+                                                                                16.w,
+                                                                                8.0.w,
+                                                                                16.0.w,
+                                                                                8.0.w,
+                                                                              ),
+                                                                              width: double.infinity,
+                                                                              height: 50.h,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(
+                                                                                  10.r,
+                                                                                ),
+                                                                                border: Border.all(
+                                                                                  color: AppColors.infoGrey1,
+                                                                                ),
+                                                                                color: AppColors.white,
+                                                                              ),
+                                                                              child: Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                                children: [
+                                                                                  TextView(
+                                                                                    text: getTimeFreqCustom(
+                                                                                      list,
+                                                                                    ),
+                                                                                    textStyle: TextStyle(
+                                                                                      fontFamily: 'Arial',
+                                                                                      fontSize: 14.sp,
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                      color: AppColors.reminder,
+                                                                                    ),
+                                                                                  ),
+                                                                                  IconButton(
+                                                                                    onPressed: () {
+                                                                                      final selectedIndex = model.selectedDoseIndexPerDay[list];
+
+                                                                                      if (selectedIndex ==
+                                                                                          null) {
+                                                                                        // ❌ Nothing selected → don't update
+                                                                                        return;
+                                                                                      }
+                                                                                      selectTimeFreqCustomUpdate(
+                                                                                        context: context,
+                                                                                        model: model,
+                                                                                        medicationIndex: index,
+                                                                                        dayIndex: list,
+                                                                                        doseIndex: selectedIndex, // ✅ update mode
+                                                                                        setModalState: setModalState!,
+                                                                                      );
+                                                                                      model.notifyListeners();
+                                                                                    },
+                                                                                    icon: Icon(
+                                                                                      Icons.access_time_rounded,
+                                                                                      color: AppColors.fineGrey,
+                                                                                      size: 20.sp,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                4.0.w,
+                                                                          ),
+                                                                          GestureDetector(
+                                                                            onTap: () {
+                                                                              model.selectedDoseIndexPerDay[list] = null;
+                                                                              selectTimeFreqCustomUpdate(
+                                                                                context: context,
+                                                                                model: model,
+                                                                                medicationIndex: index,
+                                                                                dayIndex: list,
+                                                                                doseIndex: null, // ✅ update mode
+                                                                                setModalState: setModalState!,
+                                                                              );
+                                                                              setModalState(
+                                                                                () {},
+                                                                              );
+                                                                              model.notifyListeners();
+                                                                            },
+                                                                            child: Container(
+                                                                              padding: EdgeInsets.fromLTRB(
+                                                                                14.w,
+                                                                                8.0.w,
+                                                                                16.0.w,
+                                                                                8.0.w,
+                                                                              ),
+                                                                              width: 56.2,
+                                                                              height: 50.h,
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(
+                                                                                  10.r,
+                                                                                ),
+                                                                                border: Border.all(
+                                                                                  color: AppColors.infoGrey1,
+                                                                                ),
+                                                                                color: AppColors.white,
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: Icon(
+                                                                                  Icons.add,
+                                                                                  color: AppColors.fineGrey,
+                                                                                  size: 20.sp,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                4.w,
+                                                                          ),
+                                                                          Container(
+                                                                            padding: EdgeInsets.fromLTRB(
+                                                                              7.8.w,
+                                                                              1.0.w,
+                                                                              7.8.w,
+                                                                              1.0.w,
+                                                                            ),
+                                                                            decoration: BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(
+                                                                                22,
+                                                                              ),
+                                                                              color: AppColors.lightBlue,
+                                                                            ),
+                                                                            child: TextView(
+                                                                              text: '${e.dosageMap[list]['doses'].length}x',
+                                                                              textStyle: TextStyle(
+                                                                                fontFamily: 'GoogleSans',
+                                                                                fontSize: 12.sp,
+                                                                                fontWeight: FontWeight.w500,
+                                                                                color: AppColors.white,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10.h,
+                                                                      ),
+                                                                      e.dosageMap[list]['doses']!.isNotEmpty
+                                                                          ? Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Padding(
+                                                                                  padding: EdgeInsets.only(
+                                                                                    top: 2.w,
+                                                                                  ),
+                                                                                  child: TextView(
+                                                                                    text:
+                                                                                        DateFormat(
+                                                                                          'MMM dd',
+                                                                                        ).format(
+                                                                                          DateTime.parse(
+                                                                                            model.pickedDatedStartString!,
+                                                                                          ).add(
+                                                                                            Duration(
+                                                                                              days: list,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                    textStyle: TextStyle(
+                                                                                      fontFamily: 'Arial',
+                                                                                      fontSize: 12.sp,
+                                                                                      fontWeight: FontWeight.w400,
+                                                                                      color: AppColors.fineGrey,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: 10.w,
+                                                                                ),
+                                                                                Expanded(
+                                                                                  child: Wrap(
+                                                                                    spacing: 10.0,
+                                                                                    runSpacing: 10.0,
+                                                                                    children: [
+                                                                                      ...e.dosageMap[list]['doses'].asMap().entries.map(
+                                                                                        (
+                                                                                          entry,
+                                                                                        ) {
+                                                                                          final timeIndex = entry.key;
+                                                                                          final time = entry.value;
+                                                                                          return GestureDetector(
+                                                                                            onTap: () {
+                                                                                              model.selectedTimePerDay[list] = time['time'];
+                                                                                              model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
+                                                                                              model.timeSelected = time;
+                                                                                              setModalState!(
+                                                                                                () {},
+                                                                                              );
+                                                                                              model.notifyListeners();
+                                                                                            },
+                                                                                            child: Container(
+                                                                                              width: 110.w,
+                                                                                              padding: EdgeInsets.symmetric(
+                                                                                                vertical: 4.w,
+                                                                                                horizontal: 10.w,
+                                                                                              ),
+                                                                                              decoration: BoxDecoration(
+                                                                                                borderRadius: BorderRadius.circular(
+                                                                                                  22.r,
+                                                                                                ),
+                                                                                                border: Border.all(
+                                                                                                  color:
+                                                                                                      model.selectedTimePerDay[list] ==
+                                                                                                          time['time']
+                                                                                                      ? AppColors.transparent
+                                                                                                      : AppColors.app_green,
+                                                                                                ),
+                                                                                                color:
+                                                                                                    model.selectedTimePerDay[list] ==
+                                                                                                        time['time']
+                                                                                                    ? AppColors.app_green
+                                                                                                    : AppColors.white,
+                                                                                              ),
+                                                                                              child: Row(
+                                                                                                children: [
+                                                                                                  TextView(
+                                                                                                    text:
+                                                                                                        time['time'].contains(
+                                                                                                              "PM",
+                                                                                                            ) ||
+                                                                                                            time['time'].contains(
+                                                                                                              'AM',
+                                                                                                            )
+                                                                                                        ? time['time']
+                                                                                                        : convertTo12HourFormat(
+                                                                                                            time['time'],
+                                                                                                          ),
+                                                                                                    textStyle: TextStyle(
+                                                                                                      fontFamily: 'GoogleSans',
+                                                                                                      fontSize: 13.2.sp,
+                                                                                                      fontWeight: FontWeight.w500,
+                                                                                                      color:
+                                                                                                          model.selectedTimePerDay[list] ==
+                                                                                                              time['time']
+                                                                                                          ? AppColors.white
+                                                                                                          : AppColors.app_green,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  SizedBox(
+                                                                                                    width: 6.w,
+                                                                                                  ),
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () {
+                                                                                                      model.removeCustomTimeAt(
+                                                                                                        model: model,
+                                                                                                        medicationIndex: index,
+                                                                                                        dayIndex: list,
+                                                                                                        timeIndex: timeIndex,
+                                                                                                      );
+                                                                                                      setModalState!(
+                                                                                                        () {},
+                                                                                                      );
+                                                                                                      model.notifyListeners();
+                                                                                                    },
+                                                                                                    child: SvgPicture.asset(
+                                                                                                      AppImage.x,
+                                                                                                      color:
+                                                                                                          model.selectedTimePerDay[list] ==
+                                                                                                              time['time']
+                                                                                                          ? AppColors.white
+                                                                                                          : AppColors.app_green,
+                                                                                                      height: 16.20.h,
+                                                                                                      width: 16.w,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                        },
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            )
+                                                                          : SizedBox.shrink(),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              }),
+                                                            ],
                                                           ),
                                                         ),
                                                       ),
-                                                      SizedBox(width: 10.w),
-                                                      Expanded(
-                                                        child: Wrap(
+                                                    ],
+                                                  )
+                                                : Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Stack(
+                                                        clipBehavior: Clip.none,
+                                                        children: [
+                                                          TextView(
+                                                            text: 'Time',
+                                                            textStyle: TextStyle(
+                                                              fontFamily:
+                                                                  'Arial',
+                                                              fontSize: 14.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color:
+                                                                  allTrueList
+                                                                          .isNotEmpty &&
+                                                                      allTrueList[index] ==
+                                                                          true
+                                                                  ? AppColors
+                                                                        .red
+                                                                  : AppColors
+                                                                        .reminder,
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            right: -12.10,
+                                                            child: TextView(
+                                                              text: '*',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'Arial',
+                                                                fontSize: 18.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .red,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      SizedBox(height: 14.h),
+                                                      Row(
+                                                        children: [
+                                                          Expanded(
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets.fromLTRB(
+                                                                    16.w,
+                                                                    8.0.w,
+                                                                    16.0.w,
+                                                                    8.0.w,
+                                                                  ),
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 50.h,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      10.r,
+                                                                    ),
+                                                                border: Border.all(
+                                                                  color:
+                                                                      allTrueList
+                                                                              .isNotEmpty &&
+                                                                          allTrueList[index] ==
+                                                                              true
+                                                                      ? AppColors
+                                                                            .red
+                                                                      : AppColors
+                                                                            .infoGrey1,
+                                                                ),
+                                                                color: AppColors
+                                                                    .white,
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  TextView(
+                                                                    text:
+                                                                        model
+                                                                            .getTime ??
+                                                                        '',
+                                                                    textStyle: TextStyle(
+                                                                      fontFamily:
+                                                                          'Arial',
+                                                                      fontSize:
+                                                                          14.sp,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: AppColors
+                                                                          .reminder,
+                                                                    ),
+                                                                  ),
+                                                                  IconButton(
+                                                                    onPressed:
+                                                                        model.medicationClassList[index].timesToTake ==
+                                                                            'Custom Schedule'
+                                                                        ? null
+                                                                        // : model.selectedTimes.length >=
+                                                                        //       int.parse(
+                                                                        //         model.medicationClassList[index].timesToTake!,
+                                                                        //       )
+                                                                        // ? null
+                                                                        : () {
+                                                                            if (model.globalTimeIndex ==
+                                                                                null) {
+                                                                              return;
+                                                                            }
+                                                                            selectTimeFreqUpdate(
+                                                                              context: context,
+                                                                              setModalState: setModalState!,
+                                                                              model: model,
+                                                                              index: index,
+                                                                            );
+                                                                          },
+                                                                    icon: Icon(
+                                                                      Icons
+                                                                          .access_time_rounded,
+                                                                      color: AppColors
+                                                                          .fineGrey,
+                                                                      size:
+                                                                          20.sp,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 4.0.w,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              final maxTimes =
+                                                                  int.parse(
+                                                                    model
+                                                                        .medicationClassList[index]
+                                                                        .timesToTake!,
+                                                                  );
+                                                              if (model
+                                                                      .selectedTimes
+                                                                      .length <=
+                                                                  maxTimes) {
+                                                                model.globalTimeIndex =
+                                                                    null;
+
+                                                                selectTimeFreqUpdate(
+                                                                  context:
+                                                                      context,
+                                                                  setModalState:
+                                                                      setModalState!,
+                                                                  model: model,
+                                                                  index: index,
+                                                                );
+                                                                // model
+                                                                //     .buildDosageMap(
+                                                                //       index:
+                                                                //           index,
+                                                                //       model:
+                                                                //           model,
+                                                                //     );
+                                                              }
+                                                              allTrueList
+                                                                  .clear();
+                                                              for (
+                                                                int indx = 0;
+                                                                indx <
+                                                                    model
+                                                                        .medicationClassList
+                                                                        .length;
+                                                                indx++
+                                                              ) {
+                                                                if (int.parse(
+                                                                      model
+                                                                          .medicationClassList[indx]
+                                                                          .timesToTake!,
+                                                                    ) ==
+                                                                    model
+                                                                        .medicationClassList[indx]
+                                                                        .dosageMap[0]['doses']
+                                                                        .length) {
+                                                                  allTrueList
+                                                                      .insert(
+                                                                        indx,
+                                                                        false,
+                                                                      );
+                                                                } else {
+                                                                  allTrueList
+                                                                      .insert(
+                                                                        indx,
+                                                                        true,
+                                                                      );
+                                                                }
+                                                              }
+
+                                                              setModalState!(
+                                                                () {},
+                                                              );
+                                                              model
+                                                                  .notifyListeners();
+                                                            },
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets.fromLTRB(
+                                                                    16.w,
+                                                                    8.0.w,
+                                                                    16.0.w,
+                                                                    8.0.w,
+                                                                  ),
+                                                              width: 62,
+                                                              height: 50.h,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius.circular(
+                                                                      10.r,
+                                                                    ),
+                                                                border: Border.all(
+                                                                  color: AppColors
+                                                                      .infoGrey1,
+                                                                ),
+                                                                color: AppColors
+                                                                    .white,
+                                                              ),
+                                                              child: Icon(
+                                                                Icons.add,
+                                                                color: AppColors
+                                                                    .fineGrey,
+                                                                size: 20.sp,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+
+                                                      SizedBox(
+                                                        height:
+                                                            allTrueList
+                                                                    .isNotEmpty &&
+                                                                allTrueList[index] ==
+                                                                    true
+                                                            ? 4.0.h
+                                                            : 0.h,
+                                                      ),
+                                                      allTrueList.isNotEmpty &&
+                                                              allTrueList[index] ==
+                                                                  true
+                                                          ? TextView(
+                                                              text:
+                                                                  'Day must have exactly ${int.parse(model.medicationClassList[index].timesToTake!)} dose time(s)',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'Arial',
+                                                                fontSize:
+                                                                    12.06.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .red,
+                                                              ),
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                      SizedBox(height: 20.h),
+
+                                                      if (doses != null &&
+                                                          doses.isNotEmpty)
+                                                        Wrap(
                                                           spacing: 10.0,
                                                           runSpacing: 10.0,
                                                           children: [
-                                                            ...e.map(
-                                                              (
-                                                                time,
-                                                              ) => GestureDetector(
+                                                            ...doses.asMap().entries.map((
+                                                              entry,
+                                                            ) {
+                                                              final timeIndex =
+                                                                  entry.key;
+                                                              final time =
+                                                                  entry.value;
+
+                                                              return GestureDetector(
                                                                 onTap: () {
-                                                                  selectedTimePerDay[index] =
-                                                                      convertTo12HourFormat(
-                                                                        time.time!,
+                                                                  model.getTime =
+                                                                      time['time'];
+                                                                  model.globalTimeIndex =
+                                                                      timeIndex;
+                                                                  setModalState
+                                                                      ?.call(
+                                                                        () {},
                                                                       );
-                                                                  setModalState!(
-                                                                    () {},
-                                                                  );
                                                                   model
                                                                       .notifyListeners();
                                                                 },
@@ -49371,18 +52910,14 @@ class AuthViewModel extends BaseViewModel {
                                                                         ),
                                                                     border: Border.all(
                                                                       color:
-                                                                          selectedTimePerDay[index] ==
-                                                                              convertTo12HourFormat(
-                                                                                time.time!,
-                                                                              )
+                                                                          model.getTime ==
+                                                                              time['time']
                                                                           ? AppColors.transparent
                                                                           : AppColors.app_green,
                                                                     ),
                                                                     color:
-                                                                        selectedTimePerDay[index] ==
-                                                                            convertTo12HourFormat(
-                                                                              time.time!,
-                                                                            )
+                                                                        model.getTime ==
+                                                                            time['time']
                                                                         ? AppColors
                                                                               .app_green
                                                                         : AppColors
@@ -49392,11 +52927,11 @@ class AuthViewModel extends BaseViewModel {
                                                                     children: [
                                                                       TextView(
                                                                         text:
-                                                                            time.time!.contains('AM') ||
-                                                                                time.time!.contains('PM')
-                                                                            ? time.time!
+                                                                            time['time'].contains('AM') ||
+                                                                                time['time'].contains('PM')
+                                                                            ? time['time']
                                                                             : convertTo12HourFormat(
-                                                                                time.time!,
+                                                                                time['time'],
                                                                               ),
                                                                         textStyle: TextStyle(
                                                                           fontFamily:
@@ -49406,10 +52941,8 @@ class AuthViewModel extends BaseViewModel {
                                                                           fontWeight:
                                                                               FontWeight.w500,
                                                                           color:
-                                                                              selectedTimePerDay[index] ==
-                                                                                  convertTo12HourFormat(
-                                                                                    time.time!,
-                                                                                  )
+                                                                              model.getTime ==
+                                                                                  time['time']
                                                                               ? AppColors.white
                                                                               : AppColors.app_green,
                                                                         ),
@@ -49420,35 +52953,26 @@ class AuthViewModel extends BaseViewModel {
                                                                       ),
                                                                       GestureDetector(
                                                                         onTap: () {
-                                                                          model.removeTimeForDayUpdateDraft(
-                                                                            date:
-                                                                                DateFormat(
-                                                                                  'yyyy-MM-dd',
-                                                                                ).format(
-                                                                                  DateTime.parse(
-                                                                                    data.startDateTime!.toString(),
-                                                                                  ).add(
-                                                                                    Duration(
-                                                                                      days: index,
-                                                                                    ),
-                                                                                  ),
-                                                                                ),
-                                                                            time:
-                                                                                time.time!,
-                                                                            setModalState:
-                                                                                setModalState!,
-                                                                            dailyDoseTimes:
-                                                                                e,
+                                                                          model.removeTimeAt(
+                                                                            model:
+                                                                                model,
+                                                                            medicationIndex:
+                                                                                index,
+                                                                            timeIndex:
+                                                                                timeIndex,
                                                                           );
+                                                                          setModalState?.call(
+                                                                            () {},
+                                                                          );
+                                                                          model
+                                                                              .notifyListeners();
                                                                         },
                                                                         child: SvgPicture.asset(
                                                                           AppImage
                                                                               .x,
                                                                           color:
-                                                                              selectedTimePerDay[index] ==
-                                                                                  convertTo12HourFormat(
-                                                                                    time.time!,
-                                                                                  )
+                                                                              model.getTime ==
+                                                                                  time['time']
                                                                               ? AppColors.white
                                                                               : AppColors.app_green,
                                                                           height:
@@ -49460,1083 +52984,2985 @@ class AuthViewModel extends BaseViewModel {
                                                                     ],
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
+                                                              );
+                                                            }),
                                                           ],
-                                                        ),
-                                                      ),
+                                                        )
+                                                      else
+                                                        SizedBox.shrink(),
                                                     ],
-                                                  )
-                                                : SizedBox.shrink(),
+                                                  ),
+
+                                            SizedBox(height: 20.h),
+                                            TextFormWidget(
+                                              hint: 'Notes & Instructions',
+                                              hintWeight: FontWeight.w400,
+                                              hintColor: AppColors.reminder,
+                                              hintSize: Platform.isAndroid
+                                                  ? 14.sp
+                                                  : 12.sp,
+                                              borderColor: AppColors.infoGrey1,
+                                              label:
+                                                  'e.g. Take with food, avoid grapefruit juice',
+                                              labelStyle: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.infoGrey,
+                                                fontFamily: 'Arial',
+                                              ),
+                                              isShowHint: true,
+                                              borderTopLeft: 10.r,
+                                              borderTopRight: 10.r,
+                                              borderBottomLeft: 10.r,
+                                              borderBottomRight: 10.r,
+                                              controller: model
+                                                  .noteUpdateController[index],
+                                              onChange: (v) {
+                                                model
+                                                        .medicationClassList[index]
+                                                        .note =
+                                                    v;
+                                                setModalState!(() {});
+                                                model.notifyListeners();
+                                              },
+                                              fillColor: AppColors.white,
+                                              isFilled:
+                                                  true, // Minimum number of lines visible
+                                              maxline:
+                                                  3, // Maximum number of lines visible before scrolling
+                                              keyboardType:
+                                                  TextInputType.multiline,
+                                              validator:
+                                                  AppValidator.validateString(),
+                                              floatingLabelBehavior:
+                                                  FloatingLabelBehavior.always,
+                                              style: TextStyle(
+                                                fontSize: 16.20.sp,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'GoogleSans',
+                                              ),
+                                            ),
+                                            SizedBox(height: 10.h),
+                                            TextView(
+                                              text:
+                                                  'These notes will be included in notification messages',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 12.4.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.infoGrey,
+                                              ),
+                                            ),
                                           ],
                                         ),
-                                      );
-                                    }),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                TextView(
-                                  text: 'Time',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.reminder,
-                                  ),
-                                ),
-                                Positioned(
-                                  right: -12.10,
-                                  child: TextView(
-                                    text: '*',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Arial',
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.red,
-                                    ),
-                                  ),
-                                ),
+                                      )
+                                    : Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 14.w,
+                                          horizontal: 16.w,
+                                        ),
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                          ),
+                                          color: AppColors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            10.r,
+                                          ),
+                                        ),
+                                        child: TextView(
+                                          text: e.medicationName ?? '',
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Arial',
+                                            fontSize: 15.60.sp,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                      ),
                               ],
                             ),
-                            SizedBox(height: 14.h),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      formattedSelectedTimeAndPeriod = '--:--';
-                                      model.globalTimeIndex = null;
-                                      model.notifyListeners();
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.fromLTRB(
-                                        16.w,
-                                        8.0.w,
-                                        16.0.w,
-                                        8.0.w,
-                                      ),
-                                      width: double.infinity,
-                                      height: 50.h,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(
-                                          10.r,
-                                        ),
-                                        border: Border.all(
-                                          color: AppColors.infoGrey1,
-                                        ),
-                                        color: AppColors.white,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextView(
-                                            text: getTimeFreq(),
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              selectTimeFreqEditDraft(
-                                                context: context,
-                                                model: model,
-                                              );
-                                              setModalState!(() {});
-                                            },
-                                            icon: Icon(
-                                              Icons.access_time_rounded,
-                                              color: AppColors.fineGrey,
-                                              size: 20.sp,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                          ),
+                        );
+                      }),
+                      !onTapToAddAnotherReminder
+                          ? SizedBox.shrink()
+                          : Card(
+                              color: AppColors.white,
+                              elevation: .78,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 16.w,
+                                  horizontal: 13.6.w,
                                 ),
-                                SizedBox(width: 4.0.w),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (data.timesPerDay != null &&
-                                        model
-                                                .formattedSelectedTimeAndPeriodList!
-                                                .length <
-                                            data.timesPerDay!) {
-                                      if (model
-                                          .formattedSelectedTimeAndPeriodList!
-                                          .contains(
-                                            formattedSelectedTimeAndPeriod,
-                                          )) {
-                                        formattedSelectedTimeAndPeriod =
-                                            '--:--';
-                                        model.globalTimeIndex = null;
-                                      } else {
-                                        model
-                                            .formattedSelectedTimeAndPeriodList!
-                                            .add(
-                                              formattedSelectedTimeAndPeriod!,
-                                            );
-                                      }
-                                    } else {}
-                                    setModalState!(() {});
-                                    model.notifyListeners();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                      16.w,
-                                      8.0.w,
-                                      16.0.w,
-                                      8.0.w,
-                                    ),
-                                    width: 62,
-                                    height: 50.h,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.r),
-                                      border: Border.all(
-                                        color: AppColors.infoGrey1,
-                                      ),
-                                      color: AppColors.white,
-                                    ),
-                                    child: Icon(
-                                      Icons.add,
-                                      color: AppColors.fineGrey,
-                                      size: 20.sp,
-                                    ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.buttonGrey1,
                                   ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  color: AppColors.white,
                                 ),
-                              ],
-                            ),
-                            SizedBox(height: 24.0.h),
-                            model.formattedSelectedTimeAndPeriodList!.isNotEmpty
-                                ? Wrap(
-                                    spacing: 10.0,
-                                    runSpacing: 10.0,
+                                child: Form(
+                                  key: secondFormReminderKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      ...model.formattedSelectedTimeAndPeriodList!.asMap().entries.map((
-                                        entry,
-                                      ) {
-                                        final index = entry.key; // ✅ index
-                                        final value =
-                                            entry.value; // ✅ time string
-
-                                        return GestureDetector(
-                                          onTap: () {
-                                            formattedSelectedTimeAndPeriod =
-                                                value;
-                                            model.formattedSelectedTimeAndPeriod =
-                                                value;
-                                            model.globalTimeIndex = index;
-                                            setModalState!(() {});
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            constraints: BoxConstraints(
-                                              maxWidth: 110.0.w,
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(10.w),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              onTapToAddAnotherReminder = false;
+                                              clearReminderMedsVaraibles(model);
+                                              model.notifyListeners();
+                                            },
+                                            child: SvgPicture.asset(
+                                              AppImage.cancel,
                                             ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      TextFormWidget(
+                                        hint: 'Medication Name',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        fillColor: AppColors.white,
+                                        isFilled: true,
+                                        controller: model.medNameController,
+                                        validator:
+                                            AppValidator.validateString(),
+                                        style: TextStyle(
+                                          fontSize: 16.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                      ),
+                                      SizedBox(height: 16.h),
+                                      TextFormWidget(
+                                        hint: 'Medication Type',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        readOnly: true,
+                                        fillColor: AppColors.white,
+                                        isFilled: true,
+                                        prefixWidget:
+                                            model.medTypeResultImage.isNotEmpty
+                                            ? Padding(
+                                                padding: EdgeInsets.all(10.w),
+                                                child: SvgPicture.asset(
+                                                  model.medTypeResultImage,
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
+                                        suffixWidget: IconButton(
+                                          icon: Icon(
+                                            Icons.keyboard_arrow_down_outlined,
+                                            color: AppColors.greyee,
+                                          ),
+                                          onPressed: () async {
+                                            final result = await model
+                                                .showMedTypeMenu(context);
+
+                                            if (result != null) {
+                                              setModalState!(() {
+                                                model.medTypeResultImage =
+                                                    result["icon"] ?? '';
+                                                model.medTypeController.text =
+                                                    result["type"] ?? '';
+                                              });
+                                            }
+                                          },
+                                        ),
+                                        controller: model.medTypeController,
+                                        validator:
+                                            AppValidator.validateString(),
+                                        style: TextStyle(
+                                          fontSize: 16.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                      ),
+                                      SizedBox(height: 16.h),
+                                      TextView(
+                                        text: 'Medication picture upload',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: DottedBorder(
+                                          options:
+                                              RoundedRectDottedBorderOptions(
+                                                dashPattern: [3, 3],
+                                                strokeWidth: .94,
+                                                radius: Radius.circular(10),
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                          child: Container(
+                                            width: double.infinity,
                                             padding: EdgeInsets.symmetric(
-                                              vertical: 4.w,
-                                              horizontal: 10.w,
+                                              vertical: 16.20.w,
+                                              horizontal: 16.0.w,
                                             ),
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(22.r),
-                                              border: Border.all(
-                                                color:
-                                                    formattedSelectedTimeAndPeriod ==
-                                                        value
-                                                    ? AppColors.transparent
-                                                    : AppColors.app_green,
-                                              ),
-                                              color:
-                                                  formattedSelectedTimeAndPeriod ==
-                                                      value
-                                                  ? AppColors.app_green
-                                                  : AppColors.white,
+                                                  BorderRadius.circular(10.r),
+                                              color: AppColors.white,
                                             ),
                                             child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                TextView(
-                                                  text:
-                                                      value.contains('AM') ||
-                                                          value.contains('PM')
-                                                      ? value
-                                                      : convertTo12HourFormat(
-                                                          value,
+                                                Container(
+                                                  width: 140.w,
+                                                  height: 84.h,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.grey,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10,
                                                         ),
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'GoogleSans',
-                                                    fontSize: 13.2.sp,
-                                                    fontWeight: FontWeight.w500,
-                                                    color:
-                                                        formattedSelectedTimeAndPeriod ==
-                                                            value
-                                                        ? AppColors.white
-                                                        : AppColors.app_green,
+                                                  ),
+                                                  child: Center(
+                                                    child:
+                                                        model.imageDrug != null
+                                                        ? Image.file(
+                                                            model.imageDrug!,
+                                                            height: 75.80.h,
+                                                            width: 70.80.w,
+                                                            errorBuilder:
+                                                                (
+                                                                  context,
+                                                                  error,
+                                                                  stackTrace,
+                                                                ) => SvgPicture.asset(
+                                                                  AppImage
+                                                                      .image_icon,
+                                                                ),
+                                                          )
+                                                        : SvgPicture.asset(
+                                                            AppImage.image_icon,
+                                                          ),
                                                   ),
                                                 ),
-                                                SizedBox(width: 6.w),
+                                                model.imageDrug != null
+                                                    ? Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              model.imageDrug =
+                                                                  null;
+                                                              model
+                                                                  .notifyListeners();
+                                                            },
+                                                            child:
+                                                                SvgPicture.asset(
+                                                                  AppImage
+                                                                      .delete,
+                                                                  height:
+                                                                      16.68.h,
+                                                                  width: 15.2.w,
+                                                                ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 18.30.w,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () => model
+                                                                .pickDrugImage(
+                                                                  context,
+                                                                ),
+                                                            child:
+                                                                SvgPicture.asset(
+                                                                  AppImage
+                                                                      .upload,
+                                                                  height:
+                                                                      17.0.h,
+                                                                  width:
+                                                                      16.68.w,
+                                                                ),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    : GestureDetector(
+                                                        onTap: () =>
+                                                            model.pickDrugImage(
+                                                              context,
+                                                            ),
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.symmetric(
+                                                                horizontal:
+                                                                    22.w,
+                                                                vertical:
+                                                                    10.10.w,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  32,
+                                                                ),
+                                                            color:
+                                                                AppColors.grey,
+                                                          ),
+                                                          child: TextView(
+                                                            text: 'Upload',
+                                                            textStyle:
+                                                                TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      14.40.sp,
+                                                                  color:
+                                                                      AppColors
+                                                                          .deep,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 24.0.h),
+                                      TextView(
+                                        text: 'SET SCHEDULE AND DOSAGE',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 14.80.sp,
+                                          color: AppColors.deep,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                      SizedBox(height: 12.h),
+                                      Divider(color: AppColors.grey),
+                                      SizedBox(height: 12.h),
+                                      TextFormWidget(
+                                        hint: 'Dosage',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        controller: model.medDosageController,
+                                        fillColor: AppColors.white,
+                                        isFilled: true,
+                                        readOnly:
+                                            model.medTypeController.text ==
+                                                    'Others' ||
+                                                model
+                                                        .medDosageController
+                                                        .text ==
+                                                    ''
+                                            ? false
+                                            : true,
+                                        suffixWidget: IconButton(
+                                          onPressed:
+                                              model.medTypeController.text ==
+                                                      'Others' ||
+                                                  model
+                                                          .medTypeController
+                                                          .text ==
+                                                      ''
+                                              ? () {}
+                                              : () async {
+                                                  showMedDosageMenu(
+                                                    context: context,
+                                                    type: model
+                                                        .medTypeController
+                                                        .text,
+                                                    model: model,
+                                                  );
+                                                },
+                                          icon: Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: AppColors.faintedGrey,
+                                            size: 20.sp,
+                                          ),
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 15.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                      SizedBox(height: 24.0.h),
+                                      TextFormWidget(
+                                        hint: 'Frequency',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        fillColor: AppColors.white,
+                                        isFilled: true,
+                                        readOnly: true,
+                                        controller: TextEditingController(
+                                          text:
+                                              model
+                                                      .medDailyInTakenController
+                                                      .text ==
+                                                  ''
+                                              ? ''
+                                              : model
+                                                        .medDailyInTakenController
+                                                        .text
+                                                        .toLowerCase() ==
+                                                    'custom schedule'
+                                              ? model
+                                                    .medDailyInTakenController
+                                                    .text
+                                              : showNoTimesMode(
+                                                  int.parse(
+                                                    model
+                                                        .medDailyInTakenController
+                                                        .text,
+                                                  ),
+                                                ),
+                                        ),
+                                        suffixWidget: IconButton(
+                                          onPressed: () async {
+                                            final result =
+                                                await showDailyInTakeMenu(
+                                                  context: context,
+                                                  setModalState: setModalState,
+                                                  model: model,
+                                                );
+                                            if (result != null) {
+                                              setModalState!(() {
+                                                model
+                                                        .medDailyInTakenController
+                                                        .text =
+                                                    result;
+                                              });
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: AppColors.faintedGrey,
+                                            size: 20.sp,
+                                          ),
+                                        ),
+                                        validator:
+                                            AppValidator.validateString(),
+                                        style: TextStyle(
+                                          fontSize: 15.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                      ),
+                                      SizedBox(height: 24.0.h),
+                                      TextFormWidget(
+                                        hint: 'Start Date',
+                                        label: '13 Feb, 2026',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        readOnly: true,
+                                        fillColor: AppColors.white,
+                                        isFilled: true,
+                                        controller: model.dateTimeController,
+                                        suffixWidget: Padding(
+                                          padding: EdgeInsets.all(8.w),
+                                          child: GestureDetector(
+                                            onTap: () => model.selectDate(
+                                              context: context,
+                                              setModalState: setModalState,
+                                              model: model,
+                                            ),
+                                            child: SvgPicture.asset(
+                                              AppImage.calendar,
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        validator:
+                                            AppValidator.validateString(),
+                                        style: TextStyle(
+                                          fontSize: 15.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                        labelStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.2.sp,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                      ),
+                                      SizedBox(height: 24.0.h),
+
+                                      TextFormWidget(
+                                        hint: 'Duration',
+                                        label: '',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        controller: model.medDurationController,
+                                        labelStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 16.2.sp,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        fillColor: AppColors.appWhite,
+                                        isFilled: true,
+                                        style: TextStyle(
+                                          fontSize: 16.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                        onChange: (p0) => _calculateEndDate(
+                                          setModalState: setModalState,
+                                          model: model,
+                                        ),
+                                      ),
+                                      SizedBox(height: 24.0.h),
+
+                                      TextFormWidget(
+                                        hint: 'End Date',
+                                        label: '18 Feb, 2026',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        borderColor: AppColors.infoGrey1,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        controller: model.endDateController,
+                                        // suffixWidget: Padding(
+                                        //   padding: EdgeInsets.all(8.w),
+                                        //   child: GestureDetector(
+                                        //     onTap: () => model.selectEndDate(
+                                        //       context: context,
+                                        //       setModalState: setModalState,
+                                        //     ),
+                                        //     child: SvgPicture.asset(
+                                        //       AppImage.calendar,
+                                        //       fit: BoxFit.cover,
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        labelStyle: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Arial',
+                                          fontSize: 14.2.sp,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                        fillColor: AppColors.grey,
+                                        isFilled: true,
+                                        readOnly: true,
+                                        style: TextStyle(
+                                          fontSize: 16.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                      ),
+
+                                      // TextView(
+                                      //   text: 'Duration',
+                                      //   textStyle: TextStyle(
+                                      //     fontFamily: 'Arial',
+                                      //     fontSize: 14.sp,
+                                      //     fontWeight: FontWeight.w400,
+                                      //     color: AppColors.reminder,
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 14.0.h),
+                                      // Container(
+                                      //   padding: EdgeInsets.fromLTRB(
+                                      //     16.w,
+                                      //     0.w,
+                                      //     0.w,
+                                      //     0.w,
+                                      //   ),
+                                      //   width: double.infinity,
+                                      //   height: 50.h,
+                                      //   decoration: BoxDecoration(
+                                      //     borderRadius: BorderRadius.circular(
+                                      //       10.r,
+                                      //     ),
+                                      //     color: AppColors.dashboard,
+                                      //   ),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       TextView(
+                                      //         text:
+                                      //             model
+                                      //                 .numberOfDurationsInDays ??
+                                      //             '',
+                                      //         textStyle: TextStyle(
+                                      //           fontFamily: 'GoogleSans',
+                                      //           fontSize: 14.sp,
+                                      //           fontWeight: FontWeight.w700,
+                                      //           color: AppColors.primary1,
+                                      //         ),
+                                      //       ),
+                                      //       TextView(
+                                      //         text:
+                                      //             model
+                                      //                     .endDateController
+                                      //                     .text !=
+                                      //                 ''
+                                      //             ? ' (${model.dateTimeController.text.substring(0, 6)} - ${model.endDateController.text})'
+                                      //             : '',
+                                      //         textStyle: TextStyle(
+                                      //           fontFamily: 'Arial',
+                                      //           fontSize: 14.sp,
+                                      //           fontWeight: FontWeight.w400,
+                                      //           color: AppColors.reminder,
+                                      //         ),
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
+                                      SizedBox(height: 24.0.h),
+                                      model.isCusSchedule
+                                          ? Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Stack(
+                                                      clipBehavior: Clip.none,
+                                                      children: [
+                                                        TextView(
+                                                          text:
+                                                              'Configure Times Per Day',
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 14.sp,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color: AppColors
+                                                                .reminder,
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                          right: -12.10,
+                                                          child: TextView(
+                                                            text: '*',
+                                                            textStyle:
+                                                                TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color:
+                                                                      AppColors
+                                                                          .red,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        TextView(
+                                                          text:
+                                                              'Copy Day 1 to All',
+                                                          textStyle: TextStyle(
+                                                            fontFamily: 'Arial',
+                                                            fontSize: 13.74.sp,
+                                                            color: AppColors
+                                                                .reminder,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 8.w),
+
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            isTappedCopyall =
+                                                                !isTappedCopyall;
+                                                            if (isTappedCopyall) {
+                                                              copyDayOneToAll(
+                                                                setModalState:
+                                                                    setModalState!,
+                                                                viewModel:
+                                                                    model,
+                                                              );
+                                                            }
+                                                            model
+                                                                .notifyListeners();
+                                                          },
+                                                          child: Container(
+                                                            padding:
+                                                                isTappedCopyall
+                                                                ? EdgeInsets.all(
+                                                                    0.w,
+                                                                  )
+                                                                : EdgeInsets.all(
+                                                                    8.0.w,
+                                                                  ),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    4.r,
+                                                                  ),
+                                                              color:
+                                                                  isTappedCopyall
+                                                                  ? AppColors
+                                                                        .primary
+                                                                  : AppColors
+                                                                        .transparent,
+                                                              border: Border.all(
+                                                                color:
+                                                                    isTappedCopyall
+                                                                    ? AppColors
+                                                                          .transparent
+                                                                    : AppColors
+                                                                          .infoGrey,
+                                                                width: .78,
+                                                              ),
+                                                            ),
+                                                            child:
+                                                                isTappedCopyall
+                                                                ? Icon(
+                                                                    Icons.check,
+                                                                    size: 14.sp,
+                                                                    color: AppColors
+                                                                        .white,
+                                                                  )
+                                                                : SizedBox.shrink(),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 14.h),
+                                                SizedBox(
+                                                  height:
+                                                      model
+                                                          .intListCustom
+                                                          .isEmpty
+                                                      ? 0.h
+                                                      : model
+                                                                .intListCustom
+                                                                .length >
+                                                            1
+                                                      ? 208.h
+                                                      : 110.h,
+                                                  child: SingleChildScrollView(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        ...model.intListCustom.map(
+                                                          (e) => Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                  10.w,
+                                                                ),
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                  bottom: 12.w,
+                                                                ),
+                                                            decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                color: AppColors
+                                                                    .f1,
+                                                              ),
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    12,
+                                                                  ),
+                                                            ),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    Container(
+                                                                      padding: EdgeInsets.fromLTRB(
+                                                                        12.w,
+                                                                        3.84.w,
+                                                                        12.0.w,
+                                                                        3.84.w,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              8.r,
+                                                                            ),
+                                                                        border: Border.all(
+                                                                          color: AppColors
+                                                                              .primaryLight
+                                                                              .withOpacity(
+                                                                                .3,
+                                                                              ),
+                                                                        ),
+                                                                        color: AppColors
+                                                                            .primaryLight
+                                                                            .withOpacity(
+                                                                              .1,
+                                                                            ),
+                                                                      ),
+                                                                      child: Column(
+                                                                        children: [
+                                                                          TextView(
+                                                                            text:
+                                                                                'Day',
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'Arial',
+                                                                              fontSize: 12.sp,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              color: AppColors.fineGrey,
+                                                                            ),
+                                                                          ),
+                                                                          TextView(
+                                                                            text:
+                                                                                '${e + 1}',
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'GoogleSans',
+                                                                              fontSize: 16.sp,
+                                                                              fontWeight: FontWeight.w500,
+                                                                              color: AppColors.reminder,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          4.0.w,
+                                                                    ),
+
+                                                                    Expanded(
+                                                                      child: Container(
+                                                                        padding: EdgeInsets.fromLTRB(
+                                                                          12.w,
+                                                                          8.0.w,
+                                                                          8.0.w,
+                                                                          8.0.w,
+                                                                        ),
+                                                                        width: double
+                                                                            .infinity,
+                                                                        height:
+                                                                            50.h,
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            10.r,
+                                                                          ),
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                AppColors.infoGrey1,
+                                                                          ),
+                                                                          color:
+                                                                              AppColors.white,
+                                                                        ),
+                                                                        child: Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.spaceBetween,
+                                                                          children: [
+                                                                            TextView(
+                                                                              text: getTimeFreqCustom(
+                                                                                e,
+                                                                              ),
+                                                                              textStyle: TextStyle(
+                                                                                fontFamily: 'Arial',
+                                                                                fontSize: 14.sp,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: AppColors.reminder,
+                                                                              ),
+                                                                            ),
+                                                                            IconButton(
+                                                                              onPressed: () {
+                                                                                selectTimeFreqCustom(
+                                                                                  context: context,
+                                                                                  dayIndex: e,
+                                                                                  setModalState: setModalState,
+                                                                                  model: model,
+                                                                                );
+                                                                                model.notifyListeners();
+                                                                              },
+                                                                              icon: Icon(
+                                                                                Icons.access_time_rounded,
+                                                                                color: AppColors.fineGrey,
+                                                                                size: 20.sp,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          4.0.w,
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onTap: () {
+                                                                        selectedTimePerDay[e] =
+                                                                            null;
+                                                                        model.addTimeForDay(
+                                                                          e,
+                                                                          setModalState!,
+                                                                        );
+                                                                      },
+                                                                      child: Container(
+                                                                        padding: EdgeInsets.fromLTRB(
+                                                                          14.w,
+                                                                          8.0.w,
+                                                                          16.0.w,
+                                                                          8.0.w,
+                                                                        ),
+                                                                        width:
+                                                                            56.2,
+                                                                        height:
+                                                                            50.h,
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                            10.r,
+                                                                          ),
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                AppColors.infoGrey1,
+                                                                          ),
+                                                                          color:
+                                                                              AppColors.white,
+                                                                        ),
+                                                                        child: Center(
+                                                                          child: Icon(
+                                                                            Icons.add,
+                                                                            color:
+                                                                                AppColors.fineGrey,
+                                                                            size:
+                                                                                20.sp,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          4.w,
+                                                                    ),
+                                                                    Container(
+                                                                      padding: EdgeInsets.fromLTRB(
+                                                                        7.8.w,
+                                                                        1.0.w,
+                                                                        7.8.w,
+                                                                        1.0.w,
+                                                                      ),
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                              22,
+                                                                            ),
+                                                                        color: AppColors
+                                                                            .lightBlue,
+                                                                      ),
+                                                                      child: TextView(
+                                                                        text:
+                                                                            '${model.timesPerDay[e]!.length}x',
+                                                                        textStyle: TextStyle(
+                                                                          fontFamily:
+                                                                              'GoogleSans',
+                                                                          fontSize:
+                                                                              12.sp,
+                                                                          fontWeight:
+                                                                              FontWeight.w500,
+                                                                          color:
+                                                                              AppColors.white,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 10.h,
+                                                                ),
+                                                                model
+                                                                        .timesPerDay[e]!
+                                                                        .isNotEmpty
+                                                                    ? Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Padding(
+                                                                            padding: EdgeInsets.only(
+                                                                              top: 2.w,
+                                                                            ),
+                                                                            child: TextView(
+                                                                              text:
+                                                                                  DateFormat(
+                                                                                    'MMM dd',
+                                                                                  ).format(
+                                                                                    DateTime.parse(
+                                                                                      model.pickedDatedStartString!,
+                                                                                    ).add(
+                                                                                      Duration(
+                                                                                        days: e,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                              textStyle: TextStyle(
+                                                                                fontFamily: 'Arial',
+                                                                                fontSize: 12.sp,
+                                                                                fontWeight: FontWeight.w400,
+                                                                                color: AppColors.fineGrey,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            width:
+                                                                                10.w,
+                                                                          ),
+                                                                          Expanded(
+                                                                            child: Wrap(
+                                                                              spacing: 10.0,
+                                                                              runSpacing: 10.0,
+                                                                              children: [
+                                                                                ...model.timesPerDay[e]!.map(
+                                                                                  (
+                                                                                    time,
+                                                                                  ) => GestureDetector(
+                                                                                    onTap: () {
+                                                                                      selectedTimePerDay[e] = time;
+                                                                                      setModalState!(
+                                                                                        () {},
+                                                                                      );
+                                                                                      model.notifyListeners();
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      width: 110.w,
+                                                                                      padding: EdgeInsets.symmetric(
+                                                                                        vertical: 4.w,
+                                                                                        horizontal: 10.w,
+                                                                                      ),
+                                                                                      decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(
+                                                                                          22.r,
+                                                                                        ),
+                                                                                        border: Border.all(
+                                                                                          color:
+                                                                                              selectedTimePerDay[e] ==
+                                                                                                  time
+                                                                                              ? AppColors.transparent
+                                                                                              : AppColors.app_green,
+                                                                                        ),
+                                                                                        color:
+                                                                                            selectedTimePerDay[e] ==
+                                                                                                time
+                                                                                            ? AppColors.app_green
+                                                                                            : AppColors.white,
+                                                                                      ),
+                                                                                      child: Row(
+                                                                                        children: [
+                                                                                          TextView(
+                                                                                            text: time,
+                                                                                            textStyle: TextStyle(
+                                                                                              fontFamily: 'GoogleSans',
+                                                                                              fontSize: 13.2.sp,
+                                                                                              fontWeight: FontWeight.w500,
+                                                                                              color:
+                                                                                                  selectedTimePerDay[e] ==
+                                                                                                      time
+                                                                                                  ? AppColors.white
+                                                                                                  : AppColors.app_green,
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            width: 6.w,
+                                                                                          ),
+                                                                                          GestureDetector(
+                                                                                            onTap: () {
+                                                                                              model.removeTimeForDay(
+                                                                                                e,
+                                                                                                time,
+                                                                                                setModalState!,
+                                                                                              );
+                                                                                            },
+                                                                                            child: SvgPicture.asset(
+                                                                                              AppImage.x,
+                                                                                              color:
+                                                                                                  selectedTimePerDay[e] ==
+                                                                                                      time
+                                                                                                  ? AppColors.white
+                                                                                                  : AppColors.app_green,
+                                                                                              height: 16.20.h,
+                                                                                              width: 16.w,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      )
+                                                                    : SizedBox.shrink(),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Time',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 14.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            _validateDoseTimes
+                                                            ? AppColors.red
+                                                            : AppColors
+                                                                  .reminder,
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      right: -12.10,
+                                                      child: TextView(
+                                                        text: '*',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 18.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors.red,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 14.h),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          formattedSelectedTimeAndPeriod =
+                                                              '--:--';
+                                                          model.globalTimeIndex =
+                                                              null;
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.fromLTRB(
+                                                                16.w,
+                                                                8.0.w,
+                                                                16.0.w,
+                                                                8.0.w,
+                                                              ),
+                                                          width:
+                                                              double.infinity,
+                                                          height: 50.h,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  10.r,
+                                                                ),
+                                                            border: Border.all(
+                                                              color:
+                                                                  _validateDoseTimes
+                                                                  ? AppColors
+                                                                        .red
+                                                                  : AppColors
+                                                                        .infoGrey1,
+                                                            ),
+                                                            color:
+                                                                AppColors.white,
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              TextView(
+                                                                text:
+                                                                    getTimeFreq(),
+                                                                textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Arial',
+                                                                  fontSize:
+                                                                      14.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: AppColors
+                                                                      .reminder,
+                                                                ),
+                                                              ),
+                                                              IconButton(
+                                                                onPressed: () {
+                                                                  selectTimeFreq(
+                                                                    context:
+                                                                        context,
+                                                                    model:
+                                                                        model,
+                                                                  );
+                                                                  setModalState!(
+                                                                    () {},
+                                                                  );
+                                                                  model
+                                                                      .notifyListeners();
+                                                                },
+                                                                icon: Icon(
+                                                                  Icons
+                                                                      .access_time_rounded,
+                                                                  color: AppColors
+                                                                      .fineGrey,
+                                                                  size: 20.sp,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 4.0.w),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        if (model
+                                                                    .medDailyInTakenController
+                                                                    .text !=
+                                                                '' &&
+                                                            model
+                                                                    .formattedSelectedTimeAndPeriodList!
+                                                                    .length <
+                                                                int.parse(
+                                                                  model
+                                                                      .medDailyInTakenController
+                                                                      .text,
+                                                                )) {
+                                                          if (model
+                                                              .formattedSelectedTimeAndPeriodList!
+                                                              .contains(
+                                                                formattedSelectedTimeAndPeriod,
+                                                              )) {
+                                                            formattedSelectedTimeAndPeriod =
+                                                                '--:--';
+                                                            model.globalTimeIndex =
+                                                                null;
+                                                          } else {
+                                                            model
+                                                                .formattedSelectedTimeAndPeriodList!
+                                                                .add(
+                                                                  formattedSelectedTimeAndPeriod!,
+                                                                );
+                                                          }
+                                                          if (int.parse(
+                                                                model
+                                                                    .medDailyInTakenController
+                                                                    .text,
+                                                              ) ==
+                                                              model
+                                                                  .formattedSelectedTimeAndPeriodList!
+                                                                  .length) {
+                                                            _validateDoseTimes =
+                                                                false;
+                                                          } else {
+                                                            _validateDoseTimes =
+                                                                true;
+                                                          }
+                                                        } else {}
+                                                        setModalState!(() {});
+                                                        model.notifyListeners();
+                                                      },
+                                                      child: Container(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                              16.w,
+                                                              8.0.w,
+                                                              16.0.w,
+                                                              8.0.w,
+                                                            ),
+                                                        width: 62,
+                                                        height: 50.h,
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                10.r,
+                                                              ),
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .infoGrey1,
+                                                          ),
+                                                          color:
+                                                              AppColors.white,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.add,
+                                                          color: AppColors
+                                                              .fineGrey,
+                                                          size: 20.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: _validateDoseTimes
+                                                      ? 4.0.h
+                                                      : 0.h,
+                                                ),
+                                                _validateDoseTimes
+                                                    ? TextView(
+                                                        text:
+                                                            'Day must have exactly ${int.parse(model.medDailyInTakenController.text)} dose time(s)',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 12.06.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color: AppColors.red,
+                                                        ),
+                                                      )
+                                                    : SizedBox.shrink(),
+                                                SizedBox(height: 20.h),
+                                                model
+                                                        .formattedSelectedTimeAndPeriodList!
+                                                        .isNotEmpty
+                                                    ? Wrap(
+                                                        spacing: 10.0,
+                                                        runSpacing: 10.0,
+                                                        children: [
+                                                          ...model.formattedSelectedTimeAndPeriodList!.asMap().entries.map((
+                                                            entry,
+                                                          ) {
+                                                            final index = entry
+                                                                .key; // ✅ index
+                                                            final value =
+                                                                entry.value;
+                                                            return GestureDetector(
+                                                              onTap: () {
+                                                                formattedSelectedTimeAndPeriod =
+                                                                    value;
+                                                                model.formattedSelectedTimeAndPeriod =
+                                                                    value;
+                                                                model.globalTimeIndex =
+                                                                    index;
+                                                                setModalState!(
+                                                                  () {},
+                                                                );
+                                                                model
+                                                                    .notifyListeners();
+                                                              },
+                                                              child: Container(
+                                                                width: 104.w,
+                                                                padding:
+                                                                    EdgeInsets.symmetric(
+                                                                      vertical:
+                                                                          4.w,
+                                                                      horizontal:
+                                                                          10.w,
+                                                                    ),
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                        22.r,
+                                                                      ),
+                                                                  border: Border.all(
+                                                                    color:
+                                                                        formattedSelectedTimeAndPeriod ==
+                                                                            value
+                                                                        ? AppColors
+                                                                              .transparent
+                                                                        : AppColors
+                                                                              .app_green,
+                                                                  ),
+                                                                  color:
+                                                                      formattedSelectedTimeAndPeriod ==
+                                                                          value
+                                                                      ? AppColors
+                                                                            .app_green
+                                                                      : AppColors
+                                                                            .white,
+                                                                ),
+                                                                child: Row(
+                                                                  children: [
+                                                                    TextView(
+                                                                      text:
+                                                                          value,
+                                                                      textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'GoogleSans',
+                                                                        fontSize:
+                                                                            13.2.sp,
+                                                                        fontWeight:
+                                                                            FontWeight.w500,
+                                                                        color:
+                                                                            formattedSelectedTimeAndPeriod ==
+                                                                                value
+                                                                            ? AppColors.white
+                                                                            : AppColors.app_green,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                      width:
+                                                                          6.w,
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onTap: () {
+                                                                        model
+                                                                            .formattedSelectedTimeAndPeriodList!
+                                                                            .remove(
+                                                                              value,
+                                                                            );
+                                                                        setModalState!(
+                                                                          () {},
+                                                                        );
+                                                                        model
+                                                                            .notifyListeners();
+                                                                      },
+                                                                      child: SvgPicture.asset(
+                                                                        AppImage
+                                                                            .x,
+                                                                        color:
+                                                                            formattedSelectedTimeAndPeriod ==
+                                                                                value
+                                                                            ? AppColors.white
+                                                                            : AppColors.app_green,
+                                                                        height:
+                                                                            16.20.h,
+                                                                        width:
+                                                                            16.w,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                        ],
+                                                      )
+                                                    : SizedBox.shrink(),
+                                              ],
+                                            ),
+
+                                      SizedBox(height: 20.h),
+                                      TextFormWidget(
+                                        hint: 'Notes & Instructions',
+                                        hintWeight: FontWeight.w400,
+                                        hintColor: AppColors.reminder,
+                                        hintSize: Platform.isAndroid
+                                            ? 14.sp
+                                            : 12.sp,
+                                        borderColor: AppColors.infoGrey1,
+                                        label:
+                                            'e.g. Take with food, avoid grapefruit juice',
+                                        labelStyle: TextStyle(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.infoGrey,
+                                          fontFamily: 'Arial',
+                                        ),
+                                        isShowHint: true,
+                                        borderTopLeft: 10.r,
+                                        borderTopRight: 10.r,
+                                        borderBottomLeft: 10.r,
+                                        borderBottomRight: 10.r,
+                                        controller: model.noteController,
+                                        fillColor: AppColors.white,
+                                        isFilled:
+                                            true, // Minimum number of lines visible
+                                        maxline:
+                                            3, // Maximum number of lines visible before scrolling
+                                        keyboardType: TextInputType.multiline,
+                                        validator:
+                                            AppValidator.validateString(),
+                                        floatingLabelBehavior:
+                                            FloatingLabelBehavior.always,
+                                        style: TextStyle(
+                                          fontSize: 16.20.sp,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'GoogleSans',
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      TextView(
+                                        text:
+                                            'These notes will be included in notification messages',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 12.4.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.infoGrey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                      SizedBox(height: 24.0.h),
+                      TextView(
+                        text: 'NOTIFICATION CHANNELS',
+                        textStyle: TextStyle(
+                          fontFamily: 'GoogleSans',
+                          fontSize: 14.80.sp,
+                          color: AppColors.deep,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      SizedBox(height: 12.h),
+                      Divider(color: AppColors.grey),
+                      SizedBox(height: 8.2.h),
+                      ...List.generate(
+                        model
+                            .notificationChannelPricingResponseModel!
+                            .data!
+                            .data!
+                            .length,
+                        (index) {
+                          return chooseNotChannelWidget(
+                            context,
+                            svgIcon: notificationChannelSvgIcon(
+                              model
+                                  .notificationChannelPricingResponseModel!
+                                  .data!
+                                  .data![index]
+                                  .channel,
+                            ),
+                            text:
+                                "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
+
+                            isTapped: selectedIndexes.contains(
+                              index,
+                            ), // ✅ reflect state
+                            onTap: () {
+                              if (selectedIndexes.contains(index)) {
+                                // unselect
+                                selectedIndexes.remove(index);
+                                if (!selectedIndexes.contains(0) &&
+                                    !selectedIndexes.contains(1)) {
+                                  isTappedEmailAdded = false;
+                                  addedEmailReminderList.clear();
+                                  model.notifyListeners();
+                                }
+                                if (!selectedIndexes.contains(2) &&
+                                    !selectedIndexes.contains(3) &&
+                                    !selectedIndexes.contains(4)) {
+                                  addedPhoneReminderList.clear();
+                                  isTappedPhoneAdded = false;
+                                  model.notifyListeners();
+                                }
+                              } else {
+                                // select
+                                selectedIndexes.add(index);
+                                // ✅ Show specific dialogs
+                                if (index == 0 || index == 1) {
+                                  // Email
+                                  isTappedEmailAdded = true;
+                                  model.notifyListeners();
+                                } else if ([2, 3, 4].contains(index)) {
+                                  // Phone-related channels
+                                  isTappedPhoneAdded = true;
+                                  isPhoneValid = false;
+
+                                  model.notifyListeners();
+                                } else {
+                                  isTappedEmailAdded = false;
+                                  isTappedPhoneAdded = false;
+                                  model.notifyListeners();
+                                }
+                              } // ✅ update selection
+                              buildChannelList(selectedIndexes);
+                              model.notifyListeners();
+                            },
+                          );
+                        },
+                      ),
+                      SizedBox(height: 12.h),
+                      isTappedEmailAdded
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: addedEmailReminderList.isEmpty
+                                          ? AppColors.red
+                                          : AppColors.infoGrey1,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.r),
+                                            topRight: Radius.circular(12.r),
+                                          ),
+                                          color: AppColors.dashboard,
+                                        ),
+                                        padding: EdgeInsets.all(12.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Add Email Address',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 16.2.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color:
+                                                        addedEmailReminderList
+                                                            .isEmpty
+                                                        ? AppColors.red
+                                                        : AppColors.deep,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Emails available',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 14.8.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 6.w),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 10.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              223,
+                                                              233,
+                                                              247,
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12.r,
+                                                            ),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .primary
+                                                              .withOpacity(.4),
+                                                        ),
+                                                      ),
+                                                      child: TextView(
+                                                        text:
+                                                            '${emailReminderList.length}',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 11.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    model
-                                                        .formattedSelectedTimeAndPeriodList!
-                                                        .remove(value);
-                                                    setModalState!(() {});
+                                                    isTappedEmailAdded =
+                                                        !isTappedEmailAdded;
                                                     model.notifyListeners();
                                                   },
                                                   child: SvgPicture.asset(
-                                                    AppImage.x,
-                                                    color:
-                                                        formattedSelectedTimeAndPeriod ==
-                                                            value
-                                                        ? AppColors.white
-                                                        : AppColors.app_green,
-                                                    height: 16.20.h,
-                                                    width: 16.w,
+                                                    AppImage.drop_up,
+                                                    height: 22.0.h,
+                                                    width: 22.0.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                IconButton(
+                                                  onPressed: () =>
+                                                      showEmailDialog(
+                                                        context,
+                                                        model: model,
+                                                      ),
+                                                  icon: Icon(
+                                                    Icons.add_circle,
+                                                    color: AppColors.primary1,
+                                                    size: 24.sp,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 15.20.h),
+                                      // Padding(
+                                      //   padding: EdgeInsets.only(
+                                      //     left: 12.w,
+                                      //     right: 20.w,
+                                      //   ),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       GestureDetector(
+                                      //         onTap: () {
+                                      //           if (addedEmailReminderList.contains(
+                                      //             SharedPreferencesService
+                                      //                 .instance
+                                      //                 .usersData['user']['email'],
+                                      //           )) {
+                                      //             addedEmailReminderList.remove(
+                                      //               SharedPreferencesService
+                                      //                   .instance
+                                      //                   .usersData['user']['email'],
+                                      //             );
+                                      //           } else {
+                                      //             addedEmailReminderList.add(
+                                      //               SharedPreferencesService
+                                      //                   .instance
+                                      //                   .usersData['user']['email'],
+                                      //             );
+                                      //           }
+                                      //           setModalState!(() {});
+                                      //           model.notifyListeners();
+                                      //         },
+                                      //         child: Container(
+                                      //           padding:
+                                      //               addedEmailReminderList.contains(
+                                      //                 SharedPreferencesService
+                                      //                     .instance
+                                      //                     .usersData['user']['email'],
+                                      //               )
+                                      //               ? EdgeInsets.all(4.0.w)
+                                      //               : EdgeInsets.all(10.w),
+                                      //           decoration: BoxDecoration(
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(6.r),
+                                      //             color:
+                                      //                 addedEmailReminderList.contains(
+                                      //                   SharedPreferencesService
+                                      //                       .instance
+                                      //                       .usersData['user']['email'],
+                                      //                 )
+                                      //                 ? AppColors.primary
+                                      //                 : AppColors.transparent,
+                                      //             border: Border.all(
+                                      //               color:
+                                      //                   addedEmailReminderList.contains(
+                                      //                     SharedPreferencesService
+                                      //                         .instance
+                                      //                         .usersData['user']['email'],
+                                      //                   )
+                                      //                   ? AppColors.transparent
+                                      //                   : AppColors.infoGrey,
+                                      //               width: .78,
+                                      //             ),
+                                      //           ),
+                                      //           child:
+                                      //               addedEmailReminderList.contains(
+                                      //                 SharedPreferencesService
+                                      //                     .instance
+                                      //                     .usersData['user']['email'],
+                                      //               )
+                                      //               ? Icon(
+                                      //                   Icons.check,
+                                      //                   size: 12.sp,
+                                      //                   color: AppColors.white,
+                                      //                 )
+                                      //               : SizedBox.shrink(),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(width: 9.10.w),
+                                      //       TextView(
+                                      //         text: SharedPreferencesService
+                                      //             .instance
+                                      //             .usersData['user']['email'],
+                                      //         textStyle: TextStyle(
+                                      //           fontFamily: 'Arial',
+                                      //           fontSize: 16.2.sp,
+                                      //           fontWeight: FontWeight.w400,
+                                      //           color: AppColors.reminder,
+                                      //         ),
+                                      //       ),
+                                      //       Spacer(),
+                                      //       Row(
+                                      //         children: [
+                                      //           Container(
+                                      //             padding: EdgeInsets.all(1.2.w),
+                                      //             decoration: BoxDecoration(
+                                      //               color: AppColors.app_green,
+                                      //               shape: BoxShape.circle,
+                                      //             ),
+                                      //             child: Icon(
+                                      //               Icons.check,
+                                      //               size: 13.4.sp,
+                                      //               color: AppColors.white,
+                                      //             ),
+                                      //           ),
+                                      //           SizedBox(width: 10.w),
+                                      //           TextView(
+                                      //             text: 'Primary',
+                                      //             textStyle: TextStyle(
+                                      //               fontFamily: 'Arial',
+                                      //               fontSize: 13.72.sp,
+                                      //               fontWeight: FontWeight.w400,
+                                      //               color: AppColors.reminder,
+                                      //             ),
+                                      //           ),
+                                      //         ],
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 2.0.h),
+                                      // Divider(color: AppColors.infoGrey1),
+                                      ...emailReminderList.asMap().entries.map((
+                                        entry,
+                                      ) {
+                                        final index = entry.key;
+                                        final o = entry.value;
+                                        final isLast =
+                                            index ==
+                                            emailReminderList.length - 1;
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 12.20.w,
+                                                right: 20.w,
+                                                bottom: 12.w,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      if (addedEmailReminderList
+                                                          .contains(o)) {
+                                                        addedEmailReminderList
+                                                            .remove(o);
+                                                      } else {
+                                                        addedEmailReminderList
+                                                            .add(o);
+                                                      }
+                                                      setModalState!(() {});
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? EdgeInsets.all(
+                                                              4.0.w,
+                                                            )
+                                                          : EdgeInsets.all(
+                                                              10.w,
+                                                            ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              6.r,
+                                                            ),
+                                                        color:
+                                                            addedEmailReminderList
+                                                                .contains(o)
+                                                            ? AppColors.primary
+                                                            : AppColors
+                                                                  .transparent,
+                                                        border: Border.all(
+                                                          color:
+                                                              addedEmailReminderList
+                                                                  .contains(o)
+                                                              ? AppColors
+                                                                    .transparent
+                                                              : AppColors
+                                                                    .infoGrey,
+                                                          width: .78,
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          addedEmailReminderList
+                                                              .contains(o)
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 12.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 9.10.w),
+                                                  SizedBox(
+                                                    width: 220.w,
+                                                    child: TextView(
+                                                      text: o,
+                                                      maxLines: 1,
+                                                      textOverflow:
+                                                          TextOverflow.ellipsis,
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 16.2.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showEmailDialog(
+                                                            context,
+                                                            isEdit: true,
+                                                            index: index,
+                                                            email:
+                                                                emailReminderList[index],
+                                                          );
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.edit_pen,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 10.w),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          emailReminderList
+                                                              .removeAt(index);
+                                                          addedEmailReminderList
+                                                              .remove(o);
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.delete,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            if (!isLast)
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                            SizedBox(height: 5.10.h),
+                                          ],
                                         );
                                       }),
                                     ],
-                                  )
-                                : SizedBox.shrink(),
-                          ],
-                        ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.h),
-            TextFormWidget(
-              hint: 'Notes & Instructions',
-              hintWeight: FontWeight.w400,
-              hintColor: AppColors.reminder,
-              hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-              borderColor: AppColors.infoGrey1,
-              label: 'e.g. Take with food, avoid grapefruit juice',
-              labelStyle: TextStyle(
-                fontSize: 14.0.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.infoGrey,
-                fontFamily: 'Arial',
-              ),
-              isShowHint: true,
-              borderTopLeft: 10.r,
-              borderTopRight: 10.r,
-              borderBottomLeft: 10.r,
-              borderBottomRight: 10.r,
-              controller: model.noteEditController,
-              onChange: (p0) {
-                data.note = p0;
-                setModalState!(() {});
-                model.notifyListeners();
-              },
-              fillColor: AppColors.white,
-              isFilled: true, // Minimum number of lines visible
-              maxline: 3, // Maximum number of lines visible before scrolling
-              keyboardType: TextInputType.multiline,
-              validator: AppValidator.validateString(),
-              floatingLabelBehavior: FloatingLabelBehavior.always,
-              style: TextStyle(
-                fontSize: 16.20.sp,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'GoogleSans',
-              ),
-            ),
-            SizedBox(height: 10.h),
-            TextView(
-              text: 'These notes will be included in notification messages',
-              textStyle: TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 12.4.sp,
-                fontWeight: FontWeight.w400,
-                color: AppColors.infoGrey,
-              ),
-            ),
-            SizedBox(height: 24.0.h),
-            TextView(
-              text: 'NOTIFICATION CHANNELS',
-              textStyle: TextStyle(
-                fontFamily: 'GoogleSans',
-                fontSize: 14.80.sp,
-                color: AppColors.deep,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            Divider(color: AppColors.grey),
-            SizedBox(height: 12.h),
-            ...List.generate(
-              model.notificationChannelPricingResponseModel != null
-                  ? model
-                        .notificationChannelPricingResponseModel!
-                        .data!
-                        .data!
-                        .length
-                  : 0,
-              (index) {
-                return chooseNotChannelWidget(
-                  context,
-                  svgIcon: notificationChannelSvgIcon(
-                    model
-                        .notificationChannelPricingResponseModel!
-                        .data!
-                        .data![index]
-                        .channel,
-                  ),
-                  text:
-                      "${notificationChannelName(model.notificationChannelPricingResponseModel!.data!.data![index].channel!)} ${notificationChannelPrice(model.notificationChannelPricingResponseModel!.data!.data![index].unitPrice)}",
-
-                  isTapped: selectedIndexes.contains(index), // ✅ reflect state
-                  onTap: () {
-                    if (selectedIndexes.contains(index)) {
-                      // unselect
-                      selectedIndexes.remove(index);
-                      if (!selectedIndexes.contains(0) &&
-                          !selectedIndexes.contains(1)) {
-                        isTappedEmailAdded = false;
-                        model.notifyListeners();
-                      }
-                      if (!selectedIndexes.contains(2) &&
-                          !selectedIndexes.contains(3) &&
-                          !selectedIndexes.contains(4)) {
-                        isTappedPhoneAdded = false;
-                        model.notifyListeners();
-                      }
-                    } else {
-                      // select
-                      selectedIndexes.add(index);
-                      // ✅ Show specific dialogs
-                      if (index == 0 || index == 1) {
-                        // Email
-                        isTappedEmailAdded = true;
-                        model.notifyListeners();
-                      } else if ([2, 3, 4].contains(index)) {
-                        // Phone-related channels
-                        isTappedPhoneAdded = true;
-                        isPhoneValid = false;
-                        if (addedPhoneReminderList.contains(
-                          SharedPreferencesService
-                              .instance
-                              .usersData['user']['phone'],
-                        )) {
-                        } else {
-                          addedPhoneReminderList.add(
-                            SharedPreferencesService
-                                .instance
-                                .usersData['user']['phone'],
-                          );
-                        }
-                        model.notifyListeners();
-                      }
-                    }
-                    // ✅ update selection
-                    model.notifyListeners();
-                  },
-                );
-              },
-            ),
-            SizedBox(height: 12.h),
-            isTappedEmailAdded
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: addedEmailReminderList.isEmpty
-                                ? AppColors.red
-                                : AppColors.infoGrey1,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.infoGrey1),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12.r),
-                                  topRight: Radius.circular(12.r),
+                                  ),
                                 ),
-                                color: AppColors.dashboard,
-                              ),
-                              padding: EdgeInsets.all(12.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Add Email Address',
+                                SizedBox(height: 4.0.h),
+                                addedEmailReminderList.isEmpty
+                                    ? TextView(
+                                        text: 'Atleast one email is required',
                                         textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 16.2.sp,
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 12.80.sp,
+                                          color: AppColors.red,
                                           fontWeight: FontWeight.w400,
-                                          color: addedEmailReminderList.isEmpty
-                                              ? AppColors.red
-                                              : AppColors.deep,
                                         ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          TextView(
-                                            text: 'Emails available',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 14.8.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                223,
-                                                233,
-                                                247,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              border: Border.all(
-                                                color: AppColors.primary
-                                                    .withOpacity(.4),
-                                              ),
-                                            ),
-                                            child: TextView(
-                                              text:
-                                                  '${emailReminderList.length}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 11.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          isTappedEmailAdded =
-                                              !isTappedEmailAdded;
-                                          model.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.drop_up,
-                                          height: 22.0.h,
-                                          width: 22.0.w,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2.w),
-                                      IconButton(
-                                        onPressed: () => showEmailDialog(
-                                          context,
-                                          model: model,
-                                        ),
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: AppColors.primary1,
-                                          size: 24.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 15.20.h),
-                            ...emailReminderList.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final o = entry.value;
-                              final isLast =
-                                  index == emailReminderList.length - 1;
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 12.20.w,
-                                      right: 20.w,
-                                      bottom: 12.w,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (addedEmailReminderList.contains(
-                                              o,
-                                            )) {
-                                              addedEmailReminderList.remove(o);
-                                            } else {
-                                              addedEmailReminderList.add(o);
-                                            }
-                                            setModalState!(() {});
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            padding:
-                                                addedEmailReminderList.contains(
-                                                  o,
-                                                )
-                                                ? EdgeInsets.all(4.0.w)
-                                                : EdgeInsets.all(10.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(6.r),
-                                              color:
-                                                  addedEmailReminderList
-                                                      .contains(o)
-                                                  ? AppColors.primary
-                                                  : AppColors.transparent,
-                                              border: Border.all(
-                                                color:
-                                                    addedEmailReminderList
-                                                        .contains(o)
-                                                    ? AppColors.transparent
-                                                    : AppColors.infoGrey,
-                                                width: .78,
-                                              ),
-                                            ),
-                                            child:
-                                                addedEmailReminderList.contains(
-                                                  o,
-                                                )
-                                                ? Icon(
-                                                    Icons.check,
-                                                    size: 12.sp,
-                                                    color: AppColors.white,
-                                                  )
-                                                : SizedBox.shrink(),
-                                          ),
-                                        ),
-                                        SizedBox(width: 9.10.w),
-                                        SizedBox(
-                                          width: 220.w,
-                                          child: TextView(
-                                            text: o,
-                                            maxLines: 1,
-                                            textOverflow: TextOverflow.ellipsis,
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 16.2.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                showEmailDialog(
-                                                  context,
-                                                  isEdit: true,
-                                                  index: index,
-                                                  email:
-                                                      emailReminderList[index],
-                                                );
-                                                model.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.edit_pen,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                            SizedBox(width: 10.w),
-                                            GestureDetector(
-                                              onTap: () {
-                                                emailReminderList.removeAt(
-                                                  index,
-                                                );
-                                                addedEmailReminderList.remove(
-                                                  o,
-                                                );
-                                                model.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.delete,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  if (!isLast)
-                                    Divider(color: AppColors.infoGrey1),
-                                  SizedBox(height: 5.10.h),
-                                ],
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-                      addedEmailReminderList.isEmpty
-                          ? TextView(
-                              text: 'Atleast one email is required',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 12.80.sp,
-                                color: AppColors.red,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            )
-                          : SizedBox.shrink(),
-                    ],
-                  )
-                : SizedBox.shrink(),
-            SizedBox(height: 20.h),
-
-            isTappedPhoneAdded
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: addedPhoneReminderList.isEmpty
-                                ? AppColors.red
-                                : AppColors.infoGrey1,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.infoGrey1),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12.r),
-                                  topRight: Radius.circular(12.r),
-                                ),
-                                color: AppColors.dashboard,
-                              ),
-
-                              padding: EdgeInsets.all(12.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextView(
-                                        text: 'Add Phone Number',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'Arial',
-                                          fontSize: 15.8.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: addedPhoneReminderList.isEmpty
-                                              ? AppColors.red
-                                              : AppColors.deep,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          TextView(
-                                            text: 'Numbers available',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'Arial',
-                                              fontSize: 15.8.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.fineGrey,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 10.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(
-                                                255,
-                                                223,
-                                                233,
-                                                247,
-                                              ),
-
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                              border: Border.all(
-                                                color: AppColors.primary
-                                                    .withOpacity(.4),
-                                              ),
-                                            ),
-                                            child: TextView(
-                                              text:
-                                                  '${phoneReminderList.length}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 11.8.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          isTappedPhoneAdded =
-                                              !isTappedPhoneAdded;
-                                          model.notifyListeners();
-                                        },
-                                        child: SvgPicture.asset(
-                                          AppImage.drop_up,
-                                          height: 22.0.h,
-                                          width: 22.0.w,
-                                        ),
-                                      ),
-                                      SizedBox(width: 2.w),
-                                      IconButton(
-                                        onPressed: () {
-                                          showPhoneDialog(
-                                            context,
-                                            model: model,
-                                          );
-
-                                          isPhoneValid = false;
-                                          model.notifyListeners();
-                                        },
-                                        icon: Icon(
-                                          Icons.add_circle,
-                                          color: AppColors.primary1,
-                                          size: 24.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 15.20.h),
-                            ...phoneReminderList.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final o = entry.value;
-                              final isLast =
-                                  index == phoneReminderList.length - 1;
-
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 12.w,
-                                      right: 20.w,
-                                      bottom: 12.w,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (addedPhoneReminderList.contains(
-                                              returnPhoneNoStructureWith234(o),
-                                            )) {
-                                              addedPhoneReminderList.remove(
-                                                returnPhoneNoStructureWith234(
-                                                  o,
-                                                ),
-                                              );
-                                            } else {
-                                              addedPhoneReminderList.add(
-                                                returnPhoneNoStructureWith234(
-                                                  o,
-                                                ),
-                                              );
-                                            }
-                                            setModalState!(() {});
-                                            model.notifyListeners();
-                                          },
-                                          child: Container(
-                                            padding:
-                                                addedPhoneReminderList.contains(
-                                                  returnPhoneNoStructureWith234(
-                                                    o,
-                                                  ),
-                                                )
-                                                ? EdgeInsets.all(4.0.w)
-                                                : EdgeInsets.all(10.w),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(6.r),
-                                              color:
-                                                  addedPhoneReminderList.contains(
-                                                    returnPhoneNoStructureWith234(
-                                                      o,
-                                                    ),
-                                                  )
-                                                  ? AppColors.primary
-                                                  : AppColors.transparent,
-                                              border: Border.all(
-                                                color:
-                                                    addedPhoneReminderList.contains(
-                                                      returnPhoneNoStructureWith234(
-                                                        o,
-                                                      ),
-                                                    )
-                                                    ? AppColors.transparent
-                                                    : AppColors.infoGrey,
-                                                width: .78,
-                                              ),
-                                            ),
-                                            child:
-                                                addedPhoneReminderList.contains(
-                                                  returnPhoneNoStructureWith234(
-                                                    o,
-                                                  ),
-                                                )
-                                                ? Icon(
-                                                    Icons.check,
-                                                    size: 12.sp,
-                                                    color: AppColors.white,
-                                                  )
-                                                : SizedBox.shrink(),
-                                          ),
-                                        ),
-                                        SizedBox(width: 9.10.w),
-                                        TextView(
-                                          text: formatPhoneNumber(o),
-                                          textStyle: TextStyle(
-                                            fontFamily: 'Arial',
-                                            fontSize: 16.2.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.reminder,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                showPhoneDialog(
-                                                  context,
-                                                  isEdit: true,
-                                                  index: index,
-                                                  phoneNumber:
-                                                      phoneReminderList[index],
-                                                  model: model,
-                                                );
-                                                isPhoneValid = false;
-                                                model.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.edit_pen,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                            SizedBox(width: 16.10.w),
-                                            GestureDetector(
-                                              onTap: () {
-                                                phoneReminderList.removeAt(
-                                                  index,
-                                                );
-                                                addedPhoneReminderList.remove(
-                                                  returnPhoneNoStructureWith234(
-                                                    o,
-                                                  ),
-                                                );
-                                                model.notifyListeners();
-                                              },
-                                              child: SvgPicture.asset(
-                                                AppImage.delete,
-                                                height: 22.0.h,
-                                                width: 22.0.w,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  if (!isLast)
-                                    Divider(color: AppColors.infoGrey1),
-                                  SizedBox(height: 5.10.h),
-                                ],
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-
-                      addedPhoneReminderList.isEmpty
-                          ? TextView(
-                              text: 'Atleast one phone number is required',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 12.80.sp,
-                                color: AppColors.red,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            )
-                          : SizedBox.shrink(),
-                    ],
-                  )
-                : SizedBox.shrink(),
-            SizedBox(height: 32.20.h),
-            Row(
-              children: [
-                Expanded(
-                  child: ButtonWidget(
-                    border: 100.r,
-                    buttonColor: AppColors.white,
-                    buttonText: 'Save as Draft',
-                    color: AppColors.primary,
-                    buttonBorderColor: AppColors.primary,
-                    isLoading: model.isLoading,
-                    onPressed: () async {
-                      if (firstFormReminderKey.currentState!.validate()) {
-                        buildChannelList(selectedIndexes);
-                        await Future.delayed(Duration(seconds: 1));
-                        model.updateSaveReminderAsDraft(
-                          context: context,
-                          model: model,
-                          reminderId: reminder!.id,
-                          saveDraft: SaveDraftReminderEntityModel(
-                            title: '',
-                            payload: Payload(
-                              medications: [
-                                saveDraft.Medication(
-                                  medicationName: data.medicationName,
-                                  scheduleType: data.scheduleType,
-                                  dosage: data.dosage,
-                                  medicationType: data.medicationType!
-                                      .toUpperCase(),
-                                  startDateTime: DateTime.parse(
-                                    data.startDateTime.toString(),
-                                  ),
-                                  endDateTime: DateTime.parse(
-                                    data.endDateTime.toString(),
-                                  ),
-                                  durationInDays: data.durationInDays,
-                                  timesPerDay: data.scheduleType == 'CUSTOM'
-                                      ? 0
-                                      : data.timesPerDay,
-                                  dailyDoseTimes: data.dailyDoseTimes!
-                                      .map(
-                                        (day) => day
-                                            .map(
-                                              (time) =>
-                                                  saveDraftDose.DailyDoseTime(
-                                                    time:
-                                                        time.time!.contains(
-                                                              'AM',
-                                                            ) ||
-                                                            time.time!.contains(
-                                                              'PM',
-                                                            )
-                                                        ? convertTo24Hour(
-                                                            time.time!,
-                                                          )
-                                                        : time.time!,
-                                                    date: time.date,
-                                                    isoDate: time.isoDate,
-                                                  ),
-                                            )
-                                            .toList(),
                                       )
-                                      .toList(),
-                                  note: data.note,
-                                  medicationImage:
-                                      model.uploadImageReminderResponseModel ==
-                                              null &&
-                                          data.medicationImage == null
-                                      ? null
-                                      : saveDraftImage.MedicationImage.fromJson(
-                                          model.uploadImageReminderResponseModel !=
-                                                  null
-                                              ? model
-                                                    .uploadImageReminderResponseModel!
-                                                    .data!
-                                                    .toJson()
-                                              : data.medicationImage!.toJson(),
-                                        ),
-                                ),
+                                    : SizedBox.shrink(),
                               ],
-                              timeZone: "Africa/Lagos",
-                              notificationChannels: notificationChannel,
-                              emails: addedEmailReminderList,
-                              phoneNumbers: addedPhoneReminderList,
+                            )
+                          : SizedBox.shrink(),
+                      SizedBox(height: 20.h),
+                      !isTappedPhoneAdded && phoneReminderList.isEmpty
+                          ? SizedBox.shrink()
+                          : isTappedPhoneAdded
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(
+                                      color: addedPhoneReminderList.isEmpty
+                                          ? AppColors.red
+                                          : AppColors.infoGrey1,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColors.infoGrey1,
+                                          ),
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12.r),
+                                            topRight: Radius.circular(12.r),
+                                          ),
+                                          color: AppColors.dashboard,
+                                        ),
+
+                                        padding: EdgeInsets.all(12.w),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                TextView(
+                                                  text: 'Add Phone Number',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'Arial',
+                                                    fontSize: 15.8.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color:
+                                                        addedPhoneReminderList
+                                                            .isEmpty
+                                                        ? AppColors.red
+                                                        : AppColors.deep,
+                                                  ),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    TextView(
+                                                      text: 'Numbers available',
+                                                      textStyle: TextStyle(
+                                                        fontFamily: 'Arial',
+                                                        fontSize: 15.8.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.fineGrey,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 6.w),
+                                                    Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 10.w,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            const Color.fromARGB(
+                                                              255,
+                                                              223,
+                                                              233,
+                                                              247,
+                                                            ),
+
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12.r,
+                                                            ),
+                                                        border: Border.all(
+                                                          color: AppColors
+                                                              .primary
+                                                              .withOpacity(.4),
+                                                        ),
+                                                      ),
+                                                      child: TextView(
+                                                        text:
+                                                            '${phoneReminderList.length + 1}',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'Arial',
+                                                          fontSize: 11.8.sp,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              AppColors.primary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    isTappedPhoneAdded =
+                                                        !isTappedPhoneAdded;
+                                                    model.notifyListeners();
+                                                  },
+                                                  child: SvgPicture.asset(
+                                                    AppImage.drop_up,
+                                                    height: 22.0.h,
+                                                    width: 22.0.w,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    showPhoneDialog(
+                                                      context,
+                                                      model: model,
+                                                    );
+                                                    isPhoneValid = false;
+                                                    model.notifyListeners();
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.add_circle,
+                                                    color: AppColors.primary1,
+                                                    size: 24.sp,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 15.20.h),
+                                      // Padding(
+                                      //   padding: EdgeInsets.only(
+                                      //     left: 12.w,
+                                      //     right: 20.w,
+                                      //   ),
+                                      //   child: Row(
+                                      //     children: [
+                                      //       GestureDetector(
+                                      //         onTap: () {
+                                      //           if (addedPhoneReminderList.contains(
+                                      //             SharedPreferencesService
+                                      //                 .instance
+                                      //                 .usersData['user']['phone'],
+                                      //           )) {
+                                      //             addedPhoneReminderList.remove(
+                                      //               SharedPreferencesService
+                                      //                   .instance
+                                      //                   .usersData['user']['phone'],
+                                      //             );
+                                      //           } else {
+                                      //             addedPhoneReminderList.add(
+                                      //               SharedPreferencesService
+                                      //                   .instance
+                                      //                   .usersData['user']['phone'],
+                                      //             );
+                                      //           }
+                                      //           setModalState!(() {});
+                                      //           model.notifyListeners();
+                                      //         },
+                                      //         child: Container(
+                                      //           padding:
+                                      //               addedPhoneReminderList.contains(
+                                      //                 SharedPreferencesService
+                                      //                     .instance
+                                      //                     .usersData['user']['phone'],
+                                      //               )
+                                      //               ? EdgeInsets.all(4.0.w)
+                                      //               : EdgeInsets.all(4.w),
+                                      //           decoration: BoxDecoration(
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(6.r),
+                                      //             color:
+                                      //                 addedPhoneReminderList.contains(
+                                      //                   SharedPreferencesService
+                                      //                       .instance
+                                      //                       .usersData['user']['phone'],
+                                      //                 )
+                                      //                 ? AppColors.primary
+                                      //                 : AppColors.transparent,
+                                      //             border: Border.all(
+                                      //               color:
+                                      //                   addedPhoneReminderList.contains(
+                                      //                     SharedPreferencesService
+                                      //                         .instance
+                                      //                         .usersData['user']['phone'],
+                                      //                   )
+                                      //                   ? AppColors.transparent
+                                      //                   : AppColors.infoGrey,
+                                      //               width: .78,
+                                      //             ),
+                                      //           ),
+                                      //           child: Icon(
+                                      //             Icons.check,
+                                      //             size: 12.sp,
+                                      //             color: AppColors.white,
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //       SizedBox(width: 9.10.w),
+                                      //       TextView(
+                                      //         text: formatPhoneNumber(
+                                      //           SharedPreferencesService
+                                      //               .instance
+                                      //               .usersData['user']['phone'],
+                                      //         ),
+                                      //         textStyle: TextStyle(
+                                      //           fontFamily: 'Arial',
+                                      //           fontSize: 16.2.sp,
+                                      //           fontWeight: FontWeight.w400,
+                                      //           color: AppColors.reminder,
+                                      //         ),
+                                      //       ),
+                                      //       Spacer(),
+                                      //       Row(
+                                      //         children: [
+                                      //           Container(
+                                      //             padding: EdgeInsets.all(1.2.w),
+                                      //             decoration: BoxDecoration(
+                                      //               color: AppColors.app_green,
+                                      //               shape: BoxShape.circle,
+                                      //             ),
+                                      //             child: Icon(
+                                      //               Icons.check,
+                                      //               size: 13.4.sp,
+                                      //               color: AppColors.white,
+                                      //             ),
+                                      //           ),
+                                      //           SizedBox(width: 10.w),
+                                      //           TextView(
+                                      //             text: 'Primary',
+                                      //             textStyle: TextStyle(
+                                      //               fontFamily: 'Arial',
+                                      //               fontSize: 13.72.sp,
+                                      //               fontWeight: FontWeight.w400,
+                                      //               color: AppColors.reminder,
+                                      //             ),
+                                      //           ),
+                                      //         ],
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
+                                      // SizedBox(height: 2.0.h),
+                                      // Divider(color: AppColors.infoGrey1),
+                                      ...phoneReminderList.asMap().entries.map((
+                                        entry,
+                                      ) {
+                                        final index = entry.key;
+                                        final o = entry.value;
+                                        final isLast =
+                                            index ==
+                                            phoneReminderList.length - 1;
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 12.w,
+                                                right: 20.w,
+                                                bottom: 12.w,
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      if (addedPhoneReminderList
+                                                          .contains(
+                                                            returnPhoneNoStructureWith234(
+                                                              o,
+                                                            ),
+                                                          )) {
+                                                        addedPhoneReminderList
+                                                            .remove(
+                                                              returnPhoneNoStructureWith234(
+                                                                o,
+                                                              ),
+                                                            );
+                                                      } else {
+                                                        addedPhoneReminderList.add(
+                                                          returnPhoneNoStructureWith234(
+                                                            o,
+                                                          ),
+                                                        );
+                                                      }
+                                                      setModalState!(() {});
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: Container(
+                                                      padding:
+                                                          addedPhoneReminderList
+                                                              .contains(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              )
+                                                          ? EdgeInsets.all(
+                                                              4.0.w,
+                                                            )
+                                                          : EdgeInsets.all(
+                                                              10.w,
+                                                            ),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              6.r,
+                                                            ),
+                                                        color:
+                                                            addedPhoneReminderList
+                                                                .contains(
+                                                                  returnPhoneNoStructureWith234(
+                                                                    o,
+                                                                  ),
+                                                                )
+                                                            ? AppColors.primary
+                                                            : AppColors
+                                                                  .transparent,
+                                                        border: Border.all(
+                                                          color:
+                                                              addedPhoneReminderList
+                                                                  .contains(
+                                                                    returnPhoneNoStructureWith234(
+                                                                      o,
+                                                                    ),
+                                                                  )
+                                                              ? AppColors
+                                                                    .transparent
+                                                              : AppColors
+                                                                    .infoGrey,
+                                                          width: .78,
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          addedPhoneReminderList
+                                                              .contains(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              )
+                                                          ? Icon(
+                                                              Icons.check,
+                                                              size: 12.sp,
+                                                              color: AppColors
+                                                                  .white,
+                                                            )
+                                                          : SizedBox.shrink(),
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 9.10.w),
+                                                  TextView(
+                                                    text: formatPhoneNumber(o),
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'Arial',
+                                                      fontSize: 16.2.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                  Spacer(),
+                                                  Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          showPhoneDialog(
+                                                            context,
+                                                            isEdit: true,
+                                                            index: index,
+                                                            phoneNumber:
+                                                                phoneReminderList[index],
+                                                            model: model,
+                                                          );
+                                                          isPhoneValid = false;
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.edit_pen,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 16.10.w),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          phoneReminderList
+                                                              .removeAt(index);
+                                                          addedPhoneReminderList
+                                                              .remove(
+                                                                returnPhoneNoStructureWith234(
+                                                                  o,
+                                                                ),
+                                                              );
+                                                          model
+                                                              .notifyListeners();
+                                                        },
+                                                        child: SvgPicture.asset(
+                                                          AppImage.delete,
+                                                          height: 22.0.h,
+                                                          width: 22.0.w,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            if (!isLast)
+                                              Divider(
+                                                color: AppColors.infoGrey1,
+                                              ),
+                                            SizedBox(height: 5.10.h),
+                                          ],
+                                        );
+                                      }),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 4.0.h),
+                                addedPhoneReminderList.isEmpty
+                                    ? TextView(
+                                        text:
+                                            'Atleast one phone number is required',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 12.80.sp,
+                                          color: AppColors.red,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
+                            )
+                          : SizedBox.shrink(),
+
+                      SizedBox(height: 32.20.h),
+                      Center(
+                        child: GestureDetector(
+                          onTap: () async {
+                            onTapToAddAnotherReminder = true;
+                            model.notifyListeners();
+                            if (secondFormReminderKey.currentState != null) {
+                              if (secondFormReminderKey.currentState!
+                                  .validate()) {
+                                allTrueList.clear();
+                                for (
+                                  int indx = 0;
+                                  indx < model.medicationClassList.length;
+                                  indx++
+                                ) {
+                                  if (model
+                                              .medicationClassList[indx]
+                                              .timesToTake ==
+                                          '0' ||
+                                      model
+                                              .medicationClassList[indx]
+                                              .timesToTake ==
+                                          'null' ||
+                                      model
+                                              .medicationClassList[indx]
+                                              .timesToTake ==
+                                          '5' ||
+                                      int.parse(
+                                            model
+                                                .medicationClassList[indx]
+                                                .timesToTake!,
+                                          ) ==
+                                          model
+                                              .medicationClassList[indx]
+                                              .dosageMap[0]['doses']
+                                              .length) {
+                                    allTrueList.insert(indx, false);
+                                  } else {
+                                    allTrueList.insert(indx, true);
+                                  }
+                                }
+                                if (model.medDailyInTakenController.text ==
+                                        '0' ||
+                                    model.medDailyInTakenController.text ==
+                                        'null' ||
+                                    model.medDailyInTakenController.text ==
+                                        '5' ||
+                                    int.parse(
+                                          model.medDailyInTakenController.text,
+                                        ) ==
+                                        model
+                                            .formattedSelectedTimeAndPeriodList
+                                            ?.length) {
+                                  _validateDoseTimes = false;
+                                  allTrueList.insert(
+                                    model.medicationClassList.length,
+                                    false,
+                                  );
+                                } else {
+                                  _validateDoseTimes = true;
+                                }
+                                allTrue = allTrueList.every(
+                                  (value) => value == false,
+                                );
+
+                                if (!_validateDoseTimes && allTrue) {
+                                  await model.addReminderToList(
+                                    model: model,
+                                    setModalState: setModalState,
+                                    context: context,
+                                  );
+
+                                  onTapToAddAnotherReminder = true;
+                                }
+                              } else {
+                                AppUtils.snackbar(
+                                  context,
+                                  message: 'Kindly input all required fields..',
+                                  error: true,
+                                );
+                              }
+                            } else {
+                              onTapToAddAnotherReminder = true;
+                            }
+                            setModalState!(() {});
+                            model.notifyListeners();
+                          },
+                          child: TextView(
+                            text: 'Add Another Medication',
+                            textStyle: TextStyle(
+                              fontFamily: 'GoogleSans',
+                              fontSize: 17.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primary,
+                              decorationStyle: TextDecorationStyle.solid,
+                              decorationThickness: 1.4,
                             ),
                           ),
-                        );
-                        setModalState!(() {});
-                        model.notifyListeners();
-                      }
-                    },
+                        ),
+                      ),
+                      SizedBox(height: 30.h),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.white,
+                              buttonText: 'Save as Draft',
+                              color: AppColors.primary,
+                              buttonBorderColor: AppColors.primary,
+                              isLoading: model.isLoading,
+                              onPressed: () async {
+                                await model.addReminderToListSaveAsDraft(
+                                  model: model,
+                                  setModalState: setModalState,
+                                  context: context,
+                                );
+                                if (isTappedEmailAdded &&
+                                        addedEmailReminderList.isEmpty ||
+                                    isTappedPhoneAdded &&
+                                        addedPhoneReminderList.isEmpty) {
+                                  if (isTappedEmailAdded &&
+                                      addedEmailReminderList.isEmpty) {}
+                                  if (isTappedPhoneAdded &&
+                                      addedPhoneReminderList.isEmpty) {}
+                                } else {
+                                  model.saveReminderToDraft(
+                                    context: context,
+                                    savedraft: SaveDraftReminderEntityModel(
+                                      title: '',
+                                      payload: Payload(
+                                        medications: model.medicationClassList.map((
+                                          m,
+                                        ) {
+                                          return saveDraft.Medication(
+                                            medicationName: m.medicationName,
+                                            scheduleType: m.isCusSchedule!
+                                                ? 'CUSTOM'
+                                                : 'FIXED',
+                                            dosage: m.dosage,
+                                            medicationType: m.medicationType!
+                                                .toUpperCase(),
+                                            startDateTime:
+                                                m.startDateIso ??
+                                                DateTime.parse(''),
+                                            endDateTime:
+                                                m.endDateIso ??
+                                                DateTime.parse(''),
+                                            durationInDays: m.duration == null
+                                                ? 0
+                                                : int.parse(m.duration!),
+                                            timesPerDay: m.isCusSchedule!
+                                                ? 0
+                                                : m.timesToTake != ''
+                                                ? int.parse(m.timesToTake!)
+                                                : 0,
+                                            dailyDoseTimes: (m.dosageMap as List)
+                                                .map(
+                                                  (
+                                                    dayData,
+                                                  ) => (dayData['doses'] as List)
+                                                      .map(
+                                                        (dose) =>
+                                                            saveDraftDose
+                                                                .DailyDoseTime.fromJson(
+                                                              dose
+                                                                  as Map<
+                                                                    String,
+                                                                    dynamic
+                                                                  >,
+                                                            ),
+                                                      )
+                                                      .toList(),
+                                                )
+                                                .toList(),
+                                            note: m.note,
+                                            medicationImage:
+                                                m.imageData!.url == null
+                                                ? null
+                                                : saveDraftImage
+                                                      .MedicationImage.fromJson(
+                                                    m.imageData!.toJson(),
+                                                  ),
+                                          );
+                                        }).toList(),
+                                        timeZone: "Africa/Lagos",
+                                        notificationChannels:
+                                            notificationChannel,
+                                        emails: addedEmailReminderList,
+                                        phoneNumbers: addedPhoneReminderList,
+                                      ),
+                                    ),
+                                    model: model,
+                                  );
+                                }
+                                setModalState!(() {});
+                                model.notifyListeners();
+                                // }
+                              },
+                            ),
+                          ),
+                          SizedBox(width: 20.h),
+                          Expanded(
+                            child: ButtonWidget(
+                              border: 100.r,
+                              buttonColor: AppColors.primary,
+                              buttonText: 'Continue',
+                              color: AppColors.white,
+                              buttonBorderColor: AppColors.transparent,
+                              isLoading: model.isLoading,
+                              onPressed: () async {
+                                if (secondFormReminderKey.currentState !=
+                                    null) {
+                                  if (secondFormReminderKey.currentState!
+                                      .validate()) {
+                                    allTrueList.clear();
+                                    for (
+                                      int indx = 0;
+                                      indx < model.medicationClassList.length;
+                                      indx++
+                                    ) {
+                                      if (model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '0' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              'null' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '5' ||
+                                          int.parse(
+                                                model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake!,
+                                              ) ==
+                                              model
+                                                  .medicationClassList[indx]
+                                                  .dosageMap[0]['doses']
+                                                  .length) {
+                                        allTrueList.insert(indx, false);
+                                      } else {
+                                        allTrueList.insert(indx, true);
+                                      }
+                                    }
+
+                                    if (model.medDailyInTakenController.text ==
+                                            '0' ||
+                                        model.medDailyInTakenController.text ==
+                                            'null' ||
+                                        model.medDailyInTakenController.text ==
+                                            '5' ||
+                                        int.parse(
+                                              model
+                                                  .medDailyInTakenController
+                                                  .text,
+                                            ) ==
+                                            model
+                                                .formattedSelectedTimeAndPeriodList
+                                                ?.length) {
+                                      _validateDoseTimes = false;
+                                      allTrueList.insert(
+                                        model.medicationClassList.length,
+                                        false,
+                                      );
+                                    } else {
+                                      _validateDoseTimes = true;
+                                      allTrueList.insert(
+                                        model.medicationClassList.length,
+                                        false,
+                                      );
+                                    }
+                                    allTrue = allTrueList.every(
+                                      (value) => value == false,
+                                    );
+
+                                    if (!_validateDoseTimes && allTrue) {
+                                      await model.addReminderToList(
+                                        model: model,
+                                        setModalState: setModalState,
+                                        context: context,
+                                      );
+                                      if (isTappedEmailAdded &&
+                                              addedEmailReminderList.isEmpty ||
+                                          isTappedPhoneAdded &&
+                                              addedPhoneReminderList.isEmpty) {
+                                        if (isTappedEmailAdded &&
+                                            addedEmailReminderList.isEmpty) {}
+                                        if (isTappedPhoneAdded &&
+                                            addedPhoneReminderList.isEmpty) {}
+                                      }
+                                    } else {
+                                      for (
+                                        int indx = 0;
+                                        indx < model.medicationClassList.length;
+                                        indx++
+                                      ) {
+                                        if (model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake ==
+                                                '0' ||
+                                            model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake ==
+                                                'null' ||
+                                            model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake ==
+                                                '5' ||
+                                            int.parse(
+                                                  model
+                                                      .medicationClassList[indx]
+                                                      .timesToTake!,
+                                                ) ==
+                                                model
+                                                    .medicationClassList[indx]
+                                                    .dosageMap[0]['doses']
+                                                    .length) {
+                                          allTrueList.insert(indx, false);
+                                        } else {
+                                          allTrueList.insert(indx, true);
+                                        }
+                                      }
+
+                                      if (model
+                                                  .medDailyInTakenController
+                                                  .text ==
+                                              '0' ||
+                                          model
+                                                  .medDailyInTakenController
+                                                  .text ==
+                                              'null' ||
+                                          model
+                                                  .medDailyInTakenController
+                                                  .text ==
+                                              '5' ||
+                                          int.parse(
+                                                model
+                                                    .medDailyInTakenController
+                                                    .text,
+                                              ) ==
+                                              model
+                                                  .formattedSelectedTimeAndPeriodList
+                                                  ?.length) {
+                                        _validateDoseTimes = false;
+                                        allTrueList.insert(
+                                          model.medicationClassList.length,
+                                          false,
+                                        );
+                                      } else {
+                                        _validateDoseTimes = true;
+                                        allTrueList.insert(
+                                          model.medicationClassList.length,
+                                          false,
+                                        );
+                                      }
+                                      allTrue = allTrueList.every(
+                                        (value) => value == false,
+                                      );
+
+                                      if (!_validateDoseTimes && allTrue) {
+                                        linIndexEditUpdate++;
+                                        addCostTotal(model);
+                                      }
+                                    }
+                                  }
+                                } else {
+                                  _isLoading = true;
+                                  if (isTappedEmailAdded &&
+                                          addedEmailReminderList.isEmpty ||
+                                      isTappedPhoneAdded &&
+                                          addedPhoneReminderList.isEmpty) {
+                                    if (isTappedEmailAdded &&
+                                        addedEmailReminderList.isEmpty) {}
+                                    if (isTappedPhoneAdded &&
+                                        addedPhoneReminderList.isEmpty) {}
+                                  } else {
+                                    for (
+                                      int indx = 0;
+                                      indx < model.medicationClassList.length;
+                                      indx++
+                                    ) {
+                                      if (model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '0' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              'null' ||
+                                          model
+                                                  .medicationClassList[indx]
+                                                  .timesToTake ==
+                                              '5' ||
+                                          int.parse(
+                                                model
+                                                    .medicationClassList[indx]
+                                                    .timesToTake!,
+                                              ) ==
+                                              model
+                                                  .medicationClassList[indx]
+                                                  .dosageMap[0]['doses']
+                                                  .length) {
+                                        allTrueList.insert(indx, false);
+                                      } else {
+                                        allTrueList.insert(indx, true);
+                                      }
+                                    }
+
+                                    allTrue = allTrueList.every(
+                                      (value) => value == false,
+                                    );
+
+                                    if (!_validateDoseTimes && allTrue) {
+                                      linIndexEditUpdate++;
+                                      addCostTotal(model);
+                                    }
+                                  }
+                                  _isLoading = false;
+                                }
+
+                                buildChannelList(selectedIndexes);
+                                setModalState!(() {});
+                                model.notifyListeners();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 50.h),
+                    ],
                   ),
-                ),
-                SizedBox(width: 22.w),
-                Expanded(
-                  child: ButtonWidget(
-                    border: 100.r,
-                    buttonColor: AppColors.primary,
-                    buttonText: 'Continue',
-                    color: AppColors.white,
-                    buttonBorderColor: AppColors.transparent,
-                    isLoading: model.isLoading,
-                    onPressed: () async {
-                      if (firstFormReminderKey.currentState!.validate()) {
-                        if (isTappedEmailAdded &&
-                                addedEmailReminderList.isEmpty ||
-                            isTappedPhoneAdded &&
-                                addedPhoneReminderList.isEmpty) {
-                          if (isTappedEmailAdded &&
-                              addedEmailReminderList.isEmpty) {}
-                          if (isTappedPhoneAdded &&
-                              addedPhoneReminderList.isEmpty) {}
-                        } else {
-                          addCostTotalUpdateDraft(data: data, model: model);
-                          Future.delayed(Duration(milliseconds: 1400));
-                          linIndexEditUpdate++;
-                        }
-                        setModalState!(() {});
-                        model.notifyListeners();
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 50.h),
           ],
         ),
       ),
@@ -55460,7 +60886,7 @@ class AuthViewModel extends BaseViewModel {
             children: [
               SizedBox(height: 20, width: 20),
               TextView(
-                text: modalUpdateName(),
+                text: modalName(),
                 textStyle: TextStyle(
                   fontFamily: 'GoogleSans',
                   fontSize: 16.70.sp,
@@ -55474,7 +60900,6 @@ class AuthViewModel extends BaseViewModel {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pop(context!);
-                    model!.notifyListeners();
                   },
                   child: SvgPicture.asset(
                     AppImage.cancel,
@@ -55516,6 +60941,69 @@ class AuthViewModel extends BaseViewModel {
               ),
             ],
           ),
+          SizedBox(height: 20.h),
+          model!.medicationClassList.length == 1
+              ? SizedBox.shrink()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.first
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList -= 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.first
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary,
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    TextView(
+                      text:
+                          '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 13.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.infoGrey,
+                      ),
+                    ),
+
+                    SizedBox(width: 10.w),
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.last
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList += 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.last
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary1,
+                      ),
+                    ),
+                  ],
+                ),
           SizedBox(height: 16.20.h),
           TextView(
             text: 'MEDICATION DETAILS',
@@ -55550,7 +61038,8 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: '${data!.medicationName}',
+                  text:
+                      '${model.medicationClassList[model.indexOfMedicationClassList].medicationName}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -55559,54 +61048,91 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                model!.imageDrug != null
-                    ? Container(
-                        padding: EdgeInsets.symmetric(),
-                        width: 220.w,
-                        height: 180.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: Center(
-                          child: Image.file(
-                            model.imageDrug!,
-                            height: 140.h,
-                            width: 140.80.w,
-                            fit: BoxFit.contain,
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 24.w,
+                    horizontal: 108.0.w,
+                  ),
+                  width: double.infinity,
+                  height: 140.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child:
+                      model
+                              .medicationClassList[model
+                                  .indexOfMedicationClassList]
+                              .medicationFile !=
+                          null
+                      ? Image.file(
+                          model
+                              .medicationClassList[model
+                                  .indexOfMedicationClassList]
+                              .medicationFile!,
+                          errorBuilder: (context, error, stackTrace) =>
+                              SizedBox.shrink(),
+                        )
+                      : model
+                                .medicationClassList[model
+                                    .indexOfMedicationClassList]
+                                .imageData !=
+                            null
+                      ? Image.network(
+                          model
+                                  .medicationClassList[model
+                                      .indexOfMedicationClassList]
+                                  .imageData!
+                                  .url ??
+                              '',
+                          height: 76.h,
+                          width: 76.w,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Padding(
+                            padding: EdgeInsets.all(18.w),
+                            child: SvgPicture.asset(
+                              model
+                                      .medicationClassList[model
+                                          .indexOfMedicationClassList]
+                                      .medicationTypeIcon!
+                                      .contains('svg')
+                                  ? model
+                                        .medicationClassList[model
+                                            .indexOfMedicationClassList]
+                                        .medicationTypeIcon!
+                                  : model.isMedTypeView(
+                                      model
+                                          .medicationClassList[model
+                                              .indexOfMedicationClassList]
+                                          .medicationTypeIcon!,
+                                    ),
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: SvgPicture.asset(
+                            model
+                                    .medicationClassList[model
+                                        .indexOfMedicationClassList]
+                                    .medicationTypeIcon!
+                                    .contains('svg')
+                                ? model
+                                      .medicationClassList[model
+                                          .indexOfMedicationClassList]
+                                      .medicationTypeIcon!
+                                : isMedTypeView(
+                                    model
+                                        .medicationClassList[model
+                                            .indexOfMedicationClassList]
+                                        .medicationTypeIcon!,
+                                  ),
+                            height: 100.h,
+                            width: 94.60,
+                            color: AppColors.primary,
                           ),
                         ),
-                      )
-                    : Container(
-                        padding: EdgeInsets.symmetric(),
-                        width: 220.w,
-                        height: 180.h,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        child: data.medicationImage != null
-                            ? Image.network(
-                                data.medicationImage?.url ?? '',
-                                width: 180.w,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    SvgPicture.asset(
-                                      model.isMedTypeView(
-                                        data.medicationType!.toUpperCase(),
-                                      ),
-                                    ),
-                              )
-                            : Center(
-                                child: SvgPicture.asset(
-                                  model.isMedTypeView(
-                                    data.medicationType!.toUpperCase(),
-                                  ),
-                                  height: 140.h,
-                                  width: 100.w,
-                                  color: AppColors.primary,
-                                ),
-                              ),
-                      ),
+                ),
                 SizedBox(height: 10.h),
                 Divider(
                   color: AppColors.infoGrey.withOpacity(.2),
@@ -55627,12 +61153,28 @@ class AuthViewModel extends BaseViewModel {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SvgPicture.asset(
-                      model.isMedTypeView(data.medicationType!.toUpperCase()),
+                      model
+                              .medicationClassList[model
+                                  .indexOfMedicationClassList]
+                              .medicationTypeIcon!
+                              .contains('svg')
+                          ? model
+                                .medicationClassList[model
+                                    .indexOfMedicationClassList]
+                                .medicationTypeIcon!
+                          : isMedTypeView(
+                              model
+                                  .medicationClassList[model
+                                      .indexOfMedicationClassList]
+                                  .medicationTypeIcon!,
+                            ),
                       color: AppColors.primary,
                     ),
                     SizedBox(width: 6.0.w),
                     TextView(
-                      text: '${data.medicationType}',
+                      text:
+                          '${model.medicationClassList[model.indexOfMedicationClassList].medicationType}'
+                              .toUpperCase(),
                       textStyle: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 16.0.sp,
@@ -55680,7 +61222,8 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: data.dosage ?? '',
+                  text:
+                      '${model.medicationClassList[model.indexOfMedicationClassList].dosage}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -55695,7 +61238,10 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 10.h),
                 TextView(
-                  text: data.scheduleType != 'FIXED'
+                  text:
+                      model
+                          .medicationClassList[model.indexOfMedicationClassList]
+                          .isCusSchedule!
                       ? 'Per-day Schedule'
                       : 'Frequency',
                   textStyle: TextStyle(
@@ -55706,20 +61252,25 @@ class AuthViewModel extends BaseViewModel {
                   ),
                 ),
                 SizedBox(height: 6.0.h),
-                data.scheduleType != 'FIXED'
+                model
+                        .medicationClassList[model.indexOfMedicationClassList]
+                        .isCusSchedule!
                     ? SizedBox(
-                        height: data.dailyDoseTimes!.length > 1 ? 160.h : 90.h,
+                        height:
+                            model
+                                    .medicationClassList[model
+                                        .indexOfMedicationClassList]
+                                    .dosageMap
+                                    .length >
+                                1
+                            ? 160.h
+                            : 90.h,
                         child: SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ...data.dailyDoseTimes!.asMap().entries.map((
-                                entry,
-                              ) {
-                                final index = entry.key;
-                                final e = entry.value;
-
-                                return Container(
+                              ...model.medicationClassList[model.indexOfMedicationClassList].dosageMap.map(
+                                (e) => Container(
                                   padding: EdgeInsets.all(7.10.w),
                                   margin: EdgeInsets.only(bottom: 12.w),
                                   decoration: BoxDecoration(
@@ -55742,7 +61293,7 @@ class AuthViewModel extends BaseViewModel {
                                               Row(
                                                 children: [
                                                   TextView(
-                                                    text: 'Day ${index + 1} ',
+                                                    text: 'Day ${e['day']} ',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'GoogleSans',
                                                       fontSize: 12.sp,
@@ -55753,7 +61304,7 @@ class AuthViewModel extends BaseViewModel {
                                                   ),
                                                   TextView(
                                                     text:
-                                                        '(${DateFormat('MMM dd').format(DateTime.parse(e.last.isoDate.toString()))})',
+                                                        '(${DateFormat('MMM dd').format(DateTime.parse(model.medicationClassList[model.indexOfMedicationClassList].startDateIso.toString()).add(Duration(days: e['day'] - 1)))})',
                                                     textStyle: TextStyle(
                                                       fontFamily: 'Arial',
                                                       fontSize: 12.sp,
@@ -55773,9 +61324,10 @@ class AuthViewModel extends BaseViewModel {
                                                   children: (() {
                                                     final Set<String>
                                                     uniqueTimes = {};
-                                                    for (final dose in e) {
+                                                    for (final dose
+                                                        in e['doses']) {
                                                       uniqueTimes.add(
-                                                        dose.time!,
+                                                        dose['time'],
                                                       );
                                                     }
                                                     return uniqueTimes.map((
@@ -55820,9 +61372,16 @@ class AuthViewModel extends BaseViewModel {
                                                             ),
                                                             TextView(
                                                               text:
-                                                                  convertTo12HourFormat(
-                                                                    time,
-                                                                  ),
+                                                                  time.contains(
+                                                                        'AM',
+                                                                      ) ||
+                                                                      time.contains(
+                                                                        'PM',
+                                                                      )
+                                                                  ? time
+                                                                  : convertTo12HourFormat(
+                                                                      time,
+                                                                    ),
                                                               textStyle: TextStyle(
                                                                 fontFamily:
                                                                     'GoogleSans',
@@ -55848,8 +61407,8 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                     ],
                                   ),
-                                );
-                              }),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -55858,7 +61417,14 @@ class AuthViewModel extends BaseViewModel {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextView(
-                            text: showNoTimes(data.timesPerDay!),
+                            text: showNoTimes(
+                              int.parse(
+                                model
+                                    .medicationClassList[model
+                                        .indexOfMedicationClassList]
+                                    .timesToTake!,
+                              ),
+                            ),
                             textStyle: TextStyle(
                               fontFamily: 'Arial',
                               fontSize: 16.0.sp,
@@ -55873,9 +61439,13 @@ class AuthViewModel extends BaseViewModel {
                             children: (() {
                               final Set<String> uniqueTimes = {};
 
-                              for (final day in data.dailyDoseTimes!) {
-                                for (final dose in day) {
-                                  uniqueTimes.add(dose.time!);
+                              for (final day
+                                  in model
+                                      .medicationClassList[model
+                                          .indexOfMedicationClassList]
+                                      .dosageMap!) {
+                                for (final dose in day['doses']) {
+                                  uniqueTimes.add(dose['time']);
                                 }
                               }
 
@@ -55904,7 +61474,11 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                       SizedBox(width: 5.10.w),
                                       TextView(
-                                        text: convertTo12HourFormat(time),
+                                        text:
+                                            time.contains('AM') ||
+                                                time.contains('PM')
+                                            ? time
+                                            : convertTo12HourFormat(time),
                                         textStyle: TextStyle(
                                           fontFamily: 'GoogleSans',
                                           fontSize: 12.8.sp,
@@ -55938,9 +61512,8 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: DateFormat(
-                    'dd MMMM, yyyy',
-                  ).format(DateTime.parse(data.startDateTime!.toString())),
+                  text:
+                      '${model.medicationClassList[model.indexOfMedicationClassList].dateAndTime}',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -55965,7 +61538,13 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: getReturnDurationNumberOfDays(data.durationInDays!),
+                  text: getReturnDurationNumberOfDays(
+                    int.parse(
+                      model
+                          .medicationClassList[model.indexOfMedicationClassList]
+                          .duration!,
+                    ),
+                  ),
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -55990,9 +61569,9 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: DateFormat(
-                    'dd MMMM, yyyy',
-                  ).format(DateTime.parse(data.endDateTime!.toString())),
+                  text: model
+                      .medicationClassList[model.indexOfMedicationClassList]
+                      .endDate!,
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -56017,7 +61596,9 @@ class AuthViewModel extends BaseViewModel {
                 ),
                 SizedBox(height: 6.0.h),
                 TextView(
-                  text: data.note ?? '',
+                  text: model
+                      .medicationClassList[model.indexOfMedicationClassList]
+                      .note!,
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 16.0.sp,
@@ -56029,7 +61610,69 @@ class AuthViewModel extends BaseViewModel {
               ],
             ),
           ),
-
+          SizedBox(height: 16.20.h),
+          model.medicationClassList.length == 1
+              ? SizedBox.shrink()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.first
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList -= 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.first
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary,
+                      ),
+                    ),
+                    SizedBox(width: 10.h),
+                    TextView(
+                      text:
+                          '${model.indexOfMedicationClassList + 1}/${model.medicationClassList.length}',
+                      textStyle: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 13.2.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.infoGrey,
+                      ),
+                    ),
+                    SizedBox(width: 10.h),
+                    IconButton(
+                      onPressed:
+                          model.medicationClassList[model
+                                  .indexOfMedicationClassList] ==
+                              model.medicationClassList.last
+                          ? () {}
+                          : () {
+                              model.indexOfMedicationClassList += 1;
+                              model.notifyListeners();
+                            },
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        size: 22.sp,
+                        color:
+                            model.medicationClassList[model
+                                    .indexOfMedicationClassList] ==
+                                model.medicationClassList.last
+                            ? AppColors.primaryLight.withOpacity(.7)
+                            : AppColors.primary1,
+                      ),
+                    ),
+                  ],
+                ),
+          SizedBox(height: 16.20.h),
           SizedBox(height: 24.20.h),
           TextView(
             text: 'NOTIFICATION CHANNELS',
@@ -56221,8 +61864,7 @@ class AuthViewModel extends BaseViewModel {
                                       ),
                                     ),
                                     TextView(
-                                      text:
-                                          '${returnTotalDaysUpdateDraft(data)}',
+                                      text: '${returnTotalDays(model)}',
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 16.80.sp,
@@ -56504,6 +62146,7 @@ class AuthViewModel extends BaseViewModel {
                   buttonBorderColor: AppColors.transparent,
                   onPressed: () {
                     linIndexEditUpdate--;
+                    model.indexOfMedicationClassList = 0;
                     model.notifyListeners();
                   },
                 ),
@@ -56520,8 +62163,54 @@ class AuthViewModel extends BaseViewModel {
                       : 'Proceed to Pay',
                   color: AppColors.white,
                   buttonBorderColor: AppColors.transparent,
-                  onPressed: () {
-                    if (addedPhoneReminderList.isNotEmpty) {}
+                  onPressed: () async {
+                    if (addedPhoneReminderList.isNotEmpty) {
+                      linIndexEditUpdate++;
+                    } else {
+                      model.createReminder(
+                        context,
+                        model: model,
+                        createReminderEntityModel: CreateReminderEntityModel(
+                          medications: model.medicationClassList.map((m) {
+                            return Medication(
+                              medicationName: m.medicationName,
+                              scheduleType: m.isCusSchedule!
+                                  ? 'CUSTOM'
+                                  : 'FIXED',
+                              dosage: m.dosage,
+                              medicationType: m.medicationType!.toUpperCase(),
+                              startDateTime: m.startDateIso,
+                              endDateTime: m.endDateIso,
+                              durationInDays: int.parse(m.duration!),
+                              timesPerDay: m.isCusSchedule!
+                                  ? ''
+                                  : int.parse(m.timesToTake!),
+                              dailyDoseTimes: (m.dosageMap as List)
+                                  .map(
+                                    (dayData) => (dayData['doses'] as List)
+                                        .map(
+                                          (dose) => DailyDoseTime.fromJson(
+                                            dose as Map<String, dynamic>,
+                                          ),
+                                        )
+                                        .toList(),
+                                  )
+                                  .toList(),
+                              note: m.note,
+                              medicationImage: m.imageData!.url == null
+                                  ? null
+                                  : MedicationImage.fromJson(
+                                      m.imageData!.toJson(),
+                                    ),
+                            );
+                          }).toList(),
+                          timeZone: "Africa/Lagos",
+                          notificationChannels: notificationChannel,
+                          emails: addedEmailReminderList,
+                          phoneNumbers: addedPhoneReminderList,
+                        ),
+                      );
+                    }
                     setModalState!(() {});
                     model.notifyListeners();
                   },
@@ -56529,7 +62218,7 @@ class AuthViewModel extends BaseViewModel {
               ),
             ],
           ),
-          // SizedBox(height: 26.h),
+          SizedBox(height: 26.h),
         ],
       ),
     ),
@@ -56924,6 +62613,353 @@ class AuthViewModel extends BaseViewModel {
                           //         ),
                           //       ),
                           // );
+                          model.notifyListeners();
+                        }
+                      : () {},
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 26.h),
+        ],
+      ),
+    ),
+  );
+
+  thirdUpdateModalFlowDraft({
+    AuthViewModel? model,
+    BuildContext? context,
+    StateSetter? setModalState,
+    ScrollController? scrollController,
+  }) => Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(22.r),
+      color: AppColors.white,
+    ),
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 15.6.w, vertical: 20.w),
+      controller: scrollController,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 20, width: 20),
+              TextView(
+                text: modalUpdateName(),
+                textStyle: TextStyle(
+                  fontFamily: 'GoogleSans',
+                  fontSize: 16.70.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.deep,
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 4.w),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context!);
+                  },
+                  child: SvgPicture.asset(
+                    AppImage.cancel,
+                    height: 14.20,
+                    width: 14.20,
+                    color: AppColors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 13.60.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context!).size.width * .82,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5.0),
+                  ), // Adjust radius as needed
+                  child: LinearProgressIndicator(
+                    minHeight: 4.0, // Adjust height as needed
+                    value: linIndexEditUpdate / 3,
+                    color: AppColors.primary, // Progress bar color
+                    backgroundColor: Colors.grey[300], // Background track color
+                  ),
+                ),
+              ),
+              SizedBox(width: 10.w),
+              TextView(
+                text: '$linIndexEditUpdate/3',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 13.2.sp,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 32.h),
+          TextView(
+            text: 'Amount',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 15.90.sp,
+              fontWeight: FontWeight.w400,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 14.2.h),
+          Container(
+            height: 70.h,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.skyBlue,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Center(
+              child: TextView(
+                text: '₦$costTotal.00',
+                textStyle: TextStyle(
+                  fontFamily: 'Arial',
+                  fontSize: 20.90.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.reminder,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 22.h),
+          TextView(
+            text: 'Select Payment Method',
+            textStyle: TextStyle(
+              fontFamily: 'Arial',
+              fontSize: 16.90.sp,
+              fontWeight: FontWeight.w500,
+              color: AppColors.deep,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          paymentWidget(
+            context: context,
+            isWallet: true,
+            text: 'Pay with Wallet',
+            icon: AppImage.wallet_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Wallet';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Card',
+            icon: AppImage.card_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Card';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Bank Transfer',
+            icon: AppImage.bank_transfer,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Bank Transfer';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with Mobile Money',
+            icon: AppImage.online_mobile,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with Mobile Money';
+              model!.notifyListeners();
+            },
+          ),
+          paymentWidget(
+            isWallet: false,
+            text: 'Pay with USSD',
+            icon: AppImage.ussd_pay,
+            onTap: () {
+              onTapPaymentMeth = 'Pay with USSD';
+              model!.notifyListeners();
+            },
+          ),
+          SizedBox(height: _isLoading ? 20.h : 0.h),
+          _isLoading
+              ? SpinKitCircle(color: AppColors.primary, size: 50.sp)
+              : SizedBox.shrink(),
+          SizedBox(height: 120.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  buttonColor: AppColors.dashboard,
+                  buttonText: 'Previous',
+                  color: AppColors.deep,
+                  fontSize: 14.sp,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: () {
+                    linIndexEditUpdate--;
+                    model!.notifyListeners();
+                  },
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Flexible(
+                child: ButtonWidget(
+                  border: 100.r,
+                  fontSize: 14.sp,
+                  buttonColor: onTapPaymentMeth != ''
+                      ? AppColors.primary
+                      : AppColors.infoGrey,
+                  buttonText: 'Continue',
+                  color: AppColors.white,
+                  isLoading: model!.isLoading,
+                  buttonBorderColor: AppColors.transparent,
+                  onPressed: onTapPaymentMeth == 'Pay with Wallet'
+                      ? () {
+                          model.createReminderPaidWallet(
+                            context,
+                            model: model,
+                            createReminderEntityModel:
+                                CreateReminderEntityModel(
+                                  medications: model.medicationClassList.map((
+                                    m,
+                                  ) {
+                                    return Medication(
+                                      medicationName: m.medicationName,
+                                      scheduleType: m.isCusSchedule!
+                                          ? 'CUSTOM'
+                                          : 'FIXED',
+                                      dosage: m.dosage,
+                                      medicationType: m.medicationType!
+                                          .toUpperCase(),
+                                      startDateTime: m.startDateIso,
+                                      endDateTime: m.endDateIso,
+                                      durationInDays: int.parse(m.duration!),
+                                      timesPerDay: m.isCusSchedule!
+                                          ? ''
+                                          : int.parse(m.timesToTake!),
+                                      dailyDoseTimes: (m.dosageMap as List)
+                                          .map(
+                                            (
+                                              dayData,
+                                            ) => (dayData['doses'] as List)
+                                                .map(
+                                                  (
+                                                    dose,
+                                                  ) => DailyDoseTime.fromJson(
+                                                    dose
+                                                        as Map<String, dynamic>,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          )
+                                          .toList(),
+                                      note: m.note,
+                                      medicationImage: m.imageData!.url == null
+                                          ? null
+                                          : MedicationImage.fromJson(
+                                              m.imageData!.toJson(),
+                                            ),
+                                    );
+                                  }).toList(),
+                                  timeZone: "Africa/Lagos",
+                                  notificationChannels: notificationChannel,
+                                  emails: addedEmailReminderList,
+                                  phoneNumbers: addedPhoneReminderList,
+                                  payment: Payment(
+                                    amount: costTotal,
+                                    currency: "NGN",
+                                  ),
+                                ),
+                          );
+                          model.notifyListeners();
+                        }
+                      : onTapPaymentMeth != ''
+                      ? () async {
+                          await model.createReminderPaid(
+                            context,
+                            model: model,
+                            createReminderEntityModel:
+                                CreateReminderEntityModel(
+                                  medications: model.medicationClassList.map((
+                                    m,
+                                  ) {
+                                    return Medication(
+                                      medicationName: m.medicationName,
+                                      scheduleType: m.isCusSchedule!
+                                          ? 'CUSTOM'
+                                          : 'FIXED',
+                                      dosage: m.dosage,
+                                      medicationType: m.medicationType!
+                                          .toUpperCase(),
+                                      startDateTime: m.startDateIso,
+                                      endDateTime: m.endDateIso,
+                                      durationInDays: int.parse(m.duration!),
+                                      timesPerDay: m.isCusSchedule!
+                                          ? ''
+                                          : int.parse(m.timesToTake!),
+                                      dailyDoseTimes: (m.dosageMap as List)
+                                          .map(
+                                            (
+                                              dayData,
+                                            ) => (dayData['doses'] as List)
+                                                .map(
+                                                  (
+                                                    dose,
+                                                  ) => DailyDoseTime.fromJson(
+                                                    dose
+                                                        as Map<String, dynamic>,
+                                                  ),
+                                                )
+                                                .toList(),
+                                          )
+                                          .toList(),
+                                      note: m.note,
+                                      medicationImage: m.imageData!.url == null
+                                          ? null
+                                          : MedicationImage.fromJson(
+                                              m.imageData!.toJson(),
+                                            ),
+                                    );
+                                  }).toList(),
+                                  timeZone: "Africa/Lagos",
+                                  notificationChannels: notificationChannel,
+                                  emails: addedEmailReminderList,
+                                  phoneNumbers: addedPhoneReminderList,
+                                  payment: Payment(
+                                    amount: costTotal,
+                                    currency: "NGN",
+                                  ),
+                                ),
+                          );
+                          if (model.createReminderResponseModel?.statusCode ==
+                                  200 ||
+                              model.createReminderResponseModel?.statusCode ==
+                                  201) {
+                            initiatePayment(
+                              context,
+                              reference: model
+                                  .createReminderResponseModel
+                                  ?.data
+                                  ?.transactionReference,
+                              paymentId: model
+                                  .createReminderResponseModel
+                                  ?.data
+                                  ?.paymentId,
+                              model: model,
+                            );
+                          }
+
                           model.notifyListeners();
                         }
                       : () {},
@@ -59046,53 +65082,53 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void addCostTotalUpdateDraft({draftPay.Medication? data, model}) {
-    costTotal = 0;
-    final days = data!.durationInDays != null || data.durationInDays != ''
-        ? int.parse('${data.durationInDays}')
-        : 0;
-    final times = getTotalTimesForReminderUpdateDraft(data);
+  // void addCostTotalUpdateDraft({draftPay.Medication? data, model}) {
+  //   costTotal = 0;
+  //   final days = data!.durationInDays != null || data.durationInDays != ''
+  //       ? int.parse('${data.durationInDays}')
+  //       : 0;
+  //   final times = getTotalTimesForReminderUpdateDraft(data);
 
-    int basePrice = 0;
-    if (selectedIndexes.contains(2)) {
-      basePrice += int.parse(
-        model.notificationChannelPricingResponseModel!.data!.data!
-            .firstWhere((element) => element.channel == 'SMS')
-            .unitPrice!
-            .toString(),
-      );
-    }
-    if (selectedIndexes.contains(3)) {
-      basePrice += int.parse(
-        model.notificationChannelPricingResponseModel!.data!.data!
-            .firstWhere((element) => element.channel == 'WHATSAPP')
-            .unitPrice!
-            .toString(),
-      );
-    }
-    if (selectedIndexes.contains(4)) {
-      basePrice += int.parse(
-        model.notificationChannelPricingResponseModel!.data!.data!
-            .firstWhere((element) => element.channel == 'PHONE_CALL')
-            .unitPrice!
-            .toString(),
-      );
-    }
+  //   int basePrice = 0;
+  //   if (selectedIndexes.contains(2)) {
+  //     basePrice += int.parse(
+  //       model.notificationChannelPricingResponseModel!.data!.data!
+  //           .firstWhere((element) => element.channel == 'SMS')
+  //           .unitPrice!
+  //           .toString(),
+  //     );
+  //   }
+  //   if (selectedIndexes.contains(3)) {
+  //     basePrice += int.parse(
+  //       model.notificationChannelPricingResponseModel!.data!.data!
+  //           .firstWhere((element) => element.channel == 'WHATSAPP')
+  //           .unitPrice!
+  //           .toString(),
+  //     );
+  //   }
+  //   if (selectedIndexes.contains(4)) {
+  //     basePrice += int.parse(
+  //       model.notificationChannelPricingResponseModel!.data!.data!
+  //           .firstWhere((element) => element.channel == 'PHONE_CALL')
+  //           .unitPrice!
+  //           .toString(),
+  //     );
+  //   }
 
-    if (data.scheduleType == 'FIXED') {
-      costTotal += basePrice * times * days;
-    } else {
-      costTotal += basePrice * times;
-    }
+  //   if (data.scheduleType == 'FIXED') {
+  //     costTotal += basePrice * times * days;
+  //   } else {
+  //     costTotal += basePrice * times;
+  //   }
 
-    if (selectedIndexes.contains(2) ||
-        selectedIndexes.contains(3) ||
-        selectedIndexes.contains(4)) {
-      costTotal = costTotal * addedPhoneReminderList.length;
-    }
-    calculateTotalRemindersUpdateDraft(data);
-    notifyListeners();
-  }
+  //   if (selectedIndexes.contains(2) ||
+  //       selectedIndexes.contains(3) ||
+  //       selectedIndexes.contains(4)) {
+  //     costTotal = costTotal * addedPhoneReminderList.length;
+  //   }
+  //   calculateTotalRemindersUpdateDraft(data);
+  //   notifyListeners();
+  // }
 
   calculateTotalRemindersUpdate(getReminderId.Data? data) {
     calculationForTotalReminderForEmail = 0;

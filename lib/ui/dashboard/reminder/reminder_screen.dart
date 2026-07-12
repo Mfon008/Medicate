@@ -2268,13 +2268,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   ),
                 ),
                 SizedBox(height: 4.h),
-                medication!.startDateTime == null ||
-                        medication.startDateTime!.isEmpty
+                medication!.startDateTime == null 
                     ? const SizedBox()
                     : TextView(
                         text:
-                            '${DateFormat('MMM d').format(DateTime.parse(medication.startDateTime!))} - '
-                            '${DateFormat('MMM d').format(DateTime.parse(medication.endDateTime!))}',
+                            '${DateFormat('MMM d').format(DateTime.parse(medication.startDateTime!.toString()))} - '
+                            '${DateFormat('MMM d').format(DateTime.parse(medication.endDateTime!.toString()))}',
                         textStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 13.2.sp,

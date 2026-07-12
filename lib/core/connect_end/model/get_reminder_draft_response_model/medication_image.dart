@@ -12,6 +12,7 @@ class MedicationImage {
   String? format;
   @JsonKey(name: '_id')
   String? id;
+  String? key;
 
   MedicationImage({
     this.url,
@@ -21,6 +22,7 @@ class MedicationImage {
     this.size,
     this.format,
     this.id,
+    this.key,
   });
 
   factory MedicationImage.fromJson(Map<String, dynamic> json) {
