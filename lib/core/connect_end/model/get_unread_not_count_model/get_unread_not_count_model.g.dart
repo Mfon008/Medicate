@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'retry_payment_reminder_response_model.dart';
+part of 'get_unread_not_count_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RetryPaymentReminderResponseModel _$RetryPaymentReminderResponseModelFromJson(
+GetUnreadNotCountModel _$GetUnreadNotCountModelFromJson(
   Map<String, dynamic> json,
-) => RetryPaymentReminderResponseModel(
+) => GetUnreadNotCountModel(
   success: json['success'] as bool?,
   statusCode: (json['statusCode'] as num?)?.toInt(),
   message: json['message'] as String?,
-  datum: json['datum'] == null
+  data: json['data'] == null
       ? null
-      : Datum.fromJson(json['datum'] as Map<String, dynamic>),
+      : Data.fromJson(json['data'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$RetryPaymentReminderResponseModelToJson(
-  RetryPaymentReminderResponseModel instance,
+Map<String, dynamic> _$GetUnreadNotCountModelToJson(
+  GetUnreadNotCountModel instance,
 ) => <String, dynamic>{
   'success': instance.success,
   'statusCode': instance.statusCode,
   'message': instance.message,
-  'datum': instance.datum,
+  'data': instance.data,
 };

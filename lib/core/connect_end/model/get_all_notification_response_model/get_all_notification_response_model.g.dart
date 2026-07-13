@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'retry_payment_reminder_response_model.dart';
+part of 'get_all_notification_response_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RetryPaymentReminderResponseModel _$RetryPaymentReminderResponseModelFromJson(
+GetAllNotificationResponseModel _$GetAllNotificationResponseModelFromJson(
   Map<String, dynamic> json,
-) => RetryPaymentReminderResponseModel(
+) => GetAllNotificationResponseModel(
   success: json['success'] as bool?,
   statusCode: (json['statusCode'] as num?)?.toInt(),
   message: json['message'] as String?,
-  datum: json['datum'] == null
+  data: json['data'] == null
       ? null
-      : Datum.fromJson(json['datum'] as Map<String, dynamic>),
+      : Data.fromJson(json['data'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$RetryPaymentReminderResponseModelToJson(
-  RetryPaymentReminderResponseModel instance,
+Map<String, dynamic> _$GetAllNotificationResponseModelToJson(
+  GetAllNotificationResponseModel instance,
 ) => <String, dynamic>{
   'success': instance.success,
   'statusCode': instance.statusCode,
   'message': instance.message,
-  'datum': instance.datum,
+  'data': instance.data,
 };

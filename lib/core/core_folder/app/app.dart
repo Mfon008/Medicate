@@ -67,13 +67,13 @@ import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart'
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_first_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_second_screen.dart';
+import '../../../ui/dashboard/profile/notification_screen.dart';
 import '../../../ui/dashboard/subscribers/application_form/application_form_screen.dart';
 import '../../../ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart';
 import '../../../ui/dashboard/subscribers/family_form/family_form_screen.dart';
 import '../../../ui/dashboard/subscribers/pro_health_sub_screen.dart';
 import '../../../ui/dashboard/subscribers/subsribers_screen.dart';
 import '../../../ui/dashboard/more_screen.dart';
-import '../../../ui/dashboard/notification/empty_notification.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_dashboard.dart';
 import '../../../ui/dashboard/pharm_dashboard/pharm_more_screen.dart';
 import '../../../ui/dashboard/pharm_dashboard/reminder/pharm_view_medication_screen.dart';
@@ -163,7 +163,6 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HealthCareResetPinPadScreen),
     MaterialRoute(page: PharmacyResetPinPadScreen),
     MaterialRoute(page: AskMeScreen),
-    MaterialRoute(page: EmptyNotification),
     MaterialRoute(page: FaqScreen),
     MaterialRoute(page: SplashScreen),
     MaterialRoute(page: WalletScreen),
@@ -254,6 +253,11 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HmoPlanTiersManagementScreen),
     MaterialRoute(page: HmoCreateTiersPlanManagementScreen),
     MaterialRoute(page: HealthcareViewMedicationScreen),
+    CustomRoute(
+      page: NotificationScreen,
+      transitionsBuilder: TransitionsBuilders.slideLeft,
+      durationInMilliseconds: 300,
+    ),
     CustomRoute(
       page: MoreScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,

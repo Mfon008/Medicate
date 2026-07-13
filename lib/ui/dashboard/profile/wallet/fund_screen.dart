@@ -230,10 +230,9 @@ class _FundScreenState extends State<FundScreen> {
                                             if (states.contains(
                                               WidgetState.selected,
                                             )) {
-                                              return AppColors.primary
-                                                  .withValues(
-                                                    alpha: 0.7,
-                                                  ); // active color (a bit faint)
+                                              return AppColors.primary.withValues(
+                                                alpha: 0.7,
+                                              ); // active color (a bit faint)
                                             }
                                             return AppColors
                                                 .fineGrey; // inactive color (fainter)
@@ -316,10 +315,9 @@ class _FundScreenState extends State<FundScreen> {
                                             if (states.contains(
                                               WidgetState.selected,
                                             )) {
-                                              return AppColors.primary
-                                                  .withValues(
-                                                    alpha: 0.7,
-                                                  ); // active color (a bit faint)
+                                              return AppColors.primary.withValues(
+                                                alpha: 0.7,
+                                              ); // active color (a bit faint)
                                             }
                                             return AppColors
                                                 .fineGrey; // inactive color (fainter)
@@ -402,10 +400,9 @@ class _FundScreenState extends State<FundScreen> {
                                             if (states.contains(
                                               WidgetState.selected,
                                             )) {
-                                              return AppColors.primary
-                                                  .withValues(
-                                                    alpha: 0.7,
-                                                  ); // active color (a bit faint)
+                                              return AppColors.primary.withValues(
+                                                alpha: 0.7,
+                                              ); // active color (a bit faint)
                                             }
                                             return AppColors
                                                 .fineGrey; // inactive color (fainter)
@@ -487,10 +484,9 @@ class _FundScreenState extends State<FundScreen> {
                                             if (states.contains(
                                               WidgetState.selected,
                                             )) {
-                                              return AppColors.primary
-                                                  .withValues(
-                                                    alpha: 0.7,
-                                                  ); // active color (a bit faint)
+                                              return AppColors.primary.withValues(
+                                                alpha: 0.7,
+                                              ); // active color (a bit faint)
                                             }
                                             return AppColors
                                                 .fineGrey; // inactive color (fainter)

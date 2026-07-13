@@ -172,25 +172,58 @@ class _ReminderScreenState extends State<ReminderScreen> {
                       color: AppColors.black,
                     ),
                   ),
-                  Container(
+                  ViewModelBuilder<AuthViewModel>.reactive(
+                viewModelBuilder: () => AuthViewModel(),
+                onViewModelReady: (model) {
+                  model.getUnreadNotifications();
+                },
+                disposeViewModel: false,
+                builder: (_, AuthViewModel model, _) {
+                  return Container(
+                    margin: EdgeInsets.only(right: 2.4.w),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppColors.inactive.withOpacity(.1),
                       border: Border.all(
-                        color: AppColors.inactive..withOpacity(.4),
+                        color: AppColors.inactive.withOpacity(.4),
                       ),
                     ),
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        AppImage.bell,
-                        height: isTablet(context) ? 40.h : 20.h,
-                        width: isTablet(context) ? 40.w : 20.w,
-                        color: AppColors.primary,
-                      ),
-                      onPressed: () {},
-                      splashRadius: 28,
+                    child: Stack(
+                      children: [
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            AppImage.bell,
+                            height: isTablet(context) ? 40.h : 20.h,
+                            width: isTablet(context) ? 40.w : 20.w,
+                            color: AppColors.primary,
+                          ),
+                          onPressed: () =>
+                              navigate.navigateTo(Routes.notificationScreen),
+                          splashRadius: 28,
+                        ),
+                        model.getUnreadNotificationCountModel != null &&
+                                model
+                                        .getUnreadNotificationCountModel!
+                                        .data!
+                                        .count! >
+                                    0
+                            ? Positioned(
+                                left: 28,
+                                top: 8,
+                                child: Container(
+                                  padding: EdgeInsets.all(3.14.w),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.appRed.withOpacity(.88),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                      ],
                     ),
-                  ),
+                  );
+                },
+              ),
                 ],
               ),
             ),
@@ -2268,7 +2301,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   ),
                 ),
                 SizedBox(height: 4.h),
-                medication!.startDateTime == null 
+                medication!.startDateTime == null
                     ? const SizedBox()
                     : TextView(
                         text:
@@ -2423,7 +2456,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   }) => GestureDetector(
     onTap: () => navigate.navigateTo(
       Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id,),
+      arguments: ViewMedicationScreenArguments(id: reminder.id),
     ),
     child: Container(
       padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),

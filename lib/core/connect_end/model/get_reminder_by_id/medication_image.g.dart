@@ -14,8 +14,8 @@ MedicationImage _$MedicationImageFromJson(Map<String, dynamic> json) =>
       height: (json['height'] as num?)?.toInt(),
       size: (json['size'] as num?)?.toInt(),
       format: json['format'] as String?,
-      id: json['_id'] as String?,
       key: json['key'] as String?,
+      id: json['_id'] as String?,
     );
 
 Map<String, dynamic> _$MedicationImageToJson(MedicationImage instance) =>

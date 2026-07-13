@@ -42,7 +42,6 @@ class NotificationService {
     //     ),
     //   );
     // }
-  
 
     // navigation to screens when push notification pops should be implemented here
   }
@@ -52,13 +51,13 @@ class NotificationService {
     const android = AndroidInitializationSettings("@drawable/logo");
     const settings = InitializationSettings(android: android, iOS: ios);
     await flutterLocalNotificationsPlugin.initialize(
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse, settings: settings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+      settings: settings,
     );
-    final platform =
-        flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin
-            >();
+    final platform = flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     platform?.createNotificationChannel(_androidChannel);
   }
 
@@ -89,10 +88,10 @@ class NotificationService {
       final notification = message.notification;
       if (notification == null) return;
       flutterLocalNotificationsPlugin.show(
-        id:notification.hashCode,
-        title:notification.title,
-        body:notification.body,
-        notificationDetails:  NotificationDetails(
+        id: notification.hashCode,
+        title: notification.title,
+        body: notification.body,
+        notificationDetails: NotificationDetails(
           android: AndroidNotificationDetails(
             _androidChannel.id,
             _androidChannel.name,
@@ -116,10 +115,8 @@ class NotificationService {
 
         if (callerType == 'MydocLabModelsUser') {
           print('push mes::user::${message.data}');
-         
         } else if (callerType == 'MydocLabModelsDoctor') {
           print('push mes::::${message.data}');
-         
         }
       }
 
@@ -163,6 +160,4 @@ class NotificationService {
     initLocalNotification();
     _initNotification();
   }
-
-
 }

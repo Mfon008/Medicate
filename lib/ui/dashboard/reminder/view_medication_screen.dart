@@ -773,8 +773,8 @@ class ViewMedicationScreen extends StatelessWidget {
                                         ? 0.h
                                         : 5.0.h,
                                   ),
-                                  model.convert234To0(model) ,
-                                  
+                                  model.convert234To0(model),
+
                                   model
                                           .getReminderByIdModel!
                                           .data!
@@ -810,8 +810,8 @@ class ViewMedicationScreen extends StatelessWidget {
                                             color: AppColors.infoGrey,
                                           ),
                                         ),
-                                 
-                                  model.convertToProperEmail(model)
+
+                                  model.convertToProperEmail(model),
                                 ],
                               ),
                             ),

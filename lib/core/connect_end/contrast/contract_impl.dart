@@ -12,6 +12,7 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_all_notification_response_model/get_all_notification_response_model.dart';
 import '../model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospital_network_response_model.dart';
 import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
@@ -23,6 +24,7 @@ import '../model/get_reminder_draft_response_model/get_reminder_draft_response_m
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
+import '../model/get_unread_not_count_model/get_unread_not_count_model.dart';
 import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
@@ -159,8 +161,10 @@ class AuthContractsImpl {
   );
 
   Future<InitiatePaymentResponseModel> initiatePayment({
-    String? reference, String? paymentId,
-  }) async => await _api.initiatePayment(reference: reference,paymentId: paymentId);
+    String? reference,
+    String? paymentId,
+  }) async =>
+      await _api.initiatePayment(reference: reference, paymentId: paymentId);
 
   Future<UploadImageResponseModel> uploadImage(MultipartFile file) async =>
       await _api.uploadImage(file);
@@ -276,19 +280,19 @@ class AuthContractsImpl {
   Future<GetReminderDraftResponseModel> getDraftedReminder({
     String? page,
   }) async => await _api.getDraftedReminder(page: page);
-  
+
   Future<GetPendingReminderResponseModel> getPendingReminder({
     String? page,
   }) async => await _api.getPendingReminder(page: page);
-  
+
   Future<GetPendingReminderResponseModel> getOnlyPendingReminder({
     String? page,
   }) async => await _api.getPendingReminderOnly(page: page);
-  
+
   Future<GetPendingReminderResponseModel> getFailedPendingReminder({
     String? page,
   }) async => await _api.getFailedReminder(page: page);
-  
+
   Future<dynamic> saveReminderDraft(
     SaveDraftReminderEntityModel savedraft,
   ) async => await _api.saveReminderDraft(savedraft);
@@ -306,5 +310,15 @@ class AuthContractsImpl {
   Future<RetryPaymentReminderResponseModel> reminderRetryPayment({
     String? reminderId,
   }) async => _api.reminderRetryPayment(reminderId: reminderId);
-  Future<dynamic> sendNotificaitonDevice({String? token, String? deviceType}) async => _api.sendNotificaitonDevice(token: token, deviceType: deviceType);
+  Future<dynamic> sendNotificaitonDevice({
+    String? token,
+    String? deviceType,
+  }) async => _api.sendNotificaitonDevice(token: token, deviceType: deviceType);
+  Future<GetAllNotificationResponseModel> getNotificaitons({
+    String? page,
+  }) async => _api.getNotificaitons(page: page);
+  Future<GetUnreadNotCountModel> unReadNotificaitons() async =>
+      _api.unReadNotificaitons();
+  Future<dynamic> markAsReadNotificaitons() async =>
+      _api.markAsReadNotificaitons();
 }

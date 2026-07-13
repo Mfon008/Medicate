@@ -6,8 +6,8 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:flutter/material.dart' as _i120;
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as _i120;
 import 'package:medicate_app/core/connect_end/model/get_hmos_plan_response_model/plan.dart'
     as _i121;
 import 'package:medicate_app/core/connect_end/model/get_listed_plan_tiers_response_model/plan_tier.dart'
@@ -15,55 +15,55 @@ import 'package:medicate_app/core/connect_end/model/get_listed_plan_tiers_respon
 import 'package:medicate_app/core/connect_end/model/get_my_hmo_plan_response_model/plan.dart'
     as _i122;
 import 'package:medicate_app/ui/authentication/health_care/health_care_change_no_screen.dart'
-    as _i53;
-import 'package:medicate_app/ui/authentication/health_care/health_care_doctor_specialist_signup_screen.dart'
-    as _i51;
-import 'package:medicate_app/ui/authentication/health_care/health_care_forgot_pin_screen.dart'
-    as _i54;
-import 'package:medicate_app/ui/authentication/health_care/health_care_hospital_and_clinic_signup_screen.dart'
-    as _i50;
-import 'package:medicate_app/ui/authentication/health_care/health_care_login_screen.dart'
     as _i52;
+import 'package:medicate_app/ui/authentication/health_care/health_care_doctor_specialist_signup_screen.dart'
+    as _i50;
+import 'package:medicate_app/ui/authentication/health_care/health_care_forgot_pin_screen.dart'
+    as _i53;
+import 'package:medicate_app/ui/authentication/health_care/health_care_hospital_and_clinic_signup_screen.dart'
+    as _i49;
+import 'package:medicate_app/ui/authentication/health_care/health_care_login_screen.dart'
+    as _i51;
 import 'package:medicate_app/ui/authentication/health_care/health_care_reset_pin_screen.dart'
-    as _i55;
+    as _i54;
 import 'package:medicate_app/ui/authentication/health_care/health_care_reset_success_screen.dart'
-    as _i56;
+    as _i55;
 import 'package:medicate_app/ui/authentication/health_care/health_care_setup_pin_screen.dart'
-    as _i57;
+    as _i56;
 import 'package:medicate_app/ui/authentication/health_care/health_care_welcome_screen.dart'
-    as _i58;
+    as _i57;
 import 'package:medicate_app/ui/authentication/hmo/hmo_change_no_screen.dart'
-    as _i80;
-import 'package:medicate_app/ui/authentication/hmo/hmo_forgot_pin_screen.dart'
     as _i79;
-import 'package:medicate_app/ui/authentication/hmo/hmo_login_screen.dart'
+import 'package:medicate_app/ui/authentication/hmo/hmo_forgot_pin_screen.dart'
     as _i78;
-import 'package:medicate_app/ui/authentication/hmo/hmo_reset_pin_screen.dart'
+import 'package:medicate_app/ui/authentication/hmo/hmo_login_screen.dart'
     as _i77;
-import 'package:medicate_app/ui/authentication/hmo/hmo_reset_success_screen.dart'
+import 'package:medicate_app/ui/authentication/hmo/hmo_reset_pin_screen.dart'
     as _i76;
-import 'package:medicate_app/ui/authentication/hmo/hmo_setup_pin_screen.dart'
+import 'package:medicate_app/ui/authentication/hmo/hmo_reset_success_screen.dart'
     as _i75;
-import 'package:medicate_app/ui/authentication/hmo/hmo_signup_screen.dart'
+import 'package:medicate_app/ui/authentication/hmo/hmo_setup_pin_screen.dart'
     as _i74;
-import 'package:medicate_app/ui/authentication/hmo/hmo_welcome_screen.dart'
+import 'package:medicate_app/ui/authentication/hmo/hmo_signup_screen.dart'
     as _i73;
+import 'package:medicate_app/ui/authentication/hmo/hmo_welcome_screen.dart'
+    as _i72;
 import 'package:medicate_app/ui/authentication/pharmacy/pharm_change_no_screen.dart'
-    as _i37;
-import 'package:medicate_app/ui/authentication/pharmacy/pharm_forgot_pin_screen.dart'
-    as _i38;
-import 'package:medicate_app/ui/authentication/pharmacy/pharm_login_screen.dart'
     as _i36;
-import 'package:medicate_app/ui/authentication/pharmacy/pharm_reset_pin_screen.dart'
-    as _i39;
-import 'package:medicate_app/ui/authentication/pharmacy/pharm_reset_success_screen.dart'
-    as _i45;
-import 'package:medicate_app/ui/authentication/pharmacy/pharm_setup_pin_screen.dart'
+import 'package:medicate_app/ui/authentication/pharmacy/pharm_forgot_pin_screen.dart'
+    as _i37;
+import 'package:medicate_app/ui/authentication/pharmacy/pharm_login_screen.dart'
     as _i35;
-import 'package:medicate_app/ui/authentication/pharmacy/pharm_sign_up_screen.dart'
+import 'package:medicate_app/ui/authentication/pharmacy/pharm_reset_pin_screen.dart'
+    as _i38;
+import 'package:medicate_app/ui/authentication/pharmacy/pharm_reset_success_screen.dart'
+    as _i44;
+import 'package:medicate_app/ui/authentication/pharmacy/pharm_setup_pin_screen.dart'
     as _i34;
+import 'package:medicate_app/ui/authentication/pharmacy/pharm_sign_up_screen.dart'
+    as _i33;
 import 'package:medicate_app/ui/authentication/pharmacy/welcome_screen.dart'
-    as _i40;
+    as _i39;
 import 'package:medicate_app/ui/authentication/user/change_phone_number.dart'
     as _i8;
 import 'package:medicate_app/ui/authentication/user/forgot_pin_screen.dart'
@@ -81,106 +81,106 @@ import 'package:medicate_app/ui/authentication/user/welcome_screen.dart'
 import 'package:medicate_app/ui/dashboard/ask_me_screen.dart' as _i23;
 import 'package:medicate_app/ui/dashboard/dashboard_screen.dart' as _i2;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_dashboard.dart'
-    as _i59;
+    as _i58;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_home_screen.dart'
-    as _i60;
+    as _i59;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart'
     as _i117;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/reminder/healthcare_view_medication_screen.dart'
-    as _i114;
+    as _i113;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart'
-    as _i61;
+    as _i60;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart'
-    as _i62;
+    as _i61;
 import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_more_screen.dart'
     as _i118;
 import 'package:medicate_app/ui/dashboard/hmo/add_hospital_portal_screen.dart'
-    as _i100;
-import 'package:medicate_app/ui/dashboard/hmo/create_claims_portal_screen.dart'
-    as _i104;
-import 'package:medicate_app/ui/dashboard/hmo/create_hmo_plan.dart' as _i94;
-import 'package:medicate_app/ui/dashboard/hmo/create_settlements_portal_screen.dart'
-    as _i106;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_application_portal_screen.dart'
-    as _i95;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_claims_portal_screen.dart'
-    as _i103;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_dashboard.dart' as _i63;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_home_screen.dart' as _i64;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_hospital_network_portal_screen.dart'
     as _i99;
+import 'package:medicate_app/ui/dashboard/hmo/create_claims_portal_screen.dart'
+    as _i103;
+import 'package:medicate_app/ui/dashboard/hmo/create_hmo_plan.dart' as _i93;
+import 'package:medicate_app/ui/dashboard/hmo/create_settlements_portal_screen.dart'
+    as _i105;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_application_portal_screen.dart'
+    as _i94;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_claims_portal_screen.dart'
+    as _i102;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_dashboard.dart' as _i62;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_home_screen.dart' as _i63;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_hospital_network_portal_screen.dart'
+    as _i98;
 import 'package:medicate_app/ui/dashboard/hmo/hmo_more_screen.dart' as _i119;
 import 'package:medicate_app/ui/dashboard/hmo/hmo_renewal_portal_screen.dart'
-    as _i101;
+    as _i100;
 import 'package:medicate_app/ui/dashboard/hmo/hmo_settlement_portal_screen.dart'
-    as _i108;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_subscribers_portal_screen.dart'
-    as _i97;
-import 'package:medicate_app/ui/dashboard/hmo/hmo_view_claims_portal_screen.dart'
-    as _i105;
-import 'package:medicate_app/ui/dashboard/hmo/view_hmo_application_portal_screen.dart'
-    as _i96;
-import 'package:medicate_app/ui/dashboard/hmo/view_hmo_renewal_portal_screen.dart'
-    as _i102;
-import 'package:medicate_app/ui/dashboard/hmo/view_hmo_subscribers_portal_screen.dart'
-    as _i98;
-import 'package:medicate_app/ui/dashboard/hmo/view_settlement_portal_screen.dart'
     as _i107;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_subscribers_portal_screen.dart'
+    as _i96;
+import 'package:medicate_app/ui/dashboard/hmo/hmo_view_claims_portal_screen.dart'
+    as _i104;
+import 'package:medicate_app/ui/dashboard/hmo/view_hmo_application_portal_screen.dart'
+    as _i95;
+import 'package:medicate_app/ui/dashboard/hmo/view_hmo_renewal_portal_screen.dart'
+    as _i101;
+import 'package:medicate_app/ui/dashboard/hmo/view_hmo_subscribers_portal_screen.dart'
+    as _i97;
+import 'package:medicate_app/ui/dashboard/hmo/view_settlement_portal_screen.dart'
+    as _i106;
 import 'package:medicate_app/ui/dashboard/home_screen.dart' as _i3;
 import 'package:medicate_app/ui/dashboard/more_screen.dart' as _i115;
-import 'package:medicate_app/ui/dashboard/notification/empty_notification.dart'
-    as _i24;
 import 'package:medicate_app/ui/dashboard/pharm_dashboard/pharm_dashboard.dart'
     as _i4;
 import 'package:medicate_app/ui/dashboard/pharm_dashboard/pharm_more_screen.dart'
     as _i116;
 import 'package:medicate_app/ui/dashboard/pharm_dashboard/reminder/pharm_view_medication_screen.dart'
-    as _i33;
-import 'package:medicate_app/ui/dashboard/profile/faq_screen.dart' as _i25;
+    as _i32;
+import 'package:medicate_app/ui/dashboard/profile/faq_screen.dart' as _i24;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/doctors_screen.dart'
-    as _i47;
+    as _i46;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_info_screen.dart'
-    as _i71;
+    as _i70;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_practitioner_profile_screen.dart'
-    as _i72;
+    as _i71;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_profile_info_screen.dart'
-    as _i65;
+    as _i64;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_profile_screen.dart'
-    as _i66;
+    as _i65;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_reset_pin_pad_screen.dart'
     as _i21;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/health_care_setting_screen.dart'
-    as _i67;
+    as _i66;
 import 'package:medicate_app/ui/dashboard/profile/health_care_profile/kyc/kyc_screen.dart'
-    as _i43;
-import 'package:medicate_app/ui/dashboard/profile/health_care_profile/roles_and_permission_screen.dart'
-    as _i49;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_create_tiers_plan_management_screen.dart'
-    as _i113;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart'
-    as _i112;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_profile_info_screen.dart'
-    as _i81;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_profile_screen.dart'
-    as _i82;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_reset_pin_pad_screen.dart'
-    as _i83;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_setting_screen.dart'
-    as _i84;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart'
-    as _i109;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_first_screen.dart'
-    as _i111;
-import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_second_screen.dart'
-    as _i110;
-import 'package:medicate_app/ui/dashboard/profile/hmo/kyc/hmo_kyc_screen.dart'
     as _i42;
-import 'package:medicate_app/ui/dashboard/profile/hmo/roles_and_permission_screen.dart'
-    as _i85;
-import 'package:medicate_app/ui/dashboard/profile/hmo/users_screen.dart'
-    as _i86;
-import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart'
+import 'package:medicate_app/ui/dashboard/profile/health_care_profile/roles_and_permission_screen.dart'
+    as _i48;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_create_tiers_plan_management_screen.dart'
+    as _i112;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart'
+    as _i111;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_profile_info_screen.dart'
+    as _i80;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_profile_screen.dart'
+    as _i81;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_reset_pin_pad_screen.dart'
+    as _i82;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_setting_screen.dart'
+    as _i83;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart'
+    as _i108;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_first_screen.dart'
+    as _i110;
+import 'package:medicate_app/ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_second_screen.dart'
+    as _i109;
+import 'package:medicate_app/ui/dashboard/profile/hmo/kyc/hmo_kyc_screen.dart'
     as _i41;
+import 'package:medicate_app/ui/dashboard/profile/hmo/roles_and_permission_screen.dart'
+    as _i84;
+import 'package:medicate_app/ui/dashboard/profile/hmo/users_screen.dart'
+    as _i85;
+import 'package:medicate_app/ui/dashboard/profile/notification_screen.dart'
+    as _i114;
+import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/kyc/kyc_screen.dart'
+    as _i40;
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/pharmacy_profile_info_screen.dart'
     as _i18;
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/pharmacy_profile_screen.dart'
@@ -188,11 +188,11 @@ import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/pharmacy_prof
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/pharmacy_reset_pin_pad_screen.dart'
     as _i22;
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/pharmacy_setting_screen.dart'
-    as _i44;
+    as _i43;
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/roles_and_permission_screen.dart'
-    as _i48;
+    as _i47;
 import 'package:medicate_app/ui/dashboard/profile/pharmacy_profile/users_screen.dart'
-    as _i46;
+    as _i45;
 import 'package:medicate_app/ui/dashboard/profile/reset_pin_pad_screen.dart'
     as _i20;
 import 'package:medicate_app/ui/dashboard/profile/user_profile/profile_info_screen.dart'
@@ -200,40 +200,40 @@ import 'package:medicate_app/ui/dashboard/profile/user_profile/profile_info_scre
 import 'package:medicate_app/ui/dashboard/profile/user_profile/profile_screen.dart'
     as _i15;
 import 'package:medicate_app/ui/dashboard/profile/wallet/fund_screen.dart'
-    as _i29;
-import 'package:medicate_app/ui/dashboard/profile/wallet/fund_wallet_pay_screen.dart'
-    as _i30;
-import 'package:medicate_app/ui/dashboard/profile/wallet/transaction_screen.dart'
     as _i28;
-import 'package:medicate_app/ui/dashboard/profile/wallet/wallet_screen.dart'
+import 'package:medicate_app/ui/dashboard/profile/wallet/fund_wallet_pay_screen.dart'
+    as _i29;
+import 'package:medicate_app/ui/dashboard/profile/wallet/transaction_screen.dart'
     as _i27;
+import 'package:medicate_app/ui/dashboard/profile/wallet/wallet_screen.dart'
+    as _i26;
 import 'package:medicate_app/ui/dashboard/reminder/payment_status_screen.dart'
-    as _i31;
+    as _i30;
 import 'package:medicate_app/ui/dashboard/reminder/view_medication_screen.dart'
-    as _i32;
+    as _i31;
 import 'package:medicate_app/ui/dashboard/subscribers/application_form/application_form_screen.dart'
-    as _i88;
-import 'package:medicate_app/ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart'
-    as _i91;
-import 'package:medicate_app/ui/dashboard/subscribers/family_form/family_form_screen.dart'
-    as _i90;
-import 'package:medicate_app/ui/dashboard/subscribers/pro_health_sub_screen.dart'
     as _i87;
-import 'package:medicate_app/ui/dashboard/subscribers/subsribers_screen.dart'
+import 'package:medicate_app/ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart'
+    as _i90;
+import 'package:medicate_app/ui/dashboard/subscribers/family_form/family_form_screen.dart'
     as _i89;
+import 'package:medicate_app/ui/dashboard/subscribers/pro_health_sub_screen.dart'
+    as _i86;
+import 'package:medicate_app/ui/dashboard/subscribers/subsribers_screen.dart'
+    as _i88;
 import 'package:medicate_app/ui/dashboard/support/support_screen.dart' as _i19;
 import 'package:medicate_app/ui/onboarding/get_started_onboarding.dart' as _i6;
 import 'package:medicate_app/ui/onboarding/role_onboarding.dart' as _i5;
-import 'package:medicate_app/ui/onboarding/splash_screen.dart' as _i26;
-import 'package:medicate_app/ui/widget/accelerate_payment_view.dart' as _i68;
+import 'package:medicate_app/ui/onboarding/splash_screen.dart' as _i25;
+import 'package:medicate_app/ui/widget/accelerate_payment_view.dart' as _i67;
 import 'package:medicate_app/ui/widget/accelerate_payment_view_hmo_plan.dart'
-    as _i92;
+    as _i91;
 import 'package:medicate_app/ui/widget/accelerate_payment_view_pharmacy.dart'
-    as _i69;
+    as _i68;
 import 'package:medicate_app/ui/widget/accelerate_payment_view_wallet.dart'
-    as _i70;
+    as _i69;
 import 'package:medicate_app/ui/widget/payment_success_submit_app_screen.dart'
-    as _i93;
+    as _i92;
 import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i124;
 
@@ -282,8 +282,6 @@ class Routes {
   static const pharmacyResetPinPadScreen = '/pharmacy-reset-pin-pad-screen';
 
   static const askMeScreen = '/ask-me-screen';
-
-  static const emptyNotification = '/empty-notification';
 
   static const faqScreen = '/faq-screen';
 
@@ -487,6 +485,8 @@ class Routes {
   static const healthcareViewMedicationScreen =
       '/healthcare-view-medication-screen';
 
+  static const notificationScreen = '/notification-screen';
+
   static const moreScreen = '/more-screen';
 
   static const pharmMoreScreen = '/pharm-more-screen';
@@ -521,7 +521,6 @@ class Routes {
     healthCareResetPinPadScreen,
     pharmacyResetPinPadScreen,
     askMeScreen,
-    emptyNotification,
     faqScreen,
     splashScreen,
     walletScreen,
@@ -612,6 +611,7 @@ class Routes {
     hmoPlanTiersManagementScreen,
     hmoCreateTiersPlanManagementScreen,
     healthcareViewMedicationScreen,
+    notificationScreen,
     moreScreen,
     pharmMoreScreen,
     businessProvidersMoreScreen,
@@ -656,265 +656,265 @@ class StackedRouter extends _i1.RouterBase {
       page: _i22.PharmacyResetPinPadScreen,
     ),
     _i1.RouteDef(Routes.askMeScreen, page: _i23.AskMeScreen),
-    _i1.RouteDef(Routes.emptyNotification, page: _i24.EmptyNotification),
-    _i1.RouteDef(Routes.faqScreen, page: _i25.FaqScreen),
-    _i1.RouteDef(Routes.splashScreen, page: _i26.SplashScreen),
-    _i1.RouteDef(Routes.walletScreen, page: _i27.WalletScreen),
-    _i1.RouteDef(Routes.transactionScreen, page: _i28.TransactionScreen),
-    _i1.RouteDef(Routes.fundScreen, page: _i29.FundScreen),
-    _i1.RouteDef(Routes.fundWalletPayScreen, page: _i30.FundWalletPayScreen),
-    _i1.RouteDef(Routes.paymentStatusScreen, page: _i31.PaymentStatusScreen),
-    _i1.RouteDef(Routes.viewMedicationScreen, page: _i32.ViewMedicationScreen),
+    _i1.RouteDef(Routes.faqScreen, page: _i24.FaqScreen),
+    _i1.RouteDef(Routes.splashScreen, page: _i25.SplashScreen),
+    _i1.RouteDef(Routes.walletScreen, page: _i26.WalletScreen),
+    _i1.RouteDef(Routes.transactionScreen, page: _i27.TransactionScreen),
+    _i1.RouteDef(Routes.fundScreen, page: _i28.FundScreen),
+    _i1.RouteDef(Routes.fundWalletPayScreen, page: _i29.FundWalletPayScreen),
+    _i1.RouteDef(Routes.paymentStatusScreen, page: _i30.PaymentStatusScreen),
+    _i1.RouteDef(Routes.viewMedicationScreen, page: _i31.ViewMedicationScreen),
     _i1.RouteDef(
       Routes.pharmViewMedicationScreen,
-      page: _i33.PharmViewMedicationScreen,
+      page: _i32.PharmViewMedicationScreen,
     ),
-    _i1.RouteDef(Routes.pharmacySignUpScreen, page: _i34.PharmacySignUpScreen),
+    _i1.RouteDef(Routes.pharmacySignUpScreen, page: _i33.PharmacySignUpScreen),
     _i1.RouteDef(
       Routes.pharmacySetupPinScreen,
-      page: _i35.PharmacySetupPinScreen,
+      page: _i34.PharmacySetupPinScreen,
     ),
-    _i1.RouteDef(Routes.pharmacyLoginScreen, page: _i36.PharmacyLoginScreen),
+    _i1.RouteDef(Routes.pharmacyLoginScreen, page: _i35.PharmacyLoginScreen),
     _i1.RouteDef(
       Routes.pharmacyChangePhoneNumber,
-      page: _i37.PharmacyChangePhoneNumber,
+      page: _i36.PharmacyChangePhoneNumber,
     ),
     _i1.RouteDef(
       Routes.pharmacyForgotPinScreen,
-      page: _i38.PharmacyForgotPinScreen,
+      page: _i37.PharmacyForgotPinScreen,
     ),
     _i1.RouteDef(
       Routes.pharmacyResetPinScreen,
-      page: _i39.PharmacyResetPinScreen,
+      page: _i38.PharmacyResetPinScreen,
     ),
     _i1.RouteDef(
       Routes.pharmacyWelcomeScreen,
-      page: _i40.PharmacyWelcomeScreen,
+      page: _i39.PharmacyWelcomeScreen,
     ),
-    _i1.RouteDef(Routes.kycScreen, page: _i41.KycScreen),
-    _i1.RouteDef(Routes.hMOKycScreen, page: _i42.HMOKycScreen),
-    _i1.RouteDef(Routes.healthCareKycScreen, page: _i43.HealthCareKycScreen),
+    _i1.RouteDef(Routes.kycScreen, page: _i40.KycScreen),
+    _i1.RouteDef(Routes.hMOKycScreen, page: _i41.HMOKycScreen),
+    _i1.RouteDef(Routes.healthCareKycScreen, page: _i42.HealthCareKycScreen),
     _i1.RouteDef(
       Routes.pharmacySettingScreen,
-      page: _i44.PharmacySettingScreen,
+      page: _i43.PharmacySettingScreen,
     ),
     _i1.RouteDef(
       Routes.pharmResetSuccessScreen,
-      page: _i45.PharmResetSuccessScreen,
+      page: _i44.PharmResetSuccessScreen,
     ),
-    _i1.RouteDef(Routes.usersScreen, page: _i46.UsersScreen),
-    _i1.RouteDef(Routes.doctorScreen, page: _i47.DoctorScreen),
+    _i1.RouteDef(Routes.usersScreen, page: _i45.UsersScreen),
+    _i1.RouteDef(Routes.doctorScreen, page: _i46.DoctorScreen),
     _i1.RouteDef(
       Routes.rolesAndPermissionScreen,
-      page: _i48.RolesAndPermissionScreen,
+      page: _i47.RolesAndPermissionScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareRolesAndPermissionScreen,
-      page: _i49.HealthCareRolesAndPermissionScreen,
+      page: _i48.HealthCareRolesAndPermissionScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareHospitalAndClinicSignUpScreen,
-      page: _i50.HealthCareHospitalAndClinicSignUpScreen,
+      page: _i49.HealthCareHospitalAndClinicSignUpScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareDoctorSpecialistSignUpScreen,
-      page: _i51.HealthCareDoctorSpecialistSignUpScreen,
+      page: _i50.HealthCareDoctorSpecialistSignUpScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareLoginScreen,
-      page: _i52.HealthCareLoginScreen,
+      page: _i51.HealthCareLoginScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareChangePhoneNumber,
-      page: _i53.HealthCareChangePhoneNumber,
+      page: _i52.HealthCareChangePhoneNumber,
     ),
     _i1.RouteDef(
       Routes.healthCareForgotPinScreen,
-      page: _i54.HealthCareForgotPinScreen,
+      page: _i53.HealthCareForgotPinScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareResetPinScreen,
-      page: _i55.HealthCareResetPinScreen,
+      page: _i54.HealthCareResetPinScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareResetSuccessScreen,
-      page: _i56.HealthCareResetSuccessScreen,
+      page: _i55.HealthCareResetSuccessScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareSetupPinScreen,
-      page: _i57.HealthCareSetupPinScreen,
+      page: _i56.HealthCareSetupPinScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareWelcomeScreen,
-      page: _i58.HealthCareWelcomeScreen,
+      page: _i57.HealthCareWelcomeScreen,
     ),
     _i1.RouteDef(
       Routes.businessProviderDashboard,
-      page: _i59.BusinessProviderDashboard,
+      page: _i58.BusinessProviderDashboard,
     ),
     _i1.RouteDef(
       Routes.businessProvidersHomeScreen,
-      page: _i60.BusinessProvidersHomeScreen,
+      page: _i59.BusinessProvidersHomeScreen,
     ),
     _i1.RouteDef(
       Routes.specialistsProviderDashboard,
-      page: _i61.SpecialistsProviderDashboard,
+      page: _i60.SpecialistsProviderDashboard,
     ),
     _i1.RouteDef(
       Routes.specialistsProvidersHomeScreen,
-      page: _i62.SpecialistsProvidersHomeScreen,
+      page: _i61.SpecialistsProvidersHomeScreen,
     ),
-    _i1.RouteDef(Routes.hMODashboard, page: _i63.HMODashboard),
-    _i1.RouteDef(Routes.hMOHomeScreen, page: _i64.HMOHomeScreen),
+    _i1.RouteDef(Routes.hMODashboard, page: _i62.HMODashboard),
+    _i1.RouteDef(Routes.hMOHomeScreen, page: _i63.HMOHomeScreen),
     _i1.RouteDef(
       Routes.healthCareProfileInfoScreen,
-      page: _i65.HealthCareProfileInfoScreen,
+      page: _i64.HealthCareProfileInfoScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareProfileScreen,
-      page: _i66.HealthCareProfileScreen,
+      page: _i65.HealthCareProfileScreen,
     ),
     _i1.RouteDef(
       Routes.healthCareSettingScreen,
-      page: _i67.HealthCareSettingScreen,
+      page: _i66.HealthCareSettingScreen,
     ),
     _i1.RouteDef(
       Routes.acceleratePaymentView,
-      page: _i68.AcceleratePaymentView,
+      page: _i67.AcceleratePaymentView,
     ),
     _i1.RouteDef(
       Routes.acceleratePaymentViewPharmacy,
-      page: _i69.AcceleratePaymentViewPharmacy,
+      page: _i68.AcceleratePaymentViewPharmacy,
     ),
     _i1.RouteDef(
       Routes.acceleratePaymentViewWallet,
-      page: _i70.AcceleratePaymentViewWallet,
+      page: _i69.AcceleratePaymentViewWallet,
     ),
     _i1.RouteDef(
       Routes.healthCarePractitionerProfileInfoScreen,
-      page: _i71.HealthCarePractitionerProfileInfoScreen,
+      page: _i70.HealthCarePractitionerProfileInfoScreen,
     ),
     _i1.RouteDef(
       Routes.healthCarePractitionerProfileScreen,
-      page: _i72.HealthCarePractitionerProfileScreen,
+      page: _i71.HealthCarePractitionerProfileScreen,
     ),
-    _i1.RouteDef(Routes.hMOWelcomeScreen, page: _i73.HMOWelcomeScreen),
-    _i1.RouteDef(Routes.hMOSignUpScreen, page: _i74.HMOSignUpScreen),
-    _i1.RouteDef(Routes.hMOSetupPinScreen, page: _i75.HMOSetupPinScreen),
+    _i1.RouteDef(Routes.hMOWelcomeScreen, page: _i72.HMOWelcomeScreen),
+    _i1.RouteDef(Routes.hMOSignUpScreen, page: _i73.HMOSignUpScreen),
+    _i1.RouteDef(Routes.hMOSetupPinScreen, page: _i74.HMOSetupPinScreen),
     _i1.RouteDef(
       Routes.hMOResetSuccessScreen,
-      page: _i76.HMOResetSuccessScreen,
+      page: _i75.HMOResetSuccessScreen,
     ),
-    _i1.RouteDef(Routes.hMOResetPinScreen, page: _i77.HMOResetPinScreen),
-    _i1.RouteDef(Routes.hMOLoginScreen, page: _i78.HMOLoginScreen),
-    _i1.RouteDef(Routes.hMOForgotPinScreen, page: _i79.HMOForgotPinScreen),
-    _i1.RouteDef(Routes.hMOChangePhoneNumber, page: _i80.HMOChangePhoneNumber),
-    _i1.RouteDef(Routes.hMOProfileInfoScreen, page: _i81.HMOProfileInfoScreen),
-    _i1.RouteDef(Routes.hMOProfileScreen, page: _i82.HMOProfileScreen),
-    _i1.RouteDef(Routes.hMOResetPinPadScreen, page: _i83.HMOResetPinPadScreen),
-    _i1.RouteDef(Routes.hMOSettingScreen, page: _i84.HMOSettingScreen),
+    _i1.RouteDef(Routes.hMOResetPinScreen, page: _i76.HMOResetPinScreen),
+    _i1.RouteDef(Routes.hMOLoginScreen, page: _i77.HMOLoginScreen),
+    _i1.RouteDef(Routes.hMOForgotPinScreen, page: _i78.HMOForgotPinScreen),
+    _i1.RouteDef(Routes.hMOChangePhoneNumber, page: _i79.HMOChangePhoneNumber),
+    _i1.RouteDef(Routes.hMOProfileInfoScreen, page: _i80.HMOProfileInfoScreen),
+    _i1.RouteDef(Routes.hMOProfileScreen, page: _i81.HMOProfileScreen),
+    _i1.RouteDef(Routes.hMOResetPinPadScreen, page: _i82.HMOResetPinPadScreen),
+    _i1.RouteDef(Routes.hMOSettingScreen, page: _i83.HMOSettingScreen),
     _i1.RouteDef(
       Routes.hMORolesAndPermissionScreen,
-      page: _i85.HMORolesAndPermissionScreen,
+      page: _i84.HMORolesAndPermissionScreen,
     ),
-    _i1.RouteDef(Routes.hMOUsersScreen, page: _i86.HMOUsersScreen),
-    _i1.RouteDef(Routes.proHealthSubScreen, page: _i87.ProHealthSubScreen),
+    _i1.RouteDef(Routes.hMOUsersScreen, page: _i85.HMOUsersScreen),
+    _i1.RouteDef(Routes.proHealthSubScreen, page: _i86.ProHealthSubScreen),
     _i1.RouteDef(
       Routes.applicationFormScreen,
-      page: _i88.ApplicationFormScreen,
+      page: _i87.ApplicationFormScreen,
     ),
-    _i1.RouteDef(Routes.subsribersScreen, page: _i89.SubsribersScreen),
-    _i1.RouteDef(Routes.familyFormScreen, page: _i90.FamilyFormScreen),
-    _i1.RouteDef(Routes.coorporateFormScreen, page: _i91.CoorporateFormScreen),
+    _i1.RouteDef(Routes.subsribersScreen, page: _i88.SubsribersScreen),
+    _i1.RouteDef(Routes.familyFormScreen, page: _i89.FamilyFormScreen),
+    _i1.RouteDef(Routes.coorporateFormScreen, page: _i90.CoorporateFormScreen),
     _i1.RouteDef(
       Routes.acceleratePaymentViewHmoPlan,
-      page: _i92.AcceleratePaymentViewHmoPlan,
+      page: _i91.AcceleratePaymentViewHmoPlan,
     ),
     _i1.RouteDef(
       Routes.paymentSuccessSubmitAppScreen,
-      page: _i93.PaymentSuccessSubmitAppScreen,
+      page: _i92.PaymentSuccessSubmitAppScreen,
     ),
-    _i1.RouteDef(Routes.createHmoPlan, page: _i94.CreateHmoPlan),
+    _i1.RouteDef(Routes.createHmoPlan, page: _i93.CreateHmoPlan),
     _i1.RouteDef(
       Routes.hmoApplicationPortalScreen,
-      page: _i95.HmoApplicationPortalScreen,
+      page: _i94.HmoApplicationPortalScreen,
     ),
     _i1.RouteDef(
       Routes.viewHmoApplicationPortalScreen,
-      page: _i96.ViewHmoApplicationPortalScreen,
+      page: _i95.ViewHmoApplicationPortalScreen,
     ),
     _i1.RouteDef(
       Routes.hmoSubscribersPortalScreen,
-      page: _i97.HmoSubscribersPortalScreen,
+      page: _i96.HmoSubscribersPortalScreen,
     ),
     _i1.RouteDef(
       Routes.viewHmoSubscribersPortalScreen,
-      page: _i98.ViewHmoSubscribersPortalScreen,
+      page: _i97.ViewHmoSubscribersPortalScreen,
     ),
     _i1.RouteDef(
       Routes.hmoHospitalNetworkPortalScreen,
-      page: _i99.HmoHospitalNetworkPortalScreen,
+      page: _i98.HmoHospitalNetworkPortalScreen,
     ),
     _i1.RouteDef(
       Routes.hmoAddHospitalNetworkPortalScreen,
-      page: _i100.HmoAddHospitalNetworkPortalScreen,
+      page: _i99.HmoAddHospitalNetworkPortalScreen,
     ),
     _i1.RouteDef(
       Routes.hmoRenewalPortalScreen,
-      page: _i101.HmoRenewalPortalScreen,
+      page: _i100.HmoRenewalPortalScreen,
     ),
     _i1.RouteDef(
       Routes.viewHmoRenewalPortalScreen,
-      page: _i102.ViewHmoRenewalPortalScreen,
+      page: _i101.ViewHmoRenewalPortalScreen,
     ),
     _i1.RouteDef(
       Routes.hmoClaimsPortalScreen,
-      page: _i103.HmoClaimsPortalScreen,
+      page: _i102.HmoClaimsPortalScreen,
     ),
     _i1.RouteDef(
       Routes.createClaimsPortalScreen,
-      page: _i104.CreateClaimsPortalScreen,
+      page: _i103.CreateClaimsPortalScreen,
     ),
     _i1.RouteDef(
       Routes.viewHmoClaimsPortalScreen,
-      page: _i105.ViewHmoClaimsPortalScreen,
+      page: _i104.ViewHmoClaimsPortalScreen,
     ),
     _i1.RouteDef(
       Routes.createSettlementsPortalScreen,
-      page: _i106.CreateSettlementsPortalScreen,
+      page: _i105.CreateSettlementsPortalScreen,
     ),
     _i1.RouteDef(
       Routes.viewHmoSettlementsPortalScreen,
-      page: _i107.ViewHmoSettlementsPortalScreen,
+      page: _i106.ViewHmoSettlementsPortalScreen,
     ),
     _i1.RouteDef(
       Routes.hmoSettlementPortalScreen,
-      page: _i108.HmoSettlementPortalScreen,
+      page: _i107.HmoSettlementPortalScreen,
     ),
     _i1.RouteDef(
       Routes.hMOTwoFactorAuthScreen,
-      page: _i109.HMOTwoFactorAuthScreen,
+      page: _i108.HMOTwoFactorAuthScreen,
     ),
     _i1.RouteDef(
       Routes.hmoTwoFactorAuthVerificationSecondScreen,
-      page: _i110.HmoTwoFactorAuthVerificationSecondScreen,
+      page: _i109.HmoTwoFactorAuthVerificationSecondScreen,
     ),
     _i1.RouteDef(
       Routes.hmoTwoFactorAuthVerificationFirstScreen,
-      page: _i111.HmoTwoFactorAuthVerificationFirstScreen,
+      page: _i110.HmoTwoFactorAuthVerificationFirstScreen,
     ),
     _i1.RouteDef(
       Routes.hmoPlanTiersManagementScreen,
-      page: _i112.HmoPlanTiersManagementScreen,
+      page: _i111.HmoPlanTiersManagementScreen,
     ),
     _i1.RouteDef(
       Routes.hmoCreateTiersPlanManagementScreen,
-      page: _i113.HmoCreateTiersPlanManagementScreen,
+      page: _i112.HmoCreateTiersPlanManagementScreen,
     ),
     _i1.RouteDef(
       Routes.healthcareViewMedicationScreen,
-      page: _i114.HealthcareViewMedicationScreen,
+      page: _i113.HealthcareViewMedicationScreen,
     ),
+    _i1.RouteDef(Routes.notificationScreen, page: _i114.NotificationScreen),
     _i1.RouteDef(Routes.moreScreen, page: _i115.MoreScreen),
     _i1.RouteDef(Routes.pharmMoreScreen, page: _i116.PharmMoreScreen),
     _i1.RouteDef(
@@ -1143,66 +1143,57 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i24.EmptyNotification: (data) {
-      final args = data.getArgs<EmptyNotificationArguments>(
-        orElse: () => const EmptyNotificationArguments(),
-      );
-      return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i24.EmptyNotification(key: args.key),
-        settings: data,
-      );
-    },
-    _i25.FaqScreen: (data) {
+    _i24.FaqScreen: (data) {
       final args = data.getArgs<FaqScreenArguments>(
         orElse: () => const FaqScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i25.FaqScreen(key: args.key),
+        builder: (context) => _i24.FaqScreen(key: args.key),
         settings: data,
       );
     },
-    _i26.SplashScreen: (data) {
+    _i25.SplashScreen: (data) {
       final args = data.getArgs<SplashScreenArguments>(
         orElse: () => const SplashScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i26.SplashScreen(key: args.key),
+        builder: (context) => _i25.SplashScreen(key: args.key),
         settings: data,
       );
     },
-    _i27.WalletScreen: (data) {
+    _i26.WalletScreen: (data) {
       final args = data.getArgs<WalletScreenArguments>(
         orElse: () => const WalletScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i27.WalletScreen(key: args.key),
+        builder: (context) => _i26.WalletScreen(key: args.key),
         settings: data,
       );
     },
-    _i28.TransactionScreen: (data) {
+    _i27.TransactionScreen: (data) {
       final args = data.getArgs<TransactionScreenArguments>(
         orElse: () => const TransactionScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i28.TransactionScreen(key: args.key),
+        builder: (context) => _i27.TransactionScreen(key: args.key),
         settings: data,
       );
     },
-    _i29.FundScreen: (data) {
+    _i28.FundScreen: (data) {
       final args = data.getArgs<FundScreenArguments>(
         orElse: () => const FundScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i29.FundScreen(key: args.key),
+        builder: (context) => _i28.FundScreen(key: args.key),
         settings: data,
       );
     },
-    _i30.FundWalletPayScreen: (data) {
+    _i29.FundWalletPayScreen: (data) {
       final args = data.getArgs<FundWalletPayScreenArguments>(
         orElse: () => const FundWalletPayScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i30.FundWalletPayScreen(
+        builder: (context) => _i29.FundWalletPayScreen(
           key: args.key,
           screenName: args.screenName,
           amount: args.amount,
@@ -1210,10 +1201,10 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i31.PaymentStatusScreen: (data) {
+    _i30.PaymentStatusScreen: (data) {
       final args = data.getArgs<PaymentStatusScreenArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i31.PaymentStatusScreen(
+        builder: (context) => _i30.PaymentStatusScreen(
           key: args.key,
           isSuccessful: args.isSuccessful,
           isUserType: args.isUserType,
@@ -1221,76 +1212,76 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i32.ViewMedicationScreen: (data) {
+    _i31.ViewMedicationScreen: (data) {
       final args = data.getArgs<ViewMedicationScreenArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i32.ViewMedicationScreen(key: args.key, id: args.id),
+            _i31.ViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
       );
     },
-    _i33.PharmViewMedicationScreen: (data) {
+    _i32.PharmViewMedicationScreen: (data) {
       final args = data.getArgs<PharmViewMedicationScreenArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i33.PharmViewMedicationScreen(key: args.key, id: args.id),
+            _i32.PharmViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
       );
     },
-    _i34.PharmacySignUpScreen: (data) {
+    _i33.PharmacySignUpScreen: (data) {
       final args = data.getArgs<PharmacySignUpScreenArguments>(
         orElse: () => const PharmacySignUpScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i34.PharmacySignUpScreen(key: args.key),
+        builder: (context) => _i33.PharmacySignUpScreen(key: args.key),
         settings: data,
       );
     },
-    _i35.PharmacySetupPinScreen: (data) {
+    _i34.PharmacySetupPinScreen: (data) {
       final args = data.getArgs<PharmacySetupPinScreenArguments>(
         orElse: () => const PharmacySetupPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i35.PharmacySetupPinScreen(key: args.key),
+        builder: (context) => _i34.PharmacySetupPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i36.PharmacyLoginScreen: (data) {
+    _i35.PharmacyLoginScreen: (data) {
       final args = data.getArgs<PharmacyLoginScreenArguments>(
         orElse: () => const PharmacyLoginScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i36.PharmacyLoginScreen(key: args.key),
+        builder: (context) => _i35.PharmacyLoginScreen(key: args.key),
         settings: data,
       );
     },
-    _i37.PharmacyChangePhoneNumber: (data) {
+    _i36.PharmacyChangePhoneNumber: (data) {
       final args = data.getArgs<PharmacyChangePhoneNumberArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i37.PharmacyChangePhoneNumber(key: args.key, id: args.id),
+            _i36.PharmacyChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
       );
     },
-    _i38.PharmacyForgotPinScreen: (data) {
+    _i37.PharmacyForgotPinScreen: (data) {
       final args = data.getArgs<PharmacyForgotPinScreenArguments>(
         orElse: () => const PharmacyForgotPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i38.PharmacyForgotPinScreen(key: args.key),
+        builder: (context) => _i37.PharmacyForgotPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i39.PharmacyResetPinScreen: (data) {
+    _i38.PharmacyResetPinScreen: (data) {
       final args = data.getArgs<PharmacyResetPinScreenArguments>(
         orElse: () => const PharmacyResetPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i39.PharmacyResetPinScreen(
+        builder: (context) => _i38.PharmacyResetPinScreen(
           key: args.key,
           phone: args.phone,
           resetToken: args.resetToken,
@@ -1298,99 +1289,99 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i40.PharmacyWelcomeScreen: (data) {
+    _i39.PharmacyWelcomeScreen: (data) {
       final args = data.getArgs<PharmacyWelcomeScreenArguments>(
         orElse: () => const PharmacyWelcomeScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i40.PharmacyWelcomeScreen(key: args.key, phone: args.phone),
+            _i39.PharmacyWelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
       );
     },
-    _i41.KycScreen: (data) {
+    _i40.KycScreen: (data) {
       final args = data.getArgs<KycScreenArguments>(
         orElse: () => const KycScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i41.KycScreen(key: args.key),
+        builder: (context) => _i40.KycScreen(key: args.key),
         settings: data,
       );
     },
-    _i42.HMOKycScreen: (data) {
+    _i41.HMOKycScreen: (data) {
       final args = data.getArgs<HMOKycScreenArguments>(
         orElse: () => const HMOKycScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i42.HMOKycScreen(key: args.key),
+        builder: (context) => _i41.HMOKycScreen(key: args.key),
         settings: data,
       );
     },
-    _i43.HealthCareKycScreen: (data) {
+    _i42.HealthCareKycScreen: (data) {
       final args = data.getArgs<HealthCareKycScreenArguments>(
         orElse: () => const HealthCareKycScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i43.HealthCareKycScreen(key: args.key),
+        builder: (context) => _i42.HealthCareKycScreen(key: args.key),
         settings: data,
       );
     },
-    _i44.PharmacySettingScreen: (data) {
+    _i43.PharmacySettingScreen: (data) {
       final args = data.getArgs<PharmacySettingScreenArguments>(
         orElse: () => const PharmacySettingScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i44.PharmacySettingScreen(key: args.key),
+        builder: (context) => _i43.PharmacySettingScreen(key: args.key),
         settings: data,
       );
     },
-    _i45.PharmResetSuccessScreen: (data) {
+    _i44.PharmResetSuccessScreen: (data) {
       final args = data.getArgs<PharmResetSuccessScreenArguments>(
         orElse: () => const PharmResetSuccessScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i45.PharmResetSuccessScreen(key: args.key),
+        builder: (context) => _i44.PharmResetSuccessScreen(key: args.key),
         settings: data,
       );
     },
-    _i46.UsersScreen: (data) {
+    _i45.UsersScreen: (data) {
       final args = data.getArgs<UsersScreenArguments>(
         orElse: () => const UsersScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i46.UsersScreen(key: args.key),
+        builder: (context) => _i45.UsersScreen(key: args.key),
         settings: data,
       );
     },
-    _i47.DoctorScreen: (data) {
+    _i46.DoctorScreen: (data) {
       final args = data.getArgs<DoctorScreenArguments>(
         orElse: () => const DoctorScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i47.DoctorScreen(key: args.key),
+        builder: (context) => _i46.DoctorScreen(key: args.key),
         settings: data,
       );
     },
-    _i48.RolesAndPermissionScreen: (data) {
+    _i47.RolesAndPermissionScreen: (data) {
       final args = data.getArgs<RolesAndPermissionScreenArguments>(
         orElse: () => const RolesAndPermissionScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i48.RolesAndPermissionScreen(key: args.key),
+        builder: (context) => _i47.RolesAndPermissionScreen(key: args.key),
         settings: data,
       );
     },
-    _i49.HealthCareRolesAndPermissionScreen: (data) {
+    _i48.HealthCareRolesAndPermissionScreen: (data) {
       final args = data.getArgs<HealthCareRolesAndPermissionScreenArguments>(
         orElse: () => const HealthCareRolesAndPermissionScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i49.HealthCareRolesAndPermissionScreen(key: args.key),
+            _i48.HealthCareRolesAndPermissionScreen(key: args.key),
         settings: data,
       );
     },
-    _i50.HealthCareHospitalAndClinicSignUpScreen: (data) {
+    _i49.HealthCareHospitalAndClinicSignUpScreen: (data) {
       final args = data
           .getArgs<HealthCareHospitalAndClinicSignUpScreenArguments>(
             orElse: () =>
@@ -1398,17 +1389,17 @@ class StackedRouter extends _i1.RouterBase {
           );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i50.HealthCareHospitalAndClinicSignUpScreen(key: args.key),
+            _i49.HealthCareHospitalAndClinicSignUpScreen(key: args.key),
         settings: data,
       );
     },
-    _i51.HealthCareDoctorSpecialistSignUpScreen: (data) {
+    _i50.HealthCareDoctorSpecialistSignUpScreen: (data) {
       final args = data
           .getArgs<HealthCareDoctorSpecialistSignUpScreenArguments>(
             nullOk: false,
           );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i51.HealthCareDoctorSpecialistSignUpScreen(
+        builder: (context) => _i50.HealthCareDoctorSpecialistSignUpScreen(
           key: args.key,
           healthCareType: args.healthCareType,
           healthCareArea: args.healthCareArea,
@@ -1416,40 +1407,40 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i52.HealthCareLoginScreen: (data) {
+    _i51.HealthCareLoginScreen: (data) {
       final args = data.getArgs<HealthCareLoginScreenArguments>(
         orElse: () => const HealthCareLoginScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i52.HealthCareLoginScreen(key: args.key),
+        builder: (context) => _i51.HealthCareLoginScreen(key: args.key),
         settings: data,
       );
     },
-    _i53.HealthCareChangePhoneNumber: (data) {
+    _i52.HealthCareChangePhoneNumber: (data) {
       final args = data.getArgs<HealthCareChangePhoneNumberArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i53.HealthCareChangePhoneNumber(key: args.key, id: args.id),
+            _i52.HealthCareChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
       );
     },
-    _i54.HealthCareForgotPinScreen: (data) {
+    _i53.HealthCareForgotPinScreen: (data) {
       final args = data.getArgs<HealthCareForgotPinScreenArguments>(
         orElse: () => const HealthCareForgotPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i54.HealthCareForgotPinScreen(key: args.key),
+        builder: (context) => _i53.HealthCareForgotPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i55.HealthCareResetPinScreen: (data) {
+    _i54.HealthCareResetPinScreen: (data) {
       final args = data.getArgs<HealthCareResetPinScreenArguments>(
         orElse: () => const HealthCareResetPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i55.HealthCareResetPinScreen(
+        builder: (context) => _i54.HealthCareResetPinScreen(
           key: args.key,
           phone: args.phone,
           resetToken: args.resetToken,
@@ -1457,148 +1448,148 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i56.HealthCareResetSuccessScreen: (data) {
+    _i55.HealthCareResetSuccessScreen: (data) {
       final args = data.getArgs<HealthCareResetSuccessScreenArguments>(
         orElse: () => const HealthCareResetSuccessScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i56.HealthCareResetSuccessScreen(key: args.key),
+        builder: (context) => _i55.HealthCareResetSuccessScreen(key: args.key),
         settings: data,
       );
     },
-    _i57.HealthCareSetupPinScreen: (data) {
+    _i56.HealthCareSetupPinScreen: (data) {
       final args = data.getArgs<HealthCareSetupPinScreenArguments>(
         orElse: () => const HealthCareSetupPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i57.HealthCareSetupPinScreen(key: args.key),
+        builder: (context) => _i56.HealthCareSetupPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i58.HealthCareWelcomeScreen: (data) {
+    _i57.HealthCareWelcomeScreen: (data) {
       final args = data.getArgs<HealthCareWelcomeScreenArguments>(
         orElse: () => const HealthCareWelcomeScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i58.HealthCareWelcomeScreen(key: args.key, phone: args.phone),
+            _i57.HealthCareWelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
       );
     },
-    _i59.BusinessProviderDashboard: (data) {
+    _i58.BusinessProviderDashboard: (data) {
       final args = data.getArgs<BusinessProviderDashboardArguments>(
         orElse: () => const BusinessProviderDashboardArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i59.BusinessProviderDashboard(key: args.key, index: args.index),
+            _i58.BusinessProviderDashboard(key: args.key, index: args.index),
         settings: data,
       );
     },
-    _i60.BusinessProvidersHomeScreen: (data) {
+    _i59.BusinessProvidersHomeScreen: (data) {
       final args = data.getArgs<BusinessProvidersHomeScreenArguments>(
         orElse: () => const BusinessProvidersHomeScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i60.BusinessProvidersHomeScreen(key: args.key),
+        builder: (context) => _i59.BusinessProvidersHomeScreen(key: args.key),
         settings: data,
       );
     },
-    _i61.SpecialistsProviderDashboard: (data) {
+    _i60.SpecialistsProviderDashboard: (data) {
       final args = data.getArgs<SpecialistsProviderDashboardArguments>(
         orElse: () => const SpecialistsProviderDashboardArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i61.SpecialistsProviderDashboard(key: args.key, index: args.index),
+            _i60.SpecialistsProviderDashboard(key: args.key, index: args.index),
         settings: data,
       );
     },
-    _i62.SpecialistsProvidersHomeScreen: (data) {
+    _i61.SpecialistsProvidersHomeScreen: (data) {
       final args = data.getArgs<SpecialistsProvidersHomeScreenArguments>(
         orElse: () => const SpecialistsProvidersHomeScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i62.SpecialistsProvidersHomeScreen(key: args.key),
+            _i61.SpecialistsProvidersHomeScreen(key: args.key),
         settings: data,
       );
     },
-    _i63.HMODashboard: (data) {
+    _i62.HMODashboard: (data) {
       final args = data.getArgs<HMODashboardArguments>(
         orElse: () => const HMODashboardArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i63.HMODashboard(key: args.key, index: args.index),
+            _i62.HMODashboard(key: args.key, index: args.index),
         settings: data,
       );
     },
-    _i64.HMOHomeScreen: (data) {
+    _i63.HMOHomeScreen: (data) {
       final args = data.getArgs<HMOHomeScreenArguments>(
         orElse: () => const HMOHomeScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i64.HMOHomeScreen(key: args.key),
+        builder: (context) => _i63.HMOHomeScreen(key: args.key),
         settings: data,
       );
     },
-    _i65.HealthCareProfileInfoScreen: (data) {
+    _i64.HealthCareProfileInfoScreen: (data) {
       final args = data.getArgs<HealthCareProfileInfoScreenArguments>(
         orElse: () => const HealthCareProfileInfoScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i65.HealthCareProfileInfoScreen(key: args.key),
+        builder: (context) => _i64.HealthCareProfileInfoScreen(key: args.key),
         settings: data,
       );
     },
-    _i66.HealthCareProfileScreen: (data) {
+    _i65.HealthCareProfileScreen: (data) {
       final args = data.getArgs<HealthCareProfileScreenArguments>(
         orElse: () => const HealthCareProfileScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i66.HealthCareProfileScreen(key: args.key),
+        builder: (context) => _i65.HealthCareProfileScreen(key: args.key),
         settings: data,
       );
     },
-    _i67.HealthCareSettingScreen: (data) {
+    _i66.HealthCareSettingScreen: (data) {
       final args = data.getArgs<HealthCareSettingScreenArguments>(
         orElse: () => const HealthCareSettingScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i67.HealthCareSettingScreen(key: args.key),
+        builder: (context) => _i66.HealthCareSettingScreen(key: args.key),
         settings: data,
       );
     },
-    _i68.AcceleratePaymentView: (data) {
+    _i67.AcceleratePaymentView: (data) {
       final args = data.getArgs<AcceleratePaymentViewArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i68.AcceleratePaymentView(key: args.key, url: args.url),
+            _i67.AcceleratePaymentView(key: args.key, url: args.url),
         settings: data,
       );
     },
-    _i69.AcceleratePaymentViewPharmacy: (data) {
+    _i68.AcceleratePaymentViewPharmacy: (data) {
       final args = data.getArgs<AcceleratePaymentViewPharmacyArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i69.AcceleratePaymentViewPharmacy(key: args.key, url: args.url),
+            _i68.AcceleratePaymentViewPharmacy(key: args.key, url: args.url),
         settings: data,
       );
     },
-    _i70.AcceleratePaymentViewWallet: (data) {
+    _i69.AcceleratePaymentViewWallet: (data) {
       final args = data.getArgs<AcceleratePaymentViewWalletArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i70.AcceleratePaymentViewWallet(key: args.key, url: args.url),
+            _i69.AcceleratePaymentViewWallet(key: args.key, url: args.url),
         settings: data,
       );
     },
-    _i71.HealthCarePractitionerProfileInfoScreen: (data) {
+    _i70.HealthCarePractitionerProfileInfoScreen: (data) {
       final args = data
           .getArgs<HealthCarePractitionerProfileInfoScreenArguments>(
             orElse: () =>
@@ -1606,63 +1597,63 @@ class StackedRouter extends _i1.RouterBase {
           );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i71.HealthCarePractitionerProfileInfoScreen(key: args.key),
+            _i70.HealthCarePractitionerProfileInfoScreen(key: args.key),
         settings: data,
       );
     },
-    _i72.HealthCarePractitionerProfileScreen: (data) {
+    _i71.HealthCarePractitionerProfileScreen: (data) {
       final args = data.getArgs<HealthCarePractitionerProfileScreenArguments>(
         orElse: () => const HealthCarePractitionerProfileScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i72.HealthCarePractitionerProfileScreen(key: args.key),
+            _i71.HealthCarePractitionerProfileScreen(key: args.key),
         settings: data,
       );
     },
-    _i73.HMOWelcomeScreen: (data) {
+    _i72.HMOWelcomeScreen: (data) {
       final args = data.getArgs<HMOWelcomeScreenArguments>(
         orElse: () => const HMOWelcomeScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i73.HMOWelcomeScreen(key: args.key, phone: args.phone),
+            _i72.HMOWelcomeScreen(key: args.key, phone: args.phone),
         settings: data,
       );
     },
-    _i74.HMOSignUpScreen: (data) {
+    _i73.HMOSignUpScreen: (data) {
       final args = data.getArgs<HMOSignUpScreenArguments>(
         orElse: () => const HMOSignUpScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i74.HMOSignUpScreen(key: args.key),
+        builder: (context) => _i73.HMOSignUpScreen(key: args.key),
         settings: data,
       );
     },
-    _i75.HMOSetupPinScreen: (data) {
+    _i74.HMOSetupPinScreen: (data) {
       final args = data.getArgs<HMOSetupPinScreenArguments>(
         orElse: () => const HMOSetupPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i75.HMOSetupPinScreen(key: args.key),
+        builder: (context) => _i74.HMOSetupPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i76.HMOResetSuccessScreen: (data) {
+    _i75.HMOResetSuccessScreen: (data) {
       final args = data.getArgs<HMOResetSuccessScreenArguments>(
         orElse: () => const HMOResetSuccessScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i76.HMOResetSuccessScreen(key: args.key),
+        builder: (context) => _i75.HMOResetSuccessScreen(key: args.key),
         settings: data,
       );
     },
-    _i77.HMOResetPinScreen: (data) {
+    _i76.HMOResetPinScreen: (data) {
       final args = data.getArgs<HMOResetPinScreenArguments>(
         orElse: () => const HMOResetPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i77.HMOResetPinScreen(
+        builder: (context) => _i76.HMOResetPinScreen(
           key: args.key,
           phone: args.phone,
           resetToken: args.resetToken,
@@ -1670,98 +1661,98 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i78.HMOLoginScreen: (data) {
+    _i77.HMOLoginScreen: (data) {
       final args = data.getArgs<HMOLoginScreenArguments>(
         orElse: () => const HMOLoginScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i78.HMOLoginScreen(key: args.key),
+        builder: (context) => _i77.HMOLoginScreen(key: args.key),
         settings: data,
       );
     },
-    _i79.HMOForgotPinScreen: (data) {
+    _i78.HMOForgotPinScreen: (data) {
       final args = data.getArgs<HMOForgotPinScreenArguments>(
         orElse: () => const HMOForgotPinScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i79.HMOForgotPinScreen(key: args.key),
+        builder: (context) => _i78.HMOForgotPinScreen(key: args.key),
         settings: data,
       );
     },
-    _i80.HMOChangePhoneNumber: (data) {
+    _i79.HMOChangePhoneNumber: (data) {
       final args = data.getArgs<HMOChangePhoneNumberArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i80.HMOChangePhoneNumber(key: args.key, id: args.id),
+            _i79.HMOChangePhoneNumber(key: args.key, id: args.id),
         settings: data,
       );
     },
-    _i81.HMOProfileInfoScreen: (data) {
+    _i80.HMOProfileInfoScreen: (data) {
       final args = data.getArgs<HMOProfileInfoScreenArguments>(
         orElse: () => const HMOProfileInfoScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i81.HMOProfileInfoScreen(key: args.key),
+        builder: (context) => _i80.HMOProfileInfoScreen(key: args.key),
         settings: data,
       );
     },
-    _i82.HMOProfileScreen: (data) {
+    _i81.HMOProfileScreen: (data) {
       final args = data.getArgs<HMOProfileScreenArguments>(
         orElse: () => const HMOProfileScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i82.HMOProfileScreen(key: args.key),
+        builder: (context) => _i81.HMOProfileScreen(key: args.key),
         settings: data,
       );
     },
-    _i83.HMOResetPinPadScreen: (data) {
+    _i82.HMOResetPinPadScreen: (data) {
       final args = data.getArgs<HMOResetPinPadScreenArguments>(
         orElse: () => const HMOResetPinPadScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i83.HMOResetPinPadScreen(key: args.key),
+        builder: (context) => _i82.HMOResetPinPadScreen(key: args.key),
         settings: data,
       );
     },
-    _i84.HMOSettingScreen: (data) {
+    _i83.HMOSettingScreen: (data) {
       final args = data.getArgs<HMOSettingScreenArguments>(
         orElse: () => const HMOSettingScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i84.HMOSettingScreen(key: args.key),
+        builder: (context) => _i83.HMOSettingScreen(key: args.key),
         settings: data,
       );
     },
-    _i85.HMORolesAndPermissionScreen: (data) {
+    _i84.HMORolesAndPermissionScreen: (data) {
       final args = data.getArgs<HMORolesAndPermissionScreenArguments>(
         orElse: () => const HMORolesAndPermissionScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i85.HMORolesAndPermissionScreen(key: args.key),
+        builder: (context) => _i84.HMORolesAndPermissionScreen(key: args.key),
         settings: data,
       );
     },
-    _i86.HMOUsersScreen: (data) {
+    _i85.HMOUsersScreen: (data) {
       final args = data.getArgs<HMOUsersScreenArguments>(
         orElse: () => const HMOUsersScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i86.HMOUsersScreen(key: args.key),
+        builder: (context) => _i85.HMOUsersScreen(key: args.key),
         settings: data,
       );
     },
-    _i87.ProHealthSubScreen: (data) {
+    _i86.ProHealthSubScreen: (data) {
       final args = data.getArgs<ProHealthSubScreenArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i87.ProHealthSubScreen(key: args.key, hmoId: args.hmoId),
+            _i86.ProHealthSubScreen(key: args.key, hmoId: args.hmoId),
         settings: data,
       );
     },
-    _i88.ApplicationFormScreen: (data) {
+    _i87.ApplicationFormScreen: (data) {
       final args = data.getArgs<ApplicationFormScreenArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i88.ApplicationFormScreen(
+        builder: (context) => _i87.ApplicationFormScreen(
           key: args.key,
           planTypeName: args.planTypeName,
           planTeirName: args.planTeirName,
@@ -1772,12 +1763,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i89.SubsribersScreen: (data) {
+    _i88.SubsribersScreen: (data) {
       final args = data.getArgs<SubsribersScreenArguments>(
         orElse: () => const SubsribersScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i89.SubsribersScreen(
+        builder: (context) => _i88.SubsribersScreen(
           key: args.key,
           isSubStatus: args.isSubStatus,
           mySubPlans: args.mySubPlans,
@@ -1785,10 +1776,10 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i90.FamilyFormScreen: (data) {
+    _i89.FamilyFormScreen: (data) {
       final args = data.getArgs<FamilyFormScreenArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i90.FamilyFormScreen(
+        builder: (context) => _i89.FamilyFormScreen(
           key: args.key,
           planTypeName: args.planTypeName,
           planTeirName: args.planTeirName,
@@ -1799,10 +1790,10 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i91.CoorporateFormScreen: (data) {
+    _i90.CoorporateFormScreen: (data) {
       final args = data.getArgs<CoorporateFormScreenArguments>(nullOk: false);
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i91.CoorporateFormScreen(
+        builder: (context) => _i90.CoorporateFormScreen(
           key: args.key,
           planTypeName: args.planTypeName,
           planTeirName: args.planTeirName,
@@ -1813,12 +1804,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i92.AcceleratePaymentViewHmoPlan: (data) {
+    _i91.AcceleratePaymentViewHmoPlan: (data) {
       final args = data.getArgs<AcceleratePaymentViewHmoPlanArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i92.AcceleratePaymentViewHmoPlan(
+        builder: (context) => _i91.AcceleratePaymentViewHmoPlan(
           key: args.key,
           url: args.url,
           planType: args.planType,
@@ -1827,12 +1818,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i93.PaymentSuccessSubmitAppScreen: (data) {
+    _i92.PaymentSuccessSubmitAppScreen: (data) {
       final args = data.getArgs<PaymentSuccessSubmitAppScreenArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i93.PaymentSuccessSubmitAppScreen(
+        builder: (context) => _i92.PaymentSuccessSubmitAppScreen(
           key: args.key,
           planType: args.planType,
           planTiers: args.planTiers,
@@ -1840,12 +1831,12 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i94.CreateHmoPlan: (data) {
+    _i93.CreateHmoPlan: (data) {
       final args = data.getArgs<CreateHmoPlanArguments>(
         orElse: () => const CreateHmoPlanArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i94.CreateHmoPlan(
+        builder: (context) => _i93.CreateHmoPlan(
           key: args.key,
           isEdited: args.isEdited,
           plan: args.plan,
@@ -1853,60 +1844,60 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i95.HmoApplicationPortalScreen: (data) {
+    _i94.HmoApplicationPortalScreen: (data) {
       final args = data.getArgs<HmoApplicationPortalScreenArguments>(
         orElse: () => const HmoApplicationPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i95.HmoApplicationPortalScreen(key: args.key),
+        builder: (context) => _i94.HmoApplicationPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i96.ViewHmoApplicationPortalScreen: (data) {
+    _i95.ViewHmoApplicationPortalScreen: (data) {
       final args = data.getArgs<ViewHmoApplicationPortalScreenArguments>(
         orElse: () => const ViewHmoApplicationPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i96.ViewHmoApplicationPortalScreen(key: args.key),
+            _i95.ViewHmoApplicationPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i97.HmoSubscribersPortalScreen: (data) {
+    _i96.HmoSubscribersPortalScreen: (data) {
       final args = data.getArgs<HmoSubscribersPortalScreenArguments>(
         orElse: () => const HmoSubscribersPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i97.HmoSubscribersPortalScreen(key: args.key),
+        builder: (context) => _i96.HmoSubscribersPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i98.ViewHmoSubscribersPortalScreen: (data) {
+    _i97.ViewHmoSubscribersPortalScreen: (data) {
       final args = data.getArgs<ViewHmoSubscribersPortalScreenArguments>(
         orElse: () => const ViewHmoSubscribersPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i98.ViewHmoSubscribersPortalScreen(key: args.key),
+            _i97.ViewHmoSubscribersPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i99.HmoHospitalNetworkPortalScreen: (data) {
+    _i98.HmoHospitalNetworkPortalScreen: (data) {
       final args = data.getArgs<HmoHospitalNetworkPortalScreenArguments>(
         orElse: () => const HmoHospitalNetworkPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i99.HmoHospitalNetworkPortalScreen(key: args.key),
+            _i98.HmoHospitalNetworkPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i100.HmoAddHospitalNetworkPortalScreen: (data) {
+    _i99.HmoAddHospitalNetworkPortalScreen: (data) {
       final args = data.getArgs<HmoAddHospitalNetworkPortalScreenArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i100.HmoAddHospitalNetworkPortalScreen(
+        builder: (context) => _i99.HmoAddHospitalNetworkPortalScreen(
           key: args.key,
           isEditing: args.isEditing,
           hospitalId: args.hospitalId,
@@ -1914,93 +1905,93 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i101.HmoRenewalPortalScreen: (data) {
+    _i100.HmoRenewalPortalScreen: (data) {
       final args = data.getArgs<HmoRenewalPortalScreenArguments>(
         orElse: () => const HmoRenewalPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i101.HmoRenewalPortalScreen(key: args.key),
+        builder: (context) => _i100.HmoRenewalPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i102.ViewHmoRenewalPortalScreen: (data) {
+    _i101.ViewHmoRenewalPortalScreen: (data) {
       final args = data.getArgs<ViewHmoRenewalPortalScreenArguments>(
         orElse: () => const ViewHmoRenewalPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i102.ViewHmoRenewalPortalScreen(key: args.key),
+        builder: (context) => _i101.ViewHmoRenewalPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i103.HmoClaimsPortalScreen: (data) {
+    _i102.HmoClaimsPortalScreen: (data) {
       final args = data.getArgs<HmoClaimsPortalScreenArguments>(
         orElse: () => const HmoClaimsPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i103.HmoClaimsPortalScreen(key: args.key),
+        builder: (context) => _i102.HmoClaimsPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i104.CreateClaimsPortalScreen: (data) {
+    _i103.CreateClaimsPortalScreen: (data) {
       final args = data.getArgs<CreateClaimsPortalScreenArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i104.CreateClaimsPortalScreen(
+        builder: (context) => _i103.CreateClaimsPortalScreen(
           key: args.key,
           isReview: args.isReview,
         ),
         settings: data,
       );
     },
-    _i105.ViewHmoClaimsPortalScreen: (data) {
+    _i104.ViewHmoClaimsPortalScreen: (data) {
       final args = data.getArgs<ViewHmoClaimsPortalScreenArguments>(
         orElse: () => const ViewHmoClaimsPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i105.ViewHmoClaimsPortalScreen(key: args.key),
+        builder: (context) => _i104.ViewHmoClaimsPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i106.CreateSettlementsPortalScreen: (data) {
+    _i105.CreateSettlementsPortalScreen: (data) {
       final args = data.getArgs<CreateSettlementsPortalScreenArguments>(
         orElse: () => const CreateSettlementsPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i106.CreateSettlementsPortalScreen(key: args.key),
+            _i105.CreateSettlementsPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i107.ViewHmoSettlementsPortalScreen: (data) {
+    _i106.ViewHmoSettlementsPortalScreen: (data) {
       final args = data.getArgs<ViewHmoSettlementsPortalScreenArguments>(
         orElse: () => const ViewHmoSettlementsPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i107.ViewHmoSettlementsPortalScreen(key: args.key),
+            _i106.ViewHmoSettlementsPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i108.HmoSettlementPortalScreen: (data) {
+    _i107.HmoSettlementPortalScreen: (data) {
       final args = data.getArgs<HmoSettlementPortalScreenArguments>(
         orElse: () => const HmoSettlementPortalScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i108.HmoSettlementPortalScreen(key: args.key),
+        builder: (context) => _i107.HmoSettlementPortalScreen(key: args.key),
         settings: data,
       );
     },
-    _i109.HMOTwoFactorAuthScreen: (data) {
+    _i108.HMOTwoFactorAuthScreen: (data) {
       final args = data.getArgs<HMOTwoFactorAuthScreenArguments>(
         orElse: () => const HMOTwoFactorAuthScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i109.HMOTwoFactorAuthScreen(key: args.key),
+        builder: (context) => _i108.HMOTwoFactorAuthScreen(key: args.key),
         settings: data,
       );
     },
-    _i110.HmoTwoFactorAuthVerificationSecondScreen: (data) {
+    _i109.HmoTwoFactorAuthVerificationSecondScreen: (data) {
       final args = data
           .getArgs<HmoTwoFactorAuthVerificationSecondScreenArguments>(
             orElse: () =>
@@ -2008,11 +1999,11 @@ class StackedRouter extends _i1.RouterBase {
           );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i110.HmoTwoFactorAuthVerificationSecondScreen(key: args.key),
+            _i109.HmoTwoFactorAuthVerificationSecondScreen(key: args.key),
         settings: data,
       );
     },
-    _i111.HmoTwoFactorAuthVerificationFirstScreen: (data) {
+    _i110.HmoTwoFactorAuthVerificationFirstScreen: (data) {
       final args = data
           .getArgs<HmoTwoFactorAuthVerificationFirstScreenArguments>(
             orElse: () =>
@@ -2020,25 +2011,25 @@ class StackedRouter extends _i1.RouterBase {
           );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i111.HmoTwoFactorAuthVerificationFirstScreen(key: args.key),
+            _i110.HmoTwoFactorAuthVerificationFirstScreen(key: args.key),
         settings: data,
       );
     },
-    _i112.HmoPlanTiersManagementScreen: (data) {
+    _i111.HmoPlanTiersManagementScreen: (data) {
       final args = data.getArgs<HmoPlanTiersManagementScreenArguments>(
         orElse: () => const HmoPlanTiersManagementScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i112.HmoPlanTiersManagementScreen(key: args.key),
+        builder: (context) => _i111.HmoPlanTiersManagementScreen(key: args.key),
         settings: data,
       );
     },
-    _i113.HmoCreateTiersPlanManagementScreen: (data) {
+    _i112.HmoCreateTiersPlanManagementScreen: (data) {
       final args = data.getArgs<HmoCreateTiersPlanManagementScreenArguments>(
         orElse: () => const HmoCreateTiersPlanManagementScreenArguments(),
       );
       return _i120.MaterialPageRoute<dynamic>(
-        builder: (context) => _i113.HmoCreateTiersPlanManagementScreen(
+        builder: (context) => _i112.HmoCreateTiersPlanManagementScreen(
           key: args.key,
           isEditing: args.isEditing,
           editedPlanTier: args.editedPlanTier,
@@ -2046,14 +2037,27 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i114.HealthcareViewMedicationScreen: (data) {
+    _i113.HealthcareViewMedicationScreen: (data) {
       final args = data.getArgs<HealthcareViewMedicationScreenArguments>(
         nullOk: false,
       );
       return _i120.MaterialPageRoute<dynamic>(
         builder: (context) =>
-            _i114.HealthcareViewMedicationScreen(key: args.key, id: args.id),
+            _i113.HealthcareViewMedicationScreen(key: args.key, id: args.id),
         settings: data,
+      );
+    },
+    _i114.NotificationScreen: (data) {
+      final args = data.getArgs<NotificationScreenArguments>(
+        orElse: () => const NotificationScreenArguments(),
+      );
+      return _i120.PageRouteBuilder<dynamic>(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            _i114.NotificationScreen(key: args.key),
+        settings: data,
+        transitionsBuilder:
+            data.transition ?? _i1.TransitionsBuilders.slideLeft,
+        transitionDuration: const Duration(milliseconds: 300),
       );
     },
     _i115.MoreScreen: (data) {
@@ -2664,28 +2668,6 @@ class AskMeScreenArguments {
   @override
   int get hashCode {
     return key.hashCode ^ inText.hashCode ^ isDashboard.hashCode;
-  }
-}
-
-class EmptyNotificationArguments {
-  const EmptyNotificationArguments({this.key});
-
-  final _i120.Key? key;
-
-  @override
-  String toString() {
-    return '{"key": "$key"}';
-  }
-
-  @override
-  bool operator ==(covariant EmptyNotificationArguments other) {
-    if (identical(this, other)) return true;
-    return other.key == key;
-  }
-
-  @override
-  int get hashCode {
-    return key.hashCode;
   }
 }
 
@@ -4910,6 +4892,28 @@ class HealthcareViewMedicationScreenArguments {
   }
 }
 
+class NotificationScreenArguments {
+  const NotificationScreenArguments({this.key});
+
+  final _i120.Key? key;
+
+  @override
+  String toString() {
+    return '{"key": "$key"}';
+  }
+
+  @override
+  bool operator ==(covariant NotificationScreenArguments other) {
+    if (identical(this, other)) return true;
+    return other.key == key;
+  }
+
+  @override
+  int get hashCode {
+    return key.hashCode;
+  }
+}
+
 class MoreScreenArguments {
   const MoreScreenArguments({this.key});
 
@@ -5438,24 +5442,6 @@ extension NavigatorStateExtension on _i124.NavigationService {
         inText: inText,
         isDashboard: isDashboard,
       ),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
-  }
-
-  Future<dynamic> navigateToEmptyNotification({
-    _i120.Key? key,
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-    transition,
-  }) async {
-    return navigateTo<dynamic>(
-      Routes.emptyNotification,
-      arguments: EmptyNotificationArguments(key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -7213,6 +7199,24 @@ extension NavigatorStateExtension on _i124.NavigationService {
     );
   }
 
+  Future<dynamic> navigateToNotificationScreen({
+    _i120.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return navigateTo<dynamic>(
+      Routes.notificationScreen,
+      arguments: NotificationScreenArguments(key: key),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
   Future<dynamic> navigateToMoreScreen({
     _i120.Key? key,
     int? routerId,
@@ -7720,24 +7724,6 @@ extension NavigatorStateExtension on _i124.NavigationService {
         inText: inText,
         isDashboard: isDashboard,
       ),
-      id: routerId,
-      preventDuplicates: preventDuplicates,
-      parameters: parameters,
-      transition: transition,
-    );
-  }
-
-  Future<dynamic> replaceWithEmptyNotification({
-    _i120.Key? key,
-    int? routerId,
-    bool preventDuplicates = true,
-    Map<String, String>? parameters,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-    transition,
-  }) async {
-    return replaceWith<dynamic>(
-      Routes.emptyNotification,
-      arguments: EmptyNotificationArguments(key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -9488,6 +9474,24 @@ extension NavigatorStateExtension on _i124.NavigationService {
     return replaceWith<dynamic>(
       Routes.healthcareViewMedicationScreen,
       arguments: HealthcareViewMedicationScreenArguments(key: key, id: id),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> replaceWithNotificationScreen({
+    _i120.Key? key,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+    transition,
+  }) async {
+    return replaceWith<dynamic>(
+      Routes.notificationScreen,
+      arguments: NotificationScreenArguments(key: key),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

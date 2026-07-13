@@ -15,6 +15,7 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_entity_model/create_reminder_entity_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_all_notification_response_model/get_all_notification_response_model.dart';
 import '../model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospital_network_response_model.dart';
 import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
@@ -25,6 +26,7 @@ import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_draft_response_model/get_reminder_draft_response_model.dart';
 import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
+import '../model/get_unread_not_count_model/get_unread_not_count_model.dart';
 import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
@@ -279,9 +281,13 @@ class AuthRepoImpl {
   }
 
   Future<InitiatePaymentResponseModel> initiatePayment({
-    String? reference, String? paymentId,
+    String? reference,
+    String? paymentId,
   }) async {
-    final response = await _contract.initiatePayment(reference: reference,paymentId: paymentId);
+    final response = await _contract.initiatePayment(
+      reference: reference,
+      paymentId: paymentId,
+    );
     return response;
   }
 
@@ -495,6 +501,7 @@ class AuthRepoImpl {
     final response = await _contract.getOnlyPendingReminder(page: page);
     return response;
   }
+
   Future<GetPendingReminderResponseModel> getFailedReminder({
     String? page,
   }) async {
@@ -527,7 +534,8 @@ class AuthRepoImpl {
     return response;
   }
 
-  Future<NotificationChannelPricingResponseModel> getNotificationPricing() async {
+  Future<NotificationChannelPricingResponseModel>
+  getNotificationPricing() async {
     final response = await _contract.getNotificationPricing();
     return response;
   }
@@ -541,8 +549,31 @@ class AuthRepoImpl {
     return response;
   }
 
- Future<dynamic> sendNotificaitonDevice({String? token, String? deviceType}) async {
-    final response = await _contract.sendNotificaitonDevice(token:token, deviceType:deviceType);
+  Future<dynamic> sendNotificaitonDevice({
+    String? token,
+    String? deviceType,
+  }) async {
+    final response = await _contract.sendNotificaitonDevice(
+      token: token,
+      deviceType: deviceType,
+    );
+    return response;
+  }
+
+  Future<GetAllNotificationResponseModel> getNotificaitons({
+    String? page,
+  }) async {
+    final response = await _contract.getNotificaitons(page: page);
+    return response;
+  }
+
+  Future<GetUnreadNotCountModel> unReadNotificaitons() async {
+    final response = await _contract.unReadNotificaitons();
+    return response;
+  }
+
+  Future<dynamic> markAsReadNotificaitons() async {
+    final response = await _contract.markAsReadNotificaitons();
     return response;
   }
 

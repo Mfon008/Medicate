@@ -92,24 +92,57 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 28.w,
                       ),
                     ),
-              Container(
-                margin: EdgeInsets.only(right: 2.4.w),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.inactive.withOpacity(.1),
-                  border: Border.all(color: AppColors.inactive.withOpacity(.4)),
-                ),
-                child: IconButton(
-                  icon: SvgPicture.asset(
-                    AppImage.bell,
-                    height: isTablet(context) ? 40.h : 20.h,
-                    width: isTablet(context) ? 40.w : 20.w,
-                    color: AppColors.primary,
-                  ),
-                  onPressed: () =>
-                      navigate.navigateTo(Routes.emptyNotification),
-                  splashRadius: 28,
-                ),
+              ViewModelBuilder<AuthViewModel>.reactive(
+                viewModelBuilder: () => AuthViewModel(),
+                onViewModelReady: (model) {
+                  model.getUnreadNotifications();
+                },
+                disposeViewModel: false,
+                builder: (_, AuthViewModel model, _) {
+                  return Container(
+                    margin: EdgeInsets.only(right: 2.4.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.inactive.withOpacity(.1),
+                      border: Border.all(
+                        color: AppColors.inactive.withOpacity(.4),
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            AppImage.bell,
+                            height: isTablet(context) ? 40.h : 20.h,
+                            width: isTablet(context) ? 40.w : 20.w,
+                            color: AppColors.primary,
+                          ),
+                          onPressed: () =>
+                              navigate.navigateTo(Routes.notificationScreen),
+                          splashRadius: 28,
+                        ),
+                        model.getUnreadNotificationCountModel != null &&
+                                model
+                                        .getUnreadNotificationCountModel!
+                                        .data!
+                                        .count! >
+                                    0
+                            ? Positioned(
+                                left: 28,
+                                top: 8,
+                                child: Container(
+                                  padding: EdgeInsets.all(3.14.w),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.appRed.withOpacity(.88),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),

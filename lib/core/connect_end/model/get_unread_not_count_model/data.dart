@@ -4,17 +4,9 @@ part 'data.g.dart';
 
 @JsonSerializable()
 class Data {
-  String? message;
-  String? reminderGroupId;
-  String? transactionReference;
-  String? paymentId;
+  int? count;
 
-  Data({
-    this.message,
-    this.reminderGroupId,
-    this.transactionReference,
-    this.paymentId,
-  });
+  Data({this.count});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

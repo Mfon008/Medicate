@@ -37,10 +37,12 @@ import 'package:medicate_app/core/connect_end/model/upload_image_reminder_respon
 import 'package:medicate_app/core/core_folder/network/support_network_service.dart'
     as sup;
 import '../connect_end/model/active_hmo_plan_response_model/active_hmo_plan_response_model.dart';
+import '../connect_end/model/get_all_notification_response_model/get_all_notification_response_model.dart';
 import '../connect_end/model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../connect_end/model/get_pending_reminder_response_model/get_pending_reminder_response_model.dart';
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../connect_end/model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
+import '../connect_end/model/get_unread_not_count_model/get_unread_not_count_model.dart';
 import '../connect_end/model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
@@ -1062,12 +1064,60 @@ class AuthApi {
     }
   }
 
-  Future<dynamic> sendNotificaitonDevice({String? token, String? deviceType}) async {
+  Future<dynamic> sendNotificaitonDevice({
+    String? token,
+    String? deviceType,
+  }) async {
     try {
       final response = await _service.call(
         UrlConfig.notification_device,
         RequestMethod.post,
         data: {"token": token, "platform": deviceType},
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetAllNotificationResponseModel> getNotificaitons({
+    String? page,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.read_notification,
+        RequestMethod.getParams,
+        queryParams: {'page': page, 'limit': '20'},
+      );
+      logger.d(response.data);
+      return GetAllNotificationResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetUnreadNotCountModel> unReadNotificaitons() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.get_unread_notification,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetUnreadNotCountModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> markAsReadNotificaitons() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.read_all_notification,
+        RequestMethod.patch,
       );
       logger.d(response.data);
       return response.data;

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/core/core_folder/brief.dart';
+import 'package:stacked/stacked.dart';
 import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
+import '../../core/connect_end/view_model/auth_view_model.dart';
 import '../../core/core_folder/app/app.router.dart';
 import '../../main.dart';
 import '../widget/ai_text_form_widget.dart';
@@ -63,36 +65,64 @@ class _AskMeScreenState extends State<AskMeScreen> {
                       height: 28.h,
                       width: 28.w,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(right: 2.4.w),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.inactive.withOpacity(.1),
-                        border: Border.all(
-                          color: AppColors.inactive.withOpacity(.4),
-                        ),
-                      ),
-                      child: IconButton(
-                        icon: SvgPicture.asset(
-                          AppImage.bell,
-                          height: isTablet(context) ? 40.h : 20.h,
-                          width: isTablet(context) ? 40.w : 20.w,
-                          color: AppColors.primary,
-                        ),
-                        onPressed: () =>
-                            navigate.navigateTo(Routes.emptyNotification),
-                        splashRadius: 28,
-                      ),
+                    ViewModelBuilder<AuthViewModel>.reactive(
+                      viewModelBuilder: () => AuthViewModel(),
+                      onViewModelReady: (model) {
+                        model.getUnreadNotifications();
+                      },
+                      disposeViewModel: false,
+                      builder: (_, AuthViewModel model, _) {
+                        return Container(
+                          margin: EdgeInsets.only(right: 2.4.w),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.inactive.withOpacity(.1),
+                            border: Border.all(
+                              color: AppColors.inactive.withOpacity(.4),
+                            ),
+                          ),
+                          child: Stack(
+                            children: [
+                              IconButton(
+                                icon: SvgPicture.asset(
+                                  AppImage.bell,
+                                  height: isTablet(context) ? 40.h : 20.h,
+                                  width: isTablet(context) ? 40.w : 20.w,
+                                  color: AppColors.primary,
+                                ),
+                                onPressed: () => navigate.navigateTo(
+                                  Routes.notificationScreen,
+                                ),
+                                splashRadius: 28,
+                              ),
+                              model.getUnreadNotificationCountModel != null &&
+                                      model
+                                              .getUnreadNotificationCountModel!
+                                              .data!
+                                              .count! >
+                                          0
+                                  ? Positioned(
+                                      left: 28,
+                                      top: 8,
+                                      child: Container(
+                                        padding: EdgeInsets.all(3.14.w),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.appRed.withOpacity(
+                                            .88,
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
-              // centerTitle: true,
-              // actions: [
-              //   // Padding(
-              //   //   padding: EdgeInsets.all(isTablet(context) ? 2.0.w : 6.8.w),
-              //   //   child: ),
-              // ],
             )
           : null,
 

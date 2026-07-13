@@ -1,20 +1,14 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'datum.dart';
+
 part 'data.g.dart';
 
 @JsonSerializable()
 class Data {
-  String? message;
-  String? reminderGroupId;
-  String? transactionReference;
-  String? paymentId;
+  Datum? datum;
 
-  Data({
-    this.message,
-    this.reminderGroupId,
-    this.transactionReference,
-    this.paymentId,
-  });
+  Data({this.datum});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

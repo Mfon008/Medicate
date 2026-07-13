@@ -100,6 +100,7 @@ import '../model/create_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_reminder_entity_model/medication.dart';
 import '../model/dependent_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_all_notification_response_model/get_all_notification_response_model.dart';
 import '../model/get_hmo_plan_hospital_network_response_model/get_hmo_plan_hospital_network_response_model.dart';
 import '../model/get_hmos_plan_response_model/get_hmos_plan_response_model.dart';
 import '../model/get_hospital_by_id_response_model/get_hospital_by_id_response_model.dart';
@@ -110,6 +111,7 @@ import '../model/get_reminder_response_model/get_reminder_response_model.dart';
 import '../model/get_today_reminder_model/datum.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_transaction_wallet_response_model/transaction.dart';
+import '../model/get_unread_not_count_model/get_unread_not_count_model.dart';
 import '../model/get_user_details_no_phone_model/get_user_details_no_phone_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
@@ -161,6 +163,9 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_draft_response_
     as draft;
 import 'package:medicate_app/core/connect_end/model/get_reminder_draft_response_model/daily_dose_time.dart'
     as draftDose;
+
+import 'package:medicate_app/core/connect_end/model/get_all_notification_response_model/notification.dart'
+    as not;
 
 class AuthViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -318,6 +323,12 @@ class AuthViewModel extends BaseViewModel {
   RetryPaymentReminderResponseModel? get retryPaymentReminderResponseModel =>
       _retryPaymentReminderResponseModel;
   RetryPaymentReminderResponseModel? _retryPaymentReminderResponseModel;
+  GetAllNotificationResponseModel? _getAllNotificationsResponseModel;
+  GetAllNotificationResponseModel? get getAllNotificationsResponseModel =>
+      _getAllNotificationsResponseModel;
+  GetUnreadNotCountModel? _getUnreadNotificationCountModel;
+  GetUnreadNotCountModel? get getUnreadNotificationCountModel =>
+      _getUnreadNotificationCountModel;
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPhoneReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyFundWallet = GlobalKey<FormState>();
@@ -340,7 +351,9 @@ class AuthViewModel extends BaseViewModel {
 
   AuthViewModel({this.context});
   dynamic groupedTransactions;
+  dynamic groupedNotification;
   dynamic transactions;
+  List<not.Notification> notifications = [];
 
   String selectStatus = 'All';
   Timer? _timer;
@@ -423,6 +436,9 @@ class AuthViewModel extends BaseViewModel {
   bool isTappedCon = false;
   bool isTappedPhoneAdded = false;
   bool isTappedEmailAdded = false;
+
+  bool isFetchingMore = false;
+  bool hasMore = true;
 
   String medTypeResult = '';
   String medTypeResultImage = '';
@@ -19876,6 +19892,122 @@ class AuthViewModel extends BaseViewModel {
           token: token!,
           deviceType: deviceType,
         ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+ bool isFirstNotification(int index) {
+  if (index == 0) return false;
+
+  return items[index - 1] is String;
+}
+
+bool isLastNotification(int index) {
+  if (index == items.length - 1) return true;
+
+  return items[index + 1] is String;
+}
+
+  Future<void> loadMoreNotifications() async {
+    if (isFetchingMore || !hasMore) {
+      return;
+    }
+    pageAll++;
+
+    await getAllNotifications(loadMore: true);
+  }
+
+  List<dynamic> items = [];
+
+  Future<void> getAllNotifications({bool loadMore = false}) async {
+    try {
+      if (isFetchingMore) return;
+
+      if (loadMore) {
+        isFetchingMore = true;
+      } else {
+        _isLoading = true;
+        pageAll = 1;
+        notifications.clear();
+      }
+      _getAllNotificationsResponseModel = await runBusyFuture(
+        repositoryImply.getNotificaitons(page: pageAll.toString()),
+        throwException: true,
+      );
+        final newNotifications =
+            _getAllNotificationsResponseModel!.data!.datum!.notifications ?? [];
+        hasMore =
+            pageAll <
+            _getAllNotificationsResponseModel!.data!.datum!.meta!.totalPages!;
+
+        notifications.addAll(newNotifications);
+
+        groupedNotification = groupNotificationByDate(notifications);
+        items = buildItems();
+      isFetchingMore = false;
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  List<dynamic> buildItems() {
+    final list = <dynamic>[];
+
+    groupedNotification.forEach((date, notifications) {
+      list.add(date);
+      list.addAll(notifications);
+    });
+
+    return list;
+  }
+
+  Map<String, List<not.Notification>> groupNotificationByDate(
+    List<not.Notification> notification,
+  ) {
+    final Map<String, List<not.Notification>> grouped = {};
+
+    for (final tx in notification) {
+      final dateKey = DateFormat(
+        'yyyy-MM-dd',
+      ).format(DateTime.parse(tx.createdAt!.toString())); // normalize date
+
+      grouped.putIfAbsent(dateKey, () => []);
+      grouped[dateKey]!.add(tx);
+    }
+
+    return grouped;
+  }
+
+  void getUnreadNotifications() async {
+    try {
+      _isLoading = true;
+      _getUnreadNotificationCountModel = await runBusyFuture(
+        repositoryImply.unReadNotificaitons(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
+
+  void markAllAsReadNotification() async {
+    try {
+      _isLoading = true;
+      await runBusyFuture(
+        repositoryImply.markAsReadNotificaitons(),
         throwException: true,
       );
       _isLoading = false;
@@ -48632,7 +48764,7 @@ class AuthViewModel extends BaseViewModel {
                   padding: EdgeInsets.only(top: 4.w, right: 10.w),
                   child: GestureDetector(
                     onTap: () {
-                      model!.medicationClassList.clear();
+                      model.medicationClassList.clear();
                       Navigator.pop(context!);
                       setModalState!(() {});
                       model.notifyListeners();
@@ -48681,7 +48813,7 @@ class AuthViewModel extends BaseViewModel {
               ],
             ),
             SizedBox(height: 20.h),
-            model!.medicationClassList.isEmpty
+            model.medicationClassList.isEmpty
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

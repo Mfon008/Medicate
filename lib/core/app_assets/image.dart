@@ -16,6 +16,7 @@ class AppImage {
   static const String two_fa_ui = 'assets/svgs/2fa_ui.svg';
   static const String camera = 'assets/svgs/camera.svg';
   static const String users = 'assets/svgs/users.svg';
+  static const String empty_notification = 'assets/svgs/empty_notification.svg';
   static const String active_patients = 'assets/svgs/active_patients.svg';
   static const String month_order = 'assets/svgs/month_order.svg';
   static const String not_set_up = 'assets/svgs/not_set_up.svg';

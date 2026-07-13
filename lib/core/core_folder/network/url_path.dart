@@ -87,4 +87,8 @@ class UrlConfig {
   static const String save_reminder_draft = 'reminders/drafts';
   static const String notification_pricing = 'reminders/notification-prices';
   static const String notification_device = 'notifications/devices';
+  static const String read_all_notification = 'notifications/in-app/read-all';
+  static const String get_unread_notification =
+      'notifications/in-app/unread-count';
+  static const String read_notification = 'notifications/in-app';
 }
