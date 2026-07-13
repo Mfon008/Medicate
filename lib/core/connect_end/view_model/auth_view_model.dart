@@ -678,6 +678,7 @@ class AuthViewModel extends BaseViewModel {
   bool _validateDoseTimes = false;
   bool allTrue = false;
   List<bool> allTrueList = [];
+  List<dynamic> items = [];
 
   returnTypeOfCertificate(String relationship) {
     if (relationship.toLowerCase() == 'spouse') {
@@ -19902,17 +19903,17 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
- bool isFirstNotification(int index) {
-  if (index == 0) return false;
+  bool isFirstNotification(int index) {
+    if (index == 0) return false;
 
-  return items[index - 1] is String;
-}
+    return items[index - 1] is String;
+  }
 
-bool isLastNotification(int index) {
-  if (index == items.length - 1) return true;
+  bool isLastNotification(int index) {
+    if (index == items.length - 1) return true;
 
-  return items[index + 1] is String;
-}
+    return items[index + 1] is String;
+  }
 
   Future<void> loadMoreNotifications() async {
     if (isFetchingMore || !hasMore) {
@@ -19922,8 +19923,6 @@ bool isLastNotification(int index) {
 
     await getAllNotifications(loadMore: true);
   }
-
-  List<dynamic> items = [];
 
   Future<void> getAllNotifications({bool loadMore = false}) async {
     try {
@@ -19940,16 +19939,16 @@ bool isLastNotification(int index) {
         repositoryImply.getNotificaitons(page: pageAll.toString()),
         throwException: true,
       );
-        final newNotifications =
-            _getAllNotificationsResponseModel!.data!.datum!.notifications ?? [];
-        hasMore =
-            pageAll <
-            _getAllNotificationsResponseModel!.data!.datum!.meta!.totalPages!;
+      final newNotifications =
+          _getAllNotificationsResponseModel!.data!.datum!.notifications ?? [];
+      hasMore =
+          pageAll <
+          _getAllNotificationsResponseModel!.data!.datum!.meta!.totalPages!;
 
-        notifications.addAll(newNotifications);
+      notifications.addAll(newNotifications);
 
-        groupedNotification = groupNotificationByDate(notifications);
-        items = buildItems();
+      groupedNotification = groupNotificationByDate(notifications);
+      items = buildItems();
       isFetchingMore = false;
 
       _isLoading = false;
@@ -24018,6 +24017,7 @@ bool isLastNotification(int index) {
                                                               context,
                                                               isEdit: true,
                                                               index: index,
+                                                              model: model,
                                                               email:
                                                                   emailReminderList[index],
                                                             );
@@ -28554,6 +28554,7 @@ bool isLastNotification(int index) {
                                                             context,
                                                             isEdit: true,
                                                             index: index,
+                                                            model: model,
                                                             email:
                                                                 emailReminderList[index],
                                                           );
@@ -28996,6 +28997,9 @@ bool isLastNotification(int index) {
                                                     children: [
                                                       GestureDetector(
                                                         onTap: () {
+                                                          print(
+                                                            phoneReminderList[index],
+                                                          );
                                                           showPhoneDialog(
                                                             context,
                                                             isEdit: true,
@@ -31259,6 +31263,7 @@ bool isLastNotification(int index) {
                                                   context,
                                                   isEdit: true,
                                                   index: index,
+                                                  model: model,
                                                   email:
                                                       emailReminderList[index],
                                                 );
@@ -37657,6 +37662,7 @@ bool isLastNotification(int index) {
                                                   context,
                                                   isEdit: true,
                                                   index: index,
+                                                  model: model,
                                                   email:
                                                       emailReminderList[index],
                                                 );
@@ -44056,6 +44062,7 @@ bool isLastNotification(int index) {
                                                   context,
                                                   isEdit: true,
                                                   index: index,
+                                                  model: model,
                                                   email:
                                                       emailReminderList[index],
                                                 );
@@ -50675,6 +50682,7 @@ bool isLastNotification(int index) {
                                                             context,
                                                             isEdit: true,
                                                             index: index,
+                                                            model: model,
                                                             email:
                                                                 emailReminderList[index],
                                                           );
@@ -55150,6 +55158,7 @@ bool isLastNotification(int index) {
                                                             context,
                                                             isEdit: true,
                                                             index: index,
+                                                            model: model,
                                                             email:
                                                                 emailReminderList[index],
                                                           );
@@ -62479,6 +62488,7 @@ bool isLastNotification(int index) {
             isWallet: true,
             text: 'Pay with Wallet',
             icon: AppImage.wallet_pay,
+            model: model,
             onTap: () {
               onTapPaymentMeth = 'Pay with Wallet';
               model!.notifyListeners();
@@ -64665,6 +64675,8 @@ bool isLastNotification(int index) {
                               } else {
                                 emailReminderList[index!] =
                                     emailController.text;
+                                addedEmailReminderList[index + 1] =
+                                    emailController.text;
                               }
                               Navigator.pop(context);
                               emailController.clear();
@@ -64882,6 +64894,10 @@ bool isLastNotification(int index) {
                                       returnPhoneNoStructureAdd234After(
                                         phoneController.text.trim(),
                                       );
+                                  addedPhoneReminderList[index +
+                                      1] = returnPhoneNoStructureAdd234After(
+                                    phoneController.text.trim(),
+                                  );
                                 }
                                 Navigator.pop(context);
                                 phoneController.clear();
@@ -65535,6 +65551,7 @@ bool isLastNotification(int index) {
     bool isWallet = false,
     String? text,
     String? icon,
+    AuthViewModel? model,
     Function()? onTap,
   }) => GestureDetector(
     onTap: onTap,
@@ -65570,17 +65587,17 @@ bool isLastNotification(int index) {
                   children: [
                     ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => AuthViewModel(),
-                      onViewModelReady: (model) {
-                        model.getWalletBalance(context);
+                      onViewModelReady: (vmodel) {
+                        model!.getWalletBalance(context);
                       },
                       disposeViewModel: false,
-                      builder: (_, AuthViewModel model, _) {
+                      builder: (_, AuthViewModel vmodel, _) {
                         return SizedBox(
                           width: 90.w,
                           child: TextView(
                             text: formatNaira(
                               int.parse(
-                                model
+                                model!
                                         .getWalletBalanceResponseModel
                                         ?.data
                                         ?.balance ??
@@ -65601,7 +65618,10 @@ bool isLastNotification(int index) {
                     ),
                     SizedBox(width: 12.w),
                     GestureDetector(
-                      onTap: () => fundPaymentWallet(context),
+                      onTap: () => model!.fundPaymentWallet(
+                        context: context,
+                        model: model,
+                      ),
                       child: TextView(
                         text: 'Fund',
                         textStyle: TextStyle(
@@ -66628,16 +66648,14 @@ bool isLastNotification(int index) {
     return takenCount / totalCount;
   }
 
-  void fundPaymentWallet(context) {
+  void fundPaymentWallet({context, AuthViewModel? model}) {
     showDialog(
       context: context,
       barrierDismissible: false, // prevent closing by tapping outside
       builder: (BuildContext context) {
-        return ViewModelBuilder<AuthViewModel>.reactive(
-          viewModelBuilder: () => AuthViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          builder: (_, AuthViewModel model, _) {
+        return ListenableBuilder(
+          listenable: model!,
+          builder: (_, _) {
             return Container(
               color: AppColors.transparent,
               child: Column(
@@ -66706,7 +66724,6 @@ bool isLastNotification(int index) {
                               borderTopRight: 10.r,
                               borderBottomLeft: 10.r,
                               borderBottomRight: 10.r,
-
                               label: '',
                               hintSize: 16.60.sp,
                               controller: fundAmountController,

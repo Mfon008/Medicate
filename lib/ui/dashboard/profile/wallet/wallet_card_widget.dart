@@ -98,7 +98,7 @@ class _WalletCardState extends State<WalletCard> {
             ),
             SizedBox(height: 14.h),
             GestureDetector(
-              onTap: () => widget.model?.fundPaymentWallet(context),
+              onTap: () => widget.model?.fundPaymentWallet(context:context,model: widget.model),
               child: Container(
                 width: double.infinity,
                 margin: EdgeInsets.only(left: 23.0.w, right: 23.0.w),
