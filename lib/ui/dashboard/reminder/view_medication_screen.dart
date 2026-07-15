@@ -728,7 +728,10 @@ class ViewMedicationScreen extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: 5.0.h),
-                                  model
+                                 model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .phoneNumbers==null || model
                                           .getReminderByIdModel!
                                           .data!
                                           .phoneNumbers!
@@ -739,7 +742,10 @@ class ViewMedicationScreen extends StatelessWidget {
                                           thickness: .14,
                                         ),
                                   SizedBox(
-                                    height:
+                                    height: model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .phoneNumbers==null ||
                                         model
                                             .getReminderByIdModel!
                                             .data!
@@ -749,6 +755,9 @@ class ViewMedicationScreen extends StatelessWidget {
                                         : 5.10.h,
                                   ),
                                   model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .phoneNumbers==null || model
                                           .getReminderByIdModel!
                                           .data!
                                           .phoneNumbers!
@@ -764,7 +773,10 @@ class ViewMedicationScreen extends StatelessWidget {
                                           ),
                                         ),
                                   SizedBox(
-                                    height:
+                                    height: model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .phoneNumbers==null ||
                                         model
                                             .getReminderByIdModel!
                                             .data!
@@ -773,9 +785,12 @@ class ViewMedicationScreen extends StatelessWidget {
                                         ? 0.h
                                         : 5.0.h,
                                   ),
-                                  model.convert234To0(model),
-
+                                  model.convert234To0(model) ,
+                                  
                                   model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .emails==null || model
                                           .getReminderByIdModel!
                                           .data!
                                           .emails!
@@ -786,7 +801,10 @@ class ViewMedicationScreen extends StatelessWidget {
                                           thickness: .14,
                                         ),
                                   SizedBox(
-                                    height:
+                                    height: model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .emails==null ||
                                         model
                                             .getReminderByIdModel!
                                             .data!
@@ -795,7 +813,10 @@ class ViewMedicationScreen extends StatelessWidget {
                                         ? 0.h
                                         : 5.10.h,
                                   ),
-                                  model
+                                   model
+                                          .getReminderByIdModel!
+                                          .data!
+                                          .emails==null || model
                                           .getReminderByIdModel!
                                           .data!
                                           .emails!
@@ -810,8 +831,8 @@ class ViewMedicationScreen extends StatelessWidget {
                                             color: AppColors.infoGrey,
                                           ),
                                         ),
-
-                                  model.convertToProperEmail(model),
+                                 
+                                  model.convertToProperEmail(model)
                                 ],
                               ),
                             ),
