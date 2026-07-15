@@ -131,9 +131,11 @@ class NotificationService {
       badge: true,
       sound: true,
     );
+    print('settings.authorizationStatus::::: ${settings.authorizationStatus}');
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('User granted permission');
+      await _fm.setAutoInitEnabled(true);
 
       // Get APNs token (iOS only)
       String? apnsToken = await _fm.getAPNSToken();

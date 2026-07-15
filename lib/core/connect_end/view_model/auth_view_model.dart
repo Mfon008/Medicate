@@ -19951,10 +19951,10 @@ class AuthViewModel extends BaseViewModel {
         throwException: true,
       );
       final newNotifications =
-          _getAllNotificationsResponseModel!.data!.datum!.notifications ?? [];
+          _getAllNotificationsResponseModel!.data!.notifications ?? [];
       hasMore =
           pageAll <
-          _getAllNotificationsResponseModel!.data!.datum!.meta!.totalPages!;
+          _getAllNotificationsResponseModel!.data!.meta!.totalPages!;
 
       notifications.addAll(newNotifications);
 
@@ -68160,7 +68160,7 @@ class AuthViewModel extends BaseViewModel {
         model.getReminderByIdModel!.data!.emails!.isEmpty) {
       return SizedBox.shrink();
     }
-    final emails = model!.getReminderByIdModel!.data!.emails!
+    final emails = model.getReminderByIdModel!.data!.emails!
         .map((e) => e)
         .join(', ');
     return TextView(

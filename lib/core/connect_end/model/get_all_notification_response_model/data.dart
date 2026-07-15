@@ -1,14 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'datum.dart';
+import 'meta.dart';
+import 'notification.dart';
 
 part 'data.g.dart';
 
 @JsonSerializable()
 class Data {
-  Datum? datum;
+  List<Notification>? notifications;
+  Meta? meta;
 
-  Data({this.datum});
+  Data({this.notifications, this.meta});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

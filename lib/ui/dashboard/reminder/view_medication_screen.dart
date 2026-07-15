@@ -728,40 +728,46 @@ class ViewMedicationScreen extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: 5.0.h),
-                                 model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .phoneNumbers==null || model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .phoneNumbers!
-                                          .isEmpty
+                                  model
+                                                  .getReminderByIdModel!
+                                                  .data!
+                                                  .phoneNumbers ==
+                                              null ||
+                                          model
+                                              .getReminderByIdModel!
+                                              .data!
+                                              .phoneNumbers!
+                                              .isEmpty
                                       ? SizedBox.shrink()
                                       : Divider(
                                           color: AppColors.infoGrey,
                                           thickness: .14,
                                         ),
                                   SizedBox(
-                                    height: model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .phoneNumbers==null ||
+                                    height:
                                         model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .phoneNumbers!
-                                            .isEmpty
+                                                    .getReminderByIdModel!
+                                                    .data!
+                                                    .phoneNumbers ==
+                                                null ||
+                                            model
+                                                .getReminderByIdModel!
+                                                .data!
+                                                .phoneNumbers!
+                                                .isEmpty
                                         ? 0.h
                                         : 5.10.h,
                                   ),
                                   model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .phoneNumbers==null || model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .phoneNumbers!
-                                          .isEmpty
+                                                  .getReminderByIdModel!
+                                                  .data!
+                                                  .phoneNumbers ==
+                                              null ||
+                                          model
+                                              .getReminderByIdModel!
+                                              .data!
+                                              .phoneNumbers!
+                                              .isEmpty
                                       ? SizedBox.shrink()
                                       : TextView(
                                           text: 'Phone Numbers',
@@ -773,54 +779,56 @@ class ViewMedicationScreen extends StatelessWidget {
                                           ),
                                         ),
                                   SizedBox(
-                                    height: model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .phoneNumbers==null ||
+                                    height:
                                         model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .phoneNumbers!
-                                            .isEmpty
+                                                    .getReminderByIdModel!
+                                                    .data!
+                                                    .phoneNumbers ==
+                                                null ||
+                                            model
+                                                .getReminderByIdModel!
+                                                .data!
+                                                .phoneNumbers!
+                                                .isEmpty
                                         ? 0.h
                                         : 5.0.h,
                                   ),
-                                  model.convert234To0(model) ,
-                                  
-                                  model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .emails==null || model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .emails!
-                                          .isEmpty
+                                  model.convert234To0(model),
+
+                                  model.getReminderByIdModel!.data!.emails ==
+                                              null ||
+                                          model
+                                              .getReminderByIdModel!
+                                              .data!
+                                              .emails!
+                                              .isEmpty
                                       ? SizedBox.shrink()
                                       : Divider(
                                           color: AppColors.infoGrey,
                                           thickness: .14,
                                         ),
                                   SizedBox(
-                                    height: model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .emails==null ||
+                                    height:
                                         model
-                                            .getReminderByIdModel!
-                                            .data!
-                                            .emails!
-                                            .isEmpty
+                                                    .getReminderByIdModel!
+                                                    .data!
+                                                    .emails ==
+                                                null ||
+                                            model
+                                                .getReminderByIdModel!
+                                                .data!
+                                                .emails!
+                                                .isEmpty
                                         ? 0.h
                                         : 5.10.h,
                                   ),
-                                   model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .emails==null || model
-                                          .getReminderByIdModel!
-                                          .data!
-                                          .emails!
-                                          .isEmpty
+                                  model.getReminderByIdModel!.data!.emails ==
+                                              null ||
+                                          model
+                                              .getReminderByIdModel!
+                                              .data!
+                                              .emails!
+                                              .isEmpty
                                       ? SizedBox.shrink()
                                       : TextView(
                                           text: 'Email',
@@ -831,8 +839,8 @@ class ViewMedicationScreen extends StatelessWidget {
                                             color: AppColors.infoGrey,
                                           ),
                                         ),
-                                 
-                                  model.convertToProperEmail(model)
+
+                                  model.convertToProperEmail(model),
                                 ],
                               ),
                             ),

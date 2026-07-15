@@ -7,11 +7,15 @@ part of 'data.dart';
 // **************************************************************************
 
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
-  datum: json['data'] == null
+  notifications: (json['notifications'] as List<dynamic>?)
+      ?.map((e) => Notification.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  meta: json['meta'] == null
       ? null
-      : Datum.fromJson(json['data'] as Map<String, dynamic>),
+      : Meta.fromJson(json['meta'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-  'data': instance.datum,
+  'notifications': instance.notifications,
+  'meta': instance.meta,
 };

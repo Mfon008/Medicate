@@ -458,7 +458,12 @@ class AuthApi {
       final response = await _service.call(
         UrlConfig.reminder,
         RequestMethod.get,
-        data: {'filter':'my_reminders','status': status, 'page': page, 'limit': limit},
+        data: {
+          'filter': 'my_reminders',
+          'status': status,
+          'page': page,
+          'limit': limit,
+        },
       );
       logger.d(response.data);
       return GetReminderResponseModel.fromJson(response.data);
@@ -476,7 +481,12 @@ class AuthApi {
       final response = await _service.call(
         UrlConfig.reminder,
         RequestMethod.get,
-        data: {'filter':'my_reminders','status':'all','page': page, 'limit': limit},
+        data: {
+          'filter': 'my_reminders',
+          'status': 'all',
+          'page': page,
+          'limit': limit,
+        },
       );
       logger.d(response.data);
       return GetReminderResponseModel.fromJson(response.data);
