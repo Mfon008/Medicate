@@ -110,7 +110,7 @@ class NotificationService {
 
       if (message.data['agora_token'] != null) {
         print('push mes::vv::${message.data}');
-        print('pushhshshsh caller_type:${message.data['caller_type']}');
+        print('pushhshshsh caller_type:${message.data}');
         final callerType = message.data['caller_type']?.replaceAll('\\', '');
 
         if (callerType == 'MydocLabModelsUser') {

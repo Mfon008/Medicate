@@ -19953,8 +19953,7 @@ class AuthViewModel extends BaseViewModel {
       final newNotifications =
           _getAllNotificationsResponseModel!.data!.notifications ?? [];
       hasMore =
-          pageAll <
-          _getAllNotificationsResponseModel!.data!.meta!.totalPages!;
+          pageAll < _getAllNotificationsResponseModel!.data!.meta!.totalPages!;
 
       notifications.addAll(newNotifications);
 
@@ -23628,7 +23627,6 @@ class AuthViewModel extends BaseViewModel {
 
                                 hasNotCheckedNotificationChannel = false;
                                 buildChannelList(selectedIndexes);
-                                // addCostTotal(model);
                                 model.notifyListeners();
                               },
                             );
@@ -37585,8 +37583,7 @@ class AuthViewModel extends BaseViewModel {
                     if (selectedIndexes.contains(index)) {
                       // unselect
                       selectedIndexes.remove(index);
-                      if (!selectedIndexes.contains(0) &&
-                          !selectedIndexes.contains(1)) {
+                      if (!selectedIndexes.contains(0)) {
                         isTappedEmailAdded = false;
                         model.notifyListeners();
                       }
@@ -37600,14 +37597,42 @@ class AuthViewModel extends BaseViewModel {
                       // select
                       selectedIndexes.add(index);
                       // ✅ Show specific dialogs
-                      if (index == 0 || index == 1) {
+                      if (index == 0) {
                         // Email
                         isTappedEmailAdded = true;
+                        if (SharedPreferencesService
+                                    .instance
+                                    .usersData['user']['email'] ==
+                                '' ||
+                            addedEmailReminderList.contains(
+                              SharedPreferencesService
+                                  .instance
+                                  .usersData['user']['email'],
+                            )) {
+                        } else {
+                          addedEmailReminderList.add(
+                            SharedPreferencesService
+                                .instance
+                                .usersData['user']['email'],
+                          );
+                        }
                         model.notifyListeners();
                       } else if ([2, 3, 4].contains(index)) {
                         // Phone-related channels
                         isTappedPhoneAdded = true;
                         isPhoneValid = false;
+                        if (addedPhoneReminderList.contains(
+                          SharedPreferencesService
+                              .instance
+                              .usersData['user']['phone'],
+                        )) {
+                        } else {
+                          addedPhoneReminderList.add(
+                            SharedPreferencesService
+                                .instance
+                                .usersData['user']['phone'],
+                          );
+                        }
                         model.notifyListeners();
                       }
                     }
@@ -37696,7 +37721,12 @@ class AuthViewModel extends BaseViewModel {
                                             ),
                                             child: TextView(
                                               text:
-                                                  '${emailReminderList.length}',
+                                                  SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['email'] ==
+                                                      ''
+                                                  ? '${emailReminderList.length}'
+                                                  : '${emailReminderList.length + 1}',
                                               textStyle: TextStyle(
                                                 fontFamily: 'Arial',
                                                 fontSize: 11.8.sp,
@@ -37740,7 +37770,144 @@ class AuthViewModel extends BaseViewModel {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 15.20.h),
+                            SizedBox(
+                              height:
+                                  SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['email'] ==
+                                      ''
+                                  ? 10.h
+                                  : 15.20.h,
+                            ),
+                            SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['email'] ==
+                                    ''
+                                ? SizedBox.shrink()
+                                : Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 12.w,
+                                      right: 20.w,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (addedEmailReminderList.contains(
+                                              SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['email'],
+                                            )) {
+                                              addedEmailReminderList.remove(
+                                                SharedPreferencesService
+                                                    .instance
+                                                    .usersData['user']['email'],
+                                              );
+                                            } else {
+                                              addedEmailReminderList.add(
+                                                SharedPreferencesService
+                                                    .instance
+                                                    .usersData['user']['email'],
+                                              );
+                                            }
+                                            setModalState!(() {});
+                                            model.notifyListeners();
+                                          },
+                                          child: Container(
+                                            padding:
+                                                addedEmailReminderList.contains(
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['email'],
+                                                )
+                                                ? EdgeInsets.all(4.0.w)
+                                                : EdgeInsets.all(10.w),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(6.r),
+                                              color:
+                                                  addedEmailReminderList.contains(
+                                                    SharedPreferencesService
+                                                        .instance
+                                                        .usersData['user']['email'],
+                                                  )
+                                                  ? AppColors.primary
+                                                  : AppColors.transparent,
+                                              border: Border.all(
+                                                color:
+                                                    addedEmailReminderList.contains(
+                                                      SharedPreferencesService
+                                                          .instance
+                                                          .usersData['user']['email'],
+                                                    )
+                                                    ? AppColors.transparent
+                                                    : AppColors.infoGrey,
+                                                width: .78,
+                                              ),
+                                            ),
+                                            child:
+                                                addedEmailReminderList.contains(
+                                                  SharedPreferencesService
+                                                      .instance
+                                                      .usersData['user']['email'],
+                                                )
+                                                ? Icon(
+                                                    Icons.check,
+                                                    size: 12.sp,
+                                                    color: AppColors.white,
+                                                  )
+                                                : SizedBox.shrink(),
+                                          ),
+                                        ),
+                                        SizedBox(width: 9.10.w),
+                                        TextView(
+                                          text: SharedPreferencesService
+                                              .instance
+                                              .usersData['user']['email'],
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 16.2.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(1.2.w),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.app_green,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.check,
+                                                size: 13.4.sp,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            TextView(
+                                              text: 'Primary',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 13.72.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                            SizedBox(height: 2.0.h),
+                            SharedPreferencesService
+                                        .instance
+                                        .usersData['user']['email'] ==
+                                    ''
+                                ? SizedBox.shrink()
+                                : Divider(color: AppColors.infoGrey1),
                             ...emailReminderList.asMap().entries.map((entry) {
                               final index = entry.key;
                               final o = entry.value;
@@ -38048,125 +38215,125 @@ class AuthViewModel extends BaseViewModel {
                               ),
                             ),
                             SizedBox(height: 15.20.h),
-                            // Padding(
-                            //   padding: EdgeInsets.only(left: 12.w, right: 20.w),
-                            //   child: Row(
-                            //     children: [
-                            //       GestureDetector(
-                            //         onTap: () {
-                            //           if (addedPhoneReminderList.contains(
-                            //             SharedPreferencesService
-                            //                 .instance
-                            //                 .usersData['user']['phone'],
-                            //           )) {
-                            //             addedPhoneReminderList.remove(
-                            //               SharedPreferencesService
-                            //                   .instance
-                            //                   .usersData['user']['phone'],
-                            //             );
-                            //           } else {
-                            //             addedPhoneReminderList.add(
-                            //               SharedPreferencesService
-                            //                   .instance
-                            //                   .usersData['user']['phone'],
-                            //             );
-                            //           }
-                            //           setModalState!(() {});
-                            //           model.notifyListeners();
-                            //         },
-                            //         child: Container(
-                            //           padding:
-                            //               addedPhoneReminderList.contains(
-                            //                 SharedPreferencesService
-                            //                     .instance
-                            //                     .usersData['user']['phone'],
-                            //               )
-                            //               ? EdgeInsets.all(4.0.w)
-                            //               : EdgeInsets.all(10.w),
-                            //           decoration: BoxDecoration(
-                            //             borderRadius: BorderRadius.circular(
-                            //               6.r,
-                            //             ),
-                            //             color:
-                            //                 addedPhoneReminderList.contains(
-                            //                   SharedPreferencesService
-                            //                       .instance
-                            //                       .usersData['user']['phone'],
-                            //                 )
-                            //                 ? AppColors.primary
-                            //                 : AppColors.transparent,
-                            //             border: Border.all(
-                            //               color:
-                            //                   addedPhoneReminderList.contains(
-                            //                     SharedPreferencesService
-                            //                         .instance
-                            //                         .usersData['user']['phone'],
-                            //                   )
-                            //                   ? AppColors.transparent
-                            //                   : AppColors.infoGrey,
-                            //               width: .78,
-                            //             ),
-                            //           ),
-                            //           child:
-                            //               addedPhoneReminderList.contains(
-                            //                 SharedPreferencesService
-                            //                     .instance
-                            //                     .usersData['user']['phone'],
-                            //               )
-                            //               ? Icon(
-                            //                   Icons.check,
-                            //                   size: 12.sp,
-                            //                   color: AppColors.white,
-                            //                 )
-                            //               : SizedBox.shrink(),
-                            //         ),
-                            //       ),
-                            //       SizedBox(width: 9.10.w),
-                            //       TextView(
-                            //         text: formatPhoneNumber(
-                            //           SharedPreferencesService
-                            //               .instance
-                            //               .usersData['user']['phone'],
-                            //         ),
-                            //         textStyle: TextStyle(
-                            //           fontFamily: 'Arial',
-                            //           fontSize: 16.2.sp,
-                            //           fontWeight: FontWeight.w400,
-                            //           color: AppColors.reminder,
-                            //         ),
-                            //       ),
-                            //       Spacer(),
-                            //       Row(
-                            //         children: [
-                            //           Container(
-                            //             padding: EdgeInsets.all(1.2.w),
-                            //             decoration: BoxDecoration(
-                            //               color: AppColors.app_green,
-                            //               shape: BoxShape.circle,
-                            //             ),
-                            //             child: Icon(
-                            //               Icons.check,
-                            //               size: 13.4.sp,
-                            //               color: AppColors.white,
-                            //             ),
-                            //           ),
-                            //           SizedBox(width: 10.w),
-                            //           TextView(
-                            //             text: 'Primary',
-                            //             textStyle: TextStyle(
-                            //               fontFamily: 'Arial',
-                            //               fontSize: 13.72.sp,
-                            //               fontWeight: FontWeight.w400,
-                            //               color: AppColors.reminder,
-                            //             ),
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                            // SizedBox(height: 2.0.h),
-                            // Divider(color: AppColors.infoGrey1),
+                            Padding(
+                              padding: EdgeInsets.only(left: 12.w, right: 20.w),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (addedPhoneReminderList.contains(
+                                        SharedPreferencesService
+                                            .instance
+                                            .usersData['user']['phone'],
+                                      )) {
+                                        addedPhoneReminderList.remove(
+                                          SharedPreferencesService
+                                              .instance
+                                              .usersData['user']['phone'],
+                                        );
+                                      } else {
+                                        addedPhoneReminderList.add(
+                                          SharedPreferencesService
+                                              .instance
+                                              .usersData['user']['phone'],
+                                        );
+                                      }
+                                      setModalState!(() {});
+                                      model.notifyListeners();
+                                    },
+                                    child: Container(
+                                      padding:
+                                          addedPhoneReminderList.contains(
+                                            SharedPreferencesService
+                                                .instance
+                                                .usersData['user']['phone'],
+                                          )
+                                          ? EdgeInsets.all(4.0.w)
+                                          : EdgeInsets.all(10.w),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                          6.r,
+                                        ),
+                                        color:
+                                            addedPhoneReminderList.contains(
+                                              SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['phone'],
+                                            )
+                                            ? AppColors.primary
+                                            : AppColors.transparent,
+                                        border: Border.all(
+                                          color:
+                                              addedPhoneReminderList.contains(
+                                                SharedPreferencesService
+                                                    .instance
+                                                    .usersData['user']['phone'],
+                                              )
+                                              ? AppColors.transparent
+                                              : AppColors.infoGrey,
+                                          width: .78,
+                                        ),
+                                      ),
+                                      child:
+                                          addedPhoneReminderList.contains(
+                                            SharedPreferencesService
+                                                .instance
+                                                .usersData['user']['phone'],
+                                          )
+                                          ? Icon(
+                                              Icons.check,
+                                              size: 12.sp,
+                                              color: AppColors.white,
+                                            )
+                                          : SizedBox.shrink(),
+                                    ),
+                                  ),
+                                  SizedBox(width: 9.10.w),
+                                  TextView(
+                                    text: formatPhoneNumber(
+                                      SharedPreferencesService
+                                          .instance
+                                          .usersData['user']['phone'],
+                                    ),
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Arial',
+                                      fontSize: 16.2.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.reminder,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.all(1.2.w),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.app_green,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.check,
+                                          size: 13.4.sp,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      TextView(
+                                        text: 'Primary',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'Arial',
+                                          fontSize: 13.72.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 2.0.h),
+                            Divider(color: AppColors.infoGrey1),
                             ...phoneReminderList.asMap().entries.map((entry) {
                               final index = entry.key;
                               final o = entry.value;
@@ -43974,8 +44141,7 @@ class AuthViewModel extends BaseViewModel {
                     if (selectedIndexes.contains(index)) {
                       // unselect
                       selectedIndexes.remove(index);
-                      if (!selectedIndexes.contains(0) &&
-                          !selectedIndexes.contains(1)) {
+                      if (!selectedIndexes.contains(0)) {
                         isTappedEmailAdded = false;
                         model.notifyListeners();
                       }
@@ -43989,7 +44155,7 @@ class AuthViewModel extends BaseViewModel {
                       // select
                       selectedIndexes.add(index);
                       // ✅ Show specific dialogs
-                      if (index == 0 || index == 1) {
+                      if (index == 0) {
                         // Email
                         isTappedEmailAdded = true;
                         model.notifyListeners();
@@ -64905,7 +65071,13 @@ class AuthViewModel extends BaseViewModel {
                                         ) ||
                                         addedEmailReminderList.contains(
                                           emailController.text.trim(),
-                                        )) {
+                                        ) ||
+                                        SharedPreferencesService
+                                                .instance
+                                                .usersData['user']['email'] ==
+                                            emailController.text
+                                                .trim()
+                                                .toLowerCase()) {
                                       isInEmailList = true;
                                     } else {
                                       emailReminderList.add(
@@ -64937,7 +65109,13 @@ class AuthViewModel extends BaseViewModel {
                                           ) ||
                                           addedEmailReminderList.contains(
                                             emailController.text.trim(),
-                                          )) {
+                                          ) ||
+                                          SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['email'] ==
+                                              emailController.text
+                                                  .trim()
+                                                  .toLowerCase()) {
                                         isInEmailList = true;
                                       } else {
                                         emailReminderList[index!] =
@@ -65186,7 +65364,13 @@ class AuthViewModel extends BaseViewModel {
                                             returnPhoneNoStructureAdd234After(
                                               phoneController.text.trim(),
                                             ),
-                                          )) {
+                                          ) ||
+                                          SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['phone'] ==
+                                              returnPhoneNoStructureAdd234After(
+                                                phoneController.text.trim(),
+                                              )) {
                                         isInPhoneList = true;
                                       } else {
                                         phoneReminderList.add(
@@ -65213,7 +65397,13 @@ class AuthViewModel extends BaseViewModel {
                                             returnPhoneNoStructureAdd234After(
                                               phoneController.text.trim(),
                                             ),
-                                          )) {
+                                          ) ||
+                                          SharedPreferencesService
+                                                  .instance
+                                                  .usersData['user']['phone'] ==
+                                              returnPhoneNoStructureAdd234After(
+                                                phoneController.text.trim(),
+                                              )) {
                                         isInPhoneList = true;
                                       } else {
                                         phoneReminderList[index!] =
@@ -65919,7 +66109,9 @@ class AuthViewModel extends BaseViewModel {
                     ViewModelBuilder<AuthViewModel>.reactive(
                       viewModelBuilder: () => AuthViewModel(),
                       onViewModelReady: (vmodel) {
-                        model!.getWalletBalance(context);
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          model!.getWalletBalance(context);
+                        });
                       },
                       disposeViewModel: false,
                       builder: (_, AuthViewModel vmodel, _) {
@@ -68002,7 +68194,7 @@ class AuthViewModel extends BaseViewModel {
     }
     if (data.notificationChannels!.contains('PUSH')) {
       selectedIndexes.add(1);
-      isTappedEmailAdded = true;
+      // isTappedEmailAdded = true;
     }
     if (data.notificationChannels!.contains('SMS')) {
       selectedIndexes.add(2);
@@ -68030,7 +68222,7 @@ class AuthViewModel extends BaseViewModel {
     }
     if (notificationChannel.contains('PUSH')) {
       selectedIndexes.add(1);
-      isTappedEmailAdded = true;
+      // isTappedEmailAdded = true;
     }
     if (notificationChannel.contains('SMS')) {
       selectedIndexes.add(2);
@@ -68061,7 +68253,7 @@ class AuthViewModel extends BaseViewModel {
     }
     if (data.notificationChannels!.contains('PUSH')) {
       selectedIndexes.add(1);
-      isTappedEmailAdded = true;
+      // isTappedEmailAdded = true;
     }
     if (data.notificationChannels!.contains('SMS')) {
       selectedIndexes.add(2);
@@ -68089,7 +68281,7 @@ class AuthViewModel extends BaseViewModel {
     }
     if (data.notificationChannels!.contains('PUSH')) {
       selectedIndexes.add(1);
-      isTappedEmailAdded = true;
+      // isTappedEmailAdded = true;
     }
     if (data.notificationChannels!.contains('SMS')) {
       selectedIndexes.add(2);
@@ -68117,7 +68309,7 @@ class AuthViewModel extends BaseViewModel {
     }
     if (data.notificationChannels!.contains('PUSH')) {
       selectedIndexes.add(1);
-      isTappedEmailAdded = true;
+      // isTappedEmailAdded = true;
     }
     if (data.notificationChannels!.contains('SMS')) {
       selectedIndexes.add(2);
