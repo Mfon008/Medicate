@@ -31,10 +31,10 @@ class NotificationService {
   void handleMessage(RemoteMessage? message) {
     print('serious fb ${message?.data}');
     if (message == null) return;
-    // if (message.data['message'] != null &&
-    //     message.data['sender_type'] == 'Doctor') {
-    navigate.navigateTo(Routes.welcomeScreenNotification);
-    // }
+    navigate.navigateTo(
+      Routes.dashboard,
+      arguments: DashboardArguments(index: 1),
+    );
 
     // navigation to screens when push notification pops should be implemented here
   }

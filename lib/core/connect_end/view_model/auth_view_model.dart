@@ -19899,62 +19899,6 @@ class AuthViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void signInNotification(context, {LoginEntityModel? signInEntity}) async {
-    try {
-      _isLoading = true;
-      _loginResponseModel = await runBusyFuture(
-        repositoryImply.signIn(signInEntity!),
-        throwException: true,
-      );
-      _isLoading = false;
-      if (_loginResponseModel?.statusCode == 201) {
-        await AppUtils.snackbar(
-          context,
-          message: _loginResponseModel?.message ?? '',
-        );
-        if (_loginResponseModel!.data!.memberships!.isEmpty) {
-          navigate.navigateTo(
-            Routes.dashboard,
-            arguments: DashboardArguments(index: 1),
-          );
-        }
-        // else if (_loginResponseModel!.data!.memberships![0]['role'] ==
-        //         'OWNER' &&
-        //     _loginResponseModel!.data!.memberships![0]['tenantType'] ==
-        //         'PHARMACY') {
-        //   navigate.navigateTo(Routes.pharmacyDashboard);
-        // } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
-        //         'OWNER' &&
-        //     _loginResponseModel!.data!.memberships![0]['tenantType'] == 'HMO') {
-        //   navigate.navigateTo(Routes.hMODashboard);
-        // } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
-        //         'OWNER' &&
-        //     _loginResponseModel!.data!.memberships![0]['tenantType'] ==
-        //         'HEALTHCARE_PROVIDER') {
-        //   navigate.navigateTo(Routes.businessProviderDashboard);
-        // } else if (_loginResponseModel!.data!.memberships![0]['role'] ==
-        //         'OWNER' &&
-        //     _loginResponseModel!.data!.memberships![0]['tenantType'] ==
-        //         'HEALTHCARE_PRACTITIONER') {
-        //   navigate.navigateTo(Routes.specialistsProviderDashboard);
-        // }
-        // sendDeviceToken(
-        //   token: globalfCMToken,
-        //   deviceType: Platform.isAndroid ? 'ANDROID' : 'IOS',
-        // );
-      }
-    } catch (e) {
-      _isLoading = false;
-      logger.d(e);
-      AppUtils.snackbar(
-        context,
-        message: 'Unable to login please try again.',
-        error: true,
-      );
-    }
-    notifyListeners();
-  }
-
   void sendDeviceToken({String? token, String? deviceType}) async {
     try {
       _isLoading = true;

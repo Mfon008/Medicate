@@ -35,7 +35,6 @@ import '../../../ui/authentication/user/setup_pin_screen.dart';
 import '../../../ui/authentication/user/sign_up_screen.dart';
 import '../../../ui/authentication/user/success_screen.dart';
 import '../../../ui/authentication/user/welcome_screen.dart';
-import '../../../ui/authentication/user/welcome_screen_notification.dart';
 import '../../../ui/dashboard/ask_me_screen.dart';
 import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_dashboard.dart';
@@ -152,7 +151,6 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: SetupPinScreen),
     MaterialRoute(page: LoginScreen),
     MaterialRoute(page: WelcomeScreen),
-    MaterialRoute(page: WelcomeScreenNotification),
     MaterialRoute(page: ForgotPinScreen),
     MaterialRoute(page: ResetPinScreen),
     MaterialRoute(page: SuccessScreen),
