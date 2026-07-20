@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medicate_app/main.dart';
 
 import '../../fire_base.dart';
+import '../core_folder/app/app.router.dart';
 
 class NotificationService {
   final FirebaseMessaging _fm = FirebaseMessaging.instance;
@@ -32,15 +33,7 @@ class NotificationService {
     if (message == null) return;
     // if (message.data['message'] != null &&
     //     message.data['sender_type'] == 'Doctor') {
-    //   navigate.navigateTo(
-    //     Routes.chatScreen,
-    //     arguments: ChatScreenArguments(
-    //       id: message.data['conversation_id'].toString(),
-    //       messageModel: GetMessageIndexResponseModel(),
-    //       sender: message.data,
-    //       isBlocked: 0,
-    //     ),
-    //   );
+    navigate.navigateTo(Routes.welcomeScreenNotification);
     // }
 
     // navigation to screens when push notification pops should be implemented here
@@ -107,20 +100,6 @@ class NotificationService {
         ),
         payload: jsonEncode(message.toMap()),
       );
-
-      if (message.data['agora_token'] != null) {
-        print('push mes::vv::${message.data}');
-        print('pushhshshsh caller_type:${message.data}');
-        final callerType = message.data['caller_type']?.replaceAll('\\', '');
-
-        if (callerType == 'MydocLabModelsUser') {
-          print('push mes::user::${message.data}');
-        } else if (callerType == 'MydocLabModelsDoctor') {
-          print('push mes::::${message.data}');
-        }
-      }
-
-      // }
     });
   }
 
