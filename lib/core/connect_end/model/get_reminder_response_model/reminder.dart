@@ -9,6 +9,7 @@ part 'reminder.g.dart';
 class Reminder {
   @JsonKey(name: '_id')
   String? id;
+  String? trackingId;
   String? userId;
   Medication? medication;
   String? timeZone;
@@ -23,6 +24,7 @@ class Reminder {
 
   Reminder({
     this.id,
+    this.trackingId,
     this.userId,
     this.medication,
     this.timeZone,

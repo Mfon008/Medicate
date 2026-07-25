@@ -8,6 +8,7 @@ part of 'reminder.dart';
 
 Reminder _$ReminderFromJson(Map<String, dynamic> json) => Reminder(
   id: json['_id'] as String?,
+  trackingId: json['trackingId'] as String?,
   userId: json['userId'] as String?,
   medication: json['medication'] == null
       ? null
@@ -35,6 +36,7 @@ Reminder _$ReminderFromJson(Map<String, dynamic> json) => Reminder(
 
 Map<String, dynamic> _$ReminderToJson(Reminder instance) => <String, dynamic>{
   '_id': instance.id,
+  'trackingId': instance.trackingId,
   'userId': instance.userId,
   'medication': instance.medication,
   'timeZone': instance.timeZone,

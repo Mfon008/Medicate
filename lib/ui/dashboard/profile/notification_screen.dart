@@ -22,7 +22,7 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final ScrollController _scrollController = ScrollController();
 
-  AuthViewModel? _model;
+  // AuthViewModel? _model;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        _model?.loadMoreNotifications();
+        AuthViewModel().loadMoreNotifications();
       }
     });
   }
@@ -47,7 +47,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) async {
-        _model = model;
+        // _model = model;
         await model.getAllNotifications();
         model.markAllAsReadNotification();
       },
@@ -75,150 +75,150 @@ class _NotificationScreenState extends State<NotificationScreen> {
             centerTitle: true,
           ),
           body: model.isLoading
-    ? Center(
-        child: SpinKitThreeBounce(
-          color: AppColors.primary.withOpacity(.5),
-          size: 34,
-        ),
-      )
-    : model.items.isEmpty
-        ? Center(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(22.4.w, 160.w, 22.4.w, 60.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    AppImage.empty_notification,
-                    height: 100.h,
-                    width: 100.w,
+              ? Center(
+                  child: SpinKitThreeBounce(
+                    color: AppColors.primary.withOpacity(.5),
+                    size: 34,
                   ),
-                  SizedBox(height: 20.h),
-                  TextView(
-                    text: 'No Notifications at the moment',
-                    textStyle: TextStyle(
-                      fontSize: 18.10.sp,
-                      fontFamily: 'GoogleSans',
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.deep,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  TextView(
-                    text: 'You’ll be notified when you get one',
-                    textStyle: TextStyle(
-                      fontSize: 14.90.sp,
-                      fontFamily: 'Arial',
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.reminder1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
-        : ListView.builder(
-            controller: _scrollController,
-            padding: EdgeInsets.symmetric(
-              vertical: 30.w,
-              horizontal: 15.w,
-            ),
-            itemCount: model.items.length + (model.isFetchingMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index == model.items.length) {
-                return Padding(
-                  padding: EdgeInsets.all(22.w),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primary1,
-                    ),
-                  ),
-                );
-              }
-
-              final item = model.items[index];
-
-              if (item is String) {
-                return Padding(
-                  padding: EdgeInsets.only(top: 16.h, bottom: 10.h),
-                  child: TextView(
-                    text: DateFormat(
-                      'dd MMM, yyyy',
-                    ).format(DateTime.parse(item)),
-                    // ...
-                  ),
-                );
-              }
-
-              final isFirst = model.isFirstNotification(index);
-              final isLast = model.isLastNotification(index);
-
-              
-                return profileContainer(
-                topLeft: isFirst ? 12 : 0,
-                topRight: isFirst ? 12 : 0,
-                bottomLeft: isLast ? 12 : 0,
-                bottomRight: isLast ? 12 : 0,
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(10.0.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.faintedGold.withOpacity(.1),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: SvgPicture.asset(
-                        AppImage.timer,
-                        height: 13.9.h,
-                        width: 13.9.w,
-                        color: AppColors.faintedGold,
-                      ),
-                    ),
-                    SizedBox(width: 14.20.w),
-
-                    // Title + Time
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                )
+              : model.items.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(22.4.w, 40.w, 22.4.w, 60.w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SvgPicture.asset(
+                          AppImage.empty_notification,
+                          height: 100.h,
+                          width: 100.w,
+                        ),
+                        SizedBox(height: 20.h),
                         TextView(
-                          text: item.title ?? '',
+                          text: 'No Notifications at the moment',
                           textStyle: TextStyle(
-                            fontSize: 14.90.sp,
+                            fontSize: 18.10.sp,
                             fontFamily: 'GoogleSans',
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.reminder1,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.deep,
                           ),
                         ),
-                        SizedBox(
-                          width: 200.w,
-                          child: TextView(
-                            text: item.body ?? '',
-                            textStyle: TextStyle(
-                              fontSize: 11.98.sp,
-                              fontFamily: 'Arial',
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.reminder,
-                            ),
+                        SizedBox(height: 10.h),
+                        TextView(
+                          text: 'You’ll be notified when you get one',
+                          textStyle: TextStyle(
+                            fontSize: 14.90.sp,
+                            fontFamily: 'Arial',
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.reminder1,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(width: 10),
-                    TextView(
-                      text: DateFormat(
-                        'h:mm a',
-                      ).format(DateTime.parse(item.updatedAt.toString())),
-                      textStyle: TextStyle(
-                        fontSize: 11.90.sp,
-                        color: AppColors.infoGrey,
+                  ),
+                )
+              : ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 30.w,
+                    horizontal: 15.w,
+                  ),
+                  itemCount:
+                      model.items.length + (model.isFetchingMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == model.items.length) {
+                      return Padding(
+                        padding: EdgeInsets.all(22.w),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.primary1,
+                          ),
+                        ),
+                      );
+                    }
+
+                    final item = model.items[index];
+
+                    if (item is String) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 16.h, bottom: 10.h),
+                        child: TextView(
+                          text: DateFormat(
+                            'dd MMM, yyyy',
+                          ).format(DateTime.parse(item)),
+                          // ...
+                        ),
+                      );
+                    }
+
+                    final isFirst = model.isFirstNotification(index);
+                    final isLast = model.isLastNotification(index);
+
+                    return profileContainer(
+                      topLeft: isFirst ? 12 : 0,
+                      topRight: isFirst ? 12 : 0,
+                      bottomLeft: isLast ? 12 : 0,
+                      bottomRight: isLast ? 12 : 0,
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(10.0.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.faintedGold.withOpacity(.1),
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: SvgPicture.asset(
+                              AppImage.timer,
+                              height: 13.9.h,
+                              width: 13.9.w,
+                              color: AppColors.faintedGold,
+                            ),
+                          ),
+                          SizedBox(width: 14.20.w),
+
+                          // Title + Time
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextView(
+                                text: item.title ?? '',
+                                textStyle: TextStyle(
+                                  fontSize: 14.90.sp,
+                                  fontFamily: 'GoogleSans',
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.reminder1,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 200.w,
+                                child: TextView(
+                                  text: item.body ?? '',
+                                  textStyle: TextStyle(
+                                    fontSize: 11.98.sp,
+                                    fontFamily: 'Arial',
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 10),
+                          TextView(
+                            text: DateFormat(
+                              'h:mm a',
+                            ).format(DateTime.parse(item.updatedAt.toString())),
+                            textStyle: TextStyle(
+                              fontSize: 11.90.sp,
+                              color: AppColors.infoGrey,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-        
-              );
-            },
-          ),);
+        );
       },
     );
   }

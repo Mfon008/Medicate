@@ -33,6 +33,7 @@ Medication _$MedicationFromJson(Map<String, dynamic> json) => Medication(
           json['medicationImage'] as Map<String, dynamic>,
         ),
   id: json['_id'] as String?,
+  note: json['note'] as String?,
 );
 
 Map<String, dynamic> _$MedicationToJson(Medication instance) =>
@@ -49,4 +50,5 @@ Map<String, dynamic> _$MedicationToJson(Medication instance) =>
       'medicationStatus': instance.medicationStatus,
       'medicationImage': instance.medicationImage,
       '_id': instance.id,
+      'note': instance.note,
     };

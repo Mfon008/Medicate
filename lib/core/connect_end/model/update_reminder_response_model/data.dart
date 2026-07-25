@@ -6,9 +6,10 @@ part 'data.g.dart';
 class Data {
   String? message;
   String? transactionReference;
+  String? paymentId;
   dynamic data;
 
-  Data({this.message, this.transactionReference, this.data});
+  Data({this.message, this.transactionReference, this.data,this.paymentId});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
 

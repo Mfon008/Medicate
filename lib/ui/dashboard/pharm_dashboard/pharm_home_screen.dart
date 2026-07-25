@@ -89,102 +89,107 @@ class _PharmacyHomeScreenState extends State<PharmacyHomeScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16.8.w, vertical: 22.w),
         child: Column(
           children: [
-            GestureDetector(
-              onTap: () => navigate.navigateTo(Routes.profileScreen),
-              child: Container(
-                // margin: EdgeInsets.symmetric(horizontal: 4.0.w),
-                padding: EdgeInsets.symmetric(
-                  vertical: 12.w,
-                  horizontal: 11.4.w,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(
-                    color:
-                        SharedPreferencesService
-                                    .instance
-                                    .usersData['memberships'] !=
-                                null &&
-                            SharedPreferencesService
-                                    .instance
-                                    .usersData['memberships'][0]['profileCompletionPercentage'] ==
-                                100
-                        ? AppColors.app_green
-                        : AppColors.yellow,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color:
-                          SharedPreferencesService
-                                      .instance
-                                      .usersData['memberships'] !=
-                                  null &&
-                              SharedPreferencesService
-                                      .instance
-                                      .usersData['memberships'][0]['profileCompletionPercentage'] ==
-                                  100
-                          ? AppColors.app_green
-                          : AppColors.yellow,
-                      size: 20.sp,
-                    ),
-                    SizedBox(width: 10.12.w),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextView(
-                          text:
+            SharedPreferencesService
+                        .instance
+                        .usersData['memberships'][0]['role'] !=
+                    'OWNER'
+                ? SizedBox.shrink()
+                : GestureDetector(
+                    onTap: () => navigate.navigateTo(Routes.profileScreen),
+                    child: Container(
+                      // margin: EdgeInsets.symmetric(horizontal: 4.0.w),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12.w,
+                        horizontal: 11.4.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color:
                               SharedPreferencesService
                                           .instance
                                           .usersData['memberships'] !=
                                       null &&
                                   SharedPreferencesService
                                           .instance
-                                          .usersData['memberships'][0] ==
+                                          .usersData['memberships'][0]['profileCompletionPercentage'] ==
                                       100
-                              ? 'Completed'
-                              : 'Complete Registration',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 15.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.black,
-                          ),
+                              ? AppColors.app_green
+                              : AppColors.yellow,
                         ),
-                        TextView(
-                          text:
-                              SharedPreferencesService
-                                          .instance
-                                          .usersData['memberships'] !=
-                                      null &&
-                                  SharedPreferencesService
-                                          .instance
-                                          .usersData['memberships'][0]['profileCompletionPercentage'] !=
-                                      null
-                              ? 'Your registration is ${SharedPreferencesService.instance.usersData['memberships'][0]['profileCompletionPercentage']}% completed'
-                              : 'Please enter your new PIN.',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 13.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.infoGrey,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            color:
+                                SharedPreferencesService
+                                            .instance
+                                            .usersData['memberships'] !=
+                                        null &&
+                                    SharedPreferencesService
+                                            .instance
+                                            .usersData['memberships'][0]['profileCompletionPercentage'] ==
+                                        100
+                                ? AppColors.app_green
+                                : AppColors.yellow,
+                            size: 20.sp,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 10.12.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextView(
+                                text:
+                                    SharedPreferencesService
+                                                .instance
+                                                .usersData['memberships'] !=
+                                            null &&
+                                        SharedPreferencesService
+                                                .instance
+                                                .usersData['memberships'][0] ==
+                                            100
+                                    ? 'Completed'
+                                    : 'Complete Registration',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 15.2.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.black,
+                                ),
+                              ),
+                              TextView(
+                                text:
+                                    SharedPreferencesService
+                                                .instance
+                                                .usersData['memberships'] !=
+                                            null &&
+                                        SharedPreferencesService
+                                                .instance
+                                                .usersData['memberships'][0]['profileCompletionPercentage'] !=
+                                            null
+                                    ? 'Your registration is ${SharedPreferencesService.instance.usersData['memberships'][0]['profileCompletionPercentage']}% completed'
+                                    : 'Please enter your new PIN.',
+                                textStyle: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 13.2.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          SvgPicture.asset(
+                            AppImage.arrow_forward,
+                            width: 14.20.w,
+                            height: 14.20.w,
+                          ),
+                        ],
+                      ),
                     ),
-                    Spacer(),
-                    SvgPicture.asset(
-                      AppImage.arrow_forward,
-                      width: 14.20.w,
-                      height: 14.20.w,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
             SizedBox(height: 16.4.h),
 
             ...onTappedBoxList.map(

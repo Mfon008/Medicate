@@ -10,6 +10,7 @@ part 'reminder.g.dart';
 class Reminder {
   @JsonKey(name: '_id')
   String? id;
+  String? trackingId;
   String? userId;
   dynamic tenantId;
   Medication? medication;
@@ -17,7 +18,7 @@ class Reminder {
   bool? isActive;
   List<String>? notificationChannels;
   List<String>? phoneNumbers;
-  List<dynamic>? emails;
+  List<String>? emails;
   List<Payment>? payments;
   List<ChannelPriceSnapshot>? channelPriceSnapshots;
   String? reminderGroupId;
@@ -26,6 +27,7 @@ class Reminder {
 
   Reminder({
     this.id,
+    this.trackingId,
     this.userId,
     this.tenantId,
     this.medication,

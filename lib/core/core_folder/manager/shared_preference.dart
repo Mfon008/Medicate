@@ -38,7 +38,6 @@ class SharedPreferencesService {
 
   static const String application_global_id = 'application_global_id';
 
-
   String get authToken => sharedPreferences?.getString(keyAuthToken) ?? '';
 
   String get authType => sharedPreferences?.getString(userType) ?? '';
@@ -78,7 +77,8 @@ class SharedPreferencesService {
   }
 
   set isLogin(bool isLogin) => sharedPreferences?.setBool(is_login, isLogin);
-  set isNewLogin(bool isNewLogin) => sharedPreferences?.setBool(is_new_login, isNewLogin);
+  set isNewLogin(bool isNewLogin) =>
+      sharedPreferences?.setBool(is_new_login, isNewLogin);
   set isSignUp(bool isSignUp) =>
       sharedPreferences?.setBool(is_sign_up, isSignUp);
   set isVerified(bool verify) => sharedPreferences?.setBool(verified, verify);
@@ -109,5 +109,4 @@ class SharedPreferencesService {
       return false;
     }
   }
-
 }

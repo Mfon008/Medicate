@@ -21,8 +21,8 @@ class MedicationImage {
     this.height,
     this.size,
     this.format,
-    this.key,
     this.id,
+    this.key,
   });
 
   factory MedicationImage.fromJson(Map<String, dynamic> json) {

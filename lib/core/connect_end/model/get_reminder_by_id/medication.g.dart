@@ -8,7 +8,6 @@ part of 'medication.dart';
 
 Medication _$MedicationFromJson(Map<String, dynamic> json) => Medication(
   medicationName: json['medicationName'] as String?,
-  drugName: json['drugName'] as String?,
   medicationType: json['medicationType'] as String?,
   dosage: json['dosage'] as String?,
   startDateTime: json['startDateTime'] == null
@@ -40,15 +39,14 @@ Medication _$MedicationFromJson(Map<String, dynamic> json) => Medication(
 Map<String, dynamic> _$MedicationToJson(Medication instance) =>
     <String, dynamic>{
       'medicationName': instance.medicationName,
-      'drugName': instance.drugName,
       'medicationType': instance.medicationType,
       'dosage': instance.dosage,
       'startDateTime': instance.startDateTime?.toIso8601String(),
       'durationInDays': instance.durationInDays,
       'endDateTime': instance.endDateTime?.toIso8601String(),
+      'scheduleType': instance.scheduleType,
       'timesPerDay': instance.timesPerDay,
       'note': instance.note,
-      'scheduleType': instance.scheduleType,
       'dailyDoseTimes': instance.dailyDoseTimes,
       'medicationStatus': instance.medicationStatus,
       'medicationImage': instance.medicationImage,

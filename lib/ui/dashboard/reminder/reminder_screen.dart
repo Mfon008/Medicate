@@ -18,6 +18,7 @@ import '../../../core/connect_end/model/get_reminder_response_model/reminder.dar
 import '../../../core/connect_end/view_model/auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
+import '../../widget/status_widget.dart';
 import '../../widget/text.dart';
 
 class ReminderScreen extends StatefulWidget {
@@ -234,7 +235,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
           body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
               vertical: model.checkReminderEmpty() ? 20.w : 50.w,
-              horizontal: 16.w,
+              horizontal: 14.6.w,
             ),
             child: Column(
               children: [
@@ -1984,6 +1985,58 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   ),
                                 ),
                                 SizedBox(height: 10.30.h),
+                                SizedBox(
+                                  height:
+                                      o.status == 'PENDING' && model.isLoading
+                                      ? 20.h
+                                      : 0.h,
+                                ),
+                                o.status == 'PENDING' && model.isLoading
+                                    ? SpinKitWaveSpinner(
+                                        color: AppColors.primary,
+                                        size: 32.0.sp,
+                                      )
+                                    : SizedBox.shrink(),
+                                SizedBox(
+                                  height: o.status != 'PENDING' ? 0 : 10.h,
+                                ),
+                                o.status != 'PENDING'
+                                    ? SizedBox.shrink()
+                                    : Row(
+                                        children: [
+                                          StatusButton(
+                                            title: "Taken",
+                                            color: AppColors.green,
+                                            icon: Icons.check,
+                                            onTap: () {
+                                              model.updateDose(
+                                                context,
+                                                model,
+                                                o,
+                                                "TAKEN",
+                                              );
+                                              setState(() {});
+                                              model.notifyListeners();
+                                            },
+                                          ),
+                                          SizedBox(width: 12.w),
+                                          StatusButton(
+                                            title: "Missed",
+                                            color: AppColors.yellow,
+                                            icon: Icons.close,
+                                            onTap: () {
+                                              model.updateDose(
+                                                context,
+                                                model,
+                                                o,
+                                                "MISSED",
+                                              );
+                                              setState(() {});
+                                              model.notifyListeners();
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                 if (!isLast)
                                   Divider(
                                     color: AppColors.infoGrey,
@@ -2012,215 +2065,288 @@ class _ReminderScreenState extends State<ReminderScreen> {
     Reminder? reminder,
     AuthViewModel? model,
     bool isComplete = false,
-  }) => GestureDetector(
-    onTap: () => navigate.navigateTo(
-      Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id),
-    ),
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),
-      margin: EdgeInsets.only(bottom: 16.w),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10.r),
+  }) {
+    final addedNotificationChannels = <String>{
+      ...?reminder!.notificationChannels,
+      for (final payment in reminder.payments ?? [])
+        ...List<String>.from(payment.notificationChannelsPaidFor ?? []),
+    }.toList();
+    return GestureDetector(
+      onTap: () => navigate.navigateTo(
+        Routes.viewMedicationScreen,
+        arguments: ViewMedicationScreenArguments(id: reminder.id),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 36.0.w,
-                horizontal: 36.40.w,
-              ),
-              width: MediaQuery.of(context).size.width / 2.5,
-              height: 150.h,
-              decoration: BoxDecoration(
-                color: AppColors.dashboard,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Image.network(
-                reminder?.medication?.medicationImage?.url ?? '',
-                height: 76.h,
-                width: 76.w,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Padding(
-                  padding: EdgeInsets.all(18.w),
-                  child: SvgPicture.asset(
-                    color: AppColors.primary,
-                    model!.errorRemidnderImage(
-                      reminder!.medication!.medicationType,
-                    ),
-                  ),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 9.80.w),
+        margin: EdgeInsets.only(bottom: 16.w),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 16.0.w,
+                  horizontal: 16.40.w,
                 ),
-              ),
-            ),
-          ),
-          SizedBox(width: 15.20.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 140.w,
-                  child: TextView(
-                    text: reminder?.medication?.medicationName ?? '',
-                    maxLines: 1,
-                    textOverflow: TextOverflow.ellipsis,
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 16.2.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.reminder,
-                    ),
-                  ),
+                width: MediaQuery.of(context).size.width / 2.5,
+                height: 160.h,
+                decoration: BoxDecoration(
+                  color: AppColors.dashboard,
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                SizedBox(height: 4.h),
-                TextView(
-                  text:
-                      '${DateFormat('MMM d').format(reminder!.medication!.startDateTime!)} - ${DateFormat('MMM d').format(reminder.medication!.endDateTime!)}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.grey1,
-                  ),
-                ),
-                SizedBox(height: 6.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                child: Column(
                   children: [
-                    Expanded(
-                      // width: isTab ? 230.w : 120.w,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5.0),
-                        ), // Adjust radius as needed
-                        child: LinearProgressIndicator(
-                          minHeight: 4.0, // Adjust height as needed
-                          value: model!.getReminderStatusValue(
-                            reminder.medication!.dailyDoseTimes!,
+                    Image.network(
+                      reminder.medication?.medicationImage?.url ?? '',
+                      height: 96.h,
+                      width: 76.w,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) => Padding(
+                        padding: EdgeInsets.all(15.2.w),
+                        child: SvgPicture.asset(
+                          color: AppColors.primary,
+                          model!.errorRemidnderImage(
+                            reminder.medication!.medicationType,
                           ),
-                          color: AppColors.lightBlue, // Progress bar color
-                          backgroundColor:
-                              Colors.grey[300], // Background track color
+                          height: 46.h,
+                          width: 46.w,
                         ),
                       ),
                     ),
-                    SizedBox(width: 7.10.w),
-                    TextView(
-                      text: '${model.takenCount}/${model.totalCount}',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.infoGrey,
+                    SizedBox(height: 8.10.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 3.2.w,
+                        horizontal: 5.64.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: TextView(
+                        text: reminder.trackingId ?? 'ID:MED-2026-1023',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 10.40.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.infoGrey,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 5.6.h),
-                TextView(
-                  text: 'Dosage',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  children: [
-                    TextView(
-                      text: reminder.medication?.dosage ?? '',
+              ),
+            ),
+            SizedBox(width: 15.20.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 140.w,
+                    child: TextView(
+                      text: reminder.medication?.medicationName ?? '',
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
                       textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                        fontSize: 16.2.sp,
+                        fontWeight: FontWeight.w500,
                         color: AppColors.reminder,
                       ),
                     ),
-                    SizedBox(width: 4.6.w),
-                    TextView(
-                      text:
-                          reminder.medication?.timesPerDay == null ||
-                              reminder.medication?.timesPerDay == 0
-                          ? 'Custom'
-                          : 'x${reminder.medication?.timesPerDay} daily',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.infoGrey,
+                  ),
+                  SizedBox(height: 4.h),
+                  TextView(
+                    text:
+                        '${DateFormat('MMM d').format(reminder.medication!.startDateTime!)} - ${DateFormat('MMM d').format(reminder.medication!.endDateTime!)}',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.grey1,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        // width: isTab ? 230.w : 120.w,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(5.0),
+                          ), // Adjust radius as needed
+                          child: LinearProgressIndicator(
+                            minHeight: 4.0, // Adjust height as needed
+                            value: model!.getReminderStatusValue(
+                              reminder.medication!.dailyDoseTimes!,
+                            ),
+                            color: AppColors.lightBlue, // Progress bar color
+                            backgroundColor:
+                                Colors.grey[300], // Background track color
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 6.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(3.2.w),
-                          decoration: BoxDecoration(
-                            color: !isComplete
-                                ? payStatusColor(reminder.payments)
-                                : AppColors.app_green,
-                            shape: BoxShape.circle,
-                          ),
+                      SizedBox(width: 7.10.w),
+                      TextView(
+                        text: '${model.takenCount}/${model.totalCount}',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
                         ),
-                        SizedBox(width: 4.6.w),
-                        TextView(
-                          text: !isComplete
-                              ? payStatus(reminder.payments)
-                              : 'Completed',
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.6.h),
+                  TextView(
+                    text: 'Dosage',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
                     ),
-                    reminder.payments != null &&
-                            reminder.payments!.isNotEmpty &&
-                            reminder.payments?.last.status == 'PENDING'
-                        ? Container(
-                            padding: EdgeInsets.all(5.2.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.skyBlue,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: AppColors.skyBlue),
-                            ),
-                            child: SvgPicture.asset(
-                              AppImage.opened_eye,
-                              color: AppColors.primary,
-                            ),
-                          )
-                        : GestureDetector(
-                            onTap: () => model.showUpdateReminderModalReminder(
-                              context: context,
-                              data: reminder,
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(5.2.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.skyBlue,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppColors.skyBlue),
+                  ),
+                  SizedBox(height: 2.h),
+                  Row(
+                    children: [
+                      TextView(
+                        text: reminder.medication?.dosage ?? '',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.reminder,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      SizedBox(width: 4.6.w),
+                      TextView(
+                        text:
+                            reminder.medication?.timesPerDay == null ||
+                                reminder.medication?.timesPerDay == 0
+                            ? 'Custom'
+                            : 'x${reminder.medication?.timesPerDay} daily',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        padding: EdgeInsets.all(5.2.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.skyBlue,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.skyBlue),
+                        ),
+                        child: SvgPicture.asset(
+                          AppImage.opened_eye,
+                          color: AppColors.primary,
+                          height: 14.20.h,
+                          width: 14.20.w,
+                        ),
+                      ),
+                      SizedBox(
+                        width:
+                            reminder.medication?.medicationStatus
+                                    ?.toLowerCase() ==
+                                'ongoing'
+                            ? 2.w
+                            : 0.w,
+                      ),
+                      (reminder.medication?.medicationStatus?.toLowerCase() ==
+                                  'ongoing' &&
+                              DateTime.now().isBefore(
+                                reminder.medication!.endDateTime!,
+                              ))
+                          ? GestureDetector(
+                              onTap: () =>
+                                  model.showUpdateReminderModalReminder(
+                                    context: context,
+                                    data: reminder,
+                                  ),
+                              child: Container(
+                                padding: EdgeInsets.all(4.2.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.skyBlue,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.skyBlue),
+                                ),
+                                child: SvgPicture.asset(AppImage.square_edit),
                               ),
-                              child: SvgPicture.asset(AppImage.square_edit),
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(3.2.w),
+                            decoration: BoxDecoration(
+                              color: !isComplete
+                                  ? payStatusColor(reminder.payments)
+                                  : AppColors.app_green,
+                              shape: BoxShape.circle,
                             ),
                           ),
-                  ],
-                ),
-              ],
+                          SizedBox(width: 4.6.w),
+                          TextView(
+                            text: !isComplete
+                                ? payStatus(reminder.payments)
+                                : 'Completed',
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 6.0,
+                        children: [
+                          if (addedNotificationChannels.isNotEmpty)
+                            ...addedNotificationChannels.map(
+                              (o) => SvgPicture.asset(
+                                model.notificationChannelFlowWidgetIcon(o),
+                                color: AppColors.deep,
+                                height: o.toLowerCase() == 'email'
+                                    ? 10.h
+                                    : o.toLowerCase() == 'sms'
+                                    ? 15.4.h
+                                    : 12.20.h,
+                                width: o.toLowerCase() == 'email'
+                                    ? 10.w
+                                    : o.toLowerCase() == 'sms'
+                                    ? 15.4.w
+                                    : 12.20.w,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   reminderWidgetDraft({
     context,
@@ -2456,192 +2582,323 @@ class _ReminderScreenState extends State<ReminderScreen> {
     String? pendingDraft,
     pen.Reminder? reminder,
     AuthViewModel? model,
-  }) => GestureDetector(
-    onTap: () => navigate.navigateTo(
-      Routes.viewMedicationScreen,
-      arguments: ViewMedicationScreenArguments(id: reminder.id),
-    ),
-    child: Container(
-      padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 10.w),
-      margin: EdgeInsets.only(bottom: 16.w),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10.r),
+  }) {
+    final addedNotificationChannels = <String>{
+      ...?reminder!.notificationChannels,
+      for (final payment in reminder.payments ?? [])
+        ...List<String>.from(payment.notificationChannelsPaidFor ?? []),
+    }.toList();
+    return GestureDetector(
+      onTap: () => navigate.navigateTo(
+        Routes.viewMedicationScreen,
+        arguments: ViewMedicationScreenArguments(id: reminder.id),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                vertical: 36.0.w,
-                horizontal: 36.40.w,
-              ),
-              width: MediaQuery.of(context).size.width / 2.5,
-              height: 150.h,
-              decoration: BoxDecoration(
-                color: AppColors.dashboard,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Image.network(
-                reminder?.medication?.medicationImage?.url ?? '',
-                height: 76.h,
-                width: 76.w,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Padding(
-                  padding: EdgeInsets.all(18.w),
-                  child: SvgPicture.asset(
-                    model!.isMedTypeView(reminder?.medication?.medicationType),
-                    color: AppColors.primary,
-                  ),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.w, horizontal: 9.80.w),
+        margin: EdgeInsets.only(bottom: 16.w),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 16.0.w,
+                  horizontal: 16.40.w,
                 ),
-              ),
-            ),
-          ),
-          SizedBox(width: 15.20.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 140.w,
-                  child: TextView(
-                    text: reminder?.medication?.medicationName ?? '',
-                    maxLines: 1,
-                    textOverflow: TextOverflow.ellipsis,
-                    textStyle: TextStyle(
-                      fontFamily: 'GoogleSans',
-                      fontSize: 16.2.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.reminder,
-                    ),
-                  ),
+                width: MediaQuery.of(context).size.width / 2.5,
+                height: 160.h,
+                decoration: BoxDecoration(
+                  color: AppColors.dashboard,
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                SizedBox(height: 4.h),
-                TextView(
-                  text:
-                      '${DateFormat('MMM d').format(reminder!.medication!.startDateTime!)} - ${DateFormat('MMM d').format(reminder.medication!.endDateTime!)}',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.grey1,
-                  ),
-                ),
-                SizedBox(height: 6.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                child: Column(
                   children: [
-                    Expanded(
-                      // width: isTab ? 230.w : 130.w,
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(5.0),
-                        ), // Adjust radius as needed
-                        child: LinearProgressIndicator(
-                          minHeight: 4.0, // Adjust height as needed
-                          value: 0,
-                          color: AppColors.lightBlue, // Progress bar color
-                          backgroundColor:
-                              Colors.grey[300], // Background track color
+                    Image.network(
+                      reminder.medication?.medicationImage?.url ?? '',
+                      height: 96.h,
+                      width: 76.w,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) => Padding(
+                        padding: EdgeInsets.all(15.w),
+                        child: SvgPicture.asset(
+                          model!.isMedTypeView(
+                            reminder.medication?.medicationType,
+                          ),
+                          color: AppColors.primary,
+                          height: 46.h,
+                          width: 46.w,
                         ),
                       ),
                     ),
-                    SizedBox(width: 7.10.w),
-                    TextView(
-                      text: '0/4',
-                      textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: AppColors.infoGrey,
+                    SizedBox(height: 8.10.h),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 3.2.w,
+                        horizontal: 5.64.w,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: TextView(
+                        text: reminder.trackingId ?? 'ID:MED-2026-1023',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 10.40.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.infoGrey,
+                        ),
                       ),
                     ),
                   ],
                 ),
-                SizedBox(height: 5.4.h),
-                TextView(
-                  text: 'Dosage',
-                  textStyle: TextStyle(
-                    fontFamily: 'Arial',
-                    fontSize: 13.2.sp,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.infoGrey,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  children: [
-                    TextView(
-                      text: reminder.medication?.dosage ?? '',
+              ),
+            ),
+            SizedBox(width: 15.20.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 140.w,
+                    child: TextView(
+                      text: reminder.medication?.medicationName ?? '',
+                      maxLines: 1,
+                      textOverflow: TextOverflow.ellipsis,
                       textStyle: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 14.2.sp,
-                        fontWeight: FontWeight.w400,
+                        fontFamily: 'GoogleSans',
+                        fontSize: 16.2.sp,
+                        fontWeight: FontWeight.w500,
                         color: AppColors.reminder,
                       ),
                     ),
-                    SizedBox(width: 4.6.w),
-                    reminder.medication?.scheduleType == 'CUSTOM'
-                        ? TextView(
-                            text: 'Custom',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.infoGrey,
-                            ),
-                          )
-                        : TextView(
-                            text: 'x${reminder.medication?.timesPerDay} daily',
-                            textStyle: TextStyle(
-                              fontFamily: 'Arial',
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.infoGrey,
-                            ),
-                          ),
-                  ],
-                ),
-                SizedBox(height: 6.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(3.2.w),
-                          decoration: BoxDecoration(
-                            color: pendingDraft == 'Pending'
-                                ? AppColors.yellow
-                                : AppColors.grey1.withOpacity(.3),
-                            shape: BoxShape.circle,
+                  ),
+                  SizedBox(height: 4.h),
+                  TextView(
+                    text:
+                        '${DateFormat('MMM d').format(reminder.medication!.startDateTime!)} - ${DateFormat('MMM d').format(reminder.medication!.endDateTime!)}',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.grey1,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        // width: isTab ? 230.w : 130.w,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(5.0),
+                          ), // Adjust radius as needed
+                          child: LinearProgressIndicator(
+                            minHeight: 4.0, // Adjust height as needed
+                            value: 0,
+                            color: AppColors.lightBlue, // Progress bar color
+                            backgroundColor:
+                                Colors.grey[300], // Background track color
                           ),
                         ),
-                        SizedBox(width: 4.6.w),
-                        TextView(text: pendingDraft!),
-                      ],
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(5.2.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.skyBlue,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.skyBlue),
                       ),
-                      child: SvgPicture.asset(icon!, color: AppColors.primary),
+                      SizedBox(width: 7.10.w),
+                      TextView(
+                        text: '0/4',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.4.h),
+                  TextView(
+                    text: 'Dosage',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 13.2.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 2.h),
+                  Row(
+                    children: [
+                      TextView(
+                        text: reminder.medication?.dosage ?? '',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 14.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.reminder,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      SizedBox(width: 4.6.w),
+                      TextView(
+                        text:
+                            reminder.medication?.timesPerDay == null ||
+                                reminder.medication?.timesPerDay == 0
+                            ? 'Custom'
+                            : 'x${reminder.medication?.timesPerDay}daily',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.infoGrey,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        padding: EdgeInsets.all(5.2.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.skyBlue,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppColors.skyBlue),
+                        ),
+                        child: SvgPicture.asset(
+                          AppImage.opened_eye,
+                          color: AppColors.primary,
+                          height: 14.20.h,
+                          width: 14.20.w,
+                        ),
+                      ),
+                      SizedBox(
+                        width:
+                            reminder.medication?.medicationStatus
+                                    ?.toLowerCase() ==
+                                'ongoing'
+                            ? 2.w
+                            : 0.w,
+                      ),
+                       reminder.medication?.medicationStatus?.toLowerCase() ==
+                              'ongoing' && DateTime.now().isBefore(
+                                reminder.medication!.endDateTime!,
+                              ) || reminder.medication?.medicationStatus?.toLowerCase() ==
+                              'completed' && DateTime.now().isBefore(
+                                reminder.medication!.endDateTime!,
+                              )
+                          ? GestureDetector(
+                              onTap: () {
+                                model!.showUpdateReminderModalReminderPend(
+                                    context: context,
+                                    data: reminder,
+                                  );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(5.2.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.skyBlue,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.skyBlue),
+                                ),
+                                child: SvgPicture.asset(
+                                  icon!,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
+                  // Row(
+                  //   children: [
+                  //     TextView(
+                  //       text: reminder.medication?.dosage ?? '',
+                  //       textStyle: TextStyle(
+                  //         fontFamily: 'Arial',
+                  //         fontSize: 14.2.sp,
+                  //         fontWeight: FontWeight.w400,
+                  //         color: AppColors.reminder,
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: 4.6.w),
+                  //     reminder.medication?.scheduleType == 'CUSTOM'
+                  //         ? TextView(
+                  //             text: 'Custom',
+                  //             textStyle: TextStyle(
+                  //               fontFamily: 'Arial',
+                  //               fontSize: 12.sp,
+                  //               fontWeight: FontWeight.w400,
+                  //               color: AppColors.infoGrey,
+                  //             ),
+                  //           )
+                  //         : TextView(
+                  //             text: 'x${reminder.medication?.timesPerDay} daily',
+                  //             textStyle: TextStyle(
+                  //               fontFamily: 'Arial',
+                  //               fontSize: 12.sp,
+                  //               fontWeight: FontWeight.w400,
+                  //               color: AppColors.infoGrey,
+                  //             ),
+                  //           ),
+                  //   ],
+                  // ),
+                  SizedBox(height: 6.h),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(3.2.w),
+                            decoration: BoxDecoration(
+                              color: pendingDraft == 'Pending'
+                                  ? AppColors.yellow
+                                  : AppColors.grey1.withOpacity(.3),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          SizedBox(width: 4.6.w),
+                          TextView(text: pendingDraft!),
+                        ],
+                      ),
+                      Spacer(),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 6.0,
+                        children: [
+                          if (addedNotificationChannels.isNotEmpty)
+                            ...addedNotificationChannels.map(
+                              (o) => SvgPicture.asset(
+                                model!.notificationChannelFlowWidgetIcon(o),
+                                color: AppColors.deep,
+                                height: o.toLowerCase() == 'email'
+                                    ? 10.h
+                                    : o.toLowerCase() == 'sms'
+                                    ? 15.4.h
+                                    : 12.20.h,
+                                width: o.toLowerCase() == 'email'
+                                    ? 10.w
+                                    : o.toLowerCase() == 'sms'
+                                    ? 15.4.w
+                                    : 12.20.w,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 
   payStatus(List<Payment>? payments) {
     if (payments!.isNotEmpty && payments.last.status == 'SUCCESS') {
@@ -2650,7 +2907,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
     if (payments.isNotEmpty && payments.last.status == 'PENDING') {
       return 'Pending';
     }
-    return 'Free';
+    return 'Ongoing';
   }
 
   payStatusColor(List<Payment>? payments) {
@@ -2660,6 +2917,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
     if (payments.isNotEmpty && payments.last.status == 'PENDING') {
       return AppColors.yellow;
     }
-    return AppColors.greygrey;
+    return AppColors.yellow;
   }
 }

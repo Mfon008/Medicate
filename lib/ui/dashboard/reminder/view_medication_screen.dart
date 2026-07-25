@@ -911,10 +911,15 @@ class ViewMedicationScreen extends StatelessWidget {
         isLoading: model.isLoading,
         buttonBorderColor: AppColors.transparent,
         onPressed: () {
-          model.reminderRetryPayment(
-            context: context,
-            reminderId: model.getReminderByIdModel!.data!.id,
-          );
+          model.showUpdateMedicationDialog(
+          context: context,
+          data: model.getReminderByIdModel!.data,
+          model: model,
+        );
+          // model.reminderRetryPayment(
+          //   context: context,
+          //   reminderId: model.getReminderByIdModel!.data!.id,
+          // );
         },
         fontSize: 14.sp,
       );

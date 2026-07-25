@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'channel_price_snapshot.dart';
 import 'medication.dart';
 import 'payment.dart';
 import 'user.dart';
@@ -11,7 +12,7 @@ class Data {
   @JsonKey(name: '_id')
   String? id;
   String? userId;
-  String? tenantId;
+  dynamic tenantId;
   Medication? medication;
   String? timeZone;
   bool? isActive;
@@ -19,6 +20,7 @@ class Data {
   List<String>? phoneNumbers;
   List<String>? emails;
   List<Payment>? payments;
+  List<ChannelPriceSnapshot>? channelPriceSnapshots;
   String? reminderGroupId;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -35,6 +37,7 @@ class Data {
     this.phoneNumbers,
     this.emails,
     this.payments,
+    this.channelPriceSnapshots,
     this.reminderGroupId,
     this.createdAt,
     this.updatedAt,

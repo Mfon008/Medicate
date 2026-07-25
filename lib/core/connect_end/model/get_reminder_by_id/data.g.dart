@@ -9,7 +9,7 @@ part of 'data.dart';
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
   id: json['_id'] as String?,
   userId: json['userId'] as String?,
-  tenantId: json['tenantId'] as String?,
+  tenantId: json['tenantId'],
   medication: json['medication'] == null
       ? null
       : Medication.fromJson(json['medication'] as Map<String, dynamic>),
@@ -24,6 +24,9 @@ Data _$DataFromJson(Map<String, dynamic> json) => Data(
   emails: (json['emails'] as List<dynamic>?)?.map((e) => e as String).toList(),
   payments: (json['payments'] as List<dynamic>?)
       ?.map((e) => Payment.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  channelPriceSnapshots: (json['channelPriceSnapshots'] as List<dynamic>?)
+      ?.map((e) => ChannelPriceSnapshot.fromJson(e as Map<String, dynamic>))
       .toList(),
   reminderGroupId: json['reminderGroupId'] as String?,
   createdAt: json['createdAt'] == null
@@ -48,6 +51,7 @@ Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
   'phoneNumbers': instance.phoneNumbers,
   'emails': instance.emails,
   'payments': instance.payments,
+  'channelPriceSnapshots': instance.channelPriceSnapshots,
   'reminderGroupId': instance.reminderGroupId,
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),

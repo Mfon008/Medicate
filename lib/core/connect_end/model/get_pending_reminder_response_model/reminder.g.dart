@@ -8,6 +8,7 @@ part of 'reminder.dart';
 
 Reminder _$ReminderFromJson(Map<String, dynamic> json) => Reminder(
   id: json['_id'] as String?,
+  trackingId: json['trackingId'] as String?,
   userId: json['userId'] as String?,
   tenantId: json['tenantId'],
   medication: json['medication'] == null
@@ -21,7 +22,9 @@ Reminder _$ReminderFromJson(Map<String, dynamic> json) => Reminder(
   phoneNumbers: (json['phoneNumbers'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  emails: json['emails'] as List<dynamic>?,
+  emails: (json['emails'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   payments: (json['payments'] as List<dynamic>?)
       ?.map((e) => Payment.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -39,6 +42,7 @@ Reminder _$ReminderFromJson(Map<String, dynamic> json) => Reminder(
 
 Map<String, dynamic> _$ReminderToJson(Reminder instance) => <String, dynamic>{
   '_id': instance.id,
+  'trackingId': instance.trackingId,
   'userId': instance.userId,
   'tenantId': instance.tenantId,
   'medication': instance.medication,

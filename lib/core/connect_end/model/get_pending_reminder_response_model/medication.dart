@@ -17,6 +17,7 @@ class Medication {
   int? timesPerDay;
   List<List<DailyDoseTime>>? dailyDoseTimes;
   String? medicationStatus;
+  String? note;
   MedicationImage? medicationImage;
   @JsonKey(name: '_id')
   String? id;
@@ -33,6 +34,7 @@ class Medication {
     this.dailyDoseTimes,
     this.medicationStatus,
     this.medicationImage,
+    this.note,
     this.id,
   });
 
