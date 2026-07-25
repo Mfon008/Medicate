@@ -2300,17 +2300,28 @@ class _ReminderScreenState extends State<ReminderScreen> {
                           Container(
                             padding: EdgeInsets.all(3.2.w),
                             decoration: BoxDecoration(
-                              color: !isComplete
-                                  ? payStatusColor(reminder.payments)
-                                  : AppColors.app_green,
+                              color:
+                                  reminder.medication?.medicationStatus
+                                          ?.toLowerCase() ==
+                                      'ongoing'
+                                  ? AppColors.yellow
+                                  : reminder.medication?.medicationStatus?.toLowerCase() ==
+                                  'completed'? AppColors.app_green :AppColors.infoGrey,
                               shape: BoxShape.circle,
                             ),
                           ),
                           SizedBox(width: 4.6.w),
+                          
                           TextView(
-                            text: !isComplete
-                                ? payStatus(reminder.payments)
-                                : 'Completed',
+                            text:reminder.medication?.medicationStatus
+                                    ?.capitalize() ?? '',
+                                    textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12.80.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.reminder,
+                          letterSpacing: -0.6,
+                                    )
                           ),
                         ],
                       ),
@@ -2781,19 +2792,23 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             ? 2.w
                             : 0.w,
                       ),
-                       reminder.medication?.medicationStatus?.toLowerCase() ==
-                              'ongoing' && DateTime.now().isBefore(
-                                reminder.medication!.endDateTime!,
-                              ) || reminder.medication?.medicationStatus?.toLowerCase() ==
-                              'completed' && DateTime.now().isBefore(
-                                reminder.medication!.endDateTime!,
-                              )
+                      reminder.medication?.medicationStatus?.toLowerCase() ==
+                                      'ongoing' &&
+                                  DateTime.now().isBefore(
+                                    reminder.medication!.endDateTime!,
+                                  ) ||
+                              reminder.medication?.medicationStatus
+                                          ?.toLowerCase() ==
+                                      'completed' &&
+                                  DateTime.now().isBefore(
+                                    reminder.medication!.endDateTime!,
+                                  )
                           ? GestureDetector(
                               onTap: () {
                                 model!.showUpdateReminderModalReminderPend(
-                                    context: context,
-                                    data: reminder,
-                                  );
+                                  context: context,
+                                  data: reminder,
+                                );
                               },
                               child: Container(
                                 padding: EdgeInsets.all(5.2.w),
