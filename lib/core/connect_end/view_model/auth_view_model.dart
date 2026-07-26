@@ -694,6 +694,27 @@ class AuthViewModel extends BaseViewModel {
   List<bool> allTrueList = [];
   List<dynamic> items = [];
 
+  bool getIfTimeIsBefore(time) {
+    print('timetime::$time');
+    final now = DateTime.now();
+
+    final parts = time.split(':');
+    final scheduledTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      int.parse(parts[0]),
+      int.parse(parts[1]),
+    );
+    print('ooooooo::$scheduledTime');
+    if (scheduledTime.isAfter(now)) {
+      return true;
+    } else if (scheduledTime.isBefore(now)) {
+      return false;
+    }
+    return true;
+  }
+
   returnTypeOfCertificate(String relationship) {
     if (relationship.toLowerCase() == 'spouse') {
       return 'Marriage Certificate';
@@ -71620,7 +71641,9 @@ class AuthViewModel extends BaseViewModel {
                                               );
                                         } else {
                                           addedPhoneReminderList[index] =
-                                              returnPhoneNoStructureAdd234After(phoneController.text.trim());
+                                              returnPhoneNoStructureAdd234After(
+                                                phoneController.text.trim(),
+                                              );
                                         }
                                         isInPhoneList = false;
                                         Navigator.pop(context);

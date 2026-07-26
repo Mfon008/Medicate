@@ -22,7 +22,6 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final ScrollController _scrollController = ScrollController();
 
-  // AuthViewModel? _model;
 
   @override
   void initState() {
@@ -47,7 +46,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return ViewModelBuilder<AuthViewModel>.reactive(
       viewModelBuilder: () => AuthViewModel(),
       onViewModelReady: (model) async {
-        // _model = model;
         await model.getAllNotifications();
         model.markAllAsReadNotification();
       },

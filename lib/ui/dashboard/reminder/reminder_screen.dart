@@ -355,7 +355,8 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               ),
 
                               SizedBox(width: 12.w),
-                              GestureDetector(
+                               model
+                                      .getReminderResponseModel!=null?GestureDetector(
                                 onTap: () async {
                                   model
                                       .getReminderResponseModel!
@@ -400,7 +401,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                     ),
                                   ),
                                 ),
-                              ),
+                              ):SizedBox.shrink(),
 
                               SizedBox(width: 12.w),
                               GestureDetector(
@@ -2631,9 +2632,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
                   children: [
                     Image.network(
                       reminder.medication?.medicationImage?.url ?? '',
-                      height: 96.h,
-                      width: 76.w,
-                      fit: BoxFit.contain,
+                      height: 82.6.h,
+                      width: 86.w,
+                      fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Padding(
                         padding: EdgeInsets.all(15.w),
                         child: SvgPicture.asset(
@@ -2802,7 +2803,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                       'completed' &&
                                   DateTime.now().isBefore(
                                     reminder.medication!.endDateTime!,
-                                  )
+                                  ) || model!.getIfTimeIsBefore(reminder.medication!.dailyDoseTimes!.last.last.time)
                           ? GestureDetector(
                               onTap: () {
                                 model!.showUpdateReminderModalReminderPend(
@@ -2876,8 +2877,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               shape: BoxShape.circle,
                             ),
                           ),
-                          SizedBox(width: 4.6.w),
-                          TextView(text: pendingDraft!),
+                          SizedBox(width: 3.26.w),
+                          TextView(text: pendingDraft!,textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 13.42.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                          letterSpacing: -0.31,
+                        ),),
                         ],
                       ),
                       Spacer(),
