@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_wholesale_screen.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../widget/text.dart';
@@ -25,7 +26,7 @@ class _BusinessProviderDashboardState extends State<BusinessProviderDashboard> {
   final List<Widget> _body = [
     BusinessProvidersHomeScreen(),
     HealthCareReminderScreen(),
-    Container(),
+    BusinessProviderWholesaleScreen(),
     AskMeScreen(),
   ];
 

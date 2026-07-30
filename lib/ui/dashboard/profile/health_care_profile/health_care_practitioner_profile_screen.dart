@@ -63,9 +63,17 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                           model.getTetantResponseModel!.data!.logo != null
                       ? Center(
                           child: CircleAvatar(
-                            radius: 60.0, // Adjust the size as needed
-                            backgroundImage: NetworkImage(
-                              model.getTetantResponseModel!.data!.logo!.url!,
+                            radius: 60,
+                            child: ClipOval(
+                              child: Image.network(
+                                model.getTetantResponseModel!.data!.logo!.url!,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) {
+                                  return const Icon(Icons.person, size: 60);
+                                },
+                              ),
                             ),
                           ),
                         )
@@ -85,13 +93,21 @@ class HealthCarePractitionerProfileScreen extends StatelessWidget {
                                       null
                               ? SvgPicture.asset(AppImage.profile_image)
                               : CircleAvatar(
-                                  radius: 60.0, // Adjust the size as needed
-                                  backgroundImage: NetworkImage(
-                                    SharedPreferencesService
+                            radius: 60,
+                            child: ClipOval(
+                              child: Image.network(
+                               SharedPreferencesService
                                         .instance
                                         .usersData['profile']['profilePicture']['url'],
-                                  ),
-                                ),
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) {
+                                  return const Icon(Icons.person, size: 60);
+                                },
+                              ),
+                            ),
+                          ),
                         ),
                   SizedBox(height: 10.h),
                   Center(

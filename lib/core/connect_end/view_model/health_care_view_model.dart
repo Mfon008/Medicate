@@ -4729,7 +4729,6 @@ class HealthCareViewModel extends BaseViewModel {
                                     linIndex++;
                                     setModalState!(() {});
                                     model.notifyListeners();
-                                    print('objectmeee');
                                   },
                                 ),
                                 SizedBox(height: 16.h),

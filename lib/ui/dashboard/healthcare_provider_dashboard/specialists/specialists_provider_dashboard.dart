@@ -8,6 +8,7 @@ import '../../../../core/config/colors.dart';
 import '../../../widget/text.dart';
 import '../../ask_me_screen.dart';
 import '../reminder/healthcare_reminder_screen.dart';
+import 'specialists_provider_wholesale.dart';
 import 'specialists_providers_home_screen.dart';
 
 class SpecialistsProviderDashboard extends StatefulWidget {
@@ -26,7 +27,7 @@ class _SpecialistsProviderDashboardState
   final List<Widget> _body = [
     SpecialistsProvidersHomeScreen(),
     HealthCareReminderScreen(),
-    Container(),
+    SpecialistsProviderWholesale(),
     AskMeScreen(),
   ];
 
