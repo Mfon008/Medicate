@@ -6,6 +6,7 @@ class AppImage {
   static const String pro_health = 'assets/images/pro_health.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
   static const String info = 'assets/svgs/info.svg';
+  static const String order_notes = 'assets/svgs/order_notes.svg';
   static const String opay = 'assets/svgs/opay.svg';
   static const String locator = 'assets/svgs/locator.svg';
   static const String order_summary = 'assets/svgs/order_summary.svg';

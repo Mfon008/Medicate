@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, deprecated_member_use
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,16 +13,16 @@ import '../../../../main.dart';
 import '../../../widget/text.dart';
 import '../../../widget/text_form_widget.dart';
 
-class BusinessProviderWholesaleScreen extends StatefulWidget {
-  const BusinessProviderWholesaleScreen({super.key});
+class SpecialistsProviderWholesale extends StatefulWidget {
+  const SpecialistsProviderWholesale({super.key});
 
   @override
-  State<BusinessProviderWholesaleScreen> createState() =>
-      _BusinessProviderWholesaleScreenState();
+  State<SpecialistsProviderWholesale> createState() =>
+      _SpecialistsProviderWholesaleState();
 }
 
-class _BusinessProviderWholesaleScreenState
-    extends State<BusinessProviderWholesaleScreen> {
+class _SpecialistsProviderWholesaleState
+    extends State<SpecialistsProviderWholesale> {
   int currentPage = 0;
 
   @override
@@ -66,7 +66,11 @@ class _BusinessProviderWholesaleScreenState
                       ), // makes ripple effect round
                     ),
                   ),
-                  SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),
+                  SvgPicture.asset(
+                    AppImage.applogoSvg,
+                    height: 28.h,
+                    width: 28.w,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -86,12 +90,12 @@ class _BusinessProviderWholesaleScreenState
                             width: isTablet(context) ? 40.w : 20.w,
                             color: AppColors.primary,
                           ),
-                          onPressed: ()=>
-                          navigate.navigateTo(Routes.businessProviderAddToCartScreen),
+                          onPressed: () {},
+                          // navigate.navigateTo(Routes.emptyNotification),
                           splashRadius: 28,
                         ),
                       ),
-                      SizedBox(width: 10.w),
+                      SizedBox(width: 12.w),
                       Container(
                         margin: EdgeInsets.only(right: 2.4.w),
                         decoration: BoxDecoration(
@@ -174,7 +178,8 @@ class _BusinessProviderWholesaleScreenState
                     ),
                     SizedBox(width: 22.40.w),
                     GestureDetector(
-                      onTap: () => model.modalBottomSheetMenuHealthCareRadio(context),
+                      onTap: () =>
+                          model.modalBottomSheetMenuHealthCareRadio(context),
                       child: SvgPicture.asset(
                         AppImage.filter,
                         color: AppColors.grey1,
@@ -233,7 +238,9 @@ class _BusinessProviderWholesaleScreenState
                                   2,
                                   (index) => AnimatedContainer(
                                     duration: const Duration(milliseconds: 300),
-                                    margin: EdgeInsets.symmetric(horizontal: 3.2.w),
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 3.2.w,
+                                    ),
                                     width: 10,
                                     height: 10,
                                     decoration: BoxDecoration(
@@ -401,7 +408,12 @@ class _BusinessProviderWholesaleScreenState
                                 color: AppColors.grey,
                                 borderRadius: BorderRadius.circular(8.0.r),
                                 border: Border.all(
-                                  color: const Color.fromARGB(255, 236, 237, 237),
+                                  color: const Color.fromARGB(
+                                    255,
+                                    236,
+                                    237,
+                                    237,
+                                  ),
                                 ),
                               ),
                               child: Column(
@@ -502,7 +514,7 @@ class _BusinessProviderWholesaleScreenState
                                                   color: AppColors.black,
                                                 ),
                                               ),
-        
+
                                               //
                                               TextView(
                                                 text: '₦16,500',
@@ -638,11 +650,7 @@ class _BusinessProviderWholesaleScreenState
             ),
           ),
         );
-      }
+      },
     );
   }
-
 }
-
-enum Price { all, high, low }
-enum Category { all, analgesics, antibiotics,vitamins, medicaldevices, personalcare,firstaid}

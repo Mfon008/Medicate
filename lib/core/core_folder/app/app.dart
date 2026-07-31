@@ -44,7 +44,11 @@ import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/busi
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_home_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/reminder/healthcare_view_medication_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_add_to_cart_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_dashboard.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_order_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_whole_sale_checkout.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_provider_wholesale_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/specialists/specialists_providers_home_screen.dart';
 import '../../../ui/dashboard/hmo/add_hospital_portal_screen.dart';
 import '../../../ui/dashboard/hmo/create_claims_portal_screen.dart';
@@ -259,6 +263,10 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: BusinessProviderAddToCartScreen),
     MaterialRoute(page: BusinessProviderWholeSaleCheckout),
     MaterialRoute(page: BusinessProviderOrderScreen),
+    MaterialRoute(page: SpecialistsProviderWholesale),
+    MaterialRoute(page: SpecialistsProviderWholeSaleCheckout),
+    MaterialRoute(page: SpecialistsProviderOrderScreen),
+    MaterialRoute(page: SpecialistsProviderAddToCartScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,

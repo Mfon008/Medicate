@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
+
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/health_care_view_model.dart';
 import '../../../widget/button.dart';
 import '../../../widget/text.dart';
 
-class BusinessProviderOrderScreen extends StatelessWidget {
-  const BusinessProviderOrderScreen({super.key});
-
+class SpecialistsProviderOrderScreen extends StatelessWidget {
+  const SpecialistsProviderOrderScreen({super.key});
+  
+  
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HealthCareViewModel>.reactive(
