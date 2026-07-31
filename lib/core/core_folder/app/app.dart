@@ -37,7 +37,10 @@ import '../../../ui/authentication/user/success_screen.dart';
 import '../../../ui/authentication/user/welcome_screen.dart';
 import '../../../ui/dashboard/ask_me_screen.dart';
 import '../../../ui/dashboard/dashboard_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_add_to_cart_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_dashboard.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_order_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_whole_sale_checkout.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_home_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/reminder/healthcare_view_medication_screen.dart';
@@ -253,6 +256,9 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: HmoPlanTiersManagementScreen),
     MaterialRoute(page: HmoCreateTiersPlanManagementScreen),
     MaterialRoute(page: HealthcareViewMedicationScreen),
+    MaterialRoute(page: BusinessProviderAddToCartScreen),
+    MaterialRoute(page: BusinessProviderWholeSaleCheckout),
+    MaterialRoute(page: BusinessProviderOrderScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,

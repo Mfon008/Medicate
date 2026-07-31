@@ -19,6 +19,8 @@ import 'package:medicate_app/core/connect_end/model/sign_up_healthcare_provider_
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../main.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_whole_sale_checkout.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_wholesale_screen.dart';
 import '../../../ui/dashboard/profile/wallet/fund_screen.dart';
 import '../../../ui/dashboard/reminder/med_type.dart';
 import '../../../ui/dashboard/reminder/medication_class.dart';
@@ -129,6 +131,9 @@ class HealthCareViewModel extends BaseViewModel {
 
   String? searchDoctors = '';
   var vdeactivate;
+  bool isCartItem = false;
+  List<String> myOrderListCategory = ['All','Confirmed','Packaging','In transit','Delivered'];
+  String orderCategory = 'All';
 
   final repositoryImply = HealthcareRepoImpl();
   bool _isLoading = false;
@@ -390,7 +395,6 @@ class HealthCareViewModel extends BaseViewModel {
   int? dosageAfterValue;
   List<List<TextEditingController>> doseControllers = [];
   List<List<TextEditingController>> doseControllersUpdate = [];
-  // List<List<TextEditingController>> doseAfterControllers = [];
 
   GlobalKey<FormState> firstFormReminderKey = GlobalKey<FormState>();
   GlobalKey<FormState> firstFormReminderUpdateKey = GlobalKey<FormState>();
@@ -471,6 +475,22 @@ class HealthCareViewModel extends BaseViewModel {
 
   List<int> intList = [];
   List<int> intListCustom = [];
+
+  Price price = Price.all;
+  Category category = Category.all;
+  Delivery delivery = Delivery.instance;
+  CartAddedTime cartTimeAdded = CartAddedTime.morning;
+
+  String returnCartAddedTime(CartAddedTime cartAddedTime){
+    if(cartAddedTime==CartAddedTime.afternoon){
+      return 'Afternoon (12PM - 4PM)';
+    }
+    if(cartAddedTime==CartAddedTime.evening){
+      return 'Evening (4PM - 8PM)';
+    }
+      return 'Morning (8AM - 12PM)';
+
+  }
 
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPhoneReminder = GlobalKey<FormState>();
@@ -751,6 +771,350 @@ class HealthCareViewModel extends BaseViewModel {
     return 18.w;
   }
 
+  void modalBottomSheetMenuHealthCareRadio(context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      backgroundColor: AppColors.white,
+      constraints: BoxConstraints(maxWidth: double.infinity),
+      builder: (context) {
+        return ViewModelBuilder<HealthCareViewModel>.reactive(
+          viewModelBuilder: () => HealthCareViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, HealthCareViewModel model, _) {
+            return DraggableScrollableSheet(
+              expand: false, // 👈 allows proper layout
+              builder: (context, scrollController) {
+                return SafeArea(
+                  child: SingleChildScrollView(
+                    controller: scrollController, // 👈 critical
+                    padding: EdgeInsets.symmetric(
+                      vertical: 13.20.w,
+                      horizontal: 20.w,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // --- your content ---
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(width: 50.w),
+                            TextView(
+                              text: 'Filter Search',
+                              textStyle: TextStyle(
+                                fontSize: 16.2.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => navigate.back(),
+                              icon: SvgPicture.asset(AppImage.cancel),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 20.h),
+                        TextView(
+                          text: 'Price',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Radio(
+                              value: Price.all,
+                              groupValue: price,
+                              activeColor: AppColors.primary,
+                              onChanged: (value) {
+                                price = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'All',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Radio(
+                              value: Price.high,
+                              activeColor: AppColors.primary,
+                              groupValue: price,
+                              onChanged: (value) {
+                                price = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'Low To High',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Radio(
+                              value: Price.low,
+                              activeColor: AppColors.primary,
+                              groupValue: price,
+                              onChanged: (value) {
+                                price = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'High To Low',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        TextView(
+                          text: 'Category',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Radio(
+                              value: Category.all,
+                              groupValue: category,
+                              activeColor: AppColors.primary,
+                              onChanged: (value) {
+                                category = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'All',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Radio(
+                              value: Category.analgesics,
+                              activeColor: AppColors.primary,
+                              groupValue: category,
+                              onChanged: (value) {
+                                category = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'analgesics',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Radio(
+                              value: Category.antibiotics,
+                              activeColor: AppColors.primary,
+                              groupValue: category,
+                              onChanged: (value) {
+                                category = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'antibiotics',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Radio(
+                              value: Category.vitamins,
+                              groupValue: category,
+                              activeColor: AppColors.primary,
+                              onChanged: (value) {
+                                category = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'vitamins',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Radio(
+                              value: Category.medicaldevices,
+                              activeColor: AppColors.primary,
+                              groupValue: category,
+                              onChanged: (value) {
+                                category = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'medical devices',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Radio(
+                              value: Category.personalcare,
+                              groupValue: category,
+                              activeColor: AppColors.primary,
+                              onChanged: (value) {
+                                category = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'personal care',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Radio(
+                              value: Category.firstaid,
+                              activeColor: AppColors.primary,
+                              groupValue: category,
+                              onChanged: (value) {
+                                category = value!;
+                                model.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'first aid',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+
+                        // --- Reset link ---
+                        TextView(
+                          text: 'Reset filter',
+                          textStyle: TextStyle(
+                            fontSize: 14.2.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.primary,
+                            decoration: TextDecoration.underline,
+                            decorationColor: AppColors.primary,
+                          ),
+                        ),
+                        SizedBox(height: 50.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.dashboard,
+                                buttonText: 'Cancel',
+                                color: AppColors.black,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: () => navigate.back(),
+                              ),
+                            ),
+                            SizedBox(width: 20.w),
+                            Flexible(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary,
+                                buttonText: 'Apply',
+                                color: AppColors.white,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: () {
+                                  // if (formKeyValidate.currentState!.validate()) {
+                                  //   navigate.navigateTo(Routes.setupPinScreen);
+                                  // }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
   String querySignUpCountry = '';
   String? searchRoles = '';
 
@@ -1018,6 +1382,33 @@ class HealthCareViewModel extends BaseViewModel {
       _calculateEndDate(setModalState: setModalState, model: model);
     }
     setModalState!(() {});
+    notifyListeners();
+  }
+
+  Future<void> selectDateCheckout({
+    BuildContext? context,
+    // StateSetter? setModalState,
+    HealthCareViewModel? model,
+  }) async {
+    pickedDatedStart = await showDatePicker(
+      context: context!,
+      initialDate: DateTime.now(), // The date initially displayed
+      firstDate: DateTime.now(), // The earliest selectable date
+      lastDate: DateTime(2101), // The latest selectable date
+    );
+    pickedDatedStartString = pickedDatedStart.toString();
+
+    if (pickedDatedStart != null) {
+      pickedDate = DateFormat('dd MMM, yyyy').format(pickedDatedStart!);
+      dateTimeController.text = pickedDate!;
+      startDateIso = DateTime.utc(
+        pickedDatedStart!.year,
+        pickedDatedStart!.month,
+        pickedDatedStart!.day,
+      ).toIso8601String();
+      // _calculateEndDate(setModalState: setModalState, model: model);
+    }
+    // setModalState!(() {});
     notifyListeners();
   }
 

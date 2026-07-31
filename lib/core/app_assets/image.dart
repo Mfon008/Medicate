@@ -8,7 +8,9 @@ class AppImage {
   static const String info = 'assets/svgs/info.svg';
   static const String opay = 'assets/svgs/opay.svg';
   static const String locator = 'assets/svgs/locator.svg';
+  static const String order_summary = 'assets/svgs/order_summary.svg';
   static const String search = 'assets/svgs/search.svg';
+  static const String time = 'assets/svgs/time.svg';
   static const String earth = 'assets/svgs/earth.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
@@ -59,6 +61,9 @@ class AppImage {
   static const String bio = 'assets/svgs/bio.svg';
   static const String bell = 'assets/svgs/bell.svg';
   static const String sms = 'assets/svgs/sms.svg';
+  static const String empty_cart = 'assets/svgs/empty_cart.svg';
+  static const String box_cart = 'assets/svgs/cart_box.svg';
+  static const String delivery = 'assets/svgs/delivery.svg';
   static const String channel_email = 'assets/svgs/channel_email.svg';
   static const String burger = 'assets/svgs/burger.svg';
   static const String success = 'assets/svgs/success.svg';

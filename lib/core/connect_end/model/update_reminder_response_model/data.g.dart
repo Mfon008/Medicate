@@ -9,8 +9,8 @@ part of 'data.dart';
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
   message: json['message'] as String?,
   transactionReference: json['transactionReference'] as String?,
-  paymentId: json['paymentId'] as String?,
   data: json['data'],
+  paymentId: json['paymentId'] as String?,
 );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{

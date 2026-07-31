@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const primary = Color(0xFF0955B7);
   static const cool_blue = Color(0xFFDDE9F8);
+  static const cooool = Color(0xFFF7F8FA);
   static const bblack = Color(0xFF1F1F1F);
   static const gold = Color.fromARGB(255, 231, 185, 2);
   static const blendedGold = Color.fromARGB(255, 214, 171, 1);
@@ -38,6 +39,7 @@ class AppColors {
   static const buttonGrey1 = Color(0xFFCCCCCC);
   static const infoGrey = Color(0xFFA9A9A9);
   static const infoGrey1 = Color(0xFFEAEAEA);
+  static const infoGrey2 = Color(0xFFEFF0F2);
   static const secondaryTextColor = Color(0xFF475467);
   static const primaryTextColor = Color(0xFF101828);
 
@@ -47,6 +49,7 @@ class AppColors {
   static const greyee = Color(0xFF7D7F81);
   static const grey = Color(0xFFF5F6F8);
   static const grey1 = Color(0xFF8F8F8F);
+  static const grey2 = Color(0xFFF7F9FC);
   static const dashboard = Color(0xFFF5F6F8);
   static const nearDashboard = Color(0xFFF9FAFC);
   static const fineGrey = Color(0xFFA9A9A9);

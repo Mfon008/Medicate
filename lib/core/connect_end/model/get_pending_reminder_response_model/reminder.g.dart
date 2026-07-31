@@ -22,9 +22,7 @@ Reminder _$ReminderFromJson(Map<String, dynamic> json) => Reminder(
   phoneNumbers: (json['phoneNumbers'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  emails: (json['emails'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
+  emails: (json['emails'] as List<dynamic>?)?.map((e) => e as String).toList(),
   payments: (json['payments'] as List<dynamic>?)
       ?.map((e) => Payment.fromJson(e as Map<String, dynamic>))
       .toList(),
