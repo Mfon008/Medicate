@@ -218,6 +218,46 @@ class _SpecialistsProviderWholesaleState
                             ),
                           ),
                           Positioned(
+                            top: 17.20,
+                            left: 16.20,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 4.60.w,
+                                horizontal: 6.8.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.appWhite,
+                                borderRadius: BorderRadius.circular(20.r),
+                                
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextView(
+                                    text: 'Manufacturer: ',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 13.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                  // SizedBox(width: 50.h),
+                                  TextView(
+                                    text: 'Fidson',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 13.30.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
                             left: 1,
                             bottom: 1,
                             child: Container(

@@ -6,6 +6,9 @@ class AppRoutes {
   AppRoutes();
 
   String returnAppRoutes(type) {
+    print('ooooooo${type.authType}');
+    print('qqqqqqqq${type.isSignUp}');
+    print('eeeeeeee${type.isLogin}');
     if (type == null) {
       return Routes.splashScreen;
     }
@@ -21,7 +24,7 @@ class AppRoutes {
     } else if (type.authType == 'everyday_user' &&
         type.isSignUp == false &&
         type.isLogin == true) {
-      return Routes.welcomeScreen;
+      return Routes.businessProviderViewProductScreen;
     }
     // pharmacy flow
     if (type.authType == 'pharmacy' &&
@@ -59,7 +62,7 @@ class AppRoutes {
     } else if (type.authType == 'hmo' &&
         type.isSignUp == true &&
         type.isLogin == false) {
-      return Routes.hMOWelcomeScreen;
+      return Routes.hMOLoginScreen;
     } else if (type.authType == 'hmo' &&
         type.isSignUp == false &&
         type.isLogin == true) {

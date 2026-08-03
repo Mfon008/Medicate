@@ -1,10 +1,8 @@
 // ignore_for_file: must_be_immutable, deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../../core/connect_end/view_model/health_care_view_model.dart';
@@ -66,7 +64,11 @@ class _BusinessProviderWholesaleScreenState
                       ), // makes ripple effect round
                     ),
                   ),
-                  SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),
+                  SvgPicture.asset(
+                    AppImage.applogoSvg,
+                    height: 28.h,
+                    width: 28.w,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -86,8 +88,9 @@ class _BusinessProviderWholesaleScreenState
                             width: isTablet(context) ? 40.w : 20.w,
                             color: AppColors.primary,
                           ),
-                          onPressed: ()=>
-                          navigate.navigateTo(Routes.businessProviderAddToCartScreen),
+                          onPressed: () => navigate.navigateTo(
+                            Routes.businessProviderAddToCartScreen,
+                          ),
                           splashRadius: 28,
                         ),
                       ),
@@ -174,7 +177,8 @@ class _BusinessProviderWholesaleScreenState
                     ),
                     SizedBox(width: 22.40.w),
                     GestureDetector(
-                      onTap: () => model.modalBottomSheetMenuHealthCareRadio(context),
+                      onTap: () =>
+                          model.modalBottomSheetMenuHealthCareRadio(context),
                       child: SvgPicture.asset(
                         AppImage.filter,
                         color: AppColors.grey1,
@@ -213,6 +217,46 @@ class _BusinessProviderWholesaleScreenState
                             ),
                           ),
                           Positioned(
+                            top: 17.20,
+                            left: 16.20,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 4.60.w,
+                                horizontal: 6.8.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.appWhite,
+                                borderRadius: BorderRadius.circular(20.r),
+                                
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextView(
+                                    text: 'Manufacturer: ',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 13.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                  // SizedBox(width: 50.h),
+                                  TextView(
+                                    text: 'Fidson',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 13.30.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
                             left: 1,
                             bottom: 1,
                             child: Container(
@@ -233,7 +277,9 @@ class _BusinessProviderWholesaleScreenState
                                   2,
                                   (index) => AnimatedContainer(
                                     duration: const Duration(milliseconds: 300),
-                                    margin: EdgeInsets.symmetric(horizontal: 3.2.w),
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 3.2.w,
+                                    ),
                                     width: 10,
                                     height: 10,
                                     decoration: BoxDecoration(
@@ -401,7 +447,12 @@ class _BusinessProviderWholesaleScreenState
                                 color: AppColors.grey,
                                 borderRadius: BorderRadius.circular(8.0.r),
                                 border: Border.all(
-                                  color: const Color.fromARGB(255, 236, 237, 237),
+                                  color: const Color.fromARGB(
+                                    255,
+                                    236,
+                                    237,
+                                    237,
+                                  ),
                                 ),
                               ),
                               child: Column(
@@ -502,7 +553,7 @@ class _BusinessProviderWholesaleScreenState
                                                   color: AppColors.black,
                                                 ),
                                               ),
-        
+
                                               //
                                               TextView(
                                                 text: '₦16,500',
@@ -638,11 +689,19 @@ class _BusinessProviderWholesaleScreenState
             ),
           ),
         );
-      }
+      },
     );
   }
-
 }
 
 enum Price { all, high, low }
-enum Category { all, analgesics, antibiotics,vitamins, medicaldevices, personalcare,firstaid}
+
+enum Category {
+  all,
+  analgesics,
+  antibiotics,
+  vitamins,
+  medicaldevices,
+  personalcare,
+  firstaid,
+}

@@ -17,6 +17,8 @@ class AppImage {
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';
+  static const String validate = 'assets/svgs/validate.svg';
+  static const String stack_pack = 'assets/svgs/stack_pack.svg';
   static const String two_fa_ui = 'assets/svgs/2fa_ui.svg';
   static const String camera = 'assets/svgs/camera.svg';
   static const String users = 'assets/svgs/users.svg';
@@ -150,6 +152,8 @@ class AppImage {
   static const String level = 'assets/svgs/level.svg';
   static const String logout = 'assets/svgs/logout.svg';
   static const String arrow = 'assets/svgs/arrow.svg';
+  static const String arrow_left = 'assets/svgs/arrow_left.svg';
+  static const String arrow_right = 'assets/svgs/arrow_right.svg';
   static const String arrow_up = 'assets/svgs/arrow_up.svg';
   static const String dash_logo = 'assets/svgs/dash_logo.svg';
   static const String upload_doc = 'assets/svgs/upload_doc.svg';

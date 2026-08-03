@@ -40,7 +40,9 @@ import '../../../ui/dashboard/dashboard_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_add_to_cart_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_dashboard.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_order_screen.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_view_product_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_whole_sale_checkout.dart';
+import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_provider_wholesale_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_home_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/business_owners/business_providers_more_screen.dart';
 import '../../../ui/dashboard/healthcare_provider_dashboard/reminder/healthcare_view_medication_screen.dart';
@@ -267,6 +269,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: SpecialistsProviderWholeSaleCheckout),
     MaterialRoute(page: SpecialistsProviderOrderScreen),
     MaterialRoute(page: SpecialistsProviderAddToCartScreen),
+    MaterialRoute(page: BusinessProviderViewProductScreen),
+    MaterialRoute(page: BusinessProviderWholesaleScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,

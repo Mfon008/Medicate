@@ -21282,8 +21282,6 @@ class AuthViewModel extends BaseViewModel {
                 'HEALTHCARE_PRACTITIONER') {
           navigate.navigateTo(Routes.specialistsProviderDashboard);
         }
-
-        print('session.isNewLogin:::${session.isNewLogin}');
         if (session.isNewLogin) {
           sendDeviceToken(
             token: globalfCMToken,
