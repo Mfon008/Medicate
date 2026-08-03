@@ -35,6 +35,8 @@ class AppColors {
   static const success = Color(0xFF505050);
   static const faintedGrey = Color(0xFFC5C5C5);
   static const dottedGrey = Color(0xFFEAECF0);
+  static const manu_color = Color(0xFFE6F1FF);
+  static const manu_color1 = Color(0xFFF5F9FF);
 
   static const buttonGrey1 = Color(0xFFCCCCCC);
   static const infoGrey = Color(0xFFA9A9A9);
