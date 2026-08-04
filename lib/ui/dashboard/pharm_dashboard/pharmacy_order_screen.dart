@@ -4,25 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/view_model/health_care_view_model.dart';
-import '../../../widget/button.dart';
-import '../../../widget/text.dart';
+import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
+import '../../widget/button.dart';
+import '../../widget/text.dart';
 
-class SpecialistsProviderOrderScreen extends StatelessWidget {
-  const SpecialistsProviderOrderScreen({super.key});
-  
-  
+class PharmacyOrderScreen extends StatelessWidget {
+  const PharmacyOrderScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HealthCareViewModel>.reactive(
-      viewModelBuilder: () => HealthCareViewModel(),
+    return ViewModelBuilder<PharmViewModel>.reactive(
+      viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
       onDispose: (viewModel) {},
-      builder: (_, HealthCareViewModel model, _) {
+      builder: (_, PharmViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(

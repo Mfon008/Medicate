@@ -37,6 +37,7 @@ class AppImage {
   static const String panadol = 'assets/images/panadol.png';
   static const String cancel = 'assets/svgs/cancel.svg';
   static const String upload_icon = 'assets/svgs/upload_icon.svg';
+  static const String download_icon = 'assets/svgs/download_icon.svg';
   static const String subscription = 'assets/svgs/subscription.svg';
   static const String hospital_net = 'assets/svgs/hospital_net.svg';
   static const String renew = 'assets/svgs/renew.svg';

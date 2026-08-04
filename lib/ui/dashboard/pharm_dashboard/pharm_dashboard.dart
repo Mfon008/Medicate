@@ -9,6 +9,7 @@ import 'package:medicate_app/ui/dashboard/pharm_dashboard/pharm_home_screen.dart
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/text.dart';
+import 'pharmacy_wholesale_screen.dart';
 import 'reminder/pharmacy_reminder_screen.dart';
 
 class PharmacyDashboard extends StatefulWidget {
@@ -25,7 +26,7 @@ class _PharmacyDashboardState extends State<PharmacyDashboard> {
   final List<Widget> _body = [
     PharmacyHomeScreen(),
     PharmacyReminderScreen(),
-    Container(),
+    PharmacyWholesaleScreen(),
     AskMeScreen(),
   ];
 

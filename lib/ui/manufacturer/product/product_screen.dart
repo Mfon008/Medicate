@@ -3,15 +3,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
+import 'custom_switch_widget.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
 
+  @override
+  State<ProductScreen> createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends State<ProductScreen> {
+  bool isSwitched = false;
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -135,7 +143,7 @@ class ProductScreen extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () async {},
+                  onTap: () => _showModalBottomSheet(context),
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: isTablet(context) ? 16.w : 13.0.w,
@@ -174,7 +182,7 @@ class ProductScreen extends StatelessWidget {
             SizedBox(height: 26.h),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 10.w),
+              padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 12.4.w),
               decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(12.r),
@@ -210,12 +218,515 @@ class ProductScreen extends StatelessWidget {
                     onChange: (value) {},
                   ),
                   SizedBox(height: 14.h),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 2.w,
+                      horizontal: 10.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(color: AppColors.infoGrey1),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 4.w),
+                        TextView(
+                          text: 'Categories: ',
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 14.22.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.reminder,
+                          ),
+                        ),
+                        TextView(
+                          text: 'All',
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 14.22.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.infoGrey,
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_sharp,
+                            size: 20.0.sp,
+                            color: AppColors.infoGrey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 14.h),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 15.22.w,
+                      horizontal: 13.0.w,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.r),
+                      border: Border.all(color: AppColors.infoGrey1),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 2.w,
+                                horizontal: 9.0.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.grey,
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Center(
+                                child: TextView(
+                                  text: 'antibiotics ',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 12.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            TextView(
+                              text: 'Exp: ',
+                              textStyle: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 14.22.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.infoGrey,
+                              ),
+                            ),
+                            TextView(
+                              text: '11/2028',
+                              textStyle: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 14.22.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.red,
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              padding: EdgeInsets.all(8.w),
+                              decoration: BoxDecoration(
+                                color: AppColors.skyBlue,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.more_vert,
+                                color: AppColors.primary,
+                                size: 18.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        TextView(
+                          text: 'Panadol Extra Tablets',
+                          textStyle: TextStyle(
+                            fontFamily: 'GoogleSans',
+                            fontSize: 14.22.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.reminder,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'NAFDAC No',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                TextView(
+                                  text: '04-1290',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Price',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                TextView(
+                                  text: '₦75,000',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Stock',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 6.28.w,
+                                      height: 6.28.h,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.app_green,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    SizedBox(width: 4.h),
+                                    TextView(
+                                      text: '90 units',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 15.22.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.reminder,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 10.h),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Pack',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                TextView(
+                                  text: '100 /carton',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'MOQ',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                TextView(
+                                  text: '2 carton(s)',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextView(
+                                  text: 'Published',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 15.22.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.infoGrey,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CustomSwitch(
+                                      value: isSwitched,
+                                      onChanged: (bool val) {
+                                        setState(() {
+                                          isSwitched = val;
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(width: 6.10.h),
+                                    TextView(
+                                      text: isSwitched ? 'Yes' : 'No',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 14.22.sp,
+                                        fontWeight: FontWeight.w600,
+                                        color: isSwitched
+                                            ? AppColors.app_green
+                                            : AppColors.reminder,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(width: 10.h),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 30.h),
+                  Padding(
+                    padding: EdgeInsetsGeometry.only(left: 6.w, right: 6.w),
+                    child: Divider(
+                      color: AppColors.infoGrey,
+                      height: 1.h,
+                      thickness: 0.2,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: AppColors.primary1,
+                          size: 20.sp,
+                        ),
+                      ),
+                      TextView(
+                        text: 'Page 1 of 10',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.arrow_forward,
+                          color: AppColors.primary1,
+                          size: 20.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.h),
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.white,
+      builder: (BuildContext bc) {
+        return Container(
+          padding: EdgeInsets.all(22.6.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Keeps sheet height minimal
+            children: [
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: TextView(
+                      text: 'Select Option',
+                      color: AppColors.deep,
+                      fontWeight: FontWeight.w700,
+                      textStyle: TextStyle(
+                        fontFamily: 'GoogleSans',
+                        fontSize: 15.60.sp,
+                        color: AppColors.deep,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context), // Closes the sheet
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5.0.w),
+                        child: SvgPicture.asset(
+                          AppImage.cancel,
+                          height: 14.20.h,
+                          width: 14.20.w,
+                          color: AppColors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                  navigate.navigateTo(Routes.addProductScreen);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.30.w,
+                    horizontal: 12.w,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(40.r),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(Icons.add, color: AppColors.white, size: 24.sp),
+                      SizedBox(width: 10.w),
+                      TextView(
+                        text: 'Add Manually',
+                        textStyle: TextStyle(
+                          fontFamily: 'DMSans',
+                          fontSize: 16.90.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.30.w,
+                        horizontal: 10.w,
+                      ),
+                      decoration: BoxDecoration(
+                        border:Border.all(color: AppColors.primary),
+                        borderRadius: BorderRadius.circular(40.r),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                         SvgPicture.asset(AppImage.download_icon,width: 12.20.w,height: 14.20.h,color: AppColors.primary,),
+                          SizedBox(width: 10.w),
+                          TextView(
+                            text: 'CSV Template',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 14.90.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 14.46.w,),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.30.w,
+                        horizontal: 5.10.w,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.primary),
+                        borderRadius: BorderRadius.circular(40.r),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(AppImage.upload_icon,width: 20.w,height: 17.20.h,color: AppColors.primary,),
+                          SizedBox(width: 10.w),
+                          TextView(
+                            text: 'Bulk upload',
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 14.90.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30.h,),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -50,6 +50,7 @@ class TextFormWidget extends StatelessWidget {
   double? hintSize;
   final double? borderTopLeft;
   final double? borderBottomRight;
+  final double? letterSpacing;
   final double? borderBottomLeft;
   final FloatingLabelBehavior? floatingLabelBehavior;
 
@@ -82,6 +83,7 @@ class TextFormWidget extends StatelessWidget {
     this.onTapped,
     this.labelStyle,
     this.style,
+    this.letterSpacing=0,
     this.onEditCompleted,
     this.keyboardType,
     this.suffixIconColor,
@@ -119,10 +121,11 @@ class TextFormWidget extends StatelessWidget {
                   TextView(
                     text: hint ?? '',
                     textStyle: TextStyle(
-                      fontFamily: 'Arial',
+                      fontFamily: 'DMSans',
                       fontSize: hintSize!.sp,
                       fontWeight: hintWeight,
                       color: hintColor,
+                      letterSpacing: letterSpacing
                     ),
                   ),
 
@@ -132,7 +135,7 @@ class TextFormWidget extends StatelessWidget {
                           child: TextView(
                             text: '*',
                             textStyle: TextStyle(
-                              fontFamily: 'Arial',
+                              fontFamily: 'DMSans',
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w500,
                               color: AppColors.red,
@@ -156,7 +159,7 @@ class TextFormWidget extends StatelessWidget {
             hintStyle: TextStyle(
               fontSize: 15.20.sp,
               fontWeight: FontWeight.w400,
-              fontFamily: 'Arial',
+              fontFamily: 'DMSans',
               color: hintColor2,
             ),
             floatingLabelBehavior: floatingLabelBehavior,

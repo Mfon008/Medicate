@@ -71,6 +71,10 @@ import '../../../ui/dashboard/hmo/view_hmo_renewal_portal_screen.dart';
 import '../../../ui/dashboard/hmo/view_hmo_subscribers_portal_screen.dart';
 import '../../../ui/dashboard/hmo/view_settlement_portal_screen.dart';
 import '../../../ui/dashboard/home_screen.dart';
+import '../../../ui/dashboard/pharm_dashboard/pharmacy_add_to_cart_screen.dart';
+import '../../../ui/dashboard/pharm_dashboard/pharmacy_order_screen.dart';
+import '../../../ui/dashboard/pharm_dashboard/pharmacy_view_product_screen.dart';
+import '../../../ui/dashboard/pharm_dashboard/pharmacy_wholesale_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_create_tiers_plan_management_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart';
@@ -121,6 +125,7 @@ import '../../../ui/dashboard/reminder/payment_status_screen.dart';
 import '../../../ui/dashboard/reminder/view_medication_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
 import '../../../ui/manufacturer/overview_dashboard.dart';
+import '../../../ui/manufacturer/product/add_product_screen.dart';
 import '../../../ui/onboarding/get_started_onboarding.dart';
 import '../../../ui/onboarding/role_onboarding.dart';
 import '../../../ui/onboarding/splash_screen.dart';
@@ -273,6 +278,11 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: BusinessProviderViewProductScreen),
     MaterialRoute(page: BusinessProviderWholesaleScreen),
     MaterialRoute(page: OverviewDashboard),
+    MaterialRoute(page: PharmacyWholesaleScreen),
+    MaterialRoute(page: PharmacyAddToCartScreen),
+    MaterialRoute(page: PharmacyOrderScreen),
+    MaterialRoute(page: PharmacyViewProductScreen),
+    MaterialRoute(page: AddProductScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,
