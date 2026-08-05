@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
-
-import '../../../../core/app_assets/image.dart';
-import '../../../../core/config/colors.dart';
-import '../../../../core/connect_end/view_model/pharm_auth_view_model.dart';
-import '../../../../core/core_folder/app/app.router.dart';
-import '../../../../main.dart';
-import '../../../widget/text.dart';
-import '../../../widget/text_form_widget.dart';
+import '../../../core/app_assets/image.dart';
+import '../../../core/config/colors.dart';
+import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
+import '../../widget/text.dart';
+import '../../widget/text_form_widget.dart';
 
 class OrderManagementScreen extends StatefulWidget {
   const OrderManagementScreen({super.key});
@@ -98,7 +97,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextView(
-                  text: 'Marketplace',
+                  text: 'Order management',
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 18.20.sp,
@@ -109,7 +108,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                 SizedBox(height: 10.h),
                 TextView(
                   text:
-                      'Order directly from partnered manufacturers and distributors. Tiered pricing, MOQ discounts, and scheduled or instant delivery.',
+                      "Track incoming orders and move them through fulfilment. Status changes update the customer's dashboard in real time.",
                   textStyle: TextStyle(
                     fontFamily: 'GoogleSans',
                     fontSize: 14.20.sp,
@@ -133,10 +132,10 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                     children: [
                       SvgPicture.asset(
                         AppImage.download_icon,
-                        height: 18.h,
-                        width: 18.w,
+                        height: 13.8.h,
+                        width: 14.8.w,
                       ),
-                      SizedBox(width: 2.6.w),
+                      SizedBox(width: 6.w),
                       TextView(
                         text: 'Export CSV',
                         textStyle: TextStyle(
@@ -376,39 +375,42 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                               ],
                             ),
                             SizedBox(height: 16.20.h),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.primary,
-                                  width: 1.42,
-                                ),
-                                borderRadius: BorderRadius.circular(40.r),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.van,
-                                    height: isTablet(context)
-                                        ? 28.40.h
-                                        : 14.20.h,
-                                    width: isTablet(context)
-                                        ? 28.40.w
-                                        : 14.20.w,
+                            GestureDetector(
+                              onTap: () => navigate.navigateTo(Routes.viewOrderManagementScreen),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 10.w),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
                                     color: AppColors.primary,
+                                    width: 1.42,
                                   ),
-                                  SizedBox(width: 7.10.w),
-                                  TextView(
-                                    text: 'Advance',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 17.20.sp,
-                                      fontWeight: FontWeight.w500,
+                                  borderRadius: BorderRadius.circular(40.r),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset(
+                                      AppImage.van,
+                                      height: isTablet(context)
+                                          ? 28.40.h
+                                          : 14.20.h,
+                                      width: isTablet(context)
+                                          ? 28.40.w
+                                          : 14.20.w,
                                       color: AppColors.primary,
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 7.10.w),
+                                    TextView(
+                                      text: 'Advance',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 17.20.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(height: 2.0.h),
