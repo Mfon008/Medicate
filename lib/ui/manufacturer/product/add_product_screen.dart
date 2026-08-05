@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:medicate_app/ui/manufacturer/product/custom_switch_widget.dart';
-
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
@@ -69,7 +68,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -100,7 +99,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -126,7 +125,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -188,7 +187,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -217,7 +216,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -246,7 +245,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -275,7 +274,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -304,7 +303,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -333,7 +332,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -358,8 +357,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 text: 'Batch & Registration Details',
                 textStyle: TextStyle(
                   fontFamily: 'DMSans',
-                  fontSize: 17.2.sp,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16.2.sp,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.reminder,
                   letterSpacing: -0.12,
                 ),
@@ -472,7 +471,37 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 14.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintWeight: FontWeight.w500,
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'DMSans',
+                  fontSize: 14.sp,
+                  color: AppColors.infoGrey,
+                ),
+                style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'DMSans',
+                  fontSize: 16.sp,
+                  color: AppColors.infoGrey,
+                ),
+                fillColor: AppColors.dashboard,
+                isFilled: true,
+                readOnly: true,
+                controller: TextEditingController(),
+                validator: AppValidator.validateString(),
+                onChange: (p0) {},
+              ),
+              SizedBox(height: 20.h),
+              TextFormWidget(
+                hint: 'Serial Number',
+                label: '',
+                borderColor: AppColors.transparent,
+                borderTopLeft: 10.r,
+                borderTopRight: 10.r,
+                borderBottomLeft: 10.r,
+                borderBottomRight: 10.r,
+                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',

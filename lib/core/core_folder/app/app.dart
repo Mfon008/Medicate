@@ -19,6 +19,14 @@ import '../../../ui/authentication/hmo/hmo_reset_success_screen.dart';
 import '../../../ui/authentication/hmo/hmo_setup_pin_screen.dart';
 import '../../../ui/authentication/hmo/hmo_signup_screen.dart';
 import '../../../ui/authentication/hmo/hmo_welcome_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_change_no_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_forgot_pin_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_login_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_reset_pin_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_reset_success_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_setup_pin_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_signup_screen.dart';
+import '../../../ui/authentication/manufacturer/manufacturer_welcome_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_change_no_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_forgot_pin_screen.dart';
 import '../../../ui/authentication/pharmacy/pharm_login_screen.dart';
@@ -283,6 +291,14 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: PharmacyOrderScreen),
     MaterialRoute(page: PharmacyViewProductScreen),
     MaterialRoute(page: AddProductScreen),
+    MaterialRoute(page: ManufacturerWelcomeScreen),
+    MaterialRoute(page: ManufacturerChangePhoneNumber),
+    MaterialRoute(page: ManufacturerForgotPinScreen),
+    MaterialRoute(page: ManufacturerResetPinScreen),
+    MaterialRoute(page: ManufacturerResetSuccessScreen),
+    MaterialRoute(page: ManufacturerSetupPinScreen),
+    MaterialRoute(page: ManufacturerSignUpScreen),
+    MaterialRoute(page: ManufacturerLoginScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,

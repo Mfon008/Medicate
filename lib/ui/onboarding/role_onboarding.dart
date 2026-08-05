@@ -101,6 +101,18 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
                     text2:
                         'Manage employee health plans, view usage reports, and ensure access to quality care.',
                   ),
+                  SizedBox(height: 12.0.h),
+                  EverydayUserCard(
+                    imge: AppImage.manufacturer,
+                    userType: UserType.manufacturer,
+                    selectedUserType: selectedUserType,
+                    onTap: (type) {
+                      setState(() => selectedUserType = type);
+                    },
+                    text: 'Distributor/Manufacturer',
+                    text2:
+                        'Manage your catalog, fulfil orders and monitor your wallet from one place.',
+                  ),
                   SizedBox(height: 70.h),
                   ButtonWidget(
                     border: 100.r,
@@ -142,6 +154,9 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
       case UserType.healthCare:
       case UserType.hmo:
         navigate.navigateTo(Routes.hMOSignUpScreen);
+        break;
+      case UserType.manufacturer:
+        // navigate.navigateTo(Routes.hMOSignUpScreen);
         break;
 
       case null:

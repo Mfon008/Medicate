@@ -165,6 +165,7 @@ class AppImage {
   static const String arrow_forward = 'assets/svgs/arrow_forward.svg';
   static const String everyDayUSer = 'assets/images/everyday_user.png';
   static const String health_pro = 'assets/images/health_pro.png';
+  static const String manufacturer= 'assets/images/manufacturer.png';
   static const String hmo = 'assets/images/hmo.png';
   static const String mc = 'assets/images/m&c.png';
   static const String pharmacist = 'assets/images/pharmacist.png';

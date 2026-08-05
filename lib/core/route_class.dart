@@ -21,7 +21,7 @@ class AppRoutes {
     } else if (type.authType == 'everyday_user' &&
         type.isSignUp == false &&
         type.isLogin == true) {
-      return Routes.overviewDashboard;
+      return Routes.welcomeScreen;
     }
     // pharmacy flow
     if (type.authType == 'pharmacy' &&
