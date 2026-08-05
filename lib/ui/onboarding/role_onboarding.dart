@@ -156,7 +156,7 @@ class _RoleOnboardingState extends State<RoleOnboarding> {
         navigate.navigateTo(Routes.hMOSignUpScreen);
         break;
       case UserType.manufacturer:
-        // navigate.navigateTo(Routes.hMOSignUpScreen);
+        navigate.navigateTo(Routes.manufacturerSignUpScreen);
         break;
 
       case null:

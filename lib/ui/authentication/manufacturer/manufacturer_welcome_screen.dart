@@ -183,7 +183,7 @@ class _ManufacturerWelcomeScreenState extends State<ManufacturerWelcomeScreen> {
                   SizedBox(height: 20.0.h),
                   GestureDetector(
                     onTap: () =>
-                        navigate.navigateTo(Routes.healthCareForgotPinScreen),
+                        navigate.navigateTo(Routes.manufacturerForgotPinScreen),
                     child: TextView(
                       text: 'Forgot PIN',
                       decoration: TextDecoration.underline,

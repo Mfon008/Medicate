@@ -420,7 +420,7 @@ class _ManufacturerSignUpScreenState
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => navigate.navigateTo(
-                                Routes.healthCareLoginScreen,
+                                Routes.manufacturerLoginScreen,
                               ),
                           ),
                         ],

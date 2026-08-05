@@ -229,8 +229,8 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                         : () {
                             if (formKey.currentState!.validate()) {
                               navigate.navigateTo(
-                                Routes.healthCareWelcomeScreen,
-                                arguments: HealthCareWelcomeScreenArguments(
+                                Routes.manufacturerWelcomeScreen,
+                                arguments: ManufacturerWelcomeScreenArguments(
                                   phone: '+234${phoneController.text}',
                                 ),
                               );
@@ -312,9 +312,9 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                               color: AppColors.primary,
                               decoration: TextDecoration.underline,
                             ),
-                            recognizer: TapGestureRecognizer(),
-                            // ..onTap = () =>
-                            //     navigate.navigateTo(Routes.signUpScreen),
+                            recognizer: TapGestureRecognizer()
+                            ..onTap = () =>
+                                navigate.navigateTo(Routes.manufacturerSignUpScreen),
                           ),
                         ],
                       ),

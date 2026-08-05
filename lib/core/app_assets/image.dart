@@ -69,6 +69,7 @@ class AppImage {
   static const String empty_cart = 'assets/svgs/empty_cart.svg';
   static const String box_cart = 'assets/svgs/cart_box.svg';
   static const String truck = 'assets/svgs/truck.svg';
+  static const String van = 'assets/svgs/van.svg';
   static const String naira = 'assets/svgs/naira.svg';
   static const String delivery = 'assets/svgs/delivery.svg';
   static const String channel_email = 'assets/svgs/channel_email.svg';

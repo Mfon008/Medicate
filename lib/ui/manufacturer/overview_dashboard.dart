@@ -9,6 +9,7 @@ import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
 import '../widget/text.dart';
 import 'overview_screen.dart';
+import 'product/order_management/order_management_screen.dart';
 import 'product/product_screen.dart';
 
 class OverviewDashboard extends StatefulWidget {
@@ -24,7 +25,7 @@ class _OverviewDashboardState extends State<OverviewDashboard> {
   final List<Widget> _body = [
     OverviewScreen(),
     ProductScreen(),
-    Container(),
+    OrderManagementScreen(),
     Container()
   ];
 

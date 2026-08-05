@@ -223,7 +223,7 @@ class _ManufacturerForgotPinScreenState extends State<ManufacturerForgotPinScree
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => navigate.navigateTo(
-                                Routes.healthCareDoctorSpecialistSignUpScreen,
+                                Routes.manufacturerSignUpScreen,
                               ),
                           ),
                         ],

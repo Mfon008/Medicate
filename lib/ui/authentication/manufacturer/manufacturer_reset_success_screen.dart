@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
@@ -51,9 +53,9 @@ class ManufacturerResetSuccessScreen extends StatelessWidget {
               buttonText: 'Go to Dashboard',
               color: AppColors.white,
               buttonBorderColor: AppColors.transparent,
-              onPressed: () {
-                // navigate.navigateTo(Routes.healthCareLoginScreen);
-              },
+              onPressed: () =>
+                navigate.navigateTo(Routes.manufacturerLoginScreen),
+              
             ),
             SizedBox(height: 20.30.h),
           ],
