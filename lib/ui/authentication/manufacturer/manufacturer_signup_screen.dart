@@ -74,7 +74,7 @@ class _ManufacturerSignUpScreenState
                   ),
                   SizedBox(height: 28.0.h),
                   TextView(
-                    text: 'Welcome to Medicate',
+                    text: 'Welcome to Medicatet',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 20.sp,
