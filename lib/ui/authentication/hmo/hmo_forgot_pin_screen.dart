@@ -169,7 +169,7 @@ class _HMOForgotPinScreenState extends State<HMOForgotPinScreen> {
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(
+                              final result = AppValidator.validatePhoneNew()(
                                 value,
                               );
                               if (result != null) {

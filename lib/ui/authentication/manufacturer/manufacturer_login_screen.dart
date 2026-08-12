@@ -183,7 +183,7 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(
+                              final result = AppValidator.validatePhoneNew()(
                                 value,
                               );
                               if (result != null) {

@@ -82,20 +82,20 @@ class AppValidator {
     };
   }
 
-  static String? Function(String?) validatePhone({String? error}) {
-    return (String? value) {
-      if (value!.isEmpty) {
-        return error ?? 'Enter a valid phone number';
-      }
-      if (!RegExp(r'^\d+?$').hasMatch(value) ||
-          value.startsWith(RegExp("0[1789]")) ||
-          // Land lines eg 080
-          (!value.startsWith(RegExp("0[789]")) && value.length != 10)) {
-        return error ?? 'Not a valid phone number.';
-      }
-      return null;
-    };
-  }
+  // static String? Function(String?) validatePhone({String? error}) {
+  //   return (String? value) {
+  //     if (value!.isEmpty) {
+  //       return error ?? 'Enter a valid phone number';
+  //     }
+  //     if (!RegExp(r'^\d+?$').hasMatch(value) ||
+  //         value.startsWith(RegExp("0[1789]")) ||
+  //         // Land lines eg 080
+  //         (!value.startsWith(RegExp("0[789]")) && value.length != 10)) {
+  //       return error ?? 'Not a valid phone number.';
+  //     }
+  //     return null;
+  //   };
+  // }
 
   static String? Function(String?) validatePhoneNew({String? error}) {
     return (String? value) {

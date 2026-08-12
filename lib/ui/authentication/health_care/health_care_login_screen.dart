@@ -172,7 +172,7 @@ class _HealthCareLoginScreenState extends State<HealthCareLoginScreen> {
                           setState(() {});
                         },
                         validator: (value) {
-                          final result = AppValidator.validatePhone()(value);
+                          final result = AppValidator.validatePhoneNew()(value);
                           if (result != null) {
                             isPhoneValid = true;
                           } else {

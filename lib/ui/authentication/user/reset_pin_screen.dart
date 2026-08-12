@@ -124,7 +124,6 @@ class _ResetPinScreenState extends State<ResetPinScreen> {
                       ),
                       validator: AppValidator.validateOTP(),
                       onCompleted: (pin) {
-                        print('Entered PIN: $pin');
                         pinInput = pin;
                         setState(() {});
                       },

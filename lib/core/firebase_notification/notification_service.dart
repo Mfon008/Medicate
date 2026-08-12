@@ -7,7 +7,12 @@ import 'package:medicate_app/main.dart';
 import '../../fire_base.dart';
 import '../core_folder/app/app.router.dart';
 
+class GlobalFCToken{
+  var globalfCMTokenValue;
+}
+
 class NotificationService {
+  GlobalFCToken? _token;
   final FirebaseMessaging _fm = FirebaseMessaging.instance;
   // final ApiClient api; // your authed HTTP client
   NotificationService();
@@ -137,6 +142,7 @@ class NotificationService {
   Future<void> initNotification() async {
     await _fm.requestPermission();
     globalfCMToken = await _fm.getToken();
+    _token!.globalfCMTokenValue = await _fm.getToken();
     initPushNotification();
     initLocalNotification();
     _initNotification();

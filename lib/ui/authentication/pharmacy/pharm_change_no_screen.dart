@@ -181,7 +181,7 @@ class _PharmacyChangePhoneNumberState extends State<PharmacyChangePhoneNumber> {
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(
+                              final result = AppValidator.validatePhoneNew()(
                                 value,
                               );
                               if (result != null) {

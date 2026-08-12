@@ -95,6 +95,7 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
+import '../../firebase_notification/notification_service.dart';
 import '../model/active_hmo_plan_response_model/active_hmo_plan_response_model.dart';
 import '../model/api_result_model.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
@@ -21293,8 +21294,11 @@ class AuthViewModel extends BaseViewModel {
         }
 
         if (session.isNewLogin) {
+           // ignore: unused_local_variable
+           GlobalFCToken? _token;
           sendDeviceToken(
             token: globalfCMToken,
+            // token: _token.globalfCMTokenValue,
             deviceType: Platform.isAndroid ? 'ANDROID' : 'IOS',
           );
         }

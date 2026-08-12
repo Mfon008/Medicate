@@ -161,7 +161,6 @@ class _ChangePhoneNumberState extends State<ChangePhoneNumber> {
                             borderBottomLeft: 0,
                             borderBottomRight: 10,
                             label: 'Best number to reach you?',
-
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Arial',
@@ -180,7 +179,7 @@ class _ChangePhoneNumberState extends State<ChangePhoneNumber> {
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(
+                              final result = AppValidator.validatePhoneNew()(
                                 value,
                               );
                               if (result != null) {
