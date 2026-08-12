@@ -32,7 +32,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     'Personal Care',
     'Medical Devices',
   ];
-  String c = 'All';
+  String c = '';
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.0.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -109,7 +109,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -135,7 +135,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -146,12 +146,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
                   fontSize: 16.sp,
-                  color: AppColors.infoGrey,
+                  color: c == '' ? AppColors.infoGrey:AppColors.reminder,
                 ),
                 fillColor: AppColors.dashboard,
                 isFilled: true,
                 readOnly: true,
-                controller: TextEditingController(text: c == 'All' ? '' : c),
+                controller: TextEditingController(text: c),
                 validator: AppValidator.validateString(),
                 onChange: (p0) {},
                 suffixWidget: Theme(
@@ -161,7 +161,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     hoverColor: Colors.transparent,
                   ),
                   child: Padding(
-                    padding: EdgeInsets.all(12.w),
+                    padding: EdgeInsets.all(14.48.w),
                     child: GestureDetector(
                       onTap: () => _showCategoryMenu(context),
                       child: SvgPicture.asset(AppImage.arrow_down),
@@ -178,7 +178,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -207,7 +207,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -236,7 +236,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -265,7 +265,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -294,7 +294,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -323,7 +323,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -461,7 +461,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 hintWeight: FontWeight.w500,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
@@ -491,7 +491,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 borderTopRight: 10.r,
                 borderBottomLeft: 10.r,
                 borderBottomRight: 10.r,
-                hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                 labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontFamily: 'DMSans',
@@ -526,7 +526,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
                       hintWeight: FontWeight.w500,
-                      hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                      hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                       labelStyle: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontFamily: 'DMSans',
@@ -564,7 +564,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       borderTopRight: 10.r,
                       borderBottomLeft: 10.r,
                       borderBottomRight: 10.r,
-                      hintSize: isTablet(context) ? 6.82.sp : 13.60.sp,
+                      hintSize: isTablet(context) ? 6.82.sp : 16.80.sp,
                       labelStyle: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontFamily: 'DMSans',
@@ -622,7 +622,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ],
               ),
               SizedBox(height: 10.h),
-
               SizedBox(
                 width: double.infinity,
                 child: DottedBorder(
@@ -740,7 +739,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 hint: 'Volume Quantity',
                                 label: '',
                                 letterSpacing: -0.21,
-                                hintSize: 14.sp,
+                                hintSize: 16.80.sp,
                                 hintWeight: FontWeight.w300,
                                 borderColor: AppColors.transparent,
                                 borderTopLeft: 10.r,
@@ -749,13 +748,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 borderBottomRight: 10.r,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
+                                  fontFamily: 'DMSans',
                                   fontSize: 14.sp,
                                   color: AppColors.infoGrey,
                                 ),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
+                                  fontFamily: 'DMSans',
                                   fontSize: 16.sp,
                                   color: AppColors.infoGrey,
                                 ),
@@ -773,7 +772,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 hint: 'Price per Unit(₦)',
                                 label: '0.00',
                                 letterSpacing: -0.21,
-                                hintSize: 14.sp,
+                                hintSize: 16.80.sp,
                                 hintWeight: FontWeight.w300,
                                 borderColor: AppColors.transparent,
                                 borderTopLeft: 10.r,
@@ -782,13 +781,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 borderBottomRight: 10.r,
                                 labelStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
+                                  fontFamily: 'DMSans',
                                   fontSize: 14.sp,
                                   color: AppColors.infoGrey,
                                 ),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
-                                  fontFamily: 'Arial',
+                                  fontFamily: 'DMSans',
                                   fontSize: 16.sp,
                                   color: AppColors.infoGrey,
                                 ),

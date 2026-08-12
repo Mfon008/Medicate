@@ -157,7 +157,7 @@ class TextFormWidget extends StatelessWidget {
             labelText: readOnly! ? null : label ?? '',
             hintText: readOnly! ? label ?? '' : null,
             hintStyle: TextStyle(
-              fontSize: 15.20.sp,
+              fontSize: 17.20.sp,
               fontWeight: FontWeight.w400,
               fontFamily: 'DMSans',
               color: hintColor2,

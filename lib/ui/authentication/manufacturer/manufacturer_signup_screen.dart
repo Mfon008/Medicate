@@ -211,8 +211,8 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter name',
-                    hintWeight: FontWeight.w300,
-                    hintSize: isTablet(context) ? 6.82.sp : 15.60.sp,
+                    hintWeight: FontWeight.w400,
+                    hintSize: isTablet(context) ? 6.82.sp : 16.98.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -241,8 +241,8 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter registration number',
-                    hintWeight: FontWeight.w300,
-                    hintSize: isTablet(context) ? 6.82.sp : 15.60.sp,
+                    hintWeight: FontWeight.w400,
+                    hintSize: isTablet(context) ? 6.82.sp : 16.98.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -263,8 +263,8 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter business address',
-                    hintWeight: FontWeight.w300,
-                    hintSize: isTablet(context) ? 6.82.sp : 15.60.sp,
+                    hintWeight: FontWeight.w400,
+                    hintSize: isTablet(context) ? 6.82.sp : 16.98.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
