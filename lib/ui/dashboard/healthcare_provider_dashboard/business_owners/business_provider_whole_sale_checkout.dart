@@ -947,7 +947,9 @@ class BusinessProviderWholeSaleCheckout extends StatelessWidget {
                       ),
                       SizedBox(height: 20.h),
                       GestureDetector(
-                        onTap: () =>navigate.navigateTo(Routes.businessProviderOrderScreen),
+                        onTap: () => navigate.navigateTo(
+                          Routes.businessProviderOrderScreen,
+                        ),
                         child: Container(
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(

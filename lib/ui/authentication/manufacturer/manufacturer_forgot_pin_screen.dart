@@ -23,7 +23,8 @@ class ManufacturerForgotPinScreen extends StatefulWidget {
       _ManufacturerForgotPinScreenState();
 }
 
-class _ManufacturerForgotPinScreenState extends State<ManufacturerForgotPinScreen> {
+class _ManufacturerForgotPinScreenState
+    extends State<ManufacturerForgotPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
@@ -199,9 +200,7 @@ class _ManufacturerForgotPinScreenState extends State<ManufacturerForgotPinScree
                     onPressed: !isPassed(isPhone: isPhone)
                         ? () {}
                         : () {
-                            if (formKey.currentState!.validate()) {
-                              
-                            }
+                            if (formKey.currentState!.validate()) {}
                           },
                   ),
                   SizedBox(height: 30.h),

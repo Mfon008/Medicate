@@ -8,6 +8,7 @@ import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/manufacturer_signup_entity_model.dart';
 import '../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
@@ -16,17 +17,14 @@ import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
 class ManufacturerSignUpScreen extends StatefulWidget {
-  const ManufacturerSignUpScreen({
-    super.key,
-  });
+  const ManufacturerSignUpScreen({super.key});
 
   @override
   State<ManufacturerSignUpScreen> createState() =>
       _ManufacturerSignUpScreenState();
 }
 
-class _ManufacturerSignUpScreenState
-    extends State<ManufacturerSignUpScreen> {
+class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController phoneController = TextEditingController();
@@ -74,7 +72,7 @@ class _ManufacturerSignUpScreenState
                   ),
                   SizedBox(height: 28.0.h),
                   TextView(
-                    text: 'Welcome to Medicatet',
+                    text: 'Welcome to Medicate',
                     textStyle: TextStyle(
                       fontFamily: 'GoogleSans',
                       fontSize: 20.sp,
@@ -100,9 +98,9 @@ class _ManufacturerSignUpScreenState
                       TextView(
                         text: 'Phone Number',
                         textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 16.60.sp,
-                          fontWeight: FontWeight.w500,
+                          fontFamily: 'DMSans',
+                          fontSize: 16.98.sp,
+                          fontWeight: FontWeight.w400,
                           color: AppColors.black,
                         ),
                       ),
@@ -188,7 +186,7 @@ class _ManufacturerSignUpScreenState
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(
+                              final result = AppValidator.validatePhoneNew()(
                                 value,
                               );
                               if (result != null) {
@@ -213,7 +211,8 @@ class _ManufacturerSignUpScreenState
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter name',
-                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    hintWeight: FontWeight.w300,
+                    hintSize: isTablet(context) ? 6.82.sp : 15.60.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -224,6 +223,14 @@ class _ManufacturerSignUpScreenState
                     isFilled: true,
                     controller: manufacturerNameController,
                     validator: AppValidator.validateString(),
+                    onChange: (p0) {
+                      if (p0.isEmpty) {
+                        isName = false;
+                      } else {
+                        isName = true;
+                      }
+                      setState(() {});
+                    },
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
@@ -234,7 +241,8 @@ class _ManufacturerSignUpScreenState
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter registration number',
-                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    hintWeight: FontWeight.w300,
+                    hintSize: isTablet(context) ? 6.82.sp : 15.60.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -255,7 +263,8 @@ class _ManufacturerSignUpScreenState
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
                     label: 'Enter business address',
-                    hintSize: isTablet(context) ? 6.82.sp : 16.60.sp,
+                    hintWeight: FontWeight.w300,
+                    hintSize: isTablet(context) ? 6.82.sp : 15.60.sp,
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Arial',
@@ -327,15 +336,44 @@ class _ManufacturerSignUpScreenState
                   ButtonWidget(
                     border: 100.r,
                     buttonColor:
-                        !isPassed(isPhone: isPhone, isChecked: isChecked)
+                        !isPassed(
+                          isPhone: isPhone,
+                          isName: isName,
+                          isChecked: isChecked,
+                        )
                         ? AppColors.buttonGrey1
                         : AppColors.primary,
                     buttonText: 'Sign Up',
                     color: AppColors.white,
-                    // isLoading: model.isLoading,
+                    isLoading: model.isLoading,
                     buttonBorderColor: AppColors.transparent,
-                    onPressed:  () {}
-                        
+                    onPressed:
+                        !isPassed(
+                          isPhone: isPhone,
+                          isName: isName,
+                          isChecked: isChecked,
+                        )
+                        ? () {}
+                        : () {
+                            if (formKey.currentState!.validate()) {
+                              model.signUpManufacturer(
+                                context,
+                                signUpEntity: ManufacturerSignupEntityModel(
+                                  distributorManufacturerName:
+                                      manufacturerNameController.text.trim(),
+                                  phone: model
+                                      .returnReminderPhoneStructureWith234(
+                                        phoneController.text.trim(),
+                                      ),
+                                  registrationNumber:
+                                      registrationNumberController.text.trim(),
+                                  businessAddress: businessAddressController
+                                      .text
+                                      .trim(),
+                                ),
+                              );
+                            }
+                          },
                   ),
                   SizedBox(height: 30.h),
                   Row(
@@ -439,10 +477,10 @@ class _ManufacturerSignUpScreenState
 
   bool isPassed({
     required bool isPhone,
-    // required bool isName,
+    required bool isName,
     required bool isChecked,
   }) {
-    if (isPhone == true && isChecked == true) {
+    if (isPhone == true && isName == true && isChecked == true) {
       return true;
     }
     return false;

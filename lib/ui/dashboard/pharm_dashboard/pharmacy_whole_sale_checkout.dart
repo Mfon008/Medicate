@@ -947,7 +947,8 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       ),
                       SizedBox(height: 20.h),
                       GestureDetector(
-                        onTap: () =>navigate.navigateTo(Routes.pharmacyOrderScreen),
+                        onTap: () =>
+                            navigate.navigateTo(Routes.pharmacyOrderScreen),
                         child: Container(
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(

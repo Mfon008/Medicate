@@ -54,8 +54,7 @@ class ManufacturerResetSuccessScreen extends StatelessWidget {
               color: AppColors.white,
               buttonBorderColor: AppColors.transparent,
               onPressed: () =>
-                navigate.navigateTo(Routes.manufacturerLoginScreen),
-              
+                  navigate.navigateTo(Routes.manufacturerLoginScreen),
             ),
             SizedBox(height: 20.30.h),
           ],

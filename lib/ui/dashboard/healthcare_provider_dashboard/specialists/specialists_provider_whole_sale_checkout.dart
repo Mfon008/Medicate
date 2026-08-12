@@ -950,7 +950,9 @@ class SpecialistsProviderWholeSaleCheckout extends StatelessWidget {
                       ),
                       SizedBox(height: 20.h),
                       GestureDetector(
-                        onTap: () =>navigate.navigateTo(Routes.specialistsProviderOrderScreen),
+                        onTap: () => navigate.navigateTo(
+                          Routes.specialistsProviderOrderScreen,
+                        ),
                         child: Container(
                           width: double.infinity,
                           padding: EdgeInsets.symmetric(

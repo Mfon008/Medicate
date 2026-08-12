@@ -132,6 +132,7 @@ import '../../../ui/dashboard/profile/wallet/wallet_screen.dart';
 import '../../../ui/dashboard/reminder/payment_status_screen.dart';
 import '../../../ui/dashboard/reminder/view_medication_screen.dart';
 import '../../../ui/dashboard/support/support_screen.dart';
+import '../../../ui/manufacturer/manufacturer_view_product_screen.dart';
 import '../../../ui/manufacturer/order_management/view_order_management_screen.dart';
 import '../../../ui/manufacturer/overview_dashboard.dart';
 import '../../../ui/manufacturer/product/add_product_screen.dart';
@@ -146,18 +147,22 @@ import '../../../ui/widget/payment_success_submit_app_screen.dart';
 import '../../api_folder/auth_api.dart';
 import '../../api_folder/healthcare_api.dart';
 import '../../api_folder/hmo_api.dart';
+import '../../api_folder/manufacturer_api.dart';
 import '../../api_folder/pharm_auth_api.dart';
 import '../../connect_end/contrast/contract_impl.dart';
 import '../../connect_end/contrast/healthcare_contract_impl.dart';
 import '../../connect_end/contrast/hmo_contract_impl.dart';
+import '../../connect_end/contrast/manufacturer_impl.dart';
 import '../../connect_end/contrast/pharm_contract_impl.dart';
 import '../../connect_end/repo/healthcare_repo_impl.dart';
 import '../../connect_end/repo/hmo_repo_impl.dart';
+import '../../connect_end/repo/manufacturer_repo_impl.dart';
 import '../../connect_end/repo/pharm_repo_impl.dart';
 import '../../connect_end/repo/repo_impl.dart';
 import '../../connect_end/view_model/auth_view_model.dart';
 import '../../connect_end/view_model/health_care_view_model.dart';
 import '../../connect_end/view_model/hmo_view_model.dart';
+import '../../connect_end/view_model/manufacturer_view_model.dart';
 import '../../connect_end/view_model/pharm_auth_view_model.dart';
 import '../manager/shared_preference.dart';
 import '../network/network_service.dart';
@@ -301,6 +306,7 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: ManufacturerSignUpScreen),
     MaterialRoute(page: ManufacturerLoginScreen),
     MaterialRoute(page: ViewOrderManagementScreen),
+    MaterialRoute(page: ManufacturerViewProductScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,
@@ -343,18 +349,22 @@ import '../network/support_network_service.dart';
     LazySingleton(classType: PharmApi),
     LazySingleton(classType: HealthcareApi),
     LazySingleton(classType: HMOApi),
+    LazySingleton(classType: ManufacturerApi),
     LazySingleton(classType: AuthContractsImpl),
     LazySingleton(classType: PharmContractsImpl),
     LazySingleton(classType: HealthcareContractsImpl),
     LazySingleton(classType: HMOContractsImpl),
+    LazySingleton(classType: ManufacturerContractImpl),
     LazySingleton(classType: AuthRepoImpl),
     LazySingleton(classType: PharmRepoImpl),
     LazySingleton(classType: HealthcareRepoImpl),
     LazySingleton(classType: HMORepoImpl),
+    LazySingleton(classType: ManufacturerRepoImpl),
     LazySingleton(classType: AuthViewModel),
     Factory(classType: PharmViewModel),
     Factory(classType: HealthCareViewModel),
     Factory(classType: HMOViewModel),
+    Factory(classType: ManufacturerViewModel),
   ],
   logger: StackedLogger(),
 )

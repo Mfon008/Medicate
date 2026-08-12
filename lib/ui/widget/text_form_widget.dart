@@ -83,7 +83,7 @@ class TextFormWidget extends StatelessWidget {
     this.onTapped,
     this.labelStyle,
     this.style,
-    this.letterSpacing=0,
+    this.letterSpacing = 0,
     this.onEditCompleted,
     this.keyboardType,
     this.suffixIconColor,
@@ -125,7 +125,7 @@ class TextFormWidget extends StatelessWidget {
                       fontSize: hintSize!.sp,
                       fontWeight: hintWeight,
                       color: hintColor,
-                      letterSpacing: letterSpacing
+                      letterSpacing: letterSpacing,
                     ),
                   ),
 

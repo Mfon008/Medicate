@@ -6,8 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:medicate_app/ui/widget/text.dart';
 import '../../core/app_assets/image.dart';
 import '../../core/config/colors.dart';
-import '../../core/core_folder/app/app.router.dart';
-import '../../main.dart';
 
 class OverviewScreen extends StatelessWidget {
   const OverviewScreen({super.key});
@@ -42,9 +40,7 @@ class OverviewScreen extends StatelessWidget {
                     height: isTablet(context) ? 32.h : 12.h,
                     width: isTablet(context) ? 32.w : 12.w,
                   ),
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                   // onPressed: () => navigate.navigateTo(
                   //   Routes.moreScreen,
                   // ), // makes ripple effect round
@@ -69,8 +65,9 @@ class OverviewScreen extends StatelessWidget {
                         width: isTablet(context) ? 40.w : 20.w,
                         color: AppColors.primary,
                       ),
-                      onPressed: () =>
-                          navigate.navigateTo(Routes.notificationScreen),
+                      onPressed: (){},
+                      // onPressed: () =>
+                      //     navigate.navigateTo(Routes.notificationScreen),
                       splashRadius: 28,
                     ),
                     // model.getUnreadNotificationCountModel != null &&

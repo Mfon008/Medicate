@@ -22,7 +22,7 @@ import '../../widget/text.dart';
 import '../bio_authentication.dart';
 
 class ManufacturerWelcomeScreen extends StatefulWidget {
-ManufacturerWelcomeScreen({super.key, this.phone});
+  ManufacturerWelcomeScreen({super.key, this.phone});
 
   String? phone;
 
@@ -203,52 +203,51 @@ class _ManufacturerWelcomeScreenState extends State<ManufacturerWelcomeScreen> {
                   //                 .instance
                   //                 .usersData['pinSet'] ==
                   //             true
-                  //     ? 
-                      Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                bool auth =
-                                    await Authentication.authentication();
-                                if (auth) {
-                                  // model.signInHealthcare(
-                                  //   context,
-                                  //   signInEntity: LoginEntityModel(
-                                  //     phone:
-                                  //         widget.phone ??
-                                  //         SharedPreferencesService
-                                  //             .instance
-                                  //             .usersData['user']['phone'],
-                                  //     pin: SharedPreferencesService
-                                  //         .instance
-                                  //         .pinSet,
-                                  //   ),
-                                  // );
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(14.8.w),
-                                decoration: BoxDecoration(
-                                  color: AppColors.inactive.withOpacity(.22),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: SvgPicture.asset(AppImage.bio),
-                              ),
-                            ),
-                            SizedBox(height: 16.0.h),
-                            TextView(
-                              text: 'Login with biometric',
-                              decoration: TextDecoration.underline,
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 12.6.sp,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.greygrey1,
-                              ),
-                            ),
-                          ],
+                  //     ?
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          bool auth = await Authentication.authentication();
+                          if (auth) {
+                            // model.signInHealthcare(
+                            //   context,
+                            //   signInEntity: LoginEntityModel(
+                            //     phone:
+                            //         widget.phone ??
+                            //         SharedPreferencesService
+                            //             .instance
+                            //             .usersData['user']['phone'],
+                            //     pin: SharedPreferencesService
+                            //         .instance
+                            //         .pinSet,
+                            //   ),
+                            // );
+                          }
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(14.8.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.inactive.withOpacity(.22),
+                            shape: BoxShape.circle,
+                          ),
+                          child: SvgPicture.asset(AppImage.bio),
                         ),
-                      // : SizedBox.shrink(),
+                      ),
+                      SizedBox(height: 16.0.h),
+                      TextView(
+                        text: 'Login with biometric',
+                        decoration: TextDecoration.underline,
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 12.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.greygrey1,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // : SizedBox.shrink(),
                   SizedBox(height: 260.h),
                   ButtonWidget(
                     border: 100.r,

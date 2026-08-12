@@ -20,6 +20,18 @@ class OrderManagementScreen extends StatefulWidget {
 }
 
 class _OrderManagementScreenState extends State<OrderManagementScreen> {
+  List<String> statusList = [
+    'All',
+    'Pending',
+    'Confirmed',
+    'Packaging',
+    'In Transit',
+    'Deliverance',
+    'Cancelled',
+  ];
+
+  String s = 'All';
+
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -213,7 +225,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                               ),
                             ),
                             TextView(
-                              text: 'All',
+                              text: s,
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
                                 fontSize: 14.22.sp,
@@ -223,7 +235,9 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             ),
                             Spacer(),
                             IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                _showStatusListMenu(context);
+                              },
                               icon: Icon(
                                 Icons.keyboard_arrow_down_sharp,
                                 size: 20.0.sp,
@@ -289,8 +303,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                 fontSize: 15.22.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.reminder,
-                                letterSpacing: -0.52
-                                
+                                letterSpacing: -0.52,
                               ),
                             ),
                             SizedBox(height: 12.h),
@@ -307,7 +320,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                         fontSize: 15.22.sp,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.infoGrey,
-                                        letterSpacing: -0.92
+                                        letterSpacing: -0.92,
                                       ),
                                     ),
                                     SizedBox(height: 2.h),
@@ -332,7 +345,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                         fontSize: 15.22.sp,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.infoGrey,
-                                        letterSpacing: -0.92
+                                        letterSpacing: -0.92,
                                       ),
                                     ),
                                     SizedBox(height: 2.h),
@@ -357,7 +370,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                         fontSize: 15.22.sp,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.infoGrey,
-                                        letterSpacing: -0.92
+                                        letterSpacing: -0.92,
                                       ),
                                     ),
                                     SizedBox(height: 2.h),
@@ -376,7 +389,9 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             ),
                             SizedBox(height: 16.20.h),
                             GestureDetector(
-                              onTap: () => navigate.navigateTo(Routes.viewOrderManagementScreen),
+                              onTap: () => navigate.navigateTo(
+                                Routes.viewOrderManagementScreen,
+                              ),
                               child: Container(
                                 padding: EdgeInsets.symmetric(vertical: 10.w),
                                 decoration: BoxDecoration(
@@ -466,6 +481,132 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
           ),
         );
       },
+    );
+  }
+
+  void _showStatusListMenu(BuildContext context) async {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final Offset position = button.localToGlobal(
+      Offset.zero,
+      ancestor: overlay,
+    );
+
+    final double buttonRight = position.dx + button.size.width;
+
+    final RelativeRect menuPosition = RelativeRect.fromLTRB(
+      buttonRight - 250.w,
+      position.dy + button.size.height,
+      overlay.size.width - buttonRight,
+      0,
+    );
+
+    // Keep the currently selected value
+    String selectedStatus = s;
+
+    await showMenu(
+      context: context,
+      position: menuPosition,
+      color: AppColors.white,
+      elevation: 0,
+
+      items: [
+        PopupMenuItem(
+          enabled: false,
+          padding: EdgeInsets.zero,
+          child: StatefulBuilder(
+            builder: (context, menuSetState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // HEADER
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.w,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextView(
+                        text: 'Status',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // STATUS LIST
+                  ...statusList.map((e) {
+                    final bool isSelected = selectedStatus == e;
+
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        // Update ONLY the local popup state first
+                        menuSetState(() {
+                          selectedStatus = e;
+                        });
+
+                        // Update your actual page state
+                        setState(() {
+                          s = e;
+                        });
+
+                        // Allow the user to see the selected state
+                        await Future.delayed(const Duration(milliseconds: 300));
+
+                        // Close popup
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.w,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.skyBlue
+                              : AppColors.transparent,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.cool_blue
+                                : AppColors.transparent,
+                          ),
+                        ),
+                        child: TextView(
+                          text: e,
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.reminder,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

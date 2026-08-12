@@ -132,7 +132,13 @@ class HealthCareViewModel extends BaseViewModel {
   String? searchDoctors = '';
   var vdeactivate;
   bool isCartItem = false;
-  List<String> myOrderListCategory = ['All','Confirmed','Packaging','In transit','Delivered'];
+  List<String> myOrderListCategory = [
+    'All',
+    'Confirmed',
+    'Packaging',
+    'In transit',
+    'Delivered',
+  ];
   String orderCategory = 'All';
 
   final repositoryImply = HealthcareRepoImpl();
@@ -481,15 +487,14 @@ class HealthCareViewModel extends BaseViewModel {
   Delivery delivery = Delivery.instance;
   CartAddedTime cartTimeAdded = CartAddedTime.morning;
 
-  String returnCartAddedTime(CartAddedTime cartAddedTime){
-    if(cartAddedTime==CartAddedTime.afternoon){
+  String returnCartAddedTime(CartAddedTime cartAddedTime) {
+    if (cartAddedTime == CartAddedTime.afternoon) {
       return 'Afternoon (12PM - 4PM)';
     }
-    if(cartAddedTime==CartAddedTime.evening){
+    if (cartAddedTime == CartAddedTime.evening) {
       return 'Evening (4PM - 8PM)';
     }
-      return 'Morning (8AM - 12PM)';
-
+    return 'Morning (8AM - 12PM)';
   }
 
   GlobalKey<FormState> formKeyEmailReminder = GlobalKey<FormState>();
@@ -1010,7 +1015,6 @@ class HealthCareViewModel extends BaseViewModel {
                                 color: AppColors.black,
                               ),
                             ),
-
                           ],
                         ),
                         SizedBox(height: 10.h),
@@ -1055,8 +1059,6 @@ class HealthCareViewModel extends BaseViewModel {
                                 color: AppColors.black,
                               ),
                             ),
-
-                            
                           ],
                         ),
                         SizedBox(height: 20.h),

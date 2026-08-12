@@ -13,8 +13,7 @@ import '../../../widget/text.dart';
 
 class SpecialistsProviderOrderScreen extends StatelessWidget {
   const SpecialistsProviderOrderScreen({super.key});
-  
-  
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HealthCareViewModel>.reactive(
@@ -912,8 +911,8 @@ class SpecialistsProviderOrderScreen extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       TextView(
-                                        text:"₦100,000",
-                                         textStyle: TextStyle(
+                                        text: "₦100,000",
+                                        textStyle: TextStyle(
                                           fontFamily: 'GoogleSans',
                                           fontSize: 24.sp,
                                           fontWeight: FontWeight.w700,

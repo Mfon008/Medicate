@@ -264,22 +264,27 @@ class PharmViewModel extends BaseViewModel {
 
   List<MedicationClass> medicationClassList = [];
   bool isCartItem = false;
-  List<String> myOrderListCategory = ['All','Confirmed','Packaging','In transit','Delivered'];
+  List<String> myOrderListCategory = [
+    'All',
+    'Confirmed',
+    'Packaging',
+    'In transit',
+    'Delivered',
+  ];
   String orderCategory = 'All';
   Price price = Price.all;
   Category category = Category.all;
   Delivery delivery = Delivery.instance;
   CartAddedTime cartTimeAdded = CartAddedTime.morning;
 
-  String returnCartAddedTime(CartAddedTime cartAddedTime){
-    if(cartAddedTime==CartAddedTime.afternoon){
+  String returnCartAddedTime(CartAddedTime cartAddedTime) {
+    if (cartAddedTime == CartAddedTime.afternoon) {
       return 'Afternoon (12PM - 4PM)';
     }
-    if(cartAddedTime==CartAddedTime.evening){
+    if (cartAddedTime == CartAddedTime.evening) {
       return 'Evening (4PM - 8PM)';
     }
-      return 'Morning (8AM - 12PM)';
-
+    return 'Morning (8AM - 12PM)';
   }
 
   List<dynamic> medTypeUpdateIcon = [];
@@ -3056,7 +3061,7 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-   Future<void> selectDateCheckout({
+  Future<void> selectDateCheckout({
     BuildContext? context,
     PharmViewModel? model,
   }) async {
@@ -19138,7 +19143,6 @@ class PharmViewModel extends BaseViewModel {
                                 color: AppColors.black,
                               ),
                             ),
-
                           ],
                         ),
                         SizedBox(height: 10.h),
@@ -19183,8 +19187,6 @@ class PharmViewModel extends BaseViewModel {
                                 color: AppColors.black,
                               ),
                             ),
-
-                            
                           ],
                         ),
                         SizedBox(height: 20.h),
@@ -19242,5 +19244,4 @@ class PharmViewModel extends BaseViewModel {
       },
     );
   }
-
 }

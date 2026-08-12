@@ -24,7 +24,8 @@ class ManufacturerResetPinScreen extends StatefulWidget {
       _ManufacturerResetPinScreenState();
 }
 
-class _ManufacturerResetPinScreenState extends State<ManufacturerResetPinScreen> {
+class _ManufacturerResetPinScreenState
+    extends State<ManufacturerResetPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isPhoneValid = false;

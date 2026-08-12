@@ -859,7 +859,10 @@ class PharmacyViewProductScreen extends StatelessWidget {
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 10.w),
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.primary,width: 1.42),
+                                border: Border.all(
+                                  color: AppColors.primary,
+                                  width: 1.42,
+                                ),
                                 borderRadius: BorderRadius.circular(40.r),
                               ),
                               child: Row(

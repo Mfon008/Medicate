@@ -334,7 +334,9 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                             SizedBox(height: 20.h),
                             Center(
                               child: GestureDetector(
-                                onTap: () => navigate.navigateTo(Routes.pharmacyWholesaleScreen),
+                                onTap: () => navigate.navigateTo(
+                                  Routes.pharmacyWholesaleScreen,
+                                ),
                                 child: Container(
                                   width: double.infinity,
                                   padding: EdgeInsets.symmetric(

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/core_folder/app/app.router.dart';
+import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/set_pin_entity_model.dart';
 import '../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../core/core_folder/app/app.locator.dart';
 import '../../widget/button.dart';
@@ -19,7 +22,8 @@ class ManufacturerSetupPinScreen extends StatefulWidget {
       _ManufacturerSetupPinScreenState();
 }
 
-class _ManufacturerSetupPinScreenState extends State<ManufacturerSetupPinScreen> {
+class _ManufacturerSetupPinScreenState
+    extends State<ManufacturerSetupPinScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isPhoneValid = false;
@@ -143,13 +147,14 @@ class _ManufacturerSetupPinScreenState extends State<ManufacturerSetupPinScreen>
                     buttonText: 'Continue',
                     color: AppColors.white,
                     buttonBorderColor: AppColors.transparent,
-                    // isLoading: model.isLoading,
+                    isLoading: model.isLoading,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        // model.setPin(
-                        //   context,
-                        //   setPinEntityModel: SetPinEntityModel(pin: pinInput),
-                        // );
+                        model.setPinManufacturer(
+                          context,
+                          setPinEntityModel: SetPinEntityModel(pin: pinInput),
+                        );
+                        model.notifyListeners();
                       }
                     },
                   ),
@@ -161,6 +166,7 @@ class _ManufacturerSetupPinScreenState extends State<ManufacturerSetupPinScreen>
                     color: AppColors.primary,
                     buttonBorderColor: AppColors.primary,
                     onPressed: () {
+                      navigate.navigateTo(Routes.overviewDashboard);
                       // if (SharedPreferencesService
                       //             .instance
                       //             .usersData['memberships'][0]['role'] ==

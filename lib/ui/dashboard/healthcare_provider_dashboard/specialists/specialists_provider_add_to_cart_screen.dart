@@ -15,7 +15,6 @@ import '../../../widget/text.dart';
 class SpecialistsProviderAddToCartScreen extends StatelessWidget {
   const SpecialistsProviderAddToCartScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
@@ -336,7 +335,9 @@ class SpecialistsProviderAddToCartScreen extends StatelessWidget {
                             SizedBox(height: 20.h),
                             Center(
                               child: GestureDetector(
-                                onTap: () => navigate.navigateTo(Routes.specialistsProviderWholeSaleCheckout),
+                                onTap: () => navigate.navigateTo(
+                                  Routes.specialistsProviderWholeSaleCheckout,
+                                ),
                                 child: Container(
                                   width: double.infinity,
                                   padding: EdgeInsets.symmetric(

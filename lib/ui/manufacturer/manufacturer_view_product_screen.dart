@@ -1,21 +1,20 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
-import '../../../widget/button.dart';
-import '../../../widget/text.dart';
+import '../widget/button.dart';
+import '../widget/text.dart';
 
-class SpecialistsProviderViewProductScreen extends StatelessWidget {
-  SpecialistsProviderViewProductScreen({super.key});
+class ManufacturerViewProductScreen extends StatelessWidget {
+  ManufacturerViewProductScreen({super.key});
   int currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
-    bool isTablet(BuildContext context) =>
-        MediaQuery.of(context).size.shortestSide >= 600;
+    // bool isTablet(BuildContext context) =>
+    //     MediaQuery.of(context).size.shortestSide >= 600;
     return Scaffold(
       backgroundColor: AppColors.dashboard,
       appBar: AppBar(
@@ -757,161 +756,23 @@ class SpecialistsProviderViewProductScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 10.h),
-                      Divider(color: AppColors.infoGrey1),
-                      SizedBox(height: 5.10.h),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextView(
-                            text: 'Quantity',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              fontSize: 19.80.sp,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.black,
-                            ),
-                          ),
-                          Spacer(),
-                          Container(
-                            height: 44.0.h,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7.92.r),
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 236, 237, 237),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.remove,
-                                    size: 14.0.sp,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                ),
-                                SizedBox(width: 20.w),
-                                TextView(
-                                  text: '2',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 14.80.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.reminder,
-                                  ),
-                                ),
-                                SizedBox(width: 20.w),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.add,
-                                    size: 14.0.sp,
-                                    color: AppColors.reminder,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
                       SizedBox(height: 20.h),
                       Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10.w,
-                          horizontal: 12.40.w,
-                        ),
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(vertical: 10.w),
                         decoration: BoxDecoration(
-                          color: AppColors.grey,
-                          border: Border.all(color: AppColors.infoGrey1),
-                          borderRadius: BorderRadius.circular(8.0.r),
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(40.r),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextView(
-                              text: 'Line total',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 14.90.sp,
-                                fontWeight: FontWeight.w300,
-                                color: AppColors.black,
-                              ),
-                            ),
-                            TextView(
-                              text: '₦18,500',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 22.40.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ],
+                        child: TextView(
+                          text: 'Make Update',
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 16.90.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20.h),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 10.w),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.primary,
-                                  width: 1.42,
-                                ),
-                                borderRadius: BorderRadius.circular(40.r),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    AppImage.cart,
-                                    height: isTablet(context) ? 38.40.h : 20.h,
-                                    width: isTablet(context) ? 38.40.w : 20.w,
-                                    color: AppColors.primary,
-                                  ),
-                                  SizedBox(width: 7.10.w),
-                                  TextView(
-                                    text: 'Add to Cart',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 16.90.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                          SizedBox(width: 12.w),
-
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(vertical: 10.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary,
-                                borderRadius: BorderRadius.circular(40.r),
-                              ),
-                              child: TextView(
-                                text: 'Buy Now',
-                                textStyle: TextStyle(
-                                  fontFamily: 'DMSans',
-                                  fontSize: 16.90.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                       SizedBox(height: 10.h),
                     ],

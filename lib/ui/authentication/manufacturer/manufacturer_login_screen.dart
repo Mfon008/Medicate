@@ -18,7 +18,8 @@ class ManufacturerLoginScreen extends StatefulWidget {
   const ManufacturerLoginScreen({super.key});
 
   @override
-  State<ManufacturerLoginScreen> createState() => _ManufacturerLoginScreenState();
+  State<ManufacturerLoginScreen> createState() =>
+      _ManufacturerLoginScreenState();
 }
 
 class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
@@ -55,7 +56,10 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
         disposeViewModel: false,
         builder: (_, ManufacturerViewModel model, _) {
           return SingleChildScrollView(
-            padding: EdgeInsetsGeometry.symmetric(vertical: 60.w, horizontal: 16.w),
+            padding: EdgeInsetsGeometry.symmetric(
+              vertical: 60.w,
+              horizontal: 16.w,
+            ),
             child: Form(
               key: formKey,
               child: Column(
@@ -96,7 +100,7 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                           color: AppColors.black,
                         ),
                       ),
-          
+
                       Positioned(
                         right: -12.10,
                         child: TextView(
@@ -152,7 +156,7 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                           margin: isPhoneValid
                               ? EdgeInsets.only(top: 20.w)
                               : EdgeInsets.zero, // Add margin if invalid
-          
+
                           child: TextFormWidget(
                             hint: null,
                             borderColor: AppColors.transparent,
@@ -179,7 +183,9 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                               setState(() {});
                             },
                             validator: (value) {
-                              final result = AppValidator.validatePhone()(value);
+                              final result = AppValidator.validatePhone()(
+                                value,
+                              );
                               if (result != null) {
                                 isPhoneValid = true;
                               } else {
@@ -194,7 +200,7 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                     ],
                   ),
                   SizedBox(height: 16.h),
-          
+
                   RichText(
                     text: TextSpan(
                       style: TextStyle(
@@ -241,7 +247,10 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: Divider(color: AppColors.buttonGrey1, thickness: 1),
+                        child: Divider(
+                          color: AppColors.buttonGrey1,
+                          thickness: 1,
+                        ),
                       ),
                       SizedBox(width: 20.w),
                       TextView(
@@ -255,7 +264,10 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                       ),
                       SizedBox(width: 20.w),
                       Expanded(
-                        child: Divider(color: AppColors.buttonGrey1, thickness: 1),
+                        child: Divider(
+                          color: AppColors.buttonGrey1,
+                          thickness: 1,
+                        ),
                       ),
                     ],
                   ),
@@ -313,8 +325,9 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
                               decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
-                            ..onTap = () =>
-                                navigate.navigateTo(Routes.manufacturerSignUpScreen),
+                              ..onTap = () => navigate.navigateTo(
+                                Routes.manufacturerSignUpScreen,
+                              ),
                           ),
                         ],
                       ),
@@ -325,7 +338,7 @@ class _ManufacturerLoginScreenState extends State<ManufacturerLoginScreen> {
               ),
             ),
           );
-        }
+        },
       ),
     );
   }

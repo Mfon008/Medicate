@@ -863,8 +863,17 @@ class ViewMedicationScreen extends StatelessWidget {
   Widget buttonMedication({context, AuthViewModel? model}) {
     if (model!.getReminderByIdModel!.data!.medication!.medicationStatus!
                 .toLowerCase() ==
-            'completed' || !model.getIfTimeIsBefore(model.getReminderByIdModel!.data!.medication!.dailyDoseTimes!.last.last.time)
-        ) {
+            'completed' ||
+        !model.getIfTimeIsBefore(
+          model
+              .getReminderByIdModel!
+              .data!
+              .medication!
+              .dailyDoseTimes!
+              .last
+              .last
+              .time,
+        )) {
       return ButtonWidget(
         border: 100.r,
         buttonColor: AppColors.primary,
@@ -910,10 +919,10 @@ class ViewMedicationScreen extends StatelessWidget {
         buttonBorderColor: AppColors.transparent,
         onPressed: () {
           model.showUpdateMedicationDialog(
-          context: context,
-          data: model.getReminderByIdModel!.data,
-          model: model,
-        );
+            context: context,
+            data: model.getReminderByIdModel!.data,
+            model: model,
+          );
           // model.reminderRetryPayment(
           //   context: context,
           //   reminderId: model.getReminderByIdModel!.data!.id,

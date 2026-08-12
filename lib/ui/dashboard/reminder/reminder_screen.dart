@@ -355,53 +355,53 @@ class _ReminderScreenState extends State<ReminderScreen> {
                               ),
 
                               SizedBox(width: 12.w),
-                               model
-                                      .getReminderResponseModel!=null?GestureDetector(
-                                onTap: () async {
-                                  model
-                                      .getReminderResponseModel!
-                                      .data!
-                                      .reminders!
-                                      .clear();
-                                  await Future.delayed(
-                                    Duration(milliseconds: 500),
-                                  );
-                                  model.isReminderStatus = 'pending_payment';
-                                  // call endpoint
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 10.w,
-                                    horizontal: 12.w,
-                                  ),
-                                  decoration:
-                                      model.isReminderStatus ==
-                                          'pending_payment'
-                                      ? BoxDecoration(
-                                          color: AppColors.primary.withOpacity(
-                                            .04,
+                              model.getReminderResponseModel != null
+                                  ? GestureDetector(
+                                      onTap: () async {
+                                        model
+                                            .getReminderResponseModel!
+                                            .data!
+                                            .reminders!
+                                            .clear();
+                                        await Future.delayed(
+                                          Duration(milliseconds: 500),
+                                        );
+                                        model.isReminderStatus =
+                                            'pending_payment';
+                                        // call endpoint
+                                        setState(() {});
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 10.w,
+                                          horizontal: 12.w,
+                                        ),
+                                        decoration:
+                                            model.isReminderStatus ==
+                                                'pending_payment'
+                                            ? BoxDecoration(
+                                                color: AppColors.primary
+                                                    .withOpacity(.04),
+                                                borderRadius:
+                                                    BorderRadius.circular(22.r),
+                                              )
+                                            : BoxDecoration(),
+                                        alignment: Alignment.center,
+                                        child: TextView(
+                                          text: 'Pending Payment',
+                                          textStyle: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                model.isReminderStatus ==
+                                                    'pending_payment'
+                                                ? AppColors.primary
+                                                : AppColors.grey1,
                                           ),
-                                          borderRadius: BorderRadius.circular(
-                                            22.r,
-                                          ),
-                                        )
-                                      : BoxDecoration(),
-                                  alignment: Alignment.center,
-                                  child: TextView(
-                                    text: 'Pending Payment',
-                                    textStyle: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color:
-                                          model.isReminderStatus ==
-                                              'pending_payment'
-                                          ? AppColors.primary
-                                          : AppColors.grey1,
-                                    ),
-                                  ),
-                                ),
-                              ):SizedBox.shrink(),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox.shrink(),
 
                               SizedBox(width: 12.w),
                               GestureDetector(
@@ -2306,23 +2306,28 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                           ?.toLowerCase() ==
                                       'ongoing'
                                   ? AppColors.yellow
-                                  : reminder.medication?.medicationStatus?.toLowerCase() ==
-                                  'completed'? AppColors.app_green :AppColors.infoGrey,
+                                  : reminder.medication?.medicationStatus
+                                            ?.toLowerCase() ==
+                                        'completed'
+                                  ? AppColors.app_green
+                                  : AppColors.infoGrey,
                               shape: BoxShape.circle,
                             ),
                           ),
                           SizedBox(width: 4.6.w),
-                          
+
                           TextView(
-                            text:reminder.medication?.medicationStatus
-                                    ?.capitalize() ?? '',
-                                    textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 12.80.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.reminder,
-                          letterSpacing: -0.6,
-                                    )
+                            text:
+                                reminder.medication?.medicationStatus
+                                    ?.capitalize() ??
+                                '',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 12.80.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.reminder,
+                              letterSpacing: -0.6,
+                            ),
                           ),
                         ],
                       ),
@@ -2803,7 +2808,15 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                       'completed' &&
                                   DateTime.now().isBefore(
                                     reminder.medication!.endDateTime!,
-                                  ) || model!.getIfTimeIsBefore(reminder.medication!.dailyDoseTimes!.last.last.time)
+                                  ) ||
+                              model!.getIfTimeIsBefore(
+                                reminder
+                                    .medication!
+                                    .dailyDoseTimes!
+                                    .last
+                                    .last
+                                    .time,
+                              )
                           ? GestureDetector(
                               onTap: () {
                                 model!.showUpdateReminderModalReminderPend(
@@ -2878,13 +2891,16 @@ class _ReminderScreenState extends State<ReminderScreen> {
                             ),
                           ),
                           SizedBox(width: 3.26.w),
-                          TextView(text: pendingDraft!,textStyle: TextStyle(
-                          fontFamily: 'Arial',
-                          fontSize: 13.42.sp,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.black,
-                          letterSpacing: -0.31,
-                        ),),
+                          TextView(
+                            text: pendingDraft!,
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 13.42.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.black,
+                              letterSpacing: -0.31,
+                            ),
+                          ),
                         ],
                       ),
                       Spacer(),

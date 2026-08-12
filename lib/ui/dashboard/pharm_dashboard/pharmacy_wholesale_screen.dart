@@ -19,8 +19,7 @@ class PharmacyWholesaleScreen extends StatefulWidget {
       _PharmacyWholesaleScreenState();
 }
 
-class _PharmacyWholesaleScreenState
-    extends State<PharmacyWholesaleScreen> {
+class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
   int currentPage = 0;
 
   @override
@@ -28,7 +27,7 @@ class _PharmacyWholesaleScreenState
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
     return ViewModelBuilder<PharmViewModel>.reactive(
-      viewModelBuilder: () =>PharmViewModel(),
+      viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
       onDispose: (viewModel) {},
@@ -227,7 +226,6 @@ class _PharmacyWholesaleScreenState
                               decoration: BoxDecoration(
                                 color: AppColors.appWhite,
                                 borderRadius: BorderRadius.circular(20.r),
-                                
                               ),
                               child: Row(
                                 mainAxisAlignment:

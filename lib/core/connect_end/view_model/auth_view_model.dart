@@ -21282,6 +21282,16 @@ class AuthViewModel extends BaseViewModel {
                 'HEALTHCARE_PRACTITIONER') {
           navigate.navigateTo(Routes.specialistsProviderDashboard);
         }
+        // manufacturer distributor
+        else if (_loginResponseModel!.data!.memberships![0]['role'] ==
+                    'OWNER' &&
+                _loginResponseModel!.data!.memberships![0]['tenantType'] ==
+                    'DISTRIBUTOR' ||
+            _loginResponseModel!.data!.memberships![0]['tenantType'] ==
+                'DISTRIBUTOR') {
+          navigate.navigateTo(Routes.overviewDashboard);
+        }
+
         if (session.isNewLogin) {
           sendDeviceToken(
             token: globalfCMToken,

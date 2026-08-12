@@ -1,5 +1,3 @@
-
-
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
@@ -24,13 +22,17 @@ class _CustomSwitchState extends State<CustomSwitch>
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 60));
-    _circleAnimation = AlignmentTween(
-            begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
-            end: widget.value ? Alignment.centerLeft : Alignment.centerRight)
-        .animate(CurvedAnimation(
-            parent: _animationController!, curve: Curves.linear));
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 60),
+    );
+    _circleAnimation =
+        AlignmentTween(
+          begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+          end: widget.value ? Alignment.centerLeft : Alignment.centerRight,
+        ).animate(
+          CurvedAnimation(parent: _animationController!, curve: Curves.linear),
+        );
   }
 
   @override
@@ -60,15 +62,26 @@ class _CustomSwitchState extends State<CustomSwitch>
             ),
             child: Padding(
               padding: EdgeInsets.only(
-                  top: 2.0.w, bottom: 2.0.w, right: 2.0.w, left: 2.0.w),
+                top: 2.0.w,
+                bottom: 2.0.w,
+                right: 2.0.w,
+                left: 2.0.w,
+              ),
               child: Container(
-                alignment:
-                    widget.value ? ((Directionality.of(context) == TextDirection.rtl) ? Alignment.centerLeft : Alignment.centerRight ) : ((Directionality.of(context) == TextDirection.rtl) ? Alignment.centerRight : Alignment.centerLeft),
+                alignment: widget.value
+                    ? ((Directionality.of(context) == TextDirection.rtl)
+                          ? Alignment.centerLeft
+                          : Alignment.centerRight)
+                    : ((Directionality.of(context) == TextDirection.rtl)
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft),
                 child: Container(
                   width: 20.0,
                   height: 20.0,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: AppColors.white),
+                    shape: BoxShape.circle,
+                    color: AppColors.white,
+                  ),
                 ),
               ),
             ),

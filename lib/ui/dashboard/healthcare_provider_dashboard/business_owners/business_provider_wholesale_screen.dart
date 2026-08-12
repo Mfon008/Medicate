@@ -227,7 +227,6 @@ class _BusinessProviderWholesaleScreenState
                               decoration: BoxDecoration(
                                 color: AppColors.appWhite,
                                 borderRadius: BorderRadius.circular(20.r),
-                                
                               ),
                               child: Row(
                                 mainAxisAlignment:

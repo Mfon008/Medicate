@@ -16,6 +16,7 @@ class UrlConfig {
   static const String sign_up = 'auth/register-user';
   static const String sign_up_hmo = 'auth/register-hmo';
   static const String sign_up_pharmacy = 'auth/register-pharmacy';
+  static const String sign_up_manufacturer = 'auth/register-distributor';
   static const String sign_up_practitioner =
       'auth/register-healthcare-practitioner';
   static const String sign_up_business_owner =

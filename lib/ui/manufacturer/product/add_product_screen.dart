@@ -23,6 +23,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
   List<TextEditingController> ppuController = [TextEditingController()];
 
   bool isSwitched = false;
+  List<String> categoryList = [
+    'All',
+    'Prescription',
+    'Over the Counter',
+    'Vitamins & Supplements',
+    'First Aid',
+    'Personal Care',
+    'Medical Devices',
+  ];
+  String c = 'All';
 
   @override
   Widget build(BuildContext context) {
@@ -141,40 +151,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 fillColor: AppColors.dashboard,
                 isFilled: true,
                 readOnly: true,
-                controller: TextEditingController(),
+                controller: TextEditingController(text: c == 'All' ? '' : c),
                 validator: AppValidator.validateString(),
                 onChange: (p0) {},
-
-                suffixWidget: Padding(
-                  padding: EdgeInsets.all(12.w),
-                  child: GestureDetector(
-                    onTap: () {
-                      // showModalBottomSheet(
-                      //   context: context,
-                      //   backgroundColor: AppColors.white,
-                      //   builder: (ctx) => StatefulBuilder(
-                      //     builder: (ctx, setMenuState) {
-                      //       return Container(
-                      //         width: double.infinity,
-                      //         margin: EdgeInsets.all(16.w),
-                      //         padding: EdgeInsets.all(10.w),
-                      //         decoration: BoxDecoration(
-                      //           color: AppColors.white,
-                      //           borderRadius: BorderRadius.circular(
-                      //             12,
-                      //           ),
-                      //         ),
-                      //         child: planTypeList(
-                      //           ctx,
-                      //           setMenuState,
-                      //           model,
-                      //         ),
-                      //       );
-                      //     },
-                      //   ),
-                      // );
-                    },
-                    child: SvgPicture.asset(AppImage.arrow_down),
+                suffixWidget: Theme(
+                  data: Theme.of(context).copyWith(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(12.w),
+                    child: GestureDetector(
+                      onTap: () => _showCategoryMenu(context),
+                      child: SvgPicture.asset(AppImage.arrow_down),
+                    ),
                   ),
                 ),
               ),
@@ -408,7 +399,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     Padding(
                       padding: EdgeInsets.only(right: 13.0.w),
                       child: TextFormWidget(
-                        // hint: 'Stock',
                         label: 'e.g. 04-9214, 01-9981..',
                         borderColor: AppColors.transparent,
                         borderTopLeft: 22.r,
@@ -909,6 +899,127 @@ class _AddProductScreenState extends State<AddProductScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showCategoryMenu(BuildContext context) async {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final Offset position = button.localToGlobal(
+      Offset.zero,
+      ancestor: overlay,
+    );
+
+    final double buttonRight = position.dx + button.size.width;
+
+    final RelativeRect menuPosition = RelativeRect.fromLTRB(
+      buttonRight - 250.w, // popup width
+      position.dy + button.size.height,
+      overlay.size.width - buttonRight,
+      0,
+    );
+
+    String? selectedCategory = c;
+
+    await showMenu(
+      context: context,
+      position: menuPosition,
+      color: AppColors.white,
+      elevation: 0,
+      items: [
+        PopupMenuItem(
+          enabled: false,
+          padding: EdgeInsets.zero,
+          child: StatefulBuilder(
+            builder: (context, menuSetState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.w,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextView(
+                        text: 'Category',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  ...categoryList.map((e) {
+                     final bool isSelected = selectedCategory == e;
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        // Update the main screen immediately
+                        setState(() {
+                          c = e;
+                        });
+
+                        // Rebuild the popup itself
+                        menuSetState(() {
+                          selectedCategory = e;
+                        });
+
+                        // Keep popup open so user can see the selection
+                        await Future.delayed(const Duration(milliseconds: 300));
+
+                        // Close popup
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.w,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.skyBlue
+                              : AppColors.transparent,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.cool_blue
+                                : AppColors.transparent,
+                          ),
+                        ),
+                        child: TextView(
+                          text: e,
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.reminder,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -910,8 +910,8 @@ class PharmacyOrderScreen extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       TextView(
-                                        text:"₦100,000",
-                                         textStyle: TextStyle(
+                                        text: "₦100,000",
+                                        textStyle: TextStyle(
                                           fontFamily: 'GoogleSans',
                                           fontSize: 24.sp,
                                           fontWeight: FontWeight.w700,

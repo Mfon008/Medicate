@@ -20,13 +20,13 @@ class OverviewDashboard extends StatefulWidget {
 }
 
 class _OverviewDashboardState extends State<OverviewDashboard> {
-   int _currentIndex = 0;
+  int _currentIndex = 0;
 
   final List<Widget> _body = [
     OverviewScreen(),
     ProductScreen(),
     OrderManagementScreen(),
-    Container()
+    Container(),
   ];
 
   Future<bool> willPopControl() async {
@@ -187,8 +187,8 @@ class _OverviewDashboardState extends State<OverviewDashboard> {
                           height: 24.0.h,
                           width: 16.20.w,
                           color: _currentIndex == 3
-                            ? AppColors.primary
-                            : AppColors.fineGrey,
+                              ? AppColors.primary
+                              : AppColors.fineGrey,
                         ),
                       ),
 
@@ -204,5 +204,4 @@ class _OverviewDashboardState extends State<OverviewDashboard> {
       ),
     );
   }
-
 }

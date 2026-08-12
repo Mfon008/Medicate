@@ -22,7 +22,6 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   final ScrollController _scrollController = ScrollController();
 
-
   @override
   void initState() {
     super.initState();

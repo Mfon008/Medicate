@@ -18,6 +18,7 @@ class AppImage {
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';
+  static const String pen = 'assets/svgs/pen.svg';
   static const String validate = 'assets/svgs/validate.svg';
   static const String stack_pack = 'assets/svgs/stack_pack.svg';
   static const String two_fa_ui = 'assets/svgs/2fa_ui.svg';
@@ -166,7 +167,7 @@ class AppImage {
   static const String arrow_forward = 'assets/svgs/arrow_forward.svg';
   static const String everyDayUSer = 'assets/images/everyday_user.png';
   static const String health_pro = 'assets/images/health_pro.png';
-  static const String manufacturer= 'assets/images/manufacturer.png';
+  static const String manufacturer = 'assets/images/manufacturer.png';
   static const String hmo = 'assets/images/hmo.png';
   static const String mc = 'assets/images/m&c.png';
   static const String pharmacist = 'assets/images/pharmacist.png';
