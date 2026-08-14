@@ -13,7 +13,6 @@ import 'core/core_folder/manager/shared_preference.dart';
 import 'core/firebase_notification/notification_service.dart';
 
 final navigate = locator<NavigationService>();
-var globalfCMToken;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

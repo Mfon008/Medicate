@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
-import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
+import '../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../../main.dart';
 import '../../widget/text.dart';
@@ -36,12 +36,12 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
   Widget build(BuildContext context) {
     bool isTablet(BuildContext context) =>
         MediaQuery.of(context).size.shortestSide >= 600;
-    return ViewModelBuilder<PharmViewModel>.reactive(
-      viewModelBuilder: () => PharmViewModel(),
+    return ViewModelBuilder<ManufacturerViewModel>.reactive(
+      viewModelBuilder: () => ManufacturerViewModel(),
       onViewModelReady: (model) {},
       disposeViewModel: false,
       onDispose: (viewModel) {},
-      builder: (_, PharmViewModel model, _) {
+      builder: (_, ManufacturerViewModel model, _) {
         return Scaffold(
           backgroundColor: AppColors.dashboard,
           appBar: AppBar(
@@ -485,22 +485,23 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
   }
 
   void _showStatusListMenu(BuildContext context) async {
-    final RenderBox button = context.findRenderObject() as RenderBox;
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
 
-    final Offset position = button.localToGlobal(
-      Offset.zero,
-      ancestor: overlay,
-    );
+    final double popupWidth = 250.w;
+    final double rightMargin = 10.w;
 
-    final double buttonRight = position.dx + button.size.width;
+    // Approximate height of the popup
+    final double popupHeight = 300.h;
+
+    // Vertically center the popup
+    final double top = (overlay.size.height - popupHeight) / 2;
 
     final RelativeRect menuPosition = RelativeRect.fromLTRB(
-      buttonRight - 250.w,
-      position.dy + button.size.height,
-      overlay.size.width - buttonRight,
-      0,
+      overlay.size.width - popupWidth - rightMargin,
+      top,
+      rightMargin,
+      top,
     );
 
     // Keep the currently selected value
@@ -510,7 +511,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
       context: context,
       position: menuPosition,
       color: AppColors.white,
-      elevation: 0,
+      elevation: .8,
 
       items: [
         PopupMenuItem(

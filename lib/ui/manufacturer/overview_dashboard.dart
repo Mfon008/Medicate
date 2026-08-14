@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: must_be_immutable, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +13,8 @@ import 'order_management/order_management_screen.dart';
 import 'product/product_screen.dart';
 
 class OverviewDashboard extends StatefulWidget {
-  const OverviewDashboard({super.key});
+   OverviewDashboard({super.key, this.index});
+  int? index;
 
   @override
   State<OverviewDashboard> createState() => _OverviewDashboardState();
@@ -82,11 +83,11 @@ class _OverviewDashboardState extends State<OverviewDashboard> {
     });
   }
 
-  // @override
-  // void initState() {
-  //   _currentIndex = widget.index ?? 0;
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    _currentIndex = widget.index ?? 0;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

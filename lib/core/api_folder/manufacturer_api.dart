@@ -1,6 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
 
+import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
@@ -10,6 +14,7 @@ import '../connect_end/model/reset_password_entity_model.dart';
 import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../connect_end/model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
@@ -41,7 +46,9 @@ class ManufacturerApi {
     }
   }
 
-  Future<SignUpPhamaryResponseModel> signUp(ManufacturerSignupEntityModel signUpEntity) async {
+  Future<SignUpPhamaryResponseModel> signUp(
+    ManufacturerSignupEntityModel signUpEntity,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.sign_up_manufacturer,
@@ -221,6 +228,111 @@ class ManufacturerApi {
         UrlConfig.verify_change_phone_otp,
         RequestMethod.post,
         data: verifyPhoneEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<DistributorWholesaleCategoryModel> wholesaleCategories({
+    String? page,
+    String? search,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_categories,
+        RequestMethod.getParams,
+        queryParams: {'page': page, 'limit': 20, 'search': search},
+      );
+      logger.d(response.data);
+      return DistributorWholesaleCategoryModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<NafdacRegistrationNumberResponseModel> nafdacRegNo(
+    NafdacRegistrationNumberEntityModel nafdacRegNoync,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_nafdac_verify,
+        RequestMethod.post,
+        data: nafdacRegNoync.toJson(),
+      );
+      logger.d(response.data);
+      return NafdacRegistrationNumberResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<UploadProductImageResponseModel> uploadProductimage(MultipartFile file) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_products_images,
+        RequestMethod.upload,
+        formData: FormData.fromMap({'image': file}),
+      );
+      logger.d(response.data);
+      return UploadProductImageResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> createProduct(CreateDistributorProductEntityModel createproduct) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_products,
+        RequestMethod.post,
+        data:createproduct.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  
+  Future<dynamic> publishProduct(String productId) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_products}/$productId/publish',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<dynamic> unPublishProduct(String productId) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_products}/$productId/unpublish',
+        RequestMethod.patch
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<dynamic> deleteProduct(String productId) async {
+    try {
+      final response = await _service.call(
+       '${UrlConfig.wholesale_products}/$productId',
+        RequestMethod.delete,
       );
       logger.d(response.data);
       return response.data;

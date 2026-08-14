@@ -15,6 +15,7 @@ class AppImage {
   static const String manu_order = 'assets/svgs/manu_order.svg';
   static const String earth = 'assets/svgs/earth.svg';
   static const String not_sym = 'assets/svgs/not_symbol.svg';
+  static const String remove_product = 'assets/svgs/remove_product.svg';
   static const String pending_meds = 'assets/svgs/pending_meds.svg';
   static const String padlock = 'assets/svgs/padlock.svg';
   static const String fa = 'assets/svgs/2fa.svg';

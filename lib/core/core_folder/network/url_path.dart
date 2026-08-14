@@ -92,4 +92,8 @@ class UrlConfig {
   static const String get_unread_notification =
       'notifications/in-app/unread-count';
   static const String read_notification = 'notifications/in-app';
+  static const String wholesale_categories = 'wholesale/categories';
+  static const String wholesale_nafdac_verify = 'wholesale/nafdac/verify';
+  static const String wholesale_products_images = 'wholesale/products/images';
+  static const String wholesale_products = 'wholesale/products';
 }

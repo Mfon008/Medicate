@@ -2365,7 +2365,8 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const OverviewDashboardArguments(),
       );
       return _i145.MaterialPageRoute<dynamic>(
-        builder: (context) => _i123.OverviewDashboard(key: args.key),
+        builder: (context) =>
+            _i123.OverviewDashboard(key: args.key, index: args.index),
         settings: data,
       );
     },
@@ -5560,24 +5561,26 @@ class BusinessProviderWholesaleScreenArguments {
 }
 
 class OverviewDashboardArguments {
-  const OverviewDashboardArguments({this.key});
+  const OverviewDashboardArguments({this.key, this.index});
 
   final _i145.Key? key;
 
+  final int? index;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "index": "$index"}';
   }
 
   @override
   bool operator ==(covariant OverviewDashboardArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.index == index;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ index.hashCode;
   }
 }
 
@@ -8396,6 +8399,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> navigateToOverviewDashboard({
     _i145.Key? key,
+    int? index,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8404,7 +8408,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.overviewDashboard,
-      arguments: OverviewDashboardArguments(key: key),
+      arguments: OverviewDashboardArguments(key: key, index: index),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -11136,6 +11140,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> replaceWithOverviewDashboard({
     _i145.Key? key,
+    int? index,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11144,7 +11149,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.overviewDashboard,
-      arguments: OverviewDashboardArguments(key: key),
+      arguments: OverviewDashboardArguments(key: key, index: index),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

@@ -308,9 +308,8 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
                                     setState(() {});
                                   },
                                   validator: (value) {
-                                    final result = AppValidator.validatePhoneNew()(
-                                      value,
-                                    );
+                                    final result =
+                                        AppValidator.validatePhoneNew()(value);
                                     if (result != null) {
                                       isPhoneValid = true;
                                     } else {

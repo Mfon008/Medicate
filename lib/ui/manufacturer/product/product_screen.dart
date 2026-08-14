@@ -746,7 +746,10 @@ class _ProductScreenState extends State<ProductScreen> {
               SizedBox(height: 20.h),
               GestureDetector(
                 onTap: () {
-                  bulkUploadShowDialog(context:context,model: ManufacturerViewModel());
+                  bulkUploadShowDialog(
+                    context: context,
+                    model: ManufacturerViewModel(),
+                  );
                   // Navigator.pop(context);
                 },
                 child: Container(
@@ -959,7 +962,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SvgPicture.asset(
                                           AppImage.upload_doc,
@@ -968,7 +972,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                         ),
                                         SizedBox(height: 10.h),
                                         TextView(
-                                          text: 'Click to upload or drag and drop CSV file',
+                                          text:
+                                              'Click to upload or drag and drop CSV file',
                                           textAlign: TextAlign.center,
                                           textStyle: TextStyle(
                                             fontFamily: 'DMSans',
@@ -981,9 +986,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                         SizedBox(
                                           width: 220.w,
                                           child: TextView(
-                                            text:
-                                                'Support format: CSV',
-                                             textAlign: TextAlign.center,
+                                            text: 'Support format: CSV',
+                                            textAlign: TextAlign.center,
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
                                               fontSize: 13.6.sp,
@@ -1044,7 +1048,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           ),
                                   ),
                                 ),
-                                SizedBox(width: 20.w,),
+                                SizedBox(width: 20.w),
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {},

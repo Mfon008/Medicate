@@ -65,7 +65,7 @@ class OverviewScreen extends StatelessWidget {
                         width: isTablet(context) ? 40.w : 20.w,
                         color: AppColors.primary,
                       ),
-                      onPressed: (){},
+                      onPressed: () {},
                       // onPressed: () =>
                       //     navigate.navigateTo(Routes.notificationScreen),
                       splashRadius: 28,

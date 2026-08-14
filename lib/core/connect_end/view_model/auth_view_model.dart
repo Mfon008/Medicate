@@ -696,9 +696,7 @@ class AuthViewModel extends BaseViewModel {
   List<dynamic> items = [];
 
   bool getIfTimeIsBefore(time) {
-    print('timetime::$time');
     final now = DateTime.now();
-
     final parts = time.split(':');
     final scheduledTime = DateTime(
       now.year,
@@ -707,7 +705,6 @@ class AuthViewModel extends BaseViewModel {
       int.parse(parts[0]),
       int.parse(parts[1]),
     );
-    print('ooooooo::$scheduledTime');
     if (scheduledTime.isAfter(now)) {
       return true;
     } else if (scheduledTime.isBefore(now)) {
@@ -21294,11 +21291,9 @@ class AuthViewModel extends BaseViewModel {
         }
 
         if (session.isNewLogin) {
-           // ignore: unused_local_variable
-           GlobalFCToken? _token;
+          GlobalFCToken token = GlobalFCToken();
           sendDeviceToken(
-            token: globalfCMToken,
-            // token: _token.globalfCMTokenValue,
+            token: token.globalfCMTokenValue!,
             deviceType: Platform.isAndroid ? 'ANDROID' : 'IOS',
           );
         }
