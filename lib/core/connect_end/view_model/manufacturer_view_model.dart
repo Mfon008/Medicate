@@ -1656,8 +1656,12 @@ class ManufacturerViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
+      if(v['statusCode']==200 || v['statusCode']==201){
 
-      AppUtils.snackbar(context, message: v['message']);
+      await AppUtils.snackbar(context, message: v['message']);
+      navigate.clearStackAndShow(Routes.overviewDashboard,arguments: OverviewDashboardArguments(index: 1));
+      }
+
     } catch (e) {
       _isLoading = false;
       logger.d(e);

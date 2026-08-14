@@ -12,6 +12,8 @@ import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/image.dart';
 import '../../../core/config/colors.dart';
+import '../../../core/connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
+import '../../../core/connect_end/model/create_distributor_product_entity_model/volume_pricing.dart';
 import '../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
@@ -26,6 +28,7 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   List<TextEditingController> vPriceController = [TextEditingController()];
+  List<VolumePricing> volumnPricelist = [];
 
   List<TextEditingController> ppuController = [TextEditingController()];
   GlobalKey<FormState> formKeyAddProduct = GlobalKey<FormState>();
@@ -246,6 +249,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       isFilled: true,
                       controller: packSize,
                       validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.number,
                       onChange: (p0) {},
                     ),
                     SizedBox(height: 20.h),
@@ -302,6 +306,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       isFilled: true,
                       controller: moq,
                       validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.number,
                       onChange: (p0) {},
                     ),
                     SizedBox(height: 20.h),
@@ -330,6 +335,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       isFilled: true,
                       controller: priceUnit,
                       validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.number,
                       onChange: (p0) {},
                     ),
                     SizedBox(height: 20.h),
@@ -358,6 +364,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       isFilled: true,
                       controller: stock,
                       validator: AppValidator.validateString(),
+                      keyboardType: TextInputType.number,
                       onChange: (p0) {},
                     ),
                     SizedBox(height: 30.h),
@@ -1112,7 +1119,30 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     SizedBox(height: 30.h),
                     GestureDetector(
                       onTap: () {
-                        if (formKeyAddProduct.currentState!.validate()) {}
+                        if (formKeyAddProduct.currentState!.validate()) {
+                          for(int i = 0; i< vPriceController.length;i++){
+                            volumnPricelist.add(VolumePricing(quantity: int.parse(vPriceController[i].text),pricePerUnit: int.parse(ppuController[i].text)));
+                          }
+                          model.createProduct(context,createproduct: CreateDistributorProductEntityModel(
+                            productName: productName.text.trim(),
+                            description: description.text.trim(),
+                            category: model.c!.id,
+                            sku: sku.text.trim(),
+                            packSize:int.parse(packSize.text.trim()),
+                            unit: unit.text.trim(),
+                            minimumOrderQuantity: int.parse(moq.text.trim()),
+                            pricePerUnit: int.parse(priceUnit.text.trim()),
+                            stock: int.parse(stock.text.trim()),
+                            batchNumber: batchNo.text.trim(),
+                            serialNumber: serialNo.text.trim(),
+                            manufacturedDate: model.manufacturerDateController.text,
+                            expiryDate: model.expiryDateController.text,
+                            nafdacRegistrationNumber: model.nafdacRegNoController.text,
+                            images: model.imagesProductList,
+                            volumePricing: volumnPricelist
+
+                          ));
+                        }
                       },
                       child: Container(
                         width: double.infinity,
