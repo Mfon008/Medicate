@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/get_single_product_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
@@ -272,7 +274,9 @@ class ManufacturerApi {
     }
   }
 
-  Future<UploadProductImageResponseModel> uploadProductimage(MultipartFile file) async {
+  Future<UploadProductImageResponseModel> uploadProductimage(
+    MultipartFile file,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_products_images,
@@ -287,12 +291,14 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> createProduct(CreateDistributorProductEntityModel createproduct) async {
+  Future<dynamic> createProduct(
+    CreateDistributorProductEntityModel createproduct,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_products,
         RequestMethod.post,
-        data:createproduct.toJson(),
+        data: createproduct.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -301,7 +307,7 @@ class ManufacturerApi {
       rethrow;
     }
   }
-  
+
   Future<dynamic> publishProduct(String productId) async {
     try {
       final response = await _service.call(
@@ -315,11 +321,12 @@ class ManufacturerApi {
       rethrow;
     }
   }
+
   Future<dynamic> unPublishProduct(String productId) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_products}/$productId/unpublish',
-        RequestMethod.patch
+        RequestMethod.patch,
       );
       logger.d(response.data);
       return response.data;
@@ -328,14 +335,57 @@ class ManufacturerApi {
       rethrow;
     }
   }
+
   Future<dynamic> deleteProduct(String productId) async {
     try {
       final response = await _service.call(
-       '${UrlConfig.wholesale_products}/$productId',
+        '${UrlConfig.wholesale_products}/$productId',
         RequestMethod.delete,
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetAllProductListResponseModel> getProductList({
+    String? page,
+    String? search,
+    String? categoryId,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_products,
+        RequestMethod.getParams,
+        queryParams: categoryId != null
+            ? {
+                'page': page,
+                'limit': 10,
+                'search': search,
+                'categoryId': categoryId,
+              }
+            : {'page': page, 'limit': 10,'search':search},
+      );
+      logger.d(response.data);
+      return GetAllProductListResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetSingleProductResponseModel> getSingleProductById({
+    String? productId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_products}/$productId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetSingleProductResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

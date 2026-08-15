@@ -8,6 +8,8 @@ import '../contrast/manufacturer_impl.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
 import '../model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
@@ -140,25 +142,52 @@ class ManufacturerRepoImpl {
     return response;
   }
 
-  Future<dynamic> createProduct(CreateDistributorProductEntityModel createproduct) async {
+  Future<dynamic> createProduct(
+    CreateDistributorProductEntityModel createproduct,
+  ) async {
     final response = await _contract.createProduct(createproduct);
     return response;
   }
+
   Future<dynamic> publishProduct(String productId) async {
     final response = await _contract.publishProduct(productId);
     return response;
   }
+
   Future<dynamic> unPublishProduct(String productId) async {
     final response = await _contract.unPublishProduct(productId);
     return response;
   }
+
   Future<dynamic> deleteProduct(String productId) async {
     final response = await _contract.deleteProduct(productId);
     return response;
   }
 
-  Future<UploadProductImageResponseModel> uploadProductimage(MultipartFile file) async {
+  Future<UploadProductImageResponseModel> uploadProductimage(
+    MultipartFile file,
+  ) async {
     final response = await _contract.uploadProductimage(file);
+    return response;
+  }
+
+  Future<GetAllProductListResponseModel> getProductList({
+    String? page,
+    String? search,
+    String? categoryId,
+  }) async {
+    final response = await _contract.getProductList(
+      page: page,
+      search: search,
+      categoryId: categoryId,
+    );
+    return response;
+  }
+
+  Future<GetSingleProductResponseModel> getSingleProductById({
+    String? productId,
+  }) async {
+    final response = await _contract.getSingleProductById(productId: productId);
     return response;
   }
 

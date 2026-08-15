@@ -593,7 +593,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       fillColor: AppColors.dashboard,
                       isFilled: true,
-                      controller: TextEditingController(),
+                      controller: batchNo,
                       validator: AppValidator.validateString(),
                       onChange: (p0) {},
                     ),
@@ -621,7 +621,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       fillColor: AppColors.dashboard,
                       isFilled: true,
-                      controller: TextEditingController(),
+                      controller: serialNo,
                       validator: AppValidator.validateString(),
                       onChange: (p0) {},
                     ),
@@ -1120,28 +1120,38 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     GestureDetector(
                       onTap: () {
                         if (formKeyAddProduct.currentState!.validate()) {
-                          for(int i = 0; i< vPriceController.length;i++){
-                            volumnPricelist.add(VolumePricing(quantity: int.parse(vPriceController[i].text),pricePerUnit: int.parse(ppuController[i].text)));
+                          volumnPricelist.clear();
+                          for (int i = 0; i < vPriceController.length; i++) {
+                            volumnPricelist.add(
+                              VolumePricing(
+                                quantity: int.parse(vPriceController[i].text),
+                                pricePerUnit: int.parse(ppuController[i].text),
+                              ),
+                            );
                           }
-                          model.createProduct(context,createproduct: CreateDistributorProductEntityModel(
-                            productName: productName.text.trim(),
-                            description: description.text.trim(),
-                            category: model.c!.id,
-                            sku: sku.text.trim(),
-                            packSize:int.parse(packSize.text.trim()),
-                            unit: unit.text.trim(),
-                            minimumOrderQuantity: int.parse(moq.text.trim()),
-                            pricePerUnit: int.parse(priceUnit.text.trim()),
-                            stock: int.parse(stock.text.trim()),
-                            batchNumber: batchNo.text.trim(),
-                            serialNumber: serialNo.text.trim(),
-                            manufacturedDate: model.manufacturerDateController.text,
-                            expiryDate: model.expiryDateController.text,
-                            nafdacRegistrationNumber: model.nafdacRegNoController.text,
-                            images: model.imagesProductList,
-                            volumePricing: volumnPricelist
-
-                          ));
+                          model.createProduct(
+                            context,
+                            createproduct: CreateDistributorProductEntityModel(
+                              productName: productName.text.trim(),
+                              description: description.text.trim(),
+                              categoryId: model.c!.id,
+                              sku: sku.text.trim(),
+                              packSize: int.parse(packSize.text.trim()),
+                              unit: unit.text.trim(),
+                              minimumOrderQuantity: int.parse(moq.text.trim()),
+                              pricePerUnit: int.parse(priceUnit.text.trim()),
+                              stock: int.parse(stock.text.trim()),
+                              batchNumber: batchNo.text.trim(),
+                              serialNumber: serialNo.text.trim(),
+                              manufacturedDate:
+                                  model.manufacturerDateController.text,
+                              expiryDate: model.expiryDateController.text,
+                              nafdacRegistrationNumber:
+                                  model.nafdacRegNoController.text,
+                              images: model.imagesProductList,
+                              volumePricing: volumnPricelist,
+                            ),
+                          );
                         }
                       },
                       child: Container(

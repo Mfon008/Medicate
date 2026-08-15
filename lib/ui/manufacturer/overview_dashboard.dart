@@ -13,7 +13,7 @@ import 'order_management/order_management_screen.dart';
 import 'product/product_screen.dart';
 
 class OverviewDashboard extends StatefulWidget {
-   OverviewDashboard({super.key, this.index});
+  OverviewDashboard({super.key, this.index});
   int? index;
 
   @override

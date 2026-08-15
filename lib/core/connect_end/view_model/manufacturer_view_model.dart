@@ -1,7 +1,6 @@
 // ignore_for_file: strict_top_level_inference, public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,6 @@ import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_mod
 import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
-
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
 import '../../app_assets/app_utils.dart';
@@ -29,6 +27,8 @@ import '../../core_folder/app/app.router.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/category.dart';
+import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -112,6 +112,10 @@ class ManufacturerViewModel extends BaseViewModel {
 
   TextEditingController manufacturerDateController = TextEditingController(text: '');
   TextEditingController expiryDateController = TextEditingController(text: '');
+  GetAllProductListResponseModel? _getAllProductListResponseModel;
+  GetAllProductListResponseModel? get getAllProductListResponseModel => _getAllProductListResponseModel;
+  GetSingleProductResponseModel? _getSingleProductResponseModel;
+  GetSingleProductResponseModel? get getSingleProductResponseModel=> _getSingleProductResponseModel;
 
   final _pickImage = ImagePickerHandler();
   File? image;
@@ -1656,12 +1660,51 @@ class ManufacturerViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      if(v['statusCode']==200 || v['statusCode']==201){
+      if(v['statusCode']==200){
 
       await AppUtils.snackbar(context, message: v['message']);
       navigate.clearStackAndShow(Routes.overviewDashboard,arguments: OverviewDashboardArguments(index: 1));
       }
 
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void getAllProduct(
+    context, {
+    String? categoryId,
+    String? search,
+  }) async {
+    try {
+      _isLoading = true;
+      _getAllProductListResponseModel= await runBusyFuture(
+        repositoryImply.getProductList(page: page.toString(),search: search,categoryId: categoryId),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void getSingleProduct(
+    context, {
+    String? productId,
+  }) async {
+    try {
+      _isLoading = true;
+      _getSingleProductResponseModel= await runBusyFuture(
+        repositoryImply.getSingleProductById(productId: productId),
+        throwException: true,
+      );
+      _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);

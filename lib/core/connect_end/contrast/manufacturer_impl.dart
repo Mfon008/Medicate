@@ -6,6 +6,8 @@ import '../../core_folder/app/app.locator.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
 import '../model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
@@ -90,9 +92,17 @@ class ManufacturerContractImpl {
     CreateDistributorProductEntityModel createproduct,
   ) async => await _api.createProduct(createproduct);
 
-  Future<dynamic> publishProduct(String productId) async => await _api.publishProduct(productId);
+  Future<dynamic> publishProduct(String productId) async =>
+      await _api.publishProduct(productId);
 
-  Future<dynamic> unPublishProduct(String productId) async => await _api.unPublishProduct(productId);
+  Future<dynamic> unPublishProduct(String productId) async =>
+      await _api.unPublishProduct(productId);
 
-  Future<dynamic> deleteProduct(String productId) async => await _api.deleteProduct(productId);
+  Future<dynamic> deleteProduct(String productId) async =>
+      await _api.deleteProduct(productId);
+  Future<GetAllProductListResponseModel> getProductList({String? page,String? search,String? categoryId}) async  =>
+      await _api.getProductList(page: page,search: search,categoryId: categoryId);
+  Future<GetSingleProductResponseModel> getSingleProductById({String? productId}) async   =>
+      await _api.getSingleProductById(productId: productId);
+  
 }
