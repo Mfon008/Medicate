@@ -2411,7 +2411,11 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const AddProductScreenArguments(),
       );
       return _i145.MaterialPageRoute<dynamic>(
-        builder: (context) => _i128.AddProductScreen(key: args.key),
+        builder: (context) => _i128.AddProductScreen(
+          key: args.key,
+          isEdit: args.isEdit,
+          productId: args.productId,
+        ),
         settings: data,
       );
     },
@@ -2505,11 +2509,13 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i138.ManufacturerViewProductScreen: (data) {
       final args = data.getArgs<ManufacturerViewProductScreenArguments>(
-        orElse: () => const ManufacturerViewProductScreenArguments(),
+        nullOk: false,
       );
       return _i145.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i138.ManufacturerViewProductScreen(key: args.key),
+        builder: (context) => _i138.ManufacturerViewProductScreen(
+          key: args.key,
+          productId: args.productId,
+        ),
         settings: data,
       );
     },
@@ -5673,24 +5679,30 @@ class PharmacyViewProductScreenArguments {
 }
 
 class AddProductScreenArguments {
-  const AddProductScreenArguments({this.key});
+  const AddProductScreenArguments({this.key, this.isEdit, this.productId});
 
   final _i145.Key? key;
 
+  final bool? isEdit;
+
+  final dynamic productId;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "isEdit": "$isEdit", "productId": "$productId"}';
   }
 
   @override
   bool operator ==(covariant AddProductScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key &&
+        other.isEdit == isEdit &&
+        other.productId == productId;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ isEdit.hashCode ^ productId.hashCode;
   }
 }
 
@@ -5907,24 +5919,29 @@ class ViewOrderManagementScreenArguments {
 }
 
 class ManufacturerViewProductScreenArguments {
-  const ManufacturerViewProductScreenArguments({this.key});
+  const ManufacturerViewProductScreenArguments({
+    this.key,
+    required this.productId,
+  });
 
   final _i145.Key? key;
 
+  final String? productId;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "productId": "$productId"}';
   }
 
   @override
   bool operator ==(covariant ManufacturerViewProductScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.productId == productId;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ productId.hashCode;
   }
 }
 
@@ -8490,6 +8507,8 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> navigateToAddProductScreen({
     _i145.Key? key,
+    bool? isEdit,
+    dynamic productId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8498,7 +8517,11 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.addProductScreen,
-      arguments: AddProductScreenArguments(key: key),
+      arguments: AddProductScreenArguments(
+        key: key,
+        isEdit: isEdit,
+        productId: productId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -8678,6 +8701,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> navigateToManufacturerViewProductScreen({
     _i145.Key? key,
+    required String? productId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8686,7 +8710,10 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.manufacturerViewProductScreen,
-      arguments: ManufacturerViewProductScreenArguments(key: key),
+      arguments: ManufacturerViewProductScreenArguments(
+        key: key,
+        productId: productId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -11231,6 +11258,8 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> replaceWithAddProductScreen({
     _i145.Key? key,
+    bool? isEdit,
+    dynamic productId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11239,7 +11268,11 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.addProductScreen,
-      arguments: AddProductScreenArguments(key: key),
+      arguments: AddProductScreenArguments(
+        key: key,
+        isEdit: isEdit,
+        productId: productId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -11419,6 +11452,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> replaceWithManufacturerViewProductScreen({
     _i145.Key? key,
+    required String? productId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11427,7 +11461,10 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.manufacturerViewProductScreen,
-      arguments: ManufacturerViewProductScreenArguments(key: key),
+      arguments: ManufacturerViewProductScreenArguments(
+        key: key,
+        productId: productId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

@@ -26,7 +26,7 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   bool isSwitched = false;
-  var i;
+  // var i;
 
   GlobalKey<FormState> formKeyBulkUploads = GlobalKey<FormState>();
 
@@ -117,8 +117,9 @@ class _ProductScreenState extends State<ProductScreen> {
       ),
       body: ViewModelBuilder<ManufacturerViewModel>.reactive(
         viewModelBuilder: () => ManufacturerViewModel(),
-        onViewModelReady: (model) {
-          model.getAllProduct(context);
+        onViewModelReady: (model) async {
+          await model.getAllProduct(context);
+          model.getWholesaleCategoryList(context);
         },
         disposeViewModel: false,
         onDispose: (viewModel) {},
@@ -226,17 +227,34 @@ class _ProductScreenState extends State<ProductScreen> {
                         borderBottomLeft: 10.r,
                         borderBottomRight: 10.r,
                         fillColor: AppColors.grey,
-                        prefixWidget: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 12.6.w,
-                          ),
-                          child: SvgPicture.asset(
-                            AppImage.search,
-                            color: AppColors.infoGrey,
-                          ),
-                        ),
-                        onChange: (value) {},
+                        prefixWidget: model.isLoading
+                            ? SizedBox(
+                                width: 20.w,
+                                height: 20.w,
+                                child: Center(
+                                  child: SpinKitFadingCircle(
+                                    color: AppColors.primary1,
+                                    size: 18.sp,
+                                  ),
+                                ),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 12.6.w,
+                                ),
+                                child: SvgPicture.asset(
+                                  AppImage.search,
+                                  color: AppColors.infoGrey,
+                                ),
+                              ),
+                        onChange: (value) {
+                          model.debouncer.run(() {
+                            model.getAllProduct(context, search: value);
+                          });
+                          model.searchProduct = value;
+                          model.notifyListeners();
+                        },
                       ),
                       SizedBox(height: 14.h),
                       Container(
@@ -262,7 +280,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                             ),
                             TextView(
-                              text: 'All',
+                              text: model.c?.name ?? 'All',
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
                                 fontSize: 14.22.sp,
@@ -271,12 +289,19 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                             ),
                             Spacer(),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_sharp,
-                                size: 20.0.sp,
-                                color: AppColors.infoGrey,
+                            Theme(
+                              data: Theme.of(context).copyWith(
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(14.48.w),
+                                child: GestureDetector(
+                                  onTap: () =>
+                                      model.filterProductByCategory(context),
+                                  child: SvgPicture.asset(AppImage.arrow_down),
+                                ),
                               ),
                             ),
                           ],
@@ -318,390 +343,397 @@ class _ProductScreenState extends State<ProductScreen> {
                           ),
                         )
                       else
-                        ...model.getAllProductListResponseModel!.data!.products!
-                            .map((e) {
-                              return GestureDetector(
-                                onTap: () {
-                                  navigate.navigateTo(
-                                    Routes.manufacturerViewProductScreen,
-                                  );
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  margin: EdgeInsets.only(bottom: 12.20.w),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 15.22.w,
-                                    horizontal: 13.0.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.r),
-                                    border: Border.all(
-                                      color: AppColors.infoGrey1,
+                        ...model.getAllProductListResponseModel!.data!.products!.map((
+                          e,
+                        ) {
+                          return GestureDetector(
+                            onTap: () {
+                              navigate.navigateTo(
+                                Routes.manufacturerViewProductScreen,
+                                arguments:
+                                    ManufacturerViewProductScreenArguments(
+                                      productId: e.id,
                                     ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                              );
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              margin: EdgeInsets.only(bottom: 12.20.w),
+                              padding: EdgeInsets.symmetric(
+                                vertical: 15.22.w,
+                                horizontal: 13.0.w,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.r),
+                                border: Border.all(color: AppColors.infoGrey1),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              vertical: 2.w,
-                                              horizontal: 9.0.w,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.grey,
-                                              borderRadius:
-                                                  BorderRadius.circular(12.r),
-                                            ),
-                                            child: Center(
-                                              child: TextView(
-                                                text:
-                                                    e.categoryDetails?.name
-                                                        ?.toLowerCase() ??
-                                                    '',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 12.2.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                            ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 2.w,
+                                          horizontal: 9.0.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.grey,
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
                                           ),
-                                          SizedBox(width: 12.w),
-                                          TextView(
-                                            text: 'Exp: ',
+                                        ),
+                                        child: Center(
+                                          child: TextView(
+                                            text:
+                                                e.categoryDetails?.name
+                                                    ?.toLowerCase() ??
+                                                '',
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
-                                              fontSize: 14.22.sp,
+                                              fontSize: 12.2.sp,
                                               fontWeight: FontWeight.w400,
                                               color: AppColors.infoGrey,
                                             ),
                                           ),
-                                          TextView(
-                                            text: DateFormat(
-                                              'dd/yyyy',
-                                            ).format(e.expiryDate!),
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 14.22.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.red,
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Container(
-                                            padding: EdgeInsets.all(8.8.w),
-                                            decoration: BoxDecoration(
-                                              color: AppColors.skyBlue,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: SvgPicture.asset(
-                                              AppImage.pen,
-                                              height: 16.10.h,
-                                              width: 16.10.w,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6.w),
-
-                                          PopupMenuButton(
-                                            color: AppColors.white,
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 20.w,
-                                              vertical: 10.w,
-                                            ),
-                                            itemBuilder: (context) => [
-                                              PopupMenuItem(
-                                                onTap: () {},
-                                                enabled: false,
-                                                child: TextView(
-                                                  text: 'More Actions',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'Arial',
-                                                    fontSize: 15.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.infoGrey,
-                                                  ),
-                                                ),
-                                              ),
-                                              PopupMenuItem(
-                                                onTap: () {},
-                                                child: TextView(
-                                                  text: 'Duplicate',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 16.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              ),
-                                              PopupMenuItem(
-                                                onTap: () {},
-                                                child: TextView(
-                                                  text: 'Delete Product',
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 15.2.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                            child: Container(
-                                              padding: EdgeInsets.all(7.10.w),
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: AppColors.skyBlue,
-                                                border: Border.all(
-                                                  color: AppColors.skyBlue,
-                                                ),
-                                              ),
-                                              child: Icon(
-                                                Icons.more_vert,
-                                                size: 18.80.sp,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      TextView(
-                                        text: e.productName ?? '',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 14.22.sp,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.reminder,
                                         ),
                                       ),
-                                      SizedBox(height: 12.h),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'NAFDAC No',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                              SizedBox(height: 2.h),
-                                              SizedBox(
-                                                width: 120.w,
-                                                child: TextView(
-                                                  text:
-                                                      e.nafdacRegistrationNumber ??
-                                                      '',
-                                                      maxLines: 1,
-                                                  textOverflow: TextOverflow.ellipsis,
-                                                  textStyle: TextStyle(
-                                                    fontFamily: 'DMSans',
-                                                    fontSize: 15.22.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: AppColors.reminder,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'Price',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                              SizedBox(height: 2.h),
-                                              TextView(
-                                                text: formatNairaNoDecimal(
-                                                  e.pricePerUnit!,
-                                                ),
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'Stock',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
-                                              ),
-                                              SizedBox(height: 2.h),
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    width: 6.28.w,
-                                                    height: 6.28.h,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          AppColors.app_green,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  ),
-                                                  SizedBox(width: 4.h),
-                                                  TextView(
-                                                    text: e.stock! > 1
-                                                        ? '${e.stock} units'
-                                                        : '${e.stock} unit',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'DMSans',
-                                                      fontSize: 15.22.sp,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: AppColors.reminder,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(width: 10.h),
-                                        ],
+                                      SizedBox(width: 12.w),
+                                      TextView(
+                                        text: 'Exp: ',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.22.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.infoGrey,
+                                        ),
                                       ),
-                                      SizedBox(height: 20.h),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'Pack',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
+                                      TextView(
+                                        text: DateFormat(
+                                          'dd/yyyy',
+                                        ).format(e.expiryDate!),
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 14.22.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.red,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Container(
+                                        padding: EdgeInsets.all(8.8.w),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.skyBlue,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: SvgPicture.asset(
+                                          AppImage.pen,
+                                          height: 16.10.h,
+                                          width: 16.10.w,
+                                        ),
+                                      ),
+                                      SizedBox(width: 6.w),
+
+                                      PopupMenuButton(
+                                        color: AppColors.white,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 20.w,
+                                          vertical: 10.w,
+                                        ),
+                                        itemBuilder: (context) => [
+                                          PopupMenuItem(
+                                            onTap: () {},
+                                            enabled: false,
+                                            child: TextView(
+                                              text: 'More Actions',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 15.2.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.infoGrey,
                                               ),
-                                              SizedBox(height: 2.h),
-                                              TextView(
-                                                text: '${e.packSize} /carton',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'MOQ',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
+                                          PopupMenuItem(
+                                            onTap: () {},
+                                            child: TextView(
+                                              text: 'Duplicate',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 16.2.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder,
                                               ),
-                                              SizedBox(height: 2.h),
-                                              TextView(
-                                                text:
-                                                    '${e.minimumOrderQuantity} carton(s)',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: AppColors.reminder,
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              TextView(
-                                                text: 'Published',
-                                                textStyle: TextStyle(
-                                                  fontFamily: 'DMSans',
-                                                  fontSize: 15.22.sp,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: AppColors.infoGrey,
-                                                ),
+                                          PopupMenuItem(
+                                            onTap: () {},
+                                            child: TextView(
+                                              text: 'Delete Product',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 15.2.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: AppColors.reminder,
                                               ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  CustomSwitch(
-                                                    value: e.isPublished!,
-                                                    onChanged: (bool val) {
-                                                      setState(() {
-                                                        if(!e.isPublished!){
-                                                          model.publishProduct(context,productId: e.id);
-                                                        }else{
-                                                          model.unPublishProduct(context,productId: e.id);
-                                                        }
-                                                        e.isPublished = val;
-                                                      });
-                                                      model.notifyListeners();
-                                                    },
-                                                  ),
-                                                  SizedBox(width: 6.10.h),
-                                                  TextView(
-                                                    text: e.isPublished!
-                                                        ? 'Yes'
-                                                        : 'No',
-                                                    textStyle: TextStyle(
-                                                      fontFamily: 'DMSans',
-                                                      fontSize: 14.22.sp,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: e.isPublished!
-                                                          ? AppColors.app_green
-                                                          : AppColors.reminder,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                          SizedBox(width: 10.h),
                                         ],
+                                        child: Container(
+                                          padding: EdgeInsets.all(7.10.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: AppColors.skyBlue,
+                                            border: Border.all(
+                                              color: AppColors.skyBlue,
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            Icons.more_vert,
+                                            size: 18.80.sp,
+                                            color: AppColors.primary,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              );
-                            }),
+                                  SizedBox(height: 12.h),
+                                  TextView(
+                                    text: e.productName ?? '',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 14.22.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.reminder,
+                                    ),
+                                  ),
+                                  SizedBox(height: 12.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'NAFDAC No',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.h),
+                                          SizedBox(
+                                            width: 120.w,
+                                            child: TextView(
+                                              text:
+                                                  e.nafdacRegistrationNumber ??
+                                                  '',
+                                              maxLines: 1,
+                                              textOverflow:
+                                                  TextOverflow.ellipsis,
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 15.22.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.reminder,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'Price',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.h),
+                                          TextView(
+                                            text: formatNairaNoDecimal(
+                                              e.pricePerUnit!,
+                                            ),
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'Stock',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.h),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 6.28.w,
+                                                height: 6.28.h,
+                                                decoration: BoxDecoration(
+                                                  color: AppColors.app_green,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                              SizedBox(width: 4.h),
+                                              TextView(
+                                                text: e.stock! > 1
+                                                    ? '${e.stock} units'
+                                                    : '${e.stock} unit',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.22.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(width: 10.h),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'Pack',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.h),
+                                          TextView(
+                                            text: '${e.packSize} /carton',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'MOQ',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                          SizedBox(height: 2.h),
+                                          TextView(
+                                            text:
+                                                '${e.minimumOrderQuantity} carton(s)',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.reminder,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextView(
+                                            text: 'Published',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 15.22.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.infoGrey,
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              CustomSwitch(
+                                                value: e.isPublished!,
+                                                onChanged: (bool val) {
+                                                  setState(() {
+                                                    if (!e.isPublished!) {
+                                                      model.publishProduct(
+                                                        context,
+                                                        productId: e.id,
+                                                      );
+                                                    } else {
+                                                      model.unPublishProduct(
+                                                        context,
+                                                        productId: e.id,
+                                                      );
+                                                    }
+                                                    e.isPublished = val;
+                                                  });
+                                                  model.notifyListeners();
+                                                },
+                                              ),
+                                              SizedBox(width: 6.10.h),
+                                              TextView(
+                                                text: e.isPublished!
+                                                    ? 'Yes'
+                                                    : 'No',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 14.22.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: e.isPublished!
+                                                      ? AppColors.app_green
+                                                      : AppColors.reminder,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(width: 10.h),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
                       SizedBox(height: 30.h),
                       Padding(
                         padding: EdgeInsetsGeometry.only(left: 6.w, right: 6.w),

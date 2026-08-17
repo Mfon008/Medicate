@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import 'package:medicate_app/main.dart';
 import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
@@ -18,6 +19,7 @@ import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
+import '../../app_assets/decouncer_class.dart';
 import '../../app_assets/image.dart';
 import '../../app_assets/image_picker.dart';
 import '../../config/colors.dart';
@@ -46,6 +48,8 @@ import '../model/verify_phone_entity_model.dart';
 import '../repo/manufacturer_repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/create_distributor_product_entity_model/image.dart'
     as iml;
+import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/image.dart'
+    as im;
 
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -65,6 +69,8 @@ class ManufacturerViewModel extends BaseViewModel {
   bool get isLoadingProductImage => _isLoadingProductImage;
 
   ManufacturerViewModel({this.context});
+
+  final debouncer = Debouncer(milliseconds: 200);
 
   final defaultPinTheme = PinTheme(
     width: 50.w,
@@ -110,12 +116,16 @@ class ManufacturerViewModel extends BaseViewModel {
 
   TextEditingController nafdacRegNoController = TextEditingController();
 
-  TextEditingController manufacturerDateController = TextEditingController(text: '');
+  TextEditingController manufacturerDateController = TextEditingController(
+    text: '',
+  );
   TextEditingController expiryDateController = TextEditingController(text: '');
   GetAllProductListResponseModel? _getAllProductListResponseModel;
-  GetAllProductListResponseModel? get getAllProductListResponseModel => _getAllProductListResponseModel;
+  GetAllProductListResponseModel? get getAllProductListResponseModel =>
+      _getAllProductListResponseModel;
   GetSingleProductResponseModel? _getSingleProductResponseModel;
-  GetSingleProductResponseModel? get getSingleProductResponseModel=> _getSingleProductResponseModel;
+  GetSingleProductResponseModel? get getSingleProductResponseModel =>
+      _getSingleProductResponseModel;
 
   final _pickImage = ImagePickerHandler();
   File? image;
@@ -124,6 +134,10 @@ class ManufacturerViewModel extends BaseViewModel {
 
   DateTime? _selectedManDate;
   DateTime? _selectedExDate;
+
+  im.Image? images;
+  int inImage = 0;
+  String searchProduct = '';
 
   Future<void> selectManDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -134,7 +148,9 @@ class ManufacturerViewModel extends BaseViewModel {
     );
     if (picked != null && picked != _selectedManDate) {
       _selectedManDate = picked;
-      manufacturerDateController.text = DateFormat('yyyy-MM-dd').format(_selectedManDate!);
+      manufacturerDateController.text = DateFormat(
+        'yyyy-MM-dd',
+      ).format(_selectedManDate!);
     }
     notifyListeners();
   }
@@ -148,7 +164,9 @@ class ManufacturerViewModel extends BaseViewModel {
     );
     if (picked != null && picked != _selectedExDate) {
       _selectedExDate = picked;
-      expiryDateController.text = DateFormat('yyyy-MM-dd').format(_selectedExDate!);
+      expiryDateController.text = DateFormat(
+        'yyyy-MM-dd',
+      ).format(_selectedExDate!);
     }
     notifyListeners();
   }
@@ -1660,12 +1678,13 @@ class ManufacturerViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      if(v['statusCode']==200){
-
-      await AppUtils.snackbar(context, message: v['message']);
-      navigate.clearStackAndShow(Routes.overviewDashboard,arguments: OverviewDashboardArguments(index: 1));
+      if (v['statusCode'] == 200) {
+        await AppUtils.snackbar(context, message: v['message']);
+        navigate.clearStackAndShow(
+          Routes.overviewDashboard,
+          arguments: OverviewDashboardArguments(index: 1),
+        );
       }
-
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -1674,15 +1693,42 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getAllProduct(
+  void updateProduct(
     context, {
-    String? categoryId,
-    String? search,
+    UpdateProductManagementEntityModel? updateproduct,
+    String? productId
   }) async {
     try {
       _isLoading = true;
-      _getAllProductListResponseModel= await runBusyFuture(
-        repositoryImply.getProductList(page: page.toString(),search: search,categoryId: categoryId),
+      var v = await runBusyFuture(
+        repositoryImply.updateProduct(updateproduct: updateproduct,productId: productId),
+        throwException: true,
+      );
+      _isLoading = false;
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+        navigate.clearStackAndShow(
+          Routes.overviewDashboard,
+          arguments: OverviewDashboardArguments(index: 1),
+        );
+      }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  getAllProduct(context, {String? categoryId, String? search}) async {
+    try {
+      _isLoading = true;
+      _getAllProductListResponseModel = await runBusyFuture(
+        repositoryImply.getProductList(
+          page: page.toString(),
+          search: search,
+          categoryId: categoryId,
+        ),
         throwException: true,
       );
       _isLoading = false;
@@ -1694,13 +1740,10 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void getSingleProduct(
-    context, {
-    String? productId,
-  }) async {
+  Future<void> getSingleProduct(context, {String? productId}) async {
     try {
       _isLoading = true;
-      _getSingleProductResponseModel= await runBusyFuture(
+      _getSingleProductResponseModel = await runBusyFuture(
         repositoryImply.getSingleProductById(productId: productId),
         throwException: true,
       );
@@ -1886,6 +1929,131 @@ class ManufacturerViewModel extends BaseViewModel {
                           c = e;
                         });
                         notifyListeners();
+                        // Keep popup open so user can see the selection
+                        await Future.delayed(const Duration(milliseconds: 300));
+
+                        // Close popup
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.w,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 8.w,
+                          horizontal: 12.w,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.skyBlue
+                              : AppColors.transparent,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.cool_blue
+                                : AppColors.transparent,
+                          ),
+                        ),
+                        child: TextView(
+                          text: e.name ?? '',
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: isSelected
+                                ? AppColors.primary
+                                : AppColors.reminder,
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  void filterProductByCategory(BuildContext context) async {
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final double popupWidth = 250.w;
+    final double rightMargin = 10.w;
+
+    // Approximate height of the popup
+    final double popupHeight = 300.h;
+
+    // Vertically center the popup
+    final double top = (overlay.size.height - popupHeight) / 2;
+
+    final RelativeRect menuPosition = RelativeRect.fromLTRB(
+      overlay.size.width - popupWidth - rightMargin,
+      top,
+      rightMargin,
+      top,
+    );
+
+    Category? selectedCategory = c;
+
+    await showMenu(
+      context: context,
+      position: menuPosition,
+      color: AppColors.white,
+      elevation: .8,
+      items: [
+        PopupMenuItem(
+          enabled: false,
+          padding: EdgeInsets.zero,
+          child: StatefulBuilder(
+            builder: (context, menuSetState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.w,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextView(
+                        text: 'Category',
+                        textStyle: TextStyle(
+                          fontFamily: 'Arial',
+                          fontSize: 15.2.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.infoGrey,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  ...distributorWholesaleCategoryModel!.data!.categories!.map((
+                    e,
+                  ) {
+                    final bool isSelected = selectedCategory == e;
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        // Rebuild the popup itself
+                        menuSetState(() {
+                          selectedCategory = e;
+                          c = e;
+                        });
+                        notifyListeners();
+                        getAllProduct(
+                          context,
+                          categoryId: c!.id,
+                          search: searchProduct,
+                        );
                         // Keep popup open so user can see the selection
                         await Future.delayed(const Duration(milliseconds: 300));
 

@@ -96,4 +96,6 @@ class UrlConfig {
   static const String wholesale_nafdac_verify = 'wholesale/nafdac/verify';
   static const String wholesale_products_images = 'wholesale/products/images';
   static const String wholesale_products = 'wholesale/products';
+
+  static const String wholesale_incoming_orders = 'wholesale/incoming-orders';
 }

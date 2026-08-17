@@ -16,6 +16,7 @@ import '../connect_end/model/reset_password_entity_model.dart';
 import '../connect_end/model/set_pin_entity_model.dart';
 import '../connect_end/model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../connect_end/model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../connect_end/model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import '../connect_end/model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -308,6 +309,24 @@ class ManufacturerApi {
     }
   }
 
+  Future<dynamic> updateProduct({
+    UpdateProductManagementEntityModel? updateproduct,
+    String? productId,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_products}/$productId',
+        RequestMethod.patch,
+        data: updateproduct?.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
   Future<dynamic> publishProduct(String productId) async {
     try {
       final response = await _service.call(
@@ -366,7 +385,7 @@ class ManufacturerApi {
                 'search': search,
                 'categoryId': categoryId,
               }
-            : {'page': page, 'limit': 10,'search':search},
+            : {'page': page, 'limit': 10, 'search': search},
       );
       logger.d(response.data);
       return GetAllProductListResponseModel.fromJson(response.data);
@@ -386,6 +405,72 @@ class ManufacturerApi {
       );
       logger.d(response.data);
       return GetSingleProductResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> listIncomingOrder({
+    String? page,
+    String? status,
+    String? search,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_incoming_orders,
+        RequestMethod.getParams,
+        queryParams: {
+          'page': page,
+          'limit': '10',
+          'status': status,
+          'search': search,
+        },
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> getIncomingOrder({String? wholesaleOrderId}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> advanceIncomingOrder({String? wholesaleOrderId}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/advance',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> cancelIncomingOrder({String? wholesaleOrderId}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/cancel',
+        RequestMethod.patch,
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

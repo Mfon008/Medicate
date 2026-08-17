@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: must_be_immutable, deprecated_member_use
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/category.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
 import 'package:medicate_app/ui/manufacturer/product/custom_switch_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -18,9 +19,13 @@ import '../../../core/connect_end/view_model/manufacturer_view_model.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
+import 'package:medicate_app/core/connect_end/model/create_distributor_product_entity_model/image.dart'
+    as iml;
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+  AddProductScreen({super.key, this.isEdit, this.productId});
+  bool? isEdit;
+  String? productId;
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -51,8 +56,82 @@ class _AddProductScreenState extends State<AddProductScreen> {
         MediaQuery.of(context).size.shortestSide >= 600;
     return ViewModelBuilder<ManufacturerViewModel>.reactive(
       viewModelBuilder: () => ManufacturerViewModel(),
-      onViewModelReady: (model) {
+      onViewModelReady: (model) async {
         model.getWholesaleCategoryList(context);
+        if (widget.isEdit!) {
+          await model.getSingleProduct(context, productId: widget.productId);
+          productName.text =
+              model.getSingleProductResponseModel?.data?.product?.productName ??
+              '';
+          description.text =
+              model.getSingleProductResponseModel?.data?.product?.description ??
+              '';
+          sku.text =
+              model.getSingleProductResponseModel?.data?.product?.sku ?? '';
+          packSize.text =
+              model.getSingleProductResponseModel?.data?.product?.packSize
+                  .toString() ??
+              '';
+          moq.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.minimumOrderQuantity
+                  .toString() ??
+              '';
+          priceUnit.text =
+              model.getSingleProductResponseModel?.data?.product?.pricePerUnit
+                  .toString() ??
+              '';
+          stock.text =
+              model.getSingleProductResponseModel?.data?.product?.stock
+                  .toString() ??
+              '';
+          batchNo.text =
+              model.getSingleProductResponseModel?.data?.product?.batchNumber ??
+              '';
+          serialNo.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.serialNumber ??
+              '';
+          unit.text =
+              model.getSingleProductResponseModel?.data?.product?.unit ?? '';
+
+          model.c = Category.fromJson(model.getSingleProductResponseModel!.data!.product!.categoryDetails!.toJson());
+
+          print('model.c?.namemodel.c?.name${model.c?.toJson()}');
+          model.nafdacRegNoController.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.nafdacVerification
+                  ?.registrationNumber ??
+              '';
+          model.manufacturerDateController.text =
+              model
+                  .getSingleProductResponseModel
+                  ?.data
+                  ?.product
+                  ?.manufacturedDate
+                  ?.toString() ??
+              '';
+          model.expiryDateController.text =
+              model.getSingleProductResponseModel?.data?.product?.expiryDate
+                  ?.toString() ??
+              '';
+          model.imagesProductList = model
+              .getSingleProductResponseModel!
+              .data!
+              .product!
+              .images!
+              .map<iml.Image>((image) => iml.Image.fromJson(image.toJson()))
+              .toList();
+        }
       },
       disposeViewModel: false,
       onDispose: (viewModel) {},
@@ -853,7 +932,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                             child: Image.network(
                                               e.url!,
                                               height: 52.0.h,
-                                              width: 52.0.h,
+                                              width: 52.0.w,
                                               fit: BoxFit.cover,
                                             ),
                                           ),

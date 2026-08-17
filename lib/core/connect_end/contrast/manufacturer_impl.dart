@@ -18,6 +18,7 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import '../model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -92,6 +93,11 @@ class ManufacturerContractImpl {
     CreateDistributorProductEntityModel createproduct,
   ) async => await _api.createProduct(createproduct);
 
+  Future<dynamic> updateProduct({
+    UpdateProductManagementEntityModel? updateproduct,
+    String? productId,
+  }) async => await _api.updateProduct(updateproduct: updateproduct,productId: productId);
+
   Future<dynamic> publishProduct(String productId) async =>
       await _api.publishProduct(productId);
 
@@ -100,9 +106,16 @@ class ManufacturerContractImpl {
 
   Future<dynamic> deleteProduct(String productId) async =>
       await _api.deleteProduct(productId);
-  Future<GetAllProductListResponseModel> getProductList({String? page,String? search,String? categoryId}) async  =>
-      await _api.getProductList(page: page,search: search,categoryId: categoryId);
-  Future<GetSingleProductResponseModel> getSingleProductById({String? productId}) async   =>
-      await _api.getSingleProductById(productId: productId);
-  
+  Future<GetAllProductListResponseModel> getProductList({
+    String? page,
+    String? search,
+    String? categoryId,
+  }) async => await _api.getProductList(
+    page: page,
+    search: search,
+    categoryId: categoryId,
+  );
+  Future<GetSingleProductResponseModel> getSingleProductById({
+    String? productId,
+  }) async => await _api.getSingleProductById(productId: productId);
 }

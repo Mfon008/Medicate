@@ -20,6 +20,7 @@ import '../model/reset_password_entity_model.dart';
 import '../model/set_pin_entity_model.dart';
 import '../model/set_pin_pharm_response_model/set_pin_pharm_response_model.dart';
 import '../model/sign_up_phamary_response_model/sign_up_phamary_response_model.dart';
+import '../model/update_product_management_entity_model/update_product_management_entity_model.dart';
 import '../model/upload_product_image_response_model/upload_product_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
@@ -146,6 +147,14 @@ class ManufacturerRepoImpl {
     CreateDistributorProductEntityModel createproduct,
   ) async {
     final response = await _contract.createProduct(createproduct);
+    return response;
+  }
+
+  Future<dynamic> updateProduct({
+    UpdateProductManagementEntityModel? updateproduct,
+    String? productId,
+  }) async {
+    final response = await _contract.updateProduct(updateproduct:updateproduct,productId: productId);
     return response;
   }
 
