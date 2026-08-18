@@ -154,7 +154,10 @@ class ManufacturerRepoImpl {
     UpdateProductManagementEntityModel? updateproduct,
     String? productId,
   }) async {
-    final response = await _contract.updateProduct(updateproduct:updateproduct,productId: productId);
+    final response = await _contract.updateProduct(
+      updateproduct: updateproduct,
+      productId: productId,
+    );
     return response;
   }
 

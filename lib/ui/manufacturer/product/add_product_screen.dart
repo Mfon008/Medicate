@@ -1127,7 +1127,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       label: '',
                                       letterSpacing: -1.2,
                                       hintSize: 15.20.sp,
-                                      hintWeight: FontWeight.lerp(FontWeight.w400, FontWeight.w500, 0.005),
+                                      hintWeight: FontWeight.lerp(
+                                        FontWeight.w400,
+                                        FontWeight.w500,
+                                        0.005,
+                                      ),
                                       borderColor: AppColors.transparent,
                                       borderTopLeft: 10.r,
                                       borderTopRight: 10.r,
@@ -1159,7 +1163,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       label: '0.00',
                                       letterSpacing: -0.98,
                                       hintSize: 15.20.sp,
-                                      hintWeight: FontWeight.lerp(FontWeight.w400, FontWeight.w500, 0.005),
+                                      hintWeight: FontWeight.lerp(
+                                        FontWeight.w400,
+                                        FontWeight.w500,
+                                        0.005,
+                                      ),
                                       borderColor: AppColors.transparent,
                                       borderTopLeft: 10.r,
                                       borderTopRight: 10.r,
@@ -1328,7 +1336,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                             description: description.text
                                                 .trim(),
                                             categoryId: model.c!.id,
-                                            // distributorId: widget.productId,
                                             sku: sku.text.trim(),
                                             packSize: int.parse(
                                               packSize.text.trim(),

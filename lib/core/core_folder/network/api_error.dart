@@ -104,6 +104,9 @@ class ApiError {
           break;
         case DioExceptionType.connectionError:
           errorDescription = "Connection error";
+        case DioExceptionType.transformTimeout:
+          errorDescription = "Connection transformTimeout";
+          break;
       }
     } else {
       errorDescription = "Oops an error occurred, we are fixing it";

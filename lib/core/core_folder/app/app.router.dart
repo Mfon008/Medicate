@@ -1,5 +1,5 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format width=80
 
 // **************************************************************************
 // StackedNavigatorGenerator
@@ -5685,7 +5685,7 @@ class AddProductScreenArguments {
 
   final bool? isEdit;
 
-  final dynamic productId;
+  final String? productId;
 
   @override
   String toString() {
@@ -8508,7 +8508,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
   Future<dynamic> navigateToAddProductScreen({
     _i145.Key? key,
     bool? isEdit,
-    dynamic productId,
+    String? productId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11259,7 +11259,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
   Future<dynamic> replaceWithAddProductScreen({
     _i145.Key? key,
     bool? isEdit,
-    dynamic productId,
+    String? productId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,

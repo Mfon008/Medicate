@@ -21,6 +21,7 @@ import '../connect_end/model/get_user_details_response_model/get_user_details_re
 import '../connect_end/model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
+import '../connect_end/model/list_market_product_response_model/list_market_product_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
@@ -840,6 +841,45 @@ class HealthcareApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProduct({
+    String? page,
+    String? catId,
+    String? sortPrice,
+    String? search,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_marketplace_products,
+        RequestMethod.getParams,
+        queryParams: {'page':page,'limit':'10','search':search,'priceSort':sortPrice}
+      );
+      logger.d(response.data);
+      return ListMarketProductResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProductWithCatId({
+    String? page,
+    String? catId,
+    String? sortPrice,
+    String? search,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_marketplace_products,
+        RequestMethod.getParams,
+        queryParams: {'page':page,'limit':'10','search':search,'categoryId':catId,'priceSort':sortPrice}
+      );
+      logger.d(response.data);
+      return ListMarketProductResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

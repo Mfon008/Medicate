@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
@@ -89,14 +91,19 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(4.r),
-                                      child: Image.network(
-                                        model.images?.url ?? '',
+                                      child: CachedNetworkImage(
+                                        imageUrl: model.images?.url ?? '',
                                         height: 262.h,
                                         width: 242.w,
                                         fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Container(),
+                                        placeholder: (context, url) => Center(
+                                          child: SpinKitRipple(
+                                            color: AppColors.primary,
+                                            size: 50.sp,
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(),
                                       ),
                                     ),
                                   ),
@@ -453,7 +460,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                             ?.description ??
                                         '',
                                     textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
+                                      fontFamily: 'DMSans',
                                       fontSize: 15.80.sp,
                                       fontWeight: FontWeight.w400,
                                       color: AppColors.reminder,
@@ -498,7 +505,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                             TextView(
                                               text: 'Pack Size',
                                               textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
+                                                fontFamily: 'DMSans',
                                                 fontSize: 14.80.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.infoGrey,
@@ -508,7 +515,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                               text:
                                                   '${model.getSingleProductResponseModel?.data?.product?.packSize ?? 0} / carton',
                                               textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
+                                                fontFamily: 'DMSans',
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.w600,
                                                 color: AppColors.reminder1,
@@ -558,7 +565,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                             TextView(
                                               text: 'Stock Status',
                                               textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
+                                                fontFamily: 'DMSans',
                                                 fontSize: 14.80.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: AppColors.infoGrey,
@@ -568,7 +575,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                               text:
                                                   '${model.getSingleProductResponseModel?.data?.product?.stock ?? 0} available',
                                               textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
+                                                fontFamily: 'DMSans',
                                                 fontSize: 16.sp,
                                                 fontWeight: FontWeight.w600,
                                                 color: AppColors.app_green,
@@ -604,7 +611,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                         TextView(
                                           text: 'Volume Pricing',
                                           textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
+                                            fontFamily: 'DMSans',
                                             fontSize: 14.90.sp,
                                             fontWeight: FontWeight.w500,
                                             color: AppColors.black,
@@ -752,7 +759,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                               TextView(
                                                 text: 'Batch Number:',
                                                 textStyle: TextStyle(
-                                                  fontFamily: 'GoogleSans',
+                                                  fontFamily: 'DMSans',
                                                   fontSize: 12.90.sp,
                                                   fontWeight: FontWeight.w300,
                                                   color: AppColors.infoGrey,
@@ -857,7 +864,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                               TextView(
                                                 text: 'Expiry Date:',
                                                 textStyle: TextStyle(
-                                                  fontFamily: 'GoogleSans',
+                                                  fontFamily: 'DMSans',
                                                   fontSize: 12.90.sp,
                                                   fontWeight: FontWeight.w300,
                                                   color: AppColors.infoGrey,
@@ -937,7 +944,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                       Routes.addProductScreen,
                                       arguments: AddProductScreenArguments(
                                         isEdit: true,
-                                        productId:productId
+                                        productId: productId,
                                       ),
                                     ),
                                     child: Container(

@@ -12,9 +12,9 @@ RetryPaymentReminderResponseModel _$RetryPaymentReminderResponseModelFromJson(
   success: json['success'] as bool?,
   statusCode: (json['statusCode'] as num?)?.toInt(),
   message: json['message'] as String?,
-  datum: json['data'] == null
+  datum: json['datum'] == null
       ? null
-      : Datum.fromJson(json['data'] as Map<String, dynamic>),
+      : Datum.fromJson(json['datum'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$RetryPaymentReminderResponseModelToJson(
@@ -23,5 +23,5 @@ Map<String, dynamic> _$RetryPaymentReminderResponseModelToJson(
   'success': instance.success,
   'statusCode': instance.statusCode,
   'message': instance.message,
-  'data': instance.datum,
+  'datum': instance.datum,
 };

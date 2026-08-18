@@ -67,6 +67,7 @@ import '../model/get_user_details_response_model/get_user_details_response_model
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
+import '../model/list_market_product_response_model/list_market_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
@@ -130,6 +131,7 @@ class HealthCareViewModel extends BaseViewModel {
   String vdeactivateErrorMessage = '';
 
   String? searchDoctors = '';
+  String? searchProduct = '';
   var vdeactivate;
   bool isCartItem = false;
   List<String> myOrderListCategory = [
@@ -246,7 +248,11 @@ class HealthCareViewModel extends BaseViewModel {
   CreateReminderResponseModel? get createReminderResponseModel =>
       _createReminderResponseModel;
 
+  ListMarketProductResponseModel? _getListedMarketPlaceResponseModel;
+  ListMarketProductResponseModel? get getListedMarketPlaceResponseModel =>  _getListedMarketPlaceResponseModel;
+
   int linIndex = 1;
+  int productQuantity = 1;
   int linIndexUpdate = 1;
   int indexOfMedicationClassList = 0;
   String onTapPaymentMeth = '';
@@ -446,6 +452,7 @@ class HealthCareViewModel extends BaseViewModel {
   final _pickImage = ImagePickerHandler();
 
   List listOfDosage = [];
+  int page = 1;
   int pageAll = 1;
   int pageOngoing = 1;
   int pageCompleted = 1;
@@ -9151,93 +9158,91 @@ class HealthCareViewModel extends BaseViewModel {
                                                                                       spacing: 10.0,
                                                                                       runSpacing: 10.0,
                                                                                       children: [
-                                                                                        ...e.dosageMap[list]['doses'].asMap().entries.map(
-                                                                                          (
-                                                                                            entry,
-                                                                                          ) {
-                                                                                            final timeIndex = entry.key;
-                                                                                            final time = entry.value;
-                                                                                            return GestureDetector(
-                                                                                              onTap: () {
-                                                                                                model.selectedTimePerDay[list] = time['time'];
-                                                                                                model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
-                                                                                                model.timeSelected = time;
-                                                                                                setModalState!(
-                                                                                                  () {},
-                                                                                                );
-                                                                                                model.notifyListeners();
-                                                                                              },
-                                                                                              child: Container(
-                                                                                                width: 110.w,
-                                                                                                padding: EdgeInsets.symmetric(
-                                                                                                  vertical: 4.w,
-                                                                                                  horizontal: 10.w,
+                                                                                        ...e.dosageMap[list]['doses'].asMap().entries.map((
+                                                                                          entry,
+                                                                                        ) {
+                                                                                          final timeIndex = entry.key;
+                                                                                          final time = entry.value;
+                                                                                          return GestureDetector(
+                                                                                            onTap: () {
+                                                                                              model.selectedTimePerDay[list] = time['time'];
+                                                                                              model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
+                                                                                              model.timeSelected = time;
+                                                                                              setModalState!(
+                                                                                                () {},
+                                                                                              );
+                                                                                              model.notifyListeners();
+                                                                                            },
+                                                                                            child: Container(
+                                                                                              width: 110.w,
+                                                                                              padding: EdgeInsets.symmetric(
+                                                                                                vertical: 4.w,
+                                                                                                horizontal: 10.w,
+                                                                                              ),
+                                                                                              decoration: BoxDecoration(
+                                                                                                borderRadius: BorderRadius.circular(
+                                                                                                  22.r,
                                                                                                 ),
-                                                                                                decoration: BoxDecoration(
-                                                                                                  borderRadius: BorderRadius.circular(
-                                                                                                    22.r,
-                                                                                                  ),
-                                                                                                  border: Border.all(
-                                                                                                    color:
-                                                                                                        model.selectedTimePerDay[list] ==
-                                                                                                            time['time']
-                                                                                                        ? AppColors.transparent
-                                                                                                        : AppColors.app_green,
-                                                                                                  ),
+                                                                                                border: Border.all(
                                                                                                   color:
                                                                                                       model.selectedTimePerDay[list] ==
                                                                                                           time['time']
-                                                                                                      ? AppColors.app_green
-                                                                                                      : AppColors.white,
+                                                                                                      ? AppColors.transparent
+                                                                                                      : AppColors.app_green,
                                                                                                 ),
-                                                                                                child: Row(
-                                                                                                  children: [
-                                                                                                    TextView(
-                                                                                                      text: time['time'],
-                                                                                                      textStyle: TextStyle(
-                                                                                                        fontFamily: 'GoogleSans',
-                                                                                                        fontSize: 13.2.sp,
-                                                                                                        fontWeight: FontWeight.w500,
-                                                                                                        color:
-                                                                                                            model.selectedTimePerDay[list] ==
-                                                                                                                time['time']
-                                                                                                            ? AppColors.white
-                                                                                                            : AppColors.app_green,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                    SizedBox(
-                                                                                                      width: 6.w,
-                                                                                                    ),
-                                                                                                    GestureDetector(
-                                                                                                      onTap: () {
-                                                                                                        model.removeCustomTimeAt(
-                                                                                                          model: model,
-                                                                                                          medicationIndex: index,
-                                                                                                          dayIndex: list,
-                                                                                                          timeIndex: timeIndex,
-                                                                                                        );
-                                                                                                        setModalState!(
-                                                                                                          () {},
-                                                                                                        );
-                                                                                                        model.notifyListeners();
-                                                                                                      },
-                                                                                                      child: SvgPicture.asset(
-                                                                                                        AppImage.x,
-                                                                                                        color:
-                                                                                                            model.selectedTimePerDay[list] ==
-                                                                                                                time['time']
-                                                                                                            ? AppColors.white
-                                                                                                            : AppColors.app_green,
-                                                                                                        height: 16.20.h,
-                                                                                                        width: 16.w,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ],
-                                                                                                ),
+                                                                                                color:
+                                                                                                    model.selectedTimePerDay[list] ==
+                                                                                                        time['time']
+                                                                                                    ? AppColors.app_green
+                                                                                                    : AppColors.white,
                                                                                               ),
-                                                                                            );
-                                                                                          },
-                                                                                        ),
+                                                                                              child: Row(
+                                                                                                children: [
+                                                                                                  TextView(
+                                                                                                    text: time['time'],
+                                                                                                    textStyle: TextStyle(
+                                                                                                      fontFamily: 'GoogleSans',
+                                                                                                      fontSize: 13.2.sp,
+                                                                                                      fontWeight: FontWeight.w500,
+                                                                                                      color:
+                                                                                                          model.selectedTimePerDay[list] ==
+                                                                                                              time['time']
+                                                                                                          ? AppColors.white
+                                                                                                          : AppColors.app_green,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  SizedBox(
+                                                                                                    width: 6.w,
+                                                                                                  ),
+                                                                                                  GestureDetector(
+                                                                                                    onTap: () {
+                                                                                                      model.removeCustomTimeAt(
+                                                                                                        model: model,
+                                                                                                        medicationIndex: index,
+                                                                                                        dayIndex: list,
+                                                                                                        timeIndex: timeIndex,
+                                                                                                      );
+                                                                                                      setModalState!(
+                                                                                                        () {},
+                                                                                                      );
+                                                                                                      model.notifyListeners();
+                                                                                                    },
+                                                                                                    child: SvgPicture.asset(
+                                                                                                      AppImage.x,
+                                                                                                      color:
+                                                                                                          model.selectedTimePerDay[list] ==
+                                                                                                              time['time']
+                                                                                                          ? AppColors.white
+                                                                                                          : AppColors.app_green,
+                                                                                                      height: 16.20.h,
+                                                                                                      width: 16.w,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                          );
+                                                                                        }),
                                                                                       ],
                                                                                     ),
                                                                                   ),
@@ -18418,6 +18423,38 @@ class HealthCareViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
+
+  Future<void> getListedMarketPlace(context) async {
+    try {
+      _isLoading = true;
+      _getListedMarketPlaceResponseModel = await runBusyFuture(
+        repositoryImply.getListedMarketPlaceProduct(page: page.toString(),search: searchProduct,sortPrice: 'LOW_TO_HIGH'),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  // Future<void> getListedMarketPlaceWithCatId(context) async {
+  //   try {
+  //     _isLoading = true;
+  //     _getListedMarketPlaceResponseModel = await runBusyFuture(
+  //       repositoryImply.getListedMarketPlaceProductWithCatId(page: page.toString(),search: searchProduct,sortPrice: 'LOW_TO_HIGH'),
+  //       throwException: true,
+  //     );
+  //     _isLoading = false;
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     logger.d(e);
+  //     AppUtils.snackbar(context, message: e.toString(), error: true);
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<void> deleteRole(BuildContext context, {String? roleId}) async {
     try {

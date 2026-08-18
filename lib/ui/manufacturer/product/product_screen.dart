@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, strict_top_level_inference, deprecated_member_use
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,6 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   bool isSwitched = false;
-  // var i;
 
   GlobalKey<FormState> formKeyBulkUploads = GlobalKey<FormState>();
 

@@ -1696,12 +1696,15 @@ class ManufacturerViewModel extends BaseViewModel {
   void updateProduct(
     context, {
     UpdateProductManagementEntityModel? updateproduct,
-    String? productId
+    String? productId,
   }) async {
     try {
       _isLoading = true;
       var v = await runBusyFuture(
-        repositoryImply.updateProduct(updateproduct: updateproduct,productId: productId),
+        repositoryImply.updateProduct(
+          updateproduct: updateproduct,
+          productId: productId,
+        ),
         throwException: true,
       );
       _isLoading = false;

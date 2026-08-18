@@ -23,6 +23,7 @@ import '../model/get_user_details_response_model/get_user_details_response_model
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
+import '../model/list_market_product_response_model/list_market_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
@@ -415,6 +416,25 @@ class HealthcareRepoImpl {
 
   Future<GetWalletResponseModel> getWalletBalance() async {
     final response = await _contract.getWalletBalance();
+    return response;
+  }
+
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProduct({
+    String? page,
+    String? catId,
+    String? sortPrice,
+    String? search,
+  }) async  {
+    final response = await _contract.getListedMarketPlaceProduct(page: page,search: search,sortPrice: sortPrice,catId: catId);
+    return response;
+  }
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProductWithCatId({
+    String? page,
+    String? catId,
+    String? sortPrice,
+    String? search,
+  }) async  {
+    final response = await _contract.getListedMarketPlaceProductWithCatId(page: page,search: search,sortPrice: sortPrice,catId: catId);
     return response;
   }
 

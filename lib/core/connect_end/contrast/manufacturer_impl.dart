@@ -96,7 +96,10 @@ class ManufacturerContractImpl {
   Future<dynamic> updateProduct({
     UpdateProductManagementEntityModel? updateproduct,
     String? productId,
-  }) async => await _api.updateProduct(updateproduct: updateproduct,productId: productId);
+  }) async => await _api.updateProduct(
+    updateproduct: updateproduct,
+    productId: productId,
+  );
 
   Future<dynamic> publishProduct(String productId) async =>
       await _api.publishProduct(productId);

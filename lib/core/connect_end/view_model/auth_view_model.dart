@@ -27624,103 +27624,101 @@ class AuthViewModel extends BaseViewModel {
                                                                                     spacing: 10.0,
                                                                                     runSpacing: 10.0,
                                                                                     children: [
-                                                                                      ...e.dosageMap[list]['doses'].asMap().entries.map(
-                                                                                        (
-                                                                                          entry,
-                                                                                        ) {
-                                                                                          final timeIndex = entry.key;
-                                                                                          final time = entry.value;
-                                                                                          return GestureDetector(
-                                                                                            onTap: () {
-                                                                                              model.selectedTimePerDay[list] = time['time'];
-                                                                                              model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
-                                                                                              model.timeSelected = time;
-                                                                                              setModalState!(
-                                                                                                () {},
-                                                                                              );
-                                                                                              model.notifyListeners();
-                                                                                            },
-                                                                                            child: Container(
-                                                                                              width: 110.w,
-                                                                                              padding: EdgeInsets.symmetric(
-                                                                                                vertical: 4.w,
-                                                                                                horizontal: 10.w,
+                                                                                      ...e.dosageMap[list]['doses'].asMap().entries.map((
+                                                                                        entry,
+                                                                                      ) {
+                                                                                        final timeIndex = entry.key;
+                                                                                        final time = entry.value;
+                                                                                        return GestureDetector(
+                                                                                          onTap: () {
+                                                                                            model.selectedTimePerDay[list] = time['time'];
+                                                                                            model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
+                                                                                            model.timeSelected = time;
+                                                                                            setModalState!(
+                                                                                              () {},
+                                                                                            );
+                                                                                            model.notifyListeners();
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            width: 110.w,
+                                                                                            padding: EdgeInsets.symmetric(
+                                                                                              vertical: 4.w,
+                                                                                              horizontal: 10.w,
+                                                                                            ),
+                                                                                            decoration: BoxDecoration(
+                                                                                              borderRadius: BorderRadius.circular(
+                                                                                                22.r,
                                                                                               ),
-                                                                                              decoration: BoxDecoration(
-                                                                                                borderRadius: BorderRadius.circular(
-                                                                                                  22.r,
-                                                                                                ),
-                                                                                                border: Border.all(
-                                                                                                  color:
-                                                                                                      model.selectedTimePerDay[list] ==
-                                                                                                          time['time']
-                                                                                                      ? AppColors.transparent
-                                                                                                      : AppColors.app_green,
-                                                                                                ),
+                                                                                              border: Border.all(
                                                                                                 color:
                                                                                                     model.selectedTimePerDay[list] ==
                                                                                                         time['time']
-                                                                                                    ? AppColors.app_green
-                                                                                                    : AppColors.white,
+                                                                                                    ? AppColors.transparent
+                                                                                                    : AppColors.app_green,
                                                                                               ),
-                                                                                              child: Row(
-                                                                                                children: [
-                                                                                                  TextView(
-                                                                                                    text:
-                                                                                                        time['time'].contains(
-                                                                                                              "PM",
-                                                                                                            ) ||
-                                                                                                            time['time'].contains(
-                                                                                                              'AM',
-                                                                                                            )
-                                                                                                        ? time['time']
-                                                                                                        : convertTo12HourFormat(
-                                                                                                            time['time'],
-                                                                                                          ),
-                                                                                                    textStyle: TextStyle(
-                                                                                                      fontFamily: 'GoogleSans',
-                                                                                                      fontSize: 13.2.sp,
-                                                                                                      fontWeight: FontWeight.w500,
-                                                                                                      color:
-                                                                                                          model.selectedTimePerDay[list] ==
-                                                                                                              time['time']
-                                                                                                          ? AppColors.white
-                                                                                                          : AppColors.app_green,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  SizedBox(
-                                                                                                    width: 6.w,
-                                                                                                  ),
-                                                                                                  GestureDetector(
-                                                                                                    onTap: () {
-                                                                                                      model.removeCustomTimeAt(
-                                                                                                        model: model,
-                                                                                                        medicationIndex: index,
-                                                                                                        dayIndex: list,
-                                                                                                        timeIndex: timeIndex,
-                                                                                                      );
-                                                                                                      setModalState!(
-                                                                                                        () {},
-                                                                                                      );
-                                                                                                      model.notifyListeners();
-                                                                                                    },
-                                                                                                    child: SvgPicture.asset(
-                                                                                                      AppImage.x,
-                                                                                                      color:
-                                                                                                          model.selectedTimePerDay[list] ==
-                                                                                                              time['time']
-                                                                                                          ? AppColors.white
-                                                                                                          : AppColors.app_green,
-                                                                                                      height: 16.20.h,
-                                                                                                      width: 16.w,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ],
-                                                                                              ),
+                                                                                              color:
+                                                                                                  model.selectedTimePerDay[list] ==
+                                                                                                      time['time']
+                                                                                                  ? AppColors.app_green
+                                                                                                  : AppColors.white,
                                                                                             ),
-                                                                                          );
-                                                                                        },
-                                                                                      ),
+                                                                                            child: Row(
+                                                                                              children: [
+                                                                                                TextView(
+                                                                                                  text:
+                                                                                                      time['time'].contains(
+                                                                                                            "PM",
+                                                                                                          ) ||
+                                                                                                          time['time'].contains(
+                                                                                                            'AM',
+                                                                                                          )
+                                                                                                      ? time['time']
+                                                                                                      : convertTo12HourFormat(
+                                                                                                          time['time'],
+                                                                                                        ),
+                                                                                                  textStyle: TextStyle(
+                                                                                                    fontFamily: 'GoogleSans',
+                                                                                                    fontSize: 13.2.sp,
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                    color:
+                                                                                                        model.selectedTimePerDay[list] ==
+                                                                                                            time['time']
+                                                                                                        ? AppColors.white
+                                                                                                        : AppColors.app_green,
+                                                                                                  ),
+                                                                                                ),
+                                                                                                SizedBox(
+                                                                                                  width: 6.w,
+                                                                                                ),
+                                                                                                GestureDetector(
+                                                                                                  onTap: () {
+                                                                                                    model.removeCustomTimeAt(
+                                                                                                      model: model,
+                                                                                                      medicationIndex: index,
+                                                                                                      dayIndex: list,
+                                                                                                      timeIndex: timeIndex,
+                                                                                                    );
+                                                                                                    setModalState!(
+                                                                                                      () {},
+                                                                                                    );
+                                                                                                    model.notifyListeners();
+                                                                                                  },
+                                                                                                  child: SvgPicture.asset(
+                                                                                                    AppImage.x,
+                                                                                                    color:
+                                                                                                        model.selectedTimePerDay[list] ==
+                                                                                                            time['time']
+                                                                                                        ? AppColors.white
+                                                                                                        : AppColors.app_green,
+                                                                                                    height: 16.20.h,
+                                                                                                    width: 16.w,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        );
+                                                                                      }),
                                                                                     ],
                                                                                   ),
                                                                                 ),
@@ -57235,103 +57233,101 @@ class AuthViewModel extends BaseViewModel {
                                                                                     spacing: 10.0,
                                                                                     runSpacing: 10.0,
                                                                                     children: [
-                                                                                      ...e.dosageMap[list]['doses'].asMap().entries.map(
-                                                                                        (
-                                                                                          entry,
-                                                                                        ) {
-                                                                                          final timeIndex = entry.key;
-                                                                                          final time = entry.value;
-                                                                                          return GestureDetector(
-                                                                                            onTap: () {
-                                                                                              model.selectedTimePerDay[list] = time['time'];
-                                                                                              model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
-                                                                                              model.timeSelected = time;
-                                                                                              setModalState!(
-                                                                                                () {},
-                                                                                              );
-                                                                                              model.notifyListeners();
-                                                                                            },
-                                                                                            child: Container(
-                                                                                              width: 110.w,
-                                                                                              padding: EdgeInsets.symmetric(
-                                                                                                vertical: 4.w,
-                                                                                                horizontal: 10.w,
+                                                                                      ...e.dosageMap[list]['doses'].asMap().entries.map((
+                                                                                        entry,
+                                                                                      ) {
+                                                                                        final timeIndex = entry.key;
+                                                                                        final time = entry.value;
+                                                                                        return GestureDetector(
+                                                                                          onTap: () {
+                                                                                            model.selectedTimePerDay[list] = time['time'];
+                                                                                            model.selectedDoseIndexPerDay[list] = timeIndex; // ✅ VERY IMPORTANT
+                                                                                            model.timeSelected = time;
+                                                                                            setModalState!(
+                                                                                              () {},
+                                                                                            );
+                                                                                            model.notifyListeners();
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            width: 110.w,
+                                                                                            padding: EdgeInsets.symmetric(
+                                                                                              vertical: 4.w,
+                                                                                              horizontal: 10.w,
+                                                                                            ),
+                                                                                            decoration: BoxDecoration(
+                                                                                              borderRadius: BorderRadius.circular(
+                                                                                                22.r,
                                                                                               ),
-                                                                                              decoration: BoxDecoration(
-                                                                                                borderRadius: BorderRadius.circular(
-                                                                                                  22.r,
-                                                                                                ),
-                                                                                                border: Border.all(
-                                                                                                  color:
-                                                                                                      model.selectedTimePerDay[list] ==
-                                                                                                          time['time']
-                                                                                                      ? AppColors.transparent
-                                                                                                      : AppColors.app_green,
-                                                                                                ),
+                                                                                              border: Border.all(
                                                                                                 color:
                                                                                                     model.selectedTimePerDay[list] ==
                                                                                                         time['time']
-                                                                                                    ? AppColors.app_green
-                                                                                                    : AppColors.white,
+                                                                                                    ? AppColors.transparent
+                                                                                                    : AppColors.app_green,
                                                                                               ),
-                                                                                              child: Row(
-                                                                                                children: [
-                                                                                                  TextView(
-                                                                                                    text:
-                                                                                                        time['time'].contains(
-                                                                                                              "PM",
-                                                                                                            ) ||
-                                                                                                            time['time'].contains(
-                                                                                                              'AM',
-                                                                                                            )
-                                                                                                        ? time['time']
-                                                                                                        : convertTo12HourFormat(
-                                                                                                            time['time'],
-                                                                                                          ),
-                                                                                                    textStyle: TextStyle(
-                                                                                                      fontFamily: 'GoogleSans',
-                                                                                                      fontSize: 13.2.sp,
-                                                                                                      fontWeight: FontWeight.w500,
-                                                                                                      color:
-                                                                                                          model.selectedTimePerDay[list] ==
-                                                                                                              time['time']
-                                                                                                          ? AppColors.white
-                                                                                                          : AppColors.app_green,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  SizedBox(
-                                                                                                    width: 6.w,
-                                                                                                  ),
-                                                                                                  GestureDetector(
-                                                                                                    onTap: () {
-                                                                                                      model.removeCustomTimeAt(
-                                                                                                        model: model,
-                                                                                                        medicationIndex: index,
-                                                                                                        dayIndex: list,
-                                                                                                        timeIndex: timeIndex,
-                                                                                                      );
-                                                                                                      setModalState!(
-                                                                                                        () {},
-                                                                                                      );
-                                                                                                      model.notifyListeners();
-                                                                                                    },
-                                                                                                    child: SvgPicture.asset(
-                                                                                                      AppImage.x,
-                                                                                                      color:
-                                                                                                          model.selectedTimePerDay[list] ==
-                                                                                                              time['time']
-                                                                                                          ? AppColors.white
-                                                                                                          : AppColors.app_green,
-                                                                                                      height: 16.20.h,
-                                                                                                      width: 16.w,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ],
-                                                                                              ),
+                                                                                              color:
+                                                                                                  model.selectedTimePerDay[list] ==
+                                                                                                      time['time']
+                                                                                                  ? AppColors.app_green
+                                                                                                  : AppColors.white,
                                                                                             ),
-                                                                                          );
-                                                                                        },
-                                                                                      ),
+                                                                                            child: Row(
+                                                                                              children: [
+                                                                                                TextView(
+                                                                                                  text:
+                                                                                                      time['time'].contains(
+                                                                                                            "PM",
+                                                                                                          ) ||
+                                                                                                          time['time'].contains(
+                                                                                                            'AM',
+                                                                                                          )
+                                                                                                      ? time['time']
+                                                                                                      : convertTo12HourFormat(
+                                                                                                          time['time'],
+                                                                                                        ),
+                                                                                                  textStyle: TextStyle(
+                                                                                                    fontFamily: 'GoogleSans',
+                                                                                                    fontSize: 13.2.sp,
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                    color:
+                                                                                                        model.selectedTimePerDay[list] ==
+                                                                                                            time['time']
+                                                                                                        ? AppColors.white
+                                                                                                        : AppColors.app_green,
+                                                                                                  ),
+                                                                                                ),
+                                                                                                SizedBox(
+                                                                                                  width: 6.w,
+                                                                                                ),
+                                                                                                GestureDetector(
+                                                                                                  onTap: () {
+                                                                                                    model.removeCustomTimeAt(
+                                                                                                      model: model,
+                                                                                                      medicationIndex: index,
+                                                                                                      dayIndex: list,
+                                                                                                      timeIndex: timeIndex,
+                                                                                                    );
+                                                                                                    setModalState!(
+                                                                                                      () {},
+                                                                                                    );
+                                                                                                    model.notifyListeners();
+                                                                                                  },
+                                                                                                  child: SvgPicture.asset(
+                                                                                                    AppImage.x,
+                                                                                                    color:
+                                                                                                        model.selectedTimePerDay[list] ==
+                                                                                                            time['time']
+                                                                                                        ? AppColors.white
+                                                                                                        : AppColors.app_green,
+                                                                                                    height: 16.20.h,
+                                                                                                    width: 16.w,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                          ),
+                                                                                        );
+                                                                                      }),
                                                                                     ],
                                                                                   ),
                                                                                 ),

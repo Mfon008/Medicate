@@ -935,63 +935,63 @@ class _HmoPlanScreenState extends State<HmoPlanScreen> {
                                                                   );
                                                             },
                                                         disposeViewModel: false,
-                                                        builder: (_, HMOViewModel model, _) {
-                                                          return Wrap(
-                                                            spacing: 10.0,
-                                                            runSpacing: 8.0,
-                                                            children: [
-                                                              if (model.getPlanHospitalNetworkResponseModel !=
-                                                                      null &&
-                                                                  model
-                                                                      .getPlanHospitalNetworkResponseModel!
-                                                                      .data!
-                                                                      .hospitals!
-                                                                      .isNotEmpty)
-                                                                ...model.getPlanHospitalNetworkResponseModel!.data!.hospitals!.map(
-                                                                  (
-                                                                    o,
-                                                                  ) => IntrinsicWidth(
-                                                                    child: Container(
-                                                                      padding: EdgeInsets.symmetric(
-                                                                        horizontal:
-                                                                            12.w,
-                                                                        vertical:
-                                                                            2.2.h,
-                                                                      ),
-                                                                      decoration: BoxDecoration(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
+                                                        builder:
+                                                            (
+                                                              _,
+                                                              HMOViewModel
+                                                              model,
+                                                              _,
+                                                            ) {
+                                                              return Wrap(
+                                                                spacing: 10.0,
+                                                                runSpacing: 8.0,
+                                                                children: [
+                                                                  if (model.getPlanHospitalNetworkResponseModel !=
+                                                                          null &&
+                                                                      model
+                                                                          .getPlanHospitalNetworkResponseModel!
+                                                                          .data!
+                                                                          .hospitals!
+                                                                          .isNotEmpty)
+                                                                    ...model.getPlanHospitalNetworkResponseModel!.data!.hospitals!.map(
+                                                                      (
+                                                                        o,
+                                                                      ) => IntrinsicWidth(
+                                                                        child: Container(
+                                                                          padding: EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                12.w,
+                                                                            vertical:
+                                                                                2.2.h,
+                                                                          ),
+                                                                          decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(
                                                                               22.r,
                                                                             ),
-                                                                        border: Border.all(
-                                                                          color:
-                                                                              AppColors.primary,
-                                                                        ),
-                                                                      ),
-                                                                      child: TextView(
-                                                                        text:
-                                                                            o.state ??
-                                                                            "",
-                                                                        textStyle: TextStyle(
-                                                                          fontFamily:
-                                                                              'Arial',
-                                                                          fontSize:
-                                                                              14.2.sp,
-                                                                          fontWeight:
-                                                                              FontWeight.w400,
-                                                                          color:
-                                                                              AppColors.primary,
+                                                                            border: Border.all(
+                                                                              color: AppColors.primary,
+                                                                            ),
+                                                                          ),
+                                                                          child: TextView(
+                                                                            text:
+                                                                                o.state ??
+                                                                                "",
+                                                                            textStyle: TextStyle(
+                                                                              fontFamily: 'Arial',
+                                                                              fontSize: 14.2.sp,
+                                                                              fontWeight: FontWeight.w400,
+                                                                              color: AppColors.primary,
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
+                                                                  SizedBox(
+                                                                    width: 10.w,
                                                                   ),
-                                                                ),
-                                                              SizedBox(
-                                                                width: 10.w,
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
+                                                                ],
+                                                              );
+                                                            },
                                                       ),
                                                       SizedBox(height: 20.w),
                                                     ],
