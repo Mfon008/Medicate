@@ -8,6 +8,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/category.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_product_management_entity_model/update_product_management_entity_model.dart';
+import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/manufacturer/product/custom_switch_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../../core/app_assets/app_validation.dart';
@@ -21,6 +23,10 @@ import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 import 'package:medicate_app/core/connect_end/model/create_distributor_product_entity_model/image.dart'
     as iml;
+import 'package:medicate_app/core/connect_end/model/update_product_management_entity_model/image.dart'
+    as up;
+import 'package:medicate_app/core/connect_end/model/update_product_management_entity_model/volume_pricing.dart'
+    as v;
 
 class AddProductScreen extends StatefulWidget {
   AddProductScreen({super.key, this.isEdit, this.productId});
@@ -60,6 +66,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
         model.getWholesaleCategoryList(context);
         if (widget.isEdit!) {
           await model.getSingleProduct(context, productId: widget.productId);
+          vPriceController.clear();
+          ppuController.clear();
+          isSwitched =
+              model.getSingleProductResponseModel!.data!.product!.isPublished!;
           productName.text =
               model.getSingleProductResponseModel?.data?.product?.productName ??
               '';
@@ -101,9 +111,32 @@ class _AddProductScreenState extends State<AddProductScreen> {
           unit.text =
               model.getSingleProductResponseModel?.data?.product?.unit ?? '';
 
-          model.c = Category.fromJson(model.getSingleProductResponseModel!.data!.product!.categoryDetails!.toJson());
-
-          print('model.c?.namemodel.c?.name${model.c?.toJson()}');
+          model.c = Category(
+            id: model
+                .getSingleProductResponseModel!
+                .data!
+                .product!
+                .categoryDetails!
+                .id,
+            name: model
+                .getSingleProductResponseModel!
+                .data!
+                .product!
+                .categoryDetails!
+                .name,
+            slug: model
+                .getSingleProductResponseModel!
+                .data!
+                .product!
+                .categoryDetails!
+                .slug,
+            marginPercentage: model
+                .getSingleProductResponseModel!
+                .data!
+                .product!
+                .categoryDetails!
+                .marginPercentage,
+          );
           model.nafdacRegNoController.text =
               model
                   .getSingleProductResponseModel
@@ -131,6 +164,40 @@ class _AddProductScreenState extends State<AddProductScreen> {
               .images!
               .map<iml.Image>((image) => iml.Image.fromJson(image.toJson()))
               .toList();
+          for (
+            int i = 0;
+            i <
+                model
+                    .getSingleProductResponseModel!
+                    .data!
+                    .product!
+                    .volumePricing!
+                    .length;
+            i++
+          ) {
+            ppuController.add(
+              TextEditingController(
+                text: model
+                    .getSingleProductResponseModel!
+                    .data!
+                    .product!
+                    .volumePricing![i]
+                    .pricePerUnit
+                    .toString(),
+              ),
+            );
+            vPriceController.add(
+              TextEditingController(
+                text: model
+                    .getSingleProductResponseModel!
+                    .data!
+                    .product!
+                    .volumePricing![i]
+                    .quantity
+                    .toString(),
+              ),
+            );
+          }
         }
       },
       disposeViewModel: false,
@@ -147,7 +214,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               child: GlobalNavigator(),
             ),
             title: TextView(
-              text: 'Add New product',
+              text: widget.isEdit! ? 'Edit Product' : 'Add New Product',
               textStyle: TextStyle(
                 fontFamily: 'DMSans',
                 fontSize: 17.2.sp,
@@ -161,7 +228,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
             padding: EdgeInsets.symmetric(horizontal: 13.20.w, vertical: 23.0),
             child: Container(
               padding: EdgeInsets.symmetric(
-                horizontal: 16.20.w,
+                horizontal: 13.20.w,
                 vertical: 23.0.w,
               ),
               decoration: BoxDecoration(
@@ -1058,9 +1125,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                     child: TextFormWidget(
                                       hint: 'Volume Quantity',
                                       label: '',
-                                      letterSpacing: -0.81,
-                                      hintSize: 16.0.sp,
-                                      hintWeight: FontWeight.w500,
+                                      letterSpacing: -1.2,
+                                      hintSize: 15.20.sp,
+                                      hintWeight: FontWeight.lerp(FontWeight.w400, FontWeight.w500, 0.005),
                                       borderColor: AppColors.transparent,
                                       borderTopLeft: 10.r,
                                       borderTopRight: 10.r,
@@ -1085,14 +1152,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                       onChange: (p0) {},
                                     ),
                                   ),
-                                  SizedBox(width: 13.20.w),
+                                  SizedBox(width: 12.20.w),
                                   Expanded(
                                     child: TextFormWidget(
                                       hint: 'Price per Unit(₦)',
                                       label: '0.00',
-                                      letterSpacing: -0.81,
-                                      hintSize: 16.0.sp,
-                                      hintWeight: FontWeight.w500,
+                                      letterSpacing: -0.98,
+                                      hintSize: 15.20.sp,
+                                      hintWeight: FontWeight.lerp(FontWeight.w400, FontWeight.w500, 0.005),
                                       borderColor: AppColors.transparent,
                                       borderTopLeft: 10.r,
                                       borderTopRight: 10.r,
@@ -1196,71 +1263,225 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ],
                     ),
                     SizedBox(height: 30.h),
-                    GestureDetector(
-                      onTap: () {
-                        if (formKeyAddProduct.currentState!.validate()) {
-                          volumnPricelist.clear();
-                          for (int i = 0; i < vPriceController.length; i++) {
-                            volumnPricelist.add(
-                              VolumePricing(
-                                quantity: int.parse(vPriceController[i].text),
-                                pricePerUnit: int.parse(ppuController[i].text),
-                              ),
-                            );
-                          }
-                          model.createProduct(
-                            context,
-                            createproduct: CreateDistributorProductEntityModel(
-                              productName: productName.text.trim(),
-                              description: description.text.trim(),
-                              categoryId: model.c!.id,
-                              sku: sku.text.trim(),
-                              packSize: int.parse(packSize.text.trim()),
-                              unit: unit.text.trim(),
-                              minimumOrderQuantity: int.parse(moq.text.trim()),
-                              pricePerUnit: int.parse(priceUnit.text.trim()),
-                              stock: int.parse(stock.text.trim()),
-                              batchNumber: batchNo.text.trim(),
-                              serialNumber: serialNo.text.trim(),
-                              manufacturedDate:
-                                  model.manufacturerDateController.text,
-                              expiryDate: model.expiryDateController.text,
-                              nafdacRegistrationNumber:
-                                  model.nafdacRegNoController.text,
-                              images: model.imagesProductList,
-                              volumePricing: volumnPricelist,
-                            ),
-                          );
-                        }
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 14.30.w,
-                          horizontal: 20.w,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(52.r),
-                        ),
-                        child: Center(
-                          child: model.isLoading
-                              ? SpinKitThreeBounce(
-                                  color: AppColors.white,
-                                  size: 22.0.sp,
-                                )
-                              : TextView(
-                                  text: 'Create Product',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 17.90.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.white,
+                    widget.isEdit!
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: GestureDetector(
+                                  onTap: () => navigate.back(),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 14.30.w,
+                                      horizontal: 20.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: AppColors.primary,
+                                      ),
+                                      borderRadius: BorderRadius.circular(52.r),
+                                    ),
+                                    child: Center(
+                                      child: TextView(
+                                        text: 'Cancel',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 17.90.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.primary,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                        ),
-                      ),
-                    ),
+                              ),
+                              SizedBox(width: 20.w),
+                              Expanded(
+                                flex: 5,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    for (
+                                      int i = 0;
+                                      i < vPriceController.length;
+                                      i++
+                                    ) {
+                                      volumnPricelist.add(
+                                        VolumePricing(
+                                          quantity: int.parse(
+                                            vPriceController[i].text,
+                                          ),
+                                          pricePerUnit: int.parse(
+                                            ppuController[i].text,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    model.updateProduct(
+                                      context,
+                                      productId: widget.productId,
+                                      updateproduct:
+                                          UpdateProductManagementEntityModel(
+                                            productName: productName.text
+                                                .trim(),
+                                            description: description.text
+                                                .trim(),
+                                            categoryId: model.c!.id,
+                                            // distributorId: widget.productId,
+                                            sku: sku.text.trim(),
+                                            packSize: int.parse(
+                                              packSize.text.trim(),
+                                            ),
+                                            unit: unit.text.trim(),
+                                            minimumOrderQuantity: int.parse(
+                                              moq.text.trim(),
+                                            ),
+                                            pricePerUnit: int.parse(
+                                              priceUnit.text.trim(),
+                                            ),
+                                            stock: int.parse(stock.text.trim()),
+                                            batchNumber: batchNo.text.trim(),
+                                            serialNumber: serialNo.text.trim(),
+                                            manufacturedDate: model
+                                                .manufacturerDateController
+                                                .text,
+                                            expiryDate:
+                                                model.expiryDateController.text,
+                                            nafdacRegistrationNumber: model
+                                                .nafdacRegNoController
+                                                .text,
+                                            images: model.imagesProductList
+                                                ?.map(
+                                                  (image) => up.Image.fromJson(
+                                                    image.toJson(),
+                                                  ),
+                                                )
+                                                .toList(),
+                                            volumePricing: volumnPricelist
+                                                .map(
+                                                  (vol) =>
+                                                      v.VolumePricing.fromJson(
+                                                        vol.toJson(),
+                                                      ),
+                                                )
+                                                .toList(),
+                                          ),
+                                    );
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 14.30.w,
+                                      horizontal: 20.w,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primary,
+                                      borderRadius: BorderRadius.circular(52.r),
+                                    ),
+                                    child: Center(
+                                      child: model.isLoading
+                                          ? SpinKitThreeBounce(
+                                              color: AppColors.white,
+                                              size: 22.0.sp,
+                                            )
+                                          : TextView(
+                                              text: 'Save Changes',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 17.90.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.white,
+                                              ),
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              if (formKeyAddProduct.currentState!.validate()) {
+                                volumnPricelist.clear();
+                                for (
+                                  int i = 0;
+                                  i < vPriceController.length;
+                                  i++
+                                ) {
+                                  volumnPricelist.add(
+                                    VolumePricing(
+                                      quantity: int.parse(
+                                        vPriceController[i].text,
+                                      ),
+                                      pricePerUnit: int.parse(
+                                        ppuController[i].text,
+                                      ),
+                                    ),
+                                  );
+                                }
+                                model.createProduct(
+                                  context,
+                                  createproduct:
+                                      CreateDistributorProductEntityModel(
+                                        productName: productName.text.trim(),
+                                        description: description.text.trim(),
+                                        categoryId: model.c!.id,
+                                        sku: sku.text.trim(),
+                                        packSize: int.parse(
+                                          packSize.text.trim(),
+                                        ),
+                                        unit: unit.text.trim(),
+                                        minimumOrderQuantity: int.parse(
+                                          moq.text.trim(),
+                                        ),
+                                        pricePerUnit: int.parse(
+                                          priceUnit.text.trim(),
+                                        ),
+                                        stock: int.parse(stock.text.trim()),
+                                        batchNumber: batchNo.text.trim(),
+                                        serialNumber: serialNo.text.trim(),
+                                        manufacturedDate: model
+                                            .manufacturerDateController
+                                            .text,
+                                        expiryDate:
+                                            model.expiryDateController.text,
+                                        nafdacRegistrationNumber:
+                                            model.nafdacRegNoController.text,
+                                        images: model.imagesProductList,
+                                        volumePricing: volumnPricelist,
+                                      ),
+                                );
+                              }
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                vertical: 14.30.w,
+                                horizontal: 20.w,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(52.r),
+                              ),
+                              child: Center(
+                                child: model.isLoading
+                                    ? SpinKitThreeBounce(
+                                        color: AppColors.white,
+                                        size: 22.0.sp,
+                                      )
+                                    : TextView(
+                                        text: 'Create Product',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 17.90.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
                     SizedBox(height: 20.30.h),
                   ],
                 ),

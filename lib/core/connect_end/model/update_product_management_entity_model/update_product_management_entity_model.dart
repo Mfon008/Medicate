@@ -4,7 +4,7 @@ import 'volume_pricing.dart';
 class UpdateProductManagementEntityModel {
   String? productName;
   String? description;
-  String? distributorId;
+  // String? distributorId;
   String? categoryId;
   String? sku;
   int? packSize;
@@ -23,7 +23,7 @@ class UpdateProductManagementEntityModel {
   UpdateProductManagementEntityModel({
     this.productName,
     this.description,
-    this.distributorId,
+    // this.distributorId,
     this.categoryId,
     this.sku,
     this.packSize,
@@ -46,7 +46,7 @@ class UpdateProductManagementEntityModel {
     return UpdateProductManagementEntityModel(
       productName: json['productName'] as String?,
       description: json['description'] as String?,
-      distributorId: json['distributorId'] as String?,
+      // distributorId: json['distributorId'] as String?,
       categoryId: json['categoryId'] as String?,
       sku: json['sku'] as String?,
       packSize: json['packSize'] as int?,
@@ -71,7 +71,7 @@ class UpdateProductManagementEntityModel {
   Map<String, dynamic> toJson() => {
     'productName': productName,
     'description': description,
-    'distributorId': distributorId,
+    // 'distributorId': distributorId,
     'categoryId': categoryId,
     'sku': sku,
     'packSize': packSize,
