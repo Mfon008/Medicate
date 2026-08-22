@@ -36,6 +36,7 @@ import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
 import '../../app_assets/country_code_format.dart';
+import '../../app_assets/decouncer_class.dart';
 import '../../app_assets/image.dart';
 import '../../app_assets/image_picker.dart';
 import '../../config/colors.dart';
@@ -52,6 +53,8 @@ import '../model/create_tenant_reminder_entity_model/medication.dart';
 import '../model/create_tenant_reminder_entity_model/medication_image.dart';
 import '../model/create_tenant_reminder_entity_model/payment.dart';
 import '../model/create_user_entity_model.dart';
+import '../model/distributor_wholesale_category_model/category.dart';
+import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
@@ -59,6 +62,7 @@ import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
+import '../model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -120,6 +124,8 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_resp
     as getR;
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/data.dart'
     as getReminderId;
+import 'package:medicate_app/core/connect_end/model/get_single_market_product_response_model/image.dart'
+    as singImg;
 
 class HealthCareViewModel extends BaseViewModel {
   String? pinInput;
@@ -249,7 +255,15 @@ class HealthCareViewModel extends BaseViewModel {
       _createReminderResponseModel;
 
   ListMarketProductResponseModel? _getListedMarketPlaceResponseModel;
-  ListMarketProductResponseModel? get getListedMarketPlaceResponseModel =>  _getListedMarketPlaceResponseModel;
+  ListMarketProductResponseModel? get getListedMarketPlaceResponseModel =>
+      _getListedMarketPlaceResponseModel;
+  DistributorWholesaleCategoryModel? _distributorWholesaleCategoryModel;
+  DistributorWholesaleCategoryModel? get distributorWholesaleCategoryModel =>
+      _distributorWholesaleCategoryModel;
+  GetSingleMarketProductResponseModel? _getSingleMarketProductResponseModel;
+  GetSingleMarketProductResponseModel?
+  get getSingleMarketProductResponseModel =>
+      _getSingleMarketProductResponseModel;
 
   int linIndex = 1;
   int productQuantity = 1;
@@ -266,6 +280,8 @@ class HealthCareViewModel extends BaseViewModel {
   bool isTappedEmailAdded = false;
 
   String startDateIso = '';
+  singImg.Image? images;
+  int inImage = 0;
 
   List<MedicationClass> medicationClassList = [];
   List<dynamic> medTypeUpdateIcon = [];
@@ -490,7 +506,7 @@ class HealthCareViewModel extends BaseViewModel {
   List<int> intListCustom = [];
 
   Price price = Price.all;
-  Category category = Category.all;
+  // Category category = Category.all;
   Delivery delivery = Delivery.instance;
   CartAddedTime cartTimeAdded = CartAddedTime.morning;
 
@@ -592,6 +608,64 @@ class HealthCareViewModel extends BaseViewModel {
   int? returnNoDays;
   DateTime? pickedDatedStart;
   String? pickedDatedStartString;
+
+  Category? _cat;
+  String querySignUpCountry = '';
+  String? searchRoles = '';
+
+  bool _isLoadingCAC = false;
+  bool get isLoadingCAC => _isLoadingCAC;
+  bool _isLoadingLicense = false;
+  bool get isLoadingLicense => _isLoadingLicense;
+  bool _isLoadingTIN = false;
+  bool get isLoadingTIN => _isLoadingTIN;
+
+  final defaultPinTheme = PinTheme(
+    width: 50.w,
+    height: 50.h,
+    margin: EdgeInsets.only(right: 10.w),
+    textStyle: const TextStyle(
+      fontSize: 20,
+      color: Colors.black,
+      fontWeight: FontWeight.w500,
+    ),
+    decoration: BoxDecoration(
+      color: AppColors.grey, // light background
+      border: Border.all(color: AppColors.transparent),
+      borderRadius: BorderRadius.circular(10),
+    ),
+  );
+
+  GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateAddExperience = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateAddRole = GlobalKey<FormState>();
+
+  GlobalKey<FormState> formKeyValidateAddDoctor = GlobalKey<FormState>();
+
+  List<String> areaExpertise = [
+    'General Practitioners (GPs) & Family\nMedicine',
+    'Gynecology',
+    'Pediatrics',
+  ];
+
+  List<String> addAreaExpertise = [];
+  List<String> addAreaExpertiseDoctor = [];
+  List<String> addAreaExpertiseDoctorShow = [];
+
+  File? imageMeansId;
+  String? filenameMeansId;
+  int _start = 60;
+
+  File? image;
+  String? filename;
+
+  final Map<String, int> selectedQuantities = {};
+  int? productSinglequantity;
+
+  List<EducationalExperience> educationalExperienceList = [];
+  String sortPrice = 'LOW_TO_HIGH';
+
+  final debouncer = Debouncer(milliseconds: 200);
 
   getTimeFreq() => formattedSelectedTimeAndPeriod ?? '--:--';
 
@@ -783,7 +857,26 @@ class HealthCareViewModel extends BaseViewModel {
     return 18.w;
   }
 
-  void modalBottomSheetMenuHealthCareRadio(context) {
+  void getWholesaleCategoryList(context, {String? search}) async {
+    try {
+      _isLoading = true;
+      _distributorWholesaleCategoryModel = await runBusyFuture(
+        repositoryImply.wholesaleCategories(
+          page: page.toString(),
+          search: search,
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void modalBottomSheetMenuHealthCareRadio(context, HealthCareViewModel model) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -793,14 +886,11 @@ class HealthCareViewModel extends BaseViewModel {
       backgroundColor: AppColors.white,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (context) {
-        return ViewModelBuilder<HealthCareViewModel>.reactive(
-          viewModelBuilder: () => HealthCareViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          onDispose: (viewModel) {},
-          builder: (_, HealthCareViewModel model, _) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
             return DraggableScrollableSheet(
-              expand: false, // 👈 allows proper layout
+              expand: false,
+              maxChildSize: .60, // 👈 allows proper layout
               builder: (context, scrollController) {
                 return SafeArea(
                   child: SingleChildScrollView(
@@ -852,6 +942,8 @@ class HealthCareViewModel extends BaseViewModel {
                               activeColor: AppColors.primary,
                               onChanged: (value) {
                                 price = value!;
+                                sortPrice = 'LOW_TO_HIGH';
+                                setModalState(() {});
                                 model.notifyListeners();
                               },
                             ),
@@ -872,6 +964,8 @@ class HealthCareViewModel extends BaseViewModel {
                               groupValue: price,
                               onChanged: (value) {
                                 price = value!;
+                                sortPrice = 'LOW_TO_HIGH';
+                                setModalState(() {});
                                 model.notifyListeners();
                               },
                             ),
@@ -892,6 +986,8 @@ class HealthCareViewModel extends BaseViewModel {
                               groupValue: price,
                               onChanged: (value) {
                                 price = value!;
+                                sortPrice = 'HIGH_TO_LOW';
+                                setModalState(() {});
                                 model.notifyListeners();
                               },
                             ),
@@ -917,170 +1013,84 @@ class HealthCareViewModel extends BaseViewModel {
                           ),
                         ),
                         SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Radio(
-                              value: Category.all,
-                              groupValue: category,
-                              activeColor: AppColors.primary,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'All',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.analgesics,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'analgesics',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
+                        Wrap(
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Radio(
+                                  value: null,
+                                  groupValue: _cat,
+                                  activeColor: AppColors.primary,
+                                  onChanged: (value) {
+                                    _cat = value;
+                                    setModalState(() {});
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                TextView(
+                                  text: 'All',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                              ],
                             ),
 
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.antibiotics,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'antibiotics',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
+                            SizedBox(width: 10.w),
+                            // CATEGORIES
+                            if (model.distributorWholesaleCategoryModel !=
+                                    null &&
+                                model
+                                        .distributorWholesaleCategoryModel!
+                                        .data
+                                        ?.categories !=
+                                    null &&
+                                model
+                                    .distributorWholesaleCategoryModel!
+                                    .data!
+                                    .categories!
+                                    .isNotEmpty)
+                              ...model
+                                  .distributorWholesaleCategoryModel!
+                                  .data!
+                                  .categories!
+                                  .map((cat) {
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio<Category>(
+                                          value: cat,
+                                          groupValue: _cat,
+                                          activeColor: AppColors.primary,
+                                          onChanged: (value) {
+                                            if (value == null) return;
+                                            _cat = value;
+                                            setModalState(() {});
+                                            model.notifyListeners();
+                                          },
+                                        ),
+
+                                        TextView(
+                                          text: '${cat.name}',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.2.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 10.w),
+                                      ],
+                                    );
+                                  }),
                           ],
                         ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Radio(
-                              value: Category.vitamins,
-                              groupValue: category,
-                              activeColor: AppColors.primary,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'vitamins',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
 
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.medicaldevices,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'medical devices',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Radio(
-                              value: Category.personalcare,
-                              groupValue: category,
-                              activeColor: AppColors.primary,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'personal care',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.firstaid,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'first aid',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-
-                        // --- Reset link ---
-                        TextView(
-                          text: 'Reset filter',
-                          textStyle: TextStyle(
-                            fontSize: 14.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.primary,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primary,
-                          ),
-                        ),
                         SizedBox(height: 50.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1102,11 +1112,30 @@ class HealthCareViewModel extends BaseViewModel {
                                 buttonColor: AppColors.primary,
                                 buttonText: 'Apply',
                                 color: AppColors.white,
+                                isLoading: _isLoading,
                                 buttonBorderColor: AppColors.transparent,
-                                onPressed: () {
-                                  // if (formKeyValidate.currentState!.validate()) {
-                                  //   navigate.navigateTo(Routes.setupPinScreen);
-                                  // }
+                                onPressed: () async {
+                                  setModalState(() {
+                                    _isLoading = true;
+                                  });
+                                  if (_cat != null) {
+                                    await model.getListedMarketPlaceWithCatId(
+                                      context,
+                                      catId: _cat!.id,
+                                    );
+                                  } else {
+                                    // All categories
+                                    await model.getListedMarketPlace(context);
+                                  }
+
+                                  _isLoading = false;
+                                  if (context.mounted) {
+                                    navigate.back();
+                                  }
+                                  setModalState(() {
+                                    _isLoading = false;
+                                  });
+                                  model.notifyListeners();
                                 },
                               ),
                             ),
@@ -1123,57 +1152,6 @@ class HealthCareViewModel extends BaseViewModel {
       },
     );
   }
-
-  String querySignUpCountry = '';
-  String? searchRoles = '';
-
-  bool _isLoadingCAC = false;
-  bool get isLoadingCAC => _isLoadingCAC;
-  bool _isLoadingLicense = false;
-  bool get isLoadingLicense => _isLoadingLicense;
-  bool _isLoadingTIN = false;
-  bool get isLoadingTIN => _isLoadingTIN;
-
-  final defaultPinTheme = PinTheme(
-    width: 50.w,
-    height: 50.h,
-    margin: EdgeInsets.only(right: 10.w),
-    textStyle: const TextStyle(
-      fontSize: 20,
-      color: Colors.black,
-      fontWeight: FontWeight.w500,
-    ),
-    decoration: BoxDecoration(
-      color: AppColors.grey, // light background
-      border: Border.all(color: AppColors.transparent),
-      borderRadius: BorderRadius.circular(10),
-    ),
-  );
-
-  GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
-  GlobalKey<FormState> formKeyValidateAddExperience = GlobalKey<FormState>();
-  GlobalKey<FormState> formKeyValidateAddRole = GlobalKey<FormState>();
-
-  GlobalKey<FormState> formKeyValidateAddDoctor = GlobalKey<FormState>();
-
-  List<String> areaExpertise = [
-    'General Practitioners (GPs) & Family\nMedicine',
-    'Gynecology',
-    'Pediatrics',
-  ];
-
-  List<String> addAreaExpertise = [];
-  List<String> addAreaExpertiseDoctor = [];
-  List<String> addAreaExpertiseDoctorShow = [];
-
-  File? imageMeansId;
-  String? filenameMeansId;
-  int _start = 60;
-
-  File? image;
-  String? filename;
-
-  List<EducationalExperience> educationalExperienceList = [];
 
   /// reminder flow for health care
   ///
@@ -18428,7 +18406,11 @@ class HealthCareViewModel extends BaseViewModel {
     try {
       _isLoading = true;
       _getListedMarketPlaceResponseModel = await runBusyFuture(
-        repositoryImply.getListedMarketPlaceProduct(page: page.toString(),search: searchProduct,sortPrice: 'LOW_TO_HIGH'),
+        repositoryImply.getListedMarketPlaceProduct(
+          page: page.toString(),
+          search: searchProduct,
+          sortPrice: 'LOW_TO_HIGH',
+        ),
         throwException: true,
       );
       _isLoading = false;
@@ -18440,21 +18422,42 @@ class HealthCareViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // Future<void> getListedMarketPlaceWithCatId(context) async {
-  //   try {
-  //     _isLoading = true;
-  //     _getListedMarketPlaceResponseModel = await runBusyFuture(
-  //       repositoryImply.getListedMarketPlaceProductWithCatId(page: page.toString(),search: searchProduct,sortPrice: 'LOW_TO_HIGH'),
-  //       throwException: true,
-  //     );
-  //     _isLoading = false;
-  //   } catch (e) {
-  //     _isLoading = false;
-  //     logger.d(e);
-  //     AppUtils.snackbar(context, message: e.toString(), error: true);
-  //   }
-  //   notifyListeners();
-  // }
+  Future<void> getListedMarketPlaceWithCatId(context, {String? catId}) async {
+    try {
+      _isLoading = true;
+      _getListedMarketPlaceResponseModel = await runBusyFuture(
+        repositoryImply.getListedMarketPlaceProductWithCatId(
+          page: page.toString(),
+          search: searchProduct,
+          catId: catId,
+          sortPrice: sortPrice,
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getSingleMarketPlaceProduct(context, {String? productId}) async {
+    try {
+      _isLoading = true;
+      _getSingleMarketProductResponseModel = await runBusyFuture(
+        repositoryImply.getSingleMarketPlaceProduct(productIds: productId),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
 
   Future<void> deleteRole(BuildContext context, {String? roleId}) async {
     try {

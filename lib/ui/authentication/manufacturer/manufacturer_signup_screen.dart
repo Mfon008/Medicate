@@ -234,13 +234,13 @@ class _ManufacturerSignUpScreenState extends State<ManufacturerSignUpScreen> {
                   ),
                   SizedBox(height: 16.h),
                   TextFormWidget(
-                    hint: 'Registration number',
+                    hint: 'Business Registration number',
                     borderColor: AppColors.transparent,
                     borderTopLeft: 10.r,
                     borderTopRight: 10.r,
                     borderBottomLeft: 10.r,
                     borderBottomRight: 10.r,
-                    label: 'Enter registration number',
+                    label: 'Enter business registration number',
                     hintWeight: FontWeight.w400,
                     hintSize: isTablet(context) ? 6.82.sp : 16.98.sp,
                     labelStyle: TextStyle(

@@ -2345,8 +2345,10 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const BusinessProviderViewProductScreenArguments(),
       );
       return _i145.MaterialPageRoute<dynamic>(
-        builder: (context) =>
-            _i121.BusinessProviderViewProductScreen(key: args.key),
+        builder: (context) => _i121.BusinessProviderViewProductScreen(
+          key: args.key,
+          wholeSaleProductId: args.wholeSaleProductId,
+        ),
         settings: data,
       );
     },
@@ -5523,24 +5525,29 @@ class SpecialistsProviderAddToCartScreenArguments {
 }
 
 class BusinessProviderViewProductScreenArguments {
-  const BusinessProviderViewProductScreenArguments({this.key});
+  const BusinessProviderViewProductScreenArguments({
+    this.key,
+    this.wholeSaleProductId,
+  });
 
   final _i145.Key? key;
 
+  final String? wholeSaleProductId;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "wholeSaleProductId": "$wholeSaleProductId"}';
   }
 
   @override
   bool operator ==(covariant BusinessProviderViewProductScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.wholeSaleProductId == wholeSaleProductId;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ wholeSaleProductId.hashCode;
   }
 }
 
@@ -8380,6 +8387,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> navigateToBusinessProviderViewProductScreen({
     _i145.Key? key,
+    String? wholeSaleProductId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8388,7 +8396,10 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.businessProviderViewProductScreen,
-      arguments: BusinessProviderViewProductScreenArguments(key: key),
+      arguments: BusinessProviderViewProductScreenArguments(
+        key: key,
+        wholeSaleProductId: wholeSaleProductId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -11131,6 +11142,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> replaceWithBusinessProviderViewProductScreen({
     _i145.Key? key,
+    String? wholeSaleProductId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11139,7 +11151,10 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.businessProviderViewProductScreen,
-      arguments: BusinessProviderViewProductScreenArguments(key: key),
+      arguments: BusinessProviderViewProductScreenArguments(
+        key: key,
+        wholeSaleProductId: wholeSaleProductId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

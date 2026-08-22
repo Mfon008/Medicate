@@ -10,12 +10,14 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
+import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
+import '../model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -23,6 +25,7 @@ import '../model/get_user_details_response_model/get_user_details_response_model
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
+import '../model/list_market_product_response_model/list_market_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
@@ -46,6 +49,8 @@ import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
+import '../model/wholesale_add_to_cart_entity_model.dart';
+import '../model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
 
 @lazySingleton
 class PharmRepoImpl {
@@ -116,11 +121,6 @@ class PharmRepoImpl {
     );
     return response;
   }
-
-  // Future<dynamic> refreshToken() async {
-  //   final response = await _contract.refreshToken();
-  //   return response;
-  // }
 
   Future<dynamic> sendOtp(String phone) async {
     final response = await _contract.sendOtp(phone);
@@ -400,6 +400,90 @@ class PharmRepoImpl {
 
   Future<GetWalletResponseModel> getWalletBalance() async {
     final response = await _contract.getWalletBalance();
+    return response;
+  }
+
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProduct({
+    String? page,
+    String? sortPrice,
+    String? search,
+  }) async {
+    final response = await _contract.getListedMarketPlaceProduct(
+      page: page,
+      search: search,
+      sortPrice: sortPrice,
+    );
+    return response;
+  }
+
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProductWithCatId({
+    String? page,
+    String? catId,
+    String? sortPrice,
+    String? search,
+  }) async {
+    final response = await _contract.getListedMarketPlaceProductWithCatId(
+      page: page,
+      search: search,
+      sortPrice: sortPrice,
+      catId: catId,
+    );
+    return response;
+  }
+
+  Future<DistributorWholesaleCategoryModel> wholesaleCategories({
+    String? page,
+    String? search,
+  }) async {
+    final response = await _contract.wholesaleCategories(
+      page: page,
+      search: search,
+    );
+    return response;
+  }
+
+  Future<GetSingleMarketProductResponseModel> getSingleMarketPlaceProduct({
+    String? productIds,
+  }) async {
+    final response = await _contract.getSingleMarketPlaceProduct(
+      productIds: productIds,
+    );
+    return response;
+  }
+
+  Future<dynamic> addWholesaleProductToCart(
+    WholesaleAddToCartEntityModel? addToCart,
+  ) async {
+    final response = await _contract.addWholesaleProductToCart(addToCart);
+    return response;
+  }
+
+  Future<WholesaleGetProductAddedToCartResponseModel>
+  getWholesaleProductAddedToCart() async {
+    final response = await _contract.getWholesaleProductAddedToCart();
+    return response;
+  }
+
+  Future<dynamic> updateWholesaleProductToCart({
+    String? productId,
+    int? quantity,
+  }) async {
+    final response = await _contract.updateWholesaleProductToCart(
+      productId: productId,
+      quantity: quantity,
+    );
+    return response;
+  }
+
+  Future<dynamic> removeWholesaleProductItemFromCart(String? productId) async {
+    final response = await _contract.removeWholesaleProductItemFromCart(
+      productId,
+    );
+    return response;
+  }
+
+  Future<dynamic> clearWholesaleProductFromCart(String? productId) async {
+    final response = await _contract.clearWholesaleProductFromCart(productId);
     return response;
   }
 

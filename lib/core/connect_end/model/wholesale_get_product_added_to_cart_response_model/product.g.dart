@@ -7,7 +7,7 @@ part of 'product.dart';
 // **************************************************************************
 
 Product _$ProductFromJson(Map<String, dynamic> json) => Product(
-  id: json['_id'] as String?,
+  id: json['id'] as String?,
   productName: json['productName'] as String?,
   description: json['description'] as String?,
   creationSource: json['creationSource'] as String?,
@@ -40,9 +40,11 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   images: (json['images'] as List<dynamic>?)
       ?.map((e) => Image.fromJson(e as Map<String, dynamic>))
       .toList(),
+  volumePricing: (json['volumePricing'] as List<dynamic>?)
+      ?.map((e) => VolumePricing.fromJson(e as Map<String, dynamic>))
+      .toList(),
   isPublished: json['isPublished'] as bool?,
   isDeleted: json['isDeleted'] as bool?,
-  volumePricing: json['volumePricing'] as List<dynamic>?,
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
@@ -69,7 +71,6 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
 );
 
 Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
-  '_id': instance.id,
   'productName': instance.productName,
   'description': instance.description,
   'creationSource': instance.creationSource,
@@ -92,12 +93,13 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
   'manufacturedDate': instance.manufacturedDate?.toIso8601String(),
   'expiryDate': instance.expiryDate?.toIso8601String(),
   'images': instance.images,
+  'volumePricing': instance.volumePricing,
   'isPublished': instance.isPublished,
   'isDeleted': instance.isDeleted,
-  'volumePricing': instance.volumePricing,
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
   'updatedByAdminId': instance.updatedByAdminId,
+  'id': instance.id,
   'categoryDetails': instance.categoryDetails,
   'companyDetails': instance.companyDetails,
   'categoryMarginPercentage': instance.categoryMarginPercentage,

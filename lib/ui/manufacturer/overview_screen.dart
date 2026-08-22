@@ -172,7 +172,7 @@ class OverviewScreen extends StatelessWidget {
                   ),
                   // SizedBox(height: 3.2.h),
                   TextView(
-                    text: '₦200,00',
+                    text: '₦0.00',
                     textStyle: TextStyle(
                       fontSize: 32.sp,
                       fontWeight: FontWeight.bold,

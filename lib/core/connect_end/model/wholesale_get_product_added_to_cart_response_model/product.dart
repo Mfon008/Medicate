@@ -1,9 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+
 import 'category_details.dart';
 import 'company_details.dart';
 import 'image.dart';
 import 'nafdac_verification.dart';
 import 'price_details.dart';
+import 'volume_pricing.dart';
 
 part 'product.g.dart';
 
@@ -33,9 +35,9 @@ class Product {
   DateTime? manufacturedDate;
   DateTime? expiryDate;
   List<Image>? images;
+  List<VolumePricing>? volumePricing;
   bool? isPublished;
   bool? isDeleted;
-  List<dynamic>? volumePricing;
   DateTime? createdAt;
   DateTime? updatedAt;
   String? updatedByAdminId;
@@ -44,8 +46,8 @@ class Product {
   int? categoryMarginPercentage;
   int? platformMarginPercentage;
   int? basePricePerUnit;
-  double? enlistedPricePerUnit;
-  double? displayPricePerUnit;
+  int? enlistedPricePerUnit;
+  int? displayPricePerUnit;
   PriceDetails? priceDetails;
 
   Product({
@@ -72,9 +74,9 @@ class Product {
     this.manufacturedDate,
     this.expiryDate,
     this.images,
+    this.volumePricing,
     this.isPublished,
     this.isDeleted,
-    this.volumePricing,
     this.createdAt,
     this.updatedAt,
     this.updatedByAdminId,

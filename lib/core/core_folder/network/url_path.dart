@@ -98,5 +98,8 @@ class UrlConfig {
   static const String wholesale_products = 'wholesale/products';
 
   static const String wholesale_incoming_orders = 'wholesale/incoming-orders';
-  static const String wholesale_marketplace_products = 'wholesale/marketplace/products';
+  static const String wholesale_marketplace_products =
+      'wholesale/marketplace/products';
+  static const String wholesale_cart = 'wholesale/cart';
+  static const String wholesale_add_to_cart = 'wholesale/cart/items';
 }

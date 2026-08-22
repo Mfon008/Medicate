@@ -52,6 +52,7 @@ import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
 import '../../app_assets/country_code_format.dart';
+import '../../app_assets/decouncer_class.dart';
 import '../../app_assets/image.dart';
 import '../../app_assets/image_picker.dart';
 import '../../config/colors.dart';
@@ -67,11 +68,13 @@ import '../model/create_tenant_reminder_entity_model/daily_dose_time.dart';
 import '../model/create_tenant_reminder_entity_model/medication.dart';
 import '../model/create_tenant_reminder_entity_model/medication_image.dart';
 import '../model/create_tenant_reminder_entity_model/payment.dart';
+import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
+import '../model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -80,6 +83,7 @@ import '../model/get_user_details_response_model/get_user_details_response_model
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
+import '../model/list_market_product_response_model/list_market_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
@@ -107,6 +111,8 @@ import 'package:medicate_app/core/connect_end/model/update_reminder_entity_model
     as upReminder;
 import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/payment.dart'
     as pyR;
+import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/category.dart'
+    as ct;
 
 class PharmViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -160,6 +166,17 @@ class PharmViewModel extends BaseViewModel {
   VerifyPassOtpRespnseModel? get verifyPassOtpRespnseModel =>
       _verifyPassOtpRespnseModel;
 
+  ListMarketProductResponseModel? _getListedMarketPlaceResponseModel;
+  ListMarketProductResponseModel? get getListedMarketPlaceResponseModel =>
+      _getListedMarketPlaceResponseModel;
+  GetSingleMarketProductResponseModel? _getSingleMarketProductResponseModel;
+  GetSingleMarketProductResponseModel?
+  get getSingleMarketProductResponseModel =>
+      _getSingleMarketProductResponseModel;
+  DistributorWholesaleCategoryModel? _distributorWholesaleCategoryModel;
+  DistributorWholesaleCategoryModel? get distributorWholesaleCategoryModel =>
+      _distributorWholesaleCategoryModel;
+
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
 
@@ -185,6 +202,7 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController userAddressController = TextEditingController();
   TextEditingController userRoleController = TextEditingController();
   String? userRoleControllerId;
+  ct.Category? _cat;
 
   GetStateResponseModel? _getStateResponseModel;
   GetStateResponseModel? get getStateResponseModel => _getStateResponseModel;
@@ -261,6 +279,7 @@ class PharmViewModel extends BaseViewModel {
   bool isTappedEmailAdded = false;
 
   String startDateIso = '';
+  String? searchProduct = '';
 
   List<MedicationClass> medicationClassList = [];
   bool isCartItem = false;
@@ -342,6 +361,9 @@ class PharmViewModel extends BaseViewModel {
   List<String> phoneReminderList = [];
   List<String> addedPhoneReminderList = [];
   List<String> notificationChannel = [];
+  String sortPrice = 'LOW_TO_HIGH';
+
+  final debouncer = Debouncer(milliseconds: 200);
 
   int? index;
   int totalDayDuration = 0;
@@ -361,6 +383,7 @@ class PharmViewModel extends BaseViewModel {
   dynamic timeSelected;
 
   int? _getTotalTimesForReminder;
+  final Map<String, int> selectedQuantities = {};
 
   List<List<String>> periodLabels = [];
   List<List<String>> periodLabelsUpdate = [];
@@ -482,6 +505,7 @@ class PharmViewModel extends BaseViewModel {
   String? filenamePharmLicense;
   List<Document> kycDocumentsList = [];
   int v = 1;
+  int page = 1;
 
   int pageAll = 1;
   int pageOngoing = 1;
@@ -18902,7 +18926,7 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void modalBottomSheetMenuHealthCareRadio(context) {
+  void modalBottomSheetMenuHealthCareRadio(context, PharmViewModel model) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -18922,317 +18946,263 @@ class PharmViewModel extends BaseViewModel {
               expand: false, // 👈 allows proper layout
               builder: (context, scrollController) {
                 return SafeArea(
-                  child: SingleChildScrollView(
-                    controller: scrollController, // 👈 critical
-                    padding: EdgeInsets.symmetric(
-                      vertical: 13.20.w,
-                      horizontal: 20.w,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // --- your content ---
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: StatefulBuilder(
+                    builder: (context, setModalState) {
+                      return SingleChildScrollView(
+                        controller: scrollController, // 👈 critical
+                        padding: EdgeInsets.symmetric(
+                          vertical: 13.20.w,
+                          horizontal: 20.w,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(width: 50.w),
+                            // --- your content ---
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(width: 50.w),
+                                TextView(
+                                  text: 'Filter Search',
+                                  textStyle: TextStyle(
+                                    fontSize: 16.2.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () => navigate.back(),
+                                  icon: SvgPicture.asset(AppImage.cancel),
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: 20.h),
                             TextView(
-                              text: 'Filter Search',
+                              text: 'Price',
                               textStyle: TextStyle(
+                                fontFamily: 'Arial',
                                 fontSize: 16.2.sp,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w500,
                                 color: AppColors.black,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () => navigate.back(),
-                              icon: SvgPicture.asset(AppImage.cancel),
+                            SizedBox(height: 10.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Radio(
+                                  value: Price.all,
+                                  groupValue: price,
+                                  activeColor: AppColors.primary,
+                                  onChanged: (value) {
+                                    price = value!;
+                                    sortPrice = 'LOW_TO_HIGH';
+                                    setModalState(() {});
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                TextView(
+                                  text: 'All',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+
+                                SizedBox(height: 10.h),
+                                Radio(
+                                  value: Price.high,
+                                  activeColor: AppColors.primary,
+                                  groupValue: price,
+                                  onChanged: (value) {
+                                    price = value!;
+                                    sortPrice = 'LOW_TO_HIGH';
+                                    setModalState(() {});
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                TextView(
+                                  text: 'Low To High',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+
+                                SizedBox(height: 10.h),
+                                Radio(
+                                  value: Price.low,
+                                  activeColor: AppColors.primary,
+                                  groupValue: price,
+                                  onChanged: (value) {
+                                    price = value!;
+                                    sortPrice = 'HIGH_TO_LOW';
+                                    setModalState(() {});
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                TextView(
+                                  text: 'High To Low',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'Arial',
+                                    fontSize: 14.2.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 20.h),
+                            TextView(
+                              text: 'Category',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 16.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Wrap(
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Radio(
+                                      value: null,
+                                      groupValue: _cat,
+                                      activeColor: AppColors.primary,
+                                      onChanged: (value) {
+                                        _cat = value;
+                                        setModalState(() {});
+                                        model.notifyListeners();
+                                      },
+                                    ),
+                                    TextView(
+                                      text: 'All',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'Arial',
+                                        fontSize: 14.2.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.black,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(width: 10.w),
+                                // CATEGORIES
+                                if (model.distributorWholesaleCategoryModel !=
+                                        null &&
+                                    model
+                                            .distributorWholesaleCategoryModel!
+                                            .data
+                                            ?.categories !=
+                                        null &&
+                                    model
+                                        .distributorWholesaleCategoryModel!
+                                        .data!
+                                        .categories!
+                                        .isNotEmpty)
+                                  ...model
+                                      .distributorWholesaleCategoryModel!
+                                      .data!
+                                      .categories!
+                                      .map((cat) {
+                                        return Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Radio<ct.Category>(
+                                              value: cat,
+                                              groupValue: _cat,
+                                              activeColor: AppColors.primary,
+                                              onChanged: (value) {
+                                                if (value == null) return;
+                                                _cat = value;
+                                                setModalState(() {});
+                                                model.notifyListeners();
+                                              },
+                                            ),
+
+                                            TextView(
+                                              text: '${cat.name}',
+                                              textStyle: TextStyle(
+                                                fontFamily: 'Arial',
+                                                fontSize: 14.2.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+
+                                            SizedBox(width: 10.w),
+                                          ],
+                                        );
+                                      }),
+                              ],
+                            ),
+
+                            SizedBox(height: 50.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: ButtonWidget(
+                                    border: 100.r,
+                                    buttonColor: AppColors.dashboard,
+                                    buttonText: 'Cancel',
+                                    color: AppColors.black,
+                                    buttonBorderColor: AppColors.transparent,
+                                    onPressed: () => navigate.back(),
+                                  ),
+                                ),
+                                SizedBox(width: 20.w),
+                                Flexible(
+                                  child: ButtonWidget(
+                                    border: 100.r,
+                                    buttonColor: AppColors.primary,
+                                    buttonText: 'Apply',
+                                    color: AppColors.white,
+                                    isLoading: _isLoading,
+                                    buttonBorderColor: AppColors.transparent,
+                                    onPressed: () async {
+                                      setModalState(() {
+                                        _isLoading = true;
+                                      });
+                                      if (_cat != null) {
+                                        await model
+                                            .getListedMarketPlaceWithCatId(
+                                              context,
+                                              catId: _cat!.id,
+                                            );
+                                      } else {
+                                        // All categories
+                                        await model.getListedMarketPlace(
+                                          context,
+                                        );
+                                      }
+
+                                      _isLoading = false;
+                                      if (context.mounted) {
+                                        navigate.back();
+                                      }
+                                      setModalState(() {
+                                        _isLoading = false;
+                                      });
+                                      model.notifyListeners();
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-
-                        SizedBox(height: 20.h),
-                        TextView(
-                          text: 'Price',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Radio(
-                              value: Price.all,
-                              groupValue: price,
-                              activeColor: AppColors.primary,
-                              onChanged: (value) {
-                                price = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'All',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Price.high,
-                              activeColor: AppColors.primary,
-                              groupValue: price,
-                              onChanged: (value) {
-                                price = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'Low To High',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Price.low,
-                              activeColor: AppColors.primary,
-                              groupValue: price,
-                              onChanged: (value) {
-                                price = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'High To Low',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-                        TextView(
-                          text: 'Category',
-                          textStyle: TextStyle(
-                            fontFamily: 'Arial',
-                            fontSize: 16.2.sp,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.black,
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Radio(
-                              value: Category.all,
-                              groupValue: category,
-                              activeColor: AppColors.primary,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'All',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.analgesics,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'analgesics',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.antibiotics,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'antibiotics',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Radio(
-                              value: Category.vitamins,
-                              groupValue: category,
-                              activeColor: AppColors.primary,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'vitamins',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.medicaldevices,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'medical devices',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Radio(
-                              value: Category.personalcare,
-                              groupValue: category,
-                              activeColor: AppColors.primary,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'personal care',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-
-                            SizedBox(height: 10.h),
-                            Radio(
-                              value: Category.firstaid,
-                              activeColor: AppColors.primary,
-                              groupValue: category,
-                              onChanged: (value) {
-                                category = value!;
-                                model.notifyListeners();
-                              },
-                            ),
-                            TextView(
-                              text: 'first aid',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 14.2.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.black,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20.h),
-
-                        // --- Reset link ---
-                        TextView(
-                          text: 'Reset filter',
-                          textStyle: TextStyle(
-                            fontSize: 14.2.sp,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.primary,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColors.primary,
-                          ),
-                        ),
-                        SizedBox(height: 50.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.dashboard,
-                                buttonText: 'Cancel',
-                                color: AppColors.black,
-                                buttonBorderColor: AppColors.transparent,
-                                onPressed: () => navigate.back(),
-                              ),
-                            ),
-                            SizedBox(width: 20.w),
-                            Flexible(
-                              child: ButtonWidget(
-                                border: 100.r,
-                                buttonColor: AppColors.primary,
-                                buttonText: 'Apply',
-                                color: AppColors.white,
-                                buttonBorderColor: AppColors.transparent,
-                                onPressed: () {
-                                  // if (formKeyValidate.currentState!.validate()) {
-                                  //   navigate.navigateTo(Routes.setupPinScreen);
-                                  // }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 );
               },
@@ -19241,5 +19211,359 @@ class PharmViewModel extends BaseViewModel {
         );
       },
     );
+  }
+
+  // void modalBottomSheetMenuHealthCareRadio(context, HealthCareViewModel model) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  //     ),
+  //     backgroundColor: AppColors.white,
+  //     constraints: BoxConstraints(maxWidth: double.infinity),
+  //     builder: (context) {
+  //       return StatefulBuilder(
+  //         builder: (context, setModalState) {
+  //           return DraggableScrollableSheet(
+  //             expand: false,
+  //             maxChildSize: .60, // 👈 allows proper layout
+  //             builder: (context, scrollController) {
+  //               return SafeArea(
+  //                 child: SingleChildScrollView(
+  //                   controller: scrollController, // 👈 critical
+  //                   padding: EdgeInsets.symmetric(
+  //                     vertical: 13.20.w,
+  //                     horizontal: 20.w,
+  //                   ),
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       // --- your content ---
+  //                       Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           SizedBox(width: 50.w),
+  //                           TextView(
+  //                             text: 'Filter Search',
+  //                             textStyle: TextStyle(
+  //                               fontSize: 16.2.sp,
+  //                               fontWeight: FontWeight.w700,
+  //                               color: AppColors.black,
+  //                             ),
+  //                           ),
+  //                           IconButton(
+  //                             onPressed: () => navigate.back(),
+  //                             icon: SvgPicture.asset(AppImage.cancel),
+  //                           ),
+  //                         ],
+  //                       ),
+
+  //                       SizedBox(height: 20.h),
+  //                       TextView(
+  //                         text: 'Price',
+  //                         textStyle: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 16.2.sp,
+  //                           fontWeight: FontWeight.w500,
+  //                           color: AppColors.black,
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 10.h),
+  //                       Row(
+  //                         mainAxisAlignment: MainAxisAlignment.start,
+  //                         children: <Widget>[
+  //                           Radio(
+  //                             value: Price.all,
+  //                             groupValue: price,
+  //                             activeColor: AppColors.primary,
+  //                             onChanged: (value) {
+  //                               price = value!;
+  //                               sortPrice = 'LOW_TO_HIGH';
+  //                               setModalState(() {});
+  //                               model.notifyListeners();
+  //                             },
+  //                           ),
+  //                           TextView(
+  //                             text: 'All',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 14.2.sp,
+  //                               fontWeight: FontWeight.w500,
+  //                               color: AppColors.black,
+  //                             ),
+  //                           ),
+
+  //                           SizedBox(height: 10.h),
+  //                           Radio(
+  //                             value: Price.high,
+  //                             activeColor: AppColors.primary,
+  //                             groupValue: price,
+  //                             onChanged: (value) {
+  //                               price = value!;
+  //                               sortPrice = 'LOW_TO_HIGH';
+  //                               setModalState(() {});
+  //                               model.notifyListeners();
+  //                             },
+  //                           ),
+  //                           TextView(
+  //                             text: 'Low To High',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 14.2.sp,
+  //                               fontWeight: FontWeight.w500,
+  //                               color: AppColors.black,
+  //                             ),
+  //                           ),
+
+  //                           SizedBox(height: 10.h),
+  //                           Radio(
+  //                             value: Price.low,
+  //                             activeColor: AppColors.primary,
+  //                             groupValue: price,
+  //                             onChanged: (value) {
+  //                               price = value!;
+  //                               sortPrice = 'HIGH_TO_LOW';
+  //                               setModalState(() {});
+  //                               model.notifyListeners();
+  //                             },
+  //                           ),
+  //                           TextView(
+  //                             text: 'High To Low',
+  //                             textStyle: TextStyle(
+  //                               fontFamily: 'Arial',
+  //                               fontSize: 14.2.sp,
+  //                               fontWeight: FontWeight.w500,
+  //                               color: AppColors.black,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                       SizedBox(height: 20.h),
+  //                       TextView(
+  //                         text: 'Category',
+  //                         textStyle: TextStyle(
+  //                           fontFamily: 'Arial',
+  //                           fontSize: 16.2.sp,
+  //                           fontWeight: FontWeight.w500,
+  //                           color: AppColors.black,
+  //                         ),
+  //                       ),
+  //                       SizedBox(height: 10.h),
+  //                       Wrap(
+  //                         children: [
+  //                           Row(
+  //                             mainAxisSize: MainAxisSize.min,
+  //                             children: [
+  //                               Radio(
+  //                                 value: null,
+  //                                 groupValue: _cat,
+  //                                 activeColor: AppColors.primary,
+  //                                 onChanged: (value) {
+  //                                   _cat = value;
+  //                                   setModalState(() {});
+  //                                   model.notifyListeners();
+  //                                 },
+  //                               ),
+  //                               TextView(
+  //                                 text: 'All',
+  //                                 textStyle: TextStyle(
+  //                                   fontFamily: 'Arial',
+  //                                   fontSize: 14.2.sp,
+  //                                   fontWeight: FontWeight.w500,
+  //                                   color: AppColors.black,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+
+  //                           SizedBox(width: 10.w),
+  //                           // CATEGORIES
+  //                           if (model.distributorWholesaleCategoryModel !=
+  //                                   null &&
+  //                               model
+  //                                       .distributorWholesaleCategoryModel!
+  //                                       .data
+  //                                       ?.categories !=
+  //                                   null &&
+  //                               model
+  //                                   .distributorWholesaleCategoryModel!
+  //                                   .data!
+  //                                   .categories!
+  //                                   .isNotEmpty)
+  //                             ...model
+  //                                 .distributorWholesaleCategoryModel!
+  //                                 .data!
+  //                                 .categories!
+  //                                 .map((cat) {
+  //                                   return Row(
+  //                                     mainAxisSize: MainAxisSize.min,
+  //                                     children: [
+  //                                       Radio<Category>(
+  //                                         value: cat,
+  //                                         groupValue: _cat,
+  //                                         activeColor: AppColors.primary,
+  //                                         onChanged: (value) {
+  //                                           if (value == null) return;
+  //                                           _cat = value;
+  //                                           setModalState(() {});
+  //                                           model.notifyListeners();
+  //                                         },
+  //                                       ),
+
+  //                                       TextView(
+  //                                         text: '${cat.name}',
+  //                                         textStyle: TextStyle(
+  //                                           fontFamily: 'Arial',
+  //                                           fontSize: 14.2.sp,
+  //                                           fontWeight: FontWeight.w500,
+  //                                           color: AppColors.black,
+  //                                         ),
+  //                                       ),
+
+  //                                       SizedBox(width: 10.w),
+  //                                     ],
+  //                                   );
+  //                                 }),
+  //                         ],
+  //                       ),
+
+  //                       SizedBox(height: 50.h),
+  //                       Row(
+  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                         children: [
+  //                           Flexible(
+  //                             child: ButtonWidget(
+  //                               border: 100.r,
+  //                               buttonColor: AppColors.dashboard,
+  //                               buttonText: 'Cancel',
+  //                               color: AppColors.black,
+  //                               buttonBorderColor: AppColors.transparent,
+  //                               onPressed: () => navigate.back(),
+  //                             ),
+  //                           ),
+  //                           SizedBox(width: 20.w),
+  //                           Flexible(
+  //                             child: ButtonWidget(
+  //                               border: 100.r,
+  //                               buttonColor: AppColors.primary,
+  //                               buttonText: 'Apply',
+  //                               color: AppColors.white,
+  //                               isLoading: _isLoading,
+  //                               buttonBorderColor: AppColors.transparent,
+  //                               onPressed: () async {
+  //                                 setModalState(() {
+  //                                    _isLoading = true;
+  //                                 });
+  //                                 if (_cat != null) {
+
+  //                                   await model.getListedMarketPlaceWithCatId(
+  //                                     context,
+  //                                     catId: _cat!.id,
+  //                                   );
+  //                                 } else {
+  //                                   // All categories
+  //                                   await model.getListedMarketPlace(context);
+  //                                 }
+
+  //                                 _isLoading = false;
+  //                                 if (context.mounted) {
+  //                                   navigate.back();
+  //                                 }
+  //                                 setModalState(() {
+  //                                    _isLoading = false;
+  //                                 });
+  //                                 model.notifyListeners();
+  //                               },
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+
+  void getWholesaleCategoryList(context, {String? search}) async {
+    try {
+      _isLoading = true;
+      _distributorWholesaleCategoryModel = await runBusyFuture(
+        repositoryImply.wholesaleCategories(
+          page: page.toString(),
+          search: search,
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getListedMarketPlace(context) async {
+    try {
+      _isLoading = true;
+      _getListedMarketPlaceResponseModel = await runBusyFuture(
+        repositoryImply.getListedMarketPlaceProduct(
+          page: page.toString(),
+          search: searchProduct,
+          sortPrice: 'LOW_TO_HIGH',
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getListedMarketPlaceWithCatId(context, {String? catId}) async {
+    try {
+      _isLoading = true;
+      _getListedMarketPlaceResponseModel = await runBusyFuture(
+        repositoryImply.getListedMarketPlaceProductWithCatId(
+          page: page.toString(),
+          search: searchProduct,
+          catId: catId,
+          sortPrice: sortPrice,
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getSingleMarketPlaceProduct(context, {String? productId}) async {
+    try {
+      _isLoading = true;
+      _getSingleMarketProductResponseModel = await runBusyFuture(
+        repositoryImply.getSingleMarketPlaceProduct(productIds: productId),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
   }
 }

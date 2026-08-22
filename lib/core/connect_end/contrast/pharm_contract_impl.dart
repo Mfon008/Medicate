@@ -8,11 +8,13 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
+import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
+import '../model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -20,6 +22,7 @@ import '../model/get_user_details_response_model/get_user_details_response_model
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
+import '../model/list_market_product_response_model/list_market_product_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
@@ -77,7 +80,6 @@ class PharmContractsImpl {
       await _api.getUserDetails(phoneNo);
   Future<dynamic> changePhoneNo({String? changePhoneNo, String? id}) async =>
       await _api.changePhoneNo(phone: changePhoneNo, id: id);
-  // Future<dynamic> refreshToken() async => await _api.refreshToken();
   Future<dynamic> sendOtp(String phone) async => await _api.sendOtp(phone);
   Future<dynamic> verifyChangePhoneOtp(
     VerifyPhoneEntityModel verifyPhoneEntity,
@@ -124,12 +126,10 @@ class PharmContractsImpl {
     MultipartFile? file,
     String? id,
   }) async => await _api.uploadImageReminderUpdate(file: file, id: id);
-
   Future<GetTodayReminderModel> getTodaysReminder({
     String? period,
     String? date,
   }) async => await _api.getTodaysReminder(period: period, date: date);
-
   Future<UpdateDosesStatusModel> updateDosesStatusModel({
     String? reminderId,
     String? doseId,
@@ -139,7 +139,6 @@ class PharmContractsImpl {
     doseId: doseId,
     status: status,
   );
-
   Future<dynamic> updateReminder({
     String? reminderId,
     UpdateReminderEntityModel? updateReminder,
@@ -147,11 +146,9 @@ class PharmContractsImpl {
     reminderId: reminderId,
     updateReminder: updateReminder,
   );
-
   Future<InitiatePaymentResponseModel> initiatePayment({
     String? reference,
   }) async => await _api.initiatePayment(reference: reference);
-
   Future<dynamic> getUserDetailsByTenant({String? phone}) async =>
       await _api.getUserDetailsByTenant(phone: phone);
   Future<dynamic> registerUserByTenant({String? phone}) async =>
@@ -162,7 +159,6 @@ class PharmContractsImpl {
     String? limit,
   }) async =>
       await _api.getReminderForTenant(status: status, page: page, limit: limit);
-
   Future<GetReminderForTenantResponseModel> getReminderForTenantAll({
     String? status,
     String? page,
@@ -213,4 +209,32 @@ class PharmContractsImpl {
       await _api.getTransactionWallet();
   Future<GetWalletResponseModel> getWalletBalance() async =>
       await _api.getWalletBalance();
+
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProduct({
+    String? page,
+    String? sortPrice,
+    String? search,
+  }) async => await _api.getListedMarketPlaceProduct(
+    page: page,
+    search: search,
+    sortPrice: sortPrice,
+  );
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProductWithCatId({
+    String? page,
+    String? catId,
+    String? sortPrice,
+    String? search,
+  }) async => await _api.getListedMarketPlaceProductWithCatId(
+    page: page,
+    catId: catId,
+    search: search,
+    sortPrice: sortPrice,
+  );
+  Future<DistributorWholesaleCategoryModel> wholesaleCategories({
+    String? page,
+    String? search,
+  }) async => await _api.wholesaleCategories(page: page, search: search);
+  Future<GetSingleMarketProductResponseModel> getSingleMarketPlaceProduct({
+    String? productIds,
+  }) async => await _api.getSingleMarketPlaceProduct(productIds: productIds);
 }

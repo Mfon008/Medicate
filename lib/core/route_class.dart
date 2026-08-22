@@ -21,7 +21,7 @@ class AppRoutes {
     } else if (type.authType == 'everyday_user' &&
         type.isSignUp == false &&
         type.isLogin == true) {
-      return Routes.overviewDashboard;
+      return Routes.welcomeScreen;
     }
     // pharmacy flow
     if (type.authType == 'pharmacy' &&
@@ -64,6 +64,20 @@ class AppRoutes {
         type.isSignUp == false &&
         type.isLogin == true) {
       return Routes.hMOWelcomeScreen;
+    }
+    // distributor flow
+    if (type.authType == 'manufacturer' &&
+        type.isSignUp == true &&
+        type.isLogin == true) {
+      return Routes.manufacturerWelcomeScreen;
+    } else if (type.authType == 'manufacturer' &&
+        type.isSignUp == true &&
+        type.isLogin == false) {
+      return Routes.manufacturerLoginScreen;
+    } else if (type.authType == 'manufacturer' &&
+        type.isSignUp == false &&
+        type.isLogin == true) {
+      return Routes.manufacturerWelcomeScreen;
     }
     return Routes.splashScreen;
   }

@@ -178,8 +178,10 @@ class _SpecialistsProviderWholesaleState
                     ),
                     SizedBox(width: 22.40.w),
                     GestureDetector(
-                      onTap: () =>
-                          model.modalBottomSheetMenuHealthCareRadio(context),
+                      onTap: () => model.modalBottomSheetMenuHealthCareRadio(
+                        context,
+                        model,
+                      ),
                       child: SvgPicture.asset(
                         AppImage.filter,
                         color: AppColors.grey1,

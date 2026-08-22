@@ -11,10 +11,12 @@ import '../connect_end/model/create_payment_wallet_model/create_payment_wallet_m
 import '../connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../connect_end/model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../connect_end/model/create_user_entity_model.dart';
+import '../connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
+import '../connect_end/model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
 import '../connect_end/model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../connect_end/model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -22,6 +24,7 @@ import '../connect_end/model/get_user_details_response_model/get_user_details_re
 import '../connect_end/model/get_wallet_response_model/get_wallet_response_model.dart';
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
+import '../connect_end/model/list_market_product_response_model/list_market_product_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
@@ -836,6 +839,90 @@ class PharmApi {
       );
       logger.d(response.data);
       return GetWalletResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetSingleMarketProductResponseModel> getSingleMarketPlaceProduct({
+    String? productIds,
+  }) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_marketplace_products}/$productIds',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetSingleMarketProductResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProduct({
+    String? page,
+    String? sortPrice,
+    String? search,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_marketplace_products,
+        RequestMethod.getParams,
+        queryParams: {
+          'page': page,
+          'limit': '10',
+          'search': search,
+          'priceSort': sortPrice,
+        },
+      );
+      logger.d(response.data);
+      return ListMarketProductResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<ListMarketProductResponseModel> getListedMarketPlaceProductWithCatId({
+    String? page,
+    String? catId,
+    String? sortPrice,
+    String? search,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_marketplace_products,
+        RequestMethod.getParams,
+        queryParams: {
+          'page': page,
+          'limit': '10',
+          'search': search,
+          'categoryId': catId,
+          'priceSort': sortPrice,
+        },
+      );
+      logger.d(response.data);
+      return ListMarketProductResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<DistributorWholesaleCategoryModel> wholesaleCategories({
+    String? page,
+    String? search,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_categories,
+        RequestMethod.getParams,
+        queryParams: {'page': page, 'limit': 20, 'search': search},
+      );
+      logger.d(response.data);
+      return DistributorWholesaleCategoryModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

@@ -108,6 +108,8 @@ class ManufacturerViewModel extends BaseViewModel {
 
   String? pinInput;
 
+  int? minimumOrderQuantity;
+
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();

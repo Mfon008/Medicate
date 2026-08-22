@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_picker/file_picker.dart' as fi;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74362,8 +74362,8 @@ class AuthViewModel extends BaseViewModel {
     int? index,
   }) async {
     // 1. Pick the file
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
+    dynamic result = await fi.FilePicker.pickFiles(
+      type: fi.FileType.custom,
       allowedExtensions: ['csv'],
       allowMultiple: false,
     );

@@ -10,12 +10,14 @@ import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
 import '../model/create_user_entity_model.dart';
+import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
 import '../model/get_roles_response_model/get_roles_response_model.dart';
+import '../model/get_single_market_product_response_model/get_single_market_product_response_model.dart';
 import '../model/get_tenant_response_model/get_tenant_response_model.dart';
 import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
@@ -243,16 +245,29 @@ class HealthcareContractsImpl {
       await _api.getWalletBalance();
   Future<ListMarketProductResponseModel> getListedMarketPlaceProduct({
     String? page,
-    String? catId,
     String? sortPrice,
     String? search,
-  }) async  =>
-      await _api.getListedMarketPlaceProduct(page: page,search: search,sortPrice: sortPrice);
+  }) async => await _api.getListedMarketPlaceProduct(
+    page: page,
+    search: search,
+    sortPrice: sortPrice,
+  );
   Future<ListMarketProductResponseModel> getListedMarketPlaceProductWithCatId({
     String? page,
     String? catId,
     String? sortPrice,
     String? search,
-  }) async  =>
-      await _api.getListedMarketPlaceProductWithCatId(page: page,catId: catId,search: search,sortPrice: sortPrice);
+  }) async => await _api.getListedMarketPlaceProductWithCatId(
+    page: page,
+    catId: catId,
+    search: search,
+    sortPrice: sortPrice,
+  );
+  Future<DistributorWholesaleCategoryModel> wholesaleCategories({
+    String? page,
+    String? search,
+  }) async => await _api.wholesaleCategories(page: page, search: search);
+  Future<GetSingleMarketProductResponseModel> getSingleMarketPlaceProduct({
+    String? productIds,
+  }) async => await _api.getSingleMarketPlaceProduct(productIds: productIds);
 }
