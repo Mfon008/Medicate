@@ -1109,7 +1109,13 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                         ),
                                         borderRadius: BorderRadius.circular(40.r),
                                       ),
-                                      child: Row(
+                                      child:  model.isLoading
+                                          ? SpinKitRing(
+                                              color: AppColors.primary1,
+                                              size: 22.0.sp,
+                                              lineWidth: 2,
+                                            )
+                                          : Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [

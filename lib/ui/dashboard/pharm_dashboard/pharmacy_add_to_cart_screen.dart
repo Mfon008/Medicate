@@ -166,7 +166,7 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                   children: [
                                                     TextView(
                                                       text:
-                                                          e.product?.category
+                                                          e.product?.productName
                                                               ?.capitalizeWords() ??
                                                           '',
                                                       textStyle: TextStyle(
@@ -208,7 +208,7 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                           width: 130.w,
                                                           child: TextView(
                                                             text:
-                                                                '· ${formatNaira(e.product?.priceDetails?.displayPricePerUnit ?? 0)}/cartons',
+                                                                '· ${formatNaira(e.unitPrice ?? 0)}/cartons',
                                                             maxLines: 2,
                                                             textStyle: TextStyle(
                                                               fontFamily:
