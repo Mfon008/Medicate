@@ -2404,7 +2404,10 @@ class StackedRouter extends _i1.RouterBase {
         orElse: () => const PharmacyViewProductScreenArguments(),
       );
       return _i145.MaterialPageRoute<dynamic>(
-        builder: (context) => _i127.PharmacyViewProductScreen(key: args.key),
+        builder: (context) => _i127.PharmacyViewProductScreen(
+          key: args.key,
+          wholeSaleProductId: args.wholeSaleProductId,
+        ),
         settings: data,
       );
     },
@@ -5664,24 +5667,26 @@ class PharmacyOrderScreenArguments {
 }
 
 class PharmacyViewProductScreenArguments {
-  const PharmacyViewProductScreenArguments({this.key});
+  const PharmacyViewProductScreenArguments({this.key, this.wholeSaleProductId});
 
   final _i145.Key? key;
 
+  final String? wholeSaleProductId;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "wholeSaleProductId": "$wholeSaleProductId"}';
   }
 
   @override
   bool operator ==(covariant PharmacyViewProductScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.wholeSaleProductId == wholeSaleProductId;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ wholeSaleProductId.hashCode;
   }
 }
 
@@ -8500,6 +8505,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> navigateToPharmacyViewProductScreen({
     _i145.Key? key,
+    String? wholeSaleProductId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8508,7 +8514,10 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.pharmacyViewProductScreen,
-      arguments: PharmacyViewProductScreenArguments(key: key),
+      arguments: PharmacyViewProductScreenArguments(
+        key: key,
+        wholeSaleProductId: wholeSaleProductId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -11255,6 +11264,7 @@ extension NavigatorStateExtension on _i149.NavigationService {
 
   Future<dynamic> replaceWithPharmacyViewProductScreen({
     _i145.Key? key,
+    String? wholeSaleProductId,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11263,7 +11273,10 @@ extension NavigatorStateExtension on _i149.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.pharmacyViewProductScreen,
-      arguments: PharmacyViewProductScreenArguments(key: key),
+      arguments: PharmacyViewProductScreenArguments(
+        key: key,
+        wholeSaleProductId: wholeSaleProductId,
+      ),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

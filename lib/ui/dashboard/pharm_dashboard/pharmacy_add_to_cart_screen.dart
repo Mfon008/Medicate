@@ -462,6 +462,7 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                             bottom: 0,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Divider(color: AppColors.f1),
                                 SizedBox(height: 10.h),
@@ -479,7 +480,7 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                       ),
                                     ),
                                     TextView(
-                                      text: '₦20,000',
+                                      text: formatNaira(model.wholesaleGetProductAddedToCartResponseModel?.data?.cart?.subtotal??0),
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 17.80.sp,

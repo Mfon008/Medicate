@@ -116,6 +116,8 @@ import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_resp
     as pyR;
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/category.dart'
     as ct;
+import 'package:medicate_app/core/connect_end/model/get_single_market_product_response_model/image.dart'
+    as singImg;
 
 class PharmViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -293,6 +295,10 @@ class PharmViewModel extends BaseViewModel {
 
   String startDateIso = '';
   String? searchProduct = '';
+
+  singImg.Image? images;
+  int? productSinglequantity;
+  int inImage = 0;
 
   List<MedicationClass> medicationClassList = [];
   bool isCartItem = false;

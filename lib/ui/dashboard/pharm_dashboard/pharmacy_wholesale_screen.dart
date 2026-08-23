@@ -262,8 +262,8 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                         model.selectedQuantities[m.id] ?? minimumQuantity;
                     return GestureDetector(
                       onTap: () => navigate.navigateTo(
-                        Routes.businessProviderViewProductScreen,
-                        arguments: BusinessProviderViewProductScreenArguments(
+                        Routes.pharmacyViewProductScreen,
+                        arguments: PharmacyViewProductScreenArguments(
                           wholeSaleProductId: m.id,
                         ),
                       ),
