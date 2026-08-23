@@ -32,6 +32,7 @@ import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_m
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/logo.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_profile_entity_model/update_pharmacy_profile_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
 import 'package:medicate_app/core/core_folder/app/app.router.dart';
 import 'package:medicate_app/main.dart';
 import 'package:medicate_app/ui/widget/deactivate_user_modal_widget.dart';
@@ -102,6 +103,8 @@ import '../model/upload_image_reminder_response_model/upload_image_reminder_resp
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
+import '../model/wholesale_get_product_added_to_cart_response_model/item.dart';
+import '../model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
 import '../repo/pharm_repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/daily_dose_time.dart'
     as getR;
@@ -123,6 +126,10 @@ class PharmViewModel extends BaseViewModel {
   final session = locator<SharedPreferencesService>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _isLoadingRemoveItem = false;
+  bool get isLoadingRemoveItem => _isLoadingRemoveItem;
+  bool get isLoadingClearCart => _isLoadingClearCart;
+  bool _isLoadingClearCart = false;
   bool _isLoadingMeansId = false;
   bool get isLoadingMeansId => _isLoadingMeansId;
   bool _isLoadingCAC = false;
@@ -173,6 +180,12 @@ class PharmViewModel extends BaseViewModel {
   GetSingleMarketProductResponseModel?
   get getSingleMarketProductResponseModel =>
       _getSingleMarketProductResponseModel;
+
+  WholesaleGetProductAddedToCartResponseModel?
+  _wholesaleGetProductAddedToCartResponseModel;
+  WholesaleGetProductAddedToCartResponseModel?
+  get wholesaleGetProductAddedToCartResponseModel =>
+      _wholesaleGetProductAddedToCartResponseModel;
   DistributorWholesaleCategoryModel? _distributorWholesaleCategoryModel;
   DistributorWholesaleCategoryModel? get distributorWholesaleCategoryModel =>
       _distributorWholesaleCategoryModel;
@@ -544,6 +557,7 @@ class PharmViewModel extends BaseViewModel {
   List<String> selectedTimes = []; // ["09:30 AM", "10:30 AM"]
   List<String> selectedCustomTimes = []; // ["09:30 AM", "10:30 AM"]
 
+  Item? eCartRemove;
   File? image;
   String? searchUsers = '';
   String? searchRoles = '';
@@ -19558,6 +19572,134 @@ class PharmViewModel extends BaseViewModel {
         repositoryImply.getSingleMarketPlaceProduct(productIds: productId),
         throwException: true,
       );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWholesaleProductAddedToCart(context) async {
+    try {
+      _isLoading = true;
+      _wholesaleGetProductAddedToCartResponseModel = await runBusyFuture(
+        repositoryImply.getWholesaleProductAddedToCart(),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> addWholesaleProductToCart(
+    context, {
+    WholesaleAddToCartEntityModel? wholesaleAddToCart,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.addWholesaleProductToCart(wholesaleAddToCart),
+        throwException: true,
+      );
+
+      if (v['statusCode'] == 201) {
+        AppUtils.snackbar(
+          context,
+          message: 'Item added to cart successfully..!',
+        );
+      }
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateWholesaleProductToCart(
+    context, {
+    String? wholesaleProductId,
+    int? quantity,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.updateWholesaleProductToCart(
+          productId: wholesaleProductId,
+          quantity: quantity,
+        ),
+        throwException: true,
+      );
+
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
+      
+        getWholesaleProductAddedToCart(context);
+      }
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> removeWholesaleProductItemFromCart(
+    context, {
+    String? wholesaleProductId,
+  }) async {
+    try {
+      _isLoadingRemoveItem = true;
+      var v = await runBusyFuture(
+        repositoryImply.removeWholesaleProductItemFromCart(wholesaleProductId),
+        throwException: true,
+      );
+
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
+        AppUtils.snackbar(
+          context,
+          message: v['message'],
+        );
+        getWholesaleProductAddedToCart(context);
+      }
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> clearWholesaleProductFromCart(
+    context,
+    String? wholesaleProductId,
+  ) async {
+    try {
+      _isLoadingClearCart = true;
+      var v = await runBusyFuture(
+        repositoryImply.clearWholesaleProductFromCart(wholesaleProductId),
+        throwException: true,
+      );
+
+      if (v['statusCode'] == 201 || v['statusCode'] == 200) {
+        AppUtils.snackbar(
+          context,
+          message: v['message'],
+        );
+        getWholesaleProductAddedToCart(context);
+      }
+
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

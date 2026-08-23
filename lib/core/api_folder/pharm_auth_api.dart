@@ -6,6 +6,8 @@ import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_role_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_response_model/upload_image_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
 import '../connect_end/model/create_payment_wallet_entity_model.dart';
 import '../connect_end/model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../connect_end/model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -928,4 +930,72 @@ class PharmApi {
       rethrow;
     }
   }
+
+  Future<WholesaleGetProductAddedToCartResponseModel> getWholesaleProductAddedToCart() async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_cart,
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return WholesaleGetProductAddedToCartResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<dynamic> addWholesaleProductToCart(WholesaleAddToCartEntityModel? addToCart) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_add_to_cart,
+        RequestMethod.post,data: addToCart?.toJson()
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<dynamic> updateWholesaleProductToCart({String? productId,int? quantity}) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_add_to_cart}/$productId',
+        RequestMethod.patch,data:{'quantity':quantity}
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<dynamic> removeWholesaleProductItemFromCart(String? productId) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_add_to_cart}/$productId',
+        RequestMethod.delete
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<dynamic> clearWholesaleProductFromCart(String? productId) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_cart,
+        RequestMethod.delete
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
 }

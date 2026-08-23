@@ -11,6 +11,7 @@ import '../../../../core/config/colors.dart';
 import '../../../../core/core_folder/app/app.router.dart';
 import '../../../../main.dart';
 import '../../../core/app_assets/constant.dart';
+import '../../../core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
@@ -34,6 +35,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
       viewModelBuilder: () => PharmViewModel(),
       onViewModelReady: (model) async {
         await model.getListedMarketPlace(context);
+        await model.getWholesaleProductAddedToCart(context);
         model.getWholesaleCategoryList(context);
       },
       disposeViewModel: false,
@@ -87,17 +89,50 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                             color: AppColors.inactive.withOpacity(.4),
                           ),
                         ),
-                        child: IconButton(
-                          icon: SvgPicture.asset(
-                            AppImage.cart,
-                            height: isTablet(context) ? 40.h : 20.h,
-                            width: isTablet(context) ? 40.w : 20.w,
-                            color: AppColors.primary,
-                          ),
-                          onPressed: () => navigate.navigateTo(
-                            Routes.pharmacyAddToCartScreen,
-                          ),
-                          splashRadius: 28,
+                        child: Stack(
+                          children: [
+                            IconButton(
+                              icon: SvgPicture.asset(
+                                AppImage.cart,
+                                height: isTablet(context) ? 40.h : 20.h,
+                                width: isTablet(context) ? 40.w : 20.w,
+                                color: AppColors.primary,
+                              ),
+                              onPressed: () => navigate.navigateTo(
+                                Routes.pharmacyAddToCartScreen,
+                              ),
+                              splashRadius: 28,
+                            ),
+                            model.wholesaleGetProductAddedToCartResponseModel !=
+                                        null &&
+                                    model
+                                            .wholesaleGetProductAddedToCartResponseModel
+                                            ?.data
+                                            ?.cart
+                                            ?.itemCount !=
+                                        0
+                                ? Positioned(
+                                    right: 2,
+                                    child: Container(
+                                      padding: EdgeInsets.all(4.0.w),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.appRed,
+                                      ),
+                                      child: TextView(
+                                        text:
+                                            '${model.wholesaleGetProductAddedToCartResponseModel?.data?.cart?.itemCount}',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'DMSans',
+                                          fontSize: 11.0.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
+                          ],
                         ),
                       ),
                       SizedBox(width: 10.w),
@@ -748,42 +783,63 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                     ],
                                   ),
                                   SizedBox(height: 23.0.h),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 8.w,
-                                      horizontal: 12.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(40.r),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SvgPicture.asset(
-                                          AppImage.cart,
-                                          height: isTablet(context)
-                                              ? 38.40.h
-                                              : 20.h,
-                                          width: isTablet(context)
-                                              ? 38.40.w
-                                              : 20.w,
-                                          color: AppColors.white,
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.addWholesaleProductToCart(
+                                        context,
+                                        wholesaleAddToCart:
+                                            WholesaleAddToCartEntityModel(
+                                              productId: m.id,
+                                              quantity: currentQuantity,
+                                            ),
+                                      );
+                                      model.notifyListeners();
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 8.w,
+                                        horizontal: 12.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(
+                                          40.r,
                                         ),
-                                        SizedBox(width: 10.w),
-                                        TextView(
-                                          text: 'Add to Cart',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 16.90.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.white,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
+                                      child: model.isLoading
+                                          ? SpinKitRing(
+                                              color: AppColors.appWhite,
+                                              size: 22.0.sp,
+                                              lineWidth: 2,
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppImage.cart,
+                                                  height: isTablet(context)
+                                                      ? 38.40.h
+                                                      : 20.h,
+                                                  width: isTablet(context)
+                                                      ? 38.40.w
+                                                      : 20.w,
+                                                  color: AppColors.white,
+                                                ),
+                                                SizedBox(width: 10.w),
+                                                TextView(
+                                                  text: 'Add to Cart',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'GoogleSans',
+                                                    fontSize: 16.90.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                     ),
                                   ),
                                   SizedBox(height: 8.10.h),

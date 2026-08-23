@@ -46,6 +46,8 @@ import '../model/upload_image_response_model/upload_image_response_model.dart';
 import '../model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
+import '../model/wholesale_add_to_cart_entity_model.dart';
+import '../model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
 
 @lazySingleton
 class PharmContractsImpl {
@@ -237,4 +239,18 @@ class PharmContractsImpl {
   Future<GetSingleMarketProductResponseModel> getSingleMarketPlaceProduct({
     String? productIds,
   }) async => await _api.getSingleMarketPlaceProduct(productIds: productIds);
+  Future<dynamic> addWholesaleProductToCart(
+    WholesaleAddToCartEntityModel? addToCart,
+  ) async => await _api.addWholesaleProductToCart(addToCart);
+  Future<WholesaleGetProductAddedToCartResponseModel>
+  getWholesaleProductAddedToCart() async =>
+      await _api.getWholesaleProductAddedToCart();
+  Future<dynamic> updateWholesaleProductToCart(
+    {String? productId,
+    int? quantity,}
+  ) async => await _api.updateWholesaleProductToCart(productId:productId, quantity:quantity);
+  Future<dynamic> removeWholesaleProductItemFromCart(String? productId) async =>
+      await _api.removeWholesaleProductItemFromCart(productId);
+  Future<dynamic> clearWholesaleProductFromCart(String? productId) async =>
+      await _api.clearWholesaleProductFromCart(productId);
 }
