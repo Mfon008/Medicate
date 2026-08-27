@@ -144,7 +144,9 @@ class TransactionScreen extends StatelessWidget {
                                 Spacer(),
 
                                 TextView(
-                                  text: formatNaira(int.parse(e.amount ?? "0")),
+                                  text: formatNaira(
+                                    double.parse(e.amount ?? "0"),
+                                  ),
                                   textStyle: TextStyle(
                                     fontSize: 13.5.sp,
                                     fontWeight: FontWeight.w500,

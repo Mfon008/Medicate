@@ -4,6 +4,9 @@ class AppImage {
   static const String applogo = 'assets/images/logo.png';
   static const String med_image = 'assets/images/med-image.png';
   static const String pro_health = 'assets/images/pro_health.png';
+  static const String accelerate = 'assets/images/accelerate.png';
+  static const String flutterwave = 'assets/images/flutterwave.png';
+  static const String paystack = 'assets/images/paystack.png';
   static const String applogoSvg = 'assets/svgs/medicate.svg';
   static const String info = 'assets/svgs/info.svg';
   static const String order_notes = 'assets/svgs/order_notes.svg';

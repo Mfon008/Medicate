@@ -56,14 +56,15 @@ class _WalletCardState extends State<WalletCard> {
               text: !onTap
                   ? "₦*.**"
                   : formatNaira(
-                      int.parse(
-                        widget
-                                .model
-                                ?.getWalletBalanceResponseModel
-                                ?.data
-                                ?.balance ??
-                            "0",
-                      ),
+                      double.tryParse(
+                            widget
+                                    .model
+                                    ?.getWalletBalanceResponseModel
+                                    ?.data
+                                    ?.balance ??
+                                "0",
+                          ) ??
+                          0.0,
                     ),
               textStyle: TextStyle(
                 fontFamily: 'GoogleSans',

@@ -245,10 +245,13 @@ class PharmContractsImpl {
   Future<WholesaleGetProductAddedToCartResponseModel>
   getWholesaleProductAddedToCart() async =>
       await _api.getWholesaleProductAddedToCart();
-  Future<dynamic> updateWholesaleProductToCart(
-    {String? productId,
-    int? quantity,}
-  ) async => await _api.updateWholesaleProductToCart(productId:productId, quantity:quantity);
+  Future<dynamic> updateWholesaleProductToCart({
+    String? productId,
+    int? quantity,
+  }) async => await _api.updateWholesaleProductToCart(
+    productId: productId,
+    quantity: quantity,
+  );
   Future<dynamic> removeWholesaleProductItemFromCart(String? productId) async =>
       await _api.removeWholesaleProductItemFromCart(productId);
   Future<dynamic> clearWholesaleProductFromCart(String? productId) async =>

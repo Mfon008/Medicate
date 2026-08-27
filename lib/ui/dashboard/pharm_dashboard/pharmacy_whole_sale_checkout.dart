@@ -4,12 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:medicate_app/core/core_folder/app/app.router.dart';
-import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
+import '../../../core/app_assets/state_lga_format.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
@@ -39,7 +38,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
             title: TextView(
               text: 'Wholesale Checkout',
               textStyle: TextStyle(
-                fontFamily: 'GoogleSans',
+                fontFamily: 'DMSans',
                 fontSize: 17.2.sp,
                 fontWeight: FontWeight.w700,
                 color: AppColors.black,
@@ -72,7 +71,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: 'Delivery method',
                             textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
+                              fontFamily: 'DMSans',
                               fontSize: 15.42.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black,
@@ -131,7 +130,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                   TextView(
                                     text: 'Instant delivery',
                                     textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
+                                      fontFamily: 'DMSans',
                                       fontSize: 13.62.sp,
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.black,
@@ -143,7 +142,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               TextView(
                                 text: 'Same-day express dispatch. ',
                                 textStyle: TextStyle(
-                                  fontFamily: 'Arial',
+                                  fontFamily: 'DMSans',
                                   fontSize: 13.42.sp,
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.infoGrey,
@@ -203,7 +202,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                   TextView(
                                     text: 'Scheduled block',
                                     textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
+                                      fontFamily: 'DMSans',
                                       fontSize: 13.62.sp,
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.black,
@@ -216,7 +215,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                 text:
                                     'Pick a reliable date and time window over the next week to fit your schedule.',
                                 textStyle: TextStyle(
-                                  fontFamily: 'Arial',
+                                  fontFamily: 'DMSans',
                                   fontSize: 13.42.sp,
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.infoGrey,
@@ -265,12 +264,12 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 16.20.sp,
                                     fontWeight: FontWeight.w400,
-                                    fontFamily: 'GoogleSans',
+                                    fontFamily: 'DMSans',
                                   ),
                                   labelStyle: TextStyle(
                                     fontSize: 15.20.sp,
                                     fontWeight: FontWeight.w400,
-                                    fontFamily: 'GoogleSans',
+                                    fontFamily: 'DMSans',
                                     color: AppColors.faintedGrey,
                                   ),
                                 ),
@@ -289,7 +288,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                     TextView(
                                       text: 'Select Time Window',
                                       textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
+                                        fontFamily: 'DMSans',
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w300,
                                         color: AppColors.reminder,
@@ -298,7 +297,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                     TextView(
                                       text: '*',
                                       textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
+                                        fontFamily: 'DMSans',
                                         fontSize: 15.54.sp,
                                         fontWeight: FontWeight.w300,
                                         color: AppColors.red,
@@ -335,7 +334,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                       child: TextView(
                                         text: 'Morning (8AM - 12PM)',
                                         textStyle: TextStyle(
-                                          fontFamily: 'Arial',
+                                          fontFamily: 'DMSans',
                                           fontSize: 14.82.sp,
                                           fontWeight: FontWeight.w500,
                                           color:
@@ -376,7 +375,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                       child: TextView(
                                         text: 'Afternoon (12PM - 4PM)',
                                         textStyle: TextStyle(
-                                          fontFamily: 'Arial',
+                                          fontFamily: 'DMSans',
                                           fontSize: 14.82.sp,
                                           fontWeight: FontWeight.w500,
                                           color:
@@ -416,7 +415,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                       child: TextView(
                                         text: 'Evening (4PM - 8PM)',
                                         textStyle: TextStyle(
-                                          fontFamily: 'Arial',
+                                          fontFamily: 'DMSans',
                                           fontSize: 14.82.sp,
                                           fontWeight: FontWeight.w500,
                                           color:
@@ -457,7 +456,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                           TextView(
                                             text: 'Select Window',
                                             textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
+                                              fontFamily: 'DMSans',
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.w300,
                                               color: AppColors.reminder,
@@ -470,7 +469,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                         text:
                                             '${model.dateTimeController.text} . ${model.returnCartAddedTime(model.cartTimeAdded)}',
                                         textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
+                                          fontFamily: 'DMSans',
                                           fontSize: 15.2.sp,
                                           fontWeight: FontWeight.w500,
                                           color: AppColors.reminder,
@@ -507,7 +506,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: 'Delivery details',
                             textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
+                              fontFamily: 'DMSans',
                               fontSize: 15.42.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black,
@@ -531,26 +530,113 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         fillColor: AppColors.white,
                         isFilled: true,
                         controller: model.stateController,
-                        suffixWidget: Padding(
-                          padding: EdgeInsets.all(8.w),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: AppColors.infoGrey,
-                            ),
-                          ),
+
+                        suffixWidget: Builder(
+                          builder: (context) {
+                            return GestureDetector(
+                              onTap: () async {
+                                final RenderBox button =
+                                    context.findRenderObject() as RenderBox;
+
+                                final RenderBox overlay =
+                                    Overlay.of(
+                                          context,
+                                        ).context.findRenderObject()
+                                        as RenderBox;
+
+                                final Offset buttonPosition = button
+                                    .localToGlobal(
+                                      Offset.zero,
+                                      ancestor: overlay,
+                                    );
+
+                                final Size buttonSize = button.size;
+
+                                final selectedState = await showMenu<String>(
+                                  context: context,
+
+                                  position: RelativeRect.fromLTRB(
+                                    buttonPosition.dx,
+                                    buttonPosition.dy + buttonSize.height + 5.h,
+                                    overlay.size.width -
+                                        buttonPosition.dx -
+                                        buttonSize.width,
+                                    0,
+                                  ),
+
+                                  constraints: BoxConstraints(
+                                    minWidth: 200.w,
+                                    maxWidth: 250.w,
+                                    minHeight: 150.h,
+                                    maxHeight: 450.h,
+                                  ),
+
+                                  color: AppColors.white,
+
+                                  elevation: 4,
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+
+                                  items: stateLgaFormat
+                                      .map<PopupMenuEntry<String>>((s) {
+                                        final String state =
+                                            s['state']?.toString() ?? '';
+
+                                        return PopupMenuItem<String>(
+                                          value: state,
+                                          height: 38.h,
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 14.w,
+                                          ),
+                                          child: TextView(
+                                            text: state,
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 13.70.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        );
+                                      })
+                                      .toList(),
+                                );
+
+                                if (selectedState != null) {
+                                  model.stateController.text = selectedState;
+
+                                  // Reset LGA whenever state changes
+                                  model.lgaController.clear();
+
+                                  model.notifyListeners();
+                                }
+                              },
+
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.grey1,
+                                ),
+                              ),
+                            );
+                          },
                         ),
+
                         validator: AppValidator.validateString(),
+
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                         ),
+
                         labelStyle: TextStyle(
                           fontSize: 15.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                           color: AppColors.faintedGrey,
                         ),
                       ),
@@ -569,27 +655,126 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         readOnly: true,
                         fillColor: AppColors.white,
                         isFilled: true,
-                        controller: model.stateController,
-                        suffixWidget: Padding(
-                          padding: EdgeInsets.all(8.w),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_rounded,
-                              color: AppColors.infoGrey,
-                            ),
-                          ),
+                        controller: model.lgaController,
+                        suffixWidget: Builder(
+                          builder: (context) {
+                            return GestureDetector(
+                              onTap: () async {
+                                final RenderBox button =
+                                    context.findRenderObject() as RenderBox;
+
+                                final RenderBox overlay =
+                                    Overlay.of(
+                                          context,
+                                        ).context.findRenderObject()
+                                        as RenderBox;
+
+                                final Offset buttonPosition = button
+                                    .localToGlobal(
+                                      Offset.zero,
+                                      ancestor: overlay,
+                                    );
+
+                                final Size buttonSize = button.size;
+
+                                final selectedState = stateLgaFormat.firstWhere(
+                                  (state) =>
+                                      state['state']
+                                          .toString()
+                                          .trim()
+                                          .toLowerCase() ==
+                                      model.stateController.text
+                                          .trim()
+                                          .toLowerCase(),
+                                  orElse: () => <String, dynamic>{
+                                    'state': '',
+                                    'lgas': <String>[],
+                                  },
+                                );
+
+                                final List<dynamic> lgas =
+                                    selectedState['lgas'] ?? [];
+
+                                if (lgas.isEmpty) {
+                                  return;
+                                }
+
+                                final selectedLga = await showMenu<String>(
+                                  context: context,
+
+                                  position: RelativeRect.fromLTRB(
+                                    buttonPosition.dx,
+                                    buttonPosition.dy + buttonSize.height + 5.h,
+                                    overlay.size.width -
+                                        buttonPosition.dx -
+                                        buttonSize.width,
+                                    0,
+                                  ),
+
+                                  constraints: BoxConstraints(
+                                    minWidth: 200.w,
+                                    maxWidth: 250.w,
+                                    minHeight: 110.h,
+                                    maxHeight: 420.h,
+                                  ),
+
+                                  color: AppColors.white,
+
+                                  elevation: 4,
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+
+                                  items: lgas.map<PopupMenuEntry<String>>((
+                                    lga,
+                                  ) {
+                                    return PopupMenuItem<String>(
+                                      value: lga.toString(),
+                                      height: 38.h,
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 14.w,
+                                      ),
+                                      child: TextView(
+                                        text: lga.toString(),
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 13.70.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.black,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+
+                                if (selectedLga != null) {
+                                  model.lgaController.text = selectedLga;
+                                  model.notifyListeners();
+                                }
+                              },
+
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: AppColors.grey1,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         validator: AppValidator.validateString(),
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                         ),
+
                         labelStyle: TextStyle(
                           fontSize: 15.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                           color: AppColors.faintedGrey,
                         ),
                       ),
@@ -608,18 +793,18 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         readOnly: true,
                         fillColor: AppColors.white,
                         isFilled: true,
-                        controller: model.stateController,
+                        controller: model.deliveryAddressController,
                         maxline: 4,
                         validator: AppValidator.validateString(),
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                         ),
                         labelStyle: TextStyle(
                           fontSize: 15.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                           color: AppColors.faintedGrey,
                         ),
                       ),
@@ -638,7 +823,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         readOnly: true,
                         fillColor: AppColors.white,
                         isFilled: true,
-                        controller: model.stateController,
+                        controller: model.phoneController,
                         prefixWidget: Padding(
                           padding: EdgeInsets.all(12.w),
                           child: SvgPicture.asset(
@@ -650,12 +835,12 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                         ),
                         labelStyle: TextStyle(
                           fontSize: 15.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                           color: AppColors.faintedGrey,
                         ),
                       ),
@@ -675,18 +860,18 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         readOnly: true,
                         fillColor: AppColors.white,
                         isFilled: true,
-                        controller: model.stateController,
+                        controller: model.orderNotesController,
                         maxline: 4,
                         validator: AppValidator.validateString(),
                         style: TextStyle(
                           fontSize: 16.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                         ),
                         labelStyle: TextStyle(
                           fontSize: 15.20.sp,
                           fontWeight: FontWeight.w400,
-                          fontFamily: 'GoogleSans',
+                          fontFamily: 'DMSans',
                           color: AppColors.faintedGrey,
                         ),
                       ),
@@ -714,7 +899,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: 'Order Summary',
                             textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
+                              fontFamily: 'DMSans',
                               fontSize: 15.42.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black,
@@ -737,7 +922,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                       'Amoxicillin 500mg (Carton of 100 packs)',
                                   textOverflow: TextOverflow.ellipsis,
                                   textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
+                                    fontFamily: 'DMSans',
                                     fontSize: 15.42.sp,
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.black,
@@ -748,7 +933,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               TextView(
                                 text: 'Qty: 4 | ₦18,500',
                                 textStyle: TextStyle(
-                                  fontFamily: 'GoogleSans',
+                                  fontFamily: 'DMSans',
                                   fontSize: 12.42.sp,
                                   fontWeight: FontWeight.w300,
                                   color: AppColors.infoGrey,
@@ -760,7 +945,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: '₦37,000',
                             textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
+                              fontFamily: 'DMSans',
                               fontSize: 14.42.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.reminder1,
@@ -777,7 +962,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: 'Subtotal',
                             textStyle: TextStyle(
-                              fontFamily: 'Arial',
+                              fontFamily: 'DMSans',
                               fontSize: 14.2.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black,
@@ -786,7 +971,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: '₦37,000',
                             textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
+                              fontFamily: 'DMSans',
                               fontSize: 14.42.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.reminder1,
@@ -802,7 +987,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: 'Delivery',
                             textStyle: TextStyle(
-                              fontFamily: 'Arial',
+                              fontFamily: 'DMSans',
                               fontSize: 14.2.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black,
@@ -811,7 +996,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: '₦5,000',
                             textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
+                              fontFamily: 'DMSans',
                               fontSize: 14.42.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.reminder1,
@@ -829,7 +1014,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: 'Total:',
                             textStyle: TextStyle(
-                              fontFamily: 'Arial',
+                              fontFamily: 'DMSans',
                               fontSize: 16.2.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black,
@@ -838,7 +1023,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           TextView(
                             text: '₦42,000',
                             textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
+                              fontFamily: 'DMSans',
                               fontSize: 16.42.sp,
                               fontWeight: FontWeight.w600,
                               color: AppColors.reminder1,
@@ -863,110 +1048,356 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(AppImage.wallet),
-                          SizedBox(width: 12.w),
-                          TextView(
-                            text: 'Wallet payment',
-                            textStyle: TextStyle(
-                              fontFamily: 'GoogleSans',
-                              fontSize: 14.52.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
-                            ),
-                          ),
-                        ],
+                      TextView(
+                        text: 'Payment Method',
+                        textStyle: TextStyle(
+                          fontFamily: 'DMSans',
+                          fontSize: 15.56.sp,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.reminder,
+                        ),
                       ),
                       SizedBox(height: 10.h),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 12.w,
-                          horizontal: 16.w,
-                        ),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.cooool,
-                          borderRadius: BorderRadius.circular(8.0.r),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextView(
-                                      text: 'Wallet Balance',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w300,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4.10.h),
-                                    TextView(
-                                      text: '₦120,000',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 15.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.reminder,
-                                        letterSpacing: -0.1,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 18.30.w,
-                                    vertical: 8.2.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(22.r),
-                                    color: AppColors.primary,
-                                  ),
-                                  child: TextView(
-                                    text: '+  Top up',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 16.2.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: AppColors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 20.h),
                       GestureDetector(
-                        onTap: () =>
-                            navigate.navigateTo(Routes.pharmacyOrderScreen),
+                        onTap: () {
+                          model.payMethod = PayMethod.accelerate;
+                          model.notifyListeners();
+                        },
                         child: Container(
-                          width: double.infinity,
                           padding: EdgeInsets.symmetric(
-                            vertical: 10.w,
-                            horizontal: 12.w,
+                            horizontal: 15.6.w,
+                            vertical: 16.20.w,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(40.r),
+                            border: Border.all(
+                              color: model.payMethod == PayMethod.accelerate
+                                  ? AppColors.primary
+                                  : AppColors.infoGrey1,
+                              width: 1.22,
+                            ),
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
-                          child: Center(
-                            child: TextView(
-                              text: 'Pay ₦42,000 & Place Order',
-                              textStyle: TextStyle(
-                                fontFamily: 'GoogleSans',
-                                fontSize: 14.90.sp,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio<PayMethod>(
+                                    value: PayMethod.accelerate,
+                                    groupValue: model.payMethod,
+                                    fillColor: WidgetStateProperty.all(
+                                      model.payMethod == PayMethod.accelerate
+                                          ? AppColors.primary
+                                          : AppColors.infoGrey,
+                                    ),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity(
+                                      horizontal: -4,
+                                      vertical: -4,
+                                    ),
+                                    onChanged: (value) {
+                                      model.payMethod = value!;
+                                      model.notifyListeners();
+                                    },
+                                  ),
+
+                                  SizedBox(width: 6.12.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          AppImage.accelerate,
+                                          height: 16.h,
+                                          width: 90.w,
+                                        ),
+                                        SizedBox(height: 8.10.h),
+                                        TextView(
+                                          text:
+                                              'Direct gateway payment with card, transfer or USSD..',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 13.62.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.faintedGrey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10.h),
+                      GestureDetector(
+                        onTap: () {
+                          model.payMethod = PayMethod.wallet;
+                          model.notifyListeners();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15.6.w,
+                            vertical: 16.20.w,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: model.payMethod == PayMethod.wallet
+                                  ? AppColors.primary
+                                  : AppColors.infoGrey1,
+                              width: 1.22,
+                            ),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio<PayMethod>(
+                                    value: PayMethod.wallet,
+                                    groupValue: model.payMethod,
+                                    fillColor: WidgetStateProperty.all(
+                                      model.payMethod == PayMethod.wallet
+                                          ? AppColors.primary
+                                          : AppColors.infoGrey,
+                                    ),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity(
+                                      horizontal: -4,
+                                      vertical: -4,
+                                    ),
+                                    onChanged: (value) {
+                                      model.payMethod = value!;
+                                      model.notifyListeners();
+                                    },
+                                  ),
+
+                                  SizedBox(width: 6.12.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        TextView(
+                                          text: 'Wallet Balance',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 14.56.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: AppColors.reminder,
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.10.h),
+                                        TextView(
+                                          text:
+                                              'Pay instantly from your Medicate wallet.',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 13.62.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.faintedGrey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10.h),
+                      GestureDetector(
+                        onTap: () {
+                          model.payMethod = PayMethod.paystack;
+                          model.notifyListeners();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15.6.w,
+                            vertical: 16.20.w,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: model.payMethod == PayMethod.paystack
+                                  ? AppColors.primary
+                                  : AppColors.infoGrey1,
+                              width: 1.22,
+                            ),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio<PayMethod>(
+                                    value: PayMethod.paystack,
+                                    groupValue: model.payMethod,
+                                    fillColor: WidgetStateProperty.all(
+                                      model.payMethod == PayMethod.paystack
+                                          ? AppColors.primary
+                                          : AppColors.infoGrey,
+                                    ),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity(
+                                      horizontal: -4,
+                                      vertical: -4,
+                                    ),
+                                    onChanged: (value) {
+                                      model.payMethod = value!;
+                                      model.notifyListeners();
+                                    },
+                                  ),
+
+                                  SizedBox(width: 6.12.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          AppImage.paystack,
+                                          height: 16.h,
+                                          width: 90.w,
+                                        ),
+                                        SizedBox(height: 8.10.h),
+                                        TextView(
+                                          text:
+                                              'Direct gateway payment with card, transfer or USSD..',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 13.62.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.faintedGrey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10.h),
+                      GestureDetector(
+                        onTap: () {
+                          model.payMethod = PayMethod.flutterwave;
+                          model.notifyListeners();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15.6.w,
+                            vertical: 16.20.w,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: model.payMethod == PayMethod.flutterwave
+                                  ? AppColors.primary
+                                  : AppColors.infoGrey1,
+                              width: 1.22,
+                            ),
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Radio<PayMethod>(
+                                    value: PayMethod.flutterwave,
+                                    groupValue: model.payMethod,
+                                    fillColor: WidgetStateProperty.all(
+                                      model.payMethod == PayMethod.flutterwave
+                                          ? AppColors.primary
+                                          : AppColors.infoGrey,
+                                    ),
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    visualDensity: VisualDensity(
+                                      horizontal: -4,
+                                      vertical: -4,
+                                    ),
+                                    onChanged: (value) {
+                                      model.payMethod = value!;
+                                      model.notifyListeners();
+                                    },
+                                  ),
+
+                                  SizedBox(width: 6.12.w),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Image.asset(
+                                          AppImage.flutterwave,
+                                          height: 16.h,
+                                          width: 90.w,
+                                        ),
+                                        SizedBox(height: 8.10.h),
+                                        TextView(
+                                          text:
+                                              'Card, mobile money and international payments.',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'DMSans',
+                                            fontSize: 13.62.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.faintedGrey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 30.h),
+                      Center(
+                        child: GestureDetector(
+                          // onTap: () => navigate.navigateTo(
+                          //   Routes.pharmacyWholeSaleCheckout,
+                          // ),
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 8.w,
+                              horizontal: 12.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(40.r),
+                            ),
+                            child: Center(
+                              child: TextView(
+                                text: 'Place Order',
+                                textStyle: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  fontSize: 16.20.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -985,5 +1416,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
 }
 
 enum Delivery { instance, schedule }
+
+enum PayMethod { accelerate, wallet, paystack, flutterwave }
 
 enum CartAddedTime { morning, afternoon, evening }

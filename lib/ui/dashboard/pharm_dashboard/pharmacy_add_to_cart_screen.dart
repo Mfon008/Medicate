@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, deprecated_member_use
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,6 +11,7 @@ import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
+import '../../../core/core_folder/app/app.router.dart';
 import '../../widget/text.dart';
 
 class PharmacyAddToCartScreen extends StatelessWidget {
@@ -34,7 +36,7 @@ class PharmacyAddToCartScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 23.30.h),
+                SizedBox(height: 24.60.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -97,160 +99,138 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                 .cart!
                                 .itemCount! >
                             0
-                    ? Stack(
-                        children: [
-                          SizedBox(
-                            height: 640.h,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ...model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.items!.map((
-                                    e,
-                                  ) {
-                                    final int mainQuantity = e.quantity ?? 1;
-                                    final int currentQuantity =
-                                        model.selectedQuantities[e
-                                            .product
-                                            ?.id] ??
-                                        mainQuantity;
-                                    return SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.all(
-                                                  17.40.w,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.grey2,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        10.r,
-                                                      ),
-                                                ),
-                                                child: Container(
+                    ? Expanded(
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                bottom: 150.h, // space for subtotal section
+                              ),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ...model.wholesaleGetProductAddedToCartResponseModel!.data!.cart!.items!.map((
+                                      e,
+                                    ) {
+                                      final int mainQuantity = e.quantity ?? 1;
+                                      final int currentQuantity =
+                                          model.selectedQuantities[e
+                                              .product
+                                              ?.id] ??
+                                          mainQuantity;
+                                      return SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
                                                   padding: EdgeInsets.all(
-                                                    10.62.w,
+                                                    12.40.w,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: AppColors.infoGrey2,
+                                                    color: AppColors.grey2,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          10.r,
+                                                        ),
                                                   ),
-                                                  child: SvgPicture.asset(
-                                                    AppImage.box_cart,
-                                                    height: isTablet(context)
-                                                        ? 28.0.h
-                                                        : 18.h,
-                                                    width: isTablet(context)
-                                                        ? 28.0.w
-                                                        : 18.w,
-                                                    color: AppColors.infoGrey,
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(
+                                                      5.62.w,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color:
+                                                          AppColors.infoGrey2,
+                                                    ),
+                                                    child: ClipOval(
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            e
+                                                                .product
+                                                                ?.images?[0]
+                                                                .url ??
+                                                            '',
+                                                        height:
+                                                            isTablet(context)
+                                                            ? 28.0.h
+                                                            : 42.8.h,
+                                                        width: isTablet(context)
+                                                            ? 28.0.w
+                                                            : 42.8.w,
+                                                        errorWidget:
+                                                            (
+                                                              context,
+                                                              url,
+                                                              error,
+                                                            ) => SvgPicture.asset(
+                                                              AppImage.box_cart,
+                                                              height:
+                                                                  isTablet(
+                                                                    context,
+                                                                  )
+                                                                  ? 28.0.h
+                                                                  : 18.h,
+                                                              width:
+                                                                  isTablet(
+                                                                    context,
+                                                                  )
+                                                                  ? 28.0.w
+                                                                  : 18.w,
+                                                              color: AppColors
+                                                                  .infoGrey,
+                                                            ),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(width: 10.w),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    TextView(
-                                                      text:
-                                                          e.product?.productName
-                                                              ?.capitalizeWords() ??
-                                                          '',
-                                                      textStyle: TextStyle(
-                                                        fontFamily: 'DMSans',
-                                                        fontSize: 16.20.sp,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color:
-                                                            AppColors.reminder,
-                                                      ),
-                                                    ),
-                                                    SizedBox(height: 10.h),
-                                                    Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        TextView(
-                                                          text:
-                                                              'MOQ ${e.product?.minimumOrderQuantity ?? 0} carton(s) ',
-                                                          textStyle: TextStyle(
-                                                            fontFamily:
-                                                                'DMSans',
-                                                            fontSize: 13.20.sp,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: AppColors
-                                                                .reminder,
-                                                            letterSpacing:
-                                                                -0.21,
-                                                          ),
+                                                SizedBox(width: 10.w),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      TextView(
+                                                        text:
+                                                            e
+                                                                .product
+                                                                ?.productName
+                                                                ?.capitalizeWords() ??
+                                                            '',
+                                                        textStyle: TextStyle(
+                                                          fontFamily: 'DMSans',
+                                                          fontSize: 16.20.sp,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: AppColors
+                                                              .reminder,
                                                         ),
-                                                        SizedBox(
-                                                          width: 130.w,
-                                                          child: TextView(
-                                                            text:
-                                                                '· ${formatNaira(e.unitPrice ?? 0)}/cartons',
-                                                            maxLines: 2,
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'DMSans',
-                                                              fontSize:
-                                                                  13.20.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: AppColors
-                                                                  .reminder,
-                                                              letterSpacing:
-                                                                  -0.21,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(height: 10.h),
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                            vertical: 4.w,
-                                                            horizontal: 8.w,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              20.r,
-                                                            ),
-                                                        color: AppColors.grey,
                                                       ),
-                                                      child: Row(
+                                                      SizedBox(height: 10.h),
+                                                      Row(
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           TextView(
                                                             text:
-                                                                'Manufacturer: ',
+                                                                'MOQ ${e.product?.minimumOrderQuantity ?? 0} carton(s) ',
                                                             textStyle: TextStyle(
                                                               fontFamily:
                                                                   'DMSans',
@@ -260,294 +240,369 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                                   FontWeight
                                                                       .w400,
                                                               color: AppColors
-                                                                  .infoGrey,
-                                                              letterSpacing:
-                                                                  -0.31,
-                                                            ),
-                                                          ),
-                                                          TextView(
-                                                            text:
-                                                                ' ${e.product?.manufacturerDistributorName?.capitalizeWords() ?? ''}',
-                                                            textStyle: TextStyle(
-                                                              fontFamily:
-                                                                  'DMSans',
-                                                              fontSize:
-                                                                  13.20.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: AppColors
                                                                   .reminder,
                                                               letterSpacing:
-                                                                  -0.31,
+                                                                  -0.21,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 130.w,
+                                                            child: TextView(
+                                                              text:
+                                                                  '· ${formatNaira(e.unitPrice ?? 0)}/cartons',
+                                                              maxLines: 2,
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'DMSans',
+                                                                fontSize:
+                                                                    13.20.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                                letterSpacing:
+                                                                    -0.21,
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
                                                       ),
-                                                    ),
-                                                    SizedBox(height: 10.h),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Container(
-                                                          height: 30.h,
-                                                          decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                  7.92.r,
-                                                                ),
-                                                            border: Border.all(
-                                                              color:
-                                                                  const Color.fromARGB(
-                                                                    255,
-                                                                    236,
-                                                                    237,
-                                                                    237,
+                                                      SizedBox(height: 10.h),
+                                                      Container(
+                                                        padding:
+                                                            EdgeInsets.symmetric(
+                                                              vertical: 4.w,
+                                                              horizontal: 8.w,
+                                                            ),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                20.r,
+                                                              ),
+                                                          color: AppColors.grey,
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            TextView(
+                                                              text:
+                                                                  'Manufacturer: ',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'DMSans',
+                                                                fontSize:
+                                                                    13.20.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: AppColors
+                                                                    .infoGrey,
+                                                                letterSpacing:
+                                                                    -0.31,
+                                                              ),
+                                                            ),
+                                                            TextView(
+                                                              text:
+                                                                  ' ${e.product?.manufacturerDistributorName?.capitalizeWords() ?? ''}',
+                                                              textStyle: TextStyle(
+                                                                fontFamily:
+                                                                    'DMSans',
+                                                                fontSize:
+                                                                    13.20.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: AppColors
+                                                                    .reminder,
+                                                                letterSpacing:
+                                                                    -0.31,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(height: 10.h),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Container(
+                                                            height: 30.h,
+                                                            decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                    7.92.r,
                                                                   ),
+                                                              border: Border.all(
+                                                                color:
+                                                                    const Color.fromARGB(
+                                                                      255,
+                                                                      236,
+                                                                      237,
+                                                                      237,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                IconButton(
+                                                                  onPressed:
+                                                                      currentQuantity <=
+                                                                          e.product!.minimumOrderQuantity!
+                                                                      ? null
+                                                                      : () async {
+                                                                          model.selectedQuantities[e.product!.id!] =
+                                                                              currentQuantity -
+                                                                              1;
+                                                                          await Future.delayed(
+                                                                            Duration(
+                                                                              milliseconds: 50,
+                                                                            ),
+                                                                          );
+                                                                          model.updateWholesaleProductToCart(
+                                                                            context,
+                                                                            wholesaleProductId:
+                                                                                e.productId,
+                                                                            quantity:
+                                                                                model.selectedQuantities[e.product!.id!],
+                                                                          );
+                                                                          model
+                                                                              .notifyListeners();
+                                                                        },
+                                                                  icon: Icon(
+                                                                    Icons
+                                                                        .remove,
+                                                                    size:
+                                                                        18.0.sp,
+                                                                    color: AppColors
+                                                                        .infoGrey,
+                                                                  ),
+                                                                ),
+                                                                TextView(
+                                                                  text:
+                                                                      '$currentQuantity',
+                                                                  textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'GoogleSans',
+                                                                    fontSize:
+                                                                        16.80
+                                                                            .sp,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                                IconButton(
+                                                                  onPressed: () async {
+                                                                    model.selectedQuantities[e
+                                                                            .product!
+                                                                            .id!] =
+                                                                        currentQuantity +
+                                                                        1;
+                                                                    await Future.delayed(
+                                                                      Duration(
+                                                                        milliseconds:
+                                                                            50,
+                                                                      ),
+                                                                    );
+                                                                    model.updateWholesaleProductToCart(
+                                                                      context,
+                                                                      wholesaleProductId:
+                                                                          e.productId,
+                                                                      quantity:
+                                                                          model
+                                                                              .selectedQuantities[e
+                                                                              .product!
+                                                                              .id!],
+                                                                    );
+                                                                    model
+                                                                        .notifyListeners();
+                                                                  },
+                                                                  icon: Icon(
+                                                                    Icons.add,
+                                                                    size:
+                                                                        18.0.sp,
+                                                                    color: AppColors
+                                                                        .reminder,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                                MainAxisSize
-                                                                    .min,
-                                                            children: [
-                                                              IconButton(
-                                                                onPressed:
-                                                                    currentQuantity <=
-                                                                        e.product!.minimumOrderQuantity!
-                                                                    ? null
-                                                                    : () async {
-                                                                        model.selectedQuantities[e.product!.id!] =
-                                                                            currentQuantity -
-                                                                            1;
-                                                                        await Future.delayed(
-                                                                          Duration(
-                                                                            milliseconds:
-                                                                                50,
-                                                                          ),
-                                                                        );
-                                                                        model.updateWholesaleProductToCart(
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              model.eCartRemove =
+                                                                  e;
+                                                              model.removeWholesaleProductItemFromCart(
+                                                                context,
+                                                                wholesaleProductId:
+                                                                    e
+                                                                        .product!
+                                                                        .id!,
+                                                              );
+                                                              model
+                                                                  .notifyListeners();
+                                                            },
+                                                            child:
+                                                                model.isLoadingRemoveItem &&
+                                                                    model.eCartRemove ==
+                                                                        e
+                                                                ? SpinKitRing(
+                                                                    color: AppColors
+                                                                        .primaryLight,
+                                                                    size: 20.sp,
+                                                                    lineWidth:
+                                                                        3,
+                                                                  )
+                                                                : SvgPicture.asset(
+                                                                    AppImage
+                                                                        .delete,
+                                                                    height:
+                                                                        isTablet(
                                                                           context,
-                                                                          wholesaleProductId:
-                                                                              e.productId,
-                                                                          quantity:model.selectedQuantities[e
-                                                                          .product!
-                                                                          .id!],
-                                                                        );
-                                                                        model
-                                                                            .notifyListeners();
-                                                                      },
-                                                                icon: Icon(
-                                                                  Icons.remove,
-                                                                  size: 18.0.sp,
-                                                                  color: AppColors
-                                                                      .infoGrey,
-                                                                ),
-                                                              ),
-                                                              TextView(
-                                                                text:
-                                                                    '$currentQuantity',
-                                                                textStyle: TextStyle(
-                                                                  fontFamily:
-                                                                      'GoogleSans',
-                                                                  fontSize:
-                                                                      16.80.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: AppColors
-                                                                      .reminder,
-                                                                ),
-                                                              ),
-                                                              IconButton(
-                                                                onPressed: () async {
-                                                                  model.selectedQuantities[e
-                                                                          .product!
-                                                                          .id!] =
-                                                                      currentQuantity +
-                                                                      1;
-                                                                  await Future.delayed(
-                                                                    Duration(
-                                                                      milliseconds:
-                                                                          50,
-                                                                    ),
-                                                                  );
-                                                                  model.updateWholesaleProductToCart(
-                                                                    context,
-                                                                    wholesaleProductId:
-                                                                        e.productId,
-                                                                    quantity:model.selectedQuantities[e
-                                                                          .product!
-                                                                          .id!],
-                                                                  );
-                                                                  model
-                                                                      .notifyListeners();
-                                                                },
-                                                                icon: Icon(
-                                                                  Icons.add,
-                                                                  size: 18.0.sp,
-                                                                  color: AppColors
-                                                                      .reminder,
-                                                                ),
-                                                              ),
-                                                            ],
+                                                                        )
+                                                                        ? 38.0.h
+                                                                        : 20.8.h,
+                                                                    width:
+                                                                        isTablet(
+                                                                          context,
+                                                                        )
+                                                                        ? 38.0.w
+                                                                        : 20.8.w,
+                                                                    color:
+                                                                        AppColors
+                                                                            .red,
+                                                                  ),
                                                           ),
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            model.eCartRemove =
-                                                                e;
-                                                            model.removeWholesaleProductItemFromCart(
-                                                              context,
-                                                              wholesaleProductId:
-                                                                  e
-                                                                      .product!
-                                                                      .id!,
-                                                            );
-                                                            model
-                                                                .notifyListeners();
-                                                          },
-                                                          child:
-                                                              model.isLoadingRemoveItem &&
-                                                                  model.eCartRemove ==
-                                                                      e
-                                                              ? SpinKitRing(
-                                                                  color: AppColors
-                                                                      .primaryLight,
-                                                                  size: 20.sp,
-                                                                  lineWidth: 3,
-                                                                )
-                                                              : SvgPicture.asset(
-                                                                  AppImage
-                                                                      .delete,
-                                                                  height:
-                                                                      isTablet(
-                                                                        context,
-                                                                      )
-                                                                      ? 38.0.h
-                                                                      : 20.8.h,
-                                                                  width:
-                                                                      isTablet(
-                                                                        context,
-                                                                      )
-                                                                      ? 38.0.w
-                                                                      : 20.8.w,
-                                                                  color:
-                                                                      AppColors
-                                                                          .red,
-                                                                ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10.h),
-                                          Divider(color: AppColors.f1),
-                                        ],
+                                              ],
+                                            ),
+                                            SizedBox(height: 10.h),
+                                            Divider(color: AppColors.f1),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Divider(color: AppColors.f1),
+                                  SizedBox(height: 10.h),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      TextView(
+                                        text: 'Subtotal',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 17.80.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
                                       ),
-                                    );
-                                  }),
+                                      TextView(
+                                        text: formatNaira(
+                                          model
+                                                  .wholesaleGetProductAddedToCartResponseModel
+                                                  ?.data
+                                                  ?.cart
+                                                  ?.subtotal ??
+                                              0,
+                                        ),
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 17.80.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.reminder,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.10.h),
+                                  TextView(
+                                    text:
+                                        'Delivery fees calculated at checkout',
+                                    textStyle: TextStyle(
+                                      fontFamily: 'GoogleSans',
+                                      fontSize: 13.30.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.infoGrey,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20.h),
+                                  Center(
+                                    child: GestureDetector(
+                                      onTap: () => navigate.navigateTo(
+                                        Routes.pharmacyWholeSaleCheckout,
+                                      ),
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 8.w,
+                                          horizontal: 12.w,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.primary,
+                                          borderRadius: BorderRadius.circular(
+                                            40.r,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: TextView(
+                                            text: 'Proceed to Checkout',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'GoogleSans',
+                                              fontSize: 14.90.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: AppColors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 15.20.h),
+                                  Center(
+                                    child: TextView(
+                                      text: 'Continue Shopping',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 14.90.sp,
+                                        fontWeight: FontWeight.w300,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Divider(color: AppColors.f1),
-                                SizedBox(height: 10.h),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextView(
-                                      text: 'Subtotal',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 17.80.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                    TextView(
-                                      text: formatNaira(model.wholesaleGetProductAddedToCartResponseModel?.data?.cart?.subtotal??0),
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 17.80.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.10.h),
-                                TextView(
-                                  text: 'Delivery fees calculated at checkout',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'GoogleSans',
-                                    fontSize: 13.30.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.infoGrey,
-                                  ),
-                                ),
-                                SizedBox(height: 20.h),
-                                Center(
-                                  child: GestureDetector(
-                                    // onTap: () => navigate.navigateTo(
-                                    //   Routes.pharmacyWholesaleScreen,
-                                    // ),
-                                    child: Container(
-                                      width: double.infinity,
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 8.w,
-                                        horizontal: 12.w,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primary,
-                                        borderRadius: BorderRadius.circular(
-                                          40.r,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: TextView(
-                                          text: 'Proceed to Checkout',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'GoogleSans',
-                                            fontSize: 14.90.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 15.20.h),
-                                Center(
-                                  child: TextView(
-                                    text: 'Continue Shopping',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 14.90.sp,
-                                      fontWeight: FontWeight.w300,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       )
                     : Padding(
                         padding: EdgeInsetsGeometry.only(

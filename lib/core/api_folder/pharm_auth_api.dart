@@ -931,25 +931,31 @@ class PharmApi {
     }
   }
 
-  Future<WholesaleGetProductAddedToCartResponseModel> getWholesaleProductAddedToCart() async {
+  Future<WholesaleGetProductAddedToCartResponseModel>
+  getWholesaleProductAddedToCart() async {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_cart,
         RequestMethod.get,
       );
       logger.d(response.data);
-      return WholesaleGetProductAddedToCartResponseModel.fromJson(response.data);
+      return WholesaleGetProductAddedToCartResponseModel.fromJson(
+        response.data,
+      );
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<dynamic> addWholesaleProductToCart(WholesaleAddToCartEntityModel? addToCart) async {
+  Future<dynamic> addWholesaleProductToCart(
+    WholesaleAddToCartEntityModel? addToCart,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_add_to_cart,
-        RequestMethod.post,data: addToCart?.toJson()
+        RequestMethod.post,
+        data: addToCart?.toJson(),
       );
       logger.d(response.data);
       return response.data;
@@ -958,11 +964,16 @@ class PharmApi {
       rethrow;
     }
   }
-  Future<dynamic> updateWholesaleProductToCart({String? productId,int? quantity}) async {
+
+  Future<dynamic> updateWholesaleProductToCart({
+    String? productId,
+    int? quantity,
+  }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_add_to_cart}/$productId',
-        RequestMethod.patch,data:{'quantity':quantity}
+        RequestMethod.patch,
+        data: {'quantity': quantity},
       );
       logger.d(response.data);
       return response.data;
@@ -971,24 +982,12 @@ class PharmApi {
       rethrow;
     }
   }
+
   Future<dynamic> removeWholesaleProductItemFromCart(String? productId) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_add_to_cart}/$productId',
-        RequestMethod.delete
-      );
-      logger.d(response.data);
-      return response.data;
-    } catch (e) {
-      logger.d("response:$e");
-      rethrow;
-    }
-  }
-  Future<dynamic> clearWholesaleProductFromCart(String? productId) async {
-    try {
-      final response = await _service.call(
-        UrlConfig.wholesale_cart,
-        RequestMethod.delete
+        RequestMethod.delete,
       );
       logger.d(response.data);
       return response.data;
@@ -998,4 +997,17 @@ class PharmApi {
     }
   }
 
+  Future<dynamic> clearWholesaleProductFromCart(String? productId) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_cart,
+        RequestMethod.delete,
+      );
+      logger.d(response.data);
+      return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
 }

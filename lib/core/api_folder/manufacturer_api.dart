@@ -8,6 +8,7 @@ import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_r
 
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
@@ -471,6 +472,20 @@ class ManufacturerApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.user_detail}/$phoneNo',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetUserDetailsResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

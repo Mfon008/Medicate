@@ -227,7 +227,10 @@ class WalletScreen extends StatelessWidget {
                                                 alignment: Alignment.topRight,
                                                 child: TextView(
                                                   text: formatNaira(
-                                                    int.parse(e.amount ?? "0"),
+                                                    double.tryParse(
+                                                          e.amount ?? "0",
+                                                        ) ??
+                                                        0.0,
                                                   ),
                                                   textStyle: TextStyle(
                                                     fontFamily: 'GoogleSans',

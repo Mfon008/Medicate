@@ -31,6 +31,7 @@ import '../model/create_distributor_product_entity_model/create_distributor_prod
 import '../model/distributor_wholesale_category_model/category.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
+import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -105,6 +106,9 @@ class ManufacturerViewModel extends BaseViewModel {
   NafdacRegistrationNumberResponseModel?
   get nafdacRegistrationNumberResponseModel =>
       _nafdacRegistrationNumberResponseModel;
+  GetUserDetailsResponseModel? _getUserDetailsResponseModel;
+  GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
+      _getUserDetailsResponseModel;
 
   String? pinInput;
 
@@ -140,6 +144,21 @@ class ManufacturerViewModel extends BaseViewModel {
   im.Image? images;
   int inImage = 0;
   String searchProduct = '';
+
+  void getUserDetails({context, phoneNo}) async {
+    try {
+      _isLoading = true;
+      _getUserDetailsResponseModel = await runBusyFuture(
+        repositoryImply.getUserDetails(phoneNo),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+    }
+    notifyListeners();
+  }
 
   Future<void> selectManDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(

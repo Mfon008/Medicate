@@ -15,7 +15,7 @@ import '../../widget/button.dart';
 import '../../widget/text.dart';
 
 class PharmacyViewProductScreen extends StatelessWidget {
-  PharmacyViewProductScreen({super.key,this.wholeSaleProductId});
+  PharmacyViewProductScreen({super.key, this.wholeSaleProductId});
   String? wholeSaleProductId;
 
   @override
@@ -1087,13 +1087,21 @@ class PharmacyViewProductScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: GestureDetector(
-                                     onTap: () {
+                                    onTap: () {
                                       model.addWholesaleProductToCart(
                                         context,
                                         wholesaleAddToCart:
                                             WholesaleAddToCartEntityModel(
-                                              productId: model.getSingleMarketProductResponseModel!.data!.product!.id,
-                                              quantity: model.getSingleMarketProductResponseModel!.data!.product!.minimumOrderQuantity,
+                                              productId: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .id,
+                                              quantity: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity,
                                             ),
                                       );
                                       model.notifyListeners();
@@ -1107,40 +1115,42 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           color: AppColors.primary,
                                           width: 1.42,
                                         ),
-                                        borderRadius: BorderRadius.circular(40.r),
+                                        borderRadius: BorderRadius.circular(
+                                          40.r,
+                                        ),
                                       ),
-                                      child:  model.isLoading
+                                      child: model.isLoading
                                           ? SpinKitRing(
                                               color: AppColors.primary1,
                                               size: 22.0.sp,
                                               lineWidth: 2,
                                             )
                                           : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.cart,
-                                            height: isTablet(context)
-                                                ? 38.40.h
-                                                : 20.h,
-                                            width: isTablet(context)
-                                                ? 38.40.w
-                                                : 20.w,
-                                            color: AppColors.primary,
-                                          ),
-                                          SizedBox(width: 7.10.w),
-                                          TextView(
-                                            text: 'Add to Cart',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 16.90.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.primary,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  AppImage.cart,
+                                                  height: isTablet(context)
+                                                      ? 38.40.h
+                                                      : 20.h,
+                                                  width: isTablet(context)
+                                                      ? 38.40.w
+                                                      : 20.w,
+                                                  color: AppColors.primary,
+                                                ),
+                                                SizedBox(width: 7.10.w),
+                                                TextView(
+                                                  text: 'Add to Cart',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'GoogleSans',
+                                                    fontSize: 16.90.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
                                     ),
                                   ),
                                 ),
@@ -1180,7 +1190,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
               ],
             ),
           );
-        }
+        },
       ),
     );
   }

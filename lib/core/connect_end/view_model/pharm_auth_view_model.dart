@@ -202,6 +202,9 @@ class PharmViewModel extends BaseViewModel {
   TextEditingController rolenameController = TextEditingController();
   TextEditingController roleDescriptionController = TextEditingController();
   TextEditingController stateController = TextEditingController();
+  TextEditingController deliveryAddressController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController orderNotesController = TextEditingController();
   TextEditingController lgaController = TextEditingController();
   TextEditingController meansIdController = TextEditingController();
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
@@ -313,6 +316,7 @@ class PharmViewModel extends BaseViewModel {
   Price price = Price.all;
   Category category = Category.all;
   Delivery delivery = Delivery.instance;
+  PayMethod? payMethod;
   CartAddedTime cartTimeAdded = CartAddedTime.morning;
 
   String returnCartAddedTime(CartAddedTime cartAddedTime) {
@@ -19646,7 +19650,6 @@ class PharmViewModel extends BaseViewModel {
       );
 
       if (v['statusCode'] == 201 || v['statusCode'] == 200) {
-      
         getWholesaleProductAddedToCart(context);
       }
 
@@ -19671,10 +19674,7 @@ class PharmViewModel extends BaseViewModel {
       );
 
       if (v['statusCode'] == 201 || v['statusCode'] == 200) {
-        AppUtils.snackbar(
-          context,
-          message: v['message'],
-        );
+        AppUtils.snackbar(context, message: v['message']);
         getWholesaleProductAddedToCart(context);
       }
 
@@ -19699,10 +19699,7 @@ class PharmViewModel extends BaseViewModel {
       );
 
       if (v['statusCode'] == 201 || v['statusCode'] == 200) {
-        AppUtils.snackbar(
-          context,
-          message: v['message'],
-        );
+        AppUtils.snackbar(context, message: v['message']);
         getWholesaleProductAddedToCart(context);
       }
 
