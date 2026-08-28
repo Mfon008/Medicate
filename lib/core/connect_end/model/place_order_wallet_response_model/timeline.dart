@@ -1,13 +1,17 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'timeline.g.dart';
+
+@JsonSerializable()
 class Timeline {
-  Timeline();
+  String? status;
+  DateTime? occurredAt;
+
+  Timeline({this.status, this.occurredAt});
 
   factory Timeline.fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
-    throw UnimplementedError('Timeline.fromJson($json) is not implemented');
+    return _$TimelineFromJson(json);
   }
 
-  Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
-  }
+  Map<String, dynamic> toJson() => _$TimelineToJson(this);
 }

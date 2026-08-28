@@ -1,21 +1,27 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../core/app_assets/state_lga_format.dart';
+import '../../../core/connect_end/model/quote_instant_delivery_entity_model.dart';
+import '../../../core/connect_end/model/quote_schedule_delivery_eneity_model.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 import '../../widget/text_form_widget.dart';
 
+// ignore: must_be_immutable
 class PharmacyWholeSaleCheckout extends StatelessWidget {
-  const PharmacyWholeSaleCheckout({super.key});
+  PharmacyWholeSaleCheckout({super.key});
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -495,546 +501,729 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10.r),
                     color: AppColors.white,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(AppImage.locator),
-                          SizedBox(width: 12.w),
-                          TextView(
-                            text: 'Delivery details',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 15.42.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(AppImage.locator),
+                            SizedBox(width: 12.w),
+                            TextView(
+                              text: 'Delivery details',
+                              textStyle: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 15.42.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        TextFormWidget(
+                          hint: 'State',
+                          label: 'Select State',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          readOnly: true,
+                          fillColor: AppColors.white,
+                          isFilled: true,
+                          controller: model.stateController,
+                          suffixWidget: Builder(
+                            builder: (context) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  final RenderBox button =
+                                      context.findRenderObject() as RenderBox;
+
+                                  final RenderBox overlay =
+                                      Overlay.of(
+                                            context,
+                                          ).context.findRenderObject()
+                                          as RenderBox;
+
+                                  final Offset buttonPosition = button
+                                      .localToGlobal(
+                                        Offset.zero,
+                                        ancestor: overlay,
+                                      );
+
+                                  final Size buttonSize = button.size;
+
+                                  final selectedState = await showMenu<String>(
+                                    context: context,
+
+                                    position: RelativeRect.fromLTRB(
+                                      buttonPosition.dx,
+                                      buttonPosition.dy +
+                                          buttonSize.height +
+                                          5.h,
+                                      overlay.size.width -
+                                          buttonPosition.dx -
+                                          buttonSize.width,
+                                      0,
+                                    ),
+
+                                    constraints: BoxConstraints(
+                                      minWidth: 200.w,
+                                      maxWidth: 250.w,
+                                      minHeight: 150.h,
+                                      maxHeight: 450.h,
+                                    ),
+
+                                    color: AppColors.white,
+
+                                    elevation: 4,
+
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+
+                                    items: stateLgaFormat
+                                        .map<PopupMenuEntry<String>>((s) {
+                                          final String state =
+                                              s['state']?.toString() ?? '';
+
+                                          return PopupMenuItem<String>(
+                                            value: state,
+                                            height: 38.h,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 14.w,
+                                            ),
+                                            child: TextView(
+                                              text: state,
+                                              textStyle: TextStyle(
+                                                fontFamily: 'GoogleSans',
+                                                fontSize: 13.70.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: AppColors.black,
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
+                                  );
+
+                                  if (selectedState != null) {
+                                    model.stateController.text = selectedState;
+
+                                    // Reset LGA whenever state changes
+                                    model.lgaController.clear();
+
+                                    model.notifyListeners();
+                                  }
+                                },
+
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.grey1,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+
+                          validator: AppValidator.validateString(),
+
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                          ),
+
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                            color: AppColors.faintedGrey,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        TextFormWidget(
+                          hint: 'LGA',
+                          label: '--',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.white,
+                          isFilled: true,
+                          readOnly: true,
+                          controller: model.lgaController,
+                          suffixWidget: Builder(
+                            builder: (context) {
+                              return GestureDetector(
+                                onTap: () async {
+                                  final RenderBox button =
+                                      context.findRenderObject() as RenderBox;
+
+                                  final RenderBox overlay =
+                                      Overlay.of(
+                                            context,
+                                          ).context.findRenderObject()
+                                          as RenderBox;
+
+                                  final Offset buttonPosition = button
+                                      .localToGlobal(
+                                        Offset.zero,
+                                        ancestor: overlay,
+                                      );
+
+                                  final Size buttonSize = button.size;
+
+                                  final selectedState = stateLgaFormat
+                                      .firstWhere(
+                                        (state) =>
+                                            state['state']
+                                                .toString()
+                                                .trim()
+                                                .toLowerCase() ==
+                                            model.stateController.text
+                                                .trim()
+                                                .toLowerCase(),
+                                        orElse: () => <String, dynamic>{
+                                          'state': '',
+                                          'lgas': <String>[],
+                                        },
+                                      );
+
+                                  final List<dynamic> lgas =
+                                      selectedState['lgas'] ?? [];
+
+                                  if (lgas.isEmpty) {
+                                    return;
+                                  }
+
+                                  final selectedLga = await showMenu<String>(
+                                    context: context,
+
+                                    position: RelativeRect.fromLTRB(
+                                      buttonPosition.dx,
+                                      buttonPosition.dy +
+                                          buttonSize.height +
+                                          5.h,
+                                      overlay.size.width -
+                                          buttonPosition.dx -
+                                          buttonSize.width,
+                                      0,
+                                    ),
+
+                                    constraints: BoxConstraints(
+                                      minWidth: 200.w,
+                                      maxWidth: 250.w,
+                                      minHeight: 110.h,
+                                      maxHeight: 420.h,
+                                    ),
+
+                                    color: AppColors.white,
+
+                                    elevation: 4,
+
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                    ),
+
+                                    items: lgas.map<PopupMenuEntry<String>>((
+                                      lga,
+                                    ) {
+                                      return PopupMenuItem<String>(
+                                        value: lga.toString(),
+                                        height: 38.h,
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 14.w,
+                                        ),
+                                        child: TextView(
+                                          text: lga.toString(),
+                                          textStyle: TextStyle(
+                                            fontFamily: 'GoogleSans',
+                                            fontSize: 13.70.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+
+                                  if (selectedLga != null) {
+                                    model.lgaController.text = selectedLga;
+                                    if (model.delivery == Delivery.instance) {
+                                      model.quoteInstantDelivery(
+                                        context: context,
+                                        instantDelivery:
+                                            QuoteInstantDeliveryEntityModel(
+                                              deliveryMethod: 'INSTANT',
+                                              stateCode:
+                                                  model.stateController.text,
+                                              lgaCode: model.lgaController.text,
+                                            ),
+                                      );
+                                    } else {
+                                      model.quoteScheduleDelivery(
+                                        context: context,
+                                        scheduleDelivery:
+                                            QuoteScheduleDeliveryEneityModel(
+                                              deliveryMethod: 'SCHEDULED_BLOCK',
+                                              stateCode:
+                                                  model.stateController.text,
+                                              lgaCode: model.lgaController.text,
+                                              deliveryDate: convertDate(
+                                                model.dateTimeController.text,
+                                              ),
+                                              timeBlockStart: model
+                                                  .getTimeBlockStart(),
+                                              timeBlockEnd: model
+                                                  .getTimeBlockEnd(),
+                                            ),
+                                      );
+                                    }
+                                    model.notifyListeners();
+                                  }
+                                },
+
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                  ),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: AppColors.grey1,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                          ),
+
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                            color: AppColors.faintedGrey,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        TextFormWidget(
+                          hint: 'Delivery address',
+                          label: 'Facility address, city, state',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.white,
+                          isFilled: true,
+                          controller: model.deliveryAddressController,
+                          maxline: 4,
+                          validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                          ),
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                            color: AppColors.faintedGrey,
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                        TextFormWidget(
+                          hint: 'Contact phone',
+                          label: '+234',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.white,
+                          isFilled: true,
+                          controller: model.phoneController,
+                          prefixWidget: Padding(
+                            padding: EdgeInsets.all(12.w),
+                            child: SvgPicture.asset(
+                              AppImage.phone,
+                              color: AppColors.infoGrey,
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 12.h),
-                      TextFormWidget(
-                        hint: 'State',
-                        label: 'Select State',
-                        hintWeight: FontWeight.w400,
-                        hintColor: AppColors.reminder,
-                        hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        borderColor: AppColors.infoGrey1,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        readOnly: true,
-                        fillColor: AppColors.white,
-                        isFilled: true,
-                        controller: model.stateController,
-
-                        suffixWidget: Builder(
-                          builder: (context) {
-                            return GestureDetector(
-                              onTap: () async {
-                                final RenderBox button =
-                                    context.findRenderObject() as RenderBox;
-
-                                final RenderBox overlay =
-                                    Overlay.of(
-                                          context,
-                                        ).context.findRenderObject()
-                                        as RenderBox;
-
-                                final Offset buttonPosition = button
-                                    .localToGlobal(
-                                      Offset.zero,
-                                      ancestor: overlay,
-                                    );
-
-                                final Size buttonSize = button.size;
-
-                                final selectedState = await showMenu<String>(
-                                  context: context,
-
-                                  position: RelativeRect.fromLTRB(
-                                    buttonPosition.dx,
-                                    buttonPosition.dy + buttonSize.height + 5.h,
-                                    overlay.size.width -
-                                        buttonPosition.dx -
-                                        buttonSize.width,
-                                    0,
-                                  ),
-
-                                  constraints: BoxConstraints(
-                                    minWidth: 200.w,
-                                    maxWidth: 250.w,
-                                    minHeight: 150.h,
-                                    maxHeight: 450.h,
-                                  ),
-
-                                  color: AppColors.white,
-
-                                  elevation: 4,
-
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-
-                                  items: stateLgaFormat
-                                      .map<PopupMenuEntry<String>>((s) {
-                                        final String state =
-                                            s['state']?.toString() ?? '';
-
-                                        return PopupMenuItem<String>(
-                                          value: state,
-                                          height: 38.h,
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 14.w,
-                                          ),
-                                          child: TextView(
-                                            text: state,
-                                            textStyle: TextStyle(
-                                              fontFamily: 'GoogleSans',
-                                              fontSize: 13.70.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: AppColors.black,
-                                            ),
-                                          ),
-                                        );
-                                      })
-                                      .toList(),
-                                );
-
-                                if (selectedState != null) {
-                                  model.stateController.text = selectedState;
-
-                                  // Reset LGA whenever state changes
-                                  model.lgaController.clear();
-
-                                  model.notifyListeners();
-                                }
-                              },
-
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: AppColors.grey1,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-
-                        validator: AppValidator.validateString(),
-
-                        style: TextStyle(
-                          fontSize: 16.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                        ),
-
-                        labelStyle: TextStyle(
-                          fontSize: 15.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                          color: AppColors.faintedGrey,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      TextFormWidget(
-                        hint: 'LGA',
-                        label: '--',
-                        hintWeight: FontWeight.w400,
-                        hintColor: AppColors.reminder,
-                        hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        borderColor: AppColors.infoGrey1,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        readOnly: true,
-                        fillColor: AppColors.white,
-                        isFilled: true,
-                        controller: model.lgaController,
-                        suffixWidget: Builder(
-                          builder: (context) {
-                            return GestureDetector(
-                              onTap: () async {
-                                final RenderBox button =
-                                    context.findRenderObject() as RenderBox;
-
-                                final RenderBox overlay =
-                                    Overlay.of(
-                                          context,
-                                        ).context.findRenderObject()
-                                        as RenderBox;
-
-                                final Offset buttonPosition = button
-                                    .localToGlobal(
-                                      Offset.zero,
-                                      ancestor: overlay,
-                                    );
-
-                                final Size buttonSize = button.size;
-
-                                final selectedState = stateLgaFormat.firstWhere(
-                                  (state) =>
-                                      state['state']
-                                          .toString()
-                                          .trim()
-                                          .toLowerCase() ==
-                                      model.stateController.text
-                                          .trim()
-                                          .toLowerCase(),
-                                  orElse: () => <String, dynamic>{
-                                    'state': '',
-                                    'lgas': <String>[],
-                                  },
-                                );
-
-                                final List<dynamic> lgas =
-                                    selectedState['lgas'] ?? [];
-
-                                if (lgas.isEmpty) {
-                                  return;
-                                }
-
-                                final selectedLga = await showMenu<String>(
-                                  context: context,
-
-                                  position: RelativeRect.fromLTRB(
-                                    buttonPosition.dx,
-                                    buttonPosition.dy + buttonSize.height + 5.h,
-                                    overlay.size.width -
-                                        buttonPosition.dx -
-                                        buttonSize.width,
-                                    0,
-                                  ),
-
-                                  constraints: BoxConstraints(
-                                    minWidth: 200.w,
-                                    maxWidth: 250.w,
-                                    minHeight: 110.h,
-                                    maxHeight: 420.h,
-                                  ),
-
-                                  color: AppColors.white,
-
-                                  elevation: 4,
-
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.r),
-                                  ),
-
-                                  items: lgas.map<PopupMenuEntry<String>>((
-                                    lga,
-                                  ) {
-                                    return PopupMenuItem<String>(
-                                      value: lga.toString(),
-                                      height: 38.h,
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 14.w,
-                                      ),
-                                      child: TextView(
-                                        text: lga.toString(),
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 13.70.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.black,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                );
-
-                                if (selectedLga != null) {
-                                  model.lgaController.text = selectedLga;
-                                  model.notifyListeners();
-                                }
-                              },
-
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                child: Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: AppColors.grey1,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        validator: AppValidator.validateString(),
-                        style: TextStyle(
-                          fontSize: 16.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                        ),
-
-                        labelStyle: TextStyle(
-                          fontSize: 15.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                          color: AppColors.faintedGrey,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      TextFormWidget(
-                        hint: 'Delivery address',
-                        label: 'Facility address, city, state',
-                        hintWeight: FontWeight.w400,
-                        hintColor: AppColors.reminder,
-                        hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        borderColor: AppColors.infoGrey1,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        readOnly: true,
-                        fillColor: AppColors.white,
-                        isFilled: true,
-                        controller: model.deliveryAddressController,
-                        maxline: 4,
-                        validator: AppValidator.validateString(),
-                        style: TextStyle(
-                          fontSize: 16.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                        ),
-                        labelStyle: TextStyle(
-                          fontSize: 15.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                          color: AppColors.faintedGrey,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      TextFormWidget(
-                        hint: 'Contact phone',
-                        label: '+234',
-                        hintWeight: FontWeight.w400,
-                        hintColor: AppColors.reminder,
-                        hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        borderColor: AppColors.infoGrey1,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        readOnly: true,
-                        fillColor: AppColors.white,
-                        isFilled: true,
-                        controller: model.phoneController,
-                        prefixWidget: Padding(
-                          padding: EdgeInsets.all(12.w),
-                          child: SvgPicture.asset(
-                            AppImage.phone,
-                            color: AppColors.infoGrey,
+                          validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                          ),
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                            color: AppColors.faintedGrey,
                           ),
                         ),
-                        validator: AppValidator.validateString(),
-                        style: TextStyle(
-                          fontSize: 16.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
+                        SizedBox(height: 12.h),
+                        TextFormWidget(
+                          hint: 'Order notes (Optional)',
+                          isShowHint: true,
+                          label: 'E.g. Call central storage clerk upon arrival',
+                          hintWeight: FontWeight.w400,
+                          hintColor: AppColors.reminder,
+                          hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                          borderColor: AppColors.infoGrey1,
+                          borderTopLeft: 10.r,
+                          borderTopRight: 10.r,
+                          borderBottomLeft: 10.r,
+                          borderBottomRight: 10.r,
+                          fillColor: AppColors.white,
+                          isFilled: true,
+                          controller: model.orderNotesController,
+                          maxline: 4,
+                          // validator: AppValidator.validateString(),
+                          style: TextStyle(
+                            fontSize: 16.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                          ),
+                          labelStyle: TextStyle(
+                            fontSize: 15.20.sp,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'DMSans',
+                            color: AppColors.faintedGrey,
+                          ),
                         ),
-                        labelStyle: TextStyle(
-                          fontSize: 15.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                          color: AppColors.faintedGrey,
-                        ),
-                      ),
-                      SizedBox(height: 12.h),
-                      TextFormWidget(
-                        hint: 'Order notes (Optional)',
-                        isShowHint: true,
-                        label: 'E.g. Call central storage clerk upon arrival',
-                        hintWeight: FontWeight.w400,
-                        hintColor: AppColors.reminder,
-                        hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                        borderColor: AppColors.infoGrey1,
-                        borderTopLeft: 10.r,
-                        borderTopRight: 10.r,
-                        borderBottomLeft: 10.r,
-                        borderBottomRight: 10.r,
-                        readOnly: true,
-                        fillColor: AppColors.white,
-                        isFilled: true,
-                        controller: model.orderNotesController,
-                        maxline: 4,
-                        validator: AppValidator.validateString(),
-                        style: TextStyle(
-                          fontSize: 16.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                        ),
-                        labelStyle: TextStyle(
-                          fontSize: 15.20.sp,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'DMSans',
-                          color: AppColors.faintedGrey,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 20.w),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 20.w,
-                    vertical: 20.w,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.r),
-                    color: AppColors.white,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(AppImage.order_summary),
-                          SizedBox(width: 12.w),
-                          TextView(
-                            text: 'Order Summary',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 15.42.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 210.w,
-                                child: TextView(
-                                  maxLines: 1,
-                                  text:
-                                      'Amoxicillin 500mg (Carton of 100 packs)',
-                                  textOverflow: TextOverflow.ellipsis,
+                model.isLoading
+                    ? SpinKitCircle(size: 48.sp, color: AppColors.primary1)
+                    : model.quoteInstantDeliveryResponseModel != null ||
+                          model.quoteScheduleDeliveryResponseModel != null
+                    ? Container(
+                        margin: EdgeInsets.only(bottom: 20.w),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 20.w,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          color: AppColors.white,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SvgPicture.asset(AppImage.order_summary),
+                                SizedBox(width: 12.w),
+                                TextView(
+                                  text: 'Order Summary',
                                   textStyle: TextStyle(
                                     fontFamily: 'DMSans',
                                     fontSize: 15.42.sp,
                                     fontWeight: FontWeight.w400,
                                     color: AppColors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
+                            if (model.quoteInstantDeliveryResponseModel != null)
+                              ...model
+                                  .quoteInstantDeliveryResponseModel!
+                                  .data!
+                                  .checkout!
+                                  .items!
+                                  .map(
+                                    (p) => Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: 210.w,
+                                                  child: TextView(
+                                                    maxLines: 1,
+                                                    text:
+                                                        p
+                                                            .product
+                                                            ?.productName ??
+                                                        '',
+                                                    textOverflow:
+                                                        TextOverflow.ellipsis,
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.42.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.black,
+                                                      letterSpacing: -0.1,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextView(
+                                                  text:
+                                                      'Qty: ${p.quantity} | ${formatNaira(p.product?.priceDetails?.displayPricePerUnit ?? 0)}',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 12.42.sp,
+                                                    fontWeight: FontWeight.w300,
+                                                    color: AppColors.infoGrey,
+                                                    letterSpacing: -0.1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            TextView(
+                                              text: formatNairaDouble(
+                                                p.lineTotal!,
+                                              ),
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 14.42.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.reminder1,
+                                                letterSpacing: -0.1,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(color: AppColors.infoGrey1),
+                                      ],
+                                    ),
+                                  )
+                            else
+                              ...model
+                                  .quoteScheduleDeliveryResponseModel!
+                                  .data!
+                                  .checkout!
+                                  .items!
+                                  .map(
+                                    (p) => Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  width: 210.w,
+                                                  child: TextView(
+                                                    maxLines: 1,
+                                                    text:
+                                                        p
+                                                            .product
+                                                            ?.productName ??
+                                                        '',
+                                                    textOverflow:
+                                                        TextOverflow.ellipsis,
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.42.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: AppColors.black,
+                                                      letterSpacing: -0.1,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextView(
+                                                  text:
+                                                      'Qty: ${p.quantity} | ${formatNaira(p.product?.priceDetails?.displayPricePerUnit ?? 0)}',
+                                                  textStyle: TextStyle(
+                                                    fontFamily: 'DMSans',
+                                                    fontSize: 12.42.sp,
+                                                    fontWeight: FontWeight.w300,
+                                                    color: AppColors.infoGrey,
+                                                    letterSpacing: -0.1,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            TextView(
+                                              text: formatNairaDouble(
+                                                p.lineTotal!,
+                                              ),
+                                              textStyle: TextStyle(
+                                                fontFamily: 'DMSans',
+                                                fontSize: 14.42.sp,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.reminder1,
+                                                letterSpacing: -0.1,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(color: AppColors.infoGrey1),
+                                      ],
+                                    ),
+                                  ),
+
+                            SizedBox(height: 10.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextView(
+                                  text: 'Subtotal',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 14.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                TextView(
+                                  text:
+                                      model.quoteInstantDeliveryResponseModel !=
+                                          null
+                                      ? formatNairaDouble(
+                                          model
+                                              .quoteInstantDeliveryResponseModel!
+                                              .data!
+                                              .checkout!
+                                              .subtotal!,
+                                        )
+                                      : formatNairaDouble(
+                                          model
+                                              .quoteScheduleDeliveryResponseModel!
+                                              .data!
+                                              .checkout!
+                                              .subtotal!,
+                                        ),
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 14.42.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder1,
                                     letterSpacing: -0.1,
                                   ),
                                 ),
-                              ),
-                              TextView(
-                                text: 'Qty: 4 | ₦18,500',
-                                textStyle: TextStyle(
-                                  fontFamily: 'DMSans',
-                                  fontSize: 12.42.sp,
-                                  fontWeight: FontWeight.w300,
-                                  color: AppColors.infoGrey,
-                                  letterSpacing: -0.1,
+                              ],
+                            ),
+                            SizedBox(height: 10.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextView(
+                                  text: 'Delivery',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 14.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.black,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          TextView(
-                            text: '₦37,000',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 14.42.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.reminder1,
-                              letterSpacing: -0.1,
+                                TextView(
+                                  text:
+                                      model.quoteInstantDeliveryResponseModel !=
+                                          null
+                                      ? formatNaira(
+                                          model
+                                              .quoteInstantDeliveryResponseModel!
+                                              .data!
+                                              .checkout!
+                                              .deliveryFee!,
+                                        )
+                                      : formatNaira(
+                                          model
+                                              .quoteScheduleDeliveryResponseModel!
+                                              .data!
+                                              .checkout!
+                                              .deliveryFee!,
+                                        ),
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 14.42.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder1,
+                                    letterSpacing: -0.1,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      Divider(color: AppColors.infoGrey1),
-                      SizedBox(height: 10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextView(
-                            text: 'Subtotal',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 14.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
-                            ),
-                          ),
-                          TextView(
-                            text: '₦37,000',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 14.42.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.reminder1,
-                              letterSpacing: -0.1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextView(
-                            text: 'Delivery',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 14.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
-                            ),
-                          ),
-                          TextView(
-                            text: '₦5,000',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 14.42.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.reminder1,
-                              letterSpacing: -0.1,
-                            ),
-                          ),
-                        ],
-                      ),
 
-                      Divider(color: AppColors.infoGrey1),
-                      SizedBox(height: 4.10.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextView(
-                            text: 'Total:',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 16.2.sp,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.black,
+                            Divider(color: AppColors.infoGrey1),
+                            SizedBox(height: 4.10.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextView(
+                                  text: 'Total:',
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 16.2.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                                TextView(
+                                  text:
+                                      model.quoteInstantDeliveryResponseModel !=
+                                          null
+                                      ? formatNairaDouble(
+                                          model
+                                              .quoteInstantDeliveryResponseModel!
+                                              .data!
+                                              .checkout!
+                                              .total!,
+                                        )
+                                      : formatNairaDouble(
+                                          model
+                                              .quoteScheduleDeliveryResponseModel!
+                                              .data!
+                                              .checkout!
+                                              .total!,
+                                        ),
+                                  textStyle: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 16.42.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.reminder1,
+                                    letterSpacing: -0.1,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          TextView(
-                            text: '₦42,000',
-                            textStyle: TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 16.42.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.reminder1,
-                              letterSpacing: -0.1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                          ],
+                        ),
+                      )
+                    : SizedBox.shrink(),
                 Container(
                   margin: EdgeInsets.only(bottom: 20.w),
                   padding: EdgeInsets.symmetric(
@@ -1376,9 +1565,12 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       SizedBox(height: 30.h),
                       Center(
                         child: GestureDetector(
-                          // onTap: () => navigate.navigateTo(
-                          //   Routes.pharmacyWholeSaleCheckout,
-                          // ),
+                          onTap: () {
+                            if (formKey.currentState!.validate()) {
+                              model.paymentMethodFlowWholesale(context);
+                              model.notifyListeners();
+                            }
+                          },
                           child: Container(
                             width: double.infinity,
                             padding: EdgeInsets.symmetric(
@@ -1390,15 +1582,20 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                               borderRadius: BorderRadius.circular(40.r),
                             ),
                             child: Center(
-                              child: TextView(
-                                text: 'Place Order',
-                                textStyle: TextStyle(
-                                  fontFamily: 'DMSans',
-                                  fontSize: 16.20.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.white,
-                                ),
-                              ),
+                              child: model.isLoadingWallet
+                                  ? SpinKitFadingCircle(
+                                      color: AppColors.appWhite,
+                                      size: 40.sp,
+                                    )
+                                  : TextView(
+                                      text: 'Place Order',
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 16.20.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

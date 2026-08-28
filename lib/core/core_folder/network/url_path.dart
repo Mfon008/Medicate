@@ -102,4 +102,7 @@ class UrlConfig {
       'wholesale/marketplace/products';
   static const String wholesale_cart = 'wholesale/cart';
   static const String wholesale_add_to_cart = 'wholesale/cart/items';
+  static const String wholesale_checkout_quote = 'wholesale/checkout/quote';
+  static const String wholesale_checkout = 'wholesale/checkout';
+  static const String wholesale_orders = 'wholesale/orders';
 }

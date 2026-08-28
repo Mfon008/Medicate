@@ -24,9 +24,9 @@ class Order {
   String? timeWindowLabel;
   DeliveryDetails? deliveryDetails;
   List<DeliveryBreakdown>? deliveryBreakdown;
-  double? subtotal;
+  int? subtotal;
   int? deliveryFee;
-  double? total;
+  int? total;
   String? currency;
   Payment? payment;
   DateTime? createdAt;

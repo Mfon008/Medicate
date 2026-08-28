@@ -13,8 +13,8 @@ class Item {
   String? sku;
   String? imageUrl;
   int? quantity;
-  double? unitPrice;
-  double? lineTotal;
+  int? unitPrice;
+  int? lineTotal;
   int? minimumOrderQuantity;
   int? packSize;
   String? unit;

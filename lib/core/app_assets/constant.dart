@@ -19,6 +19,15 @@ String formatNaira(num amount) {
   return formatter.format(amount);
 }
 
+String formatNairaDouble(double amount) {
+  final formatter = NumberFormat.currency(
+    locale: 'en_NG',
+    symbol: '₦',
+    decimalDigits: 2,
+  );
+  return formatter.format(amount);
+}
+
 String formatNairaNoDecimal(num amount) {
   final formatter = NumberFormat.currency(
     locale: 'en_NG',
@@ -59,4 +68,20 @@ String convertDateToIso(String date) {
   );
 
   return dateTime.toUtc().toIso8601String();
+}
+
+String convertDate(String date) {
+  final parsedDate = DateFormat('dd MMM, yyyy').parse(date);
+  return DateFormat('yyyy-MM-dd').format(parsedDate);
+}
+
+String formatDate(String date) {
+  final parsedDate = DateTime.parse(date);
+
+  return DateFormat('MMM dd, yyyy, hh:mm a').format(parsedDate);
+}
+String formatDateNoTime(String date) {
+  final parsedDate = DateTime.parse(date);
+
+  return DateFormat('MMM dd, yyyy').format(parsedDate);
 }

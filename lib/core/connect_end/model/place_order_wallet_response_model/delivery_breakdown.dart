@@ -10,7 +10,7 @@ class DeliveryBreakdown {
   List<String>? productIds;
   List<String>? distributorIds;
   List<String>? distributorNames;
-  double? orderSubtotal;
+  int? orderSubtotal;
   String? locationId;
   String? stateCode;
   String? stateName;

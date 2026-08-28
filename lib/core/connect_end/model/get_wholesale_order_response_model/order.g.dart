@@ -21,9 +21,7 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   distributorCount: (json['distributorCount'] as num?)?.toInt(),
   deliveryMethod: json['deliveryMethod'] as String?,
   deliveryMethodLabel: json['deliveryMethodLabel'] as String?,
-  deliveryDate: json['deliveryDate'] == null
-      ? null
-      : DateTime.parse(json['deliveryDate'] as String),
+  deliveryDate: json['deliveryDate'],
   timeWindow: json['timeWindow'] as String?,
   timeWindowLabel: json['timeWindowLabel'] as String?,
   deliveryDetails: json['deliveryDetails'] == null

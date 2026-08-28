@@ -100,6 +100,7 @@ class _PharmMoreScreenState extends State<PharmMoreScreen> {
                       context,
                       icon: AppImage.cart,
                       text: 'Order History',
+                      onTap: () => navigate.navigateTo(Routes.pharmacyOrderScreen),
                     ),
                   ],
                 ),

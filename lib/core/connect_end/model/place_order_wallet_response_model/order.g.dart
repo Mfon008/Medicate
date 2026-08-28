@@ -7,7 +7,7 @@ part of 'order.dart';
 // **************************************************************************
 
 Order _$OrderFromJson(Map<String, dynamic> json) => Order(
-  id: json['_id'] as String?,
+  id: json['id'] as String?,
   orderNumber: json['orderNumber'] as String?,
   buyerTenantId: json['buyerTenantId'] as String?,
   buyerUserId: json['buyerUserId'] as String?,
@@ -32,9 +32,9 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
   deliveryBreakdown: (json['deliveryBreakdown'] as List<dynamic>?)
       ?.map((e) => DeliveryBreakdown.fromJson(e as Map<String, dynamic>))
       .toList(),
-  subtotal: (json['subtotal'] as num?)?.toDouble(),
+  subtotal: (json['subtotal'] as num?)?.toInt(),
   deliveryFee: (json['deliveryFee'] as num?)?.toInt(),
-  total: (json['total'] as num?)?.toDouble(),
+  total: (json['total'] as num?)?.toInt(),
   currency: json['currency'] as String?,
   payment: json['payment'] == null
       ? null
@@ -51,7 +51,6 @@ Order _$OrderFromJson(Map<String, dynamic> json) => Order(
 );
 
 Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
-  '_id': instance.id,
   'orderNumber': instance.orderNumber,
   'buyerTenantId': instance.buyerTenantId,
   'buyerUserId': instance.buyerUserId,
@@ -72,4 +71,5 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
   'cartClearedAt': instance.cartClearedAt?.toIso8601String(),
+  'id': instance.id,
 };

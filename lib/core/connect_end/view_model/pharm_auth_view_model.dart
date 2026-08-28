@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:medicate_app/core/app_assets/constant.dart';
 import 'package:medicate_app/core/connect_end/model/create_tenant_reminder_entity_model/patient_details.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/place_order_accelerate_entity_model/delivery_details.dart';
 import 'package:medicate_app/core/connect_end/model/upload_image_reminder_response_model/data.dart'
     as phImg;
 import 'package:medicate_app/core/connect_end/model/get_reminder_by_id/daily_dose_time.dart'
@@ -17,6 +18,8 @@ import 'package:medicate_app/core/connect_end/model/create_user_entity_model.dar
 import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/file.dart'
     as ph;
+import 'package:medicate_app/core/connect_end/model/place_order_wallet_entity_model/delivery_details.dart'
+    as del;
 import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +85,7 @@ import '../model/get_transaction_wallet_response_model/get_transaction_wallet_re
 import '../model/get_transaction_wallet_response_model/transaction.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
+import '../model/get_wholesale_order_response_model/get_wholesale_order_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/list_market_product_response_model/list_market_product_response_model.dart';
@@ -89,6 +93,14 @@ import '../model/login_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
+import '../model/place_order_accelerate_entity_model/place_order_accelerate_entity_model.dart';
+import '../model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
+import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
+import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
+import '../model/quote_instant_delivery_entity_model.dart';
+import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
+import '../model/quote_schedule_delivery_eneity_model.dart';
+import '../model/quote_schedule_delivery_response_model/quote_schedule_delivery_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -105,6 +117,8 @@ import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../model/wholesale_get_product_added_to_cart_response_model/item.dart';
 import '../model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
+import '../model/wholesale_order_list_response_model/order.dart';
+import '../model/wholesale_order_list_response_model/wholesale_order_list_response_model.dart';
 import '../repo/pharm_repo_impl.dart';
 import 'package:medicate_app/core/connect_end/model/get_reminder_for_tenant_response_model/daily_dose_time.dart'
     as getR;
@@ -128,6 +142,8 @@ class PharmViewModel extends BaseViewModel {
   final session = locator<SharedPreferencesService>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _isLoadingWallet = false;
+  bool get isLoadingWallet => _isLoadingWallet;
   bool _isLoadingRemoveItem = false;
   bool get isLoadingRemoveItem => _isLoadingRemoveItem;
   bool get isLoadingClearCart => _isLoadingClearCart;
@@ -282,6 +298,25 @@ class PharmViewModel extends BaseViewModel {
   PayWithWalletResponseModel? _payWithWalletResponseModel;
   PayWithWalletResponseModel? get payWithWalletResponseModel =>
       _payWithWalletResponseModel;
+
+  QuoteInstantDeliveryResponseModel? _quoteInstantDeliveryResponseModel;
+  QuoteInstantDeliveryResponseModel? get quoteInstantDeliveryResponseModel =>
+      _quoteInstantDeliveryResponseModel;
+  QuoteScheduleDeliveryResponseModel? _quoteScheduleDeliveryResponseModel;
+  QuoteScheduleDeliveryResponseModel? get quoteScheduleDeliveryResponseModel =>
+      _quoteScheduleDeliveryResponseModel;
+  PlaceOrderAccelerateResponseModel? _placeOrderAccelerateResponseModel;
+  PlaceOrderAccelerateResponseModel? get placeOrderAccelerateResponseModel =>
+      _placeOrderAccelerateResponseModel;
+  PlaceOrderWalletResponseModel? _placeOrderWalletResponseModel;
+  PlaceOrderWalletResponseModel? get placeOrderWalletResponseModel =>
+      _placeOrderWalletResponseModel;
+  WholesaleOrderListResponseModel? _wholesaleOrderListResponseModel;
+  WholesaleOrderListResponseModel? get wholesaleOrderListResponseModel =>
+      _wholesaleOrderListResponseModel;
+  GetWholesaleOrderResponseModel? _getWholesaleOrderResponseModel;
+  GetWholesaleOrderResponseModel? get getWholesaleOrderResponseModel =>
+      _getWholesaleOrderResponseModel;
 
   int linIndex = 1;
   int linIndexUpdate = 1;
@@ -612,6 +647,7 @@ class PharmViewModel extends BaseViewModel {
   Map<int, String?> selectedTimePerDay = {};
   Map<int, int?> selectedDoseIndexPerDay = {};
   Map<int, List<String>> timesPerDay = {};
+  Order? wholesaleOrder;
 
   String? pickedEndDate;
 
@@ -19703,6 +19739,255 @@ class PharmViewModel extends BaseViewModel {
         getWholesaleProductAddedToCart(context);
       }
 
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  paymentMethodFlowWholesale(context) {
+    if (payMethod == PayMethod.accelerate) {
+      placeOrderAccelerate(
+        context: context,
+        placeOrderAccelerate: PlaceOrderAccelerateEntityModel(
+          deliveryMethod: delivery == Delivery.instance
+              ? 'INSTANT'
+              : 'SCHEDULED_BLOCK',
+          deliveryDetails: DeliveryDetails(
+            state: stateController.text,
+            lga: lgaController.text,
+            contactPhone: phoneController.text,
+            deliveryAddress: deliveryAddressController.text,
+            orderNotes: orderNotesController.text,
+          ),
+          paymentMethod: 'ACCELERATE',
+          callbackUrl:
+              "https://app.medicate.health/wholesale/orders/payment-callback",
+          stateCode: stateController.text.toUpperCase(),
+          lgaCode: lgaController.text.toUpperCase(),
+          expectedDeliveryFee: _quoteInstantDeliveryResponseModel != null
+              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.deliveryFee
+              : _quoteScheduleDeliveryResponseModel!
+                    .data!
+                    .checkout!
+                    .deliveryFee,
+          expectedSubtotal: _quoteInstantDeliveryResponseModel != null
+              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.subtotal!
+                    .toInt()
+              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.subtotal!
+                    .toInt(),
+          expectedTotal: _quoteInstantDeliveryResponseModel != null
+              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.total!
+                    .toInt()
+              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!
+                    .toInt(),
+          deliveryDate: convertDate(dateTimeController.text),
+          timeBlockStart: getTimeBlockStart(),
+          timeBlockEnd: getTimeBlockEnd(),
+          timeWindow: getTimeWindow(),
+        ),
+      );
+    }
+    if (payMethod == PayMethod.wallet) {
+      placeOrderWallet(
+        context: context,
+        placeOrderWallet: PlaceOrderWalletEntityModel(
+          deliveryMethod: delivery == Delivery.instance
+              ? 'INSTANT'
+              : 'SCHEDULED_BLOCK',
+          deliveryDate: _quoteScheduleDeliveryResponseModel != null
+              ? convertDate(dateTimeController.text)
+              : null,
+          deliveryDetails: del.DeliveryDetails(
+            state: stateController.text,
+            lga: lgaController.text,
+            contactPhone: phoneController.text,
+            deliveryAddress: deliveryAddressController.text,
+            orderNotes: orderNotesController.text,
+          ),
+          paymentMethod: "WALLET",
+          stateCode: stateController.text.toUpperCase(),
+          lgaCode: lgaController.text.toUpperCase(),
+          expectedDeliveryFee: _quoteInstantDeliveryResponseModel != null
+              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.deliveryFee
+              : _quoteScheduleDeliveryResponseModel!
+                    .data!
+                    .checkout!
+                    .deliveryFee,
+          expectedSubtotal: _quoteInstantDeliveryResponseModel != null
+              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.subtotal!
+              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.subtotal!,
+          expectedTotal: _quoteInstantDeliveryResponseModel != null
+              ? _quoteInstantDeliveryResponseModel!.data!.checkout!.total!
+              : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!,
+          timeBlockStart: _quoteScheduleDeliveryResponseModel != null
+              ? getTimeBlockStart()
+              : null,
+          timeBlockEnd: _quoteScheduleDeliveryResponseModel != null
+              ? getTimeBlockEnd()
+              : null,
+        ),
+      );
+    }
+    if (payMethod == PayMethod.paystack) {}
+    if (payMethod == PayMethod.flutterwave) {}
+    notifyListeners();
+  }
+
+  String getTimeBlockStart() {
+    if (cartTimeAdded == CartAddedTime.morning) {
+      return '08:00';
+    }
+    if (cartTimeAdded == CartAddedTime.morning) {
+      return '12:00';
+    }
+    return '16:00';
+  }
+
+  String getTimeBlockEnd() {
+    if (cartTimeAdded == CartAddedTime.morning) {
+      return '12:00';
+    }
+    if (cartTimeAdded == CartAddedTime.morning) {
+      return '16:00';
+    }
+    return '20:00';
+  }
+
+  String getTimeWindow() {
+    if (cartTimeAdded == CartAddedTime.morning) {
+      return 'MORNING';
+    }
+    if (cartTimeAdded == CartAddedTime.morning) {
+      return 'AFTERNOON';
+    }
+    return 'EVENING';
+  }
+
+  Future<void> quoteInstantDelivery({
+    context,
+    QuoteInstantDeliveryEntityModel? instantDelivery,
+  }) async {
+    try {
+      _isLoading = true;
+      _quoteInstantDeliveryResponseModel = await runBusyFuture(
+        repositoryImply.quoteInstantDelivery(instantDelivery),
+        throwException: true,
+      );
+      _quoteScheduleDeliveryResponseModel = null;
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> quoteScheduleDelivery({
+    context,
+    QuoteScheduleDeliveryEneityModel? scheduleDelivery,
+  }) async {
+    try {
+      _isLoading = true;
+      _quoteScheduleDeliveryResponseModel = await runBusyFuture(
+        repositoryImply.quoteScheduleDelivery(scheduleDelivery),
+        throwException: true,
+      );
+      _quoteInstantDeliveryResponseModel = null;
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> placeOrderAccelerate({
+    context,
+    PlaceOrderAccelerateEntityModel? placeOrderAccelerate,
+  }) async {
+    try {
+      _isLoadingWallet = true;
+      _placeOrderAccelerateResponseModel = await runBusyFuture(
+        repositoryImply.placeOrderAccelerate(placeOrderAccelerate),
+        throwException: true,
+      );
+      if (_placeOrderAccelerateResponseModel!.statusCode == 201) {
+        navigate.navigateTo(
+          Routes.acceleratePaymentViewPharmacy,
+          arguments: AcceleratePaymentViewPharmacyArguments(
+            url: _placeOrderAccelerateResponseModel?.data?.payment?.redirectUrl,
+          ),
+        );
+      }
+
+      _isLoadingWallet = false;
+    } catch (e) {
+      _isLoadingWallet = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> placeOrderWallet({
+    context,
+    PlaceOrderWalletEntityModel? placeOrderWallet,
+  }) async {
+    try {
+      _isLoadingWallet = true;
+      _placeOrderWalletResponseModel = await runBusyFuture(
+        repositoryImply.placeOrderWallet(placeOrderWallet),
+        throwException: true,
+      );
+      if (_placeOrderWalletResponseModel!.statusCode == 201) {
+        await AppUtils.snackbar(
+          context,
+          message: _placeOrderWalletResponseModel?.message ?? '',
+        );
+        navigate.navigateTo(
+          Routes.pharmacyDashboard,
+          arguments: PharmacyDashboardArguments(index: 2),
+        );
+      }
+      _isLoadingWallet = false;
+    } catch (e) {
+      _isLoadingWallet = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWholesaleOrderList({context}) async {
+    try {
+      _isLoading = true;
+      _wholesaleOrderListResponseModel = await runBusyFuture(
+        repositoryImply.getWholesaleOrderList(pageAll.toString()),
+        throwException: true,
+      );
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWholesaleOrder({context, String? wholesaleOrderId}) async {
+    try {
+      _isLoading = true;
+      _getWholesaleOrderResponseModel = await runBusyFuture(
+        repositoryImply.getWholesaleOrder(wholesaleOrderId),
+        throwException: true,
+      );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

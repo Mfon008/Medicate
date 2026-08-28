@@ -2,6 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_roles_response_model/get_roles_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/quote_instant_delivery_entity_model.dart';
+import 'package:medicate_app/core/connect_end/model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/roles_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_pharmacy_kyc_entity_model/update_pharmacy_kyc_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/update_role_entity_model.dart';
@@ -24,6 +28,7 @@ import '../connect_end/model/get_today_reminder_model/get_today_reminder_model.d
 import '../connect_end/model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../connect_end/model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../connect_end/model/get_wallet_response_model/get_wallet_response_model.dart';
+import '../connect_end/model/get_wholesale_order_response_model/get_wholesale_order_response_model.dart';
 import '../connect_end/model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../connect_end/model/initiate_payment_wallet_entity_model.dart';
 import '../connect_end/model/list_market_product_response_model/list_market_product_response_model.dart';
@@ -31,6 +36,10 @@ import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_entity_model.dart';
 import '../connect_end/model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
+import '../connect_end/model/place_order_accelerate_entity_model/place_order_accelerate_entity_model.dart';
+import '../connect_end/model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
+import '../connect_end/model/quote_schedule_delivery_eneity_model.dart';
+import '../connect_end/model/quote_schedule_delivery_response_model/quote_schedule_delivery_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
 import '../connect_end/model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../connect_end/model/reset_password_entity_model.dart';
@@ -48,6 +57,7 @@ import '../connect_end/model/upload_image_reminder_response_model/upload_image_r
 import '../connect_end/model/verify_pass_otp_respnse_model/verify_pass_otp_respnse_model.dart';
 import '../connect_end/model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../connect_end/model/verify_phone_entity_model.dart';
+import '../connect_end/model/wholesale_order_list_response_model/wholesale_order_list_response_model.dart';
 import '../core_folder/app/app.locator.dart';
 import '../core_folder/app/app.logger.dart';
 import '../core_folder/manager/shared_preference.dart';
@@ -1005,6 +1015,107 @@ class PharmApi {
       );
       logger.d(response.data);
       return response.data;
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<QuoteInstantDeliveryResponseModel> quoteInstantDelivery(
+    QuoteInstantDeliveryEntityModel? instantDelivery,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout_quote,
+        RequestMethod.post,
+        data: instantDelivery?.toJson(),
+      );
+      logger.d(response.data);
+      return QuoteInstantDeliveryResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<QuoteScheduleDeliveryResponseModel> quoteScheduleDelivery(
+    QuoteScheduleDeliveryEneityModel? scheduleDelivery,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout_quote,
+        RequestMethod.post,
+        data: scheduleDelivery?.toJson(),
+      );
+      logger.d(response.data);
+      return QuoteScheduleDeliveryResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<PlaceOrderAccelerateResponseModel> placeOrderAccelerate(
+    PlaceOrderAccelerateEntityModel? placeOrderAccelerate,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout,
+        RequestMethod.post,
+        data: placeOrderAccelerate?.toJson(),
+      );
+      logger.d(response.data);
+      return PlaceOrderAccelerateResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<PlaceOrderWalletResponseModel> placeOrderWallet(
+    PlaceOrderWalletEntityModel? placeOrderWalletync,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout,
+        RequestMethod.post,
+        data: placeOrderWalletync?.toJson(),
+      );
+      logger.d(response.data);
+      return PlaceOrderWalletResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderList(
+    String page,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_orders,
+        RequestMethod.getParams,
+        queryParams: {'page': page, 'limit': '10'},
+      );
+      logger.d(response.data);
+      return WholesaleOrderListResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetWholesaleOrderResponseModel> getWholesaleOrder(
+    String? wholesaleOrderId,
+  ) async {
+    try {
+      final response = await _service.call(
+        '${UrlConfig.wholesale_orders}/$wholesaleOrderId',
+        RequestMethod.get,
+      );
+      logger.d(response.data);
+      return GetWholesaleOrderResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

@@ -17,7 +17,7 @@ DeliveryBreakdown _$DeliveryBreakdownFromJson(Map<String, dynamic> json) =>
       distributorNames: (json['distributorNames'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      orderSubtotal: (json['orderSubtotal'] as num?)?.toDouble(),
+      orderSubtotal: (json['orderSubtotal'] as num?)?.toInt(),
       locationId: json['locationId'] as String?,
       stateCode: json['stateCode'] as String?,
       stateName: json['stateName'] as String?,

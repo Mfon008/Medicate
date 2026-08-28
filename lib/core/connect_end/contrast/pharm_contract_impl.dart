@@ -20,6 +20,7 @@ import '../model/get_today_reminder_model/get_today_reminder_model.dart';
 import '../model/get_transaction_wallet_response_model/get_transaction_wallet_response_model.dart';
 import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/get_wallet_response_model/get_wallet_response_model.dart';
+import '../model/get_wholesale_order_response_model/get_wholesale_order_response_model.dart';
 import '../model/initiate_payment_response_model/initiate_payment_response_model.dart';
 import '../model/initiate_payment_wallet_entity_model.dart';
 import '../model/list_market_product_response_model/list_market_product_response_model.dart';
@@ -27,6 +28,14 @@ import '../model/login_entity_model.dart';
 import '../model/pay_with_wallet_entity_model.dart';
 import '../model/pay_with_wallet_response_model/pay_with_wallet_response_model.dart';
 import '../model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
+import '../model/place_order_accelerate_entity_model/place_order_accelerate_entity_model.dart';
+import '../model/place_order_accelerate_response_model/place_order_accelerate_response_model.dart';
+import '../model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
+import '../model/place_order_wallet_response_model/place_order_wallet_response_model.dart';
+import '../model/quote_instant_delivery_entity_model.dart';
+import '../model/quote_instant_delivery_response_model/quote_instant_delivery_response_model.dart';
+import '../model/quote_schedule_delivery_eneity_model.dart';
+import '../model/quote_schedule_delivery_response_model/quote_schedule_delivery_response_model.dart';
 import '../model/resend_otp_entity_model.dart';
 import '../model/resend_otp_response_model/resend_otp_response_model.dart';
 import '../model/reset_password_entity_model.dart';
@@ -48,6 +57,7 @@ import '../model/verify_pharmacy_otp_model/verify_pharmacy_otp_model.dart';
 import '../model/verify_phone_entity_model.dart';
 import '../model/wholesale_add_to_cart_entity_model.dart';
 import '../model/wholesale_get_product_added_to_cart_response_model/wholesale_get_product_added_to_cart_response_model.dart';
+import '../model/wholesale_order_list_response_model/wholesale_order_list_response_model.dart';
 
 @lazySingleton
 class PharmContractsImpl {
@@ -256,4 +266,22 @@ class PharmContractsImpl {
       await _api.removeWholesaleProductItemFromCart(productId);
   Future<dynamic> clearWholesaleProductFromCart(String? productId) async =>
       await _api.clearWholesaleProductFromCart(productId);
+  Future<QuoteInstantDeliveryResponseModel> quoteInstantDelivery(
+    QuoteInstantDeliveryEntityModel? instantDelivery,
+  ) async => await _api.quoteInstantDelivery(instantDelivery);
+  Future<QuoteScheduleDeliveryResponseModel> quoteScheduleDelivery(
+    QuoteScheduleDeliveryEneityModel? scheduleDelivery,
+  ) async => await _api.quoteScheduleDelivery(scheduleDelivery);
+  Future<PlaceOrderAccelerateResponseModel> placeOrderAccelerate(
+    PlaceOrderAccelerateEntityModel? placeOrderAccelerate,
+  ) async => await _api.placeOrderAccelerate(placeOrderAccelerate);
+  Future<PlaceOrderWalletResponseModel> placeOrderWallet(
+    PlaceOrderWalletEntityModel? placeOrderWalletync,
+  ) async => await _api.placeOrderWallet(placeOrderWalletync);
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderList(
+    String page,
+  ) async => await _api.getWholesaleOrderList(page);
+  Future<GetWholesaleOrderResponseModel> getWholesaleOrder(
+    String? wholesaleOrderId,
+  ) async => await _api.getWholesaleOrder(wholesaleOrderId);
 }

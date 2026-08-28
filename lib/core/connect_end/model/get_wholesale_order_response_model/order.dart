@@ -20,7 +20,7 @@ class Order {
   int? distributorCount;
   String? deliveryMethod;
   String? deliveryMethodLabel;
-  DateTime? deliveryDate;
+  dynamic deliveryDate;
   String? timeWindow;
   String? timeWindowLabel;
   DeliveryDetails? deliveryDetails;

@@ -10,6 +10,10 @@ class PlaceOrderAccelerateEntityModel {
   int? expectedTotal;
   String? stateCode;
   String? lgaCode;
+  String? timeBlockStart;
+  String? timeBlockEnd;
+  String? deliveryDate;
+  String? timeWindow;
 
   PlaceOrderAccelerateEntityModel({
     this.deliveryMethod,
@@ -21,6 +25,10 @@ class PlaceOrderAccelerateEntityModel {
     this.expectedTotal,
     this.stateCode,
     this.lgaCode,
+    this.deliveryDate,
+    this.timeBlockEnd,
+    this.timeBlockStart,
+    this.timeWindow,
   });
 
   factory PlaceOrderAccelerateEntityModel.fromJson(Map<String, dynamic> json) {
@@ -38,6 +46,10 @@ class PlaceOrderAccelerateEntityModel {
       expectedTotal: json['expectedTotal'] as int?,
       stateCode: json['stateCode'] as String?,
       lgaCode: json['lgaCode'] as String?,
+      timeWindow: json['timeWindow'] as String?,
+      deliveryDate: json['deliveryDate'] as String?,
+      timeBlockEnd: json['timeBlockEnd'] as String?,
+      timeBlockStart: json['timeBlockStart'] as String?,
     );
   }
 
@@ -51,5 +63,9 @@ class PlaceOrderAccelerateEntityModel {
     'expectedTotal': expectedTotal,
     'stateCode': stateCode,
     'lgaCode': lgaCode,
+    'timeBlockStart': timeBlockStart,
+    'timeBlockEnd': timeBlockEnd,
+    'deliveryDate': deliveryDate,
+    'timeWindow': timeWindow,
   };
 }
