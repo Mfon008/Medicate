@@ -36,6 +36,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
       onViewModelReady: (model) async {
         await model.getListedMarketPlace(context);
         await model.getWholesaleProductAddedToCart(context);
+
         model.getWholesaleCategoryList(context);
       },
       disposeViewModel: false,
@@ -173,7 +174,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                   textStyle: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 18.20.sp,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: AppColors.black,
                   ),
                 ),
@@ -236,7 +237,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                     GestureDetector(
                       onTap: () => model.modalBottomSheetMenuHealthCareRadio(
                         context,
-                        model,
+                        model: model,
                       ),
                       child: SvgPicture.asset(
                         AppImage.filter,
@@ -283,7 +284,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                   width: double.infinity,
                                   height: 198.h,
                                   decoration: BoxDecoration(
-                                    color: AppColors.grey,
+                                    color: AppColors.white,
                                     borderRadius: BorderRadius.circular(10.r),
                                     border: Border.all(
                                       color: const Color.fromARGB(
@@ -298,9 +299,9 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                     borderRadius: BorderRadius.circular(4.r),
                                     child: CachedNetworkImage(
                                       imageUrl: m.images?[0].url ?? '',
-                                      height: 262.h,
-                                      width: 242.w,
-                                      fit: BoxFit.cover,
+                                      height: 162.h,
+                                      width: 122.w,
+                                      fit: BoxFit.contain,
                                       placeholder: (context, url) => Center(
                                         child: SpinKitRipple(
                                           color: AppColors.primary,
@@ -430,7 +431,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                         ),
                                       ),
                                       TextView(
-                                        text: '${m.packSize} / (carton)s',
+                                        text: '${m.packSize} / carton',
                                         textStyle: TextStyle(
                                           fontFamily: 'DMSans',
                                           fontSize: 14.20.sp,
@@ -484,8 +485,9 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                         ),
                                       ),
                                       TextView(
-                                        text:
-                                            '${m.minimumOrderQuantity} cartons',
+                                        text: m.minimumOrderQuantity! > 1
+                                            ? '${m.minimumOrderQuantity} cartons'
+                                            : '${m.minimumOrderQuantity} carton',
                                         textStyle: TextStyle(
                                           fontFamily: 'DMSans',
                                           fontSize: 14.20.sp,

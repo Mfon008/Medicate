@@ -282,7 +282,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                               ),
                               child: TextView(
                                 text:
-                                    'SKU: ${model.getSingleMarketProductResponseModel?.data?.product?.category?.toUpperCase() ?? ''}',
+                                    'SKU: ${model.getSingleMarketProductResponseModel?.data?.product?.sku?.toUpperCase() ?? ''}',
                                 textStyle: TextStyle(
                                   fontFamily: 'DMSans',
                                   fontSize: 14.20.sp,

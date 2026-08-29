@@ -139,7 +139,7 @@ class _BusinessProviderWholesaleScreenState
                   textStyle: TextStyle(
                     fontFamily: 'DMSans',
                     fontSize: 18.20.sp,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: AppColors.black,
                   ),
                 ),

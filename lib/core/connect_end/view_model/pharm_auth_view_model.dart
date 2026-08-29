@@ -18986,7 +18986,7 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void modalBottomSheetMenuHealthCareRadio(context, PharmViewModel model) {
+  void modalBottomSheetMenuHealthCareRadio(context, {PharmViewModel? model}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -18996,70 +18996,145 @@ class PharmViewModel extends BaseViewModel {
       backgroundColor: AppColors.white,
       constraints: BoxConstraints(maxWidth: double.infinity),
       builder: (context) {
-        return ViewModelBuilder<PharmViewModel>.reactive(
-          viewModelBuilder: () => PharmViewModel(),
-          onViewModelReady: (model) {},
-          disposeViewModel: false,
-          onDispose: (viewModel) {},
-          builder: (_, PharmViewModel model, _) {
-            return DraggableScrollableSheet(
-              expand: false, // 👈 allows proper layout
-              builder: (context, scrollController) {
-                return SafeArea(
-                  child: StatefulBuilder(
-                    builder: (context, setModalState) {
-                      return SingleChildScrollView(
-                        controller: scrollController, // 👈 critical
-                        padding: EdgeInsets.symmetric(
-                          vertical: 13.20.w,
-                          horizontal: 20.w,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+        return DraggableScrollableSheet(
+          expand: false, // 👈 allows proper layout
+          builder: (context, scrollController) {
+            return SafeArea(
+              child: StatefulBuilder(
+                builder: (context, setModalState) {
+                  return SingleChildScrollView(
+                    controller: scrollController, // 👈 critical
+                    padding: EdgeInsets.symmetric(
+                      vertical: 13.20.w,
+                      horizontal: 20.w,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // --- your content ---
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // --- your content ---
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(width: 50.w),
-                                TextView(
-                                  text: 'Filter Search',
-                                  textStyle: TextStyle(
-                                    fontSize: 16.2.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () => navigate.back(),
-                                  icon: SvgPicture.asset(AppImage.cancel),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 20.h),
+                            SizedBox(width: 50.w),
                             TextView(
-                              text: 'Price',
+                              text: 'Filter Search',
+                              textStyle: TextStyle(
+                                fontSize: 16.2.sp,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.black,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => navigate.back(),
+                              icon: SvgPicture.asset(AppImage.cancel),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 20.h),
+                        TextView(
+                          text: 'Price',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Radio(
+                              value: Price.all,
+                              groupValue: price,
+                              activeColor: AppColors.primary,
+                              onChanged: (value) {
+                                price = value!;
+                                sortPrice = 'LOW_TO_HIGH';
+                                setModalState(() {});
+                                model!.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'All',
                               textStyle: TextStyle(
                                 fontFamily: 'Arial',
-                                fontSize: 16.2.sp,
+                                fontSize: 14.2.sp,
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.black,
                               ),
                             ),
+
                             SizedBox(height: 10.h),
+                            Radio(
+                              value: Price.high,
+                              activeColor: AppColors.primary,
+                              groupValue: price,
+                              onChanged: (value) {
+                                price = value!;
+                                sortPrice = 'LOW_TO_HIGH';
+                                setModalState(() {});
+                                model!.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'Low To High',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10.h),
+                            Radio(
+                              value: Price.low,
+                              activeColor: AppColors.primary,
+                              groupValue: price,
+                              onChanged: (value) {
+                                price = value!;
+                                sortPrice = 'HIGH_TO_LOW';
+                                setModalState(() {});
+                                model!.notifyListeners();
+                              },
+                            ),
+                            TextView(
+                              text: 'High To Low',
+                              textStyle: TextStyle(
+                                fontFamily: 'Arial',
+                                fontSize: 14.2.sp,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20.h),
+                        TextView(
+                          text: 'Category',
+                          textStyle: TextStyle(
+                            fontFamily: 'Arial',
+                            fontSize: 16.2.sp,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.black,
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        Wrap(
+                          children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
                                 Radio(
-                                  value: Price.all,
-                                  groupValue: price,
+                                  value: null,
+                                  groupValue: _cat,
                                   activeColor: AppColors.primary,
                                   onChanged: (value) {
-                                    price = value!;
-                                    sortPrice = 'LOW_TO_HIGH';
+                                    _cat = value;
                                     setModalState(() {});
-                                    model.notifyListeners();
+                                    model!.notifyListeners();
                                   },
                                 ),
                                 TextView(
@@ -19071,201 +19146,138 @@ class PharmViewModel extends BaseViewModel {
                                     color: AppColors.black,
                                   ),
                                 ),
-
-                                SizedBox(height: 10.h),
-                                Radio(
-                                  value: Price.high,
-                                  activeColor: AppColors.primary,
-                                  groupValue: price,
-                                  onChanged: (value) {
-                                    price = value!;
-                                    sortPrice = 'LOW_TO_HIGH';
-                                    setModalState(() {});
-                                    model.notifyListeners();
-                                  },
-                                ),
-                                TextView(
-                                  text: 'Low To High',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.2.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.black,
-                                  ),
-                                ),
-
-                                SizedBox(height: 10.h),
-                                Radio(
-                                  value: Price.low,
-                                  activeColor: AppColors.primary,
-                                  groupValue: price,
-                                  onChanged: (value) {
-                                    price = value!;
-                                    sortPrice = 'HIGH_TO_LOW';
-                                    setModalState(() {});
-                                    model.notifyListeners();
-                                  },
-                                ),
-                                TextView(
-                                  text: 'High To Low',
-                                  textStyle: TextStyle(
-                                    fontFamily: 'Arial',
-                                    fontSize: 14.2.sp,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppColors.black,
-                                  ),
-                                ),
                               ],
                             ),
-                            SizedBox(height: 20.h),
-                            TextView(
-                              text: 'Category',
-                              textStyle: TextStyle(
-                                fontFamily: 'Arial',
-                                fontSize: 16.2.sp,
-                                fontWeight: FontWeight.w500,
+
+                            SizedBox(width: 10.w),
+                            // CATEGORIES
+                            if (model!.distributorWholesaleCategoryModel !=
+                                    null &&
+                                model
+                                        .distributorWholesaleCategoryModel!
+                                        .data
+                                        ?.categories !=
+                                    null &&
+                                model
+                                    .distributorWholesaleCategoryModel!
+                                    .data!
+                                    .categories!
+                                    .isNotEmpty)
+                              ...model
+                                  .distributorWholesaleCategoryModel!
+                                  .data!
+                                  .categories!
+                                  .map((cat) {
+                                    return Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Radio<ct.Category>(
+                                          value: cat,
+                                          groupValue: _cat,
+                                          activeColor: AppColors.primary,
+                                          onChanged: (value) {
+                                            if (value == null) return;
+                                            _cat = value;
+                                            setModalState(() {});
+                                            model.notifyListeners();
+                                          },
+                                        ),
+
+                                        TextView(
+                                          text: '${cat.name}',
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Arial',
+                                            fontSize: 14.2.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppColors.black,
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 10.w),
+                                      ],
+                                    );
+                                  }),
+                          ],
+                        ),
+
+                        SizedBox(height: 20.h),
+                        GestureDetector(
+                          onTap: () async {
+                            _cat = null;
+                            if (context.mounted) {
+                              navigate.back();
+                            }
+                            model.getListedMarketPlace(context);
+                            setModalState(() {});
+                            model.notifyListeners();
+                          },
+                          child: TextView(
+                            text: 'Reset filter',
+                            textStyle: TextStyle(
+                              fontFamily: 'Arial',
+                              fontSize: 14.2.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                              decorationColor: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 50.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.dashboard,
+                                buttonText: 'Cancel',
                                 color: AppColors.black,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: () => navigate.back(),
                               ),
                             ),
-                            SizedBox(height: 10.h),
-                            Wrap(
-                              children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Radio(
-                                      value: null,
-                                      groupValue: _cat,
-                                      activeColor: AppColors.primary,
-                                      onChanged: (value) {
-                                        _cat = value;
-                                        setModalState(() {});
-                                        model.notifyListeners();
-                                      },
-                                    ),
-                                    TextView(
-                                      text: 'All',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'Arial',
-                                        fontSize: 14.2.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                            SizedBox(width: 20.w),
+                            Flexible(
+                              child: ButtonWidget(
+                                border: 100.r,
+                                buttonColor: AppColors.primary,
+                                buttonText: 'Apply',
+                                color: AppColors.white,
+                                isLoading: _isLoading,
+                                buttonBorderColor: AppColors.transparent,
+                                onPressed: () async {
+                                  setModalState(() {
+                                    _isLoading = true;
+                                  });
+                                  if (_cat != null) {
+                                    await model.getListedMarketPlaceWithCatId(
+                                      context,
+                                      catId: _cat!.id,
+                                    );
+                                  } else {
+                                    // All categories
+                                    await model.getListedMarketPlace(context);
+                                  }
 
-                                SizedBox(width: 10.w),
-                                // CATEGORIES
-                                if (model.distributorWholesaleCategoryModel !=
-                                        null &&
-                                    model
-                                            .distributorWholesaleCategoryModel!
-                                            .data
-                                            ?.categories !=
-                                        null &&
-                                    model
-                                        .distributorWholesaleCategoryModel!
-                                        .data!
-                                        .categories!
-                                        .isNotEmpty)
-                                  ...model
-                                      .distributorWholesaleCategoryModel!
-                                      .data!
-                                      .categories!
-                                      .map((cat) {
-                                        return Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Radio<ct.Category>(
-                                              value: cat,
-                                              groupValue: _cat,
-                                              activeColor: AppColors.primary,
-                                              onChanged: (value) {
-                                                if (value == null) return;
-                                                _cat = value;
-                                                setModalState(() {});
-                                                model.notifyListeners();
-                                              },
-                                            ),
-
-                                            TextView(
-                                              text: '${cat.name}',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'Arial',
-                                                fontSize: 14.2.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: AppColors.black,
-                                              ),
-                                            ),
-
-                                            SizedBox(width: 10.w),
-                                          ],
-                                        );
-                                      }),
-                              ],
-                            ),
-
-                            SizedBox(height: 50.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: ButtonWidget(
-                                    border: 100.r,
-                                    buttonColor: AppColors.dashboard,
-                                    buttonText: 'Cancel',
-                                    color: AppColors.black,
-                                    buttonBorderColor: AppColors.transparent,
-                                    onPressed: () => navigate.back(),
-                                  ),
-                                ),
-                                SizedBox(width: 20.w),
-                                Flexible(
-                                  child: ButtonWidget(
-                                    border: 100.r,
-                                    buttonColor: AppColors.primary,
-                                    buttonText: 'Apply',
-                                    color: AppColors.white,
-                                    isLoading: _isLoading,
-                                    buttonBorderColor: AppColors.transparent,
-                                    onPressed: () async {
-                                      setModalState(() {
-                                        _isLoading = true;
-                                      });
-                                      if (_cat != null) {
-                                        await model
-                                            .getListedMarketPlaceWithCatId(
-                                              context,
-                                              catId: _cat!.id,
-                                            );
-                                      } else {
-                                        // All categories
-                                        await model.getListedMarketPlace(
-                                          context,
-                                        );
-                                      }
-
-                                      _isLoading = false;
-                                      if (context.mounted) {
-                                        navigate.back();
-                                      }
-                                      setModalState(() {
-                                        _isLoading = false;
-                                      });
-                                      model.notifyListeners();
-                                    },
-                                  ),
-                                ),
-                              ],
+                                  _isLoading = false;
+                                  if (context.mounted) {
+                                    navigate.back();
+                                  }
+                                  setModalState(() {
+                                    _isLoading = false;
+                                  });
+                                  model.notifyListeners();
+                                },
+                              ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
-                );
-              },
+                      ],
+                    ),
+                  );
+                },
+              ),
             );
           },
         );
