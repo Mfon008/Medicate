@@ -10,6 +10,7 @@ import 'package:medicate_app/core/config/colors.dart';
 import 'package:medicate_app/main.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/image.dart';
+import '../../../core/app_assets/app_validation.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
 import '../../../core/core_folder/app/app.router.dart';
 import '../../widget/text.dart';
@@ -353,6 +354,11 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                               mainAxisSize:
                                                                   MainAxisSize
                                                                       .min,
+                                                              crossAxisAlignment:  model.editingQuantityProductId ==
+                                                                        e
+                                                                            .product!
+                                                                            .id!
+                                                                    ?CrossAxisAlignment.end:CrossAxisAlignment.center,
                                                               children: [
                                                                 IconButton(
                                                                   onPressed:
@@ -387,22 +393,92 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                                         .infoGrey,
                                                                   ),
                                                                 ),
-                                                                TextView(
-                                                                  text:
-                                                                      '$currentQuantity',
-                                                                  textStyle: TextStyle(
-                                                                    fontFamily:
-                                                                        'GoogleSans',
-                                                                    fontSize:
-                                                                        16.80
-                                                                            .sp,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400,
-                                                                    color: AppColors
-                                                                        .reminder,
-                                                                  ),
-                                                                ),
+                                                                model.editingQuantityProductId ==
+                                                                        e
+                                                                            .product!
+                                                                            .id!
+                                                                    ? SizedBox(
+                                                                        width:
+                                                                            35.w,
+                                                                        height:
+                                                                            25.h,
+                                                                        child: Form(
+                                                                          key: model
+                                                                              .quantityValueFormKey,
+                                                                          child: TextFormField(
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            decoration: InputDecoration(
+                                                                              isDense: true,
+                                                                              contentPadding: EdgeInsets.zero,
+                                                                              border: OutlineInputBorder(
+                                                                                borderRadius: BorderRadius.circular(
+                                                                                  5.r,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            controller:
+                                                                                model.quantityValueController,
+                                                                            showCursor:
+                                                                                false,
+                                                                            validator:
+                                                                                AppValidator.validateIntProductQuantity(),
+                                                                            onChanged:
+                                                                                (
+                                                                                  value,
+                                                                                ) {
+                                                                                  if (value.isNotEmpty) {
+                                                                                    final quantity = int.tryParse(
+                                                                                      value,
+                                                                                    );
+
+                                                                                    if (quantity ==
+                                                                                        null)
+                                                                                      return;
+
+                                                                                    model.selectedQuantities[e.product!.id!] = quantity;
+                                                                                    model.updateWholesaleProductToCart(
+                                                                                      context,
+                                                                                      wholesaleProductId: e.productId,
+                                                                                      quantity: model.selectedQuantities[e.product!.id!],
+                                                                                    );
+
+                                                                                    model.notifyListeners();
+                                                                                  }
+                                                                                },
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : GestureDetector(
+                                                                        onTap: () {
+                                                                          model
+                                                                              .editingQuantityProductId = e
+                                                                              .product!
+                                                                              .id!;
+
+                                                                          model
+                                                                              .quantityValueController
+                                                                              .text = currentQuantity
+                                                                              .toString();
+
+                                                                          model
+                                                                              .notifyListeners();
+                                                                        },
+                                                                        child: TextView(
+                                                                          text:
+                                                                              '$currentQuantity',
+                                                                          textStyle: TextStyle(
+                                                                            fontFamily:
+                                                                                'GoogleSans',
+                                                                            fontSize:
+                                                                                16.80.sp,
+                                                                            fontWeight:
+                                                                                FontWeight.w400,
+                                                                            color:
+                                                                                AppColors.reminder,
+                                                                          ),
+                                                                        ),
+                                                                      ),
                                                                 IconButton(
                                                                   onPressed: () async {
                                                                     model.selectedQuantities[e

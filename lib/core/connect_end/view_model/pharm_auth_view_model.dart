@@ -132,6 +132,8 @@ import 'package:medicate_app/core/connect_end/model/distributor_wholesale_catego
     as ct;
 import 'package:medicate_app/core/connect_end/model/get_single_market_product_response_model/image.dart'
     as singImg;
+import 'package:medicate_app/core/connect_end/model/list_market_product_response_model/product.dart'
+    as p;
 
 class PharmViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -140,6 +142,14 @@ class PharmViewModel extends BaseViewModel {
   final repositoryImply = PharmRepoImpl();
 
   final session = locator<SharedPreferencesService>();
+
+  bool isQuantityTapp = false;
+  p.Product? product;
+
+  TextEditingController quantityValueController = TextEditingController();
+  GlobalKey<FormState> quantityValueFormKey = GlobalKey<FormState>();
+  String? editingQuantityProductId;
+
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   bool _isLoadingWallet = false;

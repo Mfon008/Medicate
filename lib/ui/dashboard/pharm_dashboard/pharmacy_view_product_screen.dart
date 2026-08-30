@@ -9,6 +9,7 @@ import 'package:medicate_app/core/connect_end/view_model/pharm_auth_view_model.d
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
+import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/constant.dart';
 import '../../../core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
 import '../../widget/button.dart';
@@ -343,7 +344,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       .getSingleMarketProductResponseModel
                                       ?.data
                                       ?.product
-                                      ?.productName ??
+                                      ?.productName?.capitalize() ??
                                   '',
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
@@ -416,27 +417,31 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                     color: AppColors.infoGrey,
                                   ),
                                 ),
-                                Spacer(),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 2.60.w,
-                                    horizontal: 12.8.w,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20.r),
-                                    border: Border.all(
-                                      color: AppColors.infoGrey1,
-                                      width: 1.2,
+                                SizedBox(width: 20.w,),
+                                Expanded(
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 2.60.w,
+                                      horizontal: 12.8.w,
                                     ),
-                                  ),
-                                  child: TextView(
-                                    text:
-                                        'Min. Order:  ${model.getSingleMarketProductResponseModel?.data?.product?.minimumOrderQuantity} Cartons',
-                                    textStyle: TextStyle(
-                                      fontFamily: 'GoogleSans',
-                                      fontSize: 12.90.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: AppColors.reminder,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      border: Border.all(
+                                        color: AppColors.infoGrey1,
+                                        width: 1.2,
+                                      ),
+                                    ),
+                                    child: TextView(
+                                      text:
+                                          'Min. Order:  ${model.getSingleMarketProductResponseModel?.data?.product?.minimumOrderQuantity} Cartons',
+                                          maxLines: 1,
+                                          textOverflow: TextOverflow.ellipsis,
+                                      textStyle: TextStyle(
+                                        fontFamily: 'GoogleSans',
+                                        fontSize: 12.90.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.reminder,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -996,18 +1001,65 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                               : AppColors.reminder,
                                         ),
                                       ),
-                                      SizedBox(width: 20.w),
-                                      TextView(
-                                        text:
-                                            '${model.getSingleMarketProductResponseModel!.data!.product!.minimumOrderQuantity ?? 0}',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'GoogleSans',
-                                          fontSize: 14.80.sp,
-                                          fontWeight: FontWeight.w400,
-                                          color: AppColors.reminder,
-                                        ),
-                                      ),
-                                      SizedBox(width: 20.w),
+                                      SizedBox(width:model.isQuantityTapp == true?10.w: 20.w),
+                                      model.isQuantityTapp == true
+                                          ? SizedBox(
+                                              width: 45.w,
+                                              height: 45.h,
+                                              child: Center(
+                                                child: Form(
+                                                  key: model.quantityValueFormKey,
+                                                  child: TextFormField(
+                                                    textAlign: TextAlign.center,
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              5.r,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                    controller: model
+                                                        .quantityValueController,
+                                                    showCursor: false,
+                                                    validator:
+                                                        AppValidator.validateIntProductQuantity(),
+                                                    onChanged: (value) {
+                                                      if (value.isNotEmpty) {
+                                                        model
+                                                                .getSingleMarketProductResponseModel!
+                                                                .data!
+                                                                .product!
+                                                                .minimumOrderQuantity =
+                                                            int.parse(value);
+                                                
+                                                        model.notifyListeners();
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                model.isQuantityTapp = true;
+                                                model.notifyListeners();
+                                              },
+                                              child: TextView(
+                                                text:
+                                                    '${model.getSingleMarketProductResponseModel!.data!.product!.minimumOrderQuantity ?? 0}',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'GoogleSans',
+                                                  fontSize: 14.80.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.reminder,
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(width: model.isQuantityTapp == true?10.w:20.w),
                                       IconButton(
                                         onPressed: () {
                                           model
@@ -1088,6 +1140,39 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
+                                      if(model.isQuantityTapp == true){
+                                        final value = model
+                                            .quantityValueController
+                                            .text
+                                            .trim();
+                                         if (value.isEmpty) {
+                                          return;
+                                        }
+                                        // Validate the field
+                                        if (!(model
+                                                .quantityValueFormKey
+                                                .currentState
+                                                ?.validate() ??
+                                            false)) {
+                                          return;
+                                        }
+
+                                         model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity =
+                                            int.tryParse(value) ?? 0;
+
+                                        // Do nothing if the parsed quantity is invalid/zero
+                                        if (model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity! <= 0) {
+                                          return;
+                                        }
+                                      }
                                       model.addWholesaleProductToCart(
                                         context,
                                         wholesaleAddToCart:

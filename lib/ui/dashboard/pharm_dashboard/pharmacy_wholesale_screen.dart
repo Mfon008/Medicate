@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:medicate_app/core/app_assets/app_validation.dart';
 import 'package:stacked/stacked.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
@@ -26,6 +27,7 @@ class PharmacyWholesaleScreen extends StatefulWidget {
 
 class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
   int currentPage = 0;
+  String? editingQuantityProductId;
 
   @override
   Widget build(BuildContext context) {
@@ -259,7 +261,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                     m,
                   ) {
                     final int minimumQuantity = m.minimumOrderQuantity ?? 1;
-                    final int currentQuantity =
+                    int currentQuantity =
                         model.selectedQuantities[m.id] ?? minimumQuantity;
                     return GestureDetector(
                       onTap: () => navigate.navigateTo(
@@ -735,6 +737,10 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              editingQuantityProductId == m.id!
+                                              ? CrossAxisAlignment.end
+                                              : CrossAxisAlignment.center,
                                           children: [
                                             IconButton(
                                               onPressed:
@@ -757,15 +763,83 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                                     : AppColors.reminder,
                                               ),
                                             ),
-                                            TextView(
-                                              text: '$currentQuantity',
-                                              textStyle: TextStyle(
-                                                fontFamily: 'GoogleSans',
-                                                fontSize: 14.80.sp,
-                                                fontWeight: FontWeight.w400,
-                                                color: AppColors.reminder,
-                                              ),
-                                            ),
+
+                                            editingQuantityProductId == m.id!
+                                                ? SizedBox(
+                                                    width: 35.w,
+                                                    height: 25.h,
+                                                    child: Form(
+                                                      key: model
+                                                          .quantityValueFormKey,
+                                                      child: TextFormField(
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        decoration: InputDecoration(
+                                                          isDense: true,
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          border: OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  5.r,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        controller: model
+                                                            .quantityValueController,
+                                                        showCursor: false,
+                                                        validator:
+                                                            AppValidator.validateIntProductQuantity(),
+                                                        onChanged: (value) {
+                                                          if (value
+                                                              .isNotEmpty) {
+                                                            final quantity =
+                                                                int.tryParse(
+                                                                  value,
+                                                                );
+
+                                                            if (quantity ==
+                                                                null)
+                                                              return;
+
+                                                            model.selectedQuantities[m
+                                                                    .id!] =
+                                                                quantity;
+
+                                                            model
+                                                                .notifyListeners();
+                                                          }
+                                                        },
+                                                      ),
+                                                    ),
+                                                  )
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        editingQuantityProductId =
+                                                            m.id!;
+                                                      });
+
+                                                      model
+                                                          .quantityValueController
+                                                          .text = currentQuantity
+                                                          .toString();
+
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: TextView(
+                                                      text: '$currentQuantity',
+                                                      textStyle: TextStyle(
+                                                        fontFamily:
+                                                            'GoogleSans',
+                                                        fontSize: 14.80.sp,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color:
+                                                            AppColors.reminder,
+                                                      ),
+                                                    ),
+                                                  ),
                                             IconButton(
                                               onPressed: () {
                                                 model.selectedQuantities[m
@@ -786,7 +860,34 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                   ),
                                   SizedBox(height: 23.0.h),
                                   GestureDetector(
-                                    onTap: () {
+                                    onTap: () async {
+                                      if (editingQuantityProductId == m.id) {
+                                        final value = model
+                                            .quantityValueController
+                                            .text
+                                            .trim();
+                                        // Do nothing if the field is empty
+                                        if (value.isEmpty) {
+                                          return;
+                                        }
+                                        // Validate the field
+                                        if (!(model
+                                                .quantityValueFormKey
+                                                .currentState
+                                                ?.validate() ??
+                                            false)) {
+                                          return;
+                                        }
+                                        // Get the latest quantity from the TextFormField
+                                        currentQuantity =
+                                            int.tryParse(value) ?? 0;
+
+                                        // Do nothing if the parsed quantity is invalid/zero
+                                        if (currentQuantity <= 0) {
+                                          return;
+                                        }
+                                      }
+
                                       model.addWholesaleProductToCart(
                                         context,
                                         wholesaleAddToCart:
@@ -795,6 +896,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                               quantity: currentQuantity,
                                             ),
                                       );
+
                                       model.notifyListeners();
                                     },
                                     child: Container(

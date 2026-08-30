@@ -52,6 +52,18 @@ class AppValidator {
     };
   }
 
+  static String? Function(String?) validateIntProductQuantity({String? error}) {
+    return (String? value) {
+      if (value == null || value.isEmpty) {
+       return null;
+      }
+      if ((int.tryParse(value) ?? 0.0) <= 0) {
+        return null;
+      }
+      return null;
+    };
+  }
+
   static String? Function(String?) validateEmail({String? error}) {
     return (String? value) {
       if (value!.isEmpty) {
