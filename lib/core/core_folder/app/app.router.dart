@@ -2429,6 +2429,7 @@ class StackedRouter extends _i1.RouterBase {
           key: args.key,
           isEdit: args.isEdit,
           productId: args.productId,
+          isDuplicate: args.isDuplicate,
         ),
         settings: data,
       );
@@ -5709,7 +5710,12 @@ class PharmacyViewProductScreenArguments {
 }
 
 class AddProductScreenArguments {
-  const AddProductScreenArguments({this.key, this.isEdit, this.productId});
+  const AddProductScreenArguments({
+    this.key,
+    this.isEdit,
+    this.productId,
+    this.isDuplicate,
+  });
 
   final _i146.Key? key;
 
@@ -5717,9 +5723,11 @@ class AddProductScreenArguments {
 
   final String? productId;
 
+  final bool? isDuplicate;
+
   @override
   String toString() {
-    return '{"key": "$key", "isEdit": "$isEdit", "productId": "$productId"}';
+    return '{"key": "$key", "isEdit": "$isEdit", "productId": "$productId", "isDuplicate": "$isDuplicate"}';
   }
 
   @override
@@ -5727,12 +5735,16 @@ class AddProductScreenArguments {
     if (identical(this, other)) return true;
     return other.key == key &&
         other.isEdit == isEdit &&
-        other.productId == productId;
+        other.productId == productId &&
+        other.isDuplicate == isDuplicate;
   }
 
   @override
   int get hashCode {
-    return key.hashCode ^ isEdit.hashCode ^ productId.hashCode;
+    return key.hashCode ^
+        isEdit.hashCode ^
+        productId.hashCode ^
+        isDuplicate.hashCode;
   }
 }
 
@@ -8569,6 +8581,7 @@ extension NavigatorStateExtension on _i150.NavigationService {
     _i146.Key? key,
     bool? isEdit,
     String? productId,
+    bool? isDuplicate,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8581,6 +8594,7 @@ extension NavigatorStateExtension on _i150.NavigationService {
         key: key,
         isEdit: isEdit,
         productId: productId,
+        isDuplicate: isDuplicate,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -11346,6 +11360,7 @@ extension NavigatorStateExtension on _i150.NavigationService {
     _i146.Key? key,
     bool? isEdit,
     String? productId,
+    bool? isDuplicate,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11358,6 +11373,7 @@ extension NavigatorStateExtension on _i150.NavigationService {
         key: key,
         isEdit: isEdit,
         productId: productId,
+        isDuplicate: isDuplicate,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,

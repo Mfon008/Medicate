@@ -29,8 +29,9 @@ import 'package:medicate_app/core/connect_end/model/update_product_management_en
     as v;
 
 class AddProductScreen extends StatefulWidget {
-  AddProductScreen({super.key, this.isEdit, this.productId});
+  AddProductScreen({super.key, this.isEdit, this.productId, this.isDuplicate});
   bool? isEdit;
+  bool? isDuplicate;
   String? productId;
 
   @override
@@ -64,7 +65,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       viewModelBuilder: () => ManufacturerViewModel(),
       onViewModelReady: (model) async {
         model.getWholesaleCategoryList(context);
-        if (widget.isEdit!) {
+        if (widget.isEdit! || widget.isDuplicate!) {
           await model.getSingleProduct(context, productId: widget.productId);
           vPriceController.clear();
           ppuController.clear();

@@ -85,28 +85,8 @@ class _ProductScreenState extends State<ProductScreen> {
                         color: AppColors.primary,
                       ),
                       onPressed: () {},
-                      // onPressed: () =>
-                      //     navigate.navigateTo(Routes.notificationScreen),
                       splashRadius: 28,
                     ),
-                    // model.getUnreadNotificationCountModel != null &&
-                    //         model
-                    //                 .getUnreadNotificationCountModel!
-                    //                 .data!
-                    //                 .count! >
-                    //             0
-                    //     ? Positioned(
-                    //         left: 28,
-                    //         top: 8,
-                    //         child: Container(
-                    //           padding: EdgeInsets.all(3.14.w),
-                    //           decoration: BoxDecoration(
-                    //             color: AppColors.appRed.withOpacity(.88),
-                    //             shape: BoxShape.circle,
-                    //           ),
-                    //         ),
-                    //       )
-                    //     : SizedBox.shrink(),
                   ],
                 ),
               ),
@@ -454,7 +434,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                             ),
                                           ),
                                           PopupMenuItem(
-                                            onTap: () {},
+                                            onTap: () =>
+                                              model.duplicateProductDialog(context: context,productId: e.id),
                                             child: TextView(
                                               text: 'Duplicate',
                                               textStyle: TextStyle(
@@ -466,7 +447,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             ),
                                           ),
                                           PopupMenuItem(
-                                            onTap: () {},
+                                            onTap: () =>model.deleteProductDialog(context: context,productId: e.id),
                                             child: TextView(
                                               text: 'Delete Product',
                                               textStyle: TextStyle(

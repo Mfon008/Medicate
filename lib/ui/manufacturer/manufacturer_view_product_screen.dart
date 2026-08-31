@@ -391,7 +391,7 @@ class ManufacturerViewProductScreen extends StatelessWidget {
                                     Row(
                                       children: [
                                         TextView(
-                                          text: formatNaira(
+                                          text: formatNairaNoDecimal(
                                             model
                                                     .getSingleProductResponseModel
                                                     ?.data

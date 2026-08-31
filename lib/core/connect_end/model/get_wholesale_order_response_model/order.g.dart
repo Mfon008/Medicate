@@ -56,7 +56,7 @@ Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
   'distributorCount': instance.distributorCount,
   'deliveryMethod': instance.deliveryMethod,
   'deliveryMethodLabel': instance.deliveryMethodLabel,
-  'deliveryDate': instance.deliveryDate?.toIso8601String(),
+  'deliveryDate': instance.deliveryDate,
   'timeWindow': instance.timeWindow,
   'timeWindowLabel': instance.timeWindowLabel,
   'deliveryDetails': instance.deliveryDetails,

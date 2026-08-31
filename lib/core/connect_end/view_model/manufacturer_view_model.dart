@@ -52,6 +52,11 @@ import 'package:medicate_app/core/connect_end/model/create_distributor_product_e
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/image.dart'
     as im;
 
+// import 'package:medicate_app/core/connect_end/model/create_distributor_product_entity_model/image.dart'
+//     as cm;
+// import 'package:medicate_app/core/connect_end/model/create_distributor_product_entity_model/volume_pricing.dart'
+//     as vl;
+
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
   final logger = getLogger(' ManufacturerViewModel');
@@ -1699,7 +1704,7 @@ class ManufacturerViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-      if (v['statusCode'] == 200) {
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
         await AppUtils.snackbar(context, message: v['message']);
         navigate.clearStackAndShow(
           Routes.overviewDashboard,
@@ -1824,8 +1829,13 @@ class ManufacturerViewModel extends BaseViewModel {
         throwException: true,
       );
       _isLoading = false;
-
-      AppUtils.snackbar(context, message: v['message']);
+      if (v['statusCode'] == 200 || v['statusCode'] == 201) {
+        await AppUtils.snackbar(context, message: v['message']);
+        navigate.clearStackAndShow(
+          Routes.overviewDashboard,
+          arguments: OverviewDashboardArguments(index: 1),
+        );
+      }
     } catch (e) {
       _isLoading = false;
       logger.d(e);
@@ -2127,6 +2137,287 @@ class ManufacturerViewModel extends BaseViewModel {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> duplicateProductDialog({
+    BuildContext? context,
+    String? productId,
+  }) async {
+    return showDialog(
+      context: context!,
+      barrierDismissible: false, // Prevent dismiss when tapping outside
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top warning icon
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.yellow.withOpacity(.09),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(12.0.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.yellow,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImage.ex_error,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                TextView(
+                  text: "Are you sure?",
+                  textStyle: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.bblack,
+                  ),
+                ),
+                SizedBox(height: 10.h),
+                TextView(
+                  text:
+                      "This action will enlist this product on the wholesale store.",
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.success,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: AppColors.primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 32.w,
+                          vertical: 12.w,
+                        ),
+                      ),
+                      child: TextView(
+                        text: "No, Cancel",
+                        textStyle: TextStyle(
+                          fontFamily: 'DMSans',
+                          fontSize: 15.6.sp,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+
+                    // Continue Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => navigate.navigateTo(
+                          Routes.addProductScreen,
+                          arguments: AddProductScreenArguments(
+                            isDuplicate: true,
+                            isEdit: false,
+                            productId: productId,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 12.w,
+                          ),
+                          elevation: 0,
+                        ),
+                        child: TextView(
+                          text: "Yes, Approve",
+                          textStyle: TextStyle(
+                            fontFamily: 'DMSans',
+                            fontSize: 15.6.sp,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deleteProductDialog({
+    BuildContext? context,
+    String? productId,
+  }) async {
+    return showDialog(
+      context: context!,
+      barrierDismissible: false, // Prevent dismiss when tapping outside
+      builder: (BuildContext context) {
+        return ViewModelBuilder<ManufacturerViewModel>.reactive(
+          viewModelBuilder: () => ManufacturerViewModel(),
+          onViewModelReady: (model) {},
+          disposeViewModel: false,
+          onDispose: (viewModel) {},
+          builder: (_, ManufacturerViewModel model, _) {
+            return Dialog(
+              backgroundColor: AppColors.white,
+              insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 28,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Top warning icon
+                    Container(
+                      padding: EdgeInsets.all(10.w),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.yellow.withOpacity(.09),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(12.0.w),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.yellow,
+                        ),
+                        child: Center(
+                          child: SvgPicture.asset(
+                            AppImage.ex_error,
+                            color: AppColors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    TextView(
+                      text: "Are you sure?",
+                      textStyle: TextStyle(
+                        fontFamily: 'DMSans',
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.bblack,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    TextView(
+                      text:
+                          "This action will remove this product from the wholesale store.",
+                      textAlign: TextAlign.center,
+                      textStyle: TextStyle(
+                        fontFamily: 'DMSans',
+                        fontSize: 14.8.sp,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.success,
+                      ),
+                    ),
+
+                    SizedBox(height: 24.h),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32.w,
+                              vertical: 12.w,
+                            ),
+                          ),
+                          child: TextView(
+                            text: "No, Cancel",
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 15.6.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16.w),
+
+                        // Continue Button
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () =>
+                                model.deleteProduct(context, productId: productId),
+
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.w,
+                                vertical: 12.w,
+                              ),
+                              elevation: 0,
+                            ),
+                            child: model.isLoading
+                                ? SpinKitCircle(
+                                    size: 28.80.sp,
+                                    color: AppColors.white,
+                                  )
+                                : TextView(
+                                    text: "Yes, Approve",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.6.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
