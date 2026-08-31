@@ -354,11 +354,15 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                               mainAxisSize:
                                                                   MainAxisSize
                                                                       .min,
-                                                              crossAxisAlignment:  model.editingQuantityProductId ==
-                                                                        e
-                                                                            .product!
-                                                                            .id!
-                                                                    ?CrossAxisAlignment.end:CrossAxisAlignment.center,
+                                                              crossAxisAlignment:
+                                                                  model.editingQuantityProductId ==
+                                                                      e
+                                                                          .product!
+                                                                          .id!
+                                                                  ? CrossAxisAlignment
+                                                                        .end
+                                                                  : CrossAxisAlignment
+                                                                        .center,
                                                               children: [
                                                                 IconButton(
                                                                   onPressed:

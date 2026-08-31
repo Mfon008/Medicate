@@ -105,4 +105,15 @@ class UrlConfig {
   static const String wholesale_checkout_quote = 'wholesale/checkout/quote';
   static const String wholesale_checkout = 'wholesale/checkout';
   static const String wholesale_orders = 'wholesale/orders';
+  static const String auth_distributor_profile = 'auth/distributor/profile';
+  static const String auth_distributor_profile_pic =
+      'auth/distributor/profile-picture';
+  static const String auth_distributor_kyc_status =
+      'auth/distributor/kyc/status';
+  static const String auth_distributor_kyc_level_two_save =
+      'auth/distributor/kyc/level-2/save';
+  static const String auth_distributor_kyc_level_two_submit =
+      'auth/distributor/kyc/level-2/submit';
+  static const String auth_distributor_kyc_level_three_submit =
+      'auth/distributor/kyc/level-3/submit';
 }

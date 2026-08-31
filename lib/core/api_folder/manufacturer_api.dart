@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/get_single_product_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/update_distributor_profile_entity_model.dart';
 
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
@@ -478,14 +480,27 @@ class ManufacturerApi {
     }
   }
 
-  Future<GetUserDetailsResponseModel> getUserDetails(String phoneNo) async {
+  Future<GetDistributorProfileResponseModel> getUserDetails() async {
     try {
       final response = await _service.call(
-        '${UrlConfig.user_detail}/$phoneNo',
+        UrlConfig.auth_distributor_profile,
         RequestMethod.get,
       );
       logger.d(response.data);
-      return GetUserDetailsResponseModel.fromJson(response.data);
+      return GetDistributorProfileResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+  Future<dynamic> updateDistributorProfile(UpdateDistributorProfileEntityModel updateEntity) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.auth_distributor_profile,
+        RequestMethod.patch,data: updateEntity.toJson(),
+      );
+      logger.d(response.data);
+      return response.data;
     } catch (e) {
       logger.d("response:$e");
       rethrow;

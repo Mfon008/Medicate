@@ -80,6 +80,7 @@ String formatDate(String date) {
 
   return DateFormat('MMM dd, yyyy, hh:mm a').format(parsedDate);
 }
+
 String formatDateNoTime(String date) {
   final parsedDate = DateTime.parse(date);
 

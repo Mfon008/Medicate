@@ -435,7 +435,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                           ),
                                           PopupMenuItem(
                                             onTap: () =>
-                                              model.duplicateProductDialog(context: context,productId: e.id),
+                                                model.duplicateProductDialog(
+                                                  context: context,
+                                                  productId: e.id,
+                                                ),
                                             child: TextView(
                                               text: 'Duplicate',
                                               textStyle: TextStyle(
@@ -447,7 +450,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                             ),
                                           ),
                                           PopupMenuItem(
-                                            onTap: () =>model.deleteProductDialog(context: context,productId: e.id),
+                                            onTap: () =>
+                                                model.deleteProductDialog(
+                                                  context: context,
+                                                  productId: e.id,
+                                                ),
                                             child: TextView(
                                               text: 'Delete Product',
                                               textStyle: TextStyle(

@@ -42,15 +42,13 @@ class OverviewScreen extends StatelessWidget {
                 ),
                 child: IconButton(
                   icon: SvgPicture.asset(
-                    AppImage.burger,
+                    AppImage.profile,
                     color: AppColors.primary,
-                    height: isTablet(context) ? 32.h : 12.h,
-                    width: isTablet(context) ? 32.w : 12.w,
+                    height: isTablet(context) ? 40.h : 20.h,
+                    width: isTablet(context) ? 40.w : 20.w,
                   ),
-                  onPressed: () {},
-                  // onPressed: () => navigate.navigateTo(
-                  //   Routes.moreScreen,
-                  // ), // makes ripple effect round
+                  onPressed: () =>
+                      navigate.navigateTo(Routes.manufacturerProfileScreen),
                 ),
               ),
               SvgPicture.asset(AppImage.applogoSvg, height: 28.h, width: 28.w),

@@ -111,9 +111,9 @@ class ManufacturerViewModel extends BaseViewModel {
   NafdacRegistrationNumberResponseModel?
   get nafdacRegistrationNumberResponseModel =>
       _nafdacRegistrationNumberResponseModel;
-  GetUserDetailsResponseModel? _getUserDetailsResponseModel;
-  GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
-      _getUserDetailsResponseModel;
+  // GetUserDetailsResponseModel? _getUserDetailsResponseModel;
+  // GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
+  //     _getUserDetailsResponseModel;
 
   String? pinInput;
 
@@ -150,20 +150,35 @@ class ManufacturerViewModel extends BaseViewModel {
   int inImage = 0;
   String searchProduct = '';
 
-  void getUserDetails({context, phoneNo}) async {
-    try {
-      _isLoading = true;
-      _getUserDetailsResponseModel = await runBusyFuture(
-        repositoryImply.getUserDetails(phoneNo),
-        throwException: true,
-      );
-      _isLoading = false;
-    } catch (e) {
-      _isLoading = false;
-      logger.d(e);
-    }
-    notifyListeners();
-  }
+  // void getUserDetails({context, phoneNo}) async {
+  //   try {
+  //     _isLoading = true;
+  //     _getUserDetailsResponseModel = await runBusyFuture(
+  //       repositoryImply.getUserDetails(phoneNo),
+  //       throwException: true,
+  //     );
+  //     _isLoading = false;
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     logger.d(e);
+  //   }
+  //   notifyListeners();
+  // }
+
+  // void getUserDetails(context) async {
+  //   try {
+  //     _isLoading = true;
+  //     _getUserDetailsResponseModel = await runBusyFuture(
+  //       repositoryImply.getUserDetails(phoneNo),
+  //       throwException: true,
+  //     );
+  //     _isLoading = false;
+  //   } catch (e) {
+  //     _isLoading = false;
+  //     logger.d(e);
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<void> selectManDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -2379,8 +2394,10 @@ class ManufacturerViewModel extends BaseViewModel {
                         // Continue Button
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () =>
-                                model.deleteProduct(context, productId: productId),
+                            onPressed: () => model.deleteProduct(
+                              context,
+                              productId: productId,
+                            ),
 
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,

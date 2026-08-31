@@ -21,15 +21,7 @@ class ManufacturerProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ManufacturerViewModel>.reactive(
       viewModelBuilder: () => locator<ManufacturerViewModel>(),
-      onViewModelReady: (model) {
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
-          model.getUserDetails(
-            context: context,
-            phoneNo:
-                SharedPreferencesService.instance.usersData['user']['phone'],
-          );
-        });
-      },
+      onViewModelReady: (model) {},
       disposeViewModel: false,
       builder: (_, ManufacturerViewModel model, _) {
         return Scaffold(
@@ -85,14 +77,14 @@ class ManufacturerProfileScreen extends StatelessWidget {
                   //                     null
                   //             ? SvgPicture.asset(AppImage.profile_image)
                   //             :
-                  CircleAvatar(
-                    radius: 60.0, // Adjust the size as needed
-                    backgroundImage: NetworkImage(
-                      SharedPreferencesService
-                          .instance
-                          .usersData['profile']['profilePicture']['url'],
-                    ),
-                  ),
+                  //  CircleAvatar(
+                  //     radius: 60.0, // Adjust the size as needed
+                  //     backgroundImage: NetworkImage(
+                  //       SharedPreferencesService
+                  //           .instance
+                  //           .usersData['profile']['profilePicture']['url'],
+                  //     ),
+                  //   ),
                   // ),
                   SizedBox(height: 10.h),
                   Center(
@@ -114,8 +106,7 @@ class ManufacturerProfileScreen extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Center(
                     child: TextView(
-                      text:
-                          '${SharedPreferencesService.instance.usersData['user']['fullName'] ?? model.getUserDetailsResponseModel?.data?.displayName ?? ''}',
+                      text:'KNOWN NAME',
                       textStyle: TextStyle(
                         fontSize: 16.2.sp,
                         fontWeight: FontWeight.w500,
@@ -144,32 +135,38 @@ class ManufacturerProfileScreen extends StatelessWidget {
                     // isactive: model.returnBool(),
                     topLeft: 12,
                     topRight: 12,
-                    onTap: () =>
-                        navigate.navigateTo(Routes.pharmacyProfileInfoScreen),
+                    onTap: () => navigate.navigateTo(
+                      Routes.manufacturerProfileInfoScreen,
+                    ),
                   ),
                   SizedBox(height: 1.0.h),
-                  // profileContainer(
-                  //   icon: AppImage.key,
-                  //   isactive: model.getKycStatusBool(
-                  //     cac: model
-                  //         .getTetantResponseModel
-                  //         ?.data
-                  //         ?.kycDocuments?[0]
-                  //         .status,
-                  //     license: model
-                  //         .getTetantResponseModel
-                  //         ?.data
-                  //         ?.kycDocuments?[1]
-                  //         .status,
-                  //     tin: model
-                  //         .getTetantResponseModel
-                  //         ?.data
-                  //         ?.kycDocuments?[2]
-                  //         .status,
-                  //   ),
-                  //   text: 'KYC',
-                  //   onTap: () => navigate.navigateTo(Routes.kycScreen),
-                  // ),
+                  profileContainer(
+                    icon: AppImage.key,
+                    isactive: false,
+                    bottomLeft: 12,
+                    bottomRight: 12,
+                    text: 'KYC',
+                    onTap: () {},
+                  ),
+                  SizedBox(height: 30.h),
+                  TextView(
+                    text: 'SETTINGS',
+                    textStyle: TextStyle(
+                      fontFamily: 'Arial',
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.infoGrey,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  profileContainer(
+                    icon: AppImage.settings,
+                    text: 'Settings',
+                    topLeft: 12,
+                    topRight: 12,
+                    bottomLeft: 12,
+                    bottomRight: 12,
+                  ),
                   SizedBox(height: 30.h),
 
                   TextView(

@@ -137,7 +137,8 @@ class PharmacyOrderScreen extends StatelessWidget {
                   ...model.wholesaleOrderListResponseModel!.data!.orders!.map(
                     (e) =>
                         model.wholesaleOrder == e &&
-                            model.getWholesaleOrderResponseModel != null && !model.isLoading
+                            model.getWholesaleOrderResponseModel != null &&
+                            !model.isLoading
                         ? Container(
                             margin: EdgeInsets.only(bottom: 12.w),
                             decoration: BoxDecoration(
@@ -1771,7 +1772,8 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                         fontSize: 13.20.sp,
                                                         fontWeight:
                                                             FontWeight.w500,
-                                                        color: AppColors.reminder,
+                                                        color:
+                                                            AppColors.reminder,
                                                         letterSpacing: -0.21,
                                                       ),
                                                     ),
@@ -1817,7 +1819,13 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             ),
                                           ),
                                           TextView(
-                                            text: formatNaira(model.getWholesaleOrderResponseModel!.data!.order!.subtotal!),
+                                            text: formatNaira(
+                                              model
+                                                  .getWholesaleOrderResponseModel!
+                                                  .data!
+                                                  .order!
+                                                  .subtotal!,
+                                            ),
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
                                               fontSize: 14.42.sp,
@@ -1843,7 +1851,13 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             ),
                                           ),
                                           TextView(
-                                            text: formatNaira(model.getWholesaleOrderResponseModel!.data!.order!.deliveryFee!),
+                                            text: formatNaira(
+                                              model
+                                                  .getWholesaleOrderResponseModel!
+                                                  .data!
+                                                  .order!
+                                                  .deliveryFee!,
+                                            ),
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
                                               fontSize: 14.42.sp,
@@ -1871,7 +1885,13 @@ class PharmacyOrderScreen extends StatelessWidget {
                                             ),
                                           ),
                                           TextView(
-                                            text: formatNaira(model.getWholesaleOrderResponseModel!.data!.order!.total!),
+                                            text: formatNaira(
+                                              model
+                                                  .getWholesaleOrderResponseModel!
+                                                  .data!
+                                                  .order!
+                                                  .total!,
+                                            ),
                                             textStyle: TextStyle(
                                               fontFamily: 'DMSans',
                                               fontSize: 16.42.sp,

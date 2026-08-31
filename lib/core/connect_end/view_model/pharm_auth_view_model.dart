@@ -19894,6 +19894,7 @@ class PharmViewModel extends BaseViewModel {
     QuoteInstantDeliveryEntityModel? instantDelivery,
   }) async {
     try {
+      _quoteInstantDeliveryResponseModel = null;
       _isLoading = true;
       _quoteInstantDeliveryResponseModel = await runBusyFuture(
         repositoryImply.quoteInstantDelivery(instantDelivery),
@@ -19914,6 +19915,7 @@ class PharmViewModel extends BaseViewModel {
     QuoteScheduleDeliveryEneityModel? scheduleDelivery,
   }) async {
     try {
+      _quoteScheduleDeliveryResponseModel = null;
       _isLoading = true;
       _quoteScheduleDeliveryResponseModel = await runBusyFuture(
         repositoryImply.quoteScheduleDelivery(scheduleDelivery),

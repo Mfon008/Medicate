@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,7 +23,6 @@ import '../../widget/text_form_widget.dart';
 class PharmacyWholeSaleCheckout extends StatelessWidget {
   PharmacyWholeSaleCheckout({super.key});
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -869,6 +869,10 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           fillColor: AppColors.white,
                           isFilled: true,
                           controller: model.phoneController,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(11),
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           prefixWidget: Padding(
                             padding: EdgeInsets.all(12.w),
                             child: SvgPicture.asset(
@@ -1564,43 +1568,46 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                       ),
 
                       SizedBox(height: 30.h),
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (formKey.currentState!.validate()) {
-                              model.paymentMethodFlowWholesale(context);
-                              model.notifyListeners();
-                            }
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.symmetric(
-                              vertical: 8.w,
-                              horizontal: 12.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(40.r),
-                            ),
-                            child: Center(
-                              child: model.isLoadingWallet
-                                  ? SpinKitFadingCircle(
-                                      color: AppColors.appWhite,
-                                      size: 40.sp,
-                                    )
-                                  : TextView(
-                                      text: 'Place Order',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'DMSans',
-                                        fontSize: 16.20.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.white,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      model.quoteInstantDeliveryResponseModel != null ||
+                              model.quoteScheduleDeliveryResponseModel != null
+                          ? Center(
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (formKey.currentState!.validate()) {
+                                    model.paymentMethodFlowWholesale(context);
+                                    model.notifyListeners();
+                                  }
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8.w,
+                                    horizontal: 12.w,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.circular(40.r),
+                                  ),
+                                  child: Center(
+                                    child: model.isLoadingWallet
+                                        ? SpinKitFadingCircle(
+                                            color: AppColors.appWhite,
+                                            size: 40.sp,
+                                          )
+                                        : TextView(
+                                            text: 'Place Order',
+                                            textStyle: TextStyle(
+                                              fontFamily: 'DMSans',
+                                              fontSize: 16.20.sp,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.white,
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
                     ],
                   ),
                 ),

@@ -344,7 +344,8 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       .getSingleMarketProductResponseModel
                                       ?.data
                                       ?.product
-                                      ?.productName?.capitalize() ??
+                                      ?.productName
+                                      ?.capitalize() ??
                                   '',
                               textStyle: TextStyle(
                                 fontFamily: 'DMSans',
@@ -417,7 +418,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                     color: AppColors.infoGrey,
                                   ),
                                 ),
-                                SizedBox(width: 20.w,),
+                                SizedBox(width: 20.w),
                                 Expanded(
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
@@ -434,8 +435,8 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                     child: TextView(
                                       text:
                                           'Min. Order:  ${model.getSingleMarketProductResponseModel?.data?.product?.minimumOrderQuantity} Cartons',
-                                          maxLines: 1,
-                                          textOverflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      textOverflow: TextOverflow.ellipsis,
                                       textStyle: TextStyle(
                                         fontFamily: 'GoogleSans',
                                         fontSize: 12.90.sp,
@@ -1001,14 +1002,19 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                               : AppColors.reminder,
                                         ),
                                       ),
-                                      SizedBox(width:model.isQuantityTapp == true?10.w: 20.w),
+                                      SizedBox(
+                                        width: model.isQuantityTapp == true
+                                            ? 10.w
+                                            : 20.w,
+                                      ),
                                       model.isQuantityTapp == true
                                           ? SizedBox(
                                               width: 45.w,
                                               height: 45.h,
                                               child: Center(
                                                 child: Form(
-                                                  key: model.quantityValueFormKey,
+                                                  key: model
+                                                      .quantityValueFormKey,
                                                   child: TextFormField(
                                                     textAlign: TextAlign.center,
                                                     decoration: InputDecoration(
@@ -1035,7 +1041,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                                 .product!
                                                                 .minimumOrderQuantity =
                                                             int.parse(value);
-                                                
+
                                                         model.notifyListeners();
                                                       }
                                                     },
@@ -1059,7 +1065,11 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                 ),
                                               ),
                                             ),
-                                      SizedBox(width: model.isQuantityTapp == true?10.w:20.w),
+                                      SizedBox(
+                                        width: model.isQuantityTapp == true
+                                            ? 10.w
+                                            : 20.w,
+                                      ),
                                       IconButton(
                                         onPressed: () {
                                           model
@@ -1140,12 +1150,12 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      if(model.isQuantityTapp == true){
+                                      if (model.isQuantityTapp == true) {
                                         final value = model
                                             .quantityValueController
                                             .text
                                             .trim();
-                                         if (value.isEmpty) {
+                                        if (value.isEmpty) {
                                           return;
                                         }
                                         // Validate the field
@@ -1157,19 +1167,20 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           return;
                                         }
 
-                                         model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .minimumOrderQuantity =
+                                        model
+                                                .getSingleMarketProductResponseModel!
+                                                .data!
+                                                .product!
+                                                .minimumOrderQuantity =
                                             int.tryParse(value) ?? 0;
 
                                         // Do nothing if the parsed quantity is invalid/zero
                                         if (model
-                                                  .getSingleMarketProductResponseModel!
-                                                  .data!
-                                                  .product!
-                                                  .minimumOrderQuantity! <= 0) {
+                                                .getSingleMarketProductResponseModel!
+                                                .data!
+                                                .product!
+                                                .minimumOrderQuantity! <=
+                                            0) {
                                           return;
                                         }
                                       }

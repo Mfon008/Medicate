@@ -89,6 +89,9 @@ import '../../../ui/dashboard/profile/hmo/hmo_plan_tiers_management_screen.dart'
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_first_screen.dart';
 import '../../../ui/dashboard/profile/hmo/hmo_two_factor_auth_verification_second_screen.dart';
+import '../../../ui/dashboard/profile/manufacture/manufacturer_profile_info_screen.dart';
+import '../../../ui/dashboard/profile/manufacture/manufacturer_profile_screen.dart';
+import '../../../ui/dashboard/profile/manufacture/manufacturer_setting_screen.dart';
 import '../../../ui/dashboard/profile/notification_screen.dart';
 import '../../../ui/dashboard/subscribers/application_form/application_form_screen.dart';
 import '../../../ui/dashboard/subscribers/coorporate_form/coorporate_form_screen.dart';
@@ -309,6 +312,8 @@ import '../network/support_network_service.dart';
     MaterialRoute(page: ViewOrderManagementScreen),
     MaterialRoute(page: ManufacturerViewProductScreen),
     MaterialRoute(page: PharmacyWholeSaleCheckout),
+    MaterialRoute(page: ManufacturerProfileInfoScreen),
+    MaterialRoute(page: ManufacturerSettingScreen),
     CustomRoute(
       page: NotificationScreen,
       transitionsBuilder: TransitionsBuilders.slideLeft,
@@ -336,6 +341,11 @@ import '../network/support_network_service.dart';
     ),
     CustomRoute(
       page: HMOMoreScreen,
+      transitionsBuilder: TransitionsBuilders.slideRight,
+      durationInMilliseconds: 300,
+    ),
+    CustomRoute(
+      page: ManufacturerProfileScreen,
       transitionsBuilder: TransitionsBuilders.slideRight,
       durationInMilliseconds: 300,
     ),
