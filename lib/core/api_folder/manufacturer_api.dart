@@ -493,11 +493,15 @@ class ManufacturerApi {
       rethrow;
     }
   }
-  Future<dynamic> updateDistributorProfile(UpdateDistributorProfileEntityModel updateEntity) async {
+
+  Future<dynamic> updateDistributorProfile(
+    UpdateDistributorProfileEntityModel updateEntity,
+  ) async {
     try {
       final response = await _service.call(
         UrlConfig.auth_distributor_profile,
-        RequestMethod.patch,data: updateEntity.toJson(),
+        RequestMethod.patch,
+        data: updateEntity.toJson(),
       );
       logger.d(response.data);
       return response.data;

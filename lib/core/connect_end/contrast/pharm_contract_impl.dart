@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:medicate_app/core/api_folder/pharm_auth_api.dart';
 import 'package:medicate_app/core/connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../../core_folder/app/app.locator.dart';
+import '../model/checkout_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -10,6 +11,7 @@ import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_enti
 import '../model/create_user_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
@@ -284,4 +286,7 @@ class PharmContractsImpl {
   Future<GetWholesaleOrderResponseModel> getWholesaleOrder(
     String? wholesaleOrderId,
   ) async => await _api.getWholesaleOrder(wholesaleOrderId);
+  Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(
+    CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
+  ) async => await _api.checkoutDeliveryOption(checkoutDeliveryOption);
 }

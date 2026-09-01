@@ -64,6 +64,7 @@ import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/app/app.logger.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../model/change_phone_no_response_model/change_phone_no_response_model.dart';
+import '../model/checkout_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_entity_model.dart';
@@ -74,6 +75,8 @@ import '../model/create_tenant_reminder_entity_model/medication_image.dart';
 import '../model/create_tenant_reminder_entity_model/payment.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
+import '../model/get_checkout_delivery_option_response_model/time_block.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_created_user_response_model/staff.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
@@ -221,6 +224,12 @@ class PharmViewModel extends BaseViewModel {
   GetRolesResponseModel? _getRolesResponseModel;
   GetRolesResponseModel? get getRolesResponseModel => _getRolesResponseModel;
 
+  GetCheckoutDeliveryOptionResponseModel?
+  _getCheckoutDeliveryOptionResponseModel;
+  GetCheckoutDeliveryOptionResponseModel?
+  get getCheckoutDeliveryOptionResponseModel =>
+      _getCheckoutDeliveryOptionResponseModel;
+
   GetCreatedUserResponseModel? _getCreatedUserResponseModel;
   GetCreatedUserResponseModel? get getCreatedUserResponseModel =>
       _getCreatedUserResponseModel;
@@ -362,17 +371,18 @@ class PharmViewModel extends BaseViewModel {
   Category category = Category.all;
   Delivery delivery = Delivery.instance;
   PayMethod? payMethod;
-  CartAddedTime cartTimeAdded = CartAddedTime.morning;
+  TimeBlock? time;
+  // CartAddedTime cartTimeAdded = CartAddedTime.morning;
 
-  String returnCartAddedTime(CartAddedTime cartAddedTime) {
-    if (cartAddedTime == CartAddedTime.afternoon) {
-      return 'Afternoon (12PM - 4PM)';
-    }
-    if (cartAddedTime == CartAddedTime.evening) {
-      return 'Evening (4PM - 8PM)';
-    }
-    return 'Morning (8AM - 12PM)';
-  }
+  // String returnCartAddedTime(CartAddedTime cartAddedTime) {
+  //   if (cartAddedTime == CartAddedTime.afternoon) {
+  //     return 'Afternoon (12PM - 4PM)';
+  //   }
+  //   if (cartAddedTime == CartAddedTime.evening) {
+  //     return 'Evening (4PM - 8PM)';
+  //   }
+  //   return 'Morning (8AM - 12PM)';
+  // }
 
   List<dynamic> medTypeUpdateIcon = [];
   List<int>? indexDailyList = [1, 2, 3, 4];
@@ -19807,9 +19817,9 @@ class PharmViewModel extends BaseViewModel {
               : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!
                     .toInt(),
           deliveryDate: convertDate(dateTimeController.text),
-          timeBlockStart: getTimeBlockStart(),
-          timeBlockEnd: getTimeBlockEnd(),
-          timeWindow: getTimeWindow(),
+          timeBlockStart: time!.startTime,
+          timeBlockEnd: time!.endTime,
+          timeWindow: time!.name!.toUpperCase(),
         ),
       );
     }
@@ -19846,10 +19856,10 @@ class PharmViewModel extends BaseViewModel {
               ? _quoteInstantDeliveryResponseModel!.data!.checkout!.total!
               : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!,
           timeBlockStart: _quoteScheduleDeliveryResponseModel != null
-              ? getTimeBlockStart()
+              ? time!.startTime
               : null,
           timeBlockEnd: _quoteScheduleDeliveryResponseModel != null
-              ? getTimeBlockEnd()
+              ? time!.endTime
               : null,
         ),
       );
@@ -19859,35 +19869,35 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String getTimeBlockStart() {
-    if (cartTimeAdded == CartAddedTime.morning) {
-      return '08:00';
-    }
-    if (cartTimeAdded == CartAddedTime.morning) {
-      return '12:00';
-    }
-    return '16:00';
-  }
+  // String getTimeBlockStart() {
+  //   if (cartTimeAdded == CartAddedTime.morning) {
+  //     return '08:00';
+  //   }
+  //   if (cartTimeAdded == CartAddedTime.morning) {
+  //     return '12:00';
+  //   }
+  //   return '16:00';
+  // }
 
-  String getTimeBlockEnd() {
-    if (cartTimeAdded == CartAddedTime.morning) {
-      return '12:00';
-    }
-    if (cartTimeAdded == CartAddedTime.morning) {
-      return '16:00';
-    }
-    return '20:00';
-  }
+  // String getTimeBlockEnd() {
+  //   if (cartTimeAdded == CartAddedTime.morning) {
+  //     return '12:00';
+  //   }
+  //   if (cartTimeAdded == CartAddedTime.morning) {
+  //     return '16:00';
+  //   }
+  //   return '20:00';
+  // }
 
-  String getTimeWindow() {
-    if (cartTimeAdded == CartAddedTime.morning) {
-      return 'MORNING';
-    }
-    if (cartTimeAdded == CartAddedTime.morning) {
-      return 'AFTERNOON';
-    }
-    return 'EVENING';
-  }
+  // String getTimeWindow() {
+  //   if (cartTimeAdded == CartAddedTime.morning) {
+  //     return 'MORNING';
+  //   }
+  //   if (cartTimeAdded == CartAddedTime.morning) {
+  //     return 'AFTERNOON';
+  //   }
+  //   return 'EVENING';
+  // }
 
   Future<void> quoteInstantDelivery({
     context,
@@ -19922,6 +19932,26 @@ class PharmViewModel extends BaseViewModel {
         throwException: true,
       );
       _quoteInstantDeliveryResponseModel = null;
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getCheckoutDeliveryOption({
+    context,
+    CheckoutDeliveryOptionEntityModel? checkoutDeliveryOption,
+  }) async {
+    try {
+      _getCheckoutDeliveryOptionResponseModel = null;
+      _isLoading = true;
+      _getCheckoutDeliveryOptionResponseModel = await runBusyFuture(
+        repositoryImply.checkoutDeliveryOption(checkoutDeliveryOption!),
+        throwException: true,
+      );
       _isLoading = false;
     } catch (e) {
       _isLoading = false;

@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../../core_folder/app/app.locator.dart';
 import '../../core_folder/manager/shared_preference.dart';
 import '../contrast/pharm_contract_impl.dart';
+import '../model/checkout_delivery_option_entity_model.dart';
 import '../model/create_payment_wallet_entity_model.dart';
 import '../model/create_payment_wallet_model/create_payment_wallet_model.dart';
 import '../model/create_reminder_response_model/create_reminder_response_model.dart';
@@ -12,6 +13,7 @@ import '../model/create_tenant_reminder_entity_model/create_tenant_reminder_enti
 import '../model/create_user_entity_model.dart';
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
 import '../model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import '../model/get_reminder_by_id/get_reminder_by_id.dart';
@@ -536,6 +538,11 @@ class PharmRepoImpl {
     String? wholesaleOrderId,
   ) async {
     final response = await _contract.getWholesaleOrder(wholesaleOrderId);
+    return response;
+  }
+
+  Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(CheckoutDeliveryOptionEntityModel checkoutDeliveryOption) async {
+    final response = await _contract.checkoutDeliveryOption(checkoutDeliveryOption);
     return response;
   }
 

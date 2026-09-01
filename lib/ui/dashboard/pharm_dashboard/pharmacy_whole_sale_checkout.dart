@@ -12,6 +12,7 @@ import '../../../../core/app_assets/app_validation.dart';
 import '../../../../core/app_assets/image.dart';
 import '../../../../core/config/colors.dart';
 import '../../../core/app_assets/state_lga_format.dart';
+import '../../../core/connect_end/model/checkout_delivery_option_entity_model.dart';
 import '../../../core/connect_end/model/quote_instant_delivery_entity_model.dart';
 import '../../../core/connect_end/model/quote_schedule_delivery_eneity_model.dart';
 import '../../../core/connect_end/view_model/pharm_auth_view_model.dart';
@@ -232,263 +233,6 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10.h),
-                      model.delivery == Delivery.schedule
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Divider(color: AppColors.infoGrey1),
-                                SizedBox(height: 12.h),
-                                TextFormWidget(
-                                  hint: 'Select Delivery Date',
-                                  label: 'Pick a date',
-                                  hintWeight: FontWeight.w400,
-                                  hintColor: AppColors.reminder,
-                                  hintSize: Platform.isAndroid ? 14.sp : 12.sp,
-                                  borderColor: AppColors.infoGrey1,
-                                  borderTopLeft: 10.r,
-                                  borderTopRight: 10.r,
-                                  borderBottomLeft: 10.r,
-                                  borderBottomRight: 10.r,
-                                  readOnly: true,
-                                  fillColor: AppColors.white,
-                                  isFilled: true,
-                                  controller: model.dateTimeController,
-                                  suffixWidget: Padding(
-                                    padding: EdgeInsets.all(8.w),
-                                    child: GestureDetector(
-                                      onTap: () => model.selectDateCheckout(
-                                        context: context,
-                                        model: model,
-                                      ),
-                                      child: SvgPicture.asset(
-                                        AppImage.calendar,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  validator: AppValidator.validateString(),
-                                  style: TextStyle(
-                                    fontSize: 16.20.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'DMSans',
-                                  ),
-                                  labelStyle: TextStyle(
-                                    fontSize: 15.20.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'DMSans',
-                                    color: AppColors.faintedGrey,
-                                  ),
-                                ),
-                                SizedBox(height: 10.h),
-                              ],
-                            )
-                          : SizedBox.shrink(),
-                      model.dateTimeController.text != ''
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    TextView(
-                                      text: 'Select Time Window',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'DMSans',
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w300,
-                                        color: AppColors.reminder,
-                                      ),
-                                    ),
-                                    TextView(
-                                      text: '*',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'DMSans',
-                                        fontSize: 15.54.sp,
-                                        fontWeight: FontWeight.w300,
-                                        color: AppColors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10.h),
-
-                                GestureDetector(
-                                  onTap: () {
-                                    model.cartTimeAdded = CartAddedTime.morning;
-                                    model.notifyListeners();
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10.w,
-                                      vertical: 12.4.w,
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 12.w),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color:
-                                            model.cartTimeAdded ==
-                                                CartAddedTime.morning
-                                            ? AppColors.primary
-                                            : AppColors.infoGrey1,
-                                        width: 1.22,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    child: Center(
-                                      child: TextView(
-                                        text: 'Morning (8AM - 12PM)',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.82.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              model.cartTimeAdded ==
-                                                  CartAddedTime.morning
-                                              ? AppColors.primary
-                                              : AppColors.infoGrey,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    model.cartTimeAdded =
-                                        CartAddedTime.afternoon;
-                                    model.notifyListeners();
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10.w,
-                                      vertical: 12.4.w,
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 12.w),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color:
-                                            model.cartTimeAdded ==
-                                                CartAddedTime.afternoon
-                                            ? AppColors.primary
-                                            : AppColors.infoGrey1,
-                                        width: 1.22,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    child: Center(
-                                      child: TextView(
-                                        text: 'Afternoon (12PM - 4PM)',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.82.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              model.cartTimeAdded ==
-                                                  CartAddedTime.afternoon
-                                              ? AppColors.primary
-                                              : AppColors.infoGrey,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    model.cartTimeAdded = CartAddedTime.evening;
-                                    model.notifyListeners();
-                                  },
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10.w,
-                                      vertical: 12.4.w,
-                                    ),
-                                    margin: EdgeInsets.only(bottom: 12.w),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color:
-                                            model.cartTimeAdded ==
-                                                CartAddedTime.evening
-                                            ? AppColors.primary
-                                            : AppColors.infoGrey1,
-                                        width: 1.22,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10.r),
-                                    ),
-                                    child: Center(
-                                      child: TextView(
-                                        text: 'Evening (4PM - 8PM)',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 14.82.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              model.cartTimeAdded ==
-                                                  CartAddedTime.evening
-                                              ? AppColors.primary
-                                              : AppColors.infoGrey,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 10.w),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 12.w,
-                                    horizontal: 16.w,
-                                  ),
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.cooool,
-                                    borderRadius: BorderRadius.circular(8.0.r),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset(
-                                            AppImage.calendar,
-                                            fit: BoxFit.cover,
-                                            color: AppColors.primary,
-                                          ),
-                                          SizedBox(width: 12.w),
-                                          TextView(
-                                            text: 'Select Window',
-                                            textStyle: TextStyle(
-                                              fontFamily: 'DMSans',
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w300,
-                                              color: AppColors.reminder,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 14.w),
-                                      TextView(
-                                        text:
-                                            '${model.dateTimeController.text} . ${model.returnCartAddedTime(model.cartTimeAdded)}',
-                                        textStyle: TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 15.2.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.reminder,
-                                          letterSpacing: -0.1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          : SizedBox.shrink(),
                     ],
                   ),
                 ),
@@ -776,25 +520,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                               lgaCode: model.lgaController.text,
                                             ),
                                       );
-                                    } else {
-                                      model.quoteScheduleDelivery(
-                                        context: context,
-                                        scheduleDelivery:
-                                            QuoteScheduleDeliveryEneityModel(
-                                              deliveryMethod: 'SCHEDULED_BLOCK',
-                                              stateCode:
-                                                  model.stateController.text,
-                                              lgaCode: model.lgaController.text,
-                                              deliveryDate: convertDate(
-                                                model.dateTimeController.text,
-                                              ),
-                                              timeBlockStart: model
-                                                  .getTimeBlockStart(),
-                                              timeBlockEnd: model
-                                                  .getTimeBlockEnd(),
-                                            ),
-                                      );
-                                    }
+                                    } else {}
                                     model.notifyListeners();
                                   }
                                 },
@@ -854,6 +580,356 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                             color: AppColors.faintedGrey,
                           ),
                         ),
+
+                        SizedBox(height: 12.h),
+                        model.delivery == Delivery.schedule
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  TextFormWidget(
+                                    hint: 'Select Delivery Date',
+                                    label: 'Pick a date',
+                                    hintWeight: FontWeight.w400,
+                                    hintColor: AppColors.reminder,
+                                    hintSize: Platform.isAndroid
+                                        ? 14.sp
+                                        : 12.sp,
+                                    borderColor: AppColors.infoGrey1,
+                                    borderTopLeft: 10.r,
+                                    borderTopRight: 10.r,
+                                    borderBottomLeft: 10.r,
+                                    borderBottomRight: 10.r,
+                                    readOnly: true,
+                                    fillColor: AppColors.white,
+                                    isFilled: true,
+                                    controller: model.dateTimeController,
+                                    suffixWidget: Padding(
+                                      padding: EdgeInsets.all(8.w),
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          await model.selectDateCheckout(
+                                            context: context,
+                                            model: model,
+                                          );
+
+                                          model.getCheckoutDeliveryOption(
+                                            context: context,
+                                            checkoutDeliveryOption:
+                                                CheckoutDeliveryOptionEntityModel(
+                                                  stateCode: model
+                                                      .stateController
+                                                      .text,
+                                                  lgaCode:
+                                                      model.lgaController.text,
+                                                ),
+                                          );
+                                          model.notifyListeners();
+                                        },
+                                        child: SvgPicture.asset(
+                                          AppImage.calendar,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    validator: AppValidator.validateString(),
+                                    style: TextStyle(
+                                      fontSize: 16.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'DMSans',
+                                    ),
+                                    labelStyle: TextStyle(
+                                      fontSize: 15.20.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'DMSans',
+                                      color: AppColors.faintedGrey,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.h),
+                                ],
+                              )
+                            : SizedBox.shrink(),
+                        model.dateTimeController.text != ''
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (model
+                                          .getCheckoutDeliveryOptionResponseModel !=
+                                      null)
+                                    ...model
+                                        .getCheckoutDeliveryOptionResponseModel!
+                                        .data!
+                                        .methods!
+                                        .where(
+                                          (test) =>
+                                              test.method!.toLowerCase() ==
+                                              "SCHEDULED_BLOCK".toLowerCase(),
+                                        )
+                                        .map(
+                                          (e) => Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  TextView(
+                                                    text: 'Select Time Window',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 13.78.sp,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                  TextView(
+                                                    text: '*',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 15.54.sp,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: AppColors.red,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 10.h),
+                                              if (e.timeBlocks!.isNotEmpty)
+                                                ...e.timeBlocks!.map(
+                                                  (time) => GestureDetector(
+                                                    onTap: () async {
+                                                      model.time = time;
+                                                      await Future.delayed(
+                                                        Duration(seconds: 1),
+                                                      );
+                                                      await model.quoteScheduleDelivery(
+                                                        context: context,
+                                                        scheduleDelivery:
+                                                            QuoteScheduleDeliveryEneityModel(
+                                                              deliveryMethod:
+                                                                  'SCHEDULED_BLOCK',
+                                                              stateCode: model
+                                                                  .stateController
+                                                                  .text,
+                                                              lgaCode: model
+                                                                  .lgaController
+                                                                  .text,
+                                                              deliveryDate:
+                                                                  convertDate(
+                                                                    model
+                                                                        .dateTimeController
+                                                                        .text,
+                                                                  ),
+                                                              timeBlockStart:
+                                                                  model
+                                                                      .time!
+                                                                      .startTime,
+                                                              timeBlockEnd:
+                                                                  model
+                                                                      .time!
+                                                                      .endTime,
+                                                            ),
+                                                      );
+
+                                                      model.notifyListeners();
+                                                    },
+                                                    child: Container(
+                                                      width: double.infinity,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                            horizontal: 10.w,
+                                                            vertical: 12.4.w,
+                                                          ),
+                                                      margin: EdgeInsets.only(
+                                                        bottom: 12.w,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color:
+                                                              model.time == time
+                                                              ? AppColors
+                                                                    .primary
+                                                              : AppColors
+                                                                    .infoGrey1,
+                                                          width: 1.22,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              10.r,
+                                                            ),
+                                                      ),
+                                                      child: Center(
+                                                        child: TextView(
+                                                          text:
+                                                              '${time.name} (${formatTime(time.startTime!)} - ${formatTime(time.endTime!)})',
+                                                          textStyle: TextStyle(
+                                                            fontFamily:
+                                                                'DMSans',
+                                                            fontSize: 14.82.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color:
+                                                                model.time ==
+                                                                    time
+                                                                ? AppColors
+                                                                      .primary
+                                                                : AppColors
+                                                                      .infoGrey,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                              // GestureDetector(
+                                              //   onTap: () {
+                                              //     model.cartTimeAdded =
+                                              //         CartAddedTime.afternoon;
+                                              //     model.notifyListeners();
+                                              //   },
+                                              //   child: Container(
+                                              //     width: double.infinity,
+                                              //     padding: EdgeInsets.symmetric(
+                                              //       horizontal: 10.w,
+                                              //       vertical: 12.4.w,
+                                              //     ),
+                                              //     margin: EdgeInsets.only(bottom: 12.w),
+                                              //     decoration: BoxDecoration(
+                                              //       border: Border.all(
+                                              //         color:
+                                              //             model.cartTimeAdded ==
+                                              //                 CartAddedTime.afternoon
+                                              //             ? AppColors.primary
+                                              //             : AppColors.infoGrey1,
+                                              //         width: 1.22,
+                                              //       ),
+                                              //       borderRadius: BorderRadius.circular(10.r),
+                                              //     ),
+                                              //     child: Center(
+                                              //       child: TextView(
+                                              //         text: 'Afternoon (12PM - 4PM)',
+                                              //         textStyle: TextStyle(
+                                              //           fontFamily: 'DMSans',
+                                              //           fontSize: 14.82.sp,
+                                              //           fontWeight: FontWeight.w500,
+                                              //           color:
+                                              //               model.cartTimeAdded ==
+                                              //                   CartAddedTime.afternoon
+                                              //               ? AppColors.primary
+                                              //               : AppColors.infoGrey,
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                              // GestureDetector(
+                                              //   onTap: () {
+                                              //     model.cartTimeAdded = CartAddedTime.evening;
+                                              //     model.notifyListeners();
+                                              //   },
+                                              //   child: Container(
+                                              //     width: double.infinity,
+                                              //     padding: EdgeInsets.symmetric(
+                                              //       horizontal: 10.w,
+                                              //       vertical: 12.4.w,
+                                              //     ),
+                                              //     margin: EdgeInsets.only(bottom: 12.w),
+                                              //     decoration: BoxDecoration(
+                                              //       border: Border.all(
+                                              //         color:
+                                              //             model.cartTimeAdded ==
+                                              //                 CartAddedTime.evening
+                                              //             ? AppColors.primary
+                                              //             : AppColors.infoGrey1,
+                                              //         width: 1.22,
+                                              //       ),
+                                              //       borderRadius: BorderRadius.circular(10.r),
+                                              //     ),
+                                              //     child: Center(
+                                              //       child: TextView(
+                                              //         text: 'Evening (4PM - 8PM)',
+                                              //         textStyle: TextStyle(
+                                              //           fontFamily: 'DMSans',
+                                              //           fontSize: 14.82.sp,
+                                              //           fontWeight: FontWeight.w500,
+                                              //           color:
+                                              //               model.cartTimeAdded ==
+                                              //                   CartAddedTime.evening
+                                              //               ? AppColors.primary
+                                              //               : AppColors.infoGrey,
+                                              //         ),
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
+                                            ],
+                                          ),
+                                        ),
+
+                                  SizedBox(height: 10.w),
+                                  model.time != null
+                                      ? Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 12.w,
+                                            horizontal: 16.w,
+                                          ),
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.cooool,
+                                            borderRadius: BorderRadius.circular(
+                                              8.0.r,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    AppImage.calendar,
+                                                    fit: BoxFit.cover,
+                                                    color: AppColors.primary,
+                                                  ),
+                                                  SizedBox(width: 12.w),
+                                                  TextView(
+                                                    text: 'Select Window',
+                                                    textStyle: TextStyle(
+                                                      fontFamily: 'DMSans',
+                                                      fontSize: 12.sp,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: AppColors.reminder,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(height: 14.w),
+                                              TextView(
+                                                text:
+                                                    '${model.dateTimeController.text} . ${model.time?.name ?? ''} (${formatTime(model.time?.startTime ?? '')} - ${formatTime(model.time?.endTime ?? '')})',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 15.2.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.reminder,
+                                                  letterSpacing: -0.1,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
+                              )
+                            : SizedBox.shrink(),
                         SizedBox(height: 12.h),
                         TextFormWidget(
                           hint: 'Contact phone',
@@ -1229,6 +1305,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                         ),
                       )
                     : SizedBox.shrink(),
+
                 Container(
                   margin: EdgeInsets.only(bottom: 20.w),
                   padding: EdgeInsets.symmetric(

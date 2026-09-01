@@ -106,7 +106,7 @@ class ManufacturerProfileScreen extends StatelessWidget {
                   SizedBox(height: 6.h),
                   Center(
                     child: TextView(
-                      text:'KNOWN NAME',
+                      text: 'KNOWN NAME',
                       textStyle: TextStyle(
                         fontSize: 16.2.sp,
                         fontWeight: FontWeight.w500,

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:medicate_app/core/connect_end/model/checkout_delivery_option_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_pharmacy_kyc_response_model/get_pharmacy_kyc_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_roles_response_model/get_roles_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/place_order_wallet_entity_model/place_order_wallet_entity_model.dart';
@@ -19,6 +20,7 @@ import '../connect_end/model/create_tenant_reminder_entity_model/create_tenant_r
 import '../connect_end/model/create_user_entity_model.dart';
 import '../connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/get_checkout_delivery_option_response_model/get_checkout_delivery_option_response_model.dart';
 import '../connect_end/model/get_created_user_response_model/get_created_user_response_model.dart';
 import '../connect_end/model/get_reminder_by_id/get_reminder_by_id.dart';
 import '../connect_end/model/get_reminder_for_tenant_response_model/get_reminder_for_tenant_response_model.dart';
@@ -1116,6 +1118,23 @@ class PharmApi {
       );
       logger.d(response.data);
       return GetWholesaleOrderResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(
+    CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
+  ) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_checkout_delivery_options,
+        RequestMethod.post,
+        data: checkoutDeliveryOption.toJson()
+      );
+      logger.d(response.data);
+      return GetCheckoutDeliveryOptionResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
