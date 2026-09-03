@@ -31,7 +31,6 @@ import '../model/create_distributor_product_entity_model/create_distributor_prod
 import '../model/distributor_wholesale_category_model/category.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
-import '../model/get_user_details_response_model/get_user_details_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -51,11 +50,6 @@ import 'package:medicate_app/core/connect_end/model/create_distributor_product_e
     as iml;
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/image.dart'
     as im;
-
-// import 'package:medicate_app/core/connect_end/model/create_distributor_product_entity_model/image.dart'
-//     as cm;
-// import 'package:medicate_app/core/connect_end/model/create_distributor_product_entity_model/volume_pricing.dart'
-//     as vl;
 
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;

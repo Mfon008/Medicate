@@ -412,6 +412,8 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                                           child: TextFormField(
                                                                             textAlign:
                                                                                 TextAlign.center,
+                                                                            keyboardType:
+                                                                                TextInputType.number,
                                                                             decoration: InputDecoration(
                                                                               isDense: true,
                                                                               contentPadding: EdgeInsets.zero,

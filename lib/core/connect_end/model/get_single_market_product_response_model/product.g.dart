@@ -23,6 +23,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   pricePerUnit: (json['pricePerUnit'] as num?)?.toInt(),
   stock: (json['stock'] as num?)?.toInt(),
   nafdacRegistrationNumber: json['nafdacRegistrationNumber'] as String?,
+  manufacturerName: json['manufacturerName'] as String?,
   nafdacVerified: json['nafdacVerified'] as bool?,
   nafdacVerification: json['nafdacVerification'] == null
       ? null
@@ -81,6 +82,7 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
   'sku': instance.sku,
   'packSize': instance.packSize,
   'unit': instance.unit,
+  'manufacturerName': instance.manufacturerName,
   'minimumOrderQuantity': instance.minimumOrderQuantity,
   'pricePerUnit': instance.pricePerUnit,
   'stock': instance.stock,

@@ -12,6 +12,8 @@ import '../../../../core/config/colors.dart';
 import '../../../core/app_assets/app_validation.dart';
 import '../../../core/app_assets/constant.dart';
 import '../../../core/connect_end/model/wholesale_add_to_cart_entity_model.dart';
+import '../../../core/core_folder/app/app.router.dart';
+import '../../../main.dart';
 import '../../widget/button.dart';
 import '../../widget/text.dart';
 
@@ -65,6 +67,11 @@ class PharmacyViewProductScreen extends StatelessWidget {
         disposeViewModel: false,
         onDispose: (viewModel) {},
         builder: (_, PharmViewModel model, _) {
+          final manufacturerName = model
+              .getSingleMarketProductResponseModel
+              ?.data
+              ?.product
+              ?.manufacturerName;
           return SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16.20.w, vertical: 20.0),
             child: Column(
@@ -372,12 +379,19 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 TextView(
                                   text:
                                       model
-                                          .getSingleMarketProductResponseModel
-                                          ?.data
-                                          ?.product
-                                          ?.nafdacVerification
-                                          ?.manufacturer ??
-                                      '',
+                                              .getSingleMarketProductResponseModel
+                                              ?.data
+                                              ?.product
+                                              ?.manufacturerName
+                                              ?.isNotEmpty ==
+                                          true
+                                      ? model
+                                                .getSingleMarketProductResponseModel
+                                                ?.data
+                                                ?.product
+                                                ?.manufacturerName ??
+                                            'Not available'
+                                      : 'Not available',
                                   textStyle: TextStyle(
                                     fontFamily: 'DMSans',
                                     fontSize: 14.20.sp,
@@ -791,15 +805,15 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                           ),
                                         ),
                                         SizedBox(height: 2.h),
+
                                         TextView(
                                           text:
-                                              model
-                                                  .getSingleMarketProductResponseModel
-                                                  ?.data
-                                                  ?.product
-                                                  ?.nafdacVerification
-                                                  ?.manufacturer ??
-                                              '',
+                                              manufacturerName
+                                                      ?.trim()
+                                                      .isNotEmpty ==
+                                                  true
+                                              ? manufacturerName!
+                                              : 'Not available',
                                           textStyle: TextStyle(
                                             fontFamily: 'GoogleSans',
                                             fontSize: 15.90.sp,
@@ -1017,6 +1031,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                       .quantityValueFormKey,
                                                   child: TextFormField(
                                                     textAlign: TextAlign.center,
+                                                    keyboardType: TextInputType.number,
                                                     decoration: InputDecoration(
                                                       isDense: true,
                                                       contentPadding:
@@ -1254,22 +1269,45 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                 SizedBox(width: 12.w),
 
                                 Expanded(
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 10.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primary,
-                                      borderRadius: BorderRadius.circular(40.r),
-                                    ),
-                                    child: TextView(
-                                      text: 'Buy Now',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 16.90.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.white,
+                                  child: GestureDetector(
+
+                                     onTap: () async {
+                                     await model.addWholesaleProductToCart(
+                                        context,
+                                        wholesaleAddToCart:
+                                            WholesaleAddToCartEntityModel(
+                                              productId: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .id,
+                                              quantity: model
+                                                  .getSingleMarketProductResponseModel!
+                                                  .data!
+                                                  .product!
+                                                  .minimumOrderQuantity,
+                                            ),
+                                      );
+                                       navigate.navigateTo(
+                                        Routes.pharmacyWholeSaleCheckout,
+                                      );},
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 10.w,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primary,
+                                        borderRadius: BorderRadius.circular(40.r),
+                                      ),
+                                      child: TextView(
+                                        text: 'Buy Now',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 16.90.sp,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.white,
+                                        ),
                                       ),
                                     ),
                                   ),

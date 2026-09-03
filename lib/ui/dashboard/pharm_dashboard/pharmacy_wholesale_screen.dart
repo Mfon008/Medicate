@@ -658,7 +658,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                                         SizedBox(width: 10.h),
                                                         TextView(
                                                           text: formatNaira(
-                                                            vol['pricePerUnit'],
+                                                            vol['enlistedPricePerUnit'],
                                                           ),
                                                           textStyle: TextStyle(
                                                             fontFamily:
@@ -700,8 +700,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                     children: [
                                       TextView(
                                         text: formatNaira(
-                                          m.displayPricePerUnit! *
-                                              currentQuantity,
+                                          m.displayPricePerUnit!
                                         ),
                                         textStyle: TextStyle(
                                           fontFamily: 'GoogleSans',
@@ -788,6 +787,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                                         controller: model
                                                             .quantityValueController,
                                                         showCursor: false,
+                                                        keyboardType: TextInputType.number,
                                                         validator:
                                                             AppValidator.validateIntProductQuantity(),
                                                         onChanged: (value) {
@@ -799,8 +799,9 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                                                 );
 
                                                             if (quantity ==
-                                                                null)
+                                                                null) {
                                                               return;
+                                                            }
 
                                                             model.selectedQuantities[m
                                                                     .id!] =

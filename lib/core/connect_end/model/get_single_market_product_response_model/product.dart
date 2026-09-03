@@ -40,6 +40,7 @@ class Product {
   DateTime? createdAt;
   DateTime? updatedAt;
   String? updatedByAdminId;
+  String? manufacturerName;
   CategoryDetails? categoryDetails;
   CompanyDetails? companyDetails;
   int? categoryMarginPercentage;
@@ -73,6 +74,7 @@ class Product {
     this.manufacturedDate,
     this.expiryDate,
     this.images,
+    this.manufacturerName,
     this.isPublished,
     this.isDeleted,
     this.volumePricing,
