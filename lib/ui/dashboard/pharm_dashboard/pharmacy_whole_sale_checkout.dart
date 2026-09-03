@@ -1004,7 +1004,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                   ),
                 ),
                 model.isLoading
-                    ? SpinKitCircle(size: 48.sp, color: AppColors.primary1)
+                    ? SpinKitRing(size: 35.72.sp, color: AppColors.primary1,lineWidth: 5,)
                     : model.quoteInstantDeliveryResponseModel != null ||
                           model.quoteScheduleDeliveryResponseModel != null
                     ? Container(
@@ -1089,9 +1089,11 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                               ],
                                             ),
                                             TextView(
-                                              text: formatNairaDouble(
+                                              text: formatNairaNoDecimal(
                                                 p.lineTotal!,
                                               ),
+                                              maxLines: 1,
+                                              textOverflow: TextOverflow.ellipsis,
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
                                                 fontSize: 14.42.sp,
@@ -1307,7 +1309,7 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                     : SizedBox.shrink(),
 
                 Container(
-                  margin: EdgeInsets.only(bottom: 20.w),
+                  margin: EdgeInsets.only(bottom: 20.w, top: 10.w),
                   padding: EdgeInsets.symmetric(
                     horizontal: 20.w,
                     vertical: 20.w,

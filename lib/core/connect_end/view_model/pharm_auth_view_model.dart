@@ -682,6 +682,39 @@ class PharmViewModel extends BaseViewModel {
 
   getTimeFreqCustom(int day) => selectedTimePerDay[day] ?? '--:--';
 
+  getOrderBadgeTextColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'confirmed':
+        return AppColors.primary;
+      case 'in transit':
+        return AppColors.lightBlue;
+      case 'delivered':
+        return AppColors.app_green;
+      case 'pending':
+        return AppColors.infoGrey;
+      case 'cancelled':
+        return AppColors.appRed;
+      default:
+        return AppColors.primary;
+    }
+  }
+  getOrderBadgeTextColorCont(String status) {
+    switch (status.toLowerCase()) {
+      case 'confirmed':
+        return AppColors.primary.withOpacity(.1);
+      case 'in transit':
+        return AppColors.lightBlue.withOpacity(.1);
+      case 'delivered':
+        return AppColors.app_green.withOpacity(.1);
+      case 'pending':
+        return AppColors.infoGrey.withOpacity(.1);
+      case 'cancelled':
+        return AppColors.appRed.withOpacity(.1);
+      default:
+        return AppColors.primary.withOpacity(.1);
+    }
+  }
+
   Future<void> selectTimeFreq({
     BuildContext? context,
     PharmViewModel? model,

@@ -605,7 +605,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                     .tracking?[2]
                                                                     .completed ==
                                                                 true
-                                                        ? AppColors.lightBlue
+                                                        ? AppColors.amber
                                                         : AppColors.grey,
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -1434,7 +1434,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                   e.tracking?[2].completed ==
                                                                       true
                                                               ? AppColors
-                                                                    .lightBlue
+                                                                    .amber
                                                               : AppColors.grey,
                                                           borderRadius:
                                                               BorderRadius.circular(
@@ -1947,10 +1947,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                     vertical: 4.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color:
-                                        e.badgeText?.toLowerCase() == 'pending'
-                                        ? AppColors.fineGrey.withOpacity(.1)
-                                        : const Color(0xffEDF5FF),
+                                    color:model.getOrderBadgeTextColorCont(e.badgeText!),
                                     borderRadius: BorderRadius.circular(30.r),
                                   ),
                                   child: TextView(
@@ -1959,11 +1956,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                       fontFamily: 'DMSans',
                                       fontSize: 13.2.sp,
                                       fontWeight: FontWeight.w600,
-                                      color:
-                                          e.badgeText?.toLowerCase() ==
-                                              'pending'
-                                          ? AppColors.infoGrey
-                                          : AppColors.primary,
+                                      color:model.getOrderBadgeTextColor(e.badgeText!)
                                     ),
                                   ),
                                 ),
