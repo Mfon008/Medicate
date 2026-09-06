@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:medicate_app/core/connect_end/model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_distributor_profile_response_model/get_distributor_profile_response_model.dart';
+import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/get_single_product_response_model.dart';
 import 'package:medicate_app/core/connect_end/model/manufacturer_signup_entity_model.dart';
 import 'package:medicate_app/core/connect_end/model/nafdac_registration_number_entity_model.dart';
@@ -10,6 +11,7 @@ import 'package:medicate_app/core/connect_end/model/update_distributor_profile_e
 
 import '../connect_end/model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../connect_end/model/forgot_password_response_model/forgot_password_response_model.dart';
+import '../connect_end/model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../connect_end/model/login_entity_model.dart';
 import '../connect_end/model/pharmacy_login_response_model/pharmacy_login_response_model.dart';
 import '../connect_end/model/resend_otp_entity_model.dart';
@@ -413,7 +415,7 @@ class ManufacturerApi {
     }
   }
 
-  Future<dynamic> listIncomingOrder({
+  Future<ListIncomingOrdersResponseModel> listIncomingOrder({
     String? page,
     String? status,
     String? search,
@@ -430,21 +432,21 @@ class ManufacturerApi {
         },
       );
       logger.d(response.data);
-      return response.data;
+      return ListIncomingOrdersResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;
     }
   }
 
-  Future<dynamic> getIncomingOrder({String? wholesaleOrderId}) async {
+  Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({String? wholesaleOrderId}) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId',
         RequestMethod.get,
       );
       logger.d(response.data);
-      return response.data;
+      return GetIncomingOrderDdetailResponseModel.fromJson(response.data);
     } catch (e) {
       logger.d("response:$e");
       rethrow;

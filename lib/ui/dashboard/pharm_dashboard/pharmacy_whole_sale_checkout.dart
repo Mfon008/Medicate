@@ -1004,7 +1004,11 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                   ),
                 ),
                 model.isLoading
-                    ? SpinKitRing(size: 35.72.sp, color: AppColors.primary1,lineWidth: 5,)
+                    ? SpinKitRing(
+                        size: 35.72.sp,
+                        color: AppColors.primary1,
+                        lineWidth: 5,
+                      )
                     : model.quoteInstantDeliveryResponseModel != null ||
                           model.quoteScheduleDeliveryResponseModel != null
                     ? Container(
@@ -1093,7 +1097,8 @@ class PharmacyWholeSaleCheckout extends StatelessWidget {
                                                 p.lineTotal!,
                                               ),
                                               maxLines: 1,
-                                              textOverflow: TextOverflow.ellipsis,
+                                              textOverflow:
+                                                  TextOverflow.ellipsis,
                                               textStyle: TextStyle(
                                                 fontFamily: 'DMSans',
                                                 fontSize: 14.42.sp,

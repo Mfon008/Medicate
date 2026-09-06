@@ -105,7 +105,8 @@ class UrlConfig {
   static const String wholesale_checkout_quote = 'wholesale/checkout/quote';
   static const String wholesale_checkout = 'wholesale/checkout';
   static const String wholesale_orders = 'wholesale/orders';
-  static const String wholesale_checkout_delivery_options = 'wholesale/checkout/delivery-options';
+  static const String wholesale_checkout_delivery_options =
+      'wholesale/checkout/delivery-options';
   static const String auth_distributor_profile = 'auth/distributor/profile';
   static const String auth_distributor_profile_pic =
       'auth/distributor/profile-picture';

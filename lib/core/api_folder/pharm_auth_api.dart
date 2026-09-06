@@ -1091,14 +1091,35 @@ class PharmApi {
     }
   }
 
-  Future<WholesaleOrderListResponseModel> getWholesaleOrderList(
-    String page,
-  ) async {
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderList({
+    String? page,
+  }) async {
     try {
       final response = await _service.call(
         UrlConfig.wholesale_orders,
         RequestMethod.getParams,
         queryParams: {'page': page, 'limit': '10'},
+      );
+      logger.d(response.data);
+      return WholesaleOrderListResponseModel.fromJson(response.data);
+    } catch (e) {
+      logger.d("response:$e");
+      rethrow;
+    }
+  }
+
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderListFiltering({
+    String? page,
+    String? status,
+    String? date,
+  }) async {
+    try {
+      final response = await _service.call(
+        UrlConfig.wholesale_orders,
+        RequestMethod.getParams,
+        queryParams: date != null
+            ? {'page': page, 'limit': '10', 'status': status, 'date': date}
+            : {'page': page, 'limit': '10', 'status': status},
       );
       logger.d(response.data);
       return WholesaleOrderListResponseModel.fromJson(response.data);
@@ -1131,7 +1152,7 @@ class PharmApi {
       final response = await _service.call(
         UrlConfig.wholesale_checkout_delivery_options,
         RequestMethod.post,
-        data: checkoutDeliveryOption.toJson()
+        data: checkoutDeliveryOption.toJson(),
       );
       logger.d(response.data);
       return GetCheckoutDeliveryOptionResponseModel.fromJson(response.data);

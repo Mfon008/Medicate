@@ -66,7 +66,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.h),
+        padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 17.20.h),
         child: ViewModelBuilder<PharmViewModel>.reactive(
           viewModelBuilder: () => PharmViewModel(),
           onViewModelReady: (model) async {
@@ -140,7 +140,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                   Container(
                     padding: EdgeInsets.symmetric(
                       vertical: 22.w,
-                      horizontal: 20.w,
+                      horizontal: 16.20.w,
                     ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
@@ -152,6 +152,7 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
                         bankNameController.text.isEmpty ||
                                 bankNoController.text.isEmpty
                             ? Container(
+                                margin: EdgeInsets.only(bottom: 16.w),
                                 padding: EdgeInsets.symmetric(
                                   vertical: 12.w,
                                   horizontal: 12.w,
@@ -450,7 +451,11 @@ class _PharmacyProfileInfoScreenState extends State<PharmacyProfileInfoScreen> {
 
                             child: Padding(
                               padding: EdgeInsets.all(14.20.w),
-                              child: SvgPicture.asset(AppImage.arrow_down),
+                              child: SvgPicture.asset(
+                                AppImage.arrow_down,
+                                height: 10.h,
+                                width: 10.w,
+                              ),
                             ),
                           ),
                         ),

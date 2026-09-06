@@ -681,7 +681,7 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                     ),
                                                     TextView(
                                                       text: formatNaira(
-                                                        o['pricePerUnit']
+                                                        o['enlistedPricePerUnit']
                                                             .toInt(),
                                                       ),
                                                       textStyle: TextStyle(
@@ -1031,7 +1031,8 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                       .quantityValueFormKey,
                                                   child: TextFormField(
                                                     textAlign: TextAlign.center,
-                                                    keyboardType: TextInputType.number,
+                                                    keyboardType:
+                                                        TextInputType.number,
                                                     decoration: InputDecoration(
                                                       isDense: true,
                                                       contentPadding:
@@ -1270,9 +1271,8 @@ class PharmacyViewProductScreen extends StatelessWidget {
 
                                 Expanded(
                                   child: GestureDetector(
-
-                                     onTap: () async {
-                                     await model.addWholesaleProductToCart(
+                                    onTap: () async {
+                                      await model.addWholesaleProductToCart(
                                         context,
                                         wholesaleAddToCart:
                                             WholesaleAddToCartEntityModel(
@@ -1288,9 +1288,10 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                                   .minimumOrderQuantity,
                                             ),
                                       );
-                                       navigate.navigateTo(
+                                      navigate.navigateTo(
                                         Routes.pharmacyWholeSaleCheckout,
-                                      );},
+                                      );
+                                    },
                                     child: Container(
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.symmetric(
@@ -1298,7 +1299,9 @@ class PharmacyViewProductScreen extends StatelessWidget {
                                       ),
                                       decoration: BoxDecoration(
                                         color: AppColors.primary,
-                                        borderRadius: BorderRadius.circular(40.r),
+                                        borderRadius: BorderRadius.circular(
+                                          40.r,
+                                        ),
                                       ),
                                       child: TextView(
                                         text: 'Buy Now',

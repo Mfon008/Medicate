@@ -30,7 +30,9 @@ import '../../core_folder/manager/shared_preference.dart';
 import '../model/create_distributor_product_entity_model/create_distributor_product_entity_model.dart';
 import '../model/distributor_wholesale_category_model/category.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
+import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
@@ -105,6 +107,12 @@ class ManufacturerViewModel extends BaseViewModel {
   NafdacRegistrationNumberResponseModel?
   get nafdacRegistrationNumberResponseModel =>
       _nafdacRegistrationNumberResponseModel;
+  
+  ListIncomingOrdersResponseModel? _listIncomingOrdersResponseModel;
+  ListIncomingOrdersResponseModel? get listIncomingOrdersResponseModel => _listIncomingOrdersResponseModel;
+  GetIncomingOrderDdetailResponseModel? _getIncomingOrderDdetailResponseModel;
+  GetIncomingOrderDdetailResponseModel? get getIncomingOrderDdetailResponseModel => _getIncomingOrderDdetailResponseModel;
+  
   // GetUserDetailsResponseModel? _getUserDetailsResponseModel;
   // GetUserDetailsResponseModel? get getUserDetailsResponseModel =>
   //     _getUserDetailsResponseModel;
@@ -144,6 +152,8 @@ class ManufacturerViewModel extends BaseViewModel {
   int inImage = 0;
   String searchProduct = '';
 
+  TextEditingController? searchProductController = TextEditingController();
+
   // void getUserDetails({context, phoneNo}) async {
   //   try {
   //     _isLoading = true;
@@ -173,6 +183,76 @@ class ManufacturerViewModel extends BaseViewModel {
   //   }
   //   notifyListeners();
   // }
+
+  getFilterTextOrder(s){
+    if(s=='All'){
+      return 'All';
+    }
+    if(s=='Pending'){
+      return 'Pending';
+    }
+    if(s=='Confirmed'){
+      return 'Confirmed';
+    }
+    if(s=='Packaging'){
+      return 'Processing';
+    }
+    if(s=='In Transit'){
+      return 'Shipped';
+    }
+    if(s=='Delivered'){
+      return 'Delivered';
+    }
+    if(s=='Cancelled'){
+      return 'Cancelled';
+    }
+  }
+
+  getFulfillmentOrderColor({bool? completed, bool? current}){
+    if(completed == true && current == true){
+      return AppColors.app_green;
+    } else if(completed == false && current == true){
+      return AppColors.amber;
+    } else if(completed == false && current == false){
+      return AppColors.grey;
+    } else {
+      return AppColors.grey;
+    }
+  }
+  getFulfillmentOrderColorArrow({bool? completed, bool? current}){
+    if(completed == true && current == true){
+      return AppColors.app_green;
+    } else if(completed == false && current == true){
+      return AppColors.grey1;
+    } else if(completed == false && current == false){
+      return AppColors.infoGrey;
+    } else {
+      return AppColors.infoGrey;
+    }
+  }
+
+  getFulfillmentOrderTextColor({bool? completed, bool? current}){
+    if(completed == true && current == true){
+      return AppColors.white;
+    } else if(completed == false && current == true){
+      return AppColors.white;
+    } else if(completed == false && current == false){
+      return AppColors.infoGrey;
+    } else {
+      return AppColors.infoGrey;
+    }
+  }
+  getFulfillmentOrderTextStatusColor({bool? completed, bool? current}){
+    if(completed == true && current == true){
+      return AppColors.white;
+    } else if(completed == false && current == true){
+      return AppColors.reminder;
+    } else if(completed == false && current == false){
+      return AppColors.infoGrey;
+    } else {
+      return AppColors.infoGrey;
+    }
+  }
 
   Future<void> selectManDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -1720,6 +1800,49 @@ class ManufacturerViewModel extends BaseViewModel {
           arguments: OverviewDashboardArguments(index: 1),
         );
       }
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void listIncomingOrder(
+    context, {
+    String? status,
+    String? search,
+  }) async {
+    try {
+      _isLoading = true;
+      _listIncomingOrdersResponseModel = await runBusyFuture(
+        repositoryImply.listIncomingOrder(
+          page: page.toString(),
+          status: status,
+          search: search,
+        ),
+        throwException: true,
+      );
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  void getIncomingOrderDetail(
+    context, {
+    String? id
+  }) async {
+    try {
+      _isLoading = true;
+      _getIncomingOrderDdetailResponseModel = await runBusyFuture(
+        repositoryImply.getIncomingOrder(wholesaleOrderId: id),
+        throwException: true,
+      );
+      _isLoading = false;
     } catch (e) {
       _isLoading = false;
       logger.d(e);

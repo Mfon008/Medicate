@@ -280,9 +280,18 @@ class PharmContractsImpl {
   Future<PlaceOrderWalletResponseModel> placeOrderWallet(
     PlaceOrderWalletEntityModel? placeOrderWalletync,
   ) async => await _api.placeOrderWallet(placeOrderWalletync);
-  Future<WholesaleOrderListResponseModel> getWholesaleOrderList(
-    String page,
-  ) async => await _api.getWholesaleOrderList(page);
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderList({
+    String? page,
+  }) async => await _api.getWholesaleOrderList(page: page);
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderListFiltering({
+    String? page,
+    String? status,
+    String? date,
+  }) async => await _api.getWholesaleOrderListFiltering(
+    page: page,
+    status: status,
+    date: date,
+  );
   Future<GetWholesaleOrderResponseModel> getWholesaleOrder(
     String? wholesaleOrderId,
   ) async => await _api.getWholesaleOrder(wholesaleOrderId);

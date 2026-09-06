@@ -62,6 +62,11 @@ class PharmacyOrderScreen extends StatelessWidget {
                       (e) => GestureDetector(
                         onTap: () {
                           model.orderCategory = e;
+                          model.getWholesaleOrderListFiltering(
+                            context: context,
+                            status: model.getFilterStatus(model.orderCategory),
+                            date: model.pickedDate,
+                          );
                           model.notifyListeners();
                         },
                         child: Container(
@@ -106,7 +111,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextView(
-                        text: 'Filter by date',
+                        text: model.pickedDate != null
+                            ? model.pickedDate!
+                            : 'Filter by date',
                         textStyle: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 15.62.sp,
@@ -117,7 +124,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.all(2.w),
                         child: GestureDetector(
-                          onTap: () => model.selectDateCheckout(
+                          onTap: () => model.selectDateOrderFilter(
                             context: context,
                             model: model,
                           ),
@@ -392,26 +399,16 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     vertical: 3.42.w,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[0]
-                                                                    .status
-                                                                    ?.toLowerCase() ==
-                                                                'confirmed' &&
-                                                            model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[0]
-                                                                    .completed ==
-                                                                true
-                                                        ? AppColors.app_green
-                                                        : AppColors.grey,
+                                                    color: model
+                                                        .orderStatusColorConfirmed(
+                                                          model
+                                                              .getWholesaleOrderResponseModel
+                                                              ?.data
+                                                              ?.order
+                                                              ?.items?[0]
+                                                              .tracking?[0]
+                                                              .completed,
+                                                        ),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           22,
@@ -421,30 +418,14 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: [
-                                                      Icon(
-                                                        Icons.check,
-                                                        size: 15.80.sp,
-                                                        color:
-                                                            model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[0]
-                                                                        .status
-                                                                        ?.toLowerCase() ==
-                                                                    'confirmed' &&
-                                                                model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[0]
-                                                                        .completed ==
-                                                                    true
-                                                            ? AppColors.white
-                                                            : AppColors
-                                                                  .infoGrey,
+                                                      model.orderStatusIconConfirmed(
+                                                        model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[0]
+                                                            .completed,
                                                       ),
                                                       SizedBox(width: 4.w),
                                                       TextView(
@@ -455,26 +436,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color:
-                                                              model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[0]
-                                                                          .status
-                                                                          ?.toLowerCase() ==
-                                                                      'confirmed' &&
-                                                                  model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[0]
-                                                                          .completed ==
-                                                                      true
-                                                              ? AppColors.white
-                                                              : AppColors
-                                                                    .infoGrey,
+                                                              AppColors.white,
                                                         ),
                                                       ),
                                                     ],
@@ -487,26 +449,22 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     vertical: 3.42.w,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[1]
-                                                                    .status
-                                                                    ?.toLowerCase() ==
-                                                                'packaging' &&
-                                                            model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[1]
-                                                                    .completed ==
-                                                                true
-                                                        ? AppColors.app_green
-                                                        : AppColors.grey,
+                                                    color: model.orderStatusColorPackaging(
+                                                      confirmed: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[0]
+                                                          .completed,
+                                                      packaging: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[1]
+                                                          .completed,
+                                                    ),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           22,
@@ -516,30 +474,21 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: [
-                                                      Icon(
-                                                        Icons.check,
-                                                        size: 15.80.sp,
-                                                        color:
-                                                            model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[1]
-                                                                        .status
-                                                                        ?.toLowerCase() ==
-                                                                    'packaging' &&
-                                                                model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[1]
-                                                                        .completed ==
-                                                                    true
-                                                            ? AppColors.white
-                                                            : AppColors
-                                                                  .infoGrey,
+                                                      model.orderStatusIconPackaging(
+                                                        confirmed: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[0]
+                                                            .completed,
+                                                        packaging: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[1]
+                                                            .completed,
                                                       ),
                                                       SizedBox(width: 4.w),
                                                       TextView(
@@ -549,27 +498,22 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           fontSize: 12.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
-                                                          color:
-                                                              model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[1]
-                                                                          .status
-                                                                          ?.toLowerCase() ==
-                                                                      'packaging' &&
-                                                                  model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[1]
-                                                                          .completed ==
-                                                                      true
-                                                              ? AppColors.white
-                                                              : AppColors
-                                                                    .infoGrey,
+                                                          color: model.orderStatusTextColorPackaging(
+                                                            confirmed: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[0]
+                                                                .completed,
+                                                            packaging: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[1]
+                                                                .completed,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -587,26 +531,29 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     vertical: 3.42.w,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[2]
-                                                                    .status
-                                                                    ?.toLowerCase() ==
-                                                                'in_transit' &&
-                                                            model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[2]
-                                                                    .completed ==
-                                                                true
-                                                        ? AppColors.amber
-                                                        : AppColors.grey,
+                                                    color: model.orderStatusColorIntransit(
+                                                      confirmed: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[0]
+                                                          .completed,
+                                                      packaging: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[1]
+                                                          .completed,
+                                                      intransit: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[2]
+                                                          .completed,
+                                                    ),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           22,
@@ -616,29 +563,28 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: [
-                                                      SvgPicture.asset(
-                                                        AppImage.delivery,
-                                                        color:
-                                                            model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[2]
-                                                                        .status
-                                                                        ?.toLowerCase() ==
-                                                                    'in_transit' &&
-                                                                model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[2]
-                                                                        .completed ==
-                                                                    true
-                                                            ? AppColors.appWhite
-                                                            : AppColors
-                                                                  .infoGrey,
+                                                      model.orderStatusIconIntransit(
+                                                        confirmed: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[0]
+                                                            .completed,
+                                                        packaging: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[1]
+                                                            .completed,
+                                                        intransit: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[2]
+                                                            .completed,
                                                       ),
                                                       SizedBox(width: 4.w),
                                                       TextView(
@@ -648,27 +594,29 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           fontSize: 12.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
-                                                          color:
-                                                              model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[2]
-                                                                          .status
-                                                                          ?.toLowerCase() ==
-                                                                      'in_transit' &&
-                                                                  model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[2]
-                                                                          .completed ==
-                                                                      true
-                                                              ? AppColors.white
-                                                              : AppColors
-                                                                    .infoGrey,
+                                                          color: model.orderStatusTextColorIntransit(
+                                                            confirmed: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[0]
+                                                                .completed,
+                                                            packaging: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[1]
+                                                                .completed,
+                                                            intransit: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[2]
+                                                                .completed,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -681,26 +629,36 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     vertical: 3.42.w,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color:
-                                                        model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[2]
-                                                                    .status
-                                                                    ?.toLowerCase() ==
-                                                                'delivered' &&
-                                                            model
-                                                                    .getWholesaleOrderResponseModel
-                                                                    ?.data
-                                                                    ?.order
-                                                                    ?.items?[0]
-                                                                    .tracking?[2]
-                                                                    .completed ==
-                                                                true
-                                                        ? AppColors.app_green
-                                                        : AppColors.infoGrey1,
+                                                    color: model.orderStatusColorDelivered(
+                                                      confirmed: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[0]
+                                                          .completed,
+                                                      packaging: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[1]
+                                                          .completed,
+                                                      intransit: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[2]
+                                                          .completed,
+                                                      delivered: model
+                                                          .getWholesaleOrderResponseModel
+                                                          ?.data
+                                                          ?.order
+                                                          ?.items?[0]
+                                                          .tracking?[2]
+                                                          .completed,
+                                                    ),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           22,
@@ -710,31 +668,35 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: [
-                                                      Icon(
-                                                        Icons
-                                                            .check_circle_outline_outlined,
-                                                        size: 14.sp,
-                                                        color:
-                                                            model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[2]
-                                                                        .status
-                                                                        ?.toLowerCase() ==
-                                                                    'delivered' &&
-                                                                model
-                                                                        .getWholesaleOrderResponseModel
-                                                                        ?.data
-                                                                        ?.order
-                                                                        ?.items?[0]
-                                                                        .tracking?[2]
-                                                                        .completed ==
-                                                                    true
-                                                            ? AppColors.white
-                                                            : AppColors
-                                                                  .infoGrey,
+                                                      model.orderStatusIconDelivered(
+                                                        confirmed: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[0]
+                                                            .completed,
+                                                        packaging: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[1]
+                                                            .completed,
+                                                        intransit: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[2]
+                                                            .completed,
+                                                        delivered: model
+                                                            .getWholesaleOrderResponseModel
+                                                            ?.data
+                                                            ?.order
+                                                            ?.items?[0]
+                                                            .tracking?[2]
+                                                            .completed,
                                                       ),
                                                       SizedBox(width: 4.w),
                                                       TextView(
@@ -744,27 +706,36 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           fontSize: 12.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
-                                                          color:
-                                                              model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[3]
-                                                                          .status
-                                                                          ?.toLowerCase() ==
-                                                                      'delivered' &&
-                                                                  model
-                                                                          .getWholesaleOrderResponseModel
-                                                                          ?.data
-                                                                          ?.order
-                                                                          ?.items?[0]
-                                                                          .tracking?[3]
-                                                                          .completed ==
-                                                                      true
-                                                              ? AppColors.white
-                                                              : AppColors
-                                                                    .infoGrey,
+                                                          color: model.orderStatusTextColorDelivered(
+                                                            confirmed: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[0]
+                                                                .completed,
+                                                            packaging: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[1]
+                                                                .completed,
+                                                            intransit: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[2]
+                                                                .completed,
+                                                            delivered: model
+                                                                .getWholesaleOrderResponseModel
+                                                                ?.data
+                                                                ?.order
+                                                                ?.items?[0]
+                                                                .tracking?[2]
+                                                                .completed,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -1285,15 +1256,12 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               vertical: 3.42.w,
                                                             ),
                                                         decoration: BoxDecoration(
-                                                          color:
-                                                              e.tracking?[0].status
-                                                                          ?.toLowerCase() ==
-                                                                      'confirmed' &&
-                                                                  e.tracking?[0].completed ==
-                                                                      true
-                                                              ? AppColors
-                                                                    .app_green
-                                                              : AppColors.grey,
+                                                          color: model
+                                                              .orderStatusColorConfirmed(
+                                                                e
+                                                                    .tracking![0]
+                                                                    .completed,
+                                                              ),
                                                           borderRadius:
                                                               BorderRadius.circular(
                                                                 22,
@@ -1303,19 +1271,10 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           mainAxisSize:
                                                               MainAxisSize.min,
                                                           children: [
-                                                            Icon(
-                                                              Icons.check,
-                                                              size: 15.80.sp,
-                                                              color:
-                                                                  e.tracking?[0].status
-                                                                              ?.toLowerCase() ==
-                                                                          'confirmed' &&
-                                                                      e.tracking?[0].completed ==
-                                                                          true
-                                                                  ? AppColors
-                                                                        .white
-                                                                  : AppColors
-                                                                        .infoGrey,
+                                                            model.orderStatusIconConfirmed(
+                                                              e
+                                                                  .tracking![0]
+                                                                  .completed,
                                                             ),
                                                             SizedBox(
                                                               width: 4.w,
@@ -1330,16 +1289,8 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
-                                                                color:
-                                                                    e.tracking?[0].status
-                                                                                ?.toLowerCase() ==
-                                                                            'confirmed' &&
-                                                                        e.tracking?[0].completed ==
-                                                                            true
-                                                                    ? AppColors
-                                                                          .white
-                                                                    : AppColors
-                                                                          .infoGrey,
+                                                                color: AppColors
+                                                                    .white,
                                                               ),
                                                             ),
                                                           ],
@@ -1354,15 +1305,15 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               vertical: 3.42.w,
                                                             ),
                                                         decoration: BoxDecoration(
-                                                          color:
-                                                              e.tracking?[1].status
-                                                                          ?.toLowerCase() ==
-                                                                      'packaging' &&
-                                                                  e.tracking?[1].completed ==
-                                                                      true
-                                                              ? AppColors
-                                                                    .app_green
-                                                              : AppColors.grey,
+                                                          color: model
+                                                              .orderStatusColorPackaging(
+                                                                confirmed: e
+                                                                    .tracking![0]
+                                                                    .completed,
+                                                                packaging: e
+                                                                    .tracking![1]
+                                                                    .completed,
+                                                              ),
                                                           borderRadius:
                                                               BorderRadius.circular(
                                                                 22,
@@ -1372,19 +1323,13 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           mainAxisSize:
                                                               MainAxisSize.min,
                                                           children: [
-                                                            Icon(
-                                                              Icons.check,
-                                                              size: 15.80.sp,
-                                                              color:
-                                                                  e.tracking?[1].status
-                                                                              ?.toLowerCase() ==
-                                                                          'packaging' &&
-                                                                      e.tracking?[1].completed ==
-                                                                          true
-                                                                  ? AppColors
-                                                                        .white
-                                                                  : AppColors
-                                                                        .infoGrey,
+                                                            model.orderStatusIconPackaging(
+                                                              confirmed: e
+                                                                  .tracking![0]
+                                                                  .completed,
+                                                              packaging: e
+                                                                  .tracking![1]
+                                                                  .completed,
                                                             ),
                                                             SizedBox(
                                                               width: 4.w,
@@ -1398,16 +1343,14 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
-                                                                color:
-                                                                    e.tracking?[1].status
-                                                                                ?.toLowerCase() ==
-                                                                            'packaging' &&
-                                                                        e.tracking?[1].completed ==
-                                                                            true
-                                                                    ? AppColors
-                                                                          .white
-                                                                    : AppColors
-                                                                          .infoGrey,
+                                                                color: model.orderStatusTextColorPackaging(
+                                                                  confirmed: e
+                                                                      .tracking![0]
+                                                                      .completed,
+                                                                  packaging: e
+                                                                      .tracking![1]
+                                                                      .completed,
+                                                                ),
                                                               ),
                                                             ),
                                                           ],
@@ -1433,8 +1376,7 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                       'in_transit' &&
                                                                   e.tracking?[2].completed ==
                                                                       true
-                                                              ? AppColors
-                                                                    .amber
+                                                              ? AppColors.amber
                                                               : AppColors.grey,
                                                           borderRadius:
                                                               BorderRadius.circular(
@@ -1445,18 +1387,16 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           mainAxisSize:
                                                               MainAxisSize.min,
                                                           children: [
-                                                            SvgPicture.asset(
-                                                              AppImage.delivery,
-                                                              color:
-                                                                  e.tracking?[2].status
-                                                                              ?.toLowerCase() ==
-                                                                          'in_transit' &&
-                                                                      e.tracking?[2].completed ==
-                                                                          true
-                                                                  ? AppColors
-                                                                        .appWhite
-                                                                  : AppColors
-                                                                        .infoGrey,
+                                                            model.orderStatusIconIntransit(
+                                                              confirmed: e
+                                                                  .tracking![0]
+                                                                  .completed,
+                                                              packaging: e
+                                                                  .tracking![1]
+                                                                  .completed,
+                                                              intransit: e
+                                                                  .tracking![2]
+                                                                  .completed,
                                                             ),
                                                             SizedBox(
                                                               width: 4.w,
@@ -1471,16 +1411,17 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
-                                                                color:
-                                                                    e.tracking?[2].status
-                                                                                ?.toLowerCase() ==
-                                                                            'in_transit' &&
-                                                                        e.tracking?[2].completed ==
-                                                                            true
-                                                                    ? AppColors
-                                                                          .white
-                                                                    : AppColors
-                                                                          .infoGrey,
+                                                                color: model.orderStatusTextColorIntransit(
+                                                                  confirmed: e
+                                                                      .tracking![0]
+                                                                      .completed,
+                                                                  packaging: e
+                                                                      .tracking![1]
+                                                                      .completed,
+                                                                  intransit: e
+                                                                      .tracking![2]
+                                                                      .completed,
+                                                                ),
                                                               ),
                                                             ),
                                                           ],
@@ -1495,16 +1436,21 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                               vertical: 3.42.w,
                                                             ),
                                                         decoration: BoxDecoration(
-                                                          color:
-                                                              e.tracking?[2].status
-                                                                          ?.toLowerCase() ==
-                                                                      'delivered' &&
-                                                                  e.tracking?[2].completed ==
-                                                                      true
-                                                              ? AppColors
-                                                                    .app_green
-                                                              : AppColors
-                                                                    .infoGrey1,
+                                                          color: model
+                                                              .orderStatusColorDelivered(
+                                                                confirmed: e
+                                                                    .tracking![0]
+                                                                    .completed,
+                                                                packaging: e
+                                                                    .tracking![1]
+                                                                    .completed,
+                                                                intransit: e
+                                                                    .tracking![2]
+                                                                    .completed,
+                                                                delivered: e
+                                                                    .tracking![3]
+                                                                    .completed,
+                                                              ),
                                                           borderRadius:
                                                               BorderRadius.circular(
                                                                 22,
@@ -1514,21 +1460,21 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                           mainAxisSize:
                                                               MainAxisSize.min,
                                                           children: [
-                                                            Icon(
-                                                              Icons
-                                                                  .check_circle_outline_outlined,
-                                                              size: 14.sp,
-                                                              color:
-                                                                  e.tracking?[2].status
-                                                                              ?.toLowerCase() ==
-                                                                          'delivered' &&
-                                                                      e.tracking?[2].completed ==
-                                                                          true
-                                                                  ? AppColors
-                                                                        .white
-                                                                  : AppColors
-                                                                        .infoGrey,
+                                                            model.orderStatusIconDelivered(
+                                                              confirmed: e
+                                                                  .tracking![0]
+                                                                  .completed,
+                                                              packaging: e
+                                                                  .tracking![1]
+                                                                  .completed,
+                                                              intransit: e
+                                                                  .tracking![2]
+                                                                  .completed,
+                                                              delivered: e
+                                                                  .tracking![3]
+                                                                  .completed,
                                                             ),
+
                                                             SizedBox(
                                                               width: 4.w,
                                                             ),
@@ -1541,16 +1487,20 @@ class PharmacyOrderScreen extends StatelessWidget {
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w400,
-                                                                color:
-                                                                    e.tracking?[3].status
-                                                                                ?.toLowerCase() ==
-                                                                            'delivered' &&
-                                                                        e.tracking?[3].completed ==
-                                                                            true
-                                                                    ? AppColors
-                                                                          .white
-                                                                    : AppColors
-                                                                          .infoGrey,
+                                                                color: model.orderStatusTextColorDelivered(
+                                                                  confirmed: e
+                                                                      .tracking![0]
+                                                                      .completed,
+                                                                  packaging: e
+                                                                      .tracking![1]
+                                                                      .completed,
+                                                                  intransit: e
+                                                                      .tracking![2]
+                                                                      .completed,
+                                                                  delivered: e
+                                                                      .tracking![3]
+                                                                      .completed,
+                                                                ),
                                                               ),
                                                             ),
                                                           ],
@@ -1947,7 +1897,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                     vertical: 4.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color:model.getOrderBadgeTextColorCont(e.badgeText!),
+                                    color: model.getOrderBadgeTextColorCont(
+                                      e.badgeText!,
+                                    ),
                                     borderRadius: BorderRadius.circular(30.r),
                                   ),
                                   child: TextView(
@@ -1956,7 +1908,9 @@ class PharmacyOrderScreen extends StatelessWidget {
                                       fontFamily: 'DMSans',
                                       fontSize: 13.2.sp,
                                       fontWeight: FontWeight.w600,
-                                      color:model.getOrderBadgeTextColor(e.badgeText!)
+                                      color: model.getOrderBadgeTextColor(
+                                        e.badgeText!,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -2072,9 +2026,21 @@ class PharmacyOrderScreen extends StatelessWidget {
                                 ? () {}
                                 : () async {
                                     model.pageAll--;
-                                    model.getWholesaleOrderList(
-                                      context: context,
-                                    );
+                                    if (model.pickedDate != null ||
+                                        model.orderCategory.toLowerCase() !=
+                                            'all') {
+                                      model.getWholesaleOrderListFiltering(
+                                        context: context,
+                                        status: model.getFilterStatus(
+                                          model.orderCategory,
+                                        ),
+                                        date: model.pickedDate,
+                                      );
+                                    } else {
+                                      model.getWholesaleOrderList(
+                                        context: context,
+                                      );
+                                    }
                                   },
                             icon: Icon(
                               Icons.arrow_back,
@@ -2127,9 +2093,21 @@ class PharmacyOrderScreen extends StatelessWidget {
                                 ? () {}
                                 : () async {
                                     model.pageAll++;
-                                    model.getWholesaleOrderList(
-                                      context: context,
-                                    );
+                                    if (model.pickedDate != null ||
+                                        model.orderCategory.toLowerCase() !=
+                                            'all') {
+                                      model.getWholesaleOrderListFiltering(
+                                        context: context,
+                                        status: model.getFilterStatus(
+                                          model.orderCategory,
+                                        ),
+                                        date: model.pickedDate,
+                                      );
+                                    } else {
+                                      model.getWholesaleOrderList(
+                                        context: context,
+                                      );
+                                    }
                                   },
                             icon: Icon(
                               Icons.arrow_forward,

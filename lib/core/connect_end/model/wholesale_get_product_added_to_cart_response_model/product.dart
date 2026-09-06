@@ -14,6 +14,7 @@ class Product {
   @JsonKey(name: '_id')
   String? id;
   String? productName;
+  String? manufacturerName;
   String? description;
   String? creationSource;
   String? manufacturerDistributorId;
@@ -54,6 +55,7 @@ class Product {
     this.id,
     this.productName,
     this.description,
+    this.manufacturerName,
     this.creationSource,
     this.manufacturerDistributorId,
     this.manufacturerDistributorName,

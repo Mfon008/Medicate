@@ -309,7 +309,7 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                                             ),
                                                             TextView(
                                                               text:
-                                                                  ' ${e.product?.manufacturerDistributorName?.capitalizeWords() ?? ''}',
+                                                                  ' ${e.product?.manufacturerName?.capitalizeWords() ?? ''}',
                                                               textStyle: TextStyle(
                                                                 fontFamily:
                                                                     'DMSans',
@@ -670,13 +670,21 @@ class PharmacyAddToCartScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 15.20.h),
                                   Center(
-                                    child: TextView(
-                                      text: 'Continue Shopping',
-                                      textStyle: TextStyle(
-                                        fontFamily: 'GoogleSans',
-                                        fontSize: 14.90.sp,
-                                        fontWeight: FontWeight.w300,
-                                        color: AppColors.primary,
+                                    child: GestureDetector(
+                                      onTap: () => navigate.clearStackAndShow(
+                                        Routes.pharmacyDashboard,
+                                        arguments: PharmacyDashboardArguments(
+                                          index: 2,
+                                        ),
+                                      ),
+                                      child: TextView(
+                                        text: 'Continue Shopping',
+                                        textStyle: TextStyle(
+                                          fontFamily: 'GoogleSans',
+                                          fontSize: 14.90.sp,
+                                          fontWeight: FontWeight.w300,
+                                          color: AppColors.primary,
+                                        ),
                                       ),
                                     ),
                                   ),

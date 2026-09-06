@@ -372,17 +372,6 @@ class PharmViewModel extends BaseViewModel {
   Delivery delivery = Delivery.instance;
   PayMethod? payMethod;
   TimeBlock? time;
-  // CartAddedTime cartTimeAdded = CartAddedTime.morning;
-
-  // String returnCartAddedTime(CartAddedTime cartAddedTime) {
-  //   if (cartAddedTime == CartAddedTime.afternoon) {
-  //     return 'Afternoon (12PM - 4PM)';
-  //   }
-  //   if (cartAddedTime == CartAddedTime.evening) {
-  //     return 'Evening (4PM - 8PM)';
-  //   }
-  //   return 'Morning (8AM - 12PM)';
-  // }
 
   List<dynamic> medTypeUpdateIcon = [];
   List<int>? indexDailyList = [1, 2, 3, 4];
@@ -676,6 +665,176 @@ class PharmViewModel extends BaseViewModel {
   DateTime? pickedDatedStart;
   String? pickedDatedStartString;
 
+  orderStatusColorConfirmed(bool? confirmed) {
+    if (confirmed == true) {
+      return AppColors.app_green;
+    } else {
+      return AppColors.yellow;
+    }
+  }
+
+  orderStatusIconConfirmed(bool? confirmed) {
+    if (confirmed == true) {
+      return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
+    } else {
+      return SvgPicture.asset(
+        AppImage.pending,
+        height: 11.80.sp,
+        width: 11.80.sp,
+        color: AppColors.appWhite,
+      );
+    }
+  }
+
+  orderStatusColorPackaging({bool? confirmed, bool? packaging}) {
+    if (confirmed == true && packaging == true) {
+      return AppColors.app_green;
+    } else if (confirmed == true && packaging == false) {
+      return AppColors.yellow;
+    } else {
+      return AppColors.grey;
+    }
+  }
+
+  orderStatusTextColorPackaging({bool? confirmed, bool? packaging}) {
+    if (confirmed == true && packaging == true) {
+      return AppColors.appWhite;
+    } else if (confirmed == true && packaging == false) {
+      return AppColors.white;
+    } else {
+      return AppColors.infoGrey;
+    }
+  }
+
+  orderStatusIconPackaging({bool? confirmed, bool? packaging}) {
+    if (confirmed == true && packaging == true) {
+      return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
+    } else {
+      return SvgPicture.asset(
+        AppImage.box_cart,
+        height: 12.80.sp,
+        width: 12.80.sp,
+        color: AppColors.infoGrey,
+      );
+    }
+  }
+
+  orderStatusColorIntransit({
+    bool? confirmed,
+    bool? packaging,
+    bool? intransit,
+  }) {
+    if (confirmed == true && packaging == true && intransit == true) {
+      return AppColors.app_green;
+    } else if (confirmed == true && packaging == true && intransit == false) {
+      return AppColors.yellow;
+    } else {
+      return AppColors.grey;
+    }
+  }
+
+  orderStatusTextColorIntransit({
+    bool? confirmed,
+    bool? packaging,
+    bool? intransit,
+  }) {
+    if (confirmed == true && packaging == true && intransit == true) {
+      return AppColors.white;
+    } else if (confirmed == true && packaging == true && intransit == false) {
+      return AppColors.white;
+    } else {
+      return AppColors.infoGrey;
+    }
+  }
+
+  orderStatusIconIntransit({
+    bool? confirmed,
+    bool? packaging,
+    bool? intransit,
+  }) {
+    if (confirmed == true && packaging == true && intransit == true) {
+      return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
+    } else {
+      return SvgPicture.asset(AppImage.delivery, color: AppColors.infoGrey);
+    }
+  }
+
+  orderStatusTextColorDelivered({
+    bool? confirmed,
+    bool? packaging,
+    bool? intransit,
+    bool? delivered,
+  }) {
+    if (confirmed == true &&
+        packaging == true &&
+        intransit == true &&
+        delivered == true) {
+      return AppColors.white;
+    } else if (confirmed == true &&
+        packaging == true &&
+        intransit == true &&
+        delivered == false) {
+      return AppColors.white;
+    } else {
+      return AppColors.infoGrey;
+    }
+  }
+
+  orderStatusIconDelivered({
+    bool? confirmed,
+    bool? packaging,
+    bool? intransit,
+    bool? delivered,
+  }) {
+    if (confirmed == true && packaging == true && intransit == true) {
+      return Icon(Icons.check, size: 15.80.sp, color: AppColors.white);
+    } else {
+      return Icon(
+        Icons.check_circle_outline_outlined,
+        size: 14.sp,
+        color: AppColors.infoGrey,
+      );
+    }
+  }
+
+  orderStatusColorDelivered({
+    bool? confirmed,
+    bool? packaging,
+    bool? intransit,
+    bool? delivered,
+  }) {
+    if (confirmed == true &&
+        packaging == true &&
+        intransit == true &&
+        delivered == true) {
+      return AppColors.app_green;
+    } else if (confirmed == true &&
+        packaging == true &&
+        intransit == true &&
+        delivered == false) {
+      return AppColors.yellow;
+    } else {
+      return AppColors.grey;
+    }
+  }
+
+  getFilterStatus(String orderCategory) {
+    switch (orderCategory.toLowerCase()) {
+      case 'all':
+        return 'ALL';
+      case 'confirmed':
+        return 'CONFIRMED';
+      case 'packaging':
+        return 'PROCESSING';
+      case 'in transit':
+        return 'SHIPPED';
+      case 'delivered':
+        return 'DELIVERED';
+      default:
+        return null;
+    }
+  }
+
   getTimeFreq() => formattedSelectedTimeAndPeriod ?? '--:--';
 
   getTimeFreqIndex(index) => formatSelectedTimeAndPeriodList![index];
@@ -690,28 +849,37 @@ class PharmViewModel extends BaseViewModel {
         return AppColors.lightBlue;
       case 'delivered':
         return AppColors.app_green;
+      case 'payment successful':
+        return AppColors.app_green;
       case 'pending':
-        return AppColors.infoGrey;
+        return AppColors.yellow;
+      case 'failed':
+        return AppColors.appRed;
       case 'cancelled':
         return AppColors.appRed;
       default:
-        return AppColors.primary;
+        return AppColors.infoGrey;
     }
   }
+
   getOrderBadgeTextColorCont(String status) {
     switch (status.toLowerCase()) {
       case 'confirmed':
         return AppColors.primary.withOpacity(.1);
       case 'in transit':
         return AppColors.lightBlue.withOpacity(.1);
+      case 'payment successful':
+        return AppColors.app_green.withOpacity(.1);
       case 'delivered':
         return AppColors.app_green.withOpacity(.1);
       case 'pending':
-        return AppColors.infoGrey.withOpacity(.1);
+        return AppColors.yellow.withOpacity(.1);
       case 'cancelled':
         return AppColors.appRed.withOpacity(.1);
+      case 'failed':
+        return AppColors.appRed.withOpacity(.1);
       default:
-        return AppColors.primary.withOpacity(.1);
+        return AppColors.infoGrey.withOpacity(.1);
     }
   }
 
@@ -2159,7 +2327,7 @@ class PharmViewModel extends BaseViewModel {
   }) => GestureDetector(
     onTap: onTap,
     child: Container(
-      padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 16.w),
+      padding: EdgeInsets.symmetric(vertical: 16.w, horizontal: 10.w),
       margin: EdgeInsets.only(bottom: 10.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.r),
@@ -2182,7 +2350,7 @@ class PharmViewModel extends BaseViewModel {
                 ? Icon(Icons.check, size: 12.sp, color: AppColors.white)
                 : SizedBox.shrink(),
           ),
-          SizedBox(width: 10.w),
+          SizedBox(width: 7.10.w),
           svgIcon == null
               ? SizedBox.shrink()
               : SvgPicture.asset(
@@ -2192,13 +2360,18 @@ class PharmViewModel extends BaseViewModel {
                   color: AppColors.infoGrey,
                 ),
           SizedBox(width: svgIcon == null ? 6.w : 10.w),
-          TextView(
-            text: text,
-            textStyle: TextStyle(
-              fontFamily: 'Arial',
-              fontSize: 15.22.sp,
-              fontWeight: FontWeight.w400,
-              color: AppColors.reminder,
+          SizedBox(
+            width: 230.w,
+            child: TextView(
+              text: text,
+              maxLines: 1,
+              textOverflow: TextOverflow.ellipsis,
+              textStyle: TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 15.22.sp,
+                fontWeight: FontWeight.w400,
+                color: AppColors.reminder,
+              ),
             ),
           ),
         ],
@@ -3222,6 +3395,29 @@ class PharmViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<void> selectDateOrderFilter({
+    BuildContext? context,
+    PharmViewModel? model,
+  }) async {
+    pickedDatedStart = await showDatePicker(
+      context: context!,
+      initialDate: DateTime.now(), // The date initially displayed
+      firstDate: DateTime(2025), // The earliest selectable date
+      lastDate: DateTime(2101), // The latest selectable date
+    );
+    pickedDatedStartString = pickedDatedStart.toString();
+
+    if (pickedDatedStart != null) {
+      pickedDate = DateFormat('yyyy-MM-dd').format(pickedDatedStart!);
+      getWholesaleOrderListFiltering(
+        context: context,
+        status: getFilterStatus(orderCategory),
+        date: pickedDate,
+      );
+    }
+    notifyListeners();
+  }
+
   Future<void> _calculateEndDate({
     StateSetter? setModalState,
     PharmViewModel? model,
@@ -3430,7 +3626,7 @@ class PharmViewModel extends BaseViewModel {
     ],
     child: Padding(
       padding: EdgeInsets.all(14.20.w),
-      child: SvgPicture.asset(AppImage.arrow_down),
+      child: SvgPicture.asset(AppImage.arrow_down, height: 10.h, width: 10.w),
     ),
   );
 
@@ -19167,10 +19363,17 @@ class PharmViewModel extends BaseViewModel {
                     .toInt()
               : _quoteScheduleDeliveryResponseModel!.data!.checkout!.total!
                     .toInt(),
-          deliveryDate: convertDate(dateTimeController.text),
-          timeBlockStart: time!.startTime,
-          timeBlockEnd: time!.endTime,
-          timeWindow: time!.name!.toUpperCase(),
+
+          deliveryDate: delivery == Delivery.instance
+              ? null
+              : convertDate(dateTimeController.text),
+          timeBlockStart: delivery == Delivery.instance
+              ? null
+              : time!.startTime,
+          timeBlockEnd: delivery == Delivery.instance ? null : time!.endTime,
+          timeWindow: delivery == Delivery.instance
+              ? null
+              : time!.name!.toUpperCase(),
         ),
       );
     }
@@ -19219,7 +19422,7 @@ class PharmViewModel extends BaseViewModel {
     if (payMethod == PayMethod.flutterwave) {}
     notifyListeners();
   }
-  
+
   Future<void> quoteInstantDelivery({
     context,
     QuoteInstantDeliveryEntityModel? instantDelivery,
@@ -19273,9 +19476,8 @@ class PharmViewModel extends BaseViewModel {
         repositoryImply.checkoutDeliveryOption(checkoutDeliveryOption!),
         throwException: true,
       );
-      if (delivery == Delivery.schedule && _getCheckoutDeliveryOptionResponseModel!
-              .data!
-              .methods!.isEmpty ||
+      if (delivery == Delivery.schedule &&
+              _getCheckoutDeliveryOptionResponseModel!.data!.methods!.isEmpty ||
           _getCheckoutDeliveryOptionResponseModel!
               .data!
               .methods![1]
@@ -19358,7 +19560,32 @@ class PharmViewModel extends BaseViewModel {
     try {
       _isLoading = true;
       _wholesaleOrderListResponseModel = await runBusyFuture(
-        repositoryImply.getWholesaleOrderList(pageAll.toString()),
+        repositoryImply.getWholesaleOrderList(page: pageAll.toString()),
+        throwException: true,
+      );
+
+      _isLoading = false;
+    } catch (e) {
+      _isLoading = false;
+      logger.d(e);
+      AppUtils.snackbar(context, message: e.toString(), error: true);
+    }
+    notifyListeners();
+  }
+
+  Future<void> getWholesaleOrderListFiltering({
+    context,
+    String? status,
+    String? date,
+  }) async {
+    try {
+      _isLoading = true;
+      _wholesaleOrderListResponseModel = await runBusyFuture(
+        repositoryImply.getWholesaleOrderListFiltering(
+          page: pageAll.toString(),
+          status: status,
+          date: date,
+        ),
         throwException: true,
       );
 

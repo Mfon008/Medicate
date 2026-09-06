@@ -527,10 +527,23 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<WholesaleOrderListResponseModel> getWholesaleOrderList(
-    String page,
-  ) async {
-    final response = await _contract.getWholesaleOrderList(page);
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderList({
+    String? page,
+  }) async {
+    final response = await _contract.getWholesaleOrderList(page: page);
+    return response;
+  }
+
+  Future<WholesaleOrderListResponseModel> getWholesaleOrderListFiltering({
+    String? page,
+    String? status,
+    String? date,
+  }) async {
+    final response = await _contract.getWholesaleOrderListFiltering(
+      page: page,
+      status: status,
+      date: date,
+    );
     return response;
   }
 
@@ -541,8 +554,12 @@ class PharmRepoImpl {
     return response;
   }
 
-  Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(CheckoutDeliveryOptionEntityModel checkoutDeliveryOption) async {
-    final response = await _contract.checkoutDeliveryOption(checkoutDeliveryOption);
+  Future<GetCheckoutDeliveryOptionResponseModel> checkoutDeliveryOption(
+    CheckoutDeliveryOptionEntityModel checkoutDeliveryOption,
+  ) async {
+    final response = await _contract.checkoutDeliveryOption(
+      checkoutDeliveryOption,
+    );
     return response;
   }
 

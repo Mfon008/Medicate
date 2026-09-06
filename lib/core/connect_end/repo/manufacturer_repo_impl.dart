@@ -9,8 +9,10 @@ import '../model/create_distributor_product_entity_model/create_distributor_prod
 import '../model/distributor_wholesale_category_model/distributor_wholesale_category_model.dart';
 import '../model/forgot_password_response_model/forgot_password_response_model.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
+import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
 // import '../model/get_user_details_response_model/get_user_details_response_model.dart';
+import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/nafdac_registration_number_entity_model.dart';
 import '../model/nafdac_registration_number_response_model/nafdac_registration_number_response_model.dart';
@@ -201,6 +203,20 @@ class ManufacturerRepoImpl {
     String? productId,
   }) async {
     final response = await _contract.getSingleProductById(productId: productId);
+    return response;
+  }
+
+  Future<ListIncomingOrdersResponseModel> listIncomingOrder({
+    String? page,
+    String? status,
+    String? search,
+  }) async {
+    final response = await _contract.listIncomingOrder(page: page, status: status, search: search);
+    return response;
+  }
+
+ Future<GetIncomingOrderDdetailResponseModel> getIncomingOrder({String? wholesaleOrderId}) async  {
+    final response = await _contract.getIncomingOrder(wholesaleOrderId: wholesaleOrderId);
     return response;
   }
 

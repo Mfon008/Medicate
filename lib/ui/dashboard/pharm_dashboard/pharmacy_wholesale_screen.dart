@@ -196,7 +196,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                   children: [
                     Expanded(
                       child: TextFormWidget(
-                        label: 'Search products, manufactures, SKU...',
+                        label: 'Search products, manufacturers, SKU...',
                         labelStyle: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 14.60.sp,
@@ -318,43 +318,47 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                 Positioned(
                                   top: 17.20,
                                   left: 16.20,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 4.60.w,
-                                      horizontal: 6.8.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.appWhite,
-                                      borderRadius: BorderRadius.circular(20.r),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextView(
-                                          text: 'Manufacturer: ',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 13.20.sp,
-                                            fontWeight: FontWeight.w400,
-                                            color: AppColors.black,
+                                  child:
+                                      (m.manufacturerName == null ||
+                                          m.manufacturerName!.trim().isEmpty)
+                                      ? SizedBox.shrink()
+                                      : Container(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 4.60.w,
+                                            horizontal: 6.8.w,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.appWhite,
+                                            borderRadius: BorderRadius.circular(
+                                              20.r,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              TextView(
+                                                text: 'Manufacturer: ',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 13.20.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                              // SizedBox(width: 50.h),
+                                              TextView(
+                                                text: m.manufacturerName ?? '',
+                                                textStyle: TextStyle(
+                                                  fontFamily: 'DMSans',
+                                                  fontSize: 13.30.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: AppColors.black,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        // SizedBox(width: 50.h),
-                                        TextView(
-                                          text:
-                                              m.manufacturerDistributorName ??
-                                              '',
-                                          textStyle: TextStyle(
-                                            fontFamily: 'DMSans',
-                                            fontSize: 13.30.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 ),
                                 Positioned(
                                   left: 1,
@@ -700,7 +704,7 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                     children: [
                                       TextView(
                                         text: formatNaira(
-                                          m.displayPricePerUnit!
+                                          m.displayPricePerUnit!,
                                         ),
                                         textStyle: TextStyle(
                                           fontFamily: 'GoogleSans',
@@ -787,7 +791,9 @@ class _PharmacyWholesaleScreenState extends State<PharmacyWholesaleScreen> {
                                                         controller: model
                                                             .quantityValueController,
                                                         showCursor: false,
-                                                        keyboardType: TextInputType.number,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
                                                         validator:
                                                             AppValidator.validateIntProductQuantity(),
                                                         onChanged: (value) {

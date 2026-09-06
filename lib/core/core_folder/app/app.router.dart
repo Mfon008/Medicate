@@ -2543,10 +2543,11 @@ class StackedRouter extends _i1.RouterBase {
     },
     _i137.ViewOrderManagementScreen: (data) {
       final args = data.getArgs<ViewOrderManagementScreenArguments>(
-        orElse: () => const ViewOrderManagementScreenArguments(),
+        nullOk: false,
       );
       return _i149.MaterialPageRoute<dynamic>(
-        builder: (context) => _i137.ViewOrderManagementScreen(key: args.key),
+        builder: (context) =>
+            _i137.ViewOrderManagementScreen(key: args.key, id: args.id),
         settings: data,
       );
     },
@@ -5999,24 +6000,26 @@ class ManufacturerLoginScreenArguments {
 }
 
 class ViewOrderManagementScreenArguments {
-  const ViewOrderManagementScreenArguments({this.key});
+  const ViewOrderManagementScreenArguments({this.key, required this.id});
 
   final _i149.Key? key;
 
+  final String? id;
+
   @override
   String toString() {
-    return '{"key": "$key"}';
+    return '{"key": "$key", "id": "$id"}';
   }
 
   @override
   bool operator ==(covariant ViewOrderManagementScreenArguments other) {
     if (identical(this, other)) return true;
-    return other.key == key;
+    return other.key == key && other.id == id;
   }
 
   @override
   int get hashCode {
-    return key.hashCode;
+    return key.hashCode ^ id.hashCode;
   }
 }
 
@@ -8883,6 +8886,7 @@ extension NavigatorStateExtension on _i153.NavigationService {
 
   Future<dynamic> navigateToViewOrderManagementScreen({
     _i149.Key? key,
+    required String? id,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -8891,7 +8895,7 @@ extension NavigatorStateExtension on _i153.NavigationService {
   }) async {
     return navigateTo<dynamic>(
       Routes.viewOrderManagementScreen,
-      arguments: ViewOrderManagementScreenArguments(key: key),
+      arguments: ViewOrderManagementScreenArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,
@@ -11716,6 +11720,7 @@ extension NavigatorStateExtension on _i153.NavigationService {
 
   Future<dynamic> replaceWithViewOrderManagementScreen({
     _i149.Key? key,
+    required String? id,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -11724,7 +11729,7 @@ extension NavigatorStateExtension on _i153.NavigationService {
   }) async {
     return replaceWith<dynamic>(
       Routes.viewOrderManagementScreen,
-      arguments: ViewOrderManagementScreenArguments(key: key),
+      arguments: ViewOrderManagementScreenArguments(key: key, id: id),
       id: routerId,
       preventDuplicates: preventDuplicates,
       parameters: parameters,

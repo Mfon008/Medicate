@@ -19,6 +19,7 @@ class Product {
   String? categoryId;
   String? category;
   String? categorySlug;
+  String? manufacturerName;
   String? sku;
   int? packSize;
   String? unit;
@@ -59,6 +60,7 @@ class Product {
     this.category,
     this.categorySlug,
     this.sku,
+    this.manufacturerName,
     this.packSize,
     this.unit,
     this.minimumOrderQuantity,

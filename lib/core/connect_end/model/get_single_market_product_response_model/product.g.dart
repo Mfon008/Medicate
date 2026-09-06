@@ -23,7 +23,6 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   pricePerUnit: (json['pricePerUnit'] as num?)?.toInt(),
   stock: (json['stock'] as num?)?.toInt(),
   nafdacRegistrationNumber: json['nafdacRegistrationNumber'] as String?,
-  manufacturerName: json['manufacturerName'] as String?,
   nafdacVerified: json['nafdacVerified'] as bool?,
   nafdacVerification: json['nafdacVerification'] == null
       ? null
@@ -41,6 +40,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) => Product(
   images: (json['images'] as List<dynamic>?)
       ?.map((e) => Image.fromJson(e as Map<String, dynamic>))
       .toList(),
+  manufacturerName: json['manufacturerName'] as String?,
   isPublished: json['isPublished'] as bool?,
   isDeleted: json['isDeleted'] as bool?,
   volumePricing: json['volumePricing'] as List<dynamic>?,
@@ -82,7 +82,6 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
   'sku': instance.sku,
   'packSize': instance.packSize,
   'unit': instance.unit,
-  'manufacturerName': instance.manufacturerName,
   'minimumOrderQuantity': instance.minimumOrderQuantity,
   'pricePerUnit': instance.pricePerUnit,
   'stock': instance.stock,
@@ -100,6 +99,7 @@ Map<String, dynamic> _$ProductToJson(Product instance) => <String, dynamic>{
   'createdAt': instance.createdAt?.toIso8601String(),
   'updatedAt': instance.updatedAt?.toIso8601String(),
   'updatedByAdminId': instance.updatedByAdminId,
+  'manufacturerName': instance.manufacturerName,
   'categoryDetails': instance.categoryDetails,
   'companyDetails': instance.companyDetails,
   'categoryMarginPercentage': instance.categoryMarginPercentage,
