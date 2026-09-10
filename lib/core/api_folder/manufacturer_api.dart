@@ -475,10 +475,12 @@ class ManufacturerApi {
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
     String? wholesaleOrderItemId,
+    String? reason,
   }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/cancel',
+        data: {"reason": reason},
         RequestMethod.patch,
       );
       logger.d(response.data);
@@ -492,10 +494,12 @@ class ManufacturerApi {
   Future<dynamic> rejectIncomingOrder({
     String? wholesaleOrderId,
     String? wholesaleOrderItemId,
+    String? reason,
   }) async {
     try {
       final response = await _service.call(
         '${UrlConfig.wholesale_incoming_orders}/$wholesaleOrderId/items/$wholesaleOrderItemId/reject',
+         data: {"reason": reason},
         RequestMethod.patch,
       );
       logger.d(response.data);

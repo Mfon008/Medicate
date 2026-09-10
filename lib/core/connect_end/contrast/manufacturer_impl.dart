@@ -142,8 +142,26 @@ class ManufacturerContractImpl {
   );
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
-    String? wholesaleOrderItemId,
+    String? wholesaleOrderItemId, String? reason,
   }) async => await _api.cancelIncomingOrder(
+    wholesaleOrderId: wholesaleOrderId,
+    wholesaleOrderItemId: wholesaleOrderItemId,
+    reason:reason
+  );
+  Future<dynamic> rejectIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+    String? reason,
+  }) async => await _api.rejectIncomingOrder(
+    wholesaleOrderId: wholesaleOrderId,
+    wholesaleOrderItemId: wholesaleOrderItemId,
+    reason: reason
+  );
+  
+  Future<dynamic> returnIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async => await _api.returnIncomingOrder(
     wholesaleOrderId: wholesaleOrderId,
     wholesaleOrderItemId: wholesaleOrderItemId,
   );

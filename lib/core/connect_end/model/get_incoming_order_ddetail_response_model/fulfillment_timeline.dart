@@ -6,6 +6,7 @@ part 'fulfillment_timeline.g.dart';
 class FulfillmentTimeline {
   String? status;
   String? label;
+  String? note;
   bool? completed;
   bool? current;
   dynamic occurredAt;
@@ -16,6 +17,7 @@ class FulfillmentTimeline {
     this.completed,
     this.current,
     this.occurredAt,
+    this.note,
   });
 
   factory FulfillmentTimeline.fromJson(Map<String, dynamic> json) {

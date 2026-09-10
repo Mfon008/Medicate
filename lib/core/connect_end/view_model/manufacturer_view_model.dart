@@ -1,4 +1,4 @@
-// ignore_for_file: strict_top_level_inference, public_member_api_docs, sort_constructors_first
+// ignore_for_file: use_build_context_synchronously, strict_top_level_inference, public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -17,6 +17,7 @@ import 'package:pinput/pinput.dart';
 import 'package:stacked/stacked.dart';
 import '../../../ui/widget/button.dart';
 import '../../../ui/widget/text.dart';
+import '../../../ui/widget/text_form_widget.dart';
 import '../../app_assets/app_utils.dart';
 import '../../app_assets/app_validation.dart';
 import '../../app_assets/decouncer_class.dart';
@@ -32,6 +33,7 @@ import '../model/distributor_wholesale_category_model/category.dart';
 import '../model/get_all_product_list_response_model/get_all_product_list_response_model.dart';
 import '../model/get_incoming_order_ddetail_response_model/get_incoming_order_ddetail_response_model.dart';
 import '../model/get_single_product_response_model/get_single_product_response_model.dart';
+import '../model/list_incoming_orders_response_model/item.dart';
 import '../model/list_incoming_orders_response_model/list_incoming_orders_response_model.dart';
 import '../model/login_entity_model.dart';
 import '../model/manufacturer_signup_entity_model.dart';
@@ -52,6 +54,8 @@ import 'package:medicate_app/core/connect_end/model/create_distributor_product_e
     as iml;
 import 'package:medicate_app/core/connect_end/model/get_single_product_response_model/image.dart'
     as im;
+import 'package:medicate_app/core/connect_end/model/get_incoming_order_ddetail_response_model/item.dart'
+    as getIncom;
 
 class ManufacturerViewModel extends BaseViewModel {
   final BuildContext? context;
@@ -125,12 +129,16 @@ class ManufacturerViewModel extends BaseViewModel {
   int? minimumOrderQuantity;
 
   GlobalKey<FormState> formKeyValidate2 = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateCancelOrder = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyValidateRejectOrder = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidate = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerify = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyValidateVerifyChange = GlobalKey<FormState>();
   Category? c;
 
   TextEditingController nafdacRegNoController = TextEditingController();
+  TextEditingController cancelOrderReasonController = TextEditingController();
+  TextEditingController rejectOrderReasonController = TextEditingController();
 
   TextEditingController manufacturerDateController = TextEditingController(
     text: '',
@@ -196,9 +204,8 @@ class ManufacturerViewModel extends BaseViewModel {
     }
     if (s.toLowerCase() == 'success') {
       return AppColors.app_green.withValues(alpha: .1);
-    } else {
-      AppColors.infoGrey.withValues(alpha: .1);
     }
+    return AppColors.infoGrey.withValues(alpha: .1);
   }
 
   getOrderPaymentStatusColor(String s) {
@@ -210,9 +217,8 @@ class ManufacturerViewModel extends BaseViewModel {
     }
     if (s.toLowerCase() == 'success') {
       return AppColors.app_green;
-    } else {
-      AppColors.infoGrey;
     }
+    return AppColors.infoGrey;
   }
 
   getOrderStatusColorBorder(String s) {
@@ -225,11 +231,16 @@ class ManufacturerViewModel extends BaseViewModel {
     if (s.toLowerCase() == 'pending') {
       return AppColors.yellow.withValues(alpha: .1);
     }
+    if (s.toLowerCase() == 'confirmed') {
+      return AppColors.primary.withValues(alpha: .1);
+    }
+    if (s.toLowerCase() == 'processing') {
+      return AppColors.lightBlue.withValues(alpha: .1);
+    }
     if (s.toLowerCase() == 'shipped') {
       return AppColors.purple.withValues(alpha: .1);
-    } else {
-      AppColors.infoGrey.withValues(alpha: .1);
     }
+    return AppColors.infoGrey.withValues(alpha: .1);
   }
 
   getOrderStatusColor(String s) {
@@ -242,11 +253,16 @@ class ManufacturerViewModel extends BaseViewModel {
     if (s.toLowerCase() == 'pending') {
       return AppColors.yellow;
     }
+    if (s.toLowerCase() == 'confirmed') {
+      return AppColors.primary;
+    }
+    if (s.toLowerCase() == 'processing') {
+      return AppColors.lightBlue;
+    }
     if (s.toLowerCase() == 'shipped') {
       return AppColors.purple;
-    } else {
-      AppColors.infoGrey;
     }
+    return AppColors.infoGrey;
   }
 
   advanceStatusHighlights({String? stat, String? text}) {
@@ -301,49 +317,91 @@ class ManufacturerViewModel extends BaseViewModel {
     }
   }
 
-  getFulfillmentOrderColor({bool? completed, bool? current}) {
-    if (completed == true && current == true) {
+  returnFulfillmentIncomingOrderText(String s) {
+    if (s.toLowerCase() == 'pending') {
+      return 'confrimed';
+    }
+    if (s.toLowerCase() == 'confirmed') {
+      return 'processing';
+    }
+    if (s.toLowerCase() == 'processing') {
+      return 'out for delivery';
+    }
+    if (s.toLowerCase() == 'shipped') {
+      return 'delivered';
+    }
+    if (s.toLowerCase() == 'delivered') {
+      return 'Delivered';
+    }
+  }
+
+  getFulfillmentOrderColor({
+    bool? completed,
+    bool? current,
+    bool? completed2,
+    bool? current2,
+  }) {
+    if (completed2 == false && current2 == true || completed == true) {
       return AppColors.app_green;
-    } else if (completed == false && current == true) {
+    } else if (completed == false &&
+        current == true &&
+        completed2 == false &&
+        current2 == false) {
       return AppColors.amber;
-    } else if (completed == false && current == false) {
-      return AppColors.grey;
     } else {
       return AppColors.grey;
     }
   }
 
-  getFulfillmentOrderColorArrow({bool? completed, bool? current}) {
-    if (completed == true && current == true) {
+  getFulfillmentOrderColorArrow({
+    bool? completed,
+    bool? current,
+    bool? completed2,
+    bool? current2,
+  }) {
+    if (completed2 == false && current2 == true || completed == true) {
       return AppColors.app_green;
-    } else if (completed == false && current == true) {
+    } else if (completed == false &&
+        current == true &&
+        completed2 == false &&
+        current2 == false) {
       return AppColors.grey1;
-    } else if (completed == false && current == false) {
-      return AppColors.infoGrey;
     } else {
       return AppColors.infoGrey;
     }
   }
 
-  getFulfillmentOrderTextColor({bool? completed, bool? current}) {
-    if (completed == true && current == true) {
+  getFulfillmentOrderTextColor({
+    bool? completed,
+    bool? current,
+    bool? completed2,
+    bool? current2,
+  }) {
+    if (completed2 == false && current2 == true || completed == true) {
       return AppColors.white;
-    } else if (completed == false && current == true) {
+    } else if (completed == false &&
+        current == true &&
+        completed2 == false &&
+        current2 == false) {
       return AppColors.white;
-    } else if (completed == false && current == false) {
-      return AppColors.infoGrey;
     } else {
       return AppColors.infoGrey;
     }
   }
 
-  getFulfillmentOrderTextStatusColor({bool? completed, bool? current}) {
-    if (completed == true && current == true) {
-      return AppColors.white;
-    } else if (completed == false && current == true) {
+  getFulfillmentOrderTextStatusColor({
+    bool? completed,
+    bool? current,
+    bool? completed2,
+    bool? current2,
+  }) {
+    if (completed2 == false && current2 == true || completed == true) {
+      return AppColors.green;
+    } else if (completed == false &&
+        current == true &&
+        completed2 == false &&
+        current2 == false) {
       return AppColors.reminder;
-    } else if (completed == false && current == false) {
-      return AppColors.infoGrey;
     } else {
       return AppColors.infoGrey;
     }
@@ -1903,7 +1961,11 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void listIncomingOrder(context, {String? status, String? search}) async {
+  Future<void> listIncomingOrder(
+    context, {
+    String? status,
+    String? search,
+  }) async {
     try {
       _isLoading = true;
       _listIncomingOrdersResponseModel = await runBusyFuture(
@@ -1939,11 +2001,10 @@ class ManufacturerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void advaceIncomingOrder(
-    context, {
+  Future<bool> advaceIncomingOrder(
+    BuildContext context, {
     String? orderId,
     String? orderItemId,
-    // int? itemList,
   }) async {
     try {
       _isLoading = true;
@@ -1954,15 +2015,106 @@ class ManufacturerViewModel extends BaseViewModel {
         ),
         throwException: true,
       );
+      await AppUtils.snackbar(context, message: v['message']);
+      await listIncomingOrder(context, status: 'All');
 
-      AppUtils.snackbar(context, message: v['message']);
-      _isLoading = false;
+      return true;
     } catch (e) {
-      _isLoading = false;
       logger.d(e);
-      AppUtils.snackbar(context, message: e.toString(), error: true);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-    notifyListeners();
+  }
+
+  Future<bool> cancelIncomingOrder(
+    BuildContext context, {
+    String? orderId,
+    String? orderItemId,
+    String? reason,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.cancelIncomingOrder(
+          wholesaleOrderId: orderId,
+          wholesaleOrderItemId: orderItemId,
+          reason: reason,
+        ),
+        throwException: true,
+      );
+      await AppUtils.snackbar(context, message: v['message']);
+      await listIncomingOrder(context, status: 'All');
+
+      return true;
+    } catch (e) {
+      logger.d(e);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> rejectIncomingOrder(
+    BuildContext context, {
+    String? orderId,
+    String? orderItemId,
+    String? reason,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.rejectIncomingOrder(
+          wholesaleOrderId: orderId,
+          wholesaleOrderItemId: orderItemId,
+          reason: reason,
+        ),
+        throwException: true,
+      );
+      await AppUtils.snackbar(context, message: v['message']);
+      await listIncomingOrder(context, status: 'All');
+
+      return true;
+    } catch (e) {
+      logger.d(e);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> returnIncomingOrder(
+    BuildContext context, {
+    String? orderId,
+    String? orderItemId,
+  }) async {
+    try {
+      _isLoading = true;
+      var v = await runBusyFuture(
+        repositoryImply.returnIncomingOrder(
+          wholesaleOrderId: orderId,
+          wholesaleOrderItemId: orderItemId,
+        ),
+        throwException: true,
+      );
+      await AppUtils.snackbar(context, message: v['message']);
+      await listIncomingOrder(context, status: 'All');
+
+      return true;
+    } catch (e) {
+      logger.d(e);
+      await AppUtils.snackbar(context, message: e.toString(), error: true);
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   void updateProduct(
@@ -2514,6 +2666,893 @@ class ManufacturerViewModel extends BaseViewModel {
                   ],
                 ),
               ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> advanceDetailedIncomingOrderDialog({
+    BuildContext? context,
+    String? orderId,
+    List<getIncom.Item>? itemsOrderId,
+    String? text,
+    ManufacturerViewModel? model,
+  }) async {
+    if (context == null || model == null || itemsOrderId == null) {
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Warning icon
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.yellow.withValues(alpha: .09),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.yellow,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImage.ex_error,
+                        // ignore: deprecated_member_use
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 20.h),
+
+                TextView(
+                  text: "Are you sure?",
+                  textStyle: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.bblack,
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                TextView(
+                  text: "This order would be marked as $text.",
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.success,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // CANCEL BUTTON
+                    ListenableBuilder(
+                      listenable: model,
+                      builder: (context, child) {
+                        return OutlinedButton(
+                          onPressed: model.isLoading
+                              ? null
+                              : () {
+                                  Navigator.pop(dialogContext);
+                                },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32.w,
+                              vertical: 12.w,
+                            ),
+                          ),
+                          child: TextView(
+                            text: "No, Cancel",
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 15.6.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+                    SizedBox(width: 16.w),
+
+                    // CONTINUE BUTTON
+                    Expanded(
+                      child: ListenableBuilder(
+                        listenable: model,
+                        builder: (context, child) {
+                          return ElevatedButton(
+                            onPressed: model.isLoading
+                                ? null
+                                : () async {
+                                    bool success = true;
+
+                                    for (final item in itemsOrderId) {
+                                      if (text == 'returned') {
+                                        final result = await model
+                                            .returnIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              orderItemId: item.orderItemId,
+                                            );
+
+                                        if (!result) {
+                                          success = false;
+                                          break;
+                                        }
+                                      } else if (text == 'rejected') {
+                                        final result = await model
+                                            .rejectIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              orderItemId: item.orderItemId,
+                                            );
+
+                                        if (!result) {
+                                          success = false;
+                                          break;
+                                        }
+                                      } else if (text == 'cancelled') {
+                                        final result = await model
+                                            .cancelIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              orderItemId: item.orderItemId,
+                                            );
+
+                                        if (!result) {
+                                          success = false;
+                                          break;
+                                        }
+                                      } else {
+                                        final result = await model
+                                            .advaceIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              orderItemId: item.orderItemId,
+                                            );
+
+                                        if (!result) {
+                                          success = false;
+                                          break;
+                                        }
+                                      }
+                                    }
+
+                                    if (!dialogContext.mounted) return;
+
+                                    if (success) {
+                                      navigate.clearStackAndShow(
+                                        Routes.overviewDashboard,
+                                        arguments: OverviewDashboardArguments(
+                                          index: 2,
+                                        ),
+                                      );
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              disabledBackgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.w,
+                                vertical: 12.w,
+                              ),
+                              elevation: 0,
+                            ),
+                            child: model.isLoading
+                                ? SpinKitCircle(
+                                    size: 20.sp,
+                                    color: AppColors.white,
+                                  )
+                                : TextView(
+                                    text: "Yes, Continue",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.6.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> advanceIncomingOrderDialog({
+    BuildContext? context,
+    String? orderId,
+    List<Item>? itemsOrderId,
+    String? text,
+    ManufacturerViewModel? model,
+  }) async {
+    if (context == null || model == null || itemsOrderId == null) {
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Warning icon
+                Container(
+                  padding: EdgeInsets.all(10.w),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.yellow.withValues(alpha: .09),
+                  ),
+                  child: Container(
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.yellow,
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        AppImage.ex_error,
+                        // ignore: deprecated_member_use
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 20.h),
+
+                TextView(
+                  text: "Are you sure?",
+                  textStyle: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.bblack,
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                TextView(
+                  text: "This order would be marked as $text.",
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontFamily: 'DMSans',
+                    fontSize: 14.8.sp,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.success,
+                  ),
+                ),
+
+                SizedBox(height: 24.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // CANCEL BUTTON
+                    ListenableBuilder(
+                      listenable: model,
+                      builder: (context, child) {
+                        return OutlinedButton(
+                          onPressed: model.isLoading
+                              ? null
+                              : () {
+                                  Navigator.pop(dialogContext);
+                                },
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 32.w,
+                              vertical: 12.w,
+                            ),
+                          ),
+                          child: TextView(
+                            text: "No, Cancel",
+                            textStyle: TextStyle(
+                              fontFamily: 'DMSans',
+                              fontSize: 15.6.sp,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+                    SizedBox(width: 16.w),
+
+                    // CONTINUE BUTTON
+                    Expanded(
+                      child: ListenableBuilder(
+                        listenable: model,
+                        builder: (context, child) {
+                          return ElevatedButton(
+                            onPressed: model.isLoading
+                                ? null
+                                : () async {
+                                    bool success = true;
+
+                                    for (final item in itemsOrderId) {
+                                      if (text == 'returned') {
+                                        final result = await model
+                                            .returnIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              orderItemId: item.orderItemId,
+                                            );
+
+                                        if (!result) {
+                                          success = false;
+                                          break;
+                                        }
+                                      } else if (text == 'rejected') {
+                                        model.rejectIncomingOrderDialog(
+                                          context: context,
+                                          orderId: orderId,
+                                          itemsOrderId: itemsOrderId
+                                              .map(
+                                                (item) => getIncom.Item(
+                                                  orderItemId: item.orderItemId,
+                                                  productId: item.productId,
+                                                  productName: item.productName,
+                                                  fulfillmentStatus:
+                                                      item.fulfillmentStatus,
+                                                ),
+                                              )
+                                              .toList(),
+                                          model: model,
+                                        );
+                                      } else if (text == 'cancelled') {
+                                        model.cancelIncomingOrderDialog(
+                                          context: context,
+                                          orderId: orderId,
+                                          itemsOrderId: itemsOrderId
+                                              .map(
+                                                (item) => getIncom.Item(
+                                                  orderItemId: item.orderItemId,
+                                                  productId: item.productId,
+                                                  productName: item.productName,
+                                                  fulfillmentStatus:
+                                                      item.fulfillmentStatus,
+                                                ),
+                                              )
+                                              .toList(),
+                                          model: model,
+                                        );
+                                      } else {
+                                        final result = await model
+                                            .advaceIncomingOrder(
+                                              context,
+                                              orderId: orderId,
+                                              orderItemId: item.orderItemId,
+                                            );
+
+                                        if (!result) {
+                                          success = false;
+                                          break;
+                                        }
+                                      }
+                                    }
+
+                                    if (!dialogContext.mounted) return;
+
+                                    if (success) {
+                                      Navigator.pop(dialogContext);
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              disabledBackgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.w,
+                                vertical: 12.w,
+                              ),
+                              elevation: 0,
+                            ),
+                            child: model.isLoading
+                                ? SpinKitCircle(
+                                    size: 20.sp,
+                                    color: AppColors.white,
+                                  )
+                                : TextView(
+                                    text: "Yes, Continue",
+                                    textStyle: TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 15.6.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> cancelIncomingOrderDialog({
+    BuildContext? context,
+    String? orderId,
+    List<getIncom.Item>? itemsOrderId,
+    ManufacturerViewModel? model,
+  }) async {
+    if (context == null || model == null || itemsOrderId == null) {
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Form(
+              key: formKeyValidateCancelOrder,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10.h),
+
+                  TextView(
+                    text: "Cancel Order",
+                    textStyle: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.bblack,
+                    ),
+                  ),
+
+                  SizedBox(height: 10.h),
+
+                  TextView(
+                    text: "This action will cancel this order.",
+                    textStyle: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.bblack,
+                    ),
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  TextView(
+                    text: "Leave a Comment",
+                    textAlign: TextAlign.center,
+                    textStyle: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 14.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.success,
+                    ),
+                  ),
+
+                  SizedBox(height: 4.h),
+                  TextFormWidget(
+                    hintWeight: FontWeight.w400,
+                    hintColor: AppColors.reminder,
+                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                    borderColor: AppColors.infoGrey1,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    fillColor: AppColors.white,
+                    isFilled: true,
+                    controller: cancelOrderReasonController,
+                    maxline: 4,
+                    validator: AppValidator.validateString(),
+                    style: TextStyle(
+                      fontSize: 16.20.sp,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'DMSans',
+                    ),
+                    labelStyle: TextStyle(
+                      fontSize: 15.20.sp,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'DMSans',
+                      color: AppColors.faintedGrey,
+                    ),
+                  ),
+
+                  SizedBox(height: 24.h),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // CANCEL BUTTON
+                      ListenableBuilder(
+                        listenable: model,
+                        builder: (context, child) {
+                          return OutlinedButton(
+                            onPressed: model.isLoading
+                                ? null
+                                : () {
+                                    Navigator.pop(dialogContext);
+                                  },
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: AppColors.primary),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 32.w,
+                                vertical: 12.w,
+                              ),
+                            ),
+                            child: TextView(
+                              text: "No, Cancel",
+                              textStyle: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 15.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      SizedBox(width: 16.w),
+
+                      // CONTINUE BUTTON
+                      Expanded(
+                        child: ListenableBuilder(
+                          listenable: model,
+                          builder: (context, child) {
+                            return ElevatedButton(
+                              onPressed: model.isLoading
+                                  ? null
+                                  : () async {
+                                      if (formKeyValidateCancelOrder
+                                          .currentState!
+                                          .validate()) {
+                                        bool success = true;
+
+                                        for (final item in itemsOrderId) {
+                                          final result = await model
+                                              .cancelIncomingOrder(
+                                                context,
+                                                orderId: orderId,
+                                                orderItemId: item.orderItemId,
+                                                reason:
+                                                    cancelOrderReasonController
+                                                        .text
+                                                        .trim(),
+                                              );
+
+                                          if (!result) {
+                                            success = false;
+                                            break;
+                                          }
+                                        }
+
+                                        if (!dialogContext.mounted) return;
+
+                                        if (success) {
+                                          Navigator.pop(dialogContext);
+                                        }
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                disabledBackgroundColor: AppColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                  vertical: 12.w,
+                                ),
+                                elevation: 0,
+                              ),
+                              child: model.isLoading
+                                  ? SpinKitCircle(
+                                      size: 20.sp,
+                                      color: AppColors.white,
+                                    )
+                                  : TextView(
+                                      text: "Yes, Continue",
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 15.6.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> rejectIncomingOrderDialog({
+    BuildContext? context,
+    String? orderId,
+    List<getIncom.Item>? itemsOrderId,
+    ManufacturerViewModel? model,
+  }) async {
+    if (context == null || model == null || itemsOrderId == null) {
+      return;
+    }
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          backgroundColor: AppColors.white,
+          insetPadding: EdgeInsets.symmetric(horizontal: 12.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            child: Form(
+              key: formKeyValidateRejectOrder,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10.h),
+
+                  TextView(
+                    text: "Reject Order",
+                    textStyle: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.bblack,
+                    ),
+                  ),
+
+                  SizedBox(height: 10.h),
+
+                  TextView(
+                    text: "This action will reject this order.",
+                    textStyle: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.bblack,
+                    ),
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  TextView(
+                    text: "Leave a Comment",
+                    textAlign: TextAlign.center,
+                    textStyle: TextStyle(
+                      fontFamily: 'DMSans',
+                      fontSize: 14.8.sp,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.success,
+                    ),
+                  ),
+
+                  SizedBox(height: 4.h),
+                  TextFormWidget(
+                    hintWeight: FontWeight.w400,
+                    hintColor: AppColors.reminder,
+                    hintSize: Platform.isAndroid ? 14.sp : 12.sp,
+                    borderColor: AppColors.infoGrey1,
+                    borderTopLeft: 10.r,
+                    borderTopRight: 10.r,
+                    borderBottomLeft: 10.r,
+                    borderBottomRight: 10.r,
+                    fillColor: AppColors.white,
+                    isFilled: true,
+                    controller: rejectOrderReasonController,
+                    maxline: 4,
+                    validator: AppValidator.validateString(),
+                    style: TextStyle(
+                      fontSize: 16.20.sp,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'DMSans',
+                    ),
+                    labelStyle: TextStyle(
+                      fontSize: 15.20.sp,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'DMSans',
+                      color: AppColors.faintedGrey,
+                    ),
+                  ),
+
+                  SizedBox(height: 24.h),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // CANCEL BUTTON
+                      ListenableBuilder(
+                        listenable: model,
+                        builder: (context, child) {
+                          return OutlinedButton(
+                            onPressed: model.isLoading
+                                ? null
+                                : () {
+                                    Navigator.pop(dialogContext);
+                                  },
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: AppColors.primary),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 32.w,
+                                vertical: 12.w,
+                              ),
+                            ),
+                            child: TextView(
+                              text: "No, Cancel",
+                              textStyle: TextStyle(
+                                fontFamily: 'DMSans',
+                                fontSize: 15.6.sp,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      SizedBox(width: 16.w),
+
+                      // CONTINUE BUTTON
+                      Expanded(
+                        child: ListenableBuilder(
+                          listenable: model,
+                          builder: (context, child) {
+                            return ElevatedButton(
+                              onPressed: model.isLoading
+                                  ? null
+                                  : () async {
+                                      if (formKeyValidateRejectOrder
+                                          .currentState!
+                                          .validate()) {
+                                        bool success = true;
+
+                                        for (final item in itemsOrderId) {
+                                          final result = await model
+                                              .rejectIncomingOrder(
+                                                context,
+                                                orderId: orderId,
+                                                orderItemId: item.orderItemId,
+                                                reason:
+                                                    rejectOrderReasonController
+                                                        .text
+                                                        .trim(),
+                                              );
+
+                                          if (!result) {
+                                            success = false;
+                                            break;
+                                          }
+                                        }
+
+                                        if (!dialogContext.mounted) return;
+
+                                        if (success) {
+                                          Navigator.pop(dialogContext);
+                                        }
+                                      }
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                disabledBackgroundColor: AppColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 20.w,
+                                  vertical: 12.w,
+                                ),
+                                elevation: 0,
+                              ),
+                              child: model.isLoading
+                                  ? SpinKitCircle(
+                                      size: 20.sp,
+                                      color: AppColors.white,
+                                    )
+                                  : TextView(
+                                      text: "Yes, Continue",
+                                      textStyle: TextStyle(
+                                        fontFamily: 'DMSans',
+                                        fontSize: 15.6.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.white,
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

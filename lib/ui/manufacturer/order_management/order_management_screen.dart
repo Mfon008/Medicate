@@ -566,7 +566,10 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                     ],
                                   ),
                                   SizedBox(height: 16.20.h),
-                                  ord.paymentStatus?.toLowerCase() == 'success'
+                                  ord.paymentStatus?.toLowerCase() ==
+                                                  'success' &&
+                                              ord.status?.toLowerCase() !=
+                                                  'cancelled'
                                       ? GestureDetector(
                                           onTap: () =>
                                               _showAdvanceStatusListMenu(
@@ -602,7 +605,8 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                                                 ),
                                                 SizedBox(width: 7.10.w),
                                                 TextView(
-                                                  text: 'Advance',
+                                                  text:
+                                                      'Advance',
                                                   textStyle: TextStyle(
                                                     fontFamily: 'DMSans',
                                                     fontSize: 16.20.sp,
@@ -965,25 +969,29 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             adStats = e;
                           }
                         });
-                        print('......${order?.status}');
 
-                        ;
                         if (model.advanceStatusHighlights(
                           stat: order?.status,
                           text: e,
                         )) {
                         } else {
-                          model.advaceIncomingOrder(context);
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                          }
+
+                          await Future.delayed(
+                            const Duration(milliseconds: 100),
+                          );
+                          model.advanceIncomingOrderDialog(
+                            // ignore: use_build_context_synchronously
+                            context: context,
+                            orderId: order!.id,
+                            itemsOrderId: order.items,
+                            text: e,
+                            model: model,
+                          );
                         }
                         model.notifyListeners();
-
-                        // Allow the user to see the selected state
-                        await Future.delayed(const Duration(milliseconds: 300));
-
-                        // Close popup
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                        }
                       },
                       child: Container(
                         width: double.infinity,
@@ -1019,7 +1027,7 @@ class _OrderManagementScreenState extends State<OrderManagementScreen> {
                             fontSize: 16.2.sp,
                             fontWeight: FontWeight.w400,
                             color:
-                                model!.advanceStatusHighlights(
+                                model.advanceStatusHighlights(
                                   stat: order?.status,
                                   text: e,
                                 )

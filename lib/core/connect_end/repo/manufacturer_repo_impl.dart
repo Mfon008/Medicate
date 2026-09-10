@@ -242,8 +242,33 @@ class ManufacturerRepoImpl {
   Future<dynamic> cancelIncomingOrder({
     String? wholesaleOrderId,
     String? wholesaleOrderItemId,
+    String? reason,
   }) async {
     final response = await _contract.cancelIncomingOrder(
+      wholesaleOrderId: wholesaleOrderId,
+      wholesaleOrderItemId: wholesaleOrderItemId,
+      reason:reason
+    );
+    return response;
+  }
+
+  Future<dynamic> rejectIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId, 
+    String? reason,
+  }) async {
+    final response = await _contract.rejectIncomingOrder(
+      wholesaleOrderId: wholesaleOrderId,
+      wholesaleOrderItemId: wholesaleOrderItemId,
+      reason:reason
+    );
+    return response;
+  }
+  Future<dynamic> returnIncomingOrder({
+    String? wholesaleOrderId,
+    String? wholesaleOrderItemId,
+  }) async {
+    final response = await _contract.returnIncomingOrder(
       wholesaleOrderId: wholesaleOrderId,
       wholesaleOrderItemId: wholesaleOrderItemId,
     );
